@@ -53,7 +53,8 @@ public class TestLocale extends TestFmwkPlus {
 
     public void TestLanguageRegions() {
         Set<String> missingLanguageRegion = new LinkedHashSet<String>();
-        Set<String> knownMultiScriptLanguages = new HashSet<String>(Arrays.asList("az", "bs", "pa", "shi", "sr", "vai", "uz", "yue", "zh"));
+        // TODO This should be derived from metadata: https://unicode.org/cldr/trac/ticket/11224
+        Set<String> knownMultiScriptLanguages = new HashSet<String>(Arrays.asList("az", "ff", "bs", "pa", "shi", "sr", "vai", "uz", "yue", "zh"));
         Set<String> available = testInfo.getCldrFactory().getAvailable();
         LanguageTagParser ltp = new LanguageTagParser();
         Set<String> defaultContents = testInfo.getSupplementalDataInfo()
@@ -234,7 +235,6 @@ public class TestLocale extends TestFmwkPlus {
     public void checkScript(String file, String script) {
         if (!script.isEmpty()) {
             if (!ALLOWED_SCRIPTS.contains(script) && SCRIPT_NON_UNICODE.matches(script, null)) {
-                logKnownIssue("NEED TICKET", "contains non-Unicode script");
                 return;
             }
             assertRelation("Script ok? " + script + " in " + file, true,

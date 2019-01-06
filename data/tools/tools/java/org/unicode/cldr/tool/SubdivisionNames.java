@@ -20,6 +20,8 @@ import com.google.common.collect.ImmutableSortedSet;
 
 public class SubdivisionNames {
 
+    public static final String SUBDIVISION_PATH_PREFIX = "//ldml/localeDisplayNames/subdivisions/subdivision";
+    
     private final Map<String, String> subdivisionToName;
 
     public SubdivisionNames(String locale) {
@@ -30,7 +32,8 @@ public class SubdivisionNames {
             + ".xml", data, true);
         for (Pair<String, String> pair : data) {
             // <subdivision type="AD-02">Canillo</subdivision>
-            XPathParts path = XPathParts.getFrozenInstance(pair.getFirst());
+            String rawPath = pair.getFirst();
+            XPathParts path = XPathParts.getFrozenInstance(rawPath);
             if (!"subdivision".equals(path.getElement(-1))) {
                 continue;
             }
@@ -62,6 +65,12 @@ public class SubdivisionNames {
 
     public Set<String> keySet() {
         return subdivisionToName.keySet();
+    }
+    
+    public static String getPathFromCode(String code) {
+        // <subdivision type="AD-02">Canillo</subdivision>
+        return SUBDIVISION_PATH_PREFIX
+            + "[@type=\"" + code + "\"]";
     }
 
     public static String getRegionFromSubdivision(String sdCode) {

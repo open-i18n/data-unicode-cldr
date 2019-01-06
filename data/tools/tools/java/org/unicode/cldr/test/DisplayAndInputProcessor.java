@@ -22,7 +22,6 @@ import org.unicode.cldr.util.DateTimeCanonicalizer;
 import org.unicode.cldr.util.DateTimeCanonicalizer.DateTimePatternType;
 import org.unicode.cldr.util.Emoji;
 import org.unicode.cldr.util.ICUServiceBuilder;
-import org.unicode.cldr.util.MyanmarZawgyiConverter;
 import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.UnicodeSetPrettyPrinter;
 import org.unicode.cldr.util.With;
@@ -30,6 +29,7 @@ import org.unicode.cldr.util.XPathParts;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
+import com.google.myanmartools.ZawgyiDetector;
 import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.text.Collator;
 import com.ibm.icu.text.DateIntervalInfo;
@@ -98,6 +98,10 @@ public class DisplayAndInputProcessor {
     private static final CLDRLocale KWASIO = CLDRLocale.getInstance("nmg");
     private static final CLDRLocale HEBREW = CLDRLocale.getInstance("he");
     private static final CLDRLocale MYANMAR = CLDRLocale.getInstance("my");
+    private static final CLDRLocale KYRGYZ = CLDRLocale.getInstance("ky");
+    private static final CLDRLocale URDU = CLDRLocale.getInstance("ur");
+    private static final CLDRLocale PASHTO = CLDRLocale.getInstance("ps");
+    private static final CLDRLocale FARSI = CLDRLocale.getInstance("fa");
     private static final CLDRLocale GERMAN_SWITZERLAND = CLDRLocale.getInstance("de_CH");
     private static final CLDRLocale SWISS_GERMAN = CLDRLocale.getInstance("gsw");
     public static final Set<String> LANGUAGES_USING_MODIFIER_APOSTROPHE = new HashSet<String>(
@@ -127,6 +131,16 @@ public class DisplayAndInputProcessor {
 
     private static final char[][] HEBREW_CONVERSIONS = {
         { '\'', '\u05F3' }, { '"', '\u05F4' } }; //  ' -> geresh  " -> gershayim
+
+    private static final char[][] KYRGYZ_CONVERSIONS = {
+        { 'ӊ', 'ң' }, { 'Ӊ', 'Ң' } }; //  right modifier
+
+    private static final char[][] URDU_PLUS_CONVERSIONS = {
+        { '\u0643', '\u06A9' }}; //  wrong char
+
+    private static final ZawgyiDetector detector = new ZawgyiDetector();
+    private static final Transliterator zawgyiUnicodeTransliterator =
+        Transliterator.getInstance("Zawgyi-my");
 
     private Collator col;
 
@@ -276,7 +290,7 @@ public class DisplayAndInputProcessor {
     static final UnicodeSet WHITESPACE = new UnicodeSet("[:whitespace:]").freeze();
     static final DateTimeCanonicalizer dtc = new DateTimeCanonicalizer(FIX_YEARS);
 
-    static final Splitter SPLIT_BAR = Splitter.on('|').trimResults().omitEmptyStrings();
+    public static final Splitter SPLIT_BAR = Splitter.on('|').trimResults().omitEmptyStrings();
     static final Splitter SPLIT_SPACE = Splitter.on(' ').trimResults().omitEmptyStrings();
     static final Joiner JOIN_BAR = Joiner.on(" | ");
 
@@ -315,11 +329,15 @@ public class DisplayAndInputProcessor {
             } else if (locale.childOf(KWASIO) && !isUnicodeSet) {
                 value = standardizeKwasio(value);
             } else if (locale.childOf(HEBREW) && !APOSTROPHE_SKIP_PATHS.matcher(path).matches()) {
-                value = standardizeHebrew(value);
+                value = replaceChars(path, value, HEBREW_CONVERSIONS, false);
             } else if ((locale.childOf(SWISS_GERMAN) || locale.childOf(GERMAN_SWITZERLAND)) && !isUnicodeSet) {
                 value = standardizeSwissGerman(value);
             } else if (locale.childOf(MYANMAR) && !isUnicodeSet) {
-                value = MyanmarZawgyiConverter.standardizeMyanmar(value);
+                value = standardizeMyanmar(value);
+            } else if (locale.childOf(KYRGYZ)) {
+                value = replaceChars(path, value, KYRGYZ_CONVERSIONS, false);
+            } else if (locale.childOf(URDU) || locale.childOf(PASHTO) || locale.childOf(FARSI)) {
+                value = replaceChars(path, value, URDU_PLUS_CONVERSIONS, true);
             }
 
             if (UNICODE_WHITESPACE.containsSome(value)) {
@@ -419,8 +437,13 @@ public class DisplayAndInputProcessor {
 
             if (path.startsWith("//ldml/annotations/annotation")) {
                 if (path.contains(Emoji.TYPE_TTS)) {
+                    // The row has something like "🦓 -name" in the first column. Cf. namePath, getNamePaths.
+                    // Normally the value is like "zebra" or "unicorn face", without "|".
+                    // If the user enters a value with "|",  discard anything after "|"; e.g., change "a | b | c" to "a".
                     value = SPLIT_BAR.split(value).iterator().next();
                 } else {
+                    // The row has something like "🦓 –keywords" in the first column. Cf. keywordPath, getKeywordPaths.
+                    // Normally the value is like "stripe | zebra", with "|".
                     value = annotationsForDisplay(value);
                 }
             }
@@ -436,6 +459,14 @@ public class DisplayAndInputProcessor {
 
     private static final boolean REMOVE_COVERED_KEYWORDS = true;
 
+    /**
+     * Produce a modification of the given annotation by sorting its components and filtering covered keywords.
+     * 
+     * Examples: Given "b | a", return "a | b". Given "bear | panda | panda bear", return "bear | panda".
+     *
+     * @param value the string
+     * @return the possibly modified string
+     */
     private static String annotationsForDisplay(String value) {
         TreeSet<String> sorted = new TreeSet<>(Collator.getInstance(ULocale.ROOT));
         sorted.addAll(SPLIT_BAR.splitToList(value));
@@ -446,6 +477,15 @@ public class DisplayAndInputProcessor {
         return value;
     }
 
+    /**
+     * Filter from the given set some keywords that include spaces, if they duplicate,
+     * or are "covered by", other keywords in the set.
+     * 
+     * For example, if the set is {"bear", "panda", "panda bear"} (annotation was "bear | panda | panda bear"),
+     * then remove "panda bear", treating it as "covered" since the set already includes "panda" and "bear".
+     *
+     * @param sorted the set from which items may be removed
+     */
     public static void filterCoveredKeywords(TreeSet<String> sorted) {
         // for now, just do single items
         HashSet<String> toRemove = new HashSet<>();
@@ -644,6 +684,14 @@ public class DisplayAndInputProcessor {
         return builder.toString();
     }
 
+    // Use the myanmar-tools detector.
+    private String standardizeMyanmar(String value) {
+        if (detector.getZawgyiProbability(value) > 0.90) {
+            return zawgyiUnicodeTransliterator.transform(value);
+        }
+        return value;
+    }
+
     private String standardizeNgomba(String value) {
         StringBuilder builder = new StringBuilder();
         char[] charArray = value.toCharArray();
@@ -669,10 +717,13 @@ public class DisplayAndInputProcessor {
         return builder.toString();
     }
 
-    private String standardizeHebrew(String value) {
+    private String replaceChars(String path, String value, char[][] charsToReplace, boolean skipAuxExemplars) {
+        if (skipAuxExemplars && path.contains("/exemplarCharacters[@type=\"auxiliary\"]")) {
+            return value;
+        }
         StringBuilder builder = new StringBuilder();
         for (char c : value.toCharArray()) {
-            for (char[] pair : HEBREW_CONVERSIONS) {
+            for (char[] pair : charsToReplace) {
                 if (c == pair[0]) {
                     c = pair[1];
                     break;

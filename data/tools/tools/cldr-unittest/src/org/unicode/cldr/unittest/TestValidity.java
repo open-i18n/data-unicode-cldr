@@ -1,13 +1,14 @@
 package org.unicode.cldr.unittest;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.unicode.cldr.tool.ToolConstants;
 import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.LanguageTagCanonicalizer;
@@ -29,7 +30,7 @@ public class TestValidity extends TestFmwkPlus {
         new TestValidity().run(args);
     }
 
-    Validity validity = Validity.getInstance(CLDRPaths.COMMON_DIRECTORY);
+    Validity validity = Validity.getInstance();
 
     public void TestBasicValidity() {
         Object[][] tests = {
@@ -89,46 +90,100 @@ public class TestValidity extends TestFmwkPlus {
         }
     }
 
-    static final Set<String> ALLOWED_UNDELETIONS = ImmutableSet.of("NL-BQ1", "NL-BQ2", "NL-BQ3", "NO-21", "NO-22");
-    static final Set<String> ALLOWED_MISSING = ImmutableSet.of("root");
+    static final Set<String> ALLOWED_UNDELETIONS = ImmutableSet.of("ug331", "nlbq1", "nlbq2", "nlbq3", "no21", "no22");
+    static final Set<String> ALLOWED_MISSING = ImmutableSet.of("root", "POSIX", "REVISED", "SAAHO");
 
     public void TestCompatibility() {
         // Only run the rest in exhaustive mode, since it requires CLDR_ARCHIVE_DIRECTORY
         if (getInclusion() <= 5) {
             return;
         }
-
-        final String oldCommon = CLDRPaths.ARCHIVE_DIRECTORY + "cldr-" + ToolConstants.PREVIOUS_CHART_VERSION + "/common/";
-        Validity oldValidity = Validity.getInstance(oldCommon);
-        for (LstrType type : LstrType.values()) {
-            final Map<Status, Set<String>> statusToCodes = validity.getStatusToCodes(type);
-            if (statusToCodes == null) {
-                logln("validity data unavailable: " + type);
+        Set<String> messages = new HashSet<>();
+        File archive = new File(CLDRPaths.ARCHIVE_DIRECTORY);
+        for (File cldrArchive : archive.listFiles()) {
+            if (!cldrArchive.getName().startsWith("cldr-")) {
                 continue;
             }
-            for (Entry<Status, Set<String>> e2 : statusToCodes.entrySet()) {
-                Status oldStatus = e2.getKey();
-                for (String code : e2.getValue()) {
-                    Status newStatus = getNewStatus(type, code);
-                    if (oldStatus == newStatus) {
-                        continue;
-                    }
-                    if (oldStatus == Status.regular && newStatus != Status.deprecated) {
-                        errln(type + ":" + code + ":" + oldStatus + " — regular item changed, and didn't become deprecated");
-                    }
-                    if (newStatus == null && !ALLOWED_MISSING.contains(code)) {
-                        errln(type + ":" + code + ":" + oldStatus + " — missing in new data");
-                    }
-                    if (oldStatus == Status.deprecated && !ALLOWED_UNDELETIONS.contains(code)) {
-                        errln(type + ":" + code + ":" + oldStatus + " => " + newStatus
-                            + " // add to exception list if really un-deprecated");
-                    } else {
-                        logln(type + ":" + code + " was " + oldStatus + " => " + newStatus);
+            File oldValidityLocation = new File(cldrArchive, File.separator + "common" + File.separator + "validity" + File.separator);
+            if (!oldValidityLocation.exists()) {
+                logln("Skipping " + oldValidityLocation);
+                continue;
+            }
+            logln("Checking " + oldValidityLocation.toString());
+//            final String oldValidityLocation = CLDRPaths.ARCHIVE_DIRECTORY + "cldr-" + ToolConstants.PREVIOUS_CHART_VERSION +
+//                File.separator + "common" + File.separator + "validity" + File.separator;
+            Validity oldValidity = Validity.getInstance(oldValidityLocation.toString() + File.separator);
+            
+            for (LstrType type : LstrType.values()) {
+                final Map<Status, Set<String>> statusToCodes = oldValidity.getStatusToCodes(type);
+                if (statusToCodes == null) {
+                    logln("validity data unavailable: " + type);
+                    continue;
+                }
+                for (Entry<Status, Set<String>> e2 : statusToCodes.entrySet()) {
+                    Status oldStatus = e2.getKey();
+                    for (String code : e2.getValue()) {
+                        Status newStatus = getNewStatus(type, code);
+                        if (oldStatus == newStatus) {
+                            continue;
+                        }
+                        
+                        if (newStatus == null) {
+                            if (ALLOWED_MISSING.contains(code)) {
+                                continue;
+                            }
+                            errln(messages, type + ":" + code + ":" + oldStatus + " => " + newStatus 
+                                + " — missing in new data");
+                        }
+
+                        if (oldStatus == Status.private_use && newStatus == Status.special) {
+                            logln(messages, "OK: " + type + ":" + code + " was " + oldStatus + " => " + newStatus);
+                            continue;
+                        }
+                        if (oldStatus == Status.special && newStatus == Status.unknown) {
+                            if (type == LstrType.subdivision && code.endsWith("zzzz")) {
+                                continue;
+                            }
+                            logln(messages, "OK: " + type + ":" + code + " was " + oldStatus + " => " + newStatus);
+                            continue;
+                        }
+                        if (oldStatus == Status.regular) {
+                            if (newStatus == Status.deprecated) {
+//                                logln(messages, "OK: " + type + ":" + code + " was " + oldStatus + " => " + newStatus);
+                                continue;
+                            }
+                            errln(messages, type + ":" + code + ":" + oldStatus + " => " + newStatus 
+                                + " — regular item changed, and didn't become deprecated");
+                        }
+                        if (oldStatus == Status.deprecated) {
+                            if (ALLOWED_UNDELETIONS.contains(code)) {
+                                continue;
+                            }
+                            errln(messages, type + ":" + code + ":" + oldStatus + " => " + newStatus
+                                + " // add to exception list if really un-deprecated");
+                        } else {
+                            errln(messages, type + ":" + code + " was " + oldStatus + " => " + newStatus);
+                        }
                     }
                 }
             }
         }
     }
+
+    private void logln(Set<String> messages, String string) {
+        if (!messages.contains(string)) {
+            logln(string);
+            messages.add(string);
+        }
+    }
+    
+    private void errln(Set<String> messages, String string) {
+        if (!messages.contains(string)) {
+            errln(string);
+            messages.add(string);
+        }
+    }
+
 
     private Status getNewStatus(LstrType type, String code) {
         Map<Status, Set<String>> info = validity.getStatusToCodes(type);
@@ -166,7 +221,7 @@ public class TestValidity extends TestFmwkPlus {
     public void TestUnits() {
         Splitter HYPHEN_SPLITTER = Splitter.on('-');
         UnicodeSet allowed = new UnicodeSet("[a-z0-9A-Z]").freeze();
-        Validity validity = Validity.getInstance(CLDRPaths.COMMON_DIRECTORY);
+        Validity validity = Validity.getInstance();
         Map<String, String> shortened = ImmutableMap.<String, String> builder()
             .put("acceleration", "accel")
             .put("revolution", "revol")
@@ -228,7 +283,7 @@ public class TestValidity extends TestFmwkPlus {
                     }
                     String fixedCode = fixed.toString();
                     if (!fixedCode.equals(code)) {
-                        warnln("code has overlong subcode: " + code + " should be " + fixedCode);
+                        warnln("code has overlong subcode: " + code + " should have short alias in bcp47 " + fixedCode);
                     }
                 }
             }
@@ -259,7 +314,7 @@ public class TestValidity extends TestFmwkPlus {
             result = subcode.substring(0, 8);
             break;
         }
-        shortened.put(subcode, result);
+        // shortened.put(subcode, result);
         return result;
     }
 

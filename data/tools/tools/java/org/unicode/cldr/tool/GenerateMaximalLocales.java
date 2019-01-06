@@ -150,6 +150,8 @@ public class GenerateMaximalLocales {
         "bsq_Bass_LR",
         "ccp_Cakm_BD",
         "blt_Tavt_VN",
+        "rhg_Arab_MM",
+        "rhg_Rohg_MM",
     };
 
     /**
@@ -162,7 +164,17 @@ public class GenerateMaximalLocales {
         { "eo_Latn", "eo_Latn_001" },
         { "es", "es_Latn_ES" },
         { "es_Latn", "es_Latn_ES" },
+        { "ff_BF", "ff_Latn_BF" },
+        { "ff_GM", "ff_Latn_GM" },
+        { "ff_GH", "ff_Latn_GH" },
+        { "ff_GW", "ff_Latn_GW" },
+        { "ff_LR", "ff_Latn_LR" },
+        { "ff_NE", "ff_Latn_NE" },
+        { "ff_NG", "ff_Latn_NG" },
+        { "ff_SL", "ff_Latn_SL" },
         { "ff_Adlm", "ff_Adlm_GN" },
+        { "ia", "ia_Latn_001" },
+        { "ia_Latn", "ia_Latn_001" },
         { "io", "io_Latn_001" },
         { "io_Latn", "io_Latn_001" },
         { "jbo", "jbo_Latn_001" },
@@ -197,6 +209,8 @@ public class GenerateMaximalLocales {
         { "ti", "ti_Ethi_ET" },
         { "ti_Ethi", "ti_Ethi_ET" },
         { "und", "en_Latn_US" },
+        { "und_Adlm", "ff_Adlm_GN" },
+        { "und_Adlm_GN", "ff_Adlm_GN" },
         { "und_Arab", "ar_Arab_EG" },
         { "und_Arab_PK", "ur_Arab_PK" },
         { "und_Bopo", "zh_Bopo_TW" },
@@ -264,6 +278,7 @@ public class GenerateMaximalLocales {
 //        {"bsq", "bsq_Bass_LR"},
 //        {"ccp", "ccp_Cakm_BD"},
 //        {"blt", "blt_Tavt_VN"},
+        { "mis_Medf", "mis_Medf_NG" },
     });
 
     /**

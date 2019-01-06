@@ -114,7 +114,9 @@ public class TestExampleGenerator extends TestFmwk {
         "//ldml/typographicNames/styleName[@type=\"([^\"]*+)\"][@subtype=\"([^\"]*+)\"][@alt=\"([^\"]*+)\"]",
         "//ldml/typographicNames/styleName[@type=\"([^\"]*+)\"][@subtype=\"([^\"]*+)\"]",
         "//ldml/typographicNames/featureName[@type=\"([^\"]*+)\"]",
-        "//ldml/characters/parseLenients[@scope=\"([^\"]*+)\"][@level=\"([^\"]*+)\"]/parseLenient[@sample=\"([^\"]*+)\"]");
+        "//ldml/characters/parseLenients[@scope=\"([^\"]*+)\"][@level=\"([^\"]*+)\"]/parseLenient[@sample=\"([^\"]*+)\"]",
+        "//ldml/localeDisplayNames/subdivisions/subdivision[@type=\"([^\"]*+)\"]"
+        );
 
     /**
         TEMPORARY EXCLUSIONS; TODO: add examples later 
@@ -159,6 +161,7 @@ public class TestExampleGenerator extends TestFmwk {
         "//ldml/units/unitLength[@type=\"([^\"]*+)\"]/unit[@type=\"([^\"]*+)\"]/displayName",
         "//ldml/units/unitLength[@type=\"([^\"]*+)\"]/unit[@type=\"([^\"]*+)\"]/perUnitPattern",
         "//ldml/units/unitLength[@type=\"([^\"]*+)\"]/coordinateUnit/coordinateUnitPattern[@type=\"([^\"]*+)\"]",
+        "//ldml/units/unitLength[@type=\"([^\"]*+)\"]/coordinateUnit/displayName",
 
         "//ldml/dates/timeZoneNames/zone[@type=\"([^\"]*+)\"]/long/standard" // Error: (TestExampleGenerator.java:245) No background:   <Coordinated Universal Time>    〖Coordinated Universal Time〗    
 
@@ -374,7 +377,7 @@ public class TestExampleGenerator extends TestFmwk {
         ExampleGenerator exampleGenerator = getExampleGenerator("it");
         checkValue(
             "At least",
-            "〖⩾❬99❭〗",
+            "〖≥❬99❭〗",
             exampleGenerator,
             "//ldml/numbers/miscPatterns[@numberSystem=\"latn\"]/pattern[@type=\"atLeast\"]");
         checkValue("Range", "〖❬99❭-❬144❭〗", exampleGenerator,

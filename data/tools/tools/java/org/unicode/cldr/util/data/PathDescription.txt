@@ -4,13 +4,14 @@
 # ROOT descriptions (using special placeholders). Must occur first.
 
 ^//ldml/localeDisplayNames/territories/territory\[@type="(CD|DG|CG|003|021|ZA|018|FK|MK|MM|TW|HK|MO)"] ; ROOT territory; Warning - the region {0} requires special attention! Note: before translating, be sure to read http://cldr.org/translation/country-names.
-^//ldml/localeDisplayNames/scripts/script\[@type="(Z[^"]*)"] ; ROOT script; The name of the script (writing system) with BCP47 script code = {0}. Note: before translating, be sure to read http://cldr.org/translation/script-names.
+^//ldml/localeDisplayNames/scripts/script\[@type="(Z[^"]*)"] ; ROOT script; The name of the script (writing system) with Unicode script code = {0}. Note: before translating, be sure to read http://cldr.org/translation/script-names.
 
 ^//ldml/dates/timeZoneNames/zone\[@type="([^"]*)"]/exemplarCity ; ROOT timezone ; The name of {0}. For more information, see http://cldr.org/translation/cities.
 
-^//ldml/localeDisplayNames/languages/language\[@type="([^"]*)"] ; ROOT language; The name of the language with BCP47 language code = {0}. For more information, see http://cldr.org/translation/language-names.
-^//ldml/localeDisplayNames/scripts/script\[@type="([^"]*)"] ; ROOT script; The name of the script (writing system) with BCP47 script code = {0}. For more information, see http://cldr.org/translation/script-names.
-^//ldml/localeDisplayNames/territories/territory\[@type="([^"]*)"] ; ROOT territory; The name of the country or region with BCP47 region code = {0}. For more information, see http://cldr.org/translation/country-names.
+^//ldml/localeDisplayNames/languages/language\[@type="([^"]*)"] ; ROOT language; The name of the language with Unicode language code = {0}. For more information, see http://cldr.org/translation/language-names.
+^//ldml/localeDisplayNames/scripts/script\[@type="([^"]*)"] ; ROOT script; The name of the script (writing system) with Unicode script code = {0}. For more information, see http://cldr.org/translation/script-names.
+^//ldml/localeDisplayNames/territories/territory\[@type="([^"]*)"] ; ROOT territory; The name of the country or region with Unicode region code = {0}. For more information, see http://cldr.org/translation/country-names.
+^//ldml/localeDisplayNames/subdivisions/subdivision\[@type="([^"]*)"] ; ROOT territory; The name of the country subdivision with Unicode subdivision code = {0}. For more information, see http://cldr.org/translation/country-names.
 ^//ldml/numbers/currencies/currency\[@type="([^"]*)"]/symbol$ ; ROOT currency; The symbol for the currency with the ISO currency code = {0}. For more information, see http://cldr.org/translation/currency-names.
 ^//ldml/numbers/currencies/currency\[@type="([^"]*)"]/symbol\[@alt="narrow"] ; ROOT currency; The NARROW form of the symbol used for the currency with the ISO currency code = {0}, when the known context is already enough to distinguish the symbol from other currencies that may use the same symbol. Normally, this does not need to be changed from the inherited value. For more information, see http://cldr.org/translation/currency-names.
 ^//ldml/numbers/currencies/currency\[@type="([^"]*)"]/symbol\[@alt="([^"]++)"] ; ROOT currency; An alternative form of the symbol used for the currency with the ISO currency code = {0}.  Usually occurs shortly after a new currency symbol is introduced. For more information, see http://cldr.org/translation/currency-names.
@@ -61,6 +62,7 @@
 ^//ldml/dates/timeZoneNames/(fallback|fallbackRegion|gmtZero|gmt|hour|region)Format  ;   The {1} pattern used to compose time zone names. Note: before translating, be sure to read http://cldr.org/translation/timezones.
 
 ^//ldml/units/unitLength\[@type="([^"]*)"]/compoundUnit\[@type="([^"]*)"]/compoundUnitPattern ; Special pattern used to compose forms of two units, such as meters per second. Note: before translating, be sure to read http://cldr.org/translation/units.
+^//ldml/units/unitLength\[@type="([^"]*)"]/coordinateUnit/displayName ; Display name ({1} form) for the type of direction used in latitude and longitude, such as north or east. Note: before translating, be sure to read http://cldr.org/translation/units.
 ^//ldml/units/unitLength\[@type="([^"]*)"]/coordinateUnit/coordinateUnitPattern\[@type="([^"]*)"] ; Special pattern used in latitude and longitude, such as 12°N. Note: before translating, be sure to read http://cldr.org/translation/units.
 
 ^//ldml/units/unitLength\[@type="([^"]*)"]/unit\[@type="area-acre"]/displayName ; Display name ({1} form) for “area-acre”, referring specifically to an English acre. Note: before translating, be sure to read http://cldr.org/translation/plurals.
@@ -84,7 +86,9 @@
 ^//ldml/numbers/currencyFormats\[@numberSystem="([^"]*)"]/unitPattern\[@count="(\w++)"] ; Currency format used for numbers of type {2}. For more information, please see http://cldr.org/translation/number-patterns.
 
 ^//ldml/numbers/miscPatterns\[@numberSystem="([^"]*)"]/pattern\[@type="range"] ; Format used to indicate a range of numbers. The '{'0'}' and '{'1'}' in the pattern represent the lowest and highest numbers in the range, respectively. For more information, please see http://cldr.org/translation/misc.
-^//ldml/numbers/miscPatterns\[@numberSystem="([^"]*)"]/pattern\[@type="atLeast"] ; Format used to indicate a number is at least a certain value. For more information, please see http://cldr.org/translation/misc.
+^//ldml/numbers/miscPatterns\[@numberSystem="([^"]*)"]/pattern\[@type="atLeast"] ; Format used to indicate a number is at least a certain value, often combined with other patterns to produce examples such as “≥12kg”. For more information, please see http://cldr.org/translation/misc.
+^//ldml/numbers/miscPatterns\[@numberSystem="([^"]*)"]/pattern\[@type="atMost"] ; Format used to indicate a number is at most a certain value, often combined with other patterns to produce examples such as “≤12kg”. For more information, please see http://cldr.org/translation/misc.
+^//ldml/numbers/miscPatterns\[@numberSystem="([^"]*)"]/pattern\[@type="approximately"] ; Format used to indicate a number is approximately a given value, often combined with other patterns to produce examples such as “~12kg”. For more information, please see http://cldr.org/translation/misc.
 
 ^//ldml/numbers/minimalPairs/ordinalMinimalPairs\[@ordinal="([^"]*)"] ; Minimal pairs for ordinals. For more information, please see http://cldr.org/translation/plurals#TOC-Minimal-Pairs.
 ^//ldml/numbers/minimalPairs/pluralMinimalPairs\[@count="([^"]*)"] ; Minimal pairs for plurals (cardinals). For more information, please see http://cldr.org/translation/plurals#TOC-Minimal-Pairs.
@@ -97,11 +101,20 @@
 ^//ldml/listPatterns/listPattern/listPatternPart\[@type="2"]  ;   Special pattern used to make an “and” list out of two standard elements. Note: before translating, be sure to read http://cldr.org/translation/lists.
 ^//ldml/listPatterns/listPattern/listPatternPart\[@type="([^"]*)"]  ;   Special pattern used to make a “and” list out of more than two standard elements. This is used for the {1} portion of the list. Note: before translating, be sure to read http://cldr.org/translation/lists.
 
+^//ldml/listPatterns/listPattern\[@type="standard-short"]/listPatternPart\[@type="2"]  ;   Special pattern used to make a short-style “and” list out of two standard elements. Note: before translating, be sure to read http://cldr.org/translation/lists.
+^//ldml/listPatterns/listPattern\[@type="standard-short"]/listPatternPart\[@type="([^"]*)"]  ;   Special pattern used to make a short-style “and” list out of more than two standard elements. This is used for the {1} portion of the list. Note: before translating, be sure to read http://cldr.org/translation/lists.
+
+^//ldml/listPatterns/listPattern\[@type="standard-narrow"]/listPatternPart\[@type="2"]  ;   Special pattern used to make a short-style “and” list out of two standard elements. Note: before translating, be sure to read http://cldr.org/translation/lists.
+^//ldml/listPatterns/listPattern\[@type="standard-narrow"]/listPatternPart\[@type="([^"]*)"]  ;   Special pattern used to make a short-style “and” list out of more than two standard elements. This is used for the {1} portion of the list. Note: before translating, be sure to read http://cldr.org/translation/lists.
+
 ^//ldml/listPatterns/listPattern\[@type="or"]/listPatternPart\[@type="2"]  ;   Special pattern used to make an “or” list out of two standard elements. Note: before translating, be sure to read http://cldr.org/translation/lists.
 ^//ldml/listPatterns/listPattern\[@type="or"]/listPatternPart\[@type="([^"]*)"]  ;   Special pattern used to make an “or” list out of more than two standard elements. This is used for the {1} portion of the list. Note: before translating, be sure to read http://cldr.org/translation/lists.
 
-^//ldml/listPatterns/listPattern\[@type="standard-short"]/listPatternPart\[@type="2"]  ;   Special pattern used to make a short-style “and” list out of two standard elements. Note: before translating, be sure to read http://cldr.org/translation/lists.
-^//ldml/listPatterns/listPattern\[@type="standard-short"]/listPatternPart\[@type="([^"]*)"]  ;   Special pattern used to make a short-style “and” list out of more than two standard elements. This is used for the {1} portion of the list. Note: before translating, be sure to read http://cldr.org/translation/lists.
+^//ldml/listPatterns/listPattern\[@type="or-short"]/listPatternPart\[@type="2"]  ;   Special pattern used to make an “or” list out of two standard elements. Note: before translating, be sure to read http://cldr.org/translation/lists.
+^//ldml/listPatterns/listPattern\[@type="or-short"]/listPatternPart\[@type="([^"]*)"]  ;   Special pattern used to make an “or” list out of more than two standard elements. This is used for the {1} portion of the list. Note: before translating, be sure to read http://cldr.org/translation/lists.
+
+^//ldml/listPatterns/listPattern\[@type="or-narrow"]/listPatternPart\[@type="2"]  ;   Special pattern used to make an “or” list out of two standard elements. Note: before translating, be sure to read http://cldr.org/translation/lists.
+^//ldml/listPatterns/listPattern\[@type="or-narrow"]/listPatternPart\[@type="([^"]*)"]  ;   Special pattern used to make an “or” list out of more than two standard elements. This is used for the {1} portion of the list. Note: before translating, be sure to read http://cldr.org/translation/lists.
 
 ^//ldml/listPatterns/listPattern\[@type="unit"]/listPatternPart\[@type="2"]  ;   Special pattern used to make a list out of two unit elements. Note: before translating, be sure to read http://cldr.org/translation/lists.
 ^//ldml/listPatterns/listPattern\[@type="unit"]/listPatternPart\[@type="([^"]*)"]  ;   Special pattern used to make a list out of more than two unit elements. This is used for the {1} portion of the list. Note: before translating, be sure to read http://cldr.org/translation/lists.

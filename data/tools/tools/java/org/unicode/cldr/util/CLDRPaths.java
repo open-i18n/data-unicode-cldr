@@ -42,6 +42,7 @@ public class CLDRPaths {
     public static final String SEED_COLLATION_DIRECTORY = CldrUtility.getPath(SEED_DIRECTORY, "../collation/");
     public static final String SEED_CASING_DIRECTORY = CldrUtility.getPath(SEED_DIRECTORY, "../casing/");
     public static final String SEED_ANNOTATIONS_DIRECTORY = CldrUtility.getPath(SEED_DIRECTORY, "../annotations/");
+    public static final String VALIDITY_DIRECTORY = CldrUtility.getPath(CLDRPaths.COMMON_DIRECTORY, "validity/");
 
     public static final String EXEMPLARS_DIRECTORY = CldrUtility.getPath(CLDRPaths.BASE_DIRECTORY, "exemplars/main/");
 
@@ -56,6 +57,9 @@ public class CLDRPaths {
         CldrUtility.getPath(BASE_DIRECTORY, "../cldr-archive/")));
     public static final String LAST_DIRECTORY = ARCHIVE_DIRECTORY + "cldr-" +
         ToolConstants.PREVIOUS_CHART_VERSION +
+        "/";
+    public static final String LAST_RELEASE_DIRECTORY = ARCHIVE_DIRECTORY + "cldr-" +
+        ToolConstants.LAST_RELEASE_VERSION +
         "/";
     public static final String CLDR_PRIVATE_DIRECTORY = CldrUtility.getPath(CldrUtility.getProperty("CLDR_PRIVATE_DATA",
         CldrUtility.getPath(BASE_DIRECTORY, "../cldr-private/")));

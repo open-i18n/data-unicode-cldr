@@ -97,15 +97,8 @@ public class TestDisplayAndInputProcessor extends TestFmwk {
         // correctly.
         DisplayAndInputProcessor daip = new DisplayAndInputProcessor(info
             .getCLDRFile("my", false));
-        String z_mi = "ေမာင္းရီ (နယူးဇီလန္ကၽြန္းရွိ ပင္ရင္းတိုင္းရင္းသားလူမ်ိဳး)"; // language
-        // mi
-        // in
-        // CLDR
-        // 24
-        String u_mi = "မောင်းရီ (နယူးဇီလန်ကျွန်းရှိ ပင်ရင်းတိုင်းရင်းသားလူမျိုး)"; // mi
-        // converted
-        // to
-        // Unicode
+        String z_mi = "ေမာင္းရီ (နယူးဇီလန္ကၽြန္းရွိ ပင္ရင္းတိုင္းရင္းသားလူမ်ိဳး)";
+        String u_mi = "မောင်းရီ (နယူးဇီလန်ကျွန်းရှိ ပင်ရင်းတိုင်းရင်းသားလူမျိုး)";
 
         // Check that z_mi is detected as Zawgyi, and converted to u_mi.
         // Check that the converted version is detected as Unicode.
@@ -158,14 +151,6 @@ public class TestDisplayAndInputProcessor extends TestFmwk {
                 + converted_5);
         }
 
-        String z_with_space = "\u0020\u102e\u0020\u1037\u0020\u1039"; // Test #5
-        String u_with_space = "\u00a0\u102e\u00a0\u1037\u00a0\u103a";
-        String converted_space = daip.processInput("", z_with_space, null);
-        if (!converted_space.equals(u_with_space)) {
-            errln("Myanmar with space incorrectly normalized:\n" + z_with_space
-                + " to\n" + converted_space + '\n' + u_with_space);
-        }
-
         String z_zero = "\u1031\u1040\u1037";
         String u_zero = "\u101d\u1031\u1037";
         String converted_zero = daip.processInput("", z_zero, null);
@@ -189,7 +174,7 @@ public class TestDisplayAndInputProcessor extends TestFmwk {
             errln("Myanmar should not have converted:\n" + is_unicode + " to\n"
                 + check_is_unicode);
         }
-        is_unicode = "\u1001\u103A\u103B";
+        is_unicode = "\u1001\u103B\u103c";
         check_is_unicode = daip.processInput("", is_unicode, null);
         if (!check_is_unicode.equals(is_unicode)) {
             errln("Myanmar should not have converted:\n" + is_unicode + " to\n"
@@ -254,20 +239,25 @@ public class TestDisplayAndInputProcessor extends TestFmwk {
         Set<String> allLanguages = f.getAvailableLanguages();
         for (String thisLanguage : allLanguages) {
             CLDRFile thisLanguageFile = f.make(thisLanguage, true);
-            if (usesModifierApostrophe(thisLanguageFile)) {
-                if (!DisplayAndInputProcessor.LANGUAGES_USING_MODIFIER_APOSTROPHE
-                    .contains(thisLanguage)) {
-                    errln("Language : "
-                        + thisLanguage
-                        + " uses MODIFIER_LETTER_APOSROPHE, but is not on the list in DAIP.LANGUAGES_USING_MODIFIER_APOSTROPHE");
+            try {
+                if (usesModifierApostrophe(thisLanguageFile)) {
+                    if (!DisplayAndInputProcessor.LANGUAGES_USING_MODIFIER_APOSTROPHE
+                        .contains(thisLanguage)) {
+                        errln("Language : "
+                            + thisLanguage
+                            + " uses MODIFIER_LETTER_APOSROPHE, but is not on the list in DAIP.LANGUAGES_USING_MODIFIER_APOSTROPHE");
+                    }
+                } else {
+                    if (DisplayAndInputProcessor.LANGUAGES_USING_MODIFIER_APOSTROPHE
+                        .contains(thisLanguage)) {
+                        errln("Language : "
+                            + thisLanguage
+                            + "is on the list in DAIP.LANGUAGES_USING_MODIFIER_APOSTROPHE, but the main exemplars don't use this character.");
+                    }
                 }
-            } else {
-                if (DisplayAndInputProcessor.LANGUAGES_USING_MODIFIER_APOSTROPHE
-                    .contains(thisLanguage)) {
-                    errln("Language : "
-                        + thisLanguage
-                        + "is on the list in DAIP.LANGUAGES_USING_MODIFIER_APOSTROPHE, but the main exemplars don't use this character.");
-                }
+            } catch(Throwable t) {
+                t.printStackTrace();
+                errln("Error in " + thisLanguage + " - " + t.getMessage());
             }
         }
     }

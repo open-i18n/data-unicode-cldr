@@ -30,7 +30,7 @@ import com.ibm.icu.util.VersionInfo;
 public class ScriptMetadata {
     private static final int MAX_RANK = 33;
     private static final String DATA_FILE = "/org/unicode/cldr/util/data/Script_Metadata.csv";
-    private static final VersionInfo UNICODE_VERSION = VersionInfo.getInstance(CldrUtility.getProperty("SCRIPT_UNICODE_VERSION", "10"));
+    private static final VersionInfo UNICODE_VERSION = VersionInfo.getInstance(CldrUtility.getProperty("SCRIPT_UNICODE_VERSION", "11"));
 
     // To get the data, go do the Script MetaData spreadsheet
     // Download As Comma Separated Items into DATA_FILE
@@ -305,13 +305,21 @@ public class ScriptMetadata {
     }
 
     public enum Groupings {
-        EUROPEAN("150"), MIDDLE_EASTERN("145"), SOUTH_ASIAN("034"), SOUTHEAST_ASIAN("035"), EAST_ASIAN("030"), AFRICAN("002"), AMERICAN("019"),;
+        EUROPEAN("150"),
+        MIDDLE_EASTERN("145"),
+        CENTRAL_ASIAN("143"),
+        SOUTH_ASIAN("034"),
+        SOUTHEAST_ASIAN("035"),
+        EAST_ASIAN("030"),
+        AFRICAN("002"),
+        AMERICAN("019"),;
         public final Set<String> scripts;
 
         private Groupings(String... regions) {
             scripts = With
                 .in(getScripts())
-                .toUnmodifiableCollection(new ScriptMetadata.RegionFilter(regions), new TreeSet());
+                .toUnmodifiableCollection(
+                    new ScriptMetadata.RegionFilter(regions), new TreeSet<String>());
         }
     }
 

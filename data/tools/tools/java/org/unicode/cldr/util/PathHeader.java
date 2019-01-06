@@ -116,8 +116,8 @@ public class PathHeader implements Comparable<PathHeader> {
             // account for digits, and "some" future proofing.
             order = ordering < 0
                 ? source.charAt(pos)
-                : 0x10000 + ordering;
-            mainOrder = source.substring(0, pos);
+                    : 0x10000 + ordering;
+                mainOrder = source.substring(0, pos);
         }
 
         @Override
@@ -296,7 +296,7 @@ public class PathHeader implements Comparable<PathHeader> {
         "\\[@alt=\"([^\"]*+)\"]")
         .matcher("");
 
-    static final Collator alphabetic = CLDRConfig.getInstance().getCollator();// (RuleBasedCollator) Collator.getInstance(ULocale.ENGLISH);
+    static final Collator alphabetic = CLDRConfig.getInstance().getCollatorRoot();
 
 //    static final RuleBasedCollator alphabetic = (RuleBasedCollator) Collator
 //            .getInstance(ULocale.ENGLISH);
@@ -436,7 +436,7 @@ public class PathHeader implements Comparable<PathHeader> {
             + "\t" + pageId
             + "\t" + header // + "\t" + headerOrder
             + "\t" + code // + "\t" + codeOrder
-        ;
+            ;
     }
 
     @Override
@@ -976,7 +976,7 @@ public class PathHeader implements Comparable<PathHeader> {
             "Apr", "May", "Jun",
             "Jul", "Aug", "Sep",
             "Oct", "Nov", "Dec",
-            "Und" };
+        "Und" };
         static List<String> days = Arrays.asList("sun", "mon",
             "tue", "wed", "thu",
             "fri", "sat");
@@ -1198,7 +1198,7 @@ public class PathHeader implements Comparable<PathHeader> {
                     for (int i = 0; i < languageRangeStartPoints.length; i++) {
                         if (firstLetter >= languageRangeStartPoints[i] && firstLetter <= languageRangeEndPoints[i]) {
                             return "Languages (" + Character.toUpperCase(languageRangeStartPoints[i]) + "-" + Character.toUpperCase(languageRangeEndPoints[i])
-                                + ")";
+                            + ")";
                         }
                     }
                     return "Languages";
@@ -1237,13 +1237,13 @@ public class PathHeader implements Comparable<PathHeader> {
             });
             functionMap.put("categoryFromTerritory",
                 catFromTerritory = new Transform<String, String>() {
-                    public String transform(String source) {
-                        String territory = getSubdivisionsTerritory(source, null);
-                        String container = Containment.getContainer(territory);
-                        order = Containment.getOrder(territory);
-                        return englishFile.getName(CLDRFile.TERRITORY_NAME, container);
-                    }
-                });
+                public String transform(String source) {
+                    String territory = getSubdivisionsTerritory(source, null);
+                    String container = Containment.getContainer(territory);
+                    order = Containment.getOrder(territory);
+                    return englishFile.getName(CLDRFile.TERRITORY_NAME, container);
+                }
+            });
             functionMap.put("territorySection", new Transform<String, String>() {
                 final Set<String> specialRegions = new HashSet<String>(Arrays.asList("EZ", "EU", "QO", "UN", "ZZ"));
 
@@ -1274,14 +1274,14 @@ public class PathHeader implements Comparable<PathHeader> {
             });
             functionMap.put("categoryFromTimezone",
                 catFromTimezone = new Transform<String, String>() {
-                    public String transform(String source0) {
-                        String territory = Containment.getRegionFromZone(source0);
-                        if (territory == null) {
-                            territory = "ZZ";
-                        }
-                        return catFromTerritory.transform(territory);
+                public String transform(String source0) {
+                    String territory = Containment.getRegionFromZone(source0);
+                    if (territory == null) {
+                        territory = "ZZ";
                     }
-                });
+                    return catFromTerritory.transform(territory);
+                }
+            });
             functionMap.put("timeZonePage", new Transform<String, String>() {
                 Set<String> singlePageTerritories = new HashSet<String>(Arrays.asList("AQ", "RU", "ZZ"));
 
@@ -1462,6 +1462,7 @@ public class PathHeader implements Comparable<PathHeader> {
             final Map<String, String> currencyToTerritoryOverrides = CldrUtility.asMap(ctto);
             final Map<String, String> subContinentToContinent = CldrUtility.asMap(sctc);
             final Set<String> fundCurrencies = new HashSet<String>(Arrays.asList("CHE", "CHW", "CLF", "COU", "ECV", "MXV", "USN", "USS", "UYI", "XEU", "ZAL"));
+            final Set<String> offshoreCurrencies = new HashSet<String>(Arrays.asList("CNH"));
             // TODO: Put this into supplementalDataInfo ?
 
             functionMap.put("categoryFromCurrency", new Transform<String, String>() {
@@ -1472,6 +1473,8 @@ public class PathHeader implements Comparable<PathHeader> {
                         String tag;
                         if (fundCurrencies.contains(source0)) {
                             tag = " (fund)";
+                        } else if (offshoreCurrencies.contains(source0)) {
+                            tag = " (offshore)";
                         } else {
                             tag = " (old)";
                         }
@@ -1676,7 +1679,8 @@ public class PathHeader implements Comparable<PathHeader> {
                 public String transform(String source) {
                     String major = Emoji.getMajorCategory(source);
                     // check that result is reasonable by running through PageId.
-                    if (!major.equals("Smileys & People")) {
+                    switch(major) {
+                    default:
                         PageId pageId2 = PageId.forString(major);
                         if (pageId2.getSectionId() != SectionId.Characters) {
                             if (pageId2 == PageId.Symbols) {
@@ -1684,12 +1688,15 @@ public class PathHeader implements Comparable<PathHeader> {
                             }
                         }
                         return pageId2.toString();
-                    }
-                    String minorCat = Emoji.getMinorCategory(source);
-                    if (minorCat.startsWith("person")) {
-                        return PageId.People.toString();
-                    } else {
-                        return PageId.Smileys.toString();
+                    case "Smileys & People":
+                        String minorCat = Emoji.getMinorCategory(source);
+                        if (minorCat.equals("skin-tone") || minorCat.equals("hair-style")) {
+                            return PageId.Component.toString();
+                        } else if (!minorCat.contains("face")) {
+                            return PageId.People.toString();
+                        } else {
+                            return PageId.Smileys.toString();
+                        }
                     }
                 }
             });
@@ -1749,6 +1756,9 @@ public class PathHeader implements Comparable<PathHeader> {
          * @return
          */
         private static String fix(String input, int orderIn) {
+            if (input.contains("👱")) {
+                int debug = 0;
+            }
             String oldInput = input;
             input = RegexLookup.replace(input, args.value);
             order = orderIn;

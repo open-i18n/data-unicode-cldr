@@ -938,6 +938,12 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
                 }
                 if (source.hasValueAtDPath(xpath)) {
                     String value = source.getValueAtDPath(xpath);
+                    /*
+                     * TODO: this looks dubious, see https://unicode.org/cldr/trac/ticket/11299
+                     * 
+                     * Both the "immediate parent" and the "ultimate ancestor" may be of interest, as for
+                     * "Jump to Original" -- does this code result in skipping the immediate parent?
+                     */
                     if (CldrUtility.INHERITANCE_MARKER.equals(value)) {
                         continue;
                     }
@@ -1233,6 +1239,7 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
             { "fullwide", "numbers" },
             { "gb2312han", "collation" },
             { "geor", "numbers" },
+            { "gong", "numbers" },
             { "gonm", "numbers" },
             { "gregorian", "calendar" },
             { "grek", "numbers" },
@@ -1296,6 +1303,7 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
             { "pinyin", "collation" },
             { "reformed", "collation" },
             { "roc", "calendar" },
+            { "rohg", "numbers" },
             { "roman", "numbers" },
             { "romanlow", "numbers" },
             { "saur", "numbers" },
@@ -1380,6 +1388,7 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
                 addFallbackCode(CLDRFile.LANGUAGE_NAME, extraCode, extraCode);
             }
 
+
             addFallbackCode(CLDRFile.LANGUAGE_NAME, "en_GB", "en_GB", "short");
             addFallbackCode(CLDRFile.LANGUAGE_NAME, "en_US", "en_US", "short");
             addFallbackCode(CLDRFile.LANGUAGE_NAME, "az", "az", "short");
@@ -1400,6 +1409,9 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
             addFallbackCode(CLDRFile.TERRITORY_NAME, "FK", "FK", "variant");
             addFallbackCode(CLDRFile.TERRITORY_NAME, "MK", "MK", "variant");
             addFallbackCode(CLDRFile.TERRITORY_NAME, "TL", "TL", "variant");
+
+            addFallbackCode(CLDRFile.TERRITORY_NAME, "XA", "XA");
+            addFallbackCode(CLDRFile.TERRITORY_NAME, "XB", "XB");
 
             addFallbackCode("//ldml/dates/calendars/calendar[@type=\"gregorian\"]/eras/eraAbbr/era[@type=\"0\"]", "BCE", "variant");
             addFallbackCode("//ldml/dates/calendars/calendar[@type=\"gregorian\"]/eras/eraAbbr/era[@type=\"1\"]", "CE", "variant");

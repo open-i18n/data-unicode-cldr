@@ -796,6 +796,9 @@ public class TestSupplementalInfo extends TestFmwkPlus {
         Set<String> current12preferred = new HashSet<String>();
 
         boolean haveWorld = false;
+        
+        ImmutableSet<HourStyle> oldSchool = ImmutableSet.copyOf(EnumSet.of(HourStyle.H, HourStyle.h, HourStyle.K, HourStyle.k));
+        
         for (Entry<String, PreferredAndAllowedHour> e : timeData.entrySet()) {
             String region = e.getKey();
             if (region.equals("001")) {
@@ -803,16 +806,38 @@ public class TestSupplementalInfo extends TestFmwkPlus {
             }
             regionsSoFar.add(region);
             PreferredAndAllowedHour preferredAndAllowedHour = e.getValue();
-            final HourStyle firstAllowed = preferredAndAllowedHour.allowed.iterator().next();
-            if (preferredAndAllowedHour.preferred == HourStyle.H && firstAllowed == HourStyle.h
-                || preferredAndAllowedHour.preferred == HourStyle.H && firstAllowed == HourStyle.hb
-                || preferredAndAllowedHour.preferred == HourStyle.h && firstAllowed == HourStyle.H) {
-                errln(region + ": allowed " + preferredAndAllowedHour.allowed
-                    + " starts with preferred " + preferredAndAllowedHour.preferred);
-            } else if (isVerbose()) {
-                logln(region + ": allowed " + preferredAndAllowedHour.allowed
-                    + " starts with preferred " + preferredAndAllowedHour.preferred);
+            assertNotNull("Preferred must not be null", preferredAndAllowedHour.preferred);
+            
+            // find first h or H
+            HourStyle found = null;
+            
+            for (HourStyle item : preferredAndAllowedHour.allowed) {
+                if (oldSchool.contains(item)) {
+                    found = item;
+                    if (item != preferredAndAllowedHour.preferred) {
+                        String message = "Inconsistent values for " + region + ": preferred=" + preferredAndAllowedHour.preferred
+                            + " but that isn't the first " + oldSchool + " in allowed: " + preferredAndAllowedHour.allowed;
+                        if (!logKnownIssue("cldrbug:11448", message)) {
+                            errln(message);
+                        }
+                    }
+                    break;
+                }
             }
+            if (found == null) {
+                errln(region + ": preferred " + preferredAndAllowedHour.preferred
+                    + " not in " + preferredAndAllowedHour.allowed);
+            }
+//            final HourStyle firstAllowed = preferredAndAllowedHour.allowed.iterator().next();
+//            if (preferredAndAllowedHour.preferred == HourStyle.H && firstAllowed == HourStyle.h
+//                || preferredAndAllowedHour.preferred == HourStyle.H && firstAllowed == HourStyle.hb
+//                || preferredAndAllowedHour.preferred == HourStyle.h && firstAllowed == HourStyle.H) {
+//                errln(region + ": allowed " + preferredAndAllowedHour.allowed
+//                    + " starts with preferred " + preferredAndAllowedHour.preferred);
+//            } else if (isVerbose()) {
+//                logln(region + ": allowed " + preferredAndAllowedHour.allowed
+//                    + " starts with preferred " + preferredAndAllowedHour.preferred);
+//            }
             // for (HourStyle c : preferredAndAllowedHour.allowed) {
             // if (!PreferredAndAllowedHour.HOURS.contains(c)) {
             // errln(region + ": illegal character in " +
@@ -1385,9 +1410,7 @@ public class TestSupplementalInfo extends TestFmwkPlus {
             isoCurrenciesToCountries.keySet());
         missing.removeAll(modernCurrencyCodes.keySet());
         if (missing.size() != 0) {
-            if (!logKnownIssue("cldrbug:10765", "Missing codes compared to ISO: " + missing.toString())) {
-                errln("Missing codes compared to ISO: " + missing.toString());
-            }
+            errln("Missing codes compared to ISO: " + missing.toString());
         }
 
         for (String currency : modernCurrencyCodes.keySet()) {
@@ -1838,10 +1861,8 @@ public class TestSupplementalInfo extends TestFmwkPlus {
         }
         if (!surveyToolLanguages.containsAll(mainLanguages)) {
             mainLanguages.removeAll(surveyToolLanguages);
-            if (!logKnownIssue("cldrbug:10765", "No main/* languages are missing from Survey Tool:language names")) {
-                assertEquals("No main/* languages are missing from Survey Tool:language names (eg <variable id='$language' type='choice'>) ",
-                    Collections.EMPTY_SET, mainLanguages);
-            }
+            assertEquals("No main/* languages are missing from Survey Tool:language names (eg <variable id='$language' type='choice'>) ",
+                Collections.EMPTY_SET, mainLanguages);
         }
     }
 

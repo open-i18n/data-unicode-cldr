@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.unicode.cldr.test.CoverageLevel2;
@@ -20,6 +19,9 @@ import org.unicode.cldr.util.Organization;
 import org.unicode.cldr.util.PathHeader;
 import org.unicode.cldr.util.StandardCodes;
 import org.unicode.cldr.util.SupplementalDataInfo;
+
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 
 public class TestCoverage extends TestFmwkPlus {
 
@@ -38,7 +40,7 @@ public class TestCoverage extends TestFmwkPlus {
 
     public void TestBasic() {
         CLDRFile engCldrFile = testInfo.getEnglish();
-        Set<String> errors = new LinkedHashSet<>();
+        Multimap<CoreItems, String> errors = LinkedHashMultimap.create();
         Set<CoreItems> coreCoverage = CoreCoverageInfo.getCoreCoverageInfo(
             engCldrFile, errors);
         if (!assertEquals("English should be complete", all, coreCoverage)) {
@@ -57,20 +59,23 @@ public class TestCoverage extends TestFmwkPlus {
 
     public void TestSelected() {
         Object[][] tests = {
-            { "en", "//ldml/numbers/minimalPairs/ordinalMinimalPairs[@ordinal=\"other\"]", Level.MODERN, 20 },
-            { "en", "//ldml/numbers/minimalPairs/pluralMinimalPairs[@count=\"other\"]", Level.MODERN, 20 }
+            { "en", "//ldml/localeDisplayNames/subdivisions/subdivision[@type=\"gbeng\"]", Level.MODERN, 8 },
+            { "en", "//ldml/numbers/minimalPairs/ordinalMinimalPairs[@ordinal=\"other\"]", Level.MODERATE, 20 },
+            { "en", "//ldml/numbers/minimalPairs/pluralMinimalPairs[@count=\"other\"]", Level.MODERATE, 20 },
         };
         PathHeader.Factory phf = PathHeader.getFactory(testInfo.getEnglish());
         for (Object[] test : tests) {
             String localeId = (String) test[0];
             String path = (String) test[1];
             Level expectedLevel = (Level) test[2];
+            int expectedVotes = (Integer) test[3];
             CoverageLevel2 coverageLevel = CoverageLevel2.getInstance(sdi, localeId);
             Level level = coverageLevel.getLevel(path);
             PathHeader ph = phf.fromPath(path);
+            assertEquals(localeId + " : " + path + " : ", expectedLevel, level);
             CLDRLocale loc = CLDRLocale.getInstance(localeId);
-            int expectedVotes = sdi.getRequiredVotes(loc, ph);
-
+            int actualVotes = sdi.getRequiredVotes(loc, ph);
+            assertEquals(localeId + " : " + path + " : ", expectedVotes, actualVotes);
         }
     }
 
@@ -81,7 +86,7 @@ public class TestCoverage extends TestFmwkPlus {
         logln("Status\tLocale\tName\tLevel\tCount" + showColumn(all)
             + "\tError Messages");
         LanguageTagParser ltp = new LanguageTagParser();
-        Set<String> errors = new LinkedHashSet<>();
+        Multimap<CoreItems, String> errors = LinkedHashMultimap.create();
         Set<String> toTest = new HashSet(
             Arrays.asList("ky mn ms uz az kk pa sr zh lo".split(" ")));
         Set<String> defaultContents = sdi.getDefaultContentLocales();
