@@ -29,7 +29,6 @@ import org.unicode.cldr.util.DateTimeCanonicalizer.DateTimePatternType;
 import org.unicode.cldr.util.DayPeriodInfo;
 import org.unicode.cldr.util.DayPeriodInfo.DayPeriod;
 import org.unicode.cldr.util.DayPeriodInfo.Type;
-import org.unicode.cldr.util.props.UnicodeProperty.PatternMatcher;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.ICUServiceBuilder;
 import org.unicode.cldr.util.Level;
@@ -42,6 +41,7 @@ import org.unicode.cldr.util.PreferredAndAllowedHour;
 import org.unicode.cldr.util.RegexUtilities;
 import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.XPathParts;
+import org.unicode.cldr.util.props.UnicodeProperty.PatternMatcher;
 
 import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.impl.Relation;
@@ -341,13 +341,13 @@ public class CheckDates extends FactoryCheckCLDR {
                     String lgPathToWide = lgPath.replace("[@type=\"abbreviated\"]", "[@type=\"wide\"]");
                     String lgPathWideValue = getCldrFileToCheck().getWinningValueWithBailey(lgPathToWide);
                     // This helps us get around things like "de març" vs. "març" in Catalan
-                    String thisValue = stripPrefix(value);
-                    wideValue = stripPrefix(wideValue);
-                    lgPathValue = stripPrefix(lgPathValue);
-                    lgPathWideValue = stripPrefix(lgPathWideValue);
-                    boolean thisPathHasPeriod = thisValue.contains(".");
+                    String thisValueStripped = stripPrefix(value);
+                    String wideValueStripped = stripPrefix(wideValue);
+                    String lgPathValueStripped = stripPrefix(lgPathValue);
+                    String lgPathWideValueStripped = stripPrefix(lgPathWideValue);
+                    boolean thisPathHasPeriod = value.contains(".");
                     boolean lgPathHasPeriod = lgPathValue.contains(".");
-                    if (!thisValue.equalsIgnoreCase(wideValue) && !lgPathValue.equalsIgnoreCase(lgPathWideValue) &&
+                    if (!thisValueStripped.equalsIgnoreCase(wideValueStripped) && !lgPathValueStripped.equalsIgnoreCase(lgPathWideValueStripped) &&
                         thisPathHasPeriod != lgPathHasPeriod) {
                         CheckStatus.Type et = CheckStatus.errorType;
                         if (path.contains("dayPeriod")) {
@@ -1135,13 +1135,14 @@ public class CheckDates extends FactoryCheckCLDR {
     // Q (not q)
     // M (not L)
     // E (not e, c)
+    // a (not b, B)
     // H or h (not k or K)
     // v (not z, Z, V)
     static final Pattern[] dateTimePatterns = {
-        PatternCache.get("(h|hh|H|HH)(m|mm)"), // time-short
-        PatternCache.get("(h|hh|H|HH)(m|mm)(s|ss)"), // time-medium
-        PatternCache.get("(h|hh|H|HH)(m|mm)(s|ss)(v+)"), // time-long
-        PatternCache.get("(h|hh|H|HH)(m|mm)(s|ss)(v+)"), // time-full
+        PatternCache.get("a*(h|hh|H|HH)(m|mm)"), // time-short
+        PatternCache.get("a*(h|hh|H|HH)(m|mm)(s|ss)"), // time-medium
+        PatternCache.get("a*(h|hh|H|HH)(m|mm)(s|ss)(v+)"), // time-long
+        PatternCache.get("a*(h|hh|H|HH)(m|mm)(s|ss)(v+)"), // time-full
         PatternCache.get("G*y{1,4}M{1,2}(d|dd)"), // date-short; allow yyy for Minguo/ROC calendar
         PatternCache.get("G*y(yyy)?M{1,3}(d|dd)"), // date-medium
         PatternCache.get("G*y(yyy)?M{1,4}(d|dd)"), // date-long

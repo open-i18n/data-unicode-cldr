@@ -165,6 +165,10 @@ public class GenerateMaximalLocales {
         { "es", "es_Latn_ES" },
         { "es_Latn", "es_Latn_ES" },
         { "ff_Adlm", "ff_Adlm_GN" },
+        { "io", "io_Latn_001" },
+        { "io_Latn", "io_Latn_001" },
+        { "jbo", "jbo_Latn_001" },
+        { "jbo_Latn", "jbo_Latn_001" },
         { "ku_Arab", "ku_Arab_IQ" },
         { "lrc", "lrc_Arab_IR" },
         { "lrc_Arab", "lrc_Arab_IR" },
@@ -269,6 +273,7 @@ public class GenerateMaximalLocales {
      */
     private static String[][] SpecialScripts = {
         { "zh", "Hans" }, // Hans (not Hani)
+        { "yue", "Hant" }, // Hans (not Hani)
         { "chk", "Latn" }, // Chuukese (Micronesia)
         { "fil", "Latn" }, // Filipino (Philippines)"
         { "ko", "Kore" }, // Korean (North Korea)
@@ -720,31 +725,32 @@ public class GenerateMaximalLocales {
                 }
             }
             if (toRemove.size() != 0) {
-                if (SHOW_ADD) System.out.println("Removing:\t" + locale + "\t" + toRemove + "\tfrom\t" + children);
+                System.out.println("Removing:\t" + locale + "\t" + toRemove + "\tfrom\t" + children);
                 toChildren.removeAll(locale, toRemove);
             }
         }
 
         // we add a child as a default locale if it has the same maximization
-        main: for (String locale : toChildren.keySet()) {
-            String maximized = maximize(locale, toMaximized);
-            if (maximized == null) {
-                if (SHOW_ADD) System.out.println("Missing maximized:\t" + locale);
-                continue;
-            }
-            Set<String> children = toChildren.getAll(locale);
-            Map<String, String> debugStuff = new TreeMap<String, String>();
-            for (String child : children) {
-                String maximizedChild = maximize(child, toMaximized);
-                if (maximized.equals(maximizedChild)) {
-                    defaultLocaleContent.add(child);
-                    continue main;
+        main:
+            for (String locale : toChildren.keySet()) {
+                String maximized = maximize(locale, toMaximized);
+                if (maximized == null) {
+                    if (SHOW_ADD) System.out.println("Missing maximized:\t" + locale);
+                    continue;
                 }
-                debugStuff.put(child, maximizedChild);
+                Set<String> children = toChildren.getAll(locale);
+                Map<String, String> debugStuff = new TreeMap<String, String>();
+                for (String child : children) {
+                    String maximizedChild = maximize(child, toMaximized);
+                    if (maximized.equals(maximizedChild)) {
+                        defaultLocaleContent.add(child);
+                        continue main;
+                    }
+                    debugStuff.put(child, maximizedChild);
+                }
+                if (SHOW_ADD) System.out.println("Can't find maximized: " + locale + "=" + maximized
+                    + "\tin\t" + debugStuff);
             }
-            if (SHOW_ADD) System.out.println("Can't find maximized: " + locale + "=" + maximized
-                + "\tin\t" + debugStuff);
-        }
 
         defaultLocaleContent.remove("und_ZZ"); // und_ZZ isn't ever a real locale.
 

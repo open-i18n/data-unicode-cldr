@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.unicode.cldr.test.CheckCLDR.CheckStatus.Subtype;
 import org.unicode.cldr.util.CLDRConfig;
@@ -63,16 +64,20 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
         UNITS_IGNORE("//ldml/units/unitLength[@type=\"narrow\"]", MatchType.PREFIX, 11),
         UNITS("//ldml/units/unitLength", MatchType.PREFIX, 12),
         FIELDS_NARROW("//ldml/dates/fields/field\\[@type=\"(sun|mon|tue|wed|thu|fri|sat)-narrow\"\\]/relative", MatchType.REGEX, 13),
-        FIELDS_RELATIVE("//ldml/dates/fields/field\\[@type=\".*\"\\]/relative\\[@type=\"(-1|0|1)\"\\]", MatchType.REGEX, 14);
+        FIELDS_RELATIVE("//ldml/dates/fields/field\\[@type=\".*\"\\]/relative\\[@type=\"(-1|0|1)\"\\]", MatchType.REGEX, 14),
+        ANNOTATIONS("//ldml/annotations/annotation\\[@cp=\".*\"\\]\\[@type=\"tts\"\\]", MatchType.REGEX, 15),
+        CARDINAL_MINIMAL("//ldml/numbers/minimalPairs/pluralMinimalPairs", MatchType.PREFIX, 16),
+        ORDINAL_MINIMAL("//ldml/numbers/minimalPairs/ordinalMinimalPairs", MatchType.PREFIX, 17),
+        ;
 
         private MatchType matchType;
         private String basePrefix;
-        private Matcher baseMatcher;
+        private Pattern basePattern;
 
         private Type(String basePrefix, MatchType matchType, int index) {
             this.matchType = matchType;
             this.basePrefix = basePrefix;
-            this.baseMatcher = PatternCache.get("^" + basePrefix + ".*").matcher("");
+            this.basePattern = PatternCache.get("^" + basePrefix + ".*");
         }
 
         /**
@@ -85,8 +90,8 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
         /**
          * @return the regex that matches all XPaths of this type
          */
-        public Matcher getMatcher() {
-            return baseMatcher;
+        public Pattern getPattern() {
+            return basePattern;
         }
 
         /**
@@ -102,8 +107,7 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
                     }
                 }
 
-                Matcher m = type.getMatcher();
-                m.reset(path);
+                Matcher m = type.getPattern().matcher(path);
                 if (m.matches()) {
                     return type;
                 }
@@ -116,8 +120,8 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
 
     private final Matcher exclusions = PatternCache.get("=\"narrow\"]").matcher(""); // no matches
     private final Matcher typePattern = PatternCache.get("\\[@type=\"([^\"]*+)\"]").matcher("");
-    private final Matcher attributesToIgnore = PatternCache.get("\\[@(?:count|alt)=\"[^\"]*+\"]").matcher("");
-    private final Matcher compactNumberAttributesToIgnore = PatternCache.get("\\[@(?:alt)=\"[^\"]*+\"]").matcher("");
+    private final Matcher ignoreAltAndCountAttributes = PatternCache.get("\\[@(?:count|alt)=\"[^\"]*+\"]").matcher("");
+    private final Matcher ignoreAltAttributes = PatternCache.get("\\[@(?:alt)=\"[^\"]*+\"]").matcher("");
     private final Matcher compoundUnitPatterns = PatternCache.get("compoundUnitPattern").matcher("");
 
     // map unique path fragment to set of unique fragments for other
@@ -183,25 +187,41 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
 
         // Add OK collisions for /unit[@type=\"temperature-generic\"]
         Set<String> set13 = new HashSet<String>();
-        set13.add("/unit[@type=\"temperature-generic\"]");
-        mapPathPartsToSets.put("/unit[@type=\"angle-degree\"]", set13);
+        set13.add("/unit[@type=\"angle-degree\"]");
+        mapPathPartsToSets.put("/unit[@type=\"temperature-generic\"]", set13);
 
         // Add OK collisions for /unit[@type=\"angle-degree\"]
         Set<String> set14 = new HashSet<String>();
-        set14.add("/unit[@type=\"angle-degree\"]");
-        mapPathPartsToSets.put("/unit[@type=\"temperature-generic\"]", set14);
+        set14.add("/unit[@type=\"temperature-generic\"]");
+        mapPathPartsToSets.put("/unit[@type=\"angle-degree\"]", set14);
 
         // Add OK collisions for /unit[@type=\"length-point\"]
         Set<String> set15 = new HashSet<String>();
-        set15.add("/unit[@type=\"length-point\"]");
-        mapPathPartsToSets.put("/unit[@type=\"volume-pint\"]", set15);
+        set15.add("/unit[@type=\"volume-pint\"]");
+        set15.add("/unit[@type=\"mass-pound\"]");
+        mapPathPartsToSets.put("/unit[@type=\"length-point\"]", set15);
 
         // Add OK collisions for /unit[@type=\"volume-pint\"]
         Set<String> set16 = new HashSet<String>();
-        set16.add("/unit[@type=\"volume-pint\"]");
-        mapPathPartsToSets.put("/unit[@type=\"length-point\"]", set16);
+        set16.add("/unit[@type=\"length-point\"]");
+        mapPathPartsToSets.put("/unit[@type=\"volume-pint\"]", set16);
 
-        // all done, return immutable version
+        // Add OK collisions for /unit[@type=\"pressure-hectopascal\"]
+        Set<String> set17 = new HashSet<String>();
+        set17.add("/unit[@type=\"pressure-millibar\"]");
+        mapPathPartsToSets.put("/unit[@type=\"pressure-hectopascal\"]", set17);
+
+        // Add OK collisions for /unit[@type=\"pressure-millibar\"]
+        Set<String> set18 = new HashSet<String>();
+        set18.add("/unit[@type=\"pressure-hectopascal\"]");
+        mapPathPartsToSets.put("/unit[@type=\"pressure-millibar\"]", set18);
+
+         // Add OK collisions for /unit[@type=\"mass-pound\"]
+        Set<String> set19 = new HashSet<String>();
+        set19.add("/unit[@type=\"length-point\"]");
+        mapPathPartsToSets.put("/unit[@type=\"mass-pound\"]", set19);
+
+       // all done, return immutable version
         return Collections.unmodifiableMap(mapPathPartsToSets);
     }
 
@@ -213,6 +233,9 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
         List<CheckStatus> result) {
         if (fullPath == null) return this; // skip paths that we don't have
 
+        if (path.contains("minimalPairs")) {
+            int debug = 0;
+        }
         if (value == null || value.length() == 0) {
             return this;
         }
@@ -238,7 +261,7 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
 
         Matcher matcher = null;
         String message = "Can't have same translation as {0}";
-        Matcher currentAttributesToIgnore = attributesToIgnore;
+        Matcher currentAttributesToIgnore = ignoreAltAndCountAttributes;
         Set<String> paths;
         if (myType == Type.DECIMAL_FORMAT) {
             if (!path.contains("[@count=") || "0".equals(value)) {
@@ -249,11 +272,17 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
             myPrefix = parts.removeElement(-1).toString();
             matcher = PatternCache.get(myPrefix.replaceAll("\\[", "\\\\[") +
                 "/pattern\\[@type=(?!\"" + type + "\")\"\\d+\"].*").matcher(path);
-            currentAttributesToIgnore = compactNumberAttributesToIgnore;
+            currentAttributesToIgnore = ignoreAltAttributes;
             message = "Can't have same number pattern as {0}";
             paths = getPathsWithValue(getResolvedCldrFileToCheck(), path, value, myType, myPrefix, matcher, currentAttributesToIgnore, Equivalence.exact);
         } else if (myType == Type.UNITS) {
             paths = getPathsWithValue(getResolvedCldrFileToCheck(), path, value, myType, myPrefix, matcher, currentAttributesToIgnore, Equivalence.unit);
+        } else if (myType == Type.CARDINAL_MINIMAL || myType == Type.ORDINAL_MINIMAL) {
+            if (value.equals("{0}?")) {
+                return this; // special root 'other' value
+            }
+            currentAttributesToIgnore = ignoreAltAttributes;
+            paths = getPathsWithValue(getResolvedCldrFileToCheck(), path, value, myType, myPrefix, matcher, currentAttributesToIgnore, Equivalence.normal);
         } else {
             paths = getPathsWithValue(getResolvedCldrFileToCheck(), path, value, myType, myPrefix, matcher, currentAttributesToIgnore, Equivalence.normal);
         }
@@ -321,8 +350,9 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
                     iterator.remove();
                     log("Removed '" + curVal + "': COLLISON WITH UNIT  " + unit);
                 } else {
-                    // Remove allowed collisions, such as between carats and karats (same in many languages) or
-                    // between foodcalories and either calories or kilocalories
+                    // Remove allowed collisions, such as between carats and karats (same in many languages), or
+                    // between foodcalories and either calories or kilocalories, or
+                    // between hectopascal and millibar (physically the same unit, see #10425)
                     for (Map.Entry<String, Set<String>> mapPathPartToSet : mapPathPartsToSetsForDupOK.entrySet()) {
                         if (path.contains(mapPathPartToSet.getKey())) {
                             for (String pathPart : mapPathPartToSet.getValue()) {
@@ -515,7 +545,7 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
         if (myType.matchType == MatchType.PREFIX) {
             file.getPathsWithValue(value, myPrefix, matcher, retrievedPaths);
         } else {
-            file.getPathsWithValue(value, "//ldml", myType.getMatcher(), retrievedPaths);
+            file.getPathsWithValue(value, "//ldml", myType.getPattern().matcher(""), retrievedPaths);
         }
 
         String normValue = null;
@@ -618,7 +648,7 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
             return lookup;
         }
 
-        CLDRFile english = getFactory().make("en", true);
+        CLDRFile english = getEnglishFile();
         // Pick up all instances in English where the exemplarCity and territory match
         // and include them as exceptions.
         exceptions = new HashMap<String, String>();
@@ -627,7 +657,7 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
             if (!xpath.endsWith("/exemplarCity")) continue;
             String value = english.getStringValue(xpath);
             Set<String> duplicates = getPathsWithValue(english, xpath, value,
-                Type.TERRITORY, Type.TERRITORY.getPrefix(), null, attributesToIgnore, Equivalence.normal);
+                Type.TERRITORY, Type.TERRITORY.getPrefix(), null, ignoreAltAndCountAttributes, Equivalence.normal);
             if (duplicates.size() > 0) {
                 // Assume only 1 duplicate.
                 String duplicatePath = duplicates.iterator().next();

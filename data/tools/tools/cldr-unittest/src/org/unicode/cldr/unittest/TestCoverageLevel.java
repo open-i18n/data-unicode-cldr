@@ -1,5 +1,6 @@
 package org.unicode.cldr.unittest;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -12,16 +13,22 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
+import org.unicode.cldr.test.CoverageLevel2;
 import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
+import org.unicode.cldr.util.CLDRLocale;
 import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.ChainedMap;
 import org.unicode.cldr.util.ChainedMap.M4;
 import org.unicode.cldr.util.Counter2;
+import org.unicode.cldr.util.DtdData;
+import org.unicode.cldr.util.DtdData.Element;
 import org.unicode.cldr.util.DtdType;
 import org.unicode.cldr.util.LanguageTagParser;
 import org.unicode.cldr.util.Level;
 import org.unicode.cldr.util.LogicalGrouping;
+import org.unicode.cldr.util.PathHeader;
+import org.unicode.cldr.util.PathHeader.Factory;
 import org.unicode.cldr.util.PathStarrer;
 import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.RegexLookup;
@@ -34,6 +41,8 @@ import org.unicode.cldr.util.SupplementalDataInfo.PopulationData;
 import org.unicode.cldr.util.XPathParts;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
 import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.impl.Relation;
 import com.ibm.icu.impl.Row.R2;
@@ -52,6 +61,25 @@ public class TestCoverageLevel extends TestFmwkPlus {
 
     public static void main(String[] args) {
         new TestCoverageLevel().run(args);
+    }
+
+    public void testSpecificPaths() {
+        String[][] rows = {
+            {"//ldml/characters/parseLenients[@scope=\"number\"][@level=\"lenient\"]/parseLenient[@sample=\",\"]", "moderate", "20"}
+        };
+        Factory phf = PathHeader.getFactory(ENGLISH);
+        CoverageLevel2 coverageLevel = CoverageLevel2.getInstance(SDI, "fr");
+        CLDRLocale loc = CLDRLocale.getInstance("fr");
+        for (String[] row : rows) {
+            String path = row[0];
+            Level expectedLevel = Level.fromString(row[1]);
+            Level level = coverageLevel.getLevel(path);
+            assertEquals("Level for " + path, expectedLevel, level);
+
+            int expectedRequiredVotes = Integer.parseInt(row[2]);
+            int votes = SDI.getRequiredVotes(loc, phf.fromPath(path));
+            assertEquals("Votes for " + path, expectedRequiredVotes, votes);
+        }
     }
 
     public void oldTestInvariantPaths() {
@@ -320,7 +348,7 @@ public class TestCoverageLevel extends TestFmwkPlus {
             + "i[ek]|izh|"
             + "jam|jpr|jrb|jut|"
             + "ka[aw]|kbl|ken|kgp?|kh[ow]|kiu|ko[is]|kr[ij]|kut|"
-            + "la[hm]|lfn|li[jv]|lmo|lol|ltg|lui|lz[hz]|"
+            + "la[hm]|lfn|li[jv]|lmo|lo[lu]|ltg|lui|lz[hz]|"
             + "ma[fn]|md[er]|mga|mnc|mrj|mw[rv]|mye|"
             + "nan|nds(_NL)?|njo|no[nv]?|nwc|ny[mo]|nzi|"
             + "oj|osa|ota|"
@@ -338,17 +366,17 @@ public class TestCoverageLevel extends TestFmwkPlus {
 
         final Pattern script100 = PatternCache.get("("
             + "Adlm|Afak|Aghb|Ahom|Armi|Avst|Bali|Bamu|Bass|Batk|Bhks|Blis|Brah|Bugi|Buhd|Cakm|Cans|Cari|Cham|Cher|Cirt|Copt|Cprt|Cyrs|"
-            + "Dsrt|Dupl|Egy[dhp]|Elba|Geok|Glag|Goth|Gran|Hatr|Hanb|Hano|Hluw|Hmng|Hrkt|Hung|Inds|Ital|Jamo|Java|Jurc|"
+            + "Dsrt|Dupl|Egy[dhp]|Elba|Geok|Glag|Gonm|Goth|Gran|Hatr|Hanb|Hano|Hluw|Hmng|Hrkt|Hung|Inds|Ital|Jamo|Java|Jurc|"
             + "Kali|Khar|Khoj|Kpel|Kthi|Kits|Lana|Lat[fg]|Lepc|Limb|Lin[ab]|Lisu|Loma|Ly[cd]i|Mahj|Man[di]|Marc|Maya|Mend|Mer[co]|Modi|Moon|Mroo|Mtei|Mult|"
             + "Narb|Nbat|Newa|Nkgb|Nkoo|Nshu|Ogam|Olck|Orkh|Osge|Osma|Palm|Pauc|Perm|Phag|Phl[ipv]|Phnx|Plrd|Prti|"
-            + "Rjng|Roro|Runr|Samr|Sar[ab]|Saur|Sgnw|Shaw|Shrd|Sidd|Sind|Sora|Sund|Sylo|Syr[cejn]|"
-            + "Tagb|Takr|Tal[eu]|Tang|Tavt|Teng|Tfng|Tglg|Tirh|Ugar|Vaii|Visp|Wara|Wole|Xpeo|Xsux|Yiii|Zinh|Zmth)");
+            + "Rjng|Roro|Runr|Samr|Sar[ab]|Saur|Sgnw|Shaw|Shrd|Sidd|Sind|Sora|Soyo|Sund|Sylo|Syr[cejn]|"
+            + "Tagb|Takr|Tal[eu]|Tang|Tavt|Teng|Tfng|Tglg|Tirh|Ugar|Vaii|Visp|Wara|Wole|Xpeo|Xsux|Yiii|Zanb|Zinh|Zmth)");
 
         final Pattern keys100 = PatternCache.get("(col(Alternate|Backwards|CaseFirst|CaseLevel|HiraganaQuaternary|"
             + "Normalization|Numeric|Reorder|Strength)|kv|sd|timezone|va|variableTop|x|d0|h0|i0|k0|m0|s0)");
 
         final Pattern numberingSystem100 = PatternCache.get("("
-            + "finance|native|traditional|adlm|ahom|bali|bhks|brah|cakm|cham|cyrl|hanidays|hmng|java|kali|lana(tham)?|lepc|limb|"
+            + "finance|native|traditional|adlm|ahom|bali|bhks|brah|cakm|cham|cyrl|gonm|hanidays|hmng|java|kali|lana(tham)?|lepc|limb|"
             + "math(bold|dbl|mono|san[bs])|modi|mong|mroo|mtei|mymr(shan|tlng)|newa|nkoo|olck|osma|saur|shrd|sin[dh]|sora|sund|takr|talu|tirh|vaii|wara)");
 
         final Pattern collation100 = PatternCache.get("("
@@ -364,6 +392,15 @@ public class TestCoverageLevel extends TestFmwkPlus {
         cal.set(versionNumber / 2 + versionNumber % 2 + 2001, 8 - (versionNumber % 2) * 6, 15);
         Date cldrReleaseMinus5Years = cal.getTime();
         Set<String> modernCurrencies = SDI.getCurrentCurrencies(SDI.getCurrencyTerritories(), cldrReleaseMinus5Years, NOW);
+
+        Set<String> needsNumberSystem = new HashSet<>();
+        DtdData dtdData = DtdData.getInstance(DtdType.ldml);
+        Element numbersElement = dtdData.getElementFromName().get("numbers");
+        for (Element childOfNumbers : numbersElement.getChildren().keySet()) {
+            if (childOfNumbers.containsAttribute("numberSystem")) {
+                needsNumberSystem.add(childOfNumbers.name);
+            }
+        }
 
         for (String path : english.fullIterable()) {
             logln("Testing path => " + path);
@@ -405,7 +442,10 @@ public class TestCoverageLevel extends TestFmwkPlus {
                     continue;
                 }
                 // Other paths in numbers without a numbering system are deprecated.
-                if (numberingSystem == null) {
+//                if (numberingSystem == null) {
+//                    continue;
+//                }
+                if (needsNumberSystem.contains(xpp.getElement(2))) {
                     continue;
                 }
             }
@@ -561,7 +601,44 @@ public class TestCoverageLevel extends TestFmwkPlus {
                 }
             }
 
-            errln("Comprehensive & no exception for path => " + path);
+            errln("Comprehensive & no exception for path =>\t" + path);
+        }
+    }
+
+    public void testBreakingLogicalGrouping() {
+        checkBreakingLogicalGrouping("en");
+        checkBreakingLogicalGrouping("ar");
+    }
+
+    private void checkBreakingLogicalGrouping(String localeId) {
+        SupplementalDataInfo sdi = testInfo.getSupplementalDataInfo();
+        CLDRFile cldrFile = testInfo.getCldrFactory().make(localeId, true);
+        HashSet<String> seen = new HashSet<>();
+        Multimap<Level, String> levelToPaths = TreeMultimap.create();
+        int count = 0;
+        for (String path : cldrFile.fullIterable()) {
+            if (seen.contains(path)) {
+                continue;
+            }
+            Set<String> grouping = LogicalGrouping.getPaths(cldrFile, path);
+            seen.addAll(grouping);
+            seen.add(path); // needed too?
+            levelToPaths.clear();
+            for (String groupingPath : grouping) {
+                if (LogicalGrouping.isOptional(cldrFile, groupingPath)) {
+                    continue;
+                }
+                Level level = sdi.getCoverageLevel(groupingPath, localeId);
+                levelToPaths.put(level, groupingPath);
+            }
+            if (levelToPaths.keySet().size() <= 1) {
+                continue;
+            }
+            // we have a failure
+            for (Entry<Level, Collection<String>> entry : levelToPaths.asMap().entrySet()) {
+                errln(localeId + " (" + count + ") Broken Logical Grouping: " + entry.getKey() + " => " + entry.getValue());
+            }
+            ++count;
         }
     }
 }

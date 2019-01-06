@@ -2,9 +2,11 @@ package org.unicode.cldr.util;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -16,6 +18,7 @@ import org.unicode.cldr.test.CheckCLDR.Phase;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableSet;
 import com.ibm.icu.dev.test.TestFmwk;
 import com.ibm.icu.dev.test.TestLog;
 import com.ibm.icu.text.Collator;
@@ -143,6 +146,8 @@ public class CLDRConfig extends Properties {
     private StandardCodes sc;
     private Factory cldrFactory;
     private Factory fullFactory;
+    private Factory mainAndAnnotationsFactory;
+    private Factory commonAndSeedAndMainAndAnnotationsFactory;
     private Factory exemplarsFactory;
     private Factory collationFactory;
     private Factory rbnfFactory;
@@ -262,6 +267,42 @@ public class CLDRConfig extends Properties {
             }
         }
         return annotationsFactory;
+    }
+
+    public Factory getMainAndAnnotationsFactory() {
+        synchronized (FULL_FACTORY_SYNC) {
+            if (mainAndAnnotationsFactory == null) {
+                File[] paths = {
+                    new File(CLDRPaths.MAIN_DIRECTORY), 
+                    new File(CLDRPaths.ANNOTATIONS_DIRECTORY) };
+                mainAndAnnotationsFactory = SimpleFactory.make(paths, ".*");
+            }
+        }
+        return mainAndAnnotationsFactory;
+    }
+    
+    static Factory allFactory;
+    public Factory getCommonSeedExemplarsFactory() {
+        synchronized (FULL_FACTORY_SYNC) {
+            if (allFactory == null) {
+                allFactory = SimpleFactory.make(addStandardSubdirectories(CLDR_DATA_DIRECTORIES), ".*");
+            }
+        }
+        return allFactory;
+    }
+
+    public Factory getCommonAndSeedAndMainAndAnnotationsFactory() {
+        synchronized (FULL_FACTORY_SYNC) {
+            if (commonAndSeedAndMainAndAnnotationsFactory == null) {
+                File[] paths = { 
+                    new File(CLDRPaths.MAIN_DIRECTORY), 
+                    new File(CLDRPaths.ANNOTATIONS_DIRECTORY),
+                    new File(CLDRPaths.SEED_DIRECTORY)
+                };
+                commonAndSeedAndMainAndAnnotationsFactory = SimpleFactory.make(paths, ".*");
+            }
+        }
+        return commonAndSeedAndMainAndAnnotationsFactory;
     }
 
     public Factory getFullCldrFactory() {
@@ -504,10 +545,14 @@ public class CLDRConfig extends Properties {
      */
     private static final String KEYBOARDS_DIR = "keyboards";
     private static final String MAIN_DIR = "main";
+    private static final String ANNOTATIONS_DIR = "annotations";
+    private static final String SUBDIVISIONS_DIR = "subdivisions";
+
     /**
      * TODO: better place for these constants?
      */
     private static final String CLDR_DATA_DIRECTORIES[] = { COMMON_DIR, SEED_DIR, KEYBOARDS_DIR, EXEMPLARS_DIR };
+    private static final ImmutableSet<String> STANDARD_SUBDIRS = ImmutableSet.of(MAIN_DIR, ANNOTATIONS_DIR, SUBDIVISIONS_DIR);
 
     /**
      * Get a list of CLDR directories containing actual data
@@ -518,7 +563,8 @@ public class CLDRConfig extends Properties {
     }
 
     /**
-     * given comma separated list "common" or "common,main" return a list of actual files
+     * Given comma separated list "common" or "common,main" return a list of actual files.
+     * Adds subdirectories in STANDARD_SUBDIRS as necessary.
      */
     public File[] getCLDRDataDirectories(String list) {
         final File dir = getCldrBaseDirectory();
@@ -530,15 +576,48 @@ public class CLDRConfig extends Properties {
         return ret;
     }
 
+    
     /**
-     * map "common","seed" -> "common/main", "seed/main"
+     * Add subdirectories to file list as needed, from STANDARD_SUBDIRS.
+     * <ul><li>map "common","seed" -> "common/main", "seed/main"
+     * <li>but common/main -> common/main
+     * </ul>
      */
-    public File[] getMainDataDirectories(File base[]) {
-        File[] ret = new File[base.length];
+    public File[] addStandardSubdirectories(String... base) {
+        return addStandardSubdirectories(fileArrayFromStringArray(getCldrBaseDirectory(), base));
+    }
+
+    public File[] addStandardSubdirectories(File... base) {
+        List<File> ret = new ArrayList<>();
+        //File[] ret = new File[base.length * 2];
         for (int i = 0; i < base.length; i++) {
-            ret[i] = new File(base[i], MAIN_DIR);
+            File baseFile = base[i];
+            String name = baseFile.getName();
+            if (STANDARD_SUBDIRS.contains(name)) {
+                ret.add(baseFile);
+            } else {
+                for (String sub : STANDARD_SUBDIRS) {
+                    addIfExists(ret, baseFile, sub);
+                }
+            }
         }
-        return ret;
+        return ret.toArray(new File[ret.size()]);
+    }
+
+    private File[] fileArrayFromStringArray(File dir, String... subdirNames) {
+        File[] fileList = new File[subdirNames.length];
+        int i = 0;
+        for (String item : subdirNames) {
+            fileList[i++] = new File(dir, item);
+        }
+        return fileList;
+    }
+    
+    private void addIfExists(List<File> ret, File baseFile, String sub) {
+        File file = new File(baseFile, sub);
+        if (file.exists()) {
+            ret.add(file);
+        }
     }
 
     /**
@@ -641,7 +720,7 @@ public class CLDRConfig extends Properties {
 
     private CLDRURLS urls = null;
     private CLDRURLS absoluteUrls = null;
-    
+
     public boolean isCldrVersionBefore(int... version) {
         return getEnglish().getDtdVersionInfo()
             .compareTo(getVersion(version)) < 0;

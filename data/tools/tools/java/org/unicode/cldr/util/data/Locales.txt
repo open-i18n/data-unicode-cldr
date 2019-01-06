@@ -284,7 +284,14 @@ Google	;	be	;	modern	;	T5	Belarusian
 Google	;	cy	;	modern	;	T5	Welsh
 Google	;	yue	;	modern	;	T5	Cantonese
 
-#Google Tier T6
+#Google Tier M1
+Google	;	or	;	moderate	;	Odia
+Google	;	tk	;	moderate	;	Turkmen
+Google	;	ps	;	moderate	;	Pashto
+Google	;	as	;	moderate	;	Assamese
+Google	;	sd	;	moderate	;	Sindhi
+
+#Google Tier B1
 Cherokee	;	chr	;	basic	;	T5 Cherokee
 
 #Google Tier TR
@@ -294,8 +301,8 @@ Google	;	en_CA	;	modern	; TR English (Canada)
 Google	;	en_AU	;	modern	; TR English (Australia)
 Google	;	en_IN	;	modern	; TR English (English)
 Google	;	fr_CA	;	modern	; TR French (Canada)
-Google	;	de_CH	;	modern	; TR High German (Switzerland)
-Google	;	zh_Hant_HK	;	modern	;	TR	Mandarin Chinese (Traditional, Hong Kong)
+Google	;	de_CH	;	modern	; TR High German (Switzerland) // generated
+Google	;	ar_DZ	;	modern	; TR Arabic (Algeria)
 
 #Google	;	uz_Cyrl	;	basic	;	Uzbek	(Cyrillic)														
 #Google	;	ht	;	basic	;	Haitian
@@ -588,7 +595,7 @@ Cldr	;	en_AU	;	modern	; TR English (Australia)
 Cldr	;	en_IN	;	modern	; TR English (English)
 Cldr	;	fr_CA	;	modern	; TR French (Canada)
 Cldr	;	de_CH	;	modern	; TR High German (Switzerland)
-Cldr	;	zh_Hant_HK	;	modern	;	TR	Mandarin Chinese (Traditional, Hong Kong)
+Cldr	;	ar_DZ	;	modern	; TR Arabic (Algeria)
 
 #Cldr	other (from Apple)		
 Cldr    ;   fo  ;   modern
@@ -598,9 +605,15 @@ Cldr	;	es_MX	;	modern
 Cldr	;	fr_CA	;	modern
 Cldr	;	zh_Hant_HK	;	modern
 
+#Cldr	other (from Google)		
+Cldr	;	or	;	moderate	;	Odia
+Cldr	;	tk	;	moderate	;	Turkmen
+Cldr	;	ps	;	moderate	;	Pashto
+Cldr	;	as	;	moderate	;	Assamese
+Cldr	;	sd	;	moderate	;	Sindhi
+
 Bangor_Univ ;   cy   ;    modern  ; Welsh
 Bangor_Univ ;   *    ;    moderate  ; All others
-
 
 Bhutan ;   dz   ;    modern  ; Dzongkha
 Bhutan ;   *    ; moderate   ;  All others
@@ -671,7 +684,6 @@ Microsoft	;	fil	;	modern
 Microsoft	;	fr	;	modern
 Microsoft	;	gd	;	modern
 Microsoft	;	gl	;	modern
-Microsoft	;	gsw	;	modern
 Microsoft	;	gu	;	modern
 Microsoft	;	he	;	modern
 Microsoft	;	hi	;	modern
@@ -706,6 +718,7 @@ Microsoft	;	pt_PT	;	modern
 Microsoft	;	qu	;	modern
 Microsoft	;	ro	;	modern
 Microsoft	;	ru	;	modern
+Microsoft	;	se	;	modern
 Microsoft	;	si	;	modern
 Microsoft	;	sk	;	modern
 Microsoft	;	sl	;	modern
@@ -718,6 +731,7 @@ Microsoft	;	te	;	modern
 Microsoft	;	th	;	modern
 Microsoft	;	tn	;	modern
 Microsoft	;	tr	;	modern
+Microsoft	;	ug	;	basic
 Microsoft	;	uk	;	modern
 Microsoft	;	ur	;	modern
 Microsoft	;	uz	;	modern
@@ -728,92 +742,39 @@ Microsoft	;	zh	;	modern
 Microsoft	;	zh_Hant	;	modern
 Microsoft	;	zh_Hant_HK	;	modern
 Microsoft	;	zu	;	modern
-Microsoft	;	arn	;	basic
-Microsoft	;	ba	;	basic
-Microsoft	;	bo	;	basic
-Microsoft	;	br	;	basic
 Microsoft	;	chr	;	basic
 Microsoft	;	ckb	;	basic
-Microsoft	;	co	;	basic
-Microsoft	;	dsb	;	basic
-Microsoft	;	dv	;	basic
-Microsoft	;	fa	;	basic
-Microsoft	;	ff	;	basic
-Microsoft	;	fy	;	basic
-Microsoft	;	ga	;	basic
-Microsoft	;	gn	;	basic
-Microsoft	;	haw	;	basic
-Microsoft	;	hsb	;	basic
-Microsoft	;	ikt	;	basic
-Microsoft	;	iu	;	basic
-Microsoft	;	iu_Latn	;	basic
-Microsoft	;	jv	;	basic
-Microsoft	;	kl	;	basic
-Microsoft	;	kok	;	basic
+# Microsoft	;	dv	;	basic
+Microsoft	;	fa	;	modern
+Microsoft	;	ga	;	modern
+# Microsoft	;	gn	;	basic
+# Microsoft	;	haw	;	basic
+# Microsoft	;	jv	;	basic
+# Microsoft	;	kl	;	basic
+Microsoft	;	kok	;	modern
 Microsoft	;	ku	;	basic
 Microsoft	;	lb	;	basic
-Microsoft	;	lo	;	basic
-Microsoft	;	mi	;	basic
-Microsoft	;	mn	;	basic
-Microsoft	;	moh	;	basic
-Microsoft	;	ne	;	basic
-Microsoft	;	nqo	;	basic
-Microsoft	;	oc	;	basic
-Microsoft	;	os	;	basic
-Microsoft	;	ps	;	basic
-Microsoft	;	quc	;	basic
-Microsoft	;	sa	;	basic
-Microsoft	;	sah	;	basic
-Microsoft	;	sd	;	basic
-Microsoft	;	se	;	basic
-Microsoft	;	sma	;	basic
-Microsoft	;	smj	;	basic
-Microsoft	;	smn	;	basic
-Microsoft	;	sms	;	basic
-Microsoft	;	syr	;	basic
+Microsoft	;	lo	;	modern
+# Microsoft	;	mi	;	basic
+Microsoft	;	mn	;	modern
+Microsoft	;	ne	;	modern
+Microsoft	;	ps	;	modern
+Microsoft	;	sd	;	moderate
 Microsoft	;	ti	;	basic
-Microsoft	;	ts	;	basic
 Microsoft	;	tt	;	basic
-Microsoft	;	tzm	;	basic
-Microsoft	;	zgh	;	basic
-Microsoft	;	ach	;	basic
-Microsoft	;	am	;	basic
-Microsoft	;	as	;	basic
-Microsoft	;	ban	;	basic
-Microsoft	;	bem	;	basic
-Microsoft	;	ceb	;	basic
-Microsoft	;	ee	;	basic
-Microsoft	;	fo	;	basic
-Microsoft	;	gaa	;	basic
+Microsoft	;	am	;	modern
+Microsoft	;	as	;	modern
 Microsoft	;	ha	;	basic
-Microsoft	;	ht	;	basic
-Microsoft	;	ig	;	basic
-Microsoft	;	jw	;	basic
-Microsoft	;	kg	;	basic
-Microsoft	;	kri	;	basic
-Microsoft	;	lg	;	basic
-Microsoft	;	ln	;	basic
-Microsoft	;	loz	;	basic
-Microsoft	;	lua	;	basic
-Microsoft	;	mfe	;	basic
 Microsoft	;	mg	;	basic
 Microsoft	;	mt	;	basic
 Microsoft	;	nn	;	basic
-Microsoft	;	ny	;	basic
-Microsoft	;	nyn	;	basic
 Microsoft	;	om	;	basic
-Microsoft	;	pcm	;	basic
-Microsoft	;	rm	;	basic
-Microsoft	;	rn	;	basic
 Microsoft	;	rw	;	basic
 Microsoft	;	sn	;	basic
 Microsoft	;	so	;	basic
 Microsoft	;	st	;	basic
 Microsoft	;	tg	;	basic
-Microsoft	;	tk	;	basic
-Microsoft	;	to	;	basic
-Microsoft	;	tum	;	basic
-Microsoft	;	ve	;	basic
+# Microsoft	;	to	;	basic
 Microsoft	;	wo	;	basic
 Microsoft	;	yo	;	basic
 
@@ -869,6 +830,24 @@ Rumantscha	;	*	;	moderate	;	All others
 Adlam	;	ff	;	modern	;	Fulah
 Adlam	;	*	;	moderate	;	All others
 
-Facebook	;	*	;	modern	;	All others
+Netflix ; ar ; modern
+Netflix ; de ; modern
+Netflix ; es ; modern
+Netflix ; es_419 ; modern
+Netflix ; fr ; modern
+Netflix ; it ; modern
+Netflix ; ja ; modern
+Netflix ; nl ; modern
+Netflix ; pt ; modern
+Netflix ; sr ; modern
+Netflix ; sv ; modern
 
-# not used
+Facebook	;	ar	;	modern
+Facebook	;	da	;	modern
+Facebook	;	es	;	modern
+Facebook	;	es_419	;	modern
+Facebook	;	gn	;	modern
+Facebook	;	hr	;	modern
+Facebook	;	hu	;	modern
+Facebook	;	it	;	modern
+Facebook	;	pt_PT	;	modern

@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,11 +21,13 @@ import java.util.regex.Pattern;
 import org.unicode.cldr.draft.FileUtilities;
 import org.unicode.cldr.test.OutdatedPaths;
 import org.unicode.cldr.tool.Option.Options;
+import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.LanguageTagParser;
 import org.unicode.cldr.util.PatternCache;
+import org.unicode.cldr.util.SimpleFactory;
 import org.unicode.cldr.util.StringId;
 
 import com.ibm.icu.impl.Relation;
@@ -36,7 +39,7 @@ public class GenerateBirth {
     private static boolean DEBUG = false;
 
     public enum Versions {
-        trunk, v28_0, v27_0, v26_0, v25_0, v24_0, v23_1, v22_1, v21_0, v2_0_1, v1_9_1, v1_8_1, v1_7_2, v1_6_1, v1_5_1, v1_4_1, v1_3_0, v1_2_0, v1_1_1;
+        trunk, v31_0, v30_0, v29_0, v28_0, v27_0, v26_0, v25_0, v24_0, v23_1, v22_1, v21_0, v2_0_1, v1_9_1, v1_8_1, v1_7_2, v1_6_1, v1_5_1, v1_4_1, v1_3_0, v1_2_0, v1_1_1;
         public String toString() {
             return this == Versions.trunk ? name() : name().substring(1).replace('_', '.');
         };
@@ -65,16 +68,21 @@ public class GenerateBirth {
 
         DEBUG = myOptions.get("debug").doesOccur();
 
+        final CLDRConfig config = CLDRConfig.getInstance();
+
+
         String filePattern = myOptions.get("file").getValue();
 
         ArrayList<Factory> list = new ArrayList<Factory>();
         for (Versions version : VERSIONS) {
-            Factory aFactory = Factory.make(
-                (version == Versions.trunk
+            String base = version == Versions.trunk
                 ? CLDRPaths.BASE_DIRECTORY
-                    : CLDRPaths.ARCHIVE_DIRECTORY + "cldr-" + version + "/") + "common/main/",
-                    filePattern
-                );
+                    : CLDRPaths.ARCHIVE_DIRECTORY + "cldr-" + version + "/";
+            File[] paths = version.compareTo(Versions.v27_0) > 0 // warning, order is reversed
+                ? new File[] { new File(base + "common/main/") }
+                : new File[] { new File(base + "common/main/"), new File(base + "common/annotations/") };
+            System.out.println(version + ", " + Arrays.asList(paths));
+            Factory aFactory = SimpleFactory.make(paths, filePattern);
             list.add(aFactory);
         }
         list.toArray(factories);

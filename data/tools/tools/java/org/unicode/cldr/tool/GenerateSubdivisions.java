@@ -25,6 +25,7 @@ import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.ChainedMap;
 import org.unicode.cldr.util.ChainedMap.M3;
 import org.unicode.cldr.util.DtdType;
+import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.Pair;
 import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.StandardCodes;
@@ -34,15 +35,17 @@ import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.TransliteratorUtilities;
 import org.unicode.cldr.util.Validity;
 import org.unicode.cldr.util.Validity.Status;
+import org.unicode.cldr.util.WikiSubdivisionLanguages;
 import org.unicode.cldr.util.XMLFileReader;
 import org.unicode.cldr.util.XPathParts;
 
-import com.google.common.base.Splitter;
 import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.impl.Relation;
 import com.ibm.icu.impl.Row.R2;
 import com.ibm.icu.impl.Utility;
 import com.ibm.icu.lang.UCharacter;
+import com.ibm.icu.text.CaseMap;
+import com.ibm.icu.text.CaseMap.Title;
 import com.ibm.icu.text.Collator;
 import com.ibm.icu.text.LocaleDisplayNames;
 import com.ibm.icu.text.Normalizer2;
@@ -50,8 +53,10 @@ import com.ibm.icu.text.RuleBasedCollator;
 import com.ibm.icu.util.ULocale;
 
 public class GenerateSubdivisions {
+    private static final Title TO_TITLE_WHOLE_STRING_NO_LOWERCASE = CaseMap.toTitle().wholeString().noLowercase();
 
-    private static final String ISO_COUNTRY_CODES = CLDRPaths.CLDR_PRIVATE_DIRECTORY + "external/iso_country_codes/";
+    private static final String ISO_COUNTRY_CODES = CLDRPaths.CLDR_PRIVATE_DIRECTORY + "iso_country_codes/";
+    private static final String ISO_SUBDIVISION_CODES = ISO_COUNTRY_CODES + "iso_country_codes.xml";
     static final Comparator<String> ROOT_COL;
     static {
         RuleBasedCollator _ROOT_COL = (RuleBasedCollator) Collator.getInstance(ULocale.ENGLISH);
@@ -91,31 +96,30 @@ public class GenerateSubdivisions {
     }
 
     static Map<String, String> NAME_CORRECTIONS = new HashMap<>();
-    static {
-        Splitter semi = Splitter.on(';').trimResults();
-        for (String s : FileUtilities.in(ISO_COUNTRY_CODES, "en-subdivisions-corrections.txt")) {
-            if (s.startsWith("#")) {
-                continue;
-            }
-            s = s.trim();
-            if (s.isEmpty()) {
-                continue;
-            }
-            List<String> parts = semi.splitToList(s);
-            NAME_CORRECTIONS.put(convertToCldr(parts.get(0)), parts.get(1));
-        }
-    }
-    
-    private static String convertToCldr(String regionOrSubdivision) {
+//    static {
+//        Splitter semi = Splitter.on(';').trimResults();
+//        for (String s : FileUtilities.in(ISO_COUNTRY_CODES, "en-subdivisions-corrections.txt")) {
+//            if (s.startsWith("#")) {
+//                continue;
+//            }
+//            s = s.trim();
+//            if (s.isEmpty()) {
+//                continue;
+//            }
+//            List<String> parts = semi.splitToList(s);
+//            NAME_CORRECTIONS.put(convertToCldr(parts.get(0)), parts.get(1));
+//        }
+//    }
+
+    public static String convertToCldr(String regionOrSubdivision) {
         return SubdivisionNames.isRegionCode(regionOrSubdivision) ? regionOrSubdivision.toUpperCase(Locale.ROOT)
             : regionOrSubdivision.replace("-", "").toLowerCase(Locale.ROOT);
     }
-    
+
     static final Normalizer2 nfc = Normalizer2.getNFCInstance();
 
     public static void main(String[] args) throws IOException {
         loadIso();
-        loadWiki();
         try (PrintWriter pw = FileUtilities.openUTF8Writer(CLDRPaths.GEN_DIRECTORY, "subdivision/subdivisions.xml")) {
             SubdivisionNode.printXml(pw);
         }
@@ -183,27 +187,27 @@ public class GenerateSubdivisions {
         }
 
         public static void printMissingMIDs(PrintWriter pw) {
-            for (Entry<String, String> entry : WIKIDATA_TO_MID.entrySet()) {
-                String mid = entry.getValue();
-                if (!mid.isEmpty()) {
-                    continue;
-                }
-                String subCode = entry.getKey();
-                String wiki = clean(getWikiName(subCode));
-                String iso = clean(getIsoName(subCode));
-                String countryCode = subCode.substring(0, 2);
-                String cat = SUB_TO_CAT.get(subCode);
-                String catName = getIsoName(cat);
-                pw.append(
-                    ENGLISH_ICU.regionDisplayName(countryCode)
-                    + "\t" + mid
-                    + "\t" + subCode
-                    + "\t" + catName
-                    + "\t" + wiki
-                    + "\t" + iso
-                    + "\n"
-                    );
-            }
+//            for (Entry<String, String> entry : WikiSubdivisionLanguages.WIKIDATA_TO_MID.entrySet()) {
+//                String mid = entry.getValue();
+//                if (!mid.isEmpty()) {
+//                    continue;
+//                }
+//                String subCode = entry.getKey();
+//                String wiki = clean(getWikiName(subCode));
+//                String iso = clean(getIsoName(subCode));
+//                String countryCode = subCode.substring(0, 2);
+//                String cat = SUB_TO_CAT.get(subCode);
+//                String catName = getIsoName(cat);
+//                pw.append(
+//                    ENGLISH_ICU.regionDisplayName(countryCode)
+//                    + "\t" + mid
+//                    + "\t" + subCode
+//                    + "\t" + catName
+//                    + "\t" + wiki
+//                    + "\t" + iso
+//                    + "\n"
+//                    );
+//            }
         }
 
         public static void printEnglishComp(Appendable output) throws IOException {
@@ -222,7 +226,7 @@ public class GenerateSubdivisions {
                 }
                 for (String value : entry.getValue()) {
                     String cldrName = getBestName(value, false);
-                    String wiki = getWikiName(value);
+                    String wiki = WikiSubdivisionLanguages.getBestWikiEnglishName(value);
                     final String iso = getIsoName(value);
                     if (iso.equals(wiki)) {
                         countEqual.add(iso);
@@ -230,7 +234,7 @@ public class GenerateSubdivisions {
                     }
                     output.append(
                         ENGLISH_ICU.regionDisplayName(countryCode)
-                        + "\t" + WIKIDATA_TO_MID.get(value)
+//                        + "\t" + WikiSubdivisionLanguages.WIKIDATA_TO_MID.get(value)
                         + "\t" + cldrName
                         + "\t" + value
                         + "\t" + iso
@@ -251,11 +255,11 @@ public class GenerateSubdivisions {
                 for (String value : entry.getValue()) {
                     String cldrName = getBestName(value, false);
                     //getBestName(value);
-                    String wiki = getWikiName(value);
+                    String wiki = WikiSubdivisionLanguages.getBestWikiEnglishName(value);
                     final String iso = getIsoName(value);
                     output.append(
                         ENGLISH_ICU.regionDisplayName(countryCode)
-                        + "\t" + WIKIDATA_TO_MID.get(value)
+//                        + "\t" + WikiSubdivisionLanguages.WIKIDATA_TO_MID.get(value)
                         + "\t" + value
                         + "\t" + cldrName
                         + "\t" + iso
@@ -264,27 +268,6 @@ public class GenerateSubdivisions {
                         );
                 }
             }
-        }
-
-        private static String getWikiName(String value) {
-            String name = WIKIDATA_LANG_NAME.get(value, "en");
-            if (name != null) {
-                return name;
-            }
-            name = WIKIDATA_LANG_NAME.get(value, "es");
-            if (name != null) {
-                return name;
-            }
-            name = WIKIDATA_LANG_NAME.get(value, "fr");
-            if (name != null) {
-                return name;
-            }
-            Map<String, String> data = WIKIDATA_LANG_NAME.get(value);
-            // try Spanish, then French, then first other
-            if (data != null) {
-                return data.entrySet().iterator().next().getValue(); // get first
-            }
-            return null;
         }
 
         static final String[] CRUFT = {
@@ -352,21 +335,26 @@ public class GenerateSubdivisions {
             return fixName(input);
         }
 
-        public static void printEnglish(Appendable output) throws IOException {
+        public static void printEnglish(PrintWriter output) throws IOException {
             TreeSet<String> allRegions = new TreeSet<>();
             allRegions.addAll(codeToData.keySet());
-            allRegions.addAll(formerRegionToSubdivisions.keySet());
+            allRegions.addAll(formerRegionToSubdivisions.keySet()); // override
+            
+            Factory cldrFactorySubdivisions = Factory.make(CLDRPaths.SUBDIVISIONS_DIRECTORY, ".*");
+            CLDRFile oldFileSubdivisions = cldrFactorySubdivisions.make("en", false);
+            CLDRFile fileSubdivisions = oldFileSubdivisions.cloneAsThawed();
+
 
             // <subdivisions>
             // <subdivisiontype="NZ-AUK">Auckland</territory>
-            output.append(
-                DtdType.ldml.header(MethodHandles.lookup().lookupClass())
-                + "\t<identity>\n"
-                + "\t\t<version number=\"$Revision" /*hack to stop SVN changing this*/ + "$\"/>\n"
-                + "\t\t<language type=\"en\"/>\n"
-                + "\t</identity>\n"
-                + "\t<localeDisplayNames>\n"
-                + "\t\t<subdivisions>\n");
+//            output.append(
+//                DtdType.ldml.header(MethodHandles.lookup().lookupClass())
+//                + "\t<identity>\n"
+//                + "\t\t<version number=\"$Revision" /*hack to stop SVN changing this*/ + "$\"/>\n"
+//                + "\t\t<language type=\"en\"/>\n"
+//                + "\t</identity>\n"
+//                + "\t<localeDisplayNames>\n"
+//                + "\t\t<subdivisions>\n");
             Set<String> skipped = new LinkedHashSet<>();
 
             for (String regionCode : allRegions) {
@@ -381,14 +369,14 @@ public class GenerateSubdivisions {
                 remainder = remainder == null ? Collections.EMPTY_SET : new LinkedHashSet<>(remainder);
 
                 SubdivisionNode regionNode = ID_TO_NODE.get(regionCode);
-                output.append("\t\t<!-- ")
-                .append(convertToCldr(regionCode)).append(" : ")
-                .append(TransliteratorUtilities.toXML.transform(ENGLISH_ICU.regionDisplayName(regionCode)));
+//                output.append("\t\t<!-- ")
+//                .append(convertToCldr(regionCode)).append(" : ")
+//                .append(TransliteratorUtilities.toXML.transform(ENGLISH_ICU.regionDisplayName(regionCode)));
                 if (regionNode == null) {
-                    output.append(" : NO SUBDIVISIONS -->\n");
+//                    output.append(" : NO SUBDIVISIONS -->\n");
                     continue;
                 }
-                output.append(" -->\n");
+//                output.append(" -->\n");
 
                 Set<SubdivisionNode> ordered = new LinkedHashSet<>();
                 addChildren(ordered, regionNode.children);
@@ -397,8 +385,7 @@ public class GenerateSubdivisions {
                     final String sdCode = node.code;
                     String name = getBestName(sdCode, true);
                     String upper = UCharacter.toUpperCase(name);
-                    @SuppressWarnings("deprecation")
-                    String title = UCharacter.toTitleFirst(ULocale.ROOT, name);
+                    String title = TO_TITLE_WHOLE_STRING_NO_LOWERCASE.apply(Locale.ENGLISH, null, name, new StringBuilder(), null).toString();
                     if (name.equals(upper) || !name.equals(title)) {
                         System.out.println("Suspicious name: " + name);
                     }
@@ -407,34 +394,36 @@ public class GenerateSubdivisions {
 
                     String level = sd.level == 1 ? "" : "\t<!-- in " + sd.parent.code
                         + " : " + TransliteratorUtilities.toXML.transform(getBestName(sd.parent.code, true)) + " -->";
-                    appendName(output, sdCode, name, level);
+                    appendName(fileSubdivisions, sdCode, name, level);
                     remainder.remove(sdCode);
                 }
                 for (String sdCode : remainder) {
                     String name = getBestName(sdCode, true);
-                    appendName(output, sdCode, name, "\t<!-- deprecated -->");
+                    appendName(fileSubdivisions, sdCode, name, "\t<!-- deprecated -->");
                 }
             }
-            output.append(
-                "\t\t</subdivisions>\n"
-                    + "\t</localeDisplayNames>\n"
-                    + "</ldml>");
+//            output.append(
+//                "\t\t</subdivisions>\n"
+//                    + "\t</localeDisplayNames>\n"
+//                    + "</ldml>");
             System.out.println("Skipping: " + skipped);
 //            if (!missing.isEmpty()) {
 //                throw new IllegalArgumentException("No name for: " + missing.size() + ", " + missing);
 //            }
+            fileSubdivisions.write(output);
         }
 
-        private static void appendName(Appendable output, final String sdCode, String name, String level) throws IOException {
+        private static void appendName(CLDRFile fileSubdivisions, final String sdCode, String name, String level) throws IOException {
             if (name == null) {
-                getBestName(sdCode, true);
-                name = "NAME-UNAVAILABLE";
+                return;
             }
-            output.append("\t\t\t<subdivision type=\"").append(convertToCldr(sdCode)).append("\">")
-            .append(TransliteratorUtilities.toXML.transform(name))
-            .append("</subdivision>")
-            .append(level)
-            .append('\n');
+            String cldrCode = convertToCldr(sdCode);
+            String path = "//ldml/localeDisplayNames/subdivisions/subdivision[@type=\"" + cldrCode + "\"]";
+            String oldValue = fileSubdivisions.getStringValue(path);
+            if (oldValue != null) {
+                return; // don't override old values
+            }
+            fileSubdivisions.add(path, name);
         }
 
         static Map<String, R2<List<String>, String>> territoryAliases = SDI.getLocaleAliasInfo().get("territory");
@@ -756,20 +745,6 @@ public class GenerateSubdivisions {
         }
     }
 
-    static ChainedMap.M3<String, String, String> WIKIDATA_LANG_NAME = ChainedMap.of(new TreeMap<String, Object>(), new TreeMap<String, Object>(), String.class);
-    static Map<String, String> WIKIDATA_TO_MID = new TreeMap<>();
-
-    private static void loadWiki() {
-        Splitter TAB = Splitter.on('\t').trimResults();
-        for (String line : FileUtilities.in(ISO_COUNTRY_CODES, "subdivision-names-wikidata.txt")) {
-            // AD-02    Q24260  /m/... an  Canillo
-            List<String> data = TAB.splitToList(line);
-            String subdivision = convertToCldr(data.get(0));
-            WIKIDATA_LANG_NAME.put(subdivision, data.get(3), data.get(4));
-            WIKIDATA_TO_MID.put(subdivision, data.get(2));
-        }
-    }
-
     public static void loadIso() {
         //    <country id="AD" version="16">
         //           <subdivision-code footnote="*">AD-02</subdivision-code>
@@ -777,7 +752,7 @@ public class GenerateSubdivisions {
         //                  <subdivision-locale-name>Otago</subdivision-locale-name>
 
         List<Pair<String, String>> pathValues = XMLFileReader.loadPathValues(
-            ISO_COUNTRY_CODES + "iso_country_codes.xml",
+            ISO_SUBDIVISION_CODES,
             new ArrayList<Pair<String, String>>(), false);
         XPathParts parts = new XPathParts();
         int maxIndent = 0;
@@ -865,4 +840,5 @@ public class GenerateSubdivisions {
             }
         }
     }
+
 }

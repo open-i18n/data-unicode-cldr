@@ -95,6 +95,8 @@ public class ExampleGenerator {
     public final static Date DATE_SAMPLE;
 
     private final static Date DATE_SAMPLE2;
+    private final static Date DATE_SAMPLE3;
+    private final static Date DATE_SAMPLE4;
 
     // private final static String EXEMPLAR_CITY = "Europe/Rome";
 
@@ -123,10 +125,15 @@ public class ExampleGenerator {
 
     static {
         Calendar calendar = Calendar.getInstance(ZONE_SAMPLE, ULocale.ENGLISH);
-        calendar.set(1999, 8, 14, 13, 25, 59); // 1999-09-13 13:25:59
+        calendar.set(1999, 8, 14, 13, 25, 59); // 1999-08-14 13:25:59
         DATE_SAMPLE = calendar.getTime();
-        calendar.set(1999, 9, 27, 13, 25, 59); // 1999-09-13 13:25:59
+        calendar.set(1999, 9, 27, 13, 25, 59); // 1999-09-27 13:25:59
         DATE_SAMPLE2 = calendar.getTime();
+
+        calendar.set(1999, 8, 14,  7,  0,  0); // 1999-08-14 07:00:00
+        DATE_SAMPLE3 = calendar.getTime();
+        calendar.set(1999, 8, 14, 23,  0,  0); // 1999-08-14 23:00:00
+        DATE_SAMPLE4 = calendar.getTime();
     }
 
     private CLDRFile cldrFile;
@@ -259,6 +266,9 @@ public class ExampleGenerator {
      * @return
      */
     public String getExampleHtml(String xpath, String value, ExampleContext context, ExampleType type) {
+        if (value == null) {
+            return null;
+        }
         String cacheKey;
         String result = null;
         try {
@@ -313,11 +323,11 @@ public class ExampleGenerator {
             } else if (parts.contains("currencyFormats") && parts.contains("unitPattern")) {
                 result = formatCountValue(xpath, parts, value, context, type);
             } else if (parts.getElement(-2).equals("compoundUnit")) {
-                result = handleCompoundUnit(getUnitLength(),
-                    Count.valueOf(parts.getAttributeValue(-1, "count")),
-                    value);
+                String count = CldrUtility.ifNull(parts.getAttributeValue(-1, "count"), "other");
+                result = handleCompoundUnit(getUnitLength(), Count.valueOf(count), value);
             } else if (parts.getElement(-1).equals("unitPattern")) {
-                result = handleFormatUnit(getUnitLength(), Count.valueOf(parts.getAttributeValue(-1, "count")), value);
+                String count = parts.getAttributeValue(-1, "count");
+                result = handleFormatUnit(getUnitLength(), Count.valueOf(count), value);
             } else if (parts.getElement(-1).equals("durationUnitPattern")) {
                 result = handleDurationUnit(value);
             } else if (parts.contains("intervalFormats")) {
@@ -533,10 +543,9 @@ public class ExampleGenerator {
     private String handleListPatterns(XPathParts parts, String value) {
         // listPatternType is either "duration" or null
         String listPatternType = parts.getAttributeValue(-2, "type");
-        if (listPatternType == null) {
+        if (listPatternType == null || !listPatternType.contains("unit")) {
             return handleRegularListPatterns(parts, value);
-        }
-        else {
+        } else {
             return handleDurationListPatterns(parts, value, UnitLength.from(listPatternType));
         }
     }
@@ -843,7 +852,7 @@ public class ExampleGenerator {
                     // we have to first see whether we have a currency. If so, we have to see if the count works.
 
                     if (isCurrency && phase == 0) {
-                        example = new FixedDecimal(example.source, decimalCount);
+                        example = new FixedDecimal(example.getSource(), decimalCount);
                     }
                     // skip if we've done before (can happen because of the currency reset)
                     if (examplesSeen.contains(example)) {
@@ -928,7 +937,7 @@ public class ExampleGenerator {
             unitDecimalFormat.setMaximumFractionDigits(example.getVisibleDecimalDigitCount());
             unitDecimalFormat.setMinimumFractionDigits(example.getVisibleDecimalDigitCount());
 
-            String formattedNumber = unitDecimalFormat.format(example.source);
+            String formattedNumber = unitDecimalFormat.format(example.getSource());
             unitPatternFormat.setFormatByArgumentIndex(0, unitDecimalFormat);
             resultItem = unitPattern.replace("{0}", formattedNumber).replace("{1}", unitName);
 
@@ -962,7 +971,7 @@ public class ExampleGenerator {
             ? "//ldml/numbers/currencies/currency[@type=\"" + unitType + "\"]/displayName"
                 : "//ldml/units/unit[@type=\"" + unitType + "\"]/unitPattern",
                 count, true);
-        return cldrFile.getWinningValue(unitNamePath);
+        return unitNamePath == null ? unitType : cldrFile.getWinningValue(unitNamePath);
     }
 
     private String handleNumberSymbol(XPathParts parts, String value) {
@@ -1177,7 +1186,15 @@ public class ExampleGenerator {
                 DateFormatSymbols dfs = sdf.getDateFormatSymbols();
                 dfs.setTimeSeparatorString(timeSeparator);
                 sdf.setDateFormatSymbols(dfs);
-                return sdf.format(DATE_SAMPLE);
+                if (id == null || id.indexOf('B') < 0) {
+                    return sdf.format(DATE_SAMPLE);
+                } else {
+                    List<String> examples = new ArrayList<String>();
+                    examples.add(sdf.format(DATE_SAMPLE3));
+                    examples.add(sdf.format(DATE_SAMPLE));
+                    examples.add(sdf.format(DATE_SAMPLE4));
+                    return formatExampleList(examples.toArray(new String[examples.size()]));
+                }
             }
         }
     }
@@ -1435,12 +1452,30 @@ public class ExampleGenerator {
                     }
                     if (languageName == null) {
                         languageName = cldrFile.getStringValueWithBailey(CLDRFile.getKey(CLDRFile.LANGUAGE_NAME, ltp.getLanguage()));
+                        if (languageName == null) {
+                            languageName = cldrFile.getStringValueWithBailey(CLDRFile.getKey(CLDRFile.LANGUAGE_NAME, "en"));
+                        }
+                        if (languageName == null) {
+                            languageName = ltp.getLanguage();
+                        }
                     }
                     if (scriptName == null) {
                         scriptName = cldrFile.getStringValueWithBailey(CLDRFile.getKey(CLDRFile.SCRIPT_NAME, ltp.getScript()));
+                        if (scriptName == null) {
+                            scriptName = cldrFile.getStringValueWithBailey(CLDRFile.getKey(CLDRFile.SCRIPT_NAME, "Latn"));
+                        }
+                        if (scriptName == null) {
+                            scriptName = ltp.getScript();
+                        }
                     }
                     if (territoryName == null) {
                         territoryName = cldrFile.getStringValueWithBailey(CLDRFile.getKey(CLDRFile.TERRITORY_NAME, ltp.getRegion()));
+                        if (territoryName == null) {
+                            territoryName = cldrFile.getStringValueWithBailey(CLDRFile.getKey(CLDRFile.TERRITORY_NAME, "US"));
+                        }
+                        if (territoryName == null) {
+                            territoryName = ltp.getRegion();
+                        }
                     }
                     languageName = languageName.replace('(', '[').replace(')', ']').replace('（', '［').replace('）', '］');
                     scriptName = scriptName.replace('(', '[').replace(')', ']').replace('（', '［').replace('）', '］');
@@ -1507,7 +1542,7 @@ public class ExampleGenerator {
     private String setBackground(String inputPattern) {
         Matcher m = PARAMETER.matcher(inputPattern);
         return backgroundStartSymbol + m.replaceAll(backgroundEndSymbol + "$1" + backgroundStartSymbol)
-            + backgroundEndSymbol;
+        + backgroundEndSymbol;
     }
 
     /**
@@ -1522,7 +1557,7 @@ public class ExampleGenerator {
     private String setBackgroundExceptMatch(String input, Pattern patternToEmbed) {
         Matcher m = patternToEmbed.matcher(input);
         return backgroundStartSymbol + m.replaceAll(backgroundEndSymbol + "$1" + backgroundStartSymbol)
-            + backgroundEndSymbol;
+        + backgroundEndSymbol;
     }
 
     /**
@@ -1746,12 +1781,12 @@ public class ExampleGenerator {
         return exampleHtml == null ? null
             : internal ? "〖" + exampleHtml
                 .replace("", "❬")
-                .replace("", "❭") + "〗"
-                : exampleHtml
-                .replace("<div class='cldr_example'>", "〖")
-                .replace("</div>", "〗")
-                .replace("<span class='cldr_substituted'>", "❬")
-                .replace("</span>", "❭");
+            .replace("", "❭") + "〗"
+            : exampleHtml
+            .replace("<div class='cldr_example'>", "〖")
+            .replace("</div>", "〗")
+            .replace("<span class='cldr_substituted'>", "❬")
+            .replace("</span>", "❭");
     }
 
     HelpMessages helpMessages;

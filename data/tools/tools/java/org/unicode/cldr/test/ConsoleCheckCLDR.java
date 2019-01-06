@@ -29,6 +29,8 @@ import org.unicode.cldr.test.CheckCLDR.Phase;
 import org.unicode.cldr.test.CheckCLDR.SimpleDemo;
 import org.unicode.cldr.test.ExampleGenerator.ExampleContext;
 import org.unicode.cldr.test.ExampleGenerator.ExampleType;
+import org.unicode.cldr.tool.Option;
+import org.unicode.cldr.tool.Option.Params;
 import org.unicode.cldr.tool.ShowData;
 import org.unicode.cldr.tool.TablePrinter;
 import org.unicode.cldr.util.CLDRConfig;
@@ -117,6 +119,61 @@ public class ConsoleCheckCLDR {
     // VOTE_RESOLVE2 = 21
     ;
 
+    static final String SOURCE_DIRS = CLDRPaths.MAIN_DIRECTORY + "," + CLDRPaths.ANNOTATIONS_DIRECTORY;
+
+    enum MyOptions {
+        coverage(new Params().setHelp("Set the coverage: eg -c comprehensive")
+            .setMatch("comprehensive|modern|moderate|basic")), // UOption.REQUIRES_ARG
+        examples(new Params().setHelp("Turn on examples (actually a summary of the demo)")
+            .setFlag('x')), //, 'x', UOption.NO_ARG),
+        file_filter(new Params().setHelp("Pick the locales (files) to check: arg is a regular expression, eg -f fr, or -f fr.*, or -f (fr|en-.*)")
+            .setDefault(".*").setMatch(".*")), //, 'f', UOption.REQUIRES_ARG).setDefault(".*"),
+        test_filter(new Params().setHelp("Filter the Checks: arg is a regular expression, eg -t.*number.*. To check all BUT a given test, use the style -t ((?!.*CheckZones).*)")
+            .setDefault(".*").setMatch(".*")), //, 't', UOption.REQUIRES_ARG).setDefault(".*"),
+        date_formats(new Params().setHelp("Turn on special date format checks")), //, 'd', UOption.NO_ARG),
+        organization(new Params().setHelp("Organization: ibm, google, ....; Uses Locales.txt for to filter locales and set coverage levels")
+            .setDefault(".*").setMatch(".*")), //, 'o', UOption.REQUIRES_ARG),
+        showall(new Params().setHelp("Show all paths, including aliased").setFlag('a')), //, 'a', UOption.NO_ARG),
+        path_filter(new Params().setHelp("Pick the paths to check, eg -p.*languages.*")
+            .setDefault(".*").setMatch(".*")), //, 'p', UOption.REQUIRES_ARG).setDefault(".*"),
+        errors_only(new Params().setHelp("Show errors only (with -ef, only final processing errors)")), //, 'e', UOption.NO_ARG),
+        check_on_submit(new Params().setHelp("")
+            .setFlag('k')), //, 'k', UOption.NO_ARG),
+        noaliases(new Params().setHelp("No aliases")), //, 'n', UOption.NO_ARG),
+        source_directory(new Params().setHelp("Fully qualified source directories. (Conflicts with -S.)")
+            .setDefault(SOURCE_DIRS).setMatch(".*")), //, 's', UOption.REQUIRES_ARG).setDefault(SOURCE_DIRS),
+        user(new Params().setHelp("User, eg -uu148")
+            .setMatch(".*")), //, 'u', UOption.REQUIRES_ARG),
+        phase(new Params().setHelp("?")
+            .setMatch(Phase.class).setFlag('z')), //, 'z', UOption.REQUIRES_ARG),
+        generate_html(new Params().setHelp("Generate HTML-style chart in directory.")
+            .setDefault(CLDRPaths.CHART_DIRECTORY + "/errors/").setMatch(".*")), //, 'g', UOption.OPTIONAL_ARG).setDefault(CLDRPaths.CHART_DIRECTORY + "/errors/"),
+        vote_resolution(new Params().setHelp("")), //, 'v', UOption.NO_ARG),
+        id_view(new Params().setHelp("")), //, 'i', UOption.NO_ARG),
+        subtype_filter(new Params().setHelp("error/warning subtype filter, eg unexpectedOrderOfEraYear")
+            .setDefault(".*").setMatch(".*").setFlag('y')), //, 'y', UOption.REQUIRES_ARG),
+        source_all(new Params().setHelp("Partially qualified directories. Standard subdirectories added if not specified (/main, /annotations, /subdivisions). (Conflicts with -s.)")
+            .setMatch(".*").setFlag('S').setDefault("common,seed,exemplars")), //, 'S', <changed>),
+        bailey(new Params().setHelp("check bailey values (↑↑↑)")), //, 'b', UOption.NO_ARG)
+        exemplarError(new Params().setFlag('E').setHelp("include to force strict Exemplar check"))
+        ;
+
+        // BOILERPLATE TO COPY
+        final Option option;
+        private MyOptions(Params params) {
+            option = new Option(this, params);
+        }
+        private static Option.Options myOptions = new Option.Options();
+        static {
+            for (MyOptions option : MyOptions.values()) {
+                myOptions.add(option, option.option);
+            }
+        }
+        private static Set<String> parse(String[] args, boolean showArguments) {
+            return myOptions.parse(MyOptions.values()[0], args, true);
+        }
+    }
+
     private static final UOption[] options = {
         UOption.HELP_H(),
         UOption.HELP_QUESTION_MARK(),
@@ -131,18 +188,20 @@ public class ConsoleCheckCLDR {
         UOption.create("errors_only", 'e', UOption.NO_ARG),
         UOption.create("check-on-submit", 'k', UOption.NO_ARG),
         UOption.create("noaliases", 'n', UOption.NO_ARG),
-        UOption.create("source_directory", 's', UOption.REQUIRES_ARG).setDefault(CLDRPaths.MAIN_DIRECTORY),
+        UOption.create("source_directory", 's', UOption.REQUIRES_ARG).setDefault(SOURCE_DIRS),
         UOption.create("user", 'u', UOption.REQUIRES_ARG),
         UOption.create("phase", 'z', UOption.REQUIRES_ARG),
         UOption.create("generate_html", 'g', UOption.OPTIONAL_ARG).setDefault(CLDRPaths.CHART_DIRECTORY + "/errors/"),
         UOption.create("vote resolution", 'v', UOption.NO_ARG),
         UOption.create("id view", 'i', UOption.NO_ARG),
         UOption.create("subtype_filter", 'y', UOption.REQUIRES_ARG),
-        UOption.create("source_all", 'S', UOption.REQUIRES_ARG),
-        UOption.create("bailey", 'b', UOption.NO_ARG)
+        UOption.create("source_all", 'S', UOption.OPTIONAL_ARG).setDefault("common,seed,exemplars"),
+        UOption.create("bailey", 'b', UOption.NO_ARG),
+        UOption.create("exemplarError", 'E', UOption.NO_ARG)
         // UOption.create("vote resolution2", 'w', UOption.OPTIONAL_ARG).setDefault(Utility.BASE_DIRECTORY +
         // "incoming/vetted/main/votes/"),
     };
+    
     private static final Comparator<String> baseFirstCollator = new Comparator<String>() {
         LanguageTagParser languageTagParser1 = new LanguageTagParser();
         LanguageTagParser languageTagParser2 = new LanguageTagParser();
@@ -159,7 +218,7 @@ public class ConsoleCheckCLDR {
 
     private static String[] HelpMessage = {
         "-h \t This message",
-        "-s \t Source directory, default = " + CLDRPaths.MAIN_DIRECTORY,
+        "-s \t Source directory, default = " + SOURCE_DIRS,
         "-S common,seed\t Use common AND seed directories. ( Set CLDR_DIR, don't use this with -s. )\n",
         "-fxxx \t Pick the locales (files) to check: xxx is a regular expression, eg -f fr, or -f fr.*, or -f (fr|en-.*)",
         "-pxxx \t Pick the paths to check, eg -p(.*languages.*)",
@@ -190,16 +249,17 @@ public class ConsoleCheckCLDR {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
+        MyOptions.parse(args, true);
         ElapsedTimer totalTimer = new ElapsedTimer();
-        CldrUtility.showOptions(args);
+        //CldrUtility.showOptions(args);
         UOption.parseArgs(args, options);
-        if (options[HELP1].doesOccur || options[HELP2].doesOccur) {
-            for (int i = 0; i < HelpMessage.length; ++i) {
-                System.out.println(HelpMessage[i]);
-            }
-            return;
-        }
-        String factoryFilter = options[FILE_FILTER].value;
+//        if (options[HELP1].doesOccur || options[HELP2].doesOccur) {
+//            for (int i = 0; i < HelpMessage.length; ++i) {
+//                System.out.println(HelpMessage[i]);
+//            }
+//            return;
+//        }
+        String factoryFilter = options[FILE_FILTER].value; 
         if (factoryFilter.equals("key")) {
             factoryFilter = "(en|ru|nl|fr|de|it|pl|es|tr|th|ja|zh|ko|ar|bg|sr|uk|ca|hr|cs|da|fil|fi|hu|id|lv|lt|nb|pt|ro|sk|sl|sv|vi|el|he|fa|hi|am|af|et|is|ms|sw|zu|bn|mr|ta|eu|gl|ur|gu|kn|ml|te|zh_Hant|pt_PT|en_GB)";
         }
@@ -297,15 +357,18 @@ public class ConsoleCheckCLDR {
 
         File sourceDirectories[] = null;
 
-        if (options[SOURCE_ALL].doesOccur) {
-            if (options[SOURCE_DIRECTORY].doesOccur) {
+        if (MyOptions.source_all.option.doesOccur()) {
+            if (MyOptions.source_directory.option.doesOccur()) {
                 throw new IllegalArgumentException("Don't use -s and -S together.");
             }
-            sourceDirectories = cldrConf.getMainDataDirectories(cldrConf.getCLDRDataDirectories(options[SOURCE_ALL].value));
+            sourceDirectories = cldrConf.addStandardSubdirectories(cldrConf.getCLDRDataDirectories(MyOptions.source_all.option.getValue()));
         } else {
-            sourceDirectories = new File[1];
-            sourceDirectories[0] = new File(CldrUtility.checkValidDirectory(options[SOURCE_DIRECTORY].value,
-                "Fix with -s. Use -h for help."));
+            String[] sdirs = options[SOURCE_DIRECTORY].value.split(",\\s*");
+            sourceDirectories = new File[sdirs.length];
+            for (int i = 0; i < sdirs.length; ++i) {
+                sourceDirectories[i] = new File(CldrUtility.checkValidDirectory(sdirs[i],
+                    "Fix with -s. Use -h for help."));
+            }
         }
 
         if (options[GENERATE_HTML].doesOccur) {
@@ -320,7 +383,7 @@ public class ConsoleCheckCLDR {
             // PrintWriter cssFile = FileUtilities.openUTF8Writer(generated_html_directory, "index.css");
             // Utility;
         }
-
+        
         idView = options[ID_VIEW].doesOccur;
 
         if (options[VOTE_RESOLVE].doesOccur) {
@@ -343,23 +406,23 @@ public class ConsoleCheckCLDR {
             System.out.println("    " + f.getPath() + "\t("
                 + f.getCanonicalPath() + ")");
         }
-        System.out.println("factoryFilter: " + factoryFilter);
-        System.out.println("test filter: " + checkFilter);
-        System.out.println("organization: " + organization);
-        System.out.println("show examples: " + SHOW_EXAMPLES);
-        System.out.println("phase: " + phase);
-        System.out.println("path filter: " + pathFilterString);
-        System.out.println("coverage level: " + coverageLevel);
-        System.out.println("checking dates: " + checkFlexibleDates);
-        System.out.println("only check-on-submit: " + checkOnSubmit);
-        System.out.println("show all: " + showAll);
-        System.out.println("errors only?: " + errorsOnly);
-        System.out.println("generate error counts: " + ErrorFile.generated_html_directory);
-        // System.out.println("vote directory: " + (ErrorFile.voteFactory == null ? null :
-        // ErrorFile.voteFactory.getSourceDirectory()));
-        System.out.println("resolve votes: " + resolveVotesDirectory);
-        System.out.println("id view: " + idView);
-        System.out.println("subtype filter: " + subtypeFilter);
+//        System.out.println("factoryFilter: " + factoryFilter);
+//        System.out.println("test filter: " + checkFilter);
+//        System.out.println("organization: " + organization);
+//        System.out.println("show examples: " + SHOW_EXAMPLES);
+//        System.out.println("phase: " + phase);
+//        System.out.println("path filter: " + pathFilterString);
+//        System.out.println("coverage level: " + coverageLevel);
+//        System.out.println("checking dates: " + checkFlexibleDates);
+//        System.out.println("only check-on-submit: " + checkOnSubmit);
+//        System.out.println("show all: " + showAll);
+//        System.out.println("errors only?: " + errorsOnly);
+//        System.out.println("generate error counts: " + ErrorFile.generated_html_directory);
+//        // System.out.println("vote directory: " + (ErrorFile.voteFactory == null ? null :
+//        // ErrorFile.voteFactory.getSourceDirectory()));
+//        System.out.println("resolve votes: " + resolveVotesDirectory);
+//        System.out.println("id view: " + idView);
+//        System.out.println("subtype filter: " + subtypeFilter);
 
         // set up the test
         Factory cldrFactory = SimpleFactory.make(sourceDirectories, factoryFilter)
@@ -369,13 +432,10 @@ public class ConsoleCheckCLDR {
             throw new IllegalArgumentException("The filter doesn't match any tests.");
         }
         System.out.println("filtered tests: " + checkCldr.getFilteredTests());
-        try {
-            english = cldrFactory.make("en", true);
-        } catch (Exception e1) {
-            Factory backCldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, factoryFilter)
-                .setSupplementalDirectory(new File(CLDRPaths.SUPPLEMENTAL_DIRECTORY));
-            english = backCldrFactory.make("en", true);
-        }
+        Factory backCldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, factoryFilter)
+            .setSupplementalDirectory(new File(CLDRPaths.SUPPLEMENTAL_DIRECTORY));
+        english = backCldrFactory.make("en", true);
+        
         checkCldr.setDisplayInformation(english);
         checkCldr.setEnglishFile(english);
         setExampleGenerator(new ExampleGenerator(english, english, CLDRPaths.SUPPLEMENTAL_DIRECTORY));
@@ -419,6 +479,10 @@ public class ConsoleCheckCLDR {
 
             boolean isLanguageLocale = localeID.equals(localeIDParser.set(localeID).getLanguageScript());
             options.clear();
+            
+            if (MyOptions.exemplarError.option.doesOccur()) {
+                options.put(Options.Option.exemplarErrors.toString(), "true");
+            }
 
             // if the organization is set, skip any locale that doesn't have a value in Locales.txt
             Level level = coverageLevel;
@@ -446,7 +510,7 @@ public class ConsoleCheckCLDR {
             // options.put("CheckCoverage.requiredLevel","comprehensive");
 
             CLDRFile file;
-            CLDRFile englishFile;
+            CLDRFile englishFile = english;
             CLDRFile parent = null;
 
             ElapsedTimer timer = new ElapsedTimer();
@@ -459,7 +523,7 @@ public class ConsoleCheckCLDR {
                 if (parentID != null) {
                     parent = cldrFactory.make(parentID, true);
                 }
-                englishFile = cldrFactory.make("en", true);
+                //englishFile = cldrFactory.make("en", true);
             } catch (RuntimeException e) {
                 fatalErrors.add(localeID);
                 System.out.println("FATAL ERROR: " + localeID);
@@ -703,9 +767,9 @@ public class ConsoleCheckCLDR {
                 if (missingExemplars.size() != 0) {
                     Collator col = Collator.getInstance(new ULocale(localeID));
                     showSummary(checkCldr, localeID, level, "Total missing from general exemplars:\t" + new UnicodeSetPrettyPrinter()
-                    .setOrdering(col != null ? col : Collator.getInstance(ULocale.ROOT))
-                    .setSpaceComparator(col != null ? col : Collator.getInstance(ULocale.ROOT)
-                        .setStrength2(Collator.PRIMARY))
+                        .setOrdering(col != null ? col : Collator.getInstance(ULocale.ROOT))
+                        .setSpaceComparator(col != null ? col : Collator.getInstance(ULocale.ROOT)
+                            .setStrength2(Collator.PRIMARY))
                         .setCompressRanges(true)
                         .format(missingExemplars));
                 }
@@ -714,9 +778,9 @@ public class ConsoleCheckCLDR {
                 Collator col = Collator.getInstance(new ULocale(localeID));
                 showSummary(checkCldr, localeID, level, "Total missing from currency exemplars:\t"
                     + new UnicodeSetPrettyPrinter()
-                .setOrdering(col != null ? col : Collator.getInstance(ULocale.ROOT))
-                .setSpaceComparator(col != null ? col : Collator.getInstance(ULocale.ROOT)
-                    .setStrength2(Collator.PRIMARY))
+                    .setOrdering(col != null ? col : Collator.getInstance(ULocale.ROOT))
+                    .setSpaceComparator(col != null ? col : Collator.getInstance(ULocale.ROOT)
+                        .setStrength2(Collator.PRIMARY))
                     .setCompressRanges(true)
                     .format(missingCurrencyExemplars));
             }
@@ -1303,8 +1367,8 @@ public class ConsoleCheckCLDR {
                 +
                 (notLocaleSpecific
                     ? "s. " + org.unicode.cldr.test.HelpMessages.getChartMessages("error_index_header")
-                        : " " + ConsoleCheckCLDR.getNameAndLocale(localeID, false) + ". "
-                        + ErrorFile.ERROR_CHART_HEADER
+                    : " " + ConsoleCheckCLDR.getNameAndLocale(localeID, false) + ". "
+                    + ErrorFile.ERROR_CHART_HEADER
                     ));
         }
 

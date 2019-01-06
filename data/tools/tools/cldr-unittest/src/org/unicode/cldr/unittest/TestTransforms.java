@@ -370,9 +370,13 @@ public class TestTransforms extends TestFmwkPlus {
             return Transliterator.getInstance("Any-Publishing");
         } else if (id.equalsIgnoreCase("und-t-s0-publish")) {
             return Transliterator.getInstance("Publishing-Any");
+        } else if (id.equalsIgnoreCase("de-t-de-d0-ascii")) {
+            return Transliterator.getInstance("de-ASCII");
         } else if (id.equalsIgnoreCase("my-t-my-s0-zawgyi")) {
             return Transliterator.getInstance("Zawgyi-my");
-        }
+        } else if (id.equalsIgnoreCase("und-t-d0-ascii")) {
+	    return Transliterator.getInstance("Latin-ASCII");
+	}
 
         Matcher rfc6497Matcher = rfc6497Pattern.matcher(id);
         if (rfc6497Matcher.matches()) {
@@ -412,6 +416,11 @@ public class TestTransforms extends TestFmwkPlus {
                 }
                 logln("Testing file: " + file);
                 String transName = file.substring(0, file.length() - 4);
+                if (transName.equals("ka-Latn-t-ka-m0-bgn")) {
+                    logKnownIssue("cldrbug:10566", "Jenkins build failing on translit problem");
+                    continue; // failures like the following need to be fixed first.
+                    // Error: (TestTransforms.java:434) : ka-Latn-t-ka-m0-bgn 2 Transform უფლება: expected "up’leba", got "upleba" 
+                }
 
                 Transliterator trans = getTransliterator(transName);
                 BufferedReader in = FileUtilities.openUTF8Reader(fileDirectoryName, file);

@@ -204,7 +204,7 @@ Chad	TD	"11,412,107"	35%	"28,000,000,000"	official	French	fr	26%			https://www.c
 Chile	CL	"17,363,894"	99%	"335,400,000,000"		English	en	9.50%					
 Chile	CL	"17,363,894"	99%	"335,400,000,000"		Mapuche	arn	"264,000"			http://en.wikipedia.org/wiki/Mapuche_language		
 Chile	CL	"17,363,894"	99%	"335,400,000,000"	official	Spanish	es	98%			"http://en.wikipedia.org/wiki/Demographics_of_Chile#Languages Spanish ""universal"", set to 98%"		
-China	CN	"1,355,692,576"	95%	"13,390,000,000,000"		Cantonese	yue	"70,000,000"			"Mainly in Guangdong Prov, ~70-80 million"		
+China	CN	"1,355,692,576"	95%	"13,390,000,000,000"		Cantonese	yue_Hans	"70,000,000"		5%	"Mainly in Guangdong Prov, ~70-80 million"		
 China	CN	"1,355,692,576"	95%	"13,390,000,000,000"	official	Chinese (Simplified)	zh_Hans	90%					
 China	CN	"1,355,692,576"	95%	"13,390,000,000,000"		English	en	"61,600"					
 China	CN	"1,355,692,576"	95%	"13,390,000,000,000"		Gan Chinese	gan	"22,400,000"					
@@ -436,6 +436,7 @@ Guinea	GN	"11,474,383"	41%	"12,560,000,000"		Kpelle	kpe	3.80%
 Guinea	GN	"11,474,383"	41%	"12,560,000,000"		Mandingo (N’Ko)	man_Nkoo	23%					
 Guinea	GN	"11,474,383"	41%	"12,560,000,000"		N’Ko	nqo	5%			No figures available for this language.  Estimating at 5%.		
 Guinea	GN	"11,474,383"	41%	"12,560,000,000"		Susu	sus	11%					
+Guinea-Bissau	GW	"1,693,398"	55%	"2,005,000,000"		Mankanya	knf	44200			http://www.ethnologue.com/18/language/knf/		
 Guinea-Bissau	GW	"1,693,398"	55%	"2,005,000,000"	official	Portuguese	pt	100%			https://www.cia.gov/cia/publications/factbook/geos/pu.html Many minor langs; Portuguese official		
 Guyana	GY	"735,554"	92%	"6,593,000,000"	official	English	en	100%					
 Haiti	HT	"9,996,731"	49%	"13,420,000,000"	official	French	fr	4.70%	100%		http://www.ethnologue.com/show_language.asp?code=fra 400k 2nd language speakers		
@@ -446,7 +447,7 @@ Honduras	HN	"8,598,561"	85%	"39,230,000,000"	official	Spanish	es	78%
 Hong Kong SAR China	HK	"7,112,688"	94%	"381,300,000,000"		Chinese (Simplified)	zh_Hans	5%			Hans literacy is unknown; set to 5% artificially pending better or official figures.		
 Hong Kong SAR China	HK	"7,112,688"	94%	"381,300,000,000"	official	Chinese (Traditional)	zh_Hant	95%					
 Hong Kong SAR China	HK	"7,112,688"	94%	"381,300,000,000"	official	English	en	51%					
-Hong Kong SAR China	HK	"7,112,688"	94%	"381,300,000,000"		Cantonese	yue	89.50%			https://www.cia.gov/library/publications/the-world-factbook/geos/hk.html and https://www.ethnologue.com/language/yue		
+Hong Kong SAR China	HK	"7,112,688"	94%	"381,300,000,000"		Cantonese	yue_Hant	89.50%			https://www.cia.gov/library/publications/the-world-factbook/geos/hk.html and https://www.ethnologue.com/language/yue		
 Hungary	HU	"9,919,128"	99%	"196,600,000,000"		Croatian	hr	"31,600"					
 Hungary	HU	"9,919,128"	99%	"196,600,000,000"		English	en	20%					
 Hungary	HU	"9,919,128"	99%	"196,600,000,000"		French	fr	3%					
@@ -909,7 +910,7 @@ Norfolk Island	NF	"2,210"	99%	"98,020,000"	official	English	en	"1,680"
 North Korea	KP	"24,851,627"	100%	"40,000,000,000"	official	Korean	ko	88%					
 Northern Mariana Islands	MP	"51,483"	97%	"733,000,000"		Chamorro	ch	"9,270"					
 Northern Mariana Islands	MP	"51,483"	97%	"733,000,000"	de_facto_official	English	en	97%					
-Norway	NO	"5,147,792"	100%	"282,200,000,000"	official_regional	Northern Sami	se	3.30%					
+Norway	NO	"5,147,792"	100%	"282,200,000,000"	official_regional	Northern Sami	se	0.29%					
 Norway	NO	"5,147,792"	100%	"282,200,000,000"	official	Norwegian Bokmål	nb	100%					
 Norway	NO	"5,147,792"	100%	"282,200,000,000"	official	Norwegian Nynorsk	nn	25%					
 Oman	OM	"3,219,775"	87%	"94,860,000,000"	official	Arabic	ar	81%					
@@ -1227,9 +1228,9 @@ Timor-Leste	TL	"1,201,542"	58%	"25,410,000,000"	official	Portuguese	pt	59%	100%	
 Timor-Leste	TL	"1,201,542"	58%	"25,410,000,000"	official	Tetum	tet	59%			https://www.cia.gov/cia/publications/factbook/geos/tt.html CIA Factbook. See also http://www.jsmp.minihub.org/Reports/jsmpreports/Language%20Report/LanguageReport(english).pdf		
 Togo	TG	"7,351,374"	60%	"7,348,000,000"		Ewe	ee	17%					
 Togo	TG	"7,351,374"	60%	"7,348,000,000"	official	French	fr	61%					
-Togo	TG	"7,351,374"	60%	"7,348,000,000"		Ifè	ife	1.30%	15%		http://www.ethnologue.com/18/language/ife/
-Tokelau	TK	"1,337"	94%	"1,500,000"	official	English	en	100%					
-Tokelau	TK	"1,337"	94%	"1,500,000"	official	Tokelau	tkl	100%	5%		https://www.cia.gov/library/publications/the-world-factbook/geos/tl.html		
+Togo	TG	"7,351,374"	60%	"7,348,000,000"		Ifè	ife	1.30%	15%		http://www.ethnologue.com/18/language/ife/		
+Tokelau	TK	"1,285"	94%	"1,500,000"	official	English	en	100%					
+Tokelau	TK	"1,285"	94%	"1,500,000"	official	Tokelau	tkl	100%	5%		https://www.cia.gov/library/publications/the-world-factbook/geos/tl.html		
 Tonga	TO	"106,440"	99%	"846,000,000"	official	English	en	28%			"http://www.pressreference.com/Sw-Ur/Tonga.html The Tonga Chronicle is a government-owned newspaper... It publishes two editions, one in Tongan with a circulation of 5,000, and one in English with a circulation of 1,500; Writing pop figure shown for English is set to 30% of that for Tonga. "		
 Tonga	TO	"106,440"	99%	"846,000,000"	official	Tongan	to	95%					
 Trinidad and Tobago	TT	"1,223,916"	99%	"27,140,000,000"	official	English	en	88%					
@@ -1340,6 +1341,7 @@ United States	US	"318,892,103"	99%	"16,720,000,000,000"	official_regional	Spanis
 United States	US	"318,892,103"	99%	"16,720,000,000,000"		Vietnamese	vi	"1,090,000"					
 United States	US	"318,892,103"	99%	"16,720,000,000,000"		Yiddish	yi	"157,000"			http://en.wikipedia.org/wiki/Languages_of_the_United_States#Yiddish		
 Unknown Region	ZZ	0	0%	0		Interlingua	ia	0	99%			An artificial language. No statistics found yet for user base.	
+Unknown Region	ZZ	0	0%	0		Ido	io	0	99%			https://en.wikipedia.org/wiki/Ido_language - Estimated 100-200 speakers.	
 Unknown Region	ZZ	0	0%	0		Kotava	avk	0	99%			An artificial language. No statistics found yet for user base.	
 Unknown Region	ZZ	0	0%	0		Lingua Franca Nova	lfn	0	99%		An artificial language.  See http://en.wikipedia.org/wiki/Lingua_Franca_Nova		
 Unknown Region	ZZ	0	0%	0		Novial	nov	0	99%		An artificial language.  See http://en.wikipedia.org/wiki/Novial_language		

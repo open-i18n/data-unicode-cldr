@@ -1,12 +1,10 @@
 package org.unicode.cldr.util;
 
 import java.util.List;
-import java.util.Set;
 
 import org.unicode.cldr.tool.ToolConstants;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 /**
  * Constant paths (moved here from CldrUtility).
@@ -32,14 +30,21 @@ public class CLDRPaths {
     public static final String CASING_DIRECTORY = CldrUtility.getPath(COMMON_DIRECTORY, "casing/");
     public static final String MAIN_DIRECTORY = CldrUtility.getProperty("CLDR_MAIN",
         CldrUtility.getPath(CLDRPaths.COMMON_DIRECTORY, "main"));
+    
+    public static final String RBNF_DIRECTORY = CldrUtility.getPath(CLDRPaths.COMMON_DIRECTORY, "rbnf/");
+    public static final String TRANSFORMS_DIRECTORY = CldrUtility.getPath(CLDRPaths.COMMON_DIRECTORY, "transforms/");
+    public static final String ANNOTATIONS_DIRECTORY = CldrUtility.getPath(CLDRPaths.COMMON_DIRECTORY, "annotations/");
+    public static final String SUBDIVISIONS_DIRECTORY = CldrUtility.getPath(CLDRPaths.COMMON_DIRECTORY, "subdivisions/");
+    public static final String ANNOTATIONS_DERIVED_DIRECTORY = CldrUtility.getPath(CLDRPaths.COMMON_DIRECTORY, "annotationsDerived/");
+    
     public static final String SEED_DIRECTORY = CldrUtility.getProperty("CLDR_SEED",
         CldrUtility.getPath(CLDRPaths.COMMON_DIRECTORY, "../seed/main"));
     public static final String SEED_COLLATION_DIRECTORY = CldrUtility.getPath(SEED_DIRECTORY, "../collation/");
     public static final String SEED_CASING_DIRECTORY = CldrUtility.getPath(SEED_DIRECTORY, "../casing/");
+    public static final String SEED_ANNOTATIONS_DIRECTORY = CldrUtility.getPath(SEED_DIRECTORY, "../annotations/");
+    
     public static final String EXEMPLARS_DIRECTORY = CldrUtility.getPath(CLDRPaths.BASE_DIRECTORY, "exemplars/main/");
-    public static final String RBNF_DIRECTORY = CldrUtility.getPath(CLDRPaths.COMMON_DIRECTORY, "rbnf/");
-    public static final String TRANSFORMS_DIRECTORY = CldrUtility.getPath(CLDRPaths.COMMON_DIRECTORY, "transforms/");
-    public static final String ANNOTATIONS_DIRECTORY = CldrUtility.getPath(CLDRPaths.COMMON_DIRECTORY, "annotations/");
+    
     public static final String TMP_DIRECTORY = CldrUtility.getPath(CldrUtility.getProperty("CLDR_TMP_DIR",
         CldrUtility.getPath(BASE_DIRECTORY, "../cldr-tmp/")));
     public static final String AUX_DIRECTORY = CldrUtility.getPath(CldrUtility.getProperty("CLDR_TMP_DIR",
@@ -123,15 +128,15 @@ public class CLDRPaths {
         }
     }
     
-    @Deprecated
-    public static final Set<String> LDML_DIRECTORIES = ImmutableSet.of(
-        "main",
-        "annotations",
-        "casing",
-        "collation",
-        "rbnf",
-        "segments",
-        "subdivisions"
-        );
-    public static final String UNICODE_VERSION = "8.0.0";
+    @Deprecated //use DtdType.ldml.directories
+//    public static final Set<String> LDML_DIRECTORIES = ImmutableSet.of(
+//        "main",
+//        "annotations",
+//        "casing",
+//        "collation",
+//        "rbnf",
+//        "segments",
+//        "subdivisions"
+//        );
+    public static final String UNICODE_VERSION = "10.0.0";
 }

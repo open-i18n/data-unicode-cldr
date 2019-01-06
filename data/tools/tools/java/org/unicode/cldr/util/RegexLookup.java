@@ -702,6 +702,20 @@ public class RegexLookup<T> implements Iterable<Map.Entry<Finder, T>> {
     };
 
     /**
+     * The same as a RegexFinderTransform, except that [@ is changed to \[@, and ^ is added before //, and ' is changed to ".
+     * To work better with XPaths.
+     */
+    public static Transform<String, RegexFinder> RegexFinderTransformPath2 = new Transform<String, RegexFinder>() {
+        public RegexFinder transform(String source) {
+            final String newSource = source.replace("[@", "\\[@").replace('\'', '"');
+            return new RegexFinder(newSource.startsWith("//")
+                ? "^" + newSource
+                    : newSource);
+        }
+    };
+
+
+    /**
      * Allows for merging items of the same type.
      *
      * @param <T>
@@ -986,7 +1000,7 @@ public class RegexLookup<T> implements Iterable<Map.Entry<Finder, T>> {
             public void parse(String line) {
                 int pos = line.indexOf("; ");
                 if (pos < 0) {
-                    throw new IllegalArgumentException();
+                    throw new IllegalArgumentException("Illegal line, doesn't contain semicolon: " + line);
                 }
                 String source = line.substring(0, pos).trim();
                 String target = line.substring(pos + 2).trim();

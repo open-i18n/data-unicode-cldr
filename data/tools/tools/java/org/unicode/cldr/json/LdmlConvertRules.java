@@ -34,6 +34,7 @@ class LdmlConvertRules {
         "numbers:percentFormats:numberSystem",
         "numbers:scientificFormats:numberSystem",
         "numbers:miscPatterns:numberSystem",
+        "minimalPairs:pluralMinimalPairs:count",
         "territoryContainment:group:status",
         "decimalFormat:pattern:count",
         "currencyFormat:pattern:count",
@@ -430,6 +431,9 @@ class LdmlConvertRules {
         new PathTransformSpec("(.*/alias)(.*)", "$1/alias$2"),
 
         new PathTransformSpec("(.*currencyData/region)(.*)", "$1/region$2"),
+
+        // Skip exemplar city in /etc/GMT or UTC timezones, since they don't have them.
+        new PathTransformSpec("(.*(GMT|UTC).*/exemplarCity)(.*)", ""),
 
         new PathTransformSpec("(.*/transforms/transform[^/]*)/(.*)", "$1/tRules/$2"),
         new PathTransformSpec("(.*)\\[@territories=\"([^\"]*)\"\\](.*)\\[@alt=\"variant\"\\](.*)", "$1\\[@territories=\"$2-alt-variant\"\\]"),

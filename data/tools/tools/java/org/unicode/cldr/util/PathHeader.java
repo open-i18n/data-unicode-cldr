@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -30,6 +31,7 @@ import com.ibm.icu.impl.Row;
 import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.text.Collator;
 import com.ibm.icu.text.Transform;
+import com.ibm.icu.util.ICUException;
 import com.ibm.icu.util.Output;
 import com.ibm.icu.util.ULocale;
 
@@ -91,6 +93,7 @@ public class PathHeader implements Comparable<PathHeader> {
         Numbers,
         Currencies,
         Units,
+        Characters,
         Misc("Miscellaneous"),
         BCP47,
         Supplemental,
@@ -255,6 +258,7 @@ public class PathHeader implements Comparable<PathHeader> {
         LanguageMatch(SectionId.Supplemental),
         TerritoryInfo(SectionId.Supplemental),
         LanguageInfo(SectionId.Supplemental),
+        LanguageGroup(SectionId.Supplemental),
         Fallback(SectionId.Supplemental),
         Gender(SectionId.Supplemental),
         Metazone(SectionId.Supplemental),
@@ -267,10 +271,22 @@ public class PathHeader implements Comparable<PathHeader> {
         WeekData(SectionId.Supplemental),
         Measurement(SectionId.Supplemental),
         Language(SectionId.Supplemental),
-        Annotation(SectionId.Supplemental),
         RBNF(SectionId.Supplemental),
         Segmentation(SectionId.Supplemental),
         DayPeriod(SectionId.Supplemental),
+
+        Category(SectionId.Characters),
+        // [Smileys, People, Animals & Nature, Food & Drink, Travel & Places, Activities, Objects, Symbols, Flags]
+        Smileys(SectionId.Characters),
+        People(SectionId.Characters),
+        Animals_Nature(SectionId.Characters, "Animals & Nature"),
+        Food_Drink(SectionId.Characters, "Food & Drink"),
+        Travel_Places(SectionId.Characters, "Travel & Places"),
+        Activities(SectionId.Characters),
+        Objects(SectionId.Characters),
+        Symbols2(SectionId.Characters),
+        Flags(SectionId.Characters),
+        Component(SectionId.Characters),
         ;
 
         private final SectionId sectionId;
@@ -288,7 +304,11 @@ public class PathHeader implements Comparable<PathHeader> {
          * @return
          */
         public static PageId forString(String name) {
-            return PageIdNames.forString(name);
+            try {
+                return PageIdNames.forString(name);
+            } catch (Exception e) {
+                throw new ICUException("No PageId for " + name, e);
+            }
         }
 
         /**
@@ -1270,7 +1290,7 @@ public class PathHeader implements Comparable<PathHeader> {
             functionMap.put("categoryFromTerritory",
                     catFromTerritory = new Transform<String, String>() {
                 public String transform(String source) {
-                    String territory = hyphenSplitter.split(source);
+                    String territory = getSubdivisionsTerritory(source, null);
                     String container = Containment.getContainer(territory);
                     order = Containment.getOrder(territory);
                     return englishFile.getName(CLDRFile.TERRITORY_NAME, container);
@@ -1278,11 +1298,9 @@ public class PathHeader implements Comparable<PathHeader> {
             });
             functionMap.put("territorySection", new Transform<String, String>() {
                 final Set<String> specialRegions = new HashSet<String>(Arrays.asList("EZ", "EU", "QO", "UN", "ZZ"));
-
                 public String transform(String source0) {
                     // support subdivisions
-                    int dashPos = source0.indexOf('-');
-                    String theTerritory = dashPos < 0 ? source0 : source0.substring(0,dashPos);
+                    String theTerritory = getSubdivisionsTerritory(source0, null);
                     try {
                         if (specialRegions.contains(theTerritory) 
                             || theTerritory.charAt(0) < 'A' && Integer.valueOf(theTerritory) > 0) {
@@ -1566,7 +1584,7 @@ public class PathHeader implements Comparable<PathHeader> {
                         "quarter", "quarter-short", "quarter-narrow",
                         "month", "month-short", "month-narrow",
                         "week", "week-short", "week-narrow",
-                        "weekdayOfMonth", "weekdayOfMonth-short", "weekdayOfMonth-narrow",
+                        "weekOfMonth", "weekOfMonth-short", "weekOfMonth-narrow",
                         "day", "day-short", "day-narrow",
                         "dayOfYear", "dayOfYear-short", "dayOfYear-narrow",
                         "weekday", "weekday-short", "weekday-narrow",
@@ -1701,6 +1719,36 @@ public class PathHeader implements Comparable<PathHeader> {
                             + (parts.get(0).equals("both") ? "↔︎" : "→")
                             + parts.get(2)
                             + (parts.size() > 3 ? "/"+parts.get(3) : "");
+                }
+            });
+            functionMap.put("major", new Transform<String, String>() {
+                @Override
+                public String transform(String source) {
+                    String major = Emoji.getMajorCategory(source);
+                    // check that result is reasonable by running through PageId.
+                    if (!major.equals("Smileys & People")) {
+                        PageId pageId2 = PageId.forString(major);
+                        if (pageId2.getSectionId() != SectionId.Characters) {
+                            if (pageId2 == PageId.Symbols) {
+                                pageId2 = PageId.Symbols2;
+                            }
+                        }
+                        return pageId2.toString();
+                    }
+                    String minorCat = Emoji.getMinorCategory(source);
+                    if (minorCat.startsWith("person")) {
+                        return PageId.People.toString();
+                    } else {
+                        return PageId.Smileys.toString();
+                    }
+               }
+            });
+            functionMap.put("minor", new Transform<String, String>() {
+                @Override
+                public String transform(String source) {
+                    String minorCat = Emoji.getMinorCategory(source);
+                    order = Emoji.getMinorToOrder(minorCat);
+                    return minorCat;
                 }
             });
 
@@ -1909,5 +1957,28 @@ public class PathHeader implements Comparable<PathHeader> {
             return null;
         }
         return SECTION_LINK + PathHeader.getUrl(baseUrl, file.getLocaleID(), path) + "'><em>view</em></a>";
+    }
+
+    /**
+     * If a subdivision, return the (uppercased) territory and if suffix != null, the suffix. Otherwise return the input as is.
+     * @param input
+     * @param suffix
+     * @return
+     */
+    private static String getSubdivisionsTerritory(String input, Output<String> suffix) {
+        String theTerritory;
+        if (StandardCodes.LstrType.subdivision.isWellFormed(input)) {
+            int territoryEnd = input.charAt(0) < 'A' ? 3 : 2;
+            theTerritory = input.substring(0, territoryEnd).toUpperCase(Locale.ROOT);
+            if (suffix != null) {
+                suffix.value =  input.substring(territoryEnd);
+            }
+        } else {
+            theTerritory = input;
+            if (suffix != null) {
+                suffix.value = "";
+            }
+        }
+        return theTerritory;
     }
 }

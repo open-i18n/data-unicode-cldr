@@ -719,6 +719,10 @@ public class ICUServiceBuilder {
         }
         return symbols;
     }
+    
+    public DecimalFormatSymbols getDecimalFormatSymbols(String numberSystem) {
+        return (DecimalFormatSymbols) _getDecimalFormatSymbols(numberSystem).clone();
+    }
 
     private DecimalFormatSymbols _getDecimalFormatSymbols(String numberSystem) {
         String key = (numberSystem == null) ? cldrFile.getLocaleID() : cldrFile.getLocaleID() + "@numbers="
@@ -740,12 +744,12 @@ public class ICUServiceBuilder {
         symbols.setExponentSeparator(getSymbolString("exponential", numberSystem));
         symbols.setGroupingSeparator(getSymbolCharacter("group", numberSystem));
         symbols.setInfinity(getSymbolString("infinity", numberSystem));
-        symbols.setMinusSign(getHackSymbolCharacter("minusSign", numberSystem));
+        symbols.setMinusSignString(getSymbolString("minusSign", numberSystem));
         symbols.setNaN(getSymbolString("nan", numberSystem));
         symbols.setPatternSeparator(getSymbolCharacter("list", numberSystem));
-        symbols.setPercent(getSymbolCharacter("percentSign", numberSystem));
+        symbols.setPercentString(getSymbolString("percentSign", numberSystem));
         symbols.setPerMill(getSymbolCharacter("perMille", numberSystem));
-        symbols.setPlusSign(getHackSymbolCharacter("plusSign", numberSystem));
+        symbols.setPlusSignString(getSymbolString("plusSign", numberSystem));
         // symbols.setZeroDigit(getSymbolCharacter("nativeZeroDigit", numberSystem));
         String digits = supplementalData.getDigits(numberSystem);
         if (digits != null && digits.length() == 10) {
@@ -783,9 +787,7 @@ public class ICUServiceBuilder {
         return getSymbolString(key, numsys).charAt(0);
     }
 
-    // TODO fix once http://bugs.icu-project.org/trac/ticket/10368 is done.
-    // Actually CLDR is instead now using a hacked version of DecimalFormatSymbols
-    // to address http://unicode.org/cldr/trac/ticket/9040
+    // TODO no longer used now that http://bugs.icu-project.org/trac/ticket/10368 is done.
     private char getHackSymbolCharacter(String key, String numsys) {
         String minusString = getSymbolString(key, numsys);
         char minusSign = (minusString.length() > 1 && isBidiMark(minusString.charAt(0))) ? minusString.charAt(1) : minusString.charAt(0);
@@ -889,13 +891,26 @@ public class ICUServiceBuilder {
 
     static final String SHORT_PATH = "//ldml/dates/calendars/calendar[@type=\"gregorian\"]/timeFormats/timeFormatLength[@type=\"short\"]/timeFormat[@type=\"standard\"]/pattern[@type=\"standard\"]";
     static final String HM_PATH = "//ldml/dates/calendars/calendar[@type=\"gregorian\"]/dateTimeFormats/availableFormats/dateFormatItem[@id=\"hm\"]";
+    static final String BHM_PATH = "//ldml/dates/calendars/calendar[@type=\"gregorian\"]/dateTimeFormats/availableFormats/dateFormatItem[@id=\"Bhm\"]";
 
     public String formatDayPeriod(int timeInDay, String dayPeriodFormatString) {
-        String pattern = cldrFile.getStringValue(HM_PATH);
+        String pattern = null;
+        if ((timeInDay % 6) != 0) { // need a better way to test for this
+            // dayPeriods other than am, pm, noon, midnight (want patterns with B)
+            pattern = cldrFile.getStringValue(BHM_PATH);
+            if (pattern != null) {
+                pattern = pattern.replace('B', '\uE000');
+            }
+        }
+        if (pattern == null) {
+            // dayPeriods am, pm, noon, midnight (want patterns with a)
+            pattern = cldrFile.getStringValue(HM_PATH);
+            if (pattern != null) {
+                pattern = pattern.replace('a', '\uE000');
+            }
+        }
         if (pattern == null) {
             pattern = "h:mm \uE000";
-        } else {
-            pattern = pattern.replace('a', '\uE000');
         }
         SimpleDateFormat df = getDateFormat("gregorian", pattern);
         String formatted = df.format(timeInDay);

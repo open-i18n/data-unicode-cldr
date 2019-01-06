@@ -222,6 +222,8 @@ public class TestAll extends TestGroup {
             "org.unicode.cldr.unittest.TestAliases",
             "org.unicode.cldr.unittest.TestValidity",
             "org.unicode.cldr.unittest.TestDtdData",
+            "org.unicode.cldr.unittest.TestCldrFactory",
+            "org.unicode.cldr.unittest.TestUnContainment",
             //            "org.unicode.cldr.unittest.TestCollators" See Ticket #8288
         },
             "All tests in CLDR");

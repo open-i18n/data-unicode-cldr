@@ -9,6 +9,7 @@
 # A * at the front (like *$1) means to not change the sorting group.
 
 # VARIABLES
+%a = [^"]*+
 %A = ([^"]*+)
 %B = ([^"/]*+)
 %E = ([-a-zA-Z_]*)
@@ -45,11 +46,10 @@
 ### Locale Display Names
 //ldml/localeDisplayNames/localeDisplayPattern/%E              ; Locale Display Names ; Locale Name Patterns ; Locale Formatting ; &localePattern($1)
 //ldml/localeDisplayNames/codePatterns/codePattern[@type="%A"] ; Locale Display Names ; Locale Name Patterns ; Locale Field Fallbacks ; $1
-//ldml/localeDisplayNames/annotationPatterns/annotationPattern[@type="%A"] ; Locale Display Names ; Locale Name Patterns ; Annotations ; $1
 //ldml/localeDisplayNames/languages/language[@type="%A"]       ; Locale Display Names ; &languageSection($1) ; &firstLetter($1) ; &languageSort($1)
 //ldml/localeDisplayNames/scripts/script[@type="%A"]           ; Locale Display Names ; Scripts ; &categoryFromScript($1) ; $1
 //ldml/localeDisplayNames/territories/territory[@type="%A"]    ; Locale Display Names ; &territorySection($1) ; &categoryFromTerritory($1) ; $1
-//ldml/localeDisplayNames/subdivisions/subdivision[@type="%A"]    ; Locale Display Names ; &territorySection($1) ; &categoryFromTerritory($1) ; $1
+//ldml/localeDisplayNames/subdivisions/subdivision[@type="%A"]    ; Locale Display Names ; &territorySection($1) ; &categoryFromTerritory($1)-Subdivisions ; $1
 //ldml/localeDisplayNames/variants/variant[@type="%A"]         ; Locale Display Names ; Locale Variants ; null ; $1
 //ldml/localeDisplayNames/keys/key[@type="%A"]                 ; Locale Display Names ; Keys ; &categoryFromKey($1) ; $1
 //ldml/localeDisplayNames/types/type[@key="%A"][@type="%A"]    ; Locale Display Names ; Keys ; *&categoryFromKey($1) ; $1-$2
@@ -90,9 +90,13 @@
 //ldml/dates/calendars/calendar[@type="%N"]/dateTimeFormats/dateTimeFormatLength[@type="%A"]/dateTimeFormat[@type="%A"]/pattern[@type="%A"]       ; DateTime ; &calendar($1) ; &calField(Formats:Standard:dateTime) ; $2 ; LTR_ALWAYS
 //ldml/dates/calendars/calendar[@type="%A"]/dateTimeFormats/dateTimeFormatLength[@type="%A"]/dateTimeFormat[@type="%A"]/pattern[@type="%A"]       ; Special  ; Suppress ; &calendar($1) ; &calField(Formats:Standard:dateTime)-$2 ; HIDE
 
-//ldml/dates/calendars/calendar[@type="gregorian"]/dateTimeFormats/availableFormats/dateFormatItem[@id="%A"][@count="%A"]                 ; DateTime ; &calendar(gregorian); &calField(Formats:Flexible:date) ; $1-$2 ; LTR_ALWAYS
-//ldml/dates/calendars/calendar[@type="gregorian"]/dateTimeFormats/availableFormats/dateFormatItem[@id="(?![^"]*H)%A"]                 ; DateTime ; &calendar(gregorian); &calField(Formats:Flexible:time12) ; $1 ; LTR_ALWAYS
-//ldml/dates/calendars/calendar[@type="gregorian"]/dateTimeFormats/availableFormats/dateFormatItem[@id="%A"]                           ; DateTime ; &calendar(gregorian); &calField(Formats:Flexible:time24) ; $1 ; LTR_ALWAYS
+//ldml/dates/calendars/calendar[@type="gregorian"]/dateTimeFormats/availableFormats/dateFormatItem[@id="(E*(a|b|B)*[h]%a)"]     ; DateTime ; &calendar(gregorian); &calField(Formats:Flexible:time12) ; $1 ; LTR_ALWAYS
+//ldml/dates/calendars/calendar[@type="gregorian"]/dateTimeFormats/availableFormats/dateFormatItem[@id="(E*[Hms]%a)"]           ; DateTime ; &calendar(gregorian); &calField(Formats:Flexible:time24) ; $1 ; LTR_ALWAYS
+//ldml/dates/calendars/calendar[@type="generic"]/dateTimeFormats/availableFormats/dateFormatItem[@id="(E*(a|b|B)*[h]%a)"]       ; DateTime ; &calendar(generic); &calField(Formats:Flexible:time12) ; $1 ; LTR_ALWAYS
+//ldml/dates/calendars/calendar[@type="generic"]/dateTimeFormats/availableFormats/dateFormatItem[@id="(E*[Hms]%a)"]             ; DateTime ; &calendar(generic); &calField(Formats:Flexible:time24) ; $1 ; LTR_ALWAYS
+//ldml/dates/calendars/calendar[@type="chinese"]/dateTimeFormats/availableFormats/dateFormatItem[@id="(E*(a|b|B)*[h]%a)"]       ; DateTime ; &calendar(chinese); &calField(Formats:Flexible:time12) ; $1 ; LTR_ALWAYS
+//ldml/dates/calendars/calendar[@type="chinese"]/dateTimeFormats/availableFormats/dateFormatItem[@id="(E*[Hms]%a)"]             ; DateTime ; &calendar(chinese); &calField(Formats:Flexible:time24) ; $1 ; LTR_ALWAYS
+//ldml/dates/calendars/calendar[@type="gregorian"]/dateTimeFormats/availableFormats/dateFormatItem[@id="%A"][@count="%A"]       ; DateTime ; &calendar(gregorian); &calField(Formats:Flexible:date) ; $1-$2 ; LTR_ALWAYS
 //ldml/dates/calendars/calendar[@type="%N"]/dateTimeFormats/availableFormats/dateFormatItem[@id="(?![^"]*[hHms])%A"]            ; DateTime ; &calendar($1); &calField(Formats:Flexible:date) ; $2 ; LTR_ALWAYS
 //ldml/dates/calendars/calendar[@type="%A"]/dateTimeFormats/availableFormats/dateFormatItem[@id="%A"]                           ; Special  ; Suppress ; &calendar($1); &calField(Formats:Flexible:date)-$2 ; HIDE
 
@@ -211,11 +215,12 @@
 //ldml/units/unitLength[@type="%L"]/coordinateUnit/coordinateUnitPattern[@type="%A"]                    ; Units ; Coordinates ; $2 ; &unitCount($1)
 
 ### Miscellaneous
-//ldml/listPatterns/listPattern/listPatternPart[@type="%A"] ; Misc ; Displaying Lists ; Standard Lists ; &listOrder($1)
-//ldml/listPatterns/listPattern[@type="standard-short"]/listPatternPart[@type="%A"] ; Misc ; Displaying Lists ; Short Standard Lists ; &listOrder($1)
-//ldml/listPatterns/listPattern[@type="unit"]/listPatternPart[@type="%A"] ; Misc ; Displaying Lists ; Unit Lists ; &listOrder($1)
-//ldml/listPatterns/listPattern[@type="unit-short"]/listPatternPart[@type="%A"] ; Misc ; Displaying Lists ; Short Unit Lists ; &listOrder($1)
-//ldml/listPatterns/listPattern[@type="unit-narrow"]/listPatternPart[@type="%A"] ; Misc ; Displaying Lists ; Narrow Unit Lists ; &listOrder($1)
+//ldml/listPatterns/listPattern/listPatternPart[@type="%A"] ; Misc ; Displaying Lists ; “And” List ; &listOrder($1)
+//ldml/listPatterns/listPattern[@type="standard-short"]/listPatternPart[@type="%A"] ; Misc ; Displaying Lists ; Short “and” List ; &listOrder($1)
+//ldml/listPatterns/listPattern[@type="or"]/listPatternPart[@type="%A"] ; Misc ; Displaying Lists ; “Or” List ; &listOrder($1)
+//ldml/listPatterns/listPattern[@type="unit"]/listPatternPart[@type="%A"] ; Misc ; Displaying Lists ; Unit List ; &listOrder($1)
+//ldml/listPatterns/listPattern[@type="unit-short"]/listPatternPart[@type="%A"] ; Misc ; Displaying Lists ; Short Unit List ; &listOrder($1)
+//ldml/listPatterns/listPattern[@type="unit-narrow"]/listPatternPart[@type="%A"] ; Misc ; Displaying Lists ; Narrow Unit List ; &listOrder($1)
 
 //ldml/characters/ellipsis[@type="%A"]                      ; Misc ; Linguistic Elements ; Ellipsis ; $1
 
@@ -227,9 +232,21 @@
 //ldml/posix/messages/%Estr                                 ; Misc ; Linguistic Elements ; Yes and No ; posix-$1
 //ldml/localeDisplayNames/transformNames/transformName[@type="%A"]          ; Misc ; Transforms ; null ; $1
 
-//ldml/characterLabels/characterLabelPattern[@type="%A"][@count="%A"]	; Misc ; Linguistic Elements ; Character Label Pattern ; $1-$2
-//ldml/characterLabels/characterLabelPattern[@type="%A"]	; Misc ; Linguistic Elements ; Character Label Pattern ; $1
-//ldml/characterLabels/characterLabel[@type="%A"]			; Misc ; Linguistic Elements ; Character Label ; $1
+
+#Emoji, etc.
+
+//ldml/characterLabels/characterLabelPattern[@type="%A"][@count="%A"]	; Characters ; Category ; Pattern ; $1-$2
+//ldml/characterLabels/characterLabelPattern[@type="%A"]	; Characters ; Category ; Pattern ; $1
+//ldml/characterLabels/characterLabel[@type="%A"]			; Characters ; Category ; Label ; $1
+
+//ldml/localeDisplayNames/annotationPatterns/annotationPattern[@type="%A"] ; Characters ; Category ; Link ; $1
+
+# Use special hyphens
+//ldml/annotations/annotation[@cp="%A"][@type="tts"]	; Characters ; &major($1) ; &minor($1) ; &alphaOrder($1 -name)
+//ldml/annotations/annotation[@cp="%A"]					; Characters ; &major($1) ; &minor($1) ; &alphaOrder($1 –keywords)
+
+#OLD
+//ldml/annotations/annotation_[@cp="%A"]/_tts			; Characters ; Annotation ; $1 ; TTS ; HIDE
 
 #Outside of Main
 
@@ -249,11 +266,6 @@
 //ldml/collations/collation[@type="%A"]/(%E)(.*)	; Misc ; Linguistic Elements ; Collation ; $1-$2-$3 ; HIDE
 //ldml/collations/collation[@type="%A"]	; Misc ; Linguistic Elements ; Collation ; $1 ; HIDE
 
-//ldml/annotations/annotation[@cp="%A"][@type="%A"]	; Misc ; Linguistic Elements ; Annotation ; &alphaOrder($1-$2) ; HIDE
-//ldml/annotations/annotation[@cp="%A"]	; Misc ; Linguistic Elements ; Annotation ; &alphaOrder($1-labels) ; HIDE
-
-#OLD
-//ldml/annotations/annotation_[@cp="%A"]/_tts			; Supplemental ; Annotation ; $1 ; TTS ; HIDE
 
 # HIDE OTHERS
 //ldml/layout/orientation/(%E)                              ; Special ; Alphabetic Information ; Layout ; $1 ; HIDE
@@ -340,6 +352,8 @@
 
 //supplementalData/territoryInfo/territory[@type="%A"]/languagePopulation[@type="%A"]/_%E			; Supplemental ; LanguageInfo ; $1/$2 ; $3 ; HIDE
 //supplementalData/territoryInfo/territory[@type="%A"]/_%E			; Supplemental ; TerritoryInfo ; $1 ; $2 ; HIDE
+
+//supplementalData/languageGroups/languageGroup[@parent="%A"]			; Supplemental ; LanguageGroup ; $1 ; parent-child ; HIDE
 
 //supplementalData/characters/character-fallback/character[@value="%A"]/substitute			; Supplemental ; Fallback ; $1 ; plain ; DEPRECATED
 

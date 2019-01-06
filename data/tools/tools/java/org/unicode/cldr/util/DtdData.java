@@ -736,7 +736,7 @@ public class DtdData extends XMLFileReader.SimpleHandler {
             String baseA = a.getElement(0);
             String baseB = b.getElement(0);
             if (!ROOT.name.equals(baseA) || !ROOT.name.equals(baseB)) {
-                throw new IllegalArgumentException("Comparing two different DTDs: " + baseA + ", " + baseB);
+                throw new IllegalArgumentException("Comparing different DTDs: " + ROOT.name + ", " + baseA + ", " + baseB);
             }
             int min = Math.min(a.size(), b.size());
             Element parent = ROOT;
@@ -1436,6 +1436,7 @@ public class DtdData extends XMLFileReader.SimpleHandler {
                 break;
             }
             break;
+        default:
         }
         return false;
     }
@@ -1609,7 +1610,8 @@ public class DtdData extends XMLFileReader.SimpleHandler {
     // TODO: add support for following to DTD annotations, and rework API
 
     static final Set<String> SPACED_VALUES = ImmutableSet.of(
-        "idValidity"
+        "idValidity",
+        "languageGroup"
         );
 
     public static Splitter getValueSplitter(XPathParts pathPlain) {

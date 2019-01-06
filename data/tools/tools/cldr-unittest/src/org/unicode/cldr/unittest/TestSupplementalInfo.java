@@ -2,6 +2,7 @@ package org.unicode.cldr.unittest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.EnumMap;
@@ -23,8 +24,8 @@ import java.util.regex.Pattern;
 
 import org.unicode.cldr.draft.ScriptMetadata;
 import org.unicode.cldr.tool.LikelySubtags;
+import org.unicode.cldr.tool.PluralMinimalPairs;
 import org.unicode.cldr.tool.PluralRulesFactory;
-import org.unicode.cldr.tool.PluralRulesFactory.SamplePatterns;
 import org.unicode.cldr.util.Builder;
 import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
@@ -63,6 +64,8 @@ import org.unicode.cldr.util.Validity;
 import org.unicode.cldr.util.Validity.Status;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
 import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.impl.Relation;
 import com.ibm.icu.impl.Row;
@@ -159,7 +162,7 @@ public class TestSupplementalInfo extends TestFmwkPlus {
             PluralInfo pluralInfo = SUPPLEMENTAL.getPlurals(locale);
             Set<Count> counts = pluralInfo.getCounts();
 
-            final SamplePatterns samplePatterns = prf.getSamplePatterns(new ULocale(locale));
+            final PluralMinimalPairs samplePatterns = PluralMinimalPairs.getInstance(new ULocale(locale).toString());
 
             // check that there are no null values
             PluralRanges pluralRanges = SUPPLEMENTAL.getPluralRanges(locale);
@@ -258,18 +261,18 @@ public class TestSupplementalInfo extends TestFmwkPlus {
 
     private String getRangeLine(Count start, Count end, Count result, 
             Output<FixedDecimal> maxSample, Output<FixedDecimal> minSample, 
-            SamplePatterns samplePatterns) {
+            PluralMinimalPairs samplePatterns) {
         final String range = minSample + "–" + maxSample;
         String example = range;
         if (samplePatterns != null) {
             example = "";
             if (result != null) {
                 String pat = samplePatterns.get(PluralRules.PluralType.CARDINAL, result);
-                example += "«" + pat.replace("{0}", range) + "»";
+                example += "«" + (pat == null ? "MISSING-PATTERN" : pat.replace("{0}", range)) + "»";
             } else {
                 for (Count c : new TreeSet<>(Arrays.asList(start, end, Count.other))){
                     String pat = samplePatterns.get(PluralRules.PluralType.CARDINAL, c);
-                    example += c + ":«" + pat.replace("{0}", range) + "»" + "?\tOR ";
+                    example += c + ":«" + (pat == null ? "MISSING-PATTERN" : pat.replace("{0}", range)) + "»" + "?\tOR ";
                 }
                 example += " …";
             }
@@ -304,11 +307,14 @@ public class TestSupplementalInfo extends TestFmwkPlus {
 
     public void TestPluralSamples2() {
         PluralRulesFactory prf = PluralRulesFactory.getInstance(SUPPLEMENTAL);
-        for (ULocale locale : prf.getLocales()) {
-            if (locale.toString().equals("und")) {
+        for (String locale : prf.getLocales()) {
+            if (locale.equals("und")) {
                 continue;
             }
-            final SamplePatterns samplePatterns = prf.getSamplePatterns(locale);
+            if (locale.equals("pl")) {
+                int debug = 0;
+            }
+            final PluralMinimalPairs samplePatterns = PluralMinimalPairs.getInstance(locale);
             for (PluralRules.PluralType type : PluralRules.PluralType.values()) {
                 PluralInfo rules = SUPPLEMENTAL.getPlurals(
                         SupplementalDataInfo.PluralType.fromStandardType(type),
@@ -316,20 +322,27 @@ public class TestSupplementalInfo extends TestFmwkPlus {
                 if (rules.getCounts().size() == 1) {
                     continue; // don't require rules for unary cases
                 }
+                Multimap<String, Count> sampleToCount = TreeMultimap.create();
+                
                 for (Count count : rules.getCounts()) {
                     String sample = samplePatterns.get(type, count);
                     if (sample == null) {
                         errOrLog(CoverageIssue.error, locale + "\t" + type + " \tmissing samples for " + count, "cldrbug:7075",
                                 "Missing ordinal minimal pairs");
                     } else {
+                        sampleToCount.put(sample, count);
                         PluralRules pRules = rules.getPluralRules();
                         double unique = pRules.getUniqueKeywordValue(count
                                 .toString());
                         if (unique == PluralRules.NO_UNIQUE_VALUE
                                 && !sample.contains("{0}")) {
-                            errln("Missing {0} in sample: " + locale + ", "
-                                    + type + ", " + count + " «" + sample + "»");
+                            errln("Missing {0} in sample: " + locale + ", " + type + ", " + count + " «" + sample + "»");
                         }
+                    }
+                }
+                for (Entry<String, Collection<Count>> entry : sampleToCount.asMap().entrySet()) {
+                    if (entry.getValue().size() > 1) {
+                        errln("Colliding minimal pair samples: " + locale + ", " + type + ", " + entry.getValue() + " «" + entry.getKey() + "»");
                     }
                 }
             }
@@ -1610,7 +1623,6 @@ public class TestSupplementalInfo extends TestFmwkPlus {
             //                    needsCoverage = CoverageIssue.warn;
             //                }
             //            }
-            ULocale ulocale = new ULocale(locale);
             PluralRulesFactory prf = PluralRulesFactory
                     .getInstance(CLDRConfig.getInstance()
                             .getSupplementalDataInfo());
@@ -1631,30 +1643,30 @@ public class TestSupplementalInfo extends TestFmwkPlus {
                         .noneOf(Count.class);
                 Relation<String, Count> samplesToCounts = Relation.of(
                         new HashMap(), LinkedHashSet.class);
-                Set<Count> countsFound = prf.getSampleCounts(ulocale,
+                Set<Count> countsFound = prf.getSampleCounts(locale,
                         type.standardType);
                 StringBuilder failureCases = new StringBuilder();
                 for (Count count : counts) {
-                    String pattern = prf.getSamplePattern(ulocale, type.standardType, count);
+                    String pattern = prf.getSamplePattern(locale, type.standardType, count);
                     final String rangeLine = getRangeLine(count, pluralInfo.getPluralRules(), pattern);
                     failureCases.append('\n').append(locale).append('\t').append(type).append('\t').append(rangeLine);
                     if (countsFound == null || !countsFound.contains(count)) {
                         countsWithNoSamples.add(count);
                     } else {
                         samplesToCounts.put(pattern, count);
-                        logln(ulocale + "\t" + type + "\t" + count + "\t"
+                        logln(locale + "\t" + type + "\t" + count + "\t"
                                 + pattern);
                     }
                 }
                 if (!countsWithNoSamples.isEmpty()) {
-                    errOrLog(needsCoverage, ulocale + "\t" + type + "\t missing samples:\t" + countsWithNoSamples,
+                    errOrLog(needsCoverage, locale + "\t" + type + "\t missing samples:\t" + countsWithNoSamples,
                             "cldrbug:7075", "Missing ordinal minimal pairs");
                     errOrLog(needsCoverage2, failureCases.toString());
                 }
                 for (Entry<String, Set<Count>> entry : samplesToCounts
                         .keyValuesSet()) {
                     if (entry.getValue().size() != 1) {
-                        errOrLog(needsCoverage, ulocale + "\t" + type + "\t duplicate samples: " + entry.getValue()
+                        errOrLog(needsCoverage, locale + "\t" + type + "\t duplicate samples: " + entry.getValue()
                                 + " => «" + entry.getKey() + "»", "cldrbug:7119", "Some duplicate minimal pairs");
                         errOrLog(needsCoverage2, failureCases.toString());
                     }
@@ -1782,7 +1794,7 @@ public class TestSupplementalInfo extends TestFmwkPlus {
 
     public void Test9924 () {
         PopulationData zhCNData = SUPPLEMENTAL.getLanguageAndTerritoryPopulationData(LOCALES_FIXED ? "zh" : "zh_Hans", "CN");
-        PopulationData yueCNData = SUPPLEMENTAL.getLanguageAndTerritoryPopulationData("yue", "CN");
+        PopulationData yueCNData = SUPPLEMENTAL.getLanguageAndTerritoryPopulationData("yue_Hans", "CN");
         assertTrue("yue*10 < zh", yueCNData.getPopulation() < zhCNData.getPopulation());
     }
 }

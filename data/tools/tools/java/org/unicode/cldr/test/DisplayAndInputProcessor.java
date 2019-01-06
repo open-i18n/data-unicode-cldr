@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,6 +20,7 @@ import org.unicode.cldr.util.CLDRLocale;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.DateTimeCanonicalizer;
 import org.unicode.cldr.util.DateTimeCanonicalizer.DateTimePatternType;
+import org.unicode.cldr.util.Emoji;
 import org.unicode.cldr.util.ICUServiceBuilder;
 import org.unicode.cldr.util.MyanmarZawgyiConverter;
 import org.unicode.cldr.util.PatternCache;
@@ -26,6 +28,8 @@ import org.unicode.cldr.util.UnicodeSetPrettyPrinter;
 import org.unicode.cldr.util.With;
 import org.unicode.cldr.util.XPathParts;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.text.Collator;
 import com.ibm.icu.text.DateIntervalInfo;
@@ -175,8 +179,11 @@ public class DisplayAndInputProcessor {
                 .setToQuote(new UnicodeSet(TO_QUOTE))
                 .setOrdering(col)
                 .setSpaceComparator(spaceCol);
-
         }
+    }
+    
+    public UnicodeSetPrettyPrinter getPrettyPrinter() {
+        return pp;
     }
 
     /**
@@ -226,17 +233,8 @@ public class DisplayAndInputProcessor {
      */
     public synchronized String processForDisplay(String path, String value) {
         value = Normalizer.compose(value, false); // Always normalize all text to NFC.
-        if (path.contains("exemplarCharacters")) {
-            if (value.startsWith("[") && value.endsWith("]")) {
-                value = value.substring(1, value.length() - 1);
-            }
-
-            value = replace(NEEDS_QUOTE1, value, "$1\\\\$2$3");
-            value = replace(NEEDS_QUOTE2, value, "$1\\\\$2$3");
-
-            // if (RTL.containsSome(value) && value.startsWith("[") && value.endsWith("]")) {
-            // return "\u200E[\u200E" + value.substring(1,value.length()-2) + "\u200E]\u200E";
-            // }
+        if (hasUnicodeSetValue(path)) {
+            value = displayUnicodeSet(value);
         } else if (path.contains("stopword")) {
             return value.trim().isEmpty() ? "NONE" : value;
         } else {
@@ -271,8 +269,15 @@ public class DisplayAndInputProcessor {
         return value;
     }
 
+    private boolean hasUnicodeSetValue(String path) {
+        return path.startsWith("//ldml/characters/exemplarCharacters")  || path.startsWith("//ldml/characters/parseLenients");
+    }
+
     static final UnicodeSet WHITESPACE = new UnicodeSet("[:whitespace:]").freeze();
     static final DateTimeCanonicalizer dtc = new DateTimeCanonicalizer(FIX_YEARS);
+
+    static final Splitter SPLIT_BAR = Splitter.on('|').trimResults().omitEmptyStrings();
+    static final Joiner JOIN_BAR = Joiner.on(" | ");
 
     /**
      * Process the value for input. The result is a cleaned-up value. For example,
@@ -295,23 +300,24 @@ public class DisplayAndInputProcessor {
         }
         try {
             // Normalise Malayalam characters.
+            boolean isUnicodeSet = hasUnicodeSetValue(path);
             if (locale.childOf(MALAYALAM)) {
                 String newvalue = normalizeMalayalam(value);
                 if (DEBUG_DAIP) System.out.println("DAIP: Normalized Malayalam '" + value + "' to '" + newvalue + "'");
                 value = newvalue;
-            } else if (locale.childOf(ROMANIAN) && !path.startsWith("//ldml/characters/exemplarCharacters")) {
+            } else if (locale.childOf(ROMANIAN) && !isUnicodeSet) {
                 value = standardizeRomanian(value);
-            } else if (locale.childOf(CATALAN) && !path.startsWith("//ldml/characters/exemplarCharacters")) {
+            } else if (locale.childOf(CATALAN) && !isUnicodeSet) {
                 value = standardizeCatalan(value);
-            } else if (locale.childOf(NGOMBA) && !path.startsWith("//ldml/characters/exemplarCharacters")) {
+            } else if (locale.childOf(NGOMBA) && !isUnicodeSet) {
                 value = standardizeNgomba(value);
-            } else if (locale.childOf(KWASIO) && !path.startsWith("//ldml/characters/exemplarCharacters")) {
+            } else if (locale.childOf(KWASIO) && !isUnicodeSet) {
                 value = standardizeKwasio(value);
             } else if (locale.childOf(HEBREW) && !APOSTROPHE_SKIP_PATHS.matcher(path).matches()) {
                 value = standardizeHebrew(value);
-            } else if ((locale.childOf(SWISS_GERMAN) || locale.childOf(GERMAN_SWITZERLAND)) && !path.startsWith("//ldml/characters/exemplarCharacters")) {
+            } else if ((locale.childOf(SWISS_GERMAN) || locale.childOf(GERMAN_SWITZERLAND)) && !isUnicodeSet) {
                 value = standardizeSwissGerman(value);
-            } else if (locale.childOf(MYANMAR) && !path.startsWith("//ldml/characters/exemplarCharacters")) {
+            } else if (locale.childOf(MYANMAR) && !isUnicodeSet) {
                 value = MyanmarZawgyiConverter.standardizeMyanmar(value);
             }
 
@@ -320,7 +326,7 @@ public class DisplayAndInputProcessor {
             }
 
             // all of our values should not have leading or trailing spaces, except insertBetween
-            if (!path.contains("/insertBetween")) {
+            if (!path.contains("/insertBetween") && !isUnicodeSet) {
                 value = value.trim();
             }
 
@@ -379,31 +385,8 @@ public class DisplayAndInputProcessor {
             }
 
             // check specific cases
-            if (path.contains("/exemplarCharacters")) {
-                // clean up the user's input.
-                // first, fix up the '['
-                value = value.trim();
-
-                // remove brackets and trim again before regex
-                if (value.startsWith("[")) {
-                    value = value.substring(1);
-                }
-                if (value.endsWith("]")) {
-                    value = value.substring(0, value.length() - 1);
-                }
-                value = value.trim();
-
-                value = replace(NEEDS_QUOTE1, value, "$1\\\\$2$3");
-                value = replace(NEEDS_QUOTE2, value, "$1\\\\$2$3");
-
-                // re-add brackets.
-                value = "[" + value + "]";
-
-                UnicodeSet exemplar = new UnicodeSet(value);
-                XPathParts parts = new XPathParts().set(path);
-                final String type = parts.getAttributeValue(-1, "type");
-                ExemplarType exemplarType = type == null ? ExemplarType.main : ExemplarType.valueOf(type);
-                value = getCleanedUnicodeSet(exemplar, pp, exemplarType);
+            if (isUnicodeSet) {
+                value = inputUnicodeSet(path, value);
             } else if (path.contains("stopword")) {
                 if (value.equals("NONE")) {
                     value = "";
@@ -429,10 +412,16 @@ public class DisplayAndInputProcessor {
             // Fix up hyphens, replacing with N-dash as appropriate
             if (INTERVAL_FORMAT_PATHS.matcher(path).matches()) {
                 value = normalizeIntervalHyphens(value);
-            } else {
+            } else if (!isUnicodeSet) {
                 value = normalizeHyphens(value);
             }
 
+            if (path.startsWith("//ldml/annotations/annotation") && !path.contains(Emoji.TYPE_TTS)) {
+                TreeSet<String> sorted = new TreeSet<>(Collator.getInstance(ULocale.ROOT));
+                sorted.addAll(SPLIT_BAR.splitToList(value));
+                value = JOIN_BAR.join(sorted);
+            }
+            
             return value;
         } catch (RuntimeException e) {
             if (internalException != null) {
@@ -440,6 +429,51 @@ public class DisplayAndInputProcessor {
             }
             return original;
         }
+    }
+
+    private String displayUnicodeSet(String value) {
+        if (value.startsWith("[") && value.endsWith("]")) {
+            value = value.substring(1, value.length() - 1);
+        }
+
+        value = replace(NEEDS_QUOTE1, value, "$1\\\\$2$3");
+        value = replace(NEEDS_QUOTE2, value, "$1\\\\$2$3");
+
+        // if (RTL.containsSome(value) && value.startsWith("[") && value.endsWith("]")) {
+        // return "\u200E[\u200E" + value.substring(1,value.length()-2) + "\u200E]\u200E";
+        // }
+        return value;
+    }
+
+    private String inputUnicodeSet(String path, String value) {
+        // clean up the user's input.
+        // first, fix up the '['
+        value = value.trim();
+
+        // remove brackets and trim again before regex
+        if (value.startsWith("[")) {
+            value = value.substring(1);
+        }
+        if (value.endsWith("]") && (!value.endsWith("\\]") || value.endsWith("\\\\]"))) {
+            value = value.substring(0, value.length() - 1);
+        }
+        value = value.trim();
+
+        value = replace(NEEDS_QUOTE1, value, "$1\\\\$2$3");
+        value = replace(NEEDS_QUOTE2, value, "$1\\\\$2$3");
+
+        // re-add brackets.
+        value = "[" + value + "]";
+
+        UnicodeSet exemplar = new UnicodeSet(value);
+        XPathParts parts = XPathParts.getFrozenInstance(path); // new XPathParts().set(path);
+        if (parts.getElement(2).equals("parseLenients")) {
+            return exemplar.toPattern(false);
+        }
+        final String type = parts.getAttributeValue(-1, "type");
+        ExemplarType exemplarType = type == null ? ExemplarType.main : ExemplarType.valueOf(type);
+        value = getCleanedUnicodeSet(exemplar, pp, exemplarType);
+        return value;
     }
 
     private String normalizeWhitespace(String path, String value) {
@@ -483,7 +517,7 @@ public class DisplayAndInputProcessor {
             } else if (c == ')') {
                 inParentheses = false;
             }
-            if (inParentheses && c == '-') {
+            if (inParentheses && c == '-' && Character.isDigit(value.charAt(i-1))) {
                 c = 0x2013; /* Replace hyphen-minus with dash for date ranges */
             }
             result.append(c);
@@ -707,7 +741,7 @@ public class DisplayAndInputProcessor {
     public static String getCleanedUnicodeSet(UnicodeSet exemplar, UnicodeSetPrettyPrinter prettyPrinter,
         ExemplarType exemplarType) {
         if (prettyPrinter == null) {
-            return exemplar.toString();
+            return exemplar.toPattern(false);
         }
         String value;
         prettyPrinter.setCompressRanges(exemplar.size() > 300);
