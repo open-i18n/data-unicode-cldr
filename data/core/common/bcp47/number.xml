@@ -2,8 +2,8 @@
 <!DOCTYPE ldmlBCP47 SYSTEM "../../common/dtd/ldmlBCP47.dtd">
 
 <ldmlBCP47>
-    <version number="$Revision: 6487 $"/>
-    <generation date="$Date: 2012-01-29 17:51:16 -0600 (Sun, 29 Jan 2012) $"/>
+    <version number="$Revision: 7607 $"/>
+    <generation date="$Date: 2012-08-20 11:51:09 -0700 (Mon, 20 Aug 2012) $"/>
     <keyword>
         <key name="nu" alias="numbers" description="Numbering system type key">
             <type name="arab" description="Arabic-Indic digits"/>
@@ -36,7 +36,6 @@
             <type name="kali" description="Kayah Li digits" since="21"/>
             <type name="khmr" description="Khmer digits"/>
             <type name="knda" description="Kannada digits"/>
-            <type name="osma" description="Osmanya digits" since="21"/>            
             <type name="lana" description="Tai Tham Hora (secular) digits" since="21"/>
             <type name="lanatham" description="Tai Tham Tham (ecclesiastical) digits" since="21"/>
             <type name="laoo" description="Lao digits"/>
@@ -52,14 +51,15 @@
             <type name="nkoo" description="N'Ko digits" since="21"/>
             <type name="olck" description="Ol Chiki digits" since="21"/>
             <type name="orya" description="Oriya digits"/>
+            <type name="osma" description="Osmanya digits" since="21"/>
             <type name="roman" description="Roman upper case numerals — non-decimal"/>
             <type name="romanlow" description="Roman lowercase numerals — non-decimal"/>
             <type name="saur" description="Saurashtra digits" since="21"/>
             <type name="shrd" description="Sharada digits" since="21"/>
             <type name="sora" description="Sora_Sompeng digits" since="21"/>
             <type name="sund" description="Sundanese digits" since="21"/>
-            <type name="talu" description="New Tai Lue digits" since="21"/>
             <type name="takr" description="Takri digits" since="21"/>
+            <type name="talu" description="New Tai Lue digits" since="21"/>
             <type name="taml" description="Tamil numerals — non-decimal"/>
             <type name="tamldec" description="Modern Tamil decimal digits" since="2.0.1"/>
             <type name="telu" description="Telugu digits"/>

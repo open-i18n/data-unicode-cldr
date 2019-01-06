@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 6546 $"/>
-		<generation date="$Date: 2012-02-07 12:32:35 -0600 (Tue, 07 Feb 2012) $"/>
+		<version number="$Revision: 7465 $"/>
+		<generation date="$Date: 2012-08-01 21:53:17 -0700 (Wed, 01 Aug 2012) $"/>
 		<language type="vai"/>
 		<script type="Latn"/>
 	</identity>
@@ -101,7 +101,6 @@
 			<territory type="CN">Cháína</territory>
 			<territory type="CO">Kɔlɔmbiya</territory>
 			<territory type="CR">Kósíta Ríko</territory>
-			<territory type="CS">Sɛbiya ɓɛ Mɔŋteniguro</territory>
 			<territory type="CU">Kiyubha</territory>
 			<territory type="CV">Kepi Vɛdi Tiŋŋɛ</territory>
 			<territory type="CY">Saɛpurɔ</territory>

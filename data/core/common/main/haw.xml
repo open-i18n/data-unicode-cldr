@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 6546 $"/>
-		<generation date="$Date: 2012-02-07 12:32:35 -0600 (Tue, 07 Feb 2012) $"/>
+		<version number="$Revision: 7485 $"/>
+		<generation date="$Date: 2012-08-05 19:01:41 -0700 (Sun, 05 Aug 2012) $"/>
 		<language type="haw"/>
 	</identity>
 	<localeDisplayNames>
@@ -193,24 +193,31 @@
 	</numbers>
 	<units>
 		<unit type="day">
+			<unitPattern count="one">{0} lā</unitPattern>
 			<unitPattern count="other">{0} lā</unitPattern>
 		</unit>
 		<unit type="hour">
+			<unitPattern count="one">{0} hola</unitPattern>
 			<unitPattern count="other">{0} hola</unitPattern>
 		</unit>
 		<unit type="minute">
+			<unitPattern count="one">{0} minuke</unitPattern>
 			<unitPattern count="other">{0} minuke</unitPattern>
 		</unit>
 		<unit type="month">
+			<unitPattern count="one">{0} mahina</unitPattern>
 			<unitPattern count="other">{0} mahina</unitPattern>
 		</unit>
 		<unit type="second">
+			<unitPattern count="one">{0} kekona</unitPattern>
 			<unitPattern count="other">{0} kekona</unitPattern>
 		</unit>
 		<unit type="week">
+			<unitPattern count="one">{0} pule</unitPattern>
 			<unitPattern count="other">{0} pule</unitPattern>
 		</unit>
 		<unit type="year">
+			<unitPattern count="one">{0} makahiki</unitPattern>
 			<unitPattern count="other">{0} makahiki</unitPattern>
 		</unit>
 	</units>

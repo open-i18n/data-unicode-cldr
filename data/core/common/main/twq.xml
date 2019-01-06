@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 6546 $"/>
-		<generation date="$Date: 2012-02-07 12:32:35 -0600 (Tue, 07 Feb 2012) $"/>
+		<version number="$Revision: 7553 $"/>
+		<generation date="$Date: 2012-08-14 01:15:55 -0700 (Tue, 14 Aug 2012) $"/>
 		<language type="twq"/>
 	</identity>
 	<localeDisplayNames>
@@ -100,7 +100,6 @@
 			<territory type="CN">Šiin</territory>
 			<territory type="CO">Kolombi</territory>
 			<territory type="CR">Kosta rika</territory>
-			<territory type="CS">Serbi nda Montenegro</territory>
 			<territory type="CU">Kuuba</territory>
 			<territory type="CV">Kapuver gungey</territory>
 			<territory type="CY">Šiipur</territory>
@@ -284,7 +283,7 @@
 		</territories>
 	</localeDisplayNames>
 	<characters>
-		<exemplarCharacters>[a ã b c d e ẽ f g h i j k l m n ŋ ɲ o õ p q r s š t u w x y z ž ]</exemplarCharacters>
+		<exemplarCharacters>[a ã b c d e ẽ f g h i j k l m n ɲ ŋ o õ p q r s š t u w x y z ž]</exemplarCharacters>
 		<exemplarCharacters type="auxiliary">[v]</exemplarCharacters>
 		<exemplarCharacters type="index" draft="unconfirmed">[A B C D E F G H I J K L M N O P Q R S T U W X Y Z]</exemplarCharacters>
 	</characters>
@@ -394,8 +393,14 @@
 						</quarterWidth>
 					</quarterContext>
 				</quarters>
-				<am>Subbaahi</am>
-				<pm>Zaarikay b</pm>
+				<dayPeriods>
+					<dayPeriodContext type="format">
+						<dayPeriodWidth type="wide">
+							<dayPeriod type="am">Subbaahi</dayPeriod>
+							<dayPeriod type="pm">Zaarikay b</dayPeriod>
+						</dayPeriodWidth>
+					</dayPeriodContext>
+				</dayPeriods>
 				<eras>
 					<eraNames>
 						<era type="0">Isaa jine</era>
@@ -494,9 +499,6 @@
 						<relative type="-1">Bi</relative>
 						<relative type="0">Hõo</relative>
 						<relative type="1">Suba</relative>
-					</field>
-					<field type="weekday">
-						<displayName>Zaari</displayName>
 					</field>
 					<field type="dayperiod">
 						<displayName>Subbaahi/Zaarikay banda</displayName>
@@ -718,3 +720,4 @@
 		</messages>
 	</posix>
 </ldml>
+

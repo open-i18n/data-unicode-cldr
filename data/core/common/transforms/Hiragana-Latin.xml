@@ -2,7 +2,7 @@
 <!DOCTYPE supplementalData SYSTEM "../../common/dtd/ldmlSupplemental.dtd">
 <supplementalData>
   <version number="$Revision: 5083 $"/>
-	<generation date="$Date: 2010-10-12 14:30:38 -0500 (Tue, 12 Oct 2010) $"/>
+	<generation date="$Date: 2010-10-12 12:30:38 -0700 (Tue, 12 Oct 2010) $"/>
 	<transforms>
 		<transform source="Hiragana" target="Latin" direction="both">
 			<tRule>:: [ぁ-ゔ゙ゝ-ゞガギグゲゴザジズゼゾダヂヅデドバビブベボヴヷ-ヺーヾ] ;</tRule>

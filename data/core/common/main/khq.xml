@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 6546 $"/>
-		<generation date="$Date: 2012-02-07 12:32:35 -0600 (Tue, 07 Feb 2012) $"/>
+		<version number="$Revision: 7479 $"/>
+		<generation date="$Date: 2012-08-03 14:23:14 -0700 (Fri, 03 Aug 2012) $"/>
 		<language type="khq"/>
 	</identity>
 	<localeDisplayNames>
@@ -100,7 +100,6 @@
 			<territory type="CN">Šiin</territory>
 			<territory type="CO">Kolombi</territory>
 			<territory type="CR">Kosta rika</territory>
-			<territory type="CS">Serbi nda Montenegro</territory>
 			<territory type="CU">Kuuba</territory>
 			<territory type="CV">Kapuver gungey</territory>
 			<territory type="CY">Šiipur</territory>
@@ -502,9 +501,6 @@
 						<relative type="-1">Bi</relative>
 						<relative type="0">Hõo</relative>
 						<relative type="1">Suba</relative>
-					</field>
-					<field type="weekday">
-						<displayName>Jaari</displayName>
 					</field>
 					<field type="dayperiod">
 						<displayName>Adduha wala Aluula</displayName>

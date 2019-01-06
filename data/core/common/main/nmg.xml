@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 6546 $"/>
-		<generation date="$Date: 2012-02-07 12:32:35 -0600 (Tue, 07 Feb 2012) $"/>
+		<version number="$Revision: 7479 $"/>
+		<generation date="$Date: 2012-08-03 14:23:14 -0700 (Fri, 03 Aug 2012) $"/>
 		<language type="nmg"/>
 	</identity>
 	<localeDisplayNames>
@@ -35,7 +35,7 @@
 			<language type="my">Kiɛl birmania</language>
 			<language type="ne">Kiɛl nepal</language>
 			<language type="nl">Kiɛl bóllandais</language>
-			<language type="nmg"/>
+			<language type="nmg" draft="provisional">Kwasio</language>
 			<language type="pa">Kiɛl pɛndjabi</language>
 			<language type="pl">Kiɛl pɔlɔŋe</language>
 			<language type="pt">Kiɛl bó pɔ̄rtugɛ̂</language>
@@ -100,7 +100,6 @@
 			<territory type="CN">Shine</territory>
 			<territory type="CO">Kɔlɔ́mbia</territory>
 			<territory type="CR">Kosta Ríka</territory>
-			<territory type="CS">Sɛrbia ba Mɔntenegro</territory>
 			<territory type="CU">Kuba</territory>
 			<territory type="CV">Maŋ́ má Kapvɛr</territory>
 			<territory type="CY">Sipria</territory>
@@ -484,9 +483,6 @@
 						<relative type="-1">Nakugú</relative>
 						<relative type="0">Dɔl</relative>
 						<relative type="1">Namáná</relative>
-					</field>
-					<field type="weekday">
-						<displayName>Duö</displayName>
 					</field>
 					<field type="dayperiod">
 						<displayName>Máná, Muó, Kugú, Bvul</displayName>

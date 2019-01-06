@@ -2,7 +2,7 @@
 <!DOCTYPE supplementalData SYSTEM "../../common/dtd/ldmlSupplemental.dtd">
 <supplementalData>
   <version number="$Revision: 5955 $"/>
-	<generation date="$Date: 2011-07-04 20:06:28 -0500 (Mon, 04 Jul 2011) $"/>
+	<generation date="$Date: 2011-07-04 18:06:28 -0700 (Mon, 04 Jul 2011) $"/>
 	<transforms>
 		<transform source="Fullwidth" target="Halfwidth" direction="both">
 			<comment># Fullwidth-Halfwidth</comment>

@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 6546 $"/>
-		<generation date="$Date: 2012-02-07 12:32:35 -0600 (Tue, 07 Feb 2012) $"/>
+		<version number="$Revision: 7485 $"/>
+		<generation date="$Date: 2012-08-05 19:01:41 -0700 (Sun, 05 Aug 2012) $"/>
 		<language type="bo"/>
 	</identity>
 	<localeDisplayNames>
@@ -74,7 +74,7 @@
 			<script type="Zzzz" draft="provisional">མིའི་ཤེས་རྟོགས་མ་བྱུང་བ། ཡང་ན་ཆད་ལྷག་ཅན་གྱི་ཟིན་བྲིས།</script>
 		</scripts>
 		<territories>
-			<territory type="001" draft="unconfirmed">འཛམ་གླིང་།</territory>
+			<territory type="001">འཛམ་གླིང་།</territory>
 			<territory type="002" draft="unconfirmed">ཨཕྲི་ཀ།</territory>
 			<territory type="019" draft="unconfirmed">ཨ་མེ་རི་ཀ།</territory>
 			<territory type="053" draft="unconfirmed">ཨསྟྲེ་ལི་ཡ་དང་། ནིའུ་ཛི་ལན྄ཌ།</territory>
@@ -325,7 +325,13 @@
 							<day type="sat">སྤེན་པ་</day>
 						</dayWidth>
 						<dayWidth type="narrow">
-							<day type="wed" draft="unconfirmed">ཧླག</day>
+							<day type="sun">ཉི</day>
+							<day type="mon">ཟླ</day>
+							<day type="tue">མི</day>
+							<day type="wed">ཧླག</day>
+							<day type="thu">ཕུ</day>
+							<day type="fri">ས</day>
+							<day type="sat">སྤེ</day>
 						</dayWidth>
 						<dayWidth type="wide">
 							<day type="sun">གཟའ་ཉི་མ་</day>
@@ -339,8 +345,13 @@
 					</dayContext>
 					<dayContext type="stand-alone">
 						<dayWidth type="abbreviated">
-							<day type="wed" draft="unconfirmed">ལྷག་པ་</day>
-							<day type="fri" draft="unconfirmed">པ་སངས་</day>
+							<day type="sun">ཉི་མ་</day>
+							<day type="mon">ཟླ་བ་</day>
+							<day type="tue">མིག་དམར་</day>
+							<day type="wed">ཧླག་པ་</day>
+							<day type="thu">ཕུར་བུ་</day>
+							<day type="fri">སངས་</day>
+							<day type="sat">སྤེན་པ་</day>
 						</dayWidth>
 						<dayWidth type="narrow">
 							<day type="sun">ཉི</day>
@@ -352,13 +363,24 @@
 							<day type="sat">སྤེ</day>
 						</dayWidth>
 						<dayWidth type="wide">
-							<day type="wed" draft="unconfirmed">གཟའ་ལྷག་པ་</day>
-							<day type="fri" draft="unconfirmed">གཟའ་པ་སངས་</day>
+							<day type="sun">གཟའ་ཉི་མ་</day>
+							<day type="mon">གཟའ་ཟླ་བ་</day>
+							<day type="tue">གཟའ་མིག་དམར་</day>
+							<day type="wed">གཟའ་ཧླག་པ་</day>
+							<day type="thu">གཟའ་ཕུར་བུ་</day>
+							<day type="fri">གཟའ་སངས་</day>
+							<day type="sat">གཟའ་སྤེན་པ་</day>
 						</dayWidth>
 					</dayContext>
 				</days>
 				<quarters>
 					<quarterContext type="format">
+						<quarterWidth type="abbreviated">
+							<quarter type="1" draft="provisional">དུས་ཚིགས་དང་པོ།</quarter>
+							<quarter type="2" draft="provisional">དུས་ཚིགས་གཉིས་པ།</quarter>
+							<quarter type="3" draft="provisional">་དུས་ཚིགས་གསུམ་པ།</quarter>
+							<quarter type="4" draft="provisional">དུས་ཚིགས་བཞི་པ།</quarter>
+						</quarterWidth>
 						<quarterWidth type="wide">
 							<quarter type="1" draft="provisional">དུས་ཚིགས་དང་པོ།</quarter>
 							<quarter type="2" draft="provisional">དུས་ཚིགས་གཉིས་པ།</quarter>
@@ -368,10 +390,16 @@
 					</quarterContext>
 					<quarterContext type="stand-alone">
 						<quarterWidth type="abbreviated">
-							<quarter type="3" draft="unconfirmed">དུས་ཚིགས་གསུམ་པ།</quarter>
+							<quarter type="1" draft="provisional">དུས་ཚིགས་དང་པོ།</quarter>
+							<quarter type="2" draft="provisional">དུས་ཚིགས་གཉིས་པ།</quarter>
+							<quarter type="3" draft="provisional">་དུས་ཚིགས་གསུམ་པ།</quarter>
+							<quarter type="4" draft="provisional">དུས་ཚིགས་བཞི་པ།</quarter>
 						</quarterWidth>
 						<quarterWidth type="wide">
-							<quarter type="3" draft="unconfirmed">དུས་ཚིགས་གསུམ་པ།</quarter>
+							<quarter type="1" draft="provisional">དུས་ཚིགས་དང་པོ།</quarter>
+							<quarter type="2" draft="provisional">དུས་ཚིགས་གཉིས་པ།</quarter>
+							<quarter type="3" draft="provisional">་དུས་ཚིགས་གསུམ་པ།</quarter>
+							<quarter type="4" draft="provisional">དུས་ཚིགས་བཞི་པ།</quarter>
 						</quarterWidth>
 					</quarterContext>
 				</quarters>
@@ -511,4 +539,3 @@
 		</messages>
 	</posix>
 </ldml>
-

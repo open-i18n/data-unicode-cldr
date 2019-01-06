@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 6546 $"/>
-		<generation date="$Date: 2012-02-07 12:32:35 -0600 (Tue, 07 Feb 2012) $"/>
+		<version number="$Revision: 7465 $"/>
+		<generation date="$Date: 2012-08-01 21:53:17 -0700 (Wed, 01 Aug 2012) $"/>
 		<language type="yo"/>
 	</identity>
 	<localeDisplayNames>
@@ -154,7 +154,6 @@
 			<territory type="CN">Orílẹ́ède ṣáínà</territory>
 			<territory type="CO">Orílẹ́ède Kòlómíbìa</territory>
 			<territory type="CR">Orílẹ́ède Kuusita Ríkà</territory>
-			<territory type="CS">Orílẹ́ède sẹbia ati Mọtinegoro</territory>
 			<territory type="CU">Orílẹ́ède Kúbà</territory>
 			<territory type="CV">Orílẹ́ède Etíokun Kápé féndè</territory>
 			<territory type="CY">Orílẹ́ède Kúrúsì</territory>
@@ -297,6 +296,7 @@
 			<territory type="SN">Orílẹ́ède Sẹnẹga</territory>
 			<territory type="SO">Orílẹ́ède Somalia</territory>
 			<territory type="SR">Orílẹ́ède Surinami</territory>
+			<territory type="SS" draft="provisional">Gúúsù Sudan</territory>
 			<territory type="ST">Orílẹ́ède Sao tomi ati piriiṣipi</territory>
 			<territory type="SV">Orílẹ́ède Ẹẹsáfádò</territory>
 			<territory type="SY">Orílẹ́ède Siria</territory>

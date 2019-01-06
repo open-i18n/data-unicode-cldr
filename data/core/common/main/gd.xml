@@ -2,11 +2,10 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 6546 $"/>
-		<generation date="$Date: 2012-02-07 12:32:35 -0600 (Tue, 07 Feb 2012) $"/>
+		<version number="$Revision: 7594 $"/>
+		<generation date="$Date: 2012-08-16 13:13:57 -0700 (Thu, 16 Aug 2012) $"/>
 		<language type="gd"/>
 	</identity>
-	<fallback/>
 	<localeDisplayNames>
 		<localeDisplayPattern>
 			<localePattern draft="unconfirmed">{0} ({1})</localePattern>
@@ -327,13 +326,11 @@
 			<territory type="CO" draft="unconfirmed">Coloimbia</territory>
 			<territory type="CP" draft="unconfirmed">Eilean Clipperton</territory>
 			<territory type="CR" draft="unconfirmed">Costa Rìcea</territory>
-			<territory type="CS" draft="unconfirmed">An t-Sèirb is am Monadh Neagrach</territory>
 			<territory type="CU" draft="unconfirmed">Cùba</territory>
 			<territory type="CV" draft="unconfirmed">An Ceap Uaine</territory>
 			<territory type="CX" draft="unconfirmed">Eilean na Nollaig</territory>
 			<territory type="CY" draft="unconfirmed">Cìopras</territory>
 			<territory type="CZ" draft="unconfirmed">Poblachd na Seice</territory>
-			<territory type="DD" draft="unconfirmed">A' Ghearmailt an Ear</territory>
 			<territory type="DE" draft="unconfirmed">A' Ghearmailt</territory>
 			<territory type="DG" draft="unconfirmed">Diego Garcia</territory>
 			<territory type="DJ" draft="unconfirmed">Diobùtaidh</territory>
@@ -357,7 +354,6 @@
 			<territory type="FM" draft="unconfirmed">Na Meanbh-Eileanan</territory>
 			<territory type="FO" draft="unconfirmed">Na h-Eileanan Fàro</territory>
 			<territory type="FR" draft="unconfirmed">An Fhraing</territory>
-			<territory type="FX" draft="unconfirmed">Fraing na Roinn-Eòrpa</territory>
 			<territory type="GA" draft="unconfirmed">Gabon</territory>
 			<territory type="GB" draft="unconfirmed">An Rìoghachd Aonaichte</territory>
 			<territory type="GD" draft="unconfirmed">Greanàda</territory>
@@ -456,7 +452,6 @@
 			<territory type="NO" draft="unconfirmed">An Nirribhidh</territory>
 			<territory type="NP" draft="unconfirmed">Neapàl</territory>
 			<territory type="NR" draft="unconfirmed">Nabhru</territory>
-			<territory type="NT" draft="unconfirmed">An Roinn Neodrach</territory>
 			<territory type="NU" draft="unconfirmed">Niue</territory>
 			<territory type="NZ" draft="unconfirmed">Sealainn Nuadh</territory>
 			<territory type="OM" draft="unconfirmed">Omàn</territory>
@@ -496,7 +491,6 @@
 			<territory type="SO" draft="unconfirmed">Somàilia</territory>
 			<territory type="SR" draft="unconfirmed">Suranam</territory>
 			<territory type="ST" draft="unconfirmed">São Tomé is Príncipe</territory>
-			<territory type="SU" draft="unconfirmed">Aonadh nam Poblachdan Sòisealach Sovietach</territory>
 			<territory type="SV" draft="unconfirmed">An Salbhador</territory>
 			<territory type="SY" draft="unconfirmed">Siridhea</territory>
 			<territory type="SZ" draft="unconfirmed">Dùthaich nan Suasaidh</territory>
@@ -533,7 +527,6 @@
 			<territory type="VU" draft="unconfirmed">Vanuatu</territory>
 			<territory type="WF" draft="unconfirmed">Uallas agus Futuna</territory>
 			<territory type="WS" draft="unconfirmed">Samotha</territory>
-			<territory type="YD" draft="unconfirmed">Poblachd Dheamocratach Muinntir na h-Eamaine</territory>
 			<territory type="YE" draft="unconfirmed">An Eaman</territory>
 			<territory type="YT" draft="unconfirmed">Mayotte</territory>
 			<territory type="ZA" draft="unconfirmed">Afraga a Deas</territory>
@@ -626,7 +619,6 @@
 	<characters>
 		<exemplarCharacters draft="unconfirmed">[a à b c d e è f g h i ì l m n o ò p r s t u ù]</exemplarCharacters>
 		<exemplarCharacters type="auxiliary" draft="unconfirmed">[á ċ ḋ é ḟ ġ j k ṁ ó ṗ q ṡ ṫ v w x y z]</exemplarCharacters>
-		<exemplarCharacters type="currencySymbol" draft="unconfirmed">[a b c č d e f g h i j k l ł m n o º p q r s t u v w x y z]</exemplarCharacters>
 		<exemplarCharacters type="index" draft="unconfirmed">[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]</exemplarCharacters>
 		<exemplarCharacters type="punctuation" draft="unconfirmed">[\- ‐ – — , ; \: ! ¡ ? . … · ' ‘ ’ &quot; “ ” ( ) \[ \] \{ \} § ¶ @ * / \&amp; ⁊ # % † ‡ ‧ ° © ® ™]</exemplarCharacters>
 	</characters>
@@ -906,7 +898,6 @@
 						<relative type="0" draft="unconfirmed">An-diugh</relative>
 						<relative type="1" draft="unconfirmed">A-màireach</relative>
 						<relative type="2" draft="unconfirmed">An-earar</relative>
-						<relative type="3" draft="unconfirmed">An-eararais</relative>
 					</field>
 					<field type="weekday">
 						<displayName draft="unconfirmed">Latha na seachdaine</displayName>
@@ -974,22 +965,6 @@
 			<decimalFormatLength>
 				<decimalFormat>
 					<pattern draft="unconfirmed">#,##0.###</pattern>
-				</decimalFormat>
-			</decimalFormatLength>
-			<decimalFormatLength type="short">
-				<decimalFormat>
-					<pattern type="1000" draft="unconfirmed">0.0K</pattern>
-					<pattern type="10000" draft="unconfirmed">00K</pattern>
-					<pattern type="100000" draft="unconfirmed">000K</pattern>
-					<pattern type="1000000" draft="unconfirmed">0.0M</pattern>
-					<pattern type="10000000" draft="unconfirmed">00M</pattern>
-					<pattern type="100000000" draft="unconfirmed">000M</pattern>
-					<pattern type="1000000000" draft="unconfirmed">0.0B</pattern>
-					<pattern type="10000000000" draft="unconfirmed">00B</pattern>
-					<pattern type="100000000000" draft="unconfirmed">000B</pattern>
-					<pattern type="1000000000000" draft="unconfirmed">0.0T</pattern>
-					<pattern type="10000000000000" draft="unconfirmed">00T</pattern>
-					<pattern type="100000000000000" draft="unconfirmed">000T</pattern>
 				</decimalFormat>
 			</decimalFormatLength>
 		</decimalFormats>

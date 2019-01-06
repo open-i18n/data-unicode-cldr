@@ -1,13 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 5663 $"/>
-		<generation date="$Date: 2011-04-25 14:35:18 -0500 (Mon, 25 Apr 2011) $"/>
+		<version number="$Revision: 7599 $"/>
+		<generation date="$Date: 2012-08-16 17:59:44 -0700 (Thu, 16 Aug 2012) $"/>
 		<language type="se"/>
 		<territory type="FI"/>
 	</identity>
-	<fallback>fi_FI</fallback>
 	<localeDisplayNames>
 		<territories>
 			<territory type="002" draft="provisional">Afrihká</territory>

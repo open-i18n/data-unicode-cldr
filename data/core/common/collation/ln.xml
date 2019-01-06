@@ -2,11 +2,11 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 5814 $"/>
-		<generation date="$Date: 2011-05-03 08:38:04 -0500 (Tue, 03 May 2011) $"/>
+		<version number="$Revision: 7611 $"/>
+		<generation date="$Date: 2012-08-21 01:40:03 -0700 (Tue, 21 Aug 2012) $"/>
 		<language type="ln"/> 
 	</identity>
-	<collations validSubLocales="ln_CD ln_CG">
+	<collations validSubLocales="ln_AO ln_CD ln_CF ln_CG">
 		<collation type="standard">
 			<rules>
 				<reset>E</reset>
@@ -17,7 +17,7 @@
 				<t>Ɔ</t>
 			</rules>
 		</collation>
-		<collation type="phonemic">
+		<collation type="phonetic">
 			<rules>
 				<reset>E</reset>
 				<p>ɛ</p>

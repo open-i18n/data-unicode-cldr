@@ -2,11 +2,11 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 5060 $"/>
-		<generation date="$Date: 2010-09-12 17:15:40 -0500 (Sun, 12 Sep 2010) $"/>
+		<version number="$Revision: 7611 $"/>
+		<generation date="$Date: 2012-08-21 01:40:03 -0700 (Tue, 21 Aug 2012) $"/>
 		<language type="ta" /> 
 	</identity>
-		<collations  validSubLocales="ta_IN ta_LK">
+		<collations  validSubLocales="ta_IN ta_LK ta_MY ta_SG">
 <collation type="standard" references=
 "University of Mardas, Tamil Lexicon">
   <settings normalization="on"/>

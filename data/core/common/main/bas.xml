@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 6546 $"/>
-		<generation date="$Date: 2012-02-07 12:32:35 -0600 (Tue, 07 Feb 2012) $"/>
+		<version number="$Revision: 7465 $"/>
+		<generation date="$Date: 2012-08-01 21:53:17 -0700 (Wed, 01 Aug 2012) $"/>
 		<language type="bas"/>
 	</identity>
 	<localeDisplayNames>
@@ -99,7 +99,6 @@
 			<territory type="CN">Kinà</territory>
 			<territory type="CO">Kɔ̀lɔmbìà</territory>
 			<territory type="CR">Kòstà Rikà</territory>
-			<territory type="CS">Sɛ̀rbî nì Mɔ̀ntènegrò</territory>
 			<territory type="CU">Kubà</territory>
 			<territory type="CV">Kabwɛ᷆r</territory>
 			<territory type="CY">Kiprò</territory>

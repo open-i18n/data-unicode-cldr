@@ -2,8 +2,8 @@
 <!DOCTYPE ldmlBCP47 SYSTEM "../../common/dtd/ldmlBCP47.dtd">
 
 <ldmlBCP47>
-    <version number="$Revision: 6438 $"/>
-    <generation date="$Date: 2012-01-25 01:30:12 -0600 (Wed, 25 Jan 2012) $"/>
+    <version number="$Revision: 6625 $"/>
+    <generation date="$Date: 2012-03-01 15:01:04 -0800 (Thu, 01 Mar 2012) $"/>
     <keyword>
         <key name="tz" alias="timezone" description="Time zone key">
             <type name="adalv" alias="Europe/Andorra" description="Andorra"/>
@@ -88,6 +88,7 @@
             <type name="bwgbe" alias="Africa/Gaborone" description="Gaborone, Botswana"/>
             <type name="bymsq" alias="Europe/Minsk" description="Minsk, Belarus"/>
             <type name="bzbze" alias="America/Belize" description="Belize"/>
+            <type name="cacfq" alias="America/Creston" description="Creston, Canada" since="21.0.1"/>
             <type name="caedm" alias="America/Edmonton Canada/Mountain" description="Edmonton, Canada"/>
             <type name="caffs" alias="America/Rainy_River" description="Rainy River, Canada"/>
             <type name="caglb" alias="America/Glace_Bay" description="Glace Bay, Canada"/>

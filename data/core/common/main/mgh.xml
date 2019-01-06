@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 6450 $"/>
-		<generation date="$Date: 2012-01-25 18:20:54 -0600 (Wed, 25 Jan 2012) $"/>
+		<version number="$Revision: 7553 $"/>
+		<generation date="$Date: 2012-08-14 01:15:55 -0700 (Tue, 14 Aug 2012) $"/>
 		<language type="mgh"/>
 	</identity>
 	<localeDisplayNames>
@@ -68,7 +68,6 @@
 			<territory type="CL">Uchile</territory>
 			<territory type="CN">Uchina</territory>
 			<territory type="CO">Ukolombia</territory>
-			<territory type="CS">Usiera Leoni</territory>
 			<territory type="CU">Ukuba</territory>
 			<territory type="CY">Ukuprosi</territory>
 			<territory type="CZ">Ucheki</territory>
@@ -283,8 +282,14 @@
 						</dayWidth>
 					</dayContext>
 				</days>
-				<am>wichishu</am>
-				<pm>mchochil'l</pm>
+				<dayPeriods>
+					<dayPeriodContext type="format">
+						<dayPeriodWidth type="wide">
+							<dayPeriod type="am">wichishu</dayPeriod>
+							<dayPeriod type="pm">mchochil'l</dayPeriod>
+						</dayPeriodWidth>
+					</dayPeriodContext>
+				</dayPeriods>
 				<eras>
 					<eraNames>
 						<era type="0">Hinapiya yesu</era>
@@ -386,9 +391,6 @@
 					</field>
 					<field type="weekday">
 						<displayName>nihuku no mwisho wa wiki</displayName>
-					</field>
-					<field type="dayperiod">
-						<displayName>nihuku</displayName>
 					</field>
 					<field type="hour">
 						<displayName>isaa</displayName>

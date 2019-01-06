@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 6546 $"/>
-		<generation date="$Date: 2012-02-07 12:32:35 -0600 (Tue, 07 Feb 2012) $"/>
+		<version number="$Revision: 7594 $"/>
+		<generation date="$Date: 2012-08-16 13:13:57 -0700 (Thu, 16 Aug 2012) $"/>
 		<language type="rm"/>
 	</identity>
 	<localeDisplayNames>
@@ -729,13 +729,11 @@
 			<territory type="CN" draft="contributed">China</territory>
 			<territory type="CO" draft="contributed">Columbia</territory>
 			<territory type="CR" draft="contributed">Costa Rica</territory>
-			<territory type="CS" draft="contributed">Serbia e Montenegro</territory>
 			<territory type="CU" draft="contributed">Cuba</territory>
 			<territory type="CV" draft="contributed">Cap Verd</territory>
 			<territory type="CX" draft="contributed">Insla da Christmas</territory>
 			<territory type="CY" draft="contributed">Cipra</territory>
 			<territory type="CZ" draft="contributed">Republica Tscheca</territory>
-			<territory type="DD" draft="contributed">Germania da l'Ost</territory>
 			<territory type="DE" draft="contributed">Germania</territory>
 			<territory type="DJ" draft="contributed">Dschibuti</territory>
 			<territory type="DK" draft="contributed">Danemarc</territory>
@@ -756,7 +754,6 @@
 			<territory type="FM" draft="contributed">Micronesia</territory>
 			<territory type="FO" draft="contributed">Inslas Feroe</territory>
 			<territory type="FR" draft="contributed">Frantscha</territory>
-			<territory type="FX" draft="contributed">Frantscha Metropolitana</territory>
 			<territory type="GA" draft="contributed">Gabun</territory>
 			<territory type="GB" draft="contributed">Reginavel Unì</territory>
 			<territory type="GD" draft="contributed">Grenada</territory>
@@ -851,7 +848,6 @@
 			<territory type="NO" draft="contributed">Norvegia</territory>
 			<territory type="NP" draft="contributed">Nepal</territory>
 			<territory type="NR" draft="contributed">Nauru</territory>
-			<territory type="NT" draft="contributed">Zona neutrala</territory>
 			<territory type="NU" draft="contributed">Niue</territory>
 			<territory type="NZ" draft="contributed">Nova Zelanda</territory>
 			<territory type="OM" draft="contributed">Oman</territory>
@@ -891,8 +887,8 @@
 			<territory type="SN" draft="contributed">Senegal</territory>
 			<territory type="SO" draft="contributed">Somalia</territory>
 			<territory type="SR" draft="contributed">Surinam</territory>
+			<territory type="SS" draft="provisional">Sudan dal Sid</territory>
 			<territory type="ST" draft="contributed">São Tomé e Principe</territory>
-			<territory type="SU" draft="contributed">Uniun Sovietica</territory>
 			<territory type="SV" draft="contributed">El Salvador</territory>
 			<territory type="SY" draft="contributed">Siria</territory>
 			<territory type="SZ" draft="contributed">Swaziland</territory>
@@ -927,7 +923,6 @@
 			<territory type="VU" draft="contributed">Vanuatu</territory>
 			<territory type="WF" draft="contributed">Wallis e Futuna</territory>
 			<territory type="WS" draft="contributed">Samoa</territory>
-			<territory type="YD" draft="contributed">Republica Democratica Populara da Jemen</territory>
 			<territory type="YE" draft="contributed">Jemen</territory>
 			<territory type="YT" draft="contributed">Mayotte</territory>
 			<territory type="ZA" draft="contributed">Africa dal Sid</territory>
@@ -999,7 +994,6 @@
 	<characters>
 		<exemplarCharacters draft="contributed">[a à b c d e é è f g h i ì j k l m n o ò p q r s t u ù v w x y z]</exemplarCharacters>
 		<exemplarCharacters type="auxiliary" draft="contributed">[á à ă â å ä ā æ ç é è ĕ ê ë ē í ì ĭ î ï ī ñ ó ò ŏ ô ö ø ō œ ú ù ŭ û ü ū ÿ]</exemplarCharacters>
-		<exemplarCharacters type="currencySymbol" draft="contributed">[a b c d e f g h i j k l m n o p q r s t u v w x y z]</exemplarCharacters>
 		<exemplarCharacters type="index" draft="contributed">[A À B C D E É È F G H I Ì J K L M N O Ò P Q R S T U Ù V W X Y Z]</exemplarCharacters>
 	</characters>
 	<delimiters>

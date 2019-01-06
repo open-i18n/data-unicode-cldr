@@ -2,11 +2,10 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 6546 $"/>
-		<generation date="$Date: 2012-02-07 12:32:35 -0600 (Tue, 07 Feb 2012) $"/>
+		<version number="$Revision: 7594 $"/>
+		<generation date="$Date: 2012-08-16 13:13:57 -0700 (Thu, 16 Aug 2012) $"/>
 		<language type="ps"/>
 	</identity>
-	<fallback>fa_AF</fallback>
 	<localeDisplayNames>
 		<languages>
 			<language type="af" draft="unconfirmed">افريکاني</language>
@@ -332,6 +331,9 @@
 	</dates>
 	<numbers>
 		<defaultNumberingSystem>arabext</defaultNumberingSystem>
+		<otherNumberingSystems>
+			<native>arabext</native>
+		</otherNumberingSystems>
 		<symbols numberSystem="arabext">
 			<decimal>٫</decimal>
 			<group>٬</group>

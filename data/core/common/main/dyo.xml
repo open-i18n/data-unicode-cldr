@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 6546 $"/>
-		<generation date="$Date: 2012-02-07 12:32:35 -0600 (Tue, 07 Feb 2012) $"/>
+		<version number="$Revision: 7479 $"/>
+		<generation date="$Date: 2012-08-03 14:23:14 -0700 (Fri, 03 Aug 2012) $"/>
 		<language type="dyo"/>
 	</identity>
 	<localeDisplayNames>
@@ -359,9 +359,6 @@
 						<relative type="0">Jaat</relative>
 						<relative type="1">Kajom</relative>
 					</field>
-					<field type="weekday">
-						<displayName>Funak</displayName>
-					</field>
 					<field type="dayperiod">
 						<displayName>Bujom / Kalíim</displayName>
 					</field>
@@ -492,4 +489,3 @@
 		</messages>
 	</posix>
 </ldml>
-

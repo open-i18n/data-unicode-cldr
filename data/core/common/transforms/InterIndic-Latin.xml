@@ -2,7 +2,7 @@
 <!DOCTYPE supplementalData SYSTEM "../../common/dtd/ldmlSupplemental.dtd">
 <supplementalData>
   <version number="$Revision: 6531 $"/>
-	<generation date="$Date: 2012-02-01 22:47:49 -0600 (Wed, 01 Feb 2012) $"/>
+	<generation date="$Date: 2012-02-01 20:47:49 -0800 (Wed, 01 Feb 2012) $"/>
 	<transforms>
 		<transform source="InterIndic" target="Latin" direction="forward" visibility="internal">
 			<comment># InterIndic-Latin</comment>

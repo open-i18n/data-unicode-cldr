@@ -3,7 +3,7 @@
 
 <ldmlBCP47>
     <version number="$Revision: 6464 $"/>
-    <generation date="$Date: 2012-01-27 04:10:22 -0600 (Fri, 27 Jan 2012) $"/>
+    <generation date="$Date: 2012-01-27 02:10:22 -0800 (Fri, 27 Jan 2012) $"/>
     <keyword>
         <key name="cu" alias="currency" description="Currency type key">
             <type name="adp" description="Andorran Peseta" since="1.9"/>

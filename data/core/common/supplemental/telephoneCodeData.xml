@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE supplementalData SYSTEM "../../common/dtd/ldmlSupplemental.dtd">
 <supplementalData>
-    <version number="$Revision: 4749 $"/>
-    <generation date="$Date: 2010-02-25 17:16:28 -0600 (Thu, 25 Feb 2010) $"/>
+    <version number="$Revision: 7492 $"/>
+    <generation date="$Date: 2012-08-06 11:28:49 -0700 (Mon, 06 Aug 2012) $"/>
 	<telephoneCodeData>
 		<!--
 		References:
@@ -686,6 +686,9 @@
 		</codesByTerritory>
 		<codesByTerritory territory="SR">	<!-- Suriname -->
 			<telephoneCountryCode code="597"/>
+		</codesByTerritory>
+		<codesByTerritory territory="SS">	<!-- South Sudan -->
+			<telephoneCountryCode code="211"/>
 		</codesByTerritory>
 		<codesByTerritory territory="ST">	<!-- Sao Tome and Principe -->
 			<telephoneCountryCode code="239"/>

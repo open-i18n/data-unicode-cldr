@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 6546 $"/>
-		<generation date="$Date: 2012-02-07 12:32:35 -0600 (Tue, 07 Feb 2012) $"/>
+		<version number="$Revision: 7599 $"/>
+		<generation date="$Date: 2012-08-16 17:59:44 -0700 (Thu, 16 Aug 2012) $"/>
 		<language type="wae"/>
 	</identity>
 	<localeDisplayNames>
@@ -490,6 +490,7 @@
 		</types>
 		<measurementSystemNames>
 			<measurementSystemName type="metric" draft="unconfirmed">Metriš</measurementSystemName>
+			<measurementSystemName type="UK" draft="unconfirmed">Angelsä</measurementSystemName>
 			<measurementSystemName type="US" draft="unconfirmed">Angloamerikaniš</measurementSystemName>
 		</measurementSystemNames>
 		<codePatterns>
@@ -501,7 +502,6 @@
 	<characters>
 		<exemplarCharacters>[a á ä ã b c č d e é f g h i í j k l m n o ó ö õ p q r s š t u ú ü ũ v w x y z]</exemplarCharacters>
 		<exemplarCharacters type="auxiliary">[à ă â å ā æ ç è ĕ ê ë ē ì ĭ î ï ī ñ ò ŏ ô ø ō œ ß ù ŭ û ū ÿ]</exemplarCharacters>
-		<exemplarCharacters type="currencySymbol" draft="unconfirmed">[a b c d e f g h i j k l m n o p q r s t u v w x y z]</exemplarCharacters>
 		<exemplarCharacters type="index">[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]</exemplarCharacters>
 	</characters>
 	<delimiters>
@@ -747,7 +747,6 @@
 							<greatestDifference id="h" draft="unconfirmed">h - h a</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="H">
-							<greatestDifference id="a" draft="unconfirmed">HH - HH</greatestDifference>
 							<greatestDifference id="H" draft="unconfirmed">HH - HH</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="hm">
@@ -756,7 +755,6 @@
 							<greatestDifference id="m" draft="unconfirmed">h:mm - h:mm a</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="Hm">
-							<greatestDifference id="a" draft="unconfirmed">HH:mm - HH:mm</greatestDifference>
 							<greatestDifference id="H" draft="unconfirmed">HH:mm - HH:mm</greatestDifference>
 							<greatestDifference id="m" draft="unconfirmed">HH:mm - HH:mm</greatestDifference>
 						</intervalFormatItem>
@@ -766,7 +764,6 @@
 							<greatestDifference id="m" draft="unconfirmed">h:mm - h:mm a v</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="Hmv">
-							<greatestDifference id="a" draft="unconfirmed">HH:mm - HH:mm v</greatestDifference>
 							<greatestDifference id="H" draft="unconfirmed">HH:mm - HH:mm v</greatestDifference>
 							<greatestDifference id="m" draft="unconfirmed">HH:mm - HH:mm v</greatestDifference>
 						</intervalFormatItem>
@@ -775,7 +772,6 @@
 							<greatestDifference id="h" draft="unconfirmed">h - h a v</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="Hv">
-							<greatestDifference id="a" draft="unconfirmed">HH - HH v</greatestDifference>
 							<greatestDifference id="H" draft="unconfirmed">HH - HH v</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="M">
@@ -936,14 +932,8 @@
 			<zone type="Europe/Budapest">
 				<exemplarCity draft="unconfirmed">Budapešt</exemplarCity>
 			</zone>
-			<zone type="Asia/Jerusalem">
-				<exemplarCity draft="unconfirmed">Jerusalem</exemplarCity>
-			</zone>
 			<zone type="Asia/Baghdad">
 				<exemplarCity draft="unconfirmed">Bagdad</exemplarCity>
-			</zone>
-			<zone type="Asia/Tehran">
-				<exemplarCity draft="unconfirmed">Tehran</exemplarCity>
 			</zone>
 			<zone type="Atlantic/Reykjavik">
 				<exemplarCity draft="unconfirmed">Rikjawik</exemplarCity>
@@ -975,12 +965,6 @@
 			<zone type="Europe/Amsterdam">
 				<exemplarCity draft="unconfirmed">Amšterdam</exemplarCity>
 			</zone>
-			<zone type="America/Lima">
-				<exemplarCity draft="unconfirmed">Lima</exemplarCity>
-			</zone>
-			<zone type="Asia/Manila">
-				<exemplarCity draft="unconfirmed">Manila</exemplarCity>
-			</zone>
 			<zone type="Europe/Warsaw">
 				<exemplarCity draft="unconfirmed">Waršau</exemplarCity>
 			</zone>
@@ -1011,17 +995,11 @@
 			<zone type="Asia/Damascus">
 				<exemplarCity draft="unconfirmed">Damaskus</exemplarCity>
 			</zone>
-			<zone type="Africa/Tunis">
-				<exemplarCity draft="unconfirmed">Tunis</exemplarCity>
-			</zone>
 			<zone type="Europe/Istanbul">
 				<exemplarCity draft="unconfirmed">Konštantinopel</exemplarCity>
 			</zone>
 			<zone type="Europe/Vatican">
 				<exemplarCity draft="unconfirmed">Vatikan</exemplarCity>
-			</zone>
-			<zone type="Africa/Johannesburg">
-				<exemplarCity draft="unconfirmed">Johannesburg</exemplarCity>
 			</zone>
 			<metazone type="Atlantic">
 				<long>
@@ -1075,6 +1053,7 @@
 		</symbols>
 		<currencyFormats numberSystem="latn">
 			<unitPattern count="one" draft="unconfirmed">{0} {1}</unitPattern>
+			<unitPattern count="other" draft="unconfirmed">{0} {1}</unitPattern>
 		</currencyFormats>
 		<currencies>
 			<currency type="BRL">

@@ -2,7 +2,7 @@
 <!DOCTYPE supplementalData SYSTEM "../../common/dtd/ldmlSupplemental.dtd">
 <supplementalData>
   <version number="$Revision: 5987 $"/>
-	<generation date="$Date: 2011-07-07 19:42:43 -0500 (Thu, 07 Jul 2011) $"/>
+	<generation date="$Date: 2011-07-07 17:42:43 -0700 (Thu, 07 Jul 2011) $"/>
 	<transforms>
 		<transform source="Russian" target="Latin" direction="forward" variant="BGN" draft="provisional">
 			<comment>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE supplementalData SYSTEM "../../common/dtd/ldmlSupplemental.dtd">
 <supplementalData>
-  <version number="$Revision: 4747 $"/>
-	<generation date="$Date: 2010-02-25 15:22:30 -0600 (Thu, 25 Feb 2010) $"/>
+  <version number="$Revision: 7507 $"/>
+	<generation date="$Date: 2012-08-06 23:25:39 -0700 (Mon, 06 Aug 2012) $"/>
 	<transforms>
 		<transform source="Simplified" target="Traditional" direction="both">
 			<comment># Copyright (c) 2005-2007,2010 Apple Inc., Unicode Inc.,</comment>
@@ -959,6 +959,7 @@
 			<tRule>伪↔偽;</tRule>
 			<tRule>伪←僞;</tRule>
 			<comment>#</comment>
+			<tRule>收获→收穫;</tRule>
 			<tRule>获↔獲;</tRule>
 			<tRule>获←穫;</tRule>
 			<comment>#</comment>
@@ -990,8 +991,8 @@
 			<tRule>采↔採;</tRule>
 			<tRule>采←埰;</tRule>
 			<comment>#</comment>
-			<tRule>厕↔厠;</tRule>
-			<tRule>厕←廁;</tRule>
+			<tRule>厕↔廁;</tRule>
+			<tRule>厕←厠;</tRule>
 			<tRule>捣↔搗;</tRule>
 			<tRule>捣←擣;</tRule>
 			<tRule>沩↔溈;</tRule>
@@ -1018,8 +1019,8 @@
 			<tRule>墙↔牆;</tRule>
 			<tRule>墙←墻;</tRule>
 			<comment>#</comment>
-			<tRule>奖↔奬;</tRule>
-			<tRule>奖←獎;</tRule>
+			<tRule>奖↔獎;</tRule>
+			<tRule>奖←奬;</tRule>
 			<tRule>眦↔眥;</tRule>
 			<tRule>眦←眦;</tRule>
 			<tRule>秆↔稈;</tRule>
@@ -1030,8 +1031,8 @@
 			<tRule>苧←苎;</tRule>
 			<tRule>苹↔蘋;</tRule>
 			<tRule>苹←苹;</tRule>
-			<tRule>蕴↔藴;</tRule>
-			<tRule>蕴←蘊;</tRule>
+			<tRule>蕴↔蘊;</tRule>
+			<tRule>蕴←藴;</tRule>
 			<tRule>说↔說;</tRule>
 			<tRule>说←説;</tRule>
 			<tRule>谣↔謠;</tRule>
@@ -1271,6 +1272,8 @@
 			<tRule>吊唁↔弔唁;</tRule>
 			<tRule>吊↔吊;</tRule>
 			<tRule>吊←弔;</tRule>
+			<comment>#</comment>
+			<tRule>英寸↔英吋;</tRule>
 			<comment>#</comment>
 			<tRule>方腊↔方腊;</tRule>
 			<tRule>腊↔臘;</tRule>

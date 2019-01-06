@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 6546 $"/>
-		<generation date="$Date: 2012-02-07 12:32:35 -0600 (Tue, 07 Feb 2012) $"/>
+		<version number="$Revision: 7485 $"/>
+		<generation date="$Date: 2012-08-05 19:01:41 -0700 (Sun, 05 Aug 2012) $"/>
 		<language type="sq"/>
 	</identity>
 	<localeDisplayNames>
@@ -153,7 +153,6 @@
 			<territory type="CN">Kinë</territory>
 			<territory type="CO">Kolumbi</territory>
 			<territory type="CR">Kosta Rika</territory>
-			<territory type="CS">Serbië en Montenegro</territory>
 			<territory type="CU">Kubë</territory>
 			<territory type="CV">Kap Verde</territory>
 			<territory type="CY">Qipro</territory>
@@ -617,6 +616,7 @@
 		</unit>
 		<unit type="hour">
 			<unitPattern count="one">{0} orë</unitPattern>
+			<unitPattern count="other">{0} orë</unitPattern>
 		</unit>
 		<unit type="minute">
 			<unitPattern count="one">{0} minutë</unitPattern>
@@ -624,6 +624,7 @@
 		</unit>
 		<unit type="month">
 			<unitPattern count="one">{0} muaj</unitPattern>
+			<unitPattern count="other">{0} muaj</unitPattern>
 		</unit>
 		<unit type="second">
 			<unitPattern count="one">{0} sekondë</unitPattern>
@@ -631,6 +632,7 @@
 		</unit>
 		<unit type="week">
 			<unitPattern count="one">{0} javë</unitPattern>
+			<unitPattern count="other">{0} javë</unitPattern>
 		</unit>
 		<unit type="year">
 			<unitPattern count="one">{0} vit</unitPattern>

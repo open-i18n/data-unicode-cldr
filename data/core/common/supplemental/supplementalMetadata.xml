@@ -2,19 +2,17 @@
 <!DOCTYPE supplementalData SYSTEM "../../common/dtd/ldmlSupplemental.dtd">
 
 <supplementalData>
-    <version number="$Revision: 6527 $"/>
-    <generation date="$Date: 2012-02-01 17:21:23 -0600 (Wed, 01 Feb 2012) $"/>
+    <version number="$Revision: 7684 $"/>
+    <generation date="$Date: 2012-09-05 14:13:36 -0700 (Wed, 05 Sep 2012) $"/>
     <metadata>
         <attributeOrder>
-			_q access after aliases allowsParsing alpha3 alternate at attribute attributeValue attributes backwards bcp47 before caseFirst caseLevel casing characters choice code contains count date day decexp desired digits direction element elements end exclude fips10 from gdp hex hiraganaQuarternary hiraganaQuaternary id indexSource internet iso3166 iso4217 key lines list literacyPercent locales multizone mzone normalization number numberSystem numbers numeric officialStatus oneway order ordering other otherVersion path percent population populationPercent priority radix registry replacement request rounding rules scripts services source start strength supported target tender territories territory territoryId time to type typeVersion tzidVersion uri used value values variableTop variant variants version visibility writingPercent yeartype
+			_q type id choice key registry source target path day date version count lines characters before from to iso4217 mzone number time casing list uri digits rounding iso3166 hex request direction alternate backwards caseFirst caseLevel hiraganaQuarternary hiraganaQuaternary variableTop normalization numeric strength elements element attributes attribute attributeValue contains multizone order other replacement scripts services territories territory aliases tzidVersion value values variant variants visibility alpha3 code end exclude fips10 gdp internet literacyPercent locales population writingPercent populationPercent officialStatus start used otherVersion typeVersion access after allowsParsing at bcp47 decexp desired indexSource numberSystem numbers oneway ordering percent priority radix rules supported tender territoryId yeartype cldrVersion grouping inLanguage inScript inTerritory match parent private reason reorder status validSubLocales standard references alt draft
 		</attributeOrder>
         <elementOrder>
-			ldml alternate attributeOrder attributes blockingItems calendarPreference calendarSystem casingData casingItem character character-fallback codesByTerritory comment context coverageLevel cp dayPeriodRule dayPeriodRules deprecatedItems distinguishingItems elementOrder first_variable fractions identity indexSeparator compressedIndexSeparator indexRangePattern indexLabelBefore indexLabelAfter indexLabel info keyMap languageAlias languageCodes languageCoverage languageMatch languageMatches languagePopulation last_variable first_tertiary_ignorable last_tertiary_ignorable first_secondary_ignorable last_secondary_ignorable first_primary_ignorable last_primary_ignorable first_non_ignorable last_non_ignorable first_trailing last_trailing likelySubtag mapKeys mapTypes mapZone numberingSystem parentLocale pluralRule pluralRules postCodeRegex reference region scriptAlias scriptCoverage serialElements stopwordList substitute suppress tRule telephoneCountryCode territoryAlias territoryCodes territoryCoverage currencyCoverage timezone timezoneCoverage transform typeMap usesMetazone validity alias appendItem base beforeCurrency afterCurrency codePattern contextTransform contextTransformUsage currencyMatch cyclicName cyclicNameContext cyclicNameSet cyclicNameWidth dateFormatItem day dayPeriod dayPeriodContext dayPeriodWidth defaultNumberingSystem deprecated distinguishing blocking coverageAdditions era eraNames eraAbbr eraNarrow exemplarCharacters ellipsis fallback field generic greatestDifference height hourFormat hoursFormat gmtFormat gmtZeroFormat intervalFormatFallback intervalFormatItem key listPattern listPatternPart localeDisplayNames layout contextTransforms localeDisplayPattern languages localePattern localeSeparator localeKeyTypePattern localizedPatternChars dateRangePattern calendars long measurementSystem measurementSystemName messages minDays firstDay month monthPattern monthPatternContext monthPatternWidth months monthNames monthAbbr monthPatterns days dayNames dayAbbr moreInformation native orientation inList inText otherNumberingSystems paperSize pattern displayName quarter quarters quotationStart quotationEnd alternateQuotationStart alternateQuotationEnd rbnfrule regionFormat fallbackFormat fallbackRegionFormat abbreviationFallback preferenceOrdering relative reset import p pc rule ruleset rulesetGrouping s sc scripts segmentation settings short commonlyUsed exemplarCity singleCountries default calendar collation currency currencyFormat currencySpacing currencyFormatLength dateFormat dateFormatLength dateTimeFormat dateTimeFormatLength availableFormats appendItems dayContext dayWidth decimalFormat decimalFormatLength intervalFormats monthContext monthWidth percentFormat percentFormatLength quarterContext quarterWidth scientificFormat scientificFormatLength skipDefaultLocale defaultContent standard daylight stopwords indexLabels mapping suppress_contractions optimize rules surroundingMatch insertBetween symbol decimal group list percentSign nativeZeroDigit patternDigit plusSign minusSign exponential perMille infinity nan currencyDecimal currencyGroup symbols decimalFormats scientificFormats percentFormats currencyFormats currencies t tc q qc i ic extend territories timeFormat timeFormatLength timeZoneNames traditional finance transformName type unit unitPattern variable attributeValues variables segmentRules variantAlias variants keys types transformNames measurementSystemNames codePatterns version generation cldrVersion currencyData language script territory territoryContainment languageData territoryInfo postalCodeData calendarData calendarPreferenceData variant week am pm dayPeriods eras cyclicNameSets dateFormats timeFormats dateTimeFormats fields weekData measurementData timezoneData characters delimiters measurement dates numbers transforms units listPatterns collations posix segmentations rbnf metadata codeMappings parentLocales likelySubtags metazoneInfo mapTimezones plurals telephoneCodeData numberingSystems bcp47KeywordMappings references languageMatching dayPeriodRuleSet metaZones weekendStart weekendEnd width windowsZones coverageLevels x yesstr nostr yesexpr noexpr zone metazone special zoneAlias zoneFormatting zoneItem supplementalData
+			ldml alternate attributeOrder attributes blockingItems calendarPreference calendarSystem casingData casingItem character character-fallback codesByTerritory comment context coverageVariable coverageLevel cp dayPeriodRule dayPeriodRules deprecatedItems distinguishingItems elementOrder first_variable fractions identity indexSeparator compressedIndexSeparator indexRangePattern indexLabelBefore indexLabelAfter indexLabel info keyMap languageAlias languageCodes languageCoverage languageMatch languageMatches languagePopulation last_variable first_tertiary_ignorable last_tertiary_ignorable first_secondary_ignorable last_secondary_ignorable first_primary_ignorable last_primary_ignorable first_non_ignorable last_non_ignorable first_trailing last_trailing likelySubtag mapKeys mapTypes mapZone numberingSystem parentLocale personList pluralRule pluralRules postCodeRegex reference region scriptAlias scriptCoverage serialElements stopwordList substitute suppress tRule telephoneCountryCode territoryAlias territoryCodes territoryCoverage currencyCoverage timezone timezoneCoverage transform typeMap usesMetazone validity alias appendItem base beforeCurrency afterCurrency codePattern contextTransform contextTransformUsage currencyMatch cyclicName cyclicNameContext cyclicNameSet cyclicNameWidth dateFormatItem day dayPeriod dayPeriodContext dayPeriodWidth defaultNumberingSystem deprecated distinguishing blocking coverageAdditions era eraNames eraAbbr eraNarrow exemplarCharacters ellipsis fallback field generic greatestDifference height hourFormat hoursFormat gmtFormat gmtZeroFormat intervalFormatFallback intervalFormatItem key listPattern listPatternPart localeDisplayNames layout contextTransforms localeDisplayPattern languages localePattern localeSeparator localeKeyTypePattern localizedPatternChars dateRangePattern calendars long measurementSystem measurementSystemName messages minDays firstDay month monthPattern monthPatternContext monthPatternWidth months monthNames monthAbbr monthPatterns days dayNames dayAbbr moreInformation native orientation inList inText otherNumberingSystems paperSize pattern displayName quarter quarters quotationStart quotationEnd alternateQuotationStart alternateQuotationEnd rbnfrule regionFormat fallbackFormat fallbackRegionFormat abbreviationFallback preferenceOrdering relative reset import p pc rule ruleset rulesetGrouping s sc scripts segmentation settings short commonlyUsed exemplarCity singleCountries default calendar collation currency currencyFormat currencySpacing currencyFormatLength dateFormat dateFormatLength dateTimeFormat dateTimeFormatLength availableFormats appendItems dayContext dayWidth decimalFormat decimalFormatLength intervalFormats monthContext monthWidth percentFormat percentFormatLength quarterContext quarterWidth scientificFormat scientificFormatLength skipDefaultLocale defaultContent standard daylight stopwords indexLabels mapping suppress_contractions optimize rules surroundingMatch insertBetween symbol decimal group list percentSign nativeZeroDigit patternDigit plusSign minusSign exponential perMille infinity nan currencyDecimal currencyGroup symbols decimalFormats scientificFormats percentFormats currencyFormats currencies t tc q qc i ic extend territories timeFormat timeFormatLength timeZoneNames traditional finance transformName type unit unitPattern variable attributeValues variables segmentRules variantAlias variants keys types transformNames measurementSystemNames codePatterns version generation cldrVersion currencyData language script territory territoryContainment languageData territoryInfo postalCodeData calendarData calendarPreferenceData variant week am pm dayPeriods eras cyclicNameSets dateFormats timeFormats dateTimeFormats fields weekData measurementData timezoneData characters delimiters measurement dates numbers transforms units listPatterns collations posix segmentations rbnf metadata codeMappings parentLocales likelySubtags metazoneInfo mapTimezones plurals telephoneCodeData numberingSystems bcp47KeywordMappings gender references languageMatching dayPeriodRuleSet metaZones weekendStart weekendEnd width windowsZones coverageLevels x yesstr nostr yesexpr noexpr zone metazone special zoneAlias zoneFormatting zoneItem supplementalData
 		</elementOrder>
         <serialElements>
-
-            attributeValues base comment extend first_non_ignorable first_primary_ignorable first_secondary_ignorable first_tertiary_ignorable first_trailing first_variable i ic languagePopulation last_non_ignorable last_primary_ignorable last_secondary_ignorable last_tertiary_ignorable last_trailing last_variable optimize p pc q qc reset rules s sc settings suppress_contractions t tRule tc variable x
-
+            attributeValues attributes base comment context extend i ic languageMatch last_non_ignorable last_secondary_ignorable last_tertiary_ignorable optimize p pc pluralRule rbnfrule reset rules ruleset s sc settings substitute suppress_contractions t tRule tc variable x
         </serialElements>
         <suppress>
             <attributes attribute="_q"/>
@@ -51,30 +49,30 @@
             <variable id="$language" type="choice">
                 aa ab ace ach ada ady ae af afa afh agq ain ak akk ale alg alt am an ang anp apa ar
                 arc arn arp art arw as asa ast ath aus av awa ay az
-                ba bad bai bal ban bas bat be bej bem bez ber bg bh bho bi bik bin bla bm bn
-                bnt bo br bra brx bs btk bua bug byn
+                ba bad bai bal ban bas bat bax bbj bfd be bej bem bez ber bg bh bho bi bik bin bkm bla bm bn
+                bnt bo br bra brx bs bss btk bua bug bum byn byv
                 ca cad cai car cau cay cch ce ceb cel cgg ch chb chg chk chm chn cho chp chr chy ckb
                 cmc co cop cpe cpf cpp cr crh crp cs csb cu cus cv cy
-                da dak dar dav day de del den dgr din dje doi dra dsb dua dum dv dyo dyu dz
+                da dak dar dav day de del den dgr din dje doi dra dsb dua dum dv dyo dyu dz dzg
                 ebu ee efi egy eka el elx en enm eo es et eu ewo
                 fa fan fat ff fi fil fiu fj fo fon fr frm fro frr frs fur fy
                 ga gaa gay gba gd gem gez gil gl gmh gn goh gon gor got grb grc gsw gu guz gv gwi
                 ha hai haw he hi hil him hit hmn ho hr hsb ht hu hup hy hz
-                ia iba id ie ig ii ijo ik ilo in inc ine inh io ira iro is it iu iw
-                ja jbo ji jmc jpr jrb jv jw
-                ka kaa kab kac kaj kam kar kaw kbd kcg kde kea kfo kg kha khi kho khq ki kj kk
+                ia iba ibb id ie ig ii ijo ik ilo in inc ine inh io ira iro is it iu iw
+                ja jbo jgo ji jmc jpr jrb jv jw
+                ka kaa kab kac kaj kam kar kaw kbd kbl kcg kde kea kfo kg kha khi kho khq ki kj kk kkj
                 kl kln km kmb kn ko kok kos kpe kr krc krl kro kru ks ksb ksf ksh ku kum kut kv kw ky
                 la lad lag lah lam lb lez lg li ln lo lol loz lt lu lua lui lun luo lus luy lv
-                mad mag mai mak man map mas mdf mdr men mer mfe mg mga mgh mh mi mic min mis mk
-                mkh ml mn mnc mni mno mo moh mos mr ms mt mua mul mun mus mwl mwr my myn myv
-                na nah nai nap naq nb nd nds ne new ng nia nic niu nl nmg nn no nog non nqo nr nso
+                mad maf mag mai mak man map mas mde mdf mdr men mer mfe mg mga mgh mgo mh mi mic min mis mk
+                mkh ml mn mnc mni mno mo moh mos mr ms mt mua mul mun mus mwl mwr my mye myn myv
+                na nah nai nap naq nb nd nds ne new ng nia nic niu nl nmg nn nnh no nog non nqo nr nso
                 nub nus nv nwc ny nym nyn nyo nzi
                 oc oj om or os osa ota oto
                 pa paa pag pal pam pap pau peo phi phn pi pl pon pra pro ps pt
                 qu
                 raj rap rar rm rn ro roa rof rom root ru rup rw rwk
-                sa sad sah sai sal sam saq sas sat sbp sc scn sco sd se see seh sel sem ses sg sga sgn
-                sh shi shn si sid sio sit sk sl sla sm sma smi smj smn sms sn snk so sog son sq
+                sa sad sah sai sal sam saq sas sat sba sbp sc scn sco sd se see seh sel sem ses sg sga sgn
+                sh shi shn shu si sid sio sit sk sl sla sm sma smi smj smn sms sn snk so sog son sq
                 sr srn srr ss ssa ssy st su suk sus sux sv sw swb swc syc syr
                 ta tai te tem teo ter tet tg th ti tig tiv tk tkl tl tlh tli tmh tn to tog tpi
                 tr trv ts tsi tt tum tup tut tvl tw twq ty tyv tzm
@@ -82,7 +80,7 @@
                 vai ve vi vo vot vun
                 wa wae wak wal war was wen wo
                 xal xh xog
-                yao yap yav yi yo yue ypk
+                yao yap yav ybb yi yo yue ypk
                 za zap zbl zen zh znd zu zun zxx zza
             </variable>
             <variable id="$territory" type="choice">
@@ -92,7 +90,7 @@
                 419
                 AC AD AE AF AG AI AL AM AN AO AQ AR AS AT AU AW AX AZ
                 BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BU BV BW BY BZ
-                CA CC CD CF CG CH CI CK CL CM CN CO CP CR CS CU CV CW CX CY CZ
+                CA CC CD CF CG CH CI CK CL CM CN CO CP CR CU CV CW CX CY CZ
                 DD DE DG DJ DK DM DO DZ
                 EA EC EE EG EH ER ES ET EU
                 FI FJ FK FM FO FR FX
@@ -132,10 +130,6 @@
 				Narb Nbat Nkgb Nkoo Nshu
 				Ogam Olck Orkh Orya Osma
 				Palm Perm Phag Phli Phlp Phlv Phnx Plrd Prti
-				Qaaa Qaab Qaac Qaad Qaae Qaaf Qaag Qaah Qaai Qaaj Qaak Qaal Qaam Qaan Qaao Qaap
-				Qaaq Qaar Qaas Qaat Qaau Qaav Qaaw Qaax Qaay Qaaz Qaba Qabb Qabc Qabd Qabe Qabf
-				Qabg Qabh Qabi Qabj Qabk Qabl Qabm Qabn Qabo Qabp Qabq Qabr Qabs Qabt Qabu Qabv
-				Qabw Qabx
 				Rjng Roro Runr
 				Samr Sara Sarb Saur Sgnw Shaw Shrd Sind Sinh Sora Sund Sylo Syrc Syre Syrj Syrn
 				Tagb Takr Tale Talu Taml Tang Tavt Telu Teng Tfng Tglg Thaa Thai Tibt Tirh
@@ -232,7 +226,7 @@
                 America/Blanc-Sablon America/Boa_Vista America/Bogota America/Boise America/Buenos_Aires
                 America/Cambridge_Bay America/Campo_Grande America/Cancun America/Caracas America/Catamarca
                 America/Cayenne America/Cayman America/Chicago America/Chihuahua America/Coral_Harbour
-                America/Cordoba America/Costa_Rica America/Cuiaba America/Curacao
+                America/Cordoba America/Costa_Rica America/Creston America/Cuiaba America/Curacao
                 America/Danmarkshavn America/Dawson America/Dawson_Creek America/Denver America/Detroit
                 America/Dominica
                 America/Edmonton America/Eirunepe America/El_Salvador
@@ -408,6 +402,7 @@
                 search searchjl standard stroke
                 traditional
                 unihan
+                zhuyin
             </variable>
             <variable id="$date" type="regex">200[0-9]-([0-9]|1[0-2])-([12][0-9]|3[01])</variable>
             <variable id="$double" type="regex">[0-9]+(\.[0-9]+)?</variable>
@@ -417,8 +412,8 @@
             <variable id="$locale" type="locale"/>
             <variable id="$numberSystem" type="choice">
                 arab arabext armn armnlow
-                bali beng
-                cham
+                bali beng brah
+                cakm cham
                 deva
                 ethi
                 finance fullwide
@@ -429,10 +424,10 @@
                 lana lanatham laoo latn lepc limb
                 mlym mong mtei mymr mymrshan
                 native nkoo
-                olck orya
+                olck orya osma
                 roman romanlow
-                saur sund
-                talu taml tamldec telu thai tibt traditio traditional
+                saur shrd sora sund
+                takr talu taml tamldec telu thai tibt traditio traditional
                 vaii
             </variable>
             <variable id="$reference" type="regex">([R|S]|RP)[0-9]+</variable>
@@ -453,7 +448,7 @@
             <attributeValues elements="collation" attributes="type">$collationType</attributeValues>
             <attributeValues elements="collations" attributes="version" >$version</attributeValues>
             <attributeValues elements="contextTransform" attributes="type" type="choice">uiListOrMenu stand-alone</attributeValues>
-            <attributeValues elements="contextTransformUsage" attributes="type" type="regex">[a-z-]+</attributeValues>
+            <attributeValues elements="contextTransformUsage" attributes="type" type="regex">[a-zA-Z-]+</attributeValues>
             <attributeValues elements="cp" attributes="hex" type="regex">[0-9A-Fa-f]{4,6}</attributeValues>
             <attributeValues elements="currency" attributes="before from to">$date</attributeValues>
             <attributeValues elements="currency" attributes="iso4217">$currency</attributeValues>
@@ -464,6 +459,7 @@
             <attributeValues elements="cyclicNameSet" attributes="type" type="choice">years months days dayParts zodiacs</attributeValues>
             <attributeValues elements="dateFormatLength timeFormatLength dateTimeFormatLength decimalFormatLength scientificFormatLength percentFormatLength currencyFormatLength" attributes="type" order="given">full long medium short</attributeValues>
             <attributeValues elements="day" attributes="type" order="given">sun mon tue wed thu fri sat</attributeValues>
+            <attributeValues elements="dayWidth" attributes="type" order="given">abbreviated narrow short wide</attributeValues>
             <attributeValues elements="default" attributes="type" type="choice">format gregorian long medium pinyin standard stroke wide</attributeValues>
             <attributeValues elements="era" attributes="type" type="regex">[0-9]+</attributeValues>
             <attributeValues elements="field" attributes="type" order="given">era year month week day weekday dayperiod hour minute second zone</attributeValues>
@@ -491,7 +487,7 @@
             <attributeValues elements="monthPattern" attributes="type" type="choice">leap standardAfterLeap combined</attributeValues>
             <attributeValues elements="monthPatternContext" attributes="type" order="given">format stand-alone numeric</attributeValues>
             <attributeValues elements="monthPatternWidth" attributes="type" type="choice">abbreviated narrow wide all</attributeValues>
-            <attributeValues elements="monthWidth dayWidth quarterWidth cyclicNameWidth" attributes="type" order="given">abbreviated narrow wide</attributeValues>
+            <attributeValues elements="monthWidth quarterWidth cyclicNameWidth" attributes="type" order="given">abbreviated narrow wide</attributeValues>
             <attributeValues elements="pattern" attributes="type" type="choice">standard 1000 10000 100000 1000000 10000000 10000000 100000000 1000000000 10000000000 100000000000 1000000000000 10000000000000 100000000000000</attributeValues>
             <attributeValues elements="preferenceOrdering" attributes="type">$tzidList</attributeValues>
             <attributeValues elements="quarter" attributes="type" type="choice">1 2 3 4</attributeValues> <!-- move to DTD? -->
@@ -510,7 +506,7 @@
             <attributeValues elements="territory" attributes="type">$territory</attributeValues>
             <attributeValues elements="territoryAlias" attributes="replacement type">$territory</attributeValues>
             <attributeValues elements="type" attributes="key" type="choice">calendar collation colAlternate colBackwards colCaseFirst colCaseLevel colHiraganaQuaternary colNormalization colNumeric colStrength currency numbers x</attributeValues>
-            <attributeValues elements="type" attributes="type" type="choice">x dictionary reformed unihan hanidec arab arabext arabic armn armnlow bali beng big5han buddhist cham chinese coptic deva direct ducet ethi ethiopic ethiopic-amete-alem finance fullwide gb2312han geor gregorian grek greklow gujr guru hans hansfin hant hantfin hebr hebrew identical indian islamic islamic-civil japanese java jpan jpanfin kali knda khmr lana lanatham laoo latn lepc limb lower mlym mong mtei mymr mymrshan native nkoo no non-ignorable olck orya persian phonebook pinyin primary quarternary quaternary roc roman romanlow saur sund search searchjl secondary shifted stroke talu taml tamldec telu tertiary thai tibt traditional upper vaii yes</attributeValues>
+            <attributeValues elements="type" attributes="type" type="choice">x dictionary reformed unihan hanidec arab arabext arabic armn armnlow bali beng big5han brah buddhist cakm cham chinese coptic deva direct ducet ethi ethiopic ethiopic-amete-alem finance fullwide gb2312han geor gregorian grek greklow gujr guru hans hansfin hant hantfin hebr hebrew identical indian islamic islamic-civil japanese java jpan jpanfin kali khmr knda lana lanatham laoo latn lepc limb lower mlym mong mtei mymr mymrshan native nkoo no non-ignorable olck orya osma persian phonebook phonetic pinyin primary quarternary quaternary roc roman romanlow saur shrd sora sund search searchjl secondary shifted stroke takr talu taml tamldec telu tertiary thai tibt traditional upper vaii yes zhuyin</attributeValues>
             <attributeValues elements="variable" attributes="id">$variableID</attributeValues>
             <attributeValues elements="variant" attributes="type">$variant</attributeValues>
             <attributeValues elements="variantAlias" attributes="replacement type">$variant</attributeValues>
@@ -1402,7 +1398,7 @@
             <zoneAlias type="Atlantic/Jan_Mayen" replacement="Europe/Oslo" reason="deprecated"/>
         </alias>
         <deprecated>
-            <!-- items deprecated in ldml.dtd -->
+            <!-- items deprecated in ldml.dtd, ldmlSupplemental.dtd -->
             <deprecatedItems attributes="draft" values="true false"/>
             <deprecatedItems elements="monthNames monthAbbr dayNames dayAbbr localizedPatternChars week minDays firstDay weekendStart weekendEnd yesexpr noexpr measurement hoursFormat abbreviationFallback preferenceOrdering dateRangePattern"/>
             <deprecatedItems attributes="standard time"/> <!-- 'count' was probably in a different dtd -->
@@ -1416,6 +1412,7 @@
             <deprecatedItems type="supplementalData" elements="bcp47KeywordMappings mapKeys mapTypes keyMap typeMap"/>
             <deprecatedItems elements="cldrVersion"/>
             <deprecatedItems elements="calendar" attributes="type" values="civil-arabic thai-buddhist"/>
+            <deprecatedItems elements="exemplarCharacters" attributes="type" values="currencySymbol"/>
             <deprecatedItems elements="decimal group list percentSign nativeZeroDigit patternDigit plusSign minusSign exponential perMille infinity nan currencyDecimal currencyGroup" attributes="numberSystem"/>
             <deprecatedItems elements="q qc"/>
             <deprecatedItems elements="fallback"/>
@@ -1423,6 +1420,11 @@
             <deprecatedItems elements="commonlyUsed"/>
             <deprecatedItems elements="inList inText"/>
             <deprecatedItems elements="collation" attributes="type" values="direct"/>
+            <deprecatedItems type="ldml" elements="paperSize measurementSystem"/>
+            <deprecatedItems elements="height width"/>
+            <deprecatedItems elements="am pm"/>
+            <deprecatedItems type="supplementalData" elements="deprecatedItems" attributes="type" values="standard supplemental"/>
+            <deprecatedItems type="supplementalData" elements="zoneFormatting zoneItem"/>
         </deprecated>
         <distinguishing>
              <distinguishingItems attributes="key request id _q registry alt iso4217 iso3166 mzone from to type numberSystem"/>
@@ -1444,7 +1446,7 @@
 
             <territoryCoverage type="minimal" values="ZZ"/>
             <territoryCoverage type="basic" values="BR CN DE GB FR IN IT JP RU US"/>           
-            <territoryCoverage type="moderate" values="ES BE SE TR AT ID SA NO DK PL ZA GR FI IE PT TH HK TW 419"/>		
+            <territoryCoverage type="moderate" values="ES BE SE TR AT ID SA NO DK PL ZA GR FI IE PT TH HK TW 150 419"/>		
 
             <currencyCoverage type="minimal" values="XXX"/>
 
@@ -1458,34 +1460,34 @@
         </coverageAdditions>
         <skipDefaultLocale services="segmentation collation"/>
 		<defaultContent locales="
-			aa_ET af_ZA agq_CM ak_GH am_ET ar_001 as_IN asa_TZ az_Cyrl_AZ az_Latn az_Latn_AZ
-			bas_CM be_BY bem_ZM bez_TZ bg_BG bm_ML bn_BD bo_CN br_FR brx_IN bs_BA byn_ER
-			ca_ES cch_NG cgg_UG chr_US cs_CZ cy_GB
-			da_DK dav_KE de_DE dje_NE dua_CM dyo_SN dz_BT
+			aa_ET af_ZA agq_CM ak_GH am_ET ar_001 as_IN asa_TZ ast_ES az_Cyrl_AZ az_Latn az_Latn_AZ
+			bas_CM be_BY bem_ZM bez_TZ bg_BG bm_ML bn_BD bo_CN br_FR brx_IN bs_Cyrl_BA bs_Latn bs_Latn_BA bss_CM byn_ER
+			ca_ES cch_NG cgg_UG chr_US ckb_Arab ckb_Arab_IQ cs_CZ cy_GB
+			da_DK dav_KE de_DE dje_NE dua_CM dv_MV dyo_SN dz_BT
 			ebu_KE ee_GH el_GR en_Dsrt_US en_US es_ES et_EE eu_ES ewo_CM
 			fa_IR ff_SN fi_FI fil_PH fo_FO fr_FR fur_IT
-			ga_IE gaa_GH gd_GB gl_ES gsw_CH gu_IN guz_KE gv_GB
-			ha_Latn ha_Latn_NG haw_US he_IL hi_IN hr_HR hu_HU hy_AM
-			id_ID ig_NG ii_CN is_IS it_IT
-			ja_JP jmc_TZ
-			ka_GE kab_DZ kaj_NG kam_KE kcg_NG kde_TZ kea_CV khq_ML ki_KE kk_Cyrl kk_Cyrl_KZ
-			kl_GL kln_KE km_KH kn_IN ko_KR kok_IN ksb_TZ ksf_CM ksh_DE
-			kw_GB ky_KG
+			ga_IE gaa_GH gd_GB gez_ET gl_ES gsw_CH gu_IN guz_KE gv_GB
+			ha_Arab_SD ha_Latn ha_Latn_NG haw_US he_IL hi_IN hr_HR hu_HU hy_AM
+			id_ID ig_NG ii_CN is_IS it_IT iu_CA
+			ja_JP jgo_CM jmc_TZ
+			ka_GE kab_DZ kaj_NG kam_KE kcg_NG kde_TZ kea_CV ken_CM khq_ML ki_KE kk_Cyrl kk_Cyrl_KZ kkj_CM
+			kl_GL kln_KE km_KH kn_IN ko_KR kok_IN kpe_LR ks_Arab ks_Arab_IN ksb_TZ ksf_CM ksh_DE
+			ku_Arab_IQ ku_Latn ku_Latn_TR kw_GB ky_KG
 			lag_TZ lg_UG ln_CD lo_LA lt_LT lu_CD luo_KE luy_KE lv_LV
-			mas_KE mer_KE mfe_MU mg_MG mgh_MZ mk_MK ml_IN mn_Cyrl mn_Cyrl_MN mn_Mong_CN
+			mas_KE mer_KE mfe_MU mg_MG mgh_MZ mgo_CM mi_NZ mk_MK ml_IN mn_Cyrl mn_Cyrl_MN mn_Mong_CN
 			mr_IN ms_MY mt_MT mua_CM my_MM
-			naq_NA nb_NO nd_ZW nds_DE ne_NP nl_NL nmg_CM nn_NO nr_ZA nso_ZA nus_SD nyn_UG
-			oc_FR om_ET or_IN
+			naq_NA nb_NO nd_ZW nds_DE ne_NP nl_NL nmg_CM nn_NO nnh_CM nr_ZA nso_ZA nus_SD ny_MW nyn_UG
+			oc_FR om_ET or_IN os_GE
 			pa_Arab_PK pa_Guru pa_Guru_IN pl_PL ps_AF pt_BR
 			rm_CH rn_BI ro_RO rof_TZ ru_RU rw_RW rwk_TZ
-			sah_RU saq_KE sbp_TZ se_NO seh_MZ ses_ML sg_CF shi_Latn shi_Latn_MA shi_Tfng_MA
+			sa_IN sah_RU saq_KE sbp_TZ se_NO seh_MZ ses_ML sg_CF shi_Latn_MA shi_Tfng shi_Tfng_MA
 			si_LK sid_ET sk_SK sl_SI sn_ZW so_SO sq_AL sr_Cyrl sr_Cyrl_RS sr_Latn_RS ss_ZA
-			ssy_ER st_ZA sv_SE sw_TZ swc_CD
-			ta_IN te_IN teo_UG tg_Cyrl tg_Cyrl_TJ th_TH ti_ET tig_ER tn_ZA to_TO tr_TR
-			trv_TW ts_ZA twq_NE tzm_Latn tzm_Latn_MA
-			uk_UA ur_PK uz_Arab_AF uz_Cyrl uz_Cyrl_UZ uz_Latn_UZ
+			ssy_ER st_ZA sv_SE sw_TZ swc_CD syr_SY
+			ta_IN te_IN teo_UG tg_Cyrl tg_Cyrl_TJ th_TH ti_ET tig_ER tk_Latn tk_Latn_TM tn_ZA to_TO tr_TR
+			trv_TW ts_ZA tt_RU twq_NE tzm_Latn tzm_Latn_MA
+			ug_Arab ug_Arab_CN uk_UA ur_PK uz_Arab_AF uz_Cyrl uz_Cyrl_UZ uz_Latn_UZ
 			vai_Latn_LR vai_Vaii vai_Vaii_LR ve_ZA vi_VN vun_TZ
-			wae_CH wal_ET
+			wae_CH wal_ET wo_Latn wo_Latn_SN
 			xh_ZA xog_UG
 			yav_CM yo_NG
 			zh_Hans zh_Hans_CN zh_Hant_TW zu_ZA"

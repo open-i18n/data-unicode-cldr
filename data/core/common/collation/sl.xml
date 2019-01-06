@@ -3,7 +3,7 @@
 <ldml>
 	<identity>
 		<version number="$Revision: 5022 $" />
-		<generation date="$Date: 2010-08-20 14:51:39 -0500 (Fri, 20 Aug 2010) $" />
+		<generation date="$Date: 2010-08-20 12:51:39 -0700 (Fri, 20 Aug 2010) $" />
 		<language type="sl" />
 	</identity>
 	<collations validSubLocales="sl_SI">

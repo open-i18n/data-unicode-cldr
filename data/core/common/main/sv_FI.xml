@@ -2,12 +2,20 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 5884 $"/>
-		<generation date="$Date: 2011-05-10 15:58:32 -0500 (Tue, 10 May 2011) $"/>
+		<version number="$Revision: 7599 $"/>
+		<generation date="$Date: 2012-08-16 17:59:44 -0700 (Thu, 16 Aug 2012) $"/>
 		<language type="sv"/>
 		<territory type="FI"/>
 	</identity>
 	<localeDisplayNames>
+		<scripts>
+			<script type="Mero" draft="contributed">meroitiska</script>
+		</scripts>
+		<territories>
+			<territory type="BQ" draft="contributed">Bonaire, S:t Eustatius och Saba</territory>
+			<territory type="MF" draft="contributed">S:t Martin (franska delen)</territory>
+			<territory type="SD" draft="contributed">Nordsudan</territory>
+		</territories>
 		<variants>
 			<variant type="1996">1996 års stavning</variant>
 		</variants>
@@ -18,9 +26,6 @@
 			<type type="stroke" key="collation" draft="unconfirmed">kinesiska i strecksorteringsordning</type>
 			<type type="traditional" key="collation" draft="unconfirmed">traditionell sorteringsordning</type>
 		</types>
-		<measurementSystemNames>
-			<measurementSystemName type="US" draft="unconfirmed">imperiska enheter</measurementSystemName>
-		</measurementSystemNames>
 	</localeDisplayNames>
 	<characters>
 		<exemplarCharacters draft="unconfirmed">[a à b c d e é f g h i j k l m n o p q r s t u v x y z å ä ö]</exemplarCharacters>
@@ -38,6 +43,12 @@
 		</calendars>
 		<timeZoneNames>
 			<hourFormat draft="unconfirmed">+HH:mm;−HH:mm</hourFormat>
+			<zone type="Etc/Unknown">
+				<exemplarCity draft="contributed">(okänd tidszon)</exemplarCity>
+			</zone>
+			<zone type="America/Tegucigalpa">
+				<exemplarCity draft="contributed">Tegucigalpa</exemplarCity>
+			</zone>
 		</timeZoneNames>
 	</dates>
 </ldml>

@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 5882 $"/>
-		<generation date="$Date: 2011-05-10 15:26:37 -0500 (Tue, 10 May 2011) $"/>
+		<version number="$Revision: 7498 $"/>
+		<generation date="$Date: 2012-08-06 17:23:18 -0700 (Mon, 06 Aug 2012) $"/>
 		<language type="uz"/>
 		<script type="Latn"/>
 	</identity>
@@ -19,7 +19,7 @@
 			<language type="ja">yaponcha</language>
 			<language type="pt">portugalcha</language>
 			<language type="ru">ruscha</language>
-			<language type="uz">oʼzbekcha</language>
+			<language type="uz">oʻzbekcha</language>
 			<language type="zh">xitoycha</language>
 		</languages>
 		<scripts>
@@ -27,7 +27,7 @@
 			<script type="Latn">Lotin</script>
 		</scripts>
 		<territories>
-			<territory type="AF">Afgʼoniston</territory>
+			<territory type="AF">Afgʻoniston</territory>
 			<territory type="BR">Braziliya</territory>
 			<territory type="CN">Xitoy</territory>
 			<territory type="DE">Olmoniya</territory>
@@ -37,14 +37,14 @@
 			<territory type="IT">Italiya</territory>
 			<territory type="JP">Yaponiya</territory>
 			<territory type="RU">Rossiya</territory>
-			<territory type="US">Qoʼshma Shtatlar</territory>
-			<territory type="UZ">Oʼzbekiston</territory>
+			<territory type="US">Qoʻshma Shtatlar</territory>
+			<territory type="UZ">Oʻzbekiston</territory>
 		</territories>
 	</localeDisplayNames>
 	<characters>
-		<exemplarCharacters>[a {aʼ} b {ch} d e {eʼ} f g {gʼ} h i {iʼ} j k l m n o {oʼ} p q r s {sh} t u {uʼ} v x y z]</exemplarCharacters>
+		<exemplarCharacters>[a {aʼ} b {ch} d e {eʼ} f g {gʻ} h i {iʼ} j k l m n o {oʻ} p q r s {sh} t u {uʼ} v x y z]</exemplarCharacters>
 		<exemplarCharacters type="auxiliary">[c w]</exemplarCharacters>
-		<exemplarCharacters type="index">[A B {CH} D E F G {Gʼ} H I J K L M N O {Oʼ} P Q R S {SH} T U V X Y Z]</exemplarCharacters>
+		<exemplarCharacters type="index">[A B {CH} D E F G {Gʻ} H I J K L M N O {Oʻ} P Q R S {SH} T U V X Y Z]</exemplarCharacters>
 	</characters>
 	<dates>
 		<calendars>
@@ -179,15 +179,18 @@
 				<months>
 					<monthContext type="format">
 						<monthWidth type="wide">
-							<month type="3" draft="unconfirmed">Rabiul-avval</month>
-							<month type="4" draft="unconfirmed">Rabiul-oxir</month>
-							<month type="5" draft="unconfirmed">Jumodiul-ulo</month>
-							<month type="6" draft="unconfirmed">Jumodiul-uxro</month>
-							<month type="8" draft="unconfirmed">Shaʼbon</month>
-							<month type="9" draft="unconfirmed">Ramazon</month>
-							<month type="10" draft="unconfirmed">Shavvol</month>
-							<month type="11" draft="unconfirmed">Zil-qaʼda</month>
-							<month type="12" draft="unconfirmed">Zil-hijja</month>
+							<month type="1">Muharram</month>
+							<month type="2">Safar</month>
+							<month type="3">Robiʼ ul-avval</month>
+							<month type="4">Robiʼ ul-oxir</month>
+							<month type="5">Jumad ul-avval</month>
+							<month type="6">Jumad ul-oxir</month>
+							<month type="7">Rajab</month>
+							<month type="8">Shaʼbon</month>
+							<month type="9">Ramazon</month>
+							<month type="10">Shavvol</month>
+							<month type="11">Zul-qaʼda</month>
+							<month type="12">Zul-hijja</month>
 						</monthWidth>
 					</monthContext>
 				</months>
@@ -225,10 +228,9 @@
 				<displayName draft="unconfirmed">AQSH dollari</displayName>
 			</currency>
 			<currency type="UZS">
-				<displayName draft="unconfirmed">Oʼzbekiston soʼm</displayName>
-				<symbol draft="unconfirmed">soʼm</symbol>
+				<displayName draft="unconfirmed">Oʻzbekiston soʻm</displayName>
+				<symbol draft="unconfirmed">soʻm</symbol>
 			</currency>
 		</currencies>
 	</numbers>
 </ldml>
-

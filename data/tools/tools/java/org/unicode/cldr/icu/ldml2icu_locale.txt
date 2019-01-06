@@ -1,0 +1,172 @@
+# Used by LdmlLocaleMapper.
+# Data-driven file for mapping LDML locale paths to ICU paths.
+# See ldml2icu_readme.txt for a detailed explanation of this file.
+
+# Variables
+# Attribute value
+%A=[^"']++
+# Word
+%W=[\w\-]++
+# Greedy word match
+%G=[\w\-]+
+# Number match
+%N=\d++
+# The default numbering system to be used.
+%D=//ldml/numbers/defaultNumberingSystem
+
+# Main locale data
+
+# Aliases
+
+//ldml/dates/calendars/calendar[@type="(%A)"]/alias[@source="locale"][@path="../calendar[@type='(%A)']"]   ; /calendar/$1lo ; values=/LOCALE/calendar/$2
+
+//ldml/dates/calendars/calendar[@type="(%A)"]/dayPeriods/alias[@source="locale"][@path="../../calendar[@type='(%A)']/dayPeriods"] ; /calendar/$1/AmPmMarkers:alias ; values=/LOCALE/calendar/$2/AmPmMarkers
+//ldml/dates/calendars/calendar[@type="(%A)"]/(eras|quarters)/alias[@source="locale"][@path="../../%W[@type='(%A)']/%W"] ; /calendar/$1/$2:alias ; values=/LOCALE/calendar/$3/$2
+
+//ldml/dates/calendars/calendar[@type="(%A)"]/eras/eraNarrow/alias[@source="locale"][@path="../eraAbbr"] ; /calendar/$1/eras/narrow:alias ; values=/LOCALE/calendar/$1/eras/abbreviated
+//ldml/dates/calendars/calendar[@type="(%A)"]/eras/eraNames/alias[@source="locale"][@path="../eraAbbr"] ; /calendar/$1/eras/wide:alias ; values=/LOCALE/calendar/$1/eras/abbreviated
+
+//ldml/dates/calendars/calendar[@type="(%A)"]/(cyclicNameSet)s/\2[@type="(%W)"]/alias[@source="locale"][@path="../\2[@type='(%A)']"]   ; /calendar/$1/$2s/$3:alias ; values=/LOCALE/calendar/$1/$2s/$4
+//ldml/dates/calendars/calendar[@type="(%A)"]/(cyclicNameSet)s/\2[@type="(%W)"]/(cyclicName)Context[@type="(%W)"]/\4Width[@type="(%W)"]/alias[@source="locale"][@path="../\4Width[@type='(%A)']"]   ; /calendar/$1/$2s/$3/$5/$6:alias ; values=/LOCALE/calendar/$1/$2s/$3/$5/$7
+//ldml/dates/calendars/calendar[@type="(%A)"]/(cyclicNameSet|monthPattern|quarter)s/\2Context[@type="(%W)"]/\2Width[@type="(%W)"]/alias[@source="locale"][@path="../../\2Context[@type='(%W)']/\2Width[@type='(%A)']"]   ; /calendar/$1/$2s/$3/$4:alias ; values=/LOCALE/calendar/$1/$2s/$5/$6
+
+//ldml/dates/calendars/calendar[@type="(%A)"]/(day|month)s/alias[@source="locale"][@path="../../%W[@type='(%A)']/%W"] ; /calendar/$1/$2Names:alias ; values=/LOCALE/calendar/$3/$2Names
+//ldml/dates/calendars/calendar[@type="(%A)"]/(day|month)s/\2Context[@type="(%W)"]/\2Width[@type="(%W)"]/alias[@source="locale"][@path="../\2Width[@type='(%A)']"]   ; /calendar/$1/$2Names/$3/$4:alias ; values=/LOCALE/calendar/$1/$2Names/$3/$5
+//ldml/dates/calendars/calendar[@type="(%A)"]/(day|month)s/\2Context[@type="(%W)"]/\2Width[@type="(%W)"]/alias[@source="locale"][@path="../../\2Context[@type='(%W)']/\2Width[@type='(%A)']"]   ; /calendar/$1/$2Names/$3/$4:alias ; values=/LOCALE/calendar/$1/$2Names/$5/$6
+
+//ldml/dates/calendars/calendar[@type="(%A)"]/(monthPattern|quarter)s/\2Context[@type="(%W)"]/\2Width[@type="(%W)"]/alias[@source="locale"][@path="../\2Width[@type='(%A)']"]   ; /calendar/$1/$2s/$3/$4:alias ; values=/LOCALE/calendar/$1/$2s/$3/$5
+
+//ldml/dates/calendars/calendar[@type="(%A)"]/dateFormats/alias[@source="locale"][@path="../../calendar[@type='(%A)']/dateFormats"]   ; /calendar/$1/DateTimePatterns:alias ; values=/LOCALE/calendar/$2/DateTimePatterns
+//ldml/dates/calendars/calendar[@type="(%A)"]/dateTimeFormats/alias[@source="locale"][@path="../../calendar[@type='(%A)']/dateTimeFormats"]
+     ; /calendar/$1/availableFormats:alias ; values=/LOCALE/calendar/$2/availableFormats
+     ; /calendar/$1/appendItems:alias ; values=/LOCALE/calendar/$2/appendItems
+     ; /calendar/$1/intervalFormats:alias ; values=/LOCALE/calendar/$2/intervalFormats
+//ldml/dates/calendars/calendar[@type="(%A)"]/dateTimeFormats/(availableFormats|appendItems|intervalFormats)/alias[@source="locale"][@path="../../../calendar[@type='(%A)']/dateTimeFormats/\2"]   ; /calendar/$1/$2:alias ; values=/LOCALE/calendar/$3/$2
+
+
+# Characters
+
+//ldml/characters/exemplarCharacters[@type="auxiliary"] ; /AuxExemplarCharacters
+//ldml/characters/exemplarCharacters[@type="currencySymbol"] ; /ExemplarCharactersCurrency
+//ldml/characters/exemplarCharacters[@type="index"] ; /ExemplarCharactersIndex
+//ldml/characters/exemplarCharacters[@type="punctuation"] ; /ExemplarCharactersPunctuation
+//ldml/characters/exemplarCharacters ; /ExemplarCharacters
+
+//ldml/characters/special/icu:scripts/icu:script[@type="%N"]      ;   /LocaleScript
+
+# Defaults
+
+//ldml/dates/calendars/default[@choice="(%A)"]   ; /calendar/default ; values=$1
+
+//ldml/dates/calendars/calendar[@type="(%A)"]/(month|day)s/default[@choice="(%A)"] ; /calendar/$1/$2Names/default  ; values=$3
+//ldml/dates/calendars/calendar[@type="(%A)"]/(month|day)s/%W[@type="(%A)"]/default[@choice="(%A)"] ; /calendar/$1/$2Names/$3/default  ; values=$4
+//ldml/dates/calendars/calendar[@type="(%A)"]/(monthPattern)s/\2Context[@type="(%W)"]/\2Width[@type="(%W)"]/\2[@type="(%W)"]   ; /calendar/$1/$2s/$3/$4/$5
+
+# Dates
+
+//ldml/dates/calendars/calendar[@type="chinese"]/cyclicNameSets/cyclicNameSet[@type="(%A)"]/cyclicNameContext[@type="(%A)"]/cyclicNameWidth[@type="(%A)"]/cyclicName[@type="(%A)"] ; /calendar/chinese/cyclicNameSets/$1/$2/$3 ;
+# This is a weird edge case. When the number attribute is present in the xpath,
+# its value needs to be grouped together with the xpath value in its own special
+# array, which is treated like just another value in /DateTimePatterns.
+# The group keyword is used here to specify that values from the same xpath
+# should be grouped into their own separate array.
+# So far (June 2012), this only happens in the Chinese calendar for zh_Hant
+# and the Hebrew calendar for he.
+//ldml/dates/calendars/calendar[@type="(%A)"]/dateFormats/dateFormatLength[@type="(%A)"]/dateFormat[@type="%A"]/pattern[@type="%A"][@numbers="(%W)"] ; /calendar/$1/DateTimePatterns ;  values="{value}" $3 ; group=$2
+
+//ldml/dates/calendars/calendar[@type="(%A)"]/((date|time|dateTime)Format)s/\2Length[@type="(%A)"]/\2[@type="%A"]/pattern[@type="%A"] ; /calendar/$1/DateTimePatterns
+
+//ldml/dates/calendars/calendar[@type="(%A)"]/dateTimeFormats/appendItems/appendItem[@request="(%A)"] ; /calendar/$1/appendItems/$2
+
+//ldml/dates/calendars/calendar[@type="(%A)"]/dateTimeFormats/availableFormats/dateFormatItem[@id="(%A)"] ; /calendar/$1/availableFormats/$2
+
+//ldml/dates/calendars/calendar[@type="(%A)"]/dateTimeFormats/intervalFormats/intervalFormatItem[@id="(%A)"]/greatestDifference[@id="(%A)"] ; /calendar/$1/intervalFormats/$2/$3
+//ldml/dates/calendars/calendar[@type="(%A)"]/dateTimeFormats/intervalFormats/intervalFormatFallback ; /calendar/$1/intervalFormats/fallback
+
+//ldml/dates/calendars/calendar[@type="(%A)"]/dayPeriods/dayPeriodContext[@type="format"]/dayPeriodWidth[@type="wide"]/dayPeriod[@type="(am|pm)"] ; /calendar/$1/AmPmMarkers
+
+//ldml/dates/calendars/calendar[@type="(%A)"]/eras/eraNarrow/era[@type="(%A)"] ; /calendar/$1/eras/narrow ; key=$2
+//ldml/dates/calendars/calendar[@type="(%A)"]/eras/eraAbbr/era[@type="(%A)"] ; /calendar/$1/eras/abbreviated ; key=$2
+//ldml/dates/calendars/calendar[@type="(%A)"]/eras/eraNames/era[@type="(%A)"] ; /calendar/$1/eras/wide ; key=$2
+
+//ldml/dates/calendars/calendar[@type="(%A)"]/fields/field[@type="(%A)"]/displayName ; /calendar/$1/fields/$2/dn
+//ldml/dates/calendars/calendar[@type="(%A)"]/fields/field[@type="(%A)"]/relative[@type="(%A)"] ; /calendar/$1/fields/$2/relative/"$3"
+
+//ldml/dates/calendars/calendar[@type="(%A)"]/(day|month)s/%W[@type="(%A)"]/%W[@type="(%A)"]/%W[@type="(%A)"]([@yeartype="(%A)"])? ; /calendar/$1/$2Names/$3/$4
+//ldml/dates/calendars/calendar[@type="(%A)"]/(quarters)/%W[@type="(%A)"]/%W[@type="(%A)"]/%W[@type="(?:%A)"] ; /calendar/$1/$2/$3/$4
+
+//ldml/dates/timeZoneNames/(%GFormat)   ; /zoneStrings/$1
+
+//ldml/dates/timeZoneNames/metazone[@type="(%A)"]/(\w)%W/(\w)%W ; /zoneStrings/"meta:$1"/$2$3
+
+//ldml/dates/timeZoneNames/singleCountries[@list="(%A)"] ; /zoneStrings/singleCountries ; values=$1
+
+//ldml/dates/timeZoneNames/zone[@type="(%W)/(%W)"]/exemplarCity ; /zoneStrings/"$1:$2"/ec
+//ldml/dates/timeZoneNames/zone[@type="(%W)/(%W)"]/(\w)%W/(\w)%W ; /zoneStrings/"$1:$2"/$3$4
+//ldml/dates/timeZoneNames/zone[@type="(%W)/(%W)/(%W)"]/exemplarCity ; /zoneStrings/"$1:$2:$3"/ec
+
+# Locale Display Names
+
+//ldml/localeDisplayNames/codePatterns/codePattern[@type="(%A)"] ; /codePatterns/$1
+
+//ldml/localeDisplayNames/keys/key[@type="(%A)"] ; /Keys/$1
+
+# There is a language element with a references attribute in gd.
+//ldml/localeDisplayNames/languages/language[@type="(%A)"]([@references="%A"])? ; /Languages/$1
+//ldml/localeDisplayNames/languages/language[@type="(%A)"][@alt="short"] ; /LanguagesShort/$1
+
+//ldml/localeDisplayNames/localeDisplayPattern/localeKeyTypePattern ; /localeDisplayPattern/keyTypePattern
+//ldml/localeDisplayNames/localeDisplayPattern/localePattern ; /localeDisplayPattern/pattern
+//ldml/localeDisplayNames/localeDisplayPattern/localeSeparator ; /localeDisplayPattern/separator
+
+//ldml/localeDisplayNames/measurementSystemNames/measurementSystemName[@type="(%A)"] ; /measurementSystemNames/$1
+
+# There is a script element with a references attribute in gd.
+//ldml/localeDisplayNames/scripts/script[@type="(%A)"]([@references="%A"])? ; /Scripts/$1
+//ldml/localeDisplayNames/scripts/script[@type="(%A)"][@alt="stand-alone"] ; /Scripts%stand-alone/$1
+
+//ldml/localeDisplayNames/territories/territory[@type="(%A)"] ; /Countries/$1
+
+//ldml/localeDisplayNames/types/type[@type="(%A)"][@key="((?!col(Alternate|Backwards|CaseFirst|CaseLevel|HiraganaQuaternary|Normalization|Numeric|Strength))%A)"] ; /Types/$2/$1
+
+//ldml/localeDisplayNames/variants/variant[@type="(%A)"] ; /Variants/$1
+
+# Numbers
+
+//ldml/numbers/currencies/currency[@type="(%A)"]/displayName[@count="(%A)"] ; /CurrencyPlurals/$1/$2
+
+//ldml/numbers/currencies/currency[@type="(%W)"]/symbol ; /Currencies/$1 ; fallback=$1
+//ldml/numbers/currencies/currency[@type="(%W)"]/displayName ; /Currencies/$1
+//ldml/numbers/currencies/currency[@type="(%W)"]/pattern[@type="standard"]; /Currencies/$1/ ; fallback=//ldml/numbers/currencyFormats[@numberSystem="%D"]/currencyFormatLength/currencyFormat[@type="standard"]/pattern[@type="standard"]
+//ldml/numbers/currencies/currency[@type="(%W)"]/(decimal|group) ; /Currencies/$1/
+
+
+//ldml/numbers/currencyFormats[@numberSystem="%D"]/currencySpacing/(%W)/(%W)   ; /currencySpacing/$1/$2
+//ldml/numbers/currencyFormats[@numberSystem="%D"]/unitPattern[@count="(%W)"] ; /CurrencyUnitPatterns/$1
+
+//ldml/numbers/defaultNumberingSystem ; /NumberElements/default
+//ldml/numbers/otherNumberingSystems/(%W)   ; /NumberElements/$1
+
+//ldml/numbers/symbols[@numberSystem="(%A)"]/(%W) ; /NumberElements/$1/symbols/$2
+//ldml/numbers/(%GFormat)s[@numberSystem="(%W)"]/\1Length/\1[@type="standard"]/pattern[@type="standard"] ; /NumberElements/$2/patterns/$1
+# TODO(jchye): remove the following CLDR21-compatible regex for compact decimal formats once ICU uses CLDR22.
+//ldml/numbers/decimalFormats[@numberSystem="(%W)"]/decimalFormatLength[@type="short"]/decimalFormat[@type="standard"]/pattern[@type="(%N)"] ; /NumberElements/$1/patternsShort/decimalFormat/$2/other
+# CLDR22-compatible regexes for compact/long decimal formats.
+//ldml/numbers/decimalFormats[@numberSystem="(%W)"]/decimalFormatLength[@type="short"]/decimalFormat[@type="standard"]/pattern[@type="(%N)"][@count="(%W)"] ; /NumberElements/$1/patternsShort/decimalFormat/$2/$3
+//ldml/numbers/decimalFormats[@numberSystem="(%W)"]/decimalFormatLength[@type="long"]/decimalFormat[@type="standard"]/pattern[@type="(%N)"][@count="(%W)"] ; /NumberElements/$1/patternsLong/decimalFormat/$2/$3
+
+# Misc
+
+//ldml/contextTransforms/contextTransformUsage[@type="(%W)"]/contextTransform[@type="uiListOrMenu"] ; /contextTransforms/$1:intvector ; fallback=0
+//ldml/contextTransforms/contextTransformUsage[@type="(%W)"]/contextTransform[@type="stand-alone"] ; /contextTransforms/$1:intvector ; fallback=0
+
+//ldml/delimiters/(%W) ; /delimiters/$1
+
+//ldml/layout/orientation[@lines="(%A)"][@characters="(%A)"]
+    ; /layout/lines ; values=$1
+    ; /layout/characters ; values=$2
+
+//ldml/listPatterns/listPattern/listPatternPart[@type="(%A)"] ; /listPattern/standard/$1
+
+//ldml/units/unit[@type="(%A)"]/unitPattern[@count="(%A)"][@alt="short"] ; /unitsShort/$1/$2
+//ldml/units/unit[@type="(%A)"]/unitPattern[@count="(%A)"] ; /units/$1/$2

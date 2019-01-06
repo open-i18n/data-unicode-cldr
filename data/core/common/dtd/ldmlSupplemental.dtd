@@ -7,15 +7,15 @@ THE DATA FILES AND SOFTWARE ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
 
 Except as contained in this notice, the name of a copyright holder shall not be used in advertising or otherwise to promote the sale, use or other dealings in these Data Files or Software without prior written authorization of the copyright holder.
 
-    $Revision: 6469 $
-    $Date: 2012-01-27 15:34:56 -0600 (Fri, 27 Jan 2012) $
+    $Revision: 7621 $
+    $Date: 2012-08-22 14:30:59 -0700 (Wed, 22 Aug 2012) $
 -->
 
 <!ELEMENT supplementalData ( version, generation?, cldrVersion?, currencyData?, territoryContainment?, languageData?, territoryInfo?, postalCodeData?, calendarData?, calendarPreferenceData?, weekData?, measurementData?, timezoneData?, characters?, transforms?, metadata?, codeMappings?, parentLocales?, likelySubtags?, metazoneInfo?, plurals?, telephoneCodeData?, numberingSystems?, bcp47KeywordMappings?,  gender?, references?, languageMatching?, dayPeriodRuleSet?, metaZones?, windowsZones?, coverageLevels?) >
 
 <!ELEMENT version EMPTY >
 <!ATTLIST version number CDATA #REQUIRED >
-<!ATTLIST version cldrVersion CDATA #FIXED "21.0" >
+<!ATTLIST version cldrVersion CDATA #FIXED "22.0" >
 
 <!ELEMENT generation EMPTY >
 <!ATTLIST generation date CDATA #REQUIRED >
@@ -58,7 +58,7 @@ Except as contained in this notice, the name of a copyright holder shall not be 
 <!ATTLIST group grouping ( true | false )  #IMPLIED >
 <!ATTLIST group draft ( approved | contributed | provisional | unconfirmed | true | false ) #IMPLIED > <!-- true and false are deprecated. -->
 <!ATTLIST group references CDATA #IMPLIED >
-<!ATTLIST group status ( deprecated ) #IMPLIED >
+<!ATTLIST group status ( deprecated | grouping ) #IMPLIED >
 
 <!ELEMENT languageData ( language* ) >
 <!ELEMENT language EMPTY >
@@ -377,6 +377,7 @@ Except as contained in this notice, the name of a copyright holder shall not be 
 <!ATTLIST numberingSystem radix NMTOKEN #IMPLIED >
 <!ATTLIST numberingSystem digits CDATA #IMPLIED >
 <!ATTLIST numberingSystem rules CDATA #IMPLIED >
+<!ATTLIST numberingSystem draft ( approved | contributed | provisional | unconfirmed ) #IMPLIED > 
 
 <!ELEMENT references ( reference* ) >
 <!ELEMENT reference ( #PCDATA ) >
@@ -456,19 +457,23 @@ Except as contained in this notice, the name of a copyright holder shall not be 
 
 <!ELEMENT timezoneData ( mapTimezones*, zoneFormatting* ) >
 
-<!ELEMENT zoneFormatting ( zoneItem* ) >
+<!ELEMENT zoneFormatting ( zoneItem* ) > <!-- deprecated. -->
 <!ATTLIST zoneFormatting multizone NMTOKENS #REQUIRED >
 <!ATTLIST zoneFormatting tzidVersion CDATA #IMPLIED >
 <!ATTLIST zoneFormatting references CDATA #IMPLIED >
 
-<!ELEMENT zoneItem EMPTY >
+<!ELEMENT zoneItem EMPTY > <!-- deprecated. -->
 <!ATTLIST zoneItem type CDATA #REQUIRED >
 <!ATTLIST zoneItem territory NMTOKEN #REQUIRED >
 <!ATTLIST zoneItem aliases CDATA #IMPLIED >
 <!ATTLIST zoneItem references CDATA #IMPLIED >
 
 <!-- Coverage levels -->
-<!ELEMENT coverageLevels ( coverageLevel* ) >
+<!ELEMENT coverageLevels ( coverageVariable*, coverageLevel* ) >
+
+<!ELEMENT coverageVariable EMPTY >
+<!ATTLIST coverageVariable key CDATA #REQUIRED >
+<!ATTLIST coverageVariable value CDATA #REQUIRED >
 
 <!ELEMENT coverageLevel EMPTY >
 <!ATTLIST coverageLevel inLanguage CDATA #IMPLIED >

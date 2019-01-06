@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 6546 $"/>
-		<generation date="$Date: 2012-02-07 12:32:35 -0600 (Tue, 07 Feb 2012) $"/>
+		<version number="$Revision: 7485 $"/>
+		<generation date="$Date: 2012-08-05 19:01:41 -0700 (Sun, 05 Aug 2012) $"/>
 		<language type="pa"/>
 	</identity>
 	<localeDisplayNames>
@@ -73,9 +73,6 @@
 			<calendar type="gregorian">
 				<months>
 					<monthContext type="format">
-						<monthWidth type="abbreviated">
-							<month type="5">ਮਈ</month>
-						</monthWidth>
 						<monthWidth type="wide">
 							<month type="1">ਜਨਵਰੀ</month>
 							<month type="2">ਫ਼ਰਵਰੀ</month>
@@ -92,9 +89,6 @@
 						</monthWidth>
 					</monthContext>
 					<monthContext type="stand-alone">
-						<monthWidth type="abbreviated">
-							<month type="5">ਮਈ</month>
-						</monthWidth>
 						<monthWidth type="narrow">
 							<month type="1">ਜ</month>
 							<month type="2">ਫ</month>
@@ -267,11 +261,9 @@
 					</field>
 					<field type="day">
 						<displayName>ਦਿਨ</displayName>
-						<relative type="-2">ਪਰਸੋਂ</relative>
 						<relative type="-1">ਲੰਘਿਆਂ ਕੱਲ</relative>
 						<relative type="0">ਅੱਜ</relative>
 						<relative type="1">ਭਲਕੇ</relative>
-						<relative type="2">ਪਰਸੋਂ</relative>
 					</field>
 					<field type="weekday">
 						<displayName>ਹਫ਼ਤੇ ਦਾ ਦਿਨ</displayName>
@@ -347,4 +339,3 @@
 		</messages>
 	</posix>
 </ldml>
-

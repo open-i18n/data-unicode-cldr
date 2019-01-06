@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 6546 $"/>
-		<generation date="$Date: 2012-02-07 12:32:35 -0600 (Tue, 07 Feb 2012) $"/>
+		<version number="$Revision: 7474 $"/>
+		<generation date="$Date: 2012-08-03 13:39:09 -0700 (Fri, 03 Aug 2012) $"/>
 		<language type="or"/>
 	</identity>
 	<localeDisplayNames>
@@ -728,7 +728,6 @@
 			<territory type="CN">ଚିନ୍</territory>
 			<territory type="CO">କୋଲମ୍ବିଆ</territory>
 			<territory type="CR">କୋଷ୍ଟା ରିକା</territory>
-			<territory type="CS">ସର୍ବିଆ ଏବଂ ମଣ୍ଟେନଗ୍ରୋ</territory>
 			<territory type="CU">କ୍ୱିବା</territory>
 			<territory type="CV">କେପ୍ ଭର୍ଦେ</territory>
 			<territory type="CX">ଖ୍ରୀଷ୍ଟମାସ ଆଇଲ୍ୟାଣ୍ଡ</territory>
@@ -887,6 +886,7 @@
 			<territory type="SN">ସେନେଗାଲ୍</territory>
 			<territory type="SO">ସୋମାଲିଆ</territory>
 			<territory type="SR">ସୁରିନାମ</territory>
+			<territory type="SS" draft="provisional">ଦକ୍ଷିନ ସୁଦାନ</territory>
 			<territory type="ST">ସାଓ ଟୋମେ ଏବଂ ପ୍ରିନସିପି</territory>
 			<territory type="SV">ଏଲ୍ ସାଲଭାଡୋର୍</territory>
 			<territory type="SY">ସିରିଆ</territory>
@@ -1007,6 +1007,10 @@
 				</days>
 				<dayPeriods>
 					<dayPeriodContext type="format">
+						<dayPeriodWidth type="narrow">
+							<dayPeriod type="am">am</dayPeriod>
+							<dayPeriod type="pm">pm</dayPeriod>
+						</dayPeriodWidth>
 						<dayPeriodWidth type="wide">
 							<dayPeriod type="am">am</dayPeriod>
 							<dayPeriod type="pm">pm</dayPeriod>
@@ -1124,4 +1128,3 @@
 		</messages>
 	</posix>
 </ldml>
-

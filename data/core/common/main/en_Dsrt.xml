@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 6472 $"/>
-		<generation date="$Date: 2012-01-27 17:53:35 -0600 (Fri, 27 Jan 2012) $"/>
+		<version number="$Revision: 7594 $"/>
+		<generation date="$Date: 2012-08-16 13:13:57 -0700 (Thu, 16 Aug 2012) $"/>
 		<language type="en"/>
 		<script type="Dsrt"/>
 	</identity>
@@ -311,13 +311,11 @@
 			<territory type="CN">𐐕𐐴𐑌𐐲</territory>
 			<territory type="CO">𐐗𐐲𐑊𐐲𐑋𐐺𐐨𐐲</territory>
 			<territory type="CR">𐐗𐐱𐑅𐐻𐐲 𐐡𐐨𐐿𐐲</territory>
-			<territory type="CS">𐐝𐐲𐑉𐐺𐐨𐐲 𐐰𐑌𐐼 𐐣𐐪𐑌𐐲𐑌𐐨𐑀𐑉𐐬</territory>
 			<territory type="CU">𐐗𐐷𐐭𐐺𐐲</territory>
 			<territory type="CV">𐐗𐐩𐐹 𐐚𐐯𐑉𐐼𐐨</territory>
 			<territory type="CX">𐐗𐑉𐐮𐑅𐑋𐐲𐑅 𐐌𐑊𐐲𐑌𐐼</territory>
 			<territory type="CY">𐐝𐐴𐐹𐑉𐐲𐑅</territory>
 			<territory type="CZ">𐐕𐐯𐐿 𐐡𐐨𐐹𐐲𐐺𐑊𐐮𐐿</territory>
-			<territory type="DD">𐐀𐑅𐐻 𐐖𐐲𐑉𐑋𐐲𐑌𐐨</territory>
 			<territory type="DE">𐐖𐐲𐑉𐑋𐐲𐑌𐐨</territory>
 			<territory type="DJ">𐐖𐐲𐐺𐐭𐐼𐐨</territory>
 			<territory type="DK">𐐔𐐯𐑌𐑋𐐪𐑉𐐿</territory>
@@ -338,7 +336,6 @@
 			<territory type="FM">𐐣𐐴𐐿𐑉𐐲𐑌𐐨𐑈𐐲</territory>
 			<territory type="FO">𐐙𐐯𐑉𐐬 𐐌𐑊𐐲𐑌𐐼𐑆</territory>
 			<territory type="FR">𐐙𐑉𐐰𐑌𐑅</territory>
-			<territory type="FX">𐐣𐐯𐐻𐑉𐐲𐐹𐐪𐑊𐐲𐐻𐐲𐑌 𐐙𐑉𐐰𐑌𐑅</territory>
 			<territory type="GA">𐐘𐐲𐐺𐐪𐑌</territory>
 			<territory type="GB">𐐏𐐭𐑌𐐴𐐻𐐲𐐼 𐐗𐐨𐑍𐐼𐐲𐑋</territory>
 			<territory type="GD">𐐘𐑉𐐲𐑌𐐩𐐼𐐲</territory>
@@ -434,7 +431,6 @@
 			<territory type="NO">𐐤𐐱𐑉𐐶𐐩</territory>
 			<territory type="NP">𐐤𐐩𐐹𐐪𐑊</territory>
 			<territory type="NR">𐐤𐐪𐐭𐑉𐐭</territory>
-			<territory type="NT">𐐤𐐭𐐻𐑉𐐲𐑊 𐐞𐐬𐑌</territory>
 			<territory type="NU">𐐤𐐷𐐭𐐩</territory>
 			<territory type="NZ">𐐤𐐭 𐐞𐐨𐑊𐐲𐑌𐐼</territory>
 			<territory type="OM">𐐄𐑋𐐲𐑌</territory>
@@ -475,7 +471,6 @@
 			<territory type="SO">𐐝𐐲𐑋𐐪𐑊𐐨𐐲</territory>
 			<territory type="SR">𐐝𐐭𐑉𐐲𐑌𐐪𐑋</territory>
 			<territory type="ST">𐐝𐐵 𐐓𐐬𐑋 𐐰𐑌𐐼 𐐑𐑉𐐮𐑌𐐽𐐮𐐹𐐩</territory>
-			<territory type="SU">𐐏𐐭𐑌𐐷𐐲𐑌 𐐲𐑂 𐐝𐐬𐑂𐐨𐐯𐐻 𐐝𐐬𐑇𐐲𐑊𐐮𐑅𐐻 𐐡𐐨𐐹𐐲𐐺𐑊𐐮𐐿𐑅</territory>
 			<territory type="SV">𐐇𐑊 𐐝𐐰𐑊𐑂𐐲𐐼𐐱𐑉</territory>
 			<territory type="SY">𐐝𐐮𐑉𐐨𐐲</territory>
 			<territory type="SZ">𐐝𐐶𐐪𐑆𐐨𐑊𐐰𐑌𐐼</territory>
@@ -507,7 +502,6 @@
 			<territory type="VU">𐐚𐐪𐑌𐐳𐐪𐐼𐐭</territory>
 			<territory type="WF">𐐎𐐪𐑊𐐮𐑅 𐐰𐑌𐐼 𐐙𐐭𐐻𐐭𐑌𐐲</territory>
 			<territory type="WS">𐐝𐐲𐑋𐐬𐐲</territory>
-			<territory type="YD">𐐑𐐨𐐹𐐲𐑊𐑆 𐐔𐐯𐑋𐐲𐐿𐑉𐐰𐐼𐐮𐐿 𐐡𐐨𐐹𐐲𐐺𐑊𐐮𐐿 𐐲𐑂 𐐏𐐯𐑋𐐲𐑌</territory>
 			<territory type="YE">𐐏𐐯𐑋𐐲𐑌</territory>
 			<territory type="YT">𐐣𐐪𐐷𐐱𐐻</territory>
 			<territory type="ZA">𐐝𐐵𐑃 𐐈𐑁𐑉𐐲𐐿𐐲</territory>
@@ -538,7 +532,6 @@
 	<characters>
 		<exemplarCharacters>[𐐨 𐐩 𐐪 𐐫 𐐬 𐐭 𐐮 𐐯 𐐰 𐐱 𐐲 𐐳 𐐴 𐐵 𐐶 𐐷 𐐸 𐐹 𐐺 𐐻 𐐼 𐐽 𐐾 𐐿 𐑀 𐑁 𐑂 𐑃 𐑄 𐑅 𐑆 𐑇 𐑈 𐑉 𐑊 𐑋 𐑌 𐑍 𐑎 𐑏]</exemplarCharacters>
 		<exemplarCharacters type="auxiliary">[]</exemplarCharacters>
-		<exemplarCharacters type="currencySymbol">[a b c d e f g h i j k l m n o p q r s t u v w x y z]</exemplarCharacters>
 		<exemplarCharacters type="index" draft="unconfirmed">[𐐀 𐐁 𐐂 𐐃 𐐄 𐐅 𐐆 𐐇 𐐈 𐐉 𐐊 𐐋 𐐌 𐐍 𐐎 𐐏 𐐐 𐐑 𐐒 𐐓 𐐔 𐐕 𐐖 𐐗 𐐘 𐐙 𐐚 𐐛 𐐜 𐐝 𐐞 𐐟 𐐠 𐐡 𐐢 𐐣 𐐤 𐐥 𐐦 𐐧]</exemplarCharacters>
 	</characters>
 	<dates>
@@ -592,6 +585,7 @@
 					<monthContext type="stand-alone">
 						<monthWidth type="abbreviated">
 							<month type="1">𐐖𐐰𐑌</month>
+							<month type="2">𐐙𐐯𐐺</month>
 							<month type="3">𐐣𐐪𐑉</month>
 							<month type="4">𐐁𐐹𐑉</month>
 							<month type="5">𐐣𐐩</month>
@@ -619,6 +613,7 @@
 						</monthWidth>
 						<monthWidth type="wide">
 							<month type="1">𐐖𐐰𐑌𐐷𐐭𐐯𐑉𐐨</month>
+							<month type="2">𐐙𐐯𐐺𐑉𐐭𐐯𐑉𐐨</month>
 							<month type="3">𐐣𐐪𐑉𐐽</month>
 							<month type="4">𐐁𐐹𐑉𐐮𐑊</month>
 							<month type="5">𐐣𐐩</month>

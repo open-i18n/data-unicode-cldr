@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 6546 $"/>
-		<generation date="$Date: 2012-02-07 12:32:35 -0600 (Tue, 07 Feb 2012) $"/>
+		<version number="$Revision: 7599 $"/>
+		<generation date="$Date: 2012-08-16 17:59:44 -0700 (Thu, 16 Aug 2012) $"/>
 		<language type="en"/>
 		<territory type="BE"/>
 	</identity>
@@ -168,13 +168,5 @@
 				</currencyFormat>
 			</currencyFormatLength>
 		</currencyFormats>
-		<currencies>
-			<currency type="BEF">
-				<pattern>#,##0.00 ¤;-#,##0.00 ¤</pattern>
-				<decimal>,</decimal>
-				<group>.</group>
-			</currency>
-		</currencies>
 	</numbers>
 </ldml>
-

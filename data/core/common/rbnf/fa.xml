@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
     <identity>
-        <version number="$Revision: 4126 $"/>
-        <generation date="$Date: 2009-05-05 18:33:13 -0500 (Tue, 05 May 2009) $"/>
+        <version number="$Revision: 7501 $"/>
+        <generation date="$Date: 2012-08-06 18:21:09 -0700 (Mon, 06 Aug 2012) $"/>
         <language type="fa"/>
     </identity>
     <rbnf>
@@ -51,13 +51,15 @@
                 <rbnfrule value="300">سیصد[ و →→];</rbnfrule>
                 <rbnfrule value="400">چهارصد[ و →→];</rbnfrule>
                 <rbnfrule value="500">پانصد[ و →→];</rbnfrule>
-                <rbnfrule value="600">←←صد[ و →→];</rbnfrule>
+                <rbnfrule value="600">ششصد[ و →→];</rbnfrule>
+                <rbnfrule value="700">هفتصد[ و →→];</rbnfrule>
+                <rbnfrule value="800">هشتصد[ و →→];</rbnfrule>
+                <rbnfrule value="900">نهصد[ و →→];</rbnfrule>
                 <rbnfrule value="1000">←← هزار[ و →→];</rbnfrule>
                 <rbnfrule value="1000000">←← میلیون[ و →→];</rbnfrule>
                 <rbnfrule value="1000000000">←← میلیارد[ و →→];</rbnfrule>
-                <rbnfrule value="1000000000000">←← بیلیون[ و →→];</rbnfrule>
-                <rbnfrule value="1000000000000000">←← بیلیارد[ و →→];</rbnfrule>
-                <rbnfrule value="1000000000000000000">=#,##0=;</rbnfrule>
+                <rbnfrule value="1000000000000">←← هزار میلیارد[ و →→];</rbnfrule>
+                <rbnfrule value="1000000000000000">=#,##0=;</rbnfrule>
             </ruleset>
         </rulesetGrouping>
     </rbnf>

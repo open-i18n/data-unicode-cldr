@@ -2,22 +2,37 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
     <identity>
-        <version number="$Revision: 4126 $"/>
-        <generation date="$Date: 2009-05-05 18:33:13 -0500 (Tue, 05 May 2009) $"/>
+        <version number="$Revision: 7458 $"/>
+        <generation date="$Date: 2012-07-28 23:18:29 -0700 (Sat, 28 Jul 2012) $"/>
         <language type="nl"/>
     </identity>
     <rbnf>
         <rulesetGrouping type="SpelloutRules">
             <ruleset type="2d-year" access="private">
-                <rbnfrule value="0">honderd[ →%spellout-numbering→];</rbnfrule>
-                <rbnfrule value="1">nul =%spellout-numbering=;</rbnfrule>
-                <rbnfrule value="10">=%spellout-numbering=;</rbnfrule>
+                <rbnfrule value="0">honderd;</rbnfrule>
+                <rbnfrule value="1">=%spellout-numbering=;</rbnfrule>
             </ruleset>
             <ruleset type="spellout-numbering-year">
                 <rbnfrule value="-x">min →→;</rbnfrule>
                 <rbnfrule value="x.x">=#,###0.#=;</rbnfrule>
                 <rbnfrule value="0">=%spellout-numbering=;</rbnfrule>
                 <rbnfrule value="1100" radix="100">←←­→%%2d-year→;</rbnfrule>
+                <rbnfrule value="2000">=%spellout-numbering=;</rbnfrule>
+                <rbnfrule value="2100" radix="100">←←­→%%2d-year→;</rbnfrule>
+                <rbnfrule value="3000">=%spellout-numbering=;</rbnfrule>
+                <rbnfrule value="3100" radix="100">←←­→%%2d-year→;</rbnfrule>
+                <rbnfrule value="4000">=%spellout-numbering=;</rbnfrule>
+                <rbnfrule value="4100" radix="100">←←­→%%2d-year→;</rbnfrule>
+                <rbnfrule value="5000">=%spellout-numbering=;</rbnfrule>
+                <rbnfrule value="5100" radix="100">←←­→%%2d-year→;</rbnfrule>
+                <rbnfrule value="6000">=%spellout-numbering=;</rbnfrule>
+                <rbnfrule value="6100" radix="100">←←­→%%2d-year→;</rbnfrule>
+                <rbnfrule value="7000">=%spellout-numbering=;</rbnfrule>
+                <rbnfrule value="7100" radix="100">←←­→%%2d-year→;</rbnfrule>
+                <rbnfrule value="8000">=%spellout-numbering=;</rbnfrule>
+                <rbnfrule value="8100" radix="100">←←­→%%2d-year→;</rbnfrule>
+                <rbnfrule value="9000">=%spellout-numbering=;</rbnfrule>
+                <rbnfrule value="9100" radix="100">←←­→%%2d-year→;</rbnfrule>
                 <rbnfrule value="10000">=%spellout-numbering=;</rbnfrule>
             </ruleset>
             <ruleset type="spellout-numbering">
@@ -60,12 +75,11 @@
                 <rbnfrule value="70">[→%%number-en→]zeventig;</rbnfrule>
                 <rbnfrule value="80">[→%%number-en→]tachtig;</rbnfrule>
                 <rbnfrule value="90">[→%%number-en→]negentig;</rbnfrule>
-                <rbnfrule value="100">honderd[-en-→→];</rbnfrule>
-                <rbnfrule value="130">honderd[­→→];</rbnfrule>
+                <rbnfrule value="100">honderd[→→];</rbnfrule>
                 <rbnfrule value="200">←←­honderd[­→→];</rbnfrule>
                 <rbnfrule value="1000">duizend[­→→];</rbnfrule>
                 <rbnfrule value="2000">←←­duizend[­→→];</rbnfrule>
-                <rbnfrule value="100000" radix="1000">←← duizend[ →→];</rbnfrule>
+                <rbnfrule value="100000" radix="1000">←←­duizend[­→→];</rbnfrule>
                 <rbnfrule value="1000000">←← miljoen[ →→];</rbnfrule>
                 <rbnfrule value="1000000000">←← miljard[ →→];</rbnfrule>
                 <rbnfrule value="1000000000000">←← biljoen[ →→];</rbnfrule>
@@ -74,8 +88,7 @@
             </ruleset>
             <ruleset type="ord-ste" access="private">
                 <rbnfrule value="0">ste;</rbnfrule>
-                <rbnfrule value="1">­en­=%spellout-ordinal=;</rbnfrule>
-                <rbnfrule value="2">­=%spellout-ordinal=;</rbnfrule>
+                <rbnfrule value="1">­=%spellout-ordinal=;</rbnfrule>
             </ruleset>
             <ruleset type="spellout-ordinal">
                 <rbnfrule value="-x">min →→;</rbnfrule>
@@ -85,27 +98,24 @@
                 <rbnfrule value="2">tweede;</rbnfrule>
                 <rbnfrule value="3">derde;</rbnfrule>
                 <rbnfrule value="4">=%spellout-cardinal=de;</rbnfrule>
+                <rbnfrule value="8">=%spellout-cardinal=ste;</rbnfrule>
+                <rbnfrule value="9">=%spellout-cardinal=de;</rbnfrule>
                 <rbnfrule value="20">=%spellout-cardinal=ste;</rbnfrule>
-                <rbnfrule value="102">←%spellout-cardinal← honderd→%%ord-ste→;</rbnfrule>
-                <rbnfrule value="1000">←%spellout-cardinal← duisend→%%ord-ste→;</rbnfrule>
-                <rbnfrule value="1000000">←%spellout-cardinal← miljoen→%%ord-ste→;</rbnfrule>
-                <rbnfrule value="1000000000">←%spellout-cardinal← miljard→%%ord-ste→;</rbnfrule>
-                <rbnfrule value="1000000000000">←%spellout-cardinal← biljoen→%%ord-ste→;</rbnfrule>
-                <rbnfrule value="1000000000000000">←%spellout-cardinal← biljard→%%ord-ste→;</rbnfrule>
+                <rbnfrule value="100">honderd→%%ord-ste→;</rbnfrule>
+                <rbnfrule value="200">←%spellout-cardinal←­honderd→%%ord-ste→;</rbnfrule>
+                <rbnfrule value="1000">duizend→%%ord-ste→;</rbnfrule>
+                <rbnfrule value="2000">←%spellout-cardinal←­duizend→%%ord-ste→;</rbnfrule>
+                <rbnfrule value="1000000">←%spellout-cardinal←­miljoen→%%ord-ste→;</rbnfrule>
+                <rbnfrule value="1000000000">←%spellout-cardinal←­miljard→%%ord-ste→;</rbnfrule>
+                <rbnfrule value="1000000000000">←%spellout-cardinal←­biljoen→%%ord-ste→;</rbnfrule>
+                <rbnfrule value="1000000000000000">←%spellout-cardinal←­biljard→%%ord-ste→;</rbnfrule>
                 <rbnfrule value="1000000000000000000">=#,##0=.;</rbnfrule>
             </ruleset>
         </rulesetGrouping>
         <rulesetGrouping type="OrdinalRules">
-            <ruleset type="digits-ordinal-indicator" access="private">
-                <rbnfrule value="0">ste;</rbnfrule>
-                <rbnfrule value="1">ste;</rbnfrule>
-                <rbnfrule value="2">de;</rbnfrule>
-                <rbnfrule value="20">ste;</rbnfrule>
-                <rbnfrule value="100">→→;</rbnfrule>
-            </ruleset>
             <ruleset type="digits-ordinal">
                 <rbnfrule value="-x">−→→;</rbnfrule>
-                <rbnfrule value="0">=#,##0==%%digits-ordinal-indicator=;</rbnfrule>
+                <rbnfrule value="0">=#,##0=e;</rbnfrule>
             </ruleset>
         </rulesetGrouping>
     </rbnf>

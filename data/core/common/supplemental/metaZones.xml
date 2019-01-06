@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE supplementalData SYSTEM "../../common/dtd/ldmlSupplemental.dtd">
 <supplementalData>
-	<version number="$Revision: 6438 $"/>
-	<generation date="$Date: 2012-01-25 01:30:12 -0600 (Wed, 25 Jan 2012) $"/>
+	<version number="$Revision: 7682 $"/>
+	<generation date="$Date: 2012-09-05 13:15:48 -0700 (Wed, 05 Sep 2012) $"/>
 
 	<metaZones>
 		<metazoneInfo>
@@ -330,6 +330,9 @@
 			</timezone>
 			<timezone type="America/Costa_Rica">
 				<usesMetazone mzone="America_Central"/>
+			</timezone>
+			<timezone type="America/Creston">
+				<usesMetazone mzone="America_Mountain"/>
 			</timezone>
 			<timezone type="America/Cuiaba">
 				<usesMetazone mzone="Amazon"/>
@@ -739,7 +742,9 @@
 			<timezone type="Antarctica/Casey">
 				<usesMetazone to="2009-10-17 18:00" mzone="Australia_Western"/>
 				<usesMetazone to="2010-03-04 15:00" from="2009-10-17 18:00" mzone="Casey"/>
-				<usesMetazone from="2010-03-04 15:00" mzone="Australia_Western"/>
+				<usesMetazone to="2011-10-27 18:00" from="2010-03-04 15:00" mzone="Australia_Western"/>
+				<usesMetazone to="2012-02-21 17:00" from="2011-10-27 18:00" mzone="Casey"/>
+				<usesMetazone from="2012-02-21 17:00" mzone="Australia_Western"/>
 			</timezone>
 			<timezone type="Antarctica/Davis">
 				<usesMetazone mzone="Davis"/>
@@ -1679,7 +1684,6 @@
 			<mapZone other="GMT" territory="GM" type="Africa/Banjul"/>
 			<mapZone other="GMT" territory="GN" type="Africa/Conakry"/>
 			<mapZone other="GMT" territory="IE" type="Europe/Dublin"/>
-			<mapZone other="GMT" territory="LR" type="Africa/Monrovia"/>
 			<mapZone other="GMT" territory="ML" type="Africa/Bamako"/>
 			<mapZone other="GMT" territory="MR" type="Africa/Nouakchott"/>
 			<mapZone other="GMT" territory="SH" type="Atlantic/St_Helena"/>

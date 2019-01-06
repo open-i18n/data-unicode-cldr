@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 6546 $"/>
-		<generation date="$Date: 2012-02-07 12:32:35 -0600 (Tue, 07 Feb 2012) $"/>
+		<version number="$Revision: 7480 $"/>
+		<generation date="$Date: 2012-08-03 14:30:30 -0700 (Fri, 03 Aug 2012) $"/>
 		<language type="nd"/>
 	</identity>
 	<localeDisplayNames>
@@ -100,7 +100,6 @@
 			<territory type="CN">China</territory>
 			<territory type="CO">Kholombiya</territory>
 			<territory type="CR">Khosta Rikha</territory>
-			<territory type="CS">Serbia and Montenegro</territory>
 			<territory type="CU">Cuba</territory>
 			<territory type="CV">Cape Verde Islands</territory>
 			<territory type="CY">Cyprus</territory>
@@ -474,9 +473,6 @@
 					</availableFormats>
 				</dateTimeFormats>
 				<fields>
-					<field type="era">
-						<displayName>Umnyaka</displayName>
-					</field>
 					<field type="year">
 						<displayName>Umnyaka</displayName>
 					</field>
@@ -494,9 +490,6 @@
 					</field>
 					<field type="weekday">
 						<displayName>Ilanga leviki</displayName>
-					</field>
-					<field type="dayperiod">
-						<displayName>Ilanga</displayName>
 					</field>
 					<field type="hour">
 						<displayName>Ihola</displayName>

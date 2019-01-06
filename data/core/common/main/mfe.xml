@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 6450 $"/>
-		<generation date="$Date: 2012-01-25 18:20:54 -0600 (Wed, 25 Jan 2012) $"/>
+		<version number="$Revision: 7465 $"/>
+		<generation date="$Date: 2012-08-01 21:53:17 -0700 (Wed, 01 Aug 2012) $"/>
 		<language type="mfe"/>
 	</identity>
 	<localeDisplayNames>
@@ -100,7 +100,6 @@
 			<territory type="CN">Lasinn</territory>
 			<territory type="CO">Kolonbi</territory>
 			<territory type="CR">Costa Rica</territory>
-			<territory type="CS">Serbi-ek-Montenegro</territory>
 			<territory type="CU">Cuba</territory>
 			<territory type="CV">Kap-Ver</territory>
 			<territory type="CY">Cyprus</territory>

@@ -1,20 +1,37 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 6546 $"/>
-		<generation date="$Date: 2012-02-07 12:32:35 -0600 (Tue, 07 Feb 2012) $"/>
+		<version number="$Revision: 7599 $"/>
+		<generation date="$Date: 2012-08-16 17:59:44 -0700 (Thu, 16 Aug 2012) $"/>
 		<language type="fr"/>
 		<territory type="CA"/>
 	</identity>
 	<localeDisplayNames>
 		<languages>
+			<language type="es_ES" draft="contributed">espagnol ibérique</language>
 			<language type="ps" alt="variant" draft="contributed">ps</language>
+			<language type="pt_PT" draft="contributed">portugais ibérique</language>
+			<language type="si" draft="contributed">singhalais</language>
+			<language type="to" draft="contributed">tongan</language>
+			<language type="ug" draft="contributed">ouïgour</language>
+			<language type="ug" alt="variant" draft="contributed">ouïghour</language>
+			<language type="und" draft="contributed">indéterminé</language>
 		</languages>
 		<scripts>
 			<script type="Arab" alt="variant" draft="contributed">Perso-arabe</script>
+			<script type="Hans" draft="contributed">idéogrammes han simplifiés</script>
+			<script type="Hant" draft="contributed">idéogrammes han traditionnels</script>
 		</scripts>
+		<territories>
+			<territory type="AC" draft="contributed">Île de l'Ascension</territory>
+			<territory type="GS" draft="contributed">Géorgie du Sud et les îles Sandwich du Sud</territory>
+			<territory type="MK" alt="variant" draft="contributed">Macédoine</territory>
+			<territory type="ST" draft="contributed">Sao Tomé-et-Principe</territory>
+		</territories>
 		<keys>
+			<key type="calendar" draft="contributed">Calendrier</key>
+			<key type="currency" draft="contributed">Devise</key>
 			<key type="numbers" draft="contributed">Chiffres</key>
 		</keys>
 		<types>
@@ -30,6 +47,7 @@
 			<type type="ethiopic-amete-alem" key="calendar" draft="contributed">Calendrier éthiopien de l'An de grâce</type>
 			<type type="fullwide" key="numbers" draft="contributed">Chiffre pleine largeur</type>
 			<type type="geor" key="numbers" draft="contributed">Chiffres géorgiens</type>
+			<type type="gregorian" key="calendar" draft="contributed">Calendrier grégorien</type>
 			<type type="grek" key="numbers" draft="contributed">Chiffres grecs</type>
 			<type type="greklow" key="numbers" draft="contributed">Chiffres minuscules grecs</type>
 			<type type="gujr" key="numbers" draft="contributed">Chiffres gujarati</type>
@@ -38,7 +56,10 @@
 			<type type="hans" key="numbers" draft="contributed">Chiffres chinois simplifiés</type>
 			<type type="hansfin" key="numbers" draft="contributed">Chiffres monétaires chinois simplifiés</type>
 			<type type="hant" key="numbers" draft="contributed">Chiffres chinois traditionnels</type>
+			<type type="hantfin" key="numbers" draft="contributed">Chiffres financiers en chinois traditionnel</type>
 			<type type="hebr" key="numbers" draft="contributed">Chiffre hébreux</type>
+			<type type="islamic" key="calendar" draft="contributed">Calendrier musulman</type>
+			<type type="islamic-civil" key="calendar" draft="contributed">Calendrier civil musulman</type>
 			<type type="jpanfin" key="numbers" draft="contributed">Chiffres monétaires japonais</type>
 			<type type="khmr" key="numbers" draft="contributed">Chiffres khmer</type>
 			<type type="knda" key="numbers" draft="contributed">Chiffres canara</type>
@@ -74,12 +95,12 @@
 			<stopwordList type="collation" draft="provisional">le la les</stopwordList>
 		</stopwords>
 	</characters>
-    <delimiters>
-        <quotationStart>«</quotationStart>
-        <quotationEnd>»</quotationEnd>
-        <alternateQuotationStart>‹</alternateQuotationStart>
-        <alternateQuotationEnd>›</alternateQuotationEnd>
-    </delimiters>
+	<delimiters>
+		<quotationStart>«</quotationStart>
+		<quotationEnd>»</quotationEnd>
+		<alternateQuotationStart>‹</alternateQuotationStart>
+		<alternateQuotationEnd>›</alternateQuotationEnd>
+	</delimiters>
 	<dates>
 		<calendars>
 			<calendar type="gregorian">
@@ -209,6 +230,9 @@
 		<timeZoneNames>
 			<regionFormat draft="contributed">Heure de {0}</regionFormat>
 			<fallbackRegionFormat draft="contributed">Heure de {1} ({0})</fallbackRegionFormat>
+			<zone type="America/Barbados">
+				<exemplarCity draft="contributed">Barbade (La)</exemplarCity>
+			</zone>
 			<zone type="Asia/Dhaka">
 				<exemplarCity draft="contributed">Dacca</exemplarCity>
 			</zone>
@@ -245,8 +269,17 @@
 			<zone type="Pacific/Pitcairn">
 				<exemplarCity draft="contributed">Île Pitcairn</exemplarCity>
 			</zone>
+			<zone type="Africa/Ndjamena">
+				<exemplarCity draft="contributed">Ndjamena</exemplarCity>
+			</zone>
 			<zone type="Indian/Kerguelen">
 				<exemplarCity draft="contributed">Îles Kerguelen</exemplarCity>
+			</zone>
+			<zone type="America/Port_of_Spain">
+				<exemplarCity draft="contributed">Port-d'Espagne</exemplarCity>
+			</zone>
+			<zone type="America/North_Dakota/New_Salem">
+				<exemplarCity draft="contributed">New Salem, Dakota du Nord</exemplarCity>
 			</zone>
 			<zone type="Europe/Vatican">
 				<exemplarCity draft="contributed">Vatican</exemplarCity>
@@ -285,6 +318,11 @@
 					<daylight>HAP</daylight>
 				</short>
 			</metazone>
+			<metazone type="Indonesia_Eastern">
+				<long>
+					<standard draft="contributed">heure de l’Est indonésien</standard>
+				</long>
+			</metazone>
 			<metazone type="Newfoundland">
 				<short>
 					<generic>HT</generic>
@@ -295,25 +333,58 @@
 		</timeZoneNames>
 	</dates>
 	<numbers>
-		<decimalFormats numberSystem="latn">
-			<decimalFormatLength type="short">
-				<decimalFormat>
-					<pattern type="1000000000" draft="contributed">0.0B</pattern>
-					<pattern type="10000000000" draft="contributed">00B</pattern>
-					<pattern type="100000000000" draft="contributed">000B</pattern>
-				</decimalFormat>
-			</decimalFormatLength>
-		</decimalFormats>
-		<currencyFormats numberSystem="latn">
-			<currencyFormatLength>
-				<currencyFormat>
-					<pattern>#,##0.00 ¤;(#,##0.00 ¤)</pattern>
-				</currencyFormat>
-			</currencyFormatLength>
-		</currencyFormats>
 		<currencies>
+			<currency type="AFN">
+				<symbol draft="contributed">AFN</symbol>
+			</currency>
+			<currency type="BAM">
+				<symbol draft="contributed">BAM</symbol>
+			</currency>
+			<currency type="BDT">
+				<symbol draft="contributed">BDT</symbol>
+			</currency>
 			<currency type="CAD">
 				<symbol>$</symbol>
+			</currency>
+			<currency type="CNY">
+				<symbol draft="contributed">CN¥</symbol>
+			</currency>
+			<currency type="DJF">
+				<symbol draft="contributed">DJF</symbol>
+			</currency>
+			<currency type="GYD">
+				<displayName count="one" draft="contributed">dollar guyanien</displayName>
+				<displayName count="other" draft="contributed">dollars guyaniens</displayName>
+			</currency>
+			<currency type="IDR">
+				<symbol draft="contributed">IDR</symbol>
+			</currency>
+			<currency type="MMK">
+				<symbol draft="contributed">MMK</symbol>
+			</currency>
+			<currency type="MNT">
+				<symbol draft="contributed">MNT</symbol>
+			</currency>
+			<currency type="MVR">
+				<symbol draft="contributed">MVR</symbol>
+			</currency>
+			<currency type="MYR">
+				<symbol draft="contributed">MYR</symbol>
+			</currency>
+			<currency type="PGK">
+				<symbol draft="contributed">PGK</symbol>
+			</currency>
+			<currency type="TOP">
+				<symbol draft="contributed">TOP</symbol>
+			</currency>
+			<currency type="VUV">
+				<symbol draft="contributed">VUV</symbol>
+			</currency>
+			<currency type="WST">
+				<symbol draft="contributed">WST</symbol>
+			</currency>
+			<currency type="XOF">
+				<symbol draft="contributed">F CFA</symbol>
 			</currency>
 		</currencies>
 	</numbers>
@@ -334,6 +405,10 @@
 			<unitPattern count="one" draft="contributed">Il y a {0} heure</unitPattern>
 			<unitPattern count="other" draft="contributed">Il y a {0} heures</unitPattern>
 		</unit>
+		<unit type="minute">
+			<unitPattern count="one" alt="short" draft="contributed">{0} min</unitPattern>
+			<unitPattern count="other" alt="short" draft="contributed">{0} min</unitPattern>
+		</unit>
 		<unit type="minute-future">
 			<unitPattern count="one" draft="contributed">Dans {0} minute</unitPattern>
 			<unitPattern count="other" draft="contributed">Dans {0} minutes</unitPattern>
@@ -351,8 +426,6 @@
 			<unitPattern count="other" draft="contributed">Il y a {0} mois</unitPattern>
 		</unit>
 		<unit type="second-future">
-			<unitPattern count="0" draft="contributed">Dans 0 seconde</unitPattern>
-			<unitPattern count="1" draft="contributed">Dans 1 seconde</unitPattern>
 			<unitPattern count="one" draft="contributed">Dans {0} seconde</unitPattern>
 			<unitPattern count="other" draft="contributed">Dans {0} secondes</unitPattern>
 		</unit>
@@ -378,4 +451,3 @@
 		</unit>
 	</units>
 </ldml>
-

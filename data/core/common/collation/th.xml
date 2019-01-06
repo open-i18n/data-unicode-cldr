@@ -2,13 +2,13 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
         <identity>
-                <version number="$Revision: 5918 $"/>
-                <generation date="$Date: 2011-06-20 16:18:46 -0500 (Mon, 20 Jun 2011) $"/>
+                <version number="$Revision: 7189 $"/>
+                <generation date="$Date: 2012-05-31 10:42:34 -0700 (Thu, 31 May 2012) $"/>
                 <language type="th" /> 
         </identity>
         <collations validSubLocales="th_TH">
                 <collation type="standard" references="ISO/IEC 14651, Annex C, C.2.1 Thai ordering principles">
-                        <settings normalization="on" />
+                        <settings normalization="on" alternate="shifted"/>
                         <rules>
                                 <!--
                                         The following tailoring is an adjustment of the

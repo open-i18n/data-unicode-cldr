@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 6546 $"/>
-		<generation date="$Date: 2012-02-07 12:32:35 -0600 (Tue, 07 Feb 2012) $"/>
+		<version number="$Revision: 7561 $"/>
+		<generation date="$Date: 2012-08-14 14:55:03 -0700 (Tue, 14 Aug 2012) $"/>
 		<language type="bm"/>
 	</identity>
 	<localeDisplayNames>
@@ -100,7 +100,6 @@
 			<territory type="CN">Siniwajamana</territory>
 			<territory type="CO">Kolombi</territory>
 			<territory type="CR">Kɔsitarika</territory>
-			<territory type="CS">Serbi-ni-Mɔntenegro</territory>
 			<territory type="CU">Kuba</territory>
 			<territory type="CV">Capivɛrdi</territory>
 			<territory type="CY">Cipri</territory>
@@ -302,7 +301,7 @@
 						<monthWidth type="abbreviated">
 							<month type="1">zan</month>
 							<month type="2">feb</month>
-							<month type="3">nar</month>
+							<month type="3">mar</month>
 							<month type="4">awi</month>
 							<month type="5">mɛ</month>
 							<month type="6">zuw</month>
@@ -496,9 +495,6 @@
 						<relative type="-1">kunu</relative>
 						<relative type="0">bi</relative>
 						<relative type="1">sini</relative>
-					</field>
-					<field type="weekday">
-						<displayName>don</displayName>
 					</field>
 					<field type="dayperiod">
 						<displayName>sɔgɔma/tile/wula/su</displayName>

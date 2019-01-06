@@ -6,8 +6,8 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 THE DATA FILES AND SOFTWARE ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THE DATA FILES OR SOFTWARE.
 
 Except as contained in this notice, the name of a copyright holder shall not be used in advertising or otherwise to promote the sale, use or other dealings in these Data Files or Software without prior written authorization of the copyright holder.
-$Revision: 6519 $
-$Date: 2012-02-01 00:05:51 -0600 (Wed, 01 Feb 2012) $
+$Revision: 7621 $
+$Date: 2012-08-22 14:30:59 -0700 (Wed, 22 Aug 2012) $
 -->
 
 <!ELEMENT ldml (identity, (alias | (fallback*, localeDisplayNames?, layout?, contextTransforms?, characters?, delimiters?, measurement?, dates?, numbers?, units?, listPatterns?, collations?, posix?, segmentations?, rbnf?, metadata?, references?, special*))) >
@@ -19,7 +19,7 @@ $Date: 2012-02-01 00:05:51 -0600 (Wed, 01 Feb 2012) $
 
 <!ELEMENT version EMPTY >
 <!ATTLIST version number CDATA #REQUIRED >
-<!ATTLIST version cldrVersion CDATA #FIXED "21.0" >
+<!ATTLIST version cldrVersion CDATA #FIXED "22.0" >
 
 <!ELEMENT generation EMPTY >
 <!ATTLIST generation date CDATA #REQUIRED >
@@ -248,7 +248,7 @@ $Date: 2012-02-01 00:05:51 -0600 (Wed, 01 Feb 2012) $
 <!ATTLIST characters draft ( approved | contributed | provisional | unconfirmed | true | false ) #IMPLIED > <!-- true and false are deprecated. -->
 
 <!ELEMENT exemplarCharacters ( #PCDATA | cp )* >
-<!ATTLIST exemplarCharacters type ( auxiliary | standard | punctuation | currencySymbol | index ) #IMPLIED >
+<!ATTLIST exemplarCharacters type ( auxiliary | standard | punctuation | currencySymbol | index ) #IMPLIED > <!-- currencySymbol is deprecated. -->
 <!ATTLIST exemplarCharacters draft ( approved | contributed | provisional | unconfirmed | true | false ) #IMPLIED > <!-- true and false are deprecated. -->
 <!ATTLIST exemplarCharacters standard CDATA #IMPLIED > <!-- the "standard" attribute is deprecated everywhere. -->
 <!ATTLIST exemplarCharacters references CDATA #IMPLIED >
@@ -414,7 +414,7 @@ $Date: 2012-02-01 00:05:51 -0600 (Wed, 01 Feb 2012) $
 <!ATTLIST dateRangePattern alt NMTOKENS #IMPLIED >
 <!ATTLIST dateRangePattern validSubLocales CDATA #IMPLIED >
 
-<!ELEMENT calendars (alias | (default*, calendar*, special*)) >
+<!ELEMENT calendars (alias | (default*, calendar*, special*)) > <!-- use of a default element for calendars is deprecated, use calendarPreferenceData instead -->
 <!ATTLIST calendars draft ( approved | contributed | provisional | unconfirmed | true | false ) #IMPLIED > <!-- true and false are deprecated. -->
 <!ATTLIST calendars validSubLocales CDATA #IMPLIED >
 
@@ -508,7 +508,7 @@ $Date: 2012-02-01 00:05:51 -0600 (Wed, 01 Feb 2012) $
 
 <!ELEMENT dayWidth ( alias | (day*, special*)) >
 <!ATTLIST dayWidth draft ( approved | contributed | provisional | unconfirmed | true | false ) #IMPLIED > <!-- true and false are deprecated. -->
-<!ATTLIST dayWidth type ( abbreviated| narrow | wide ) #REQUIRED >
+<!ATTLIST dayWidth type ( abbreviated| narrow | short | wide ) #REQUIRED >
 <!ATTLIST dayWidth standard CDATA #IMPLIED > <!-- the "standard" attribute is deprecated everywhere. -->
 <!ATTLIST dayWidth references CDATA #IMPLIED >
 <!ATTLIST dayWidth alt NMTOKENS #IMPLIED >
@@ -612,13 +612,13 @@ $Date: 2012-02-01 00:05:51 -0600 (Wed, 01 Feb 2012) $
 <!ATTLIST dayPeriod draft ( approved | contributed | provisional | unconfirmed ) #IMPLIED >
 <!ATTLIST dayPeriod references CDATA #IMPLIED > 
 
-<!ELEMENT am ( #PCDATA ) >
+<!ELEMENT am ( #PCDATA ) > <!-- deprecated, use dayPeriods -->
 <!ATTLIST am draft ( approved | contributed | provisional | unconfirmed | true | false ) #IMPLIED > <!-- true and false are deprecated. -->
 <!ATTLIST am references CDATA #IMPLIED >
 <!ATTLIST am alt NMTOKENS #IMPLIED >
 <!ATTLIST am validSubLocales CDATA #IMPLIED >
 
-<!ELEMENT pm ( #PCDATA ) >
+<!ELEMENT pm ( #PCDATA ) > <!-- deprecated, use dayPeriods -->
 <!ATTLIST pm draft ( approved | contributed | provisional | unconfirmed | true | false ) #IMPLIED > <!-- true and false are deprecated. -->
 <!ATTLIST pm references CDATA #IMPLIED >
 <!ATTLIST pm alt NMTOKENS #IMPLIED >
@@ -1084,6 +1084,7 @@ $Date: 2012-02-01 00:05:51 -0600 (Wed, 01 Feb 2012) $
 <!ATTLIST pattern type NMTOKEN "standard" >
 <!ATTLIST pattern draft ( approved | contributed | provisional | unconfirmed | true | false ) #IMPLIED > <!-- true and false are deprecated. -->
 <!ATTLIST pattern numbers CDATA #IMPLIED >
+<!ATTLIST pattern count (0 | 1 | zero | one | two | few | many | other) #IMPLIED > <!-- Only used for decimalFormats type="1000..." -->
 <!ATTLIST pattern references CDATA #IMPLIED >
 <!ATTLIST pattern alt NMTOKENS #IMPLIED >
 

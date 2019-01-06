@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 6546 $"/>
-		<generation date="$Date: 2012-02-07 12:32:35 -0600 (Tue, 07 Feb 2012) $"/>
+		<version number="$Revision: 7586 $"/>
+		<generation date="$Date: 2012-08-16 11:03:45 -0700 (Thu, 16 Aug 2012) $"/>
 		<language type="brx"/>
 	</identity>
 	<localeDisplayNames>
@@ -714,13 +714,11 @@
 			<territory type="CN">चीन</territory>
 			<territory type="CO">कोलम्बिया</territory>
 			<territory type="CR">कोस्टारीका</territory>
-			<territory type="CS">सर्बिया एवं मॉण्टेनेग्रो</territory>
 			<territory type="CU">क्यूबा</territory>
 			<territory type="CV">कैप वेर्दे</territory>
 			<territory type="CX">क्रिस्मस द्वीप</territory>
 			<territory type="CY">साइप्रस</territory>
 			<territory type="CZ">चेक गणराज्य</territory>
-			<territory type="DD">ईस्ट जर्मनी</territory>
 			<territory type="DE">जर्मनी</territory>
 			<territory type="DJ">द्जिबूती</territory>
 			<territory type="DK">डेनमार्क</territory>
@@ -734,13 +732,13 @@
 			<territory type="ER">एरिट्रिया</territory>
 			<territory type="ES">स्पेन</territory>
 			<territory type="ET">इथिओपिया</territory>
+			<territory type="EU">यूरोपीय संघ</territory>
 			<territory type="FI">फिनलैंड</territory>
 			<territory type="FJ">फिजी</territory>
 			<territory type="FK">फ़ॉल्कलैंड द्वीप</territory>
 			<territory type="FM">माइक्रोनेशिया</territory>
 			<territory type="FO">फरो द्वीप</territory>
 			<territory type="FR">फ्राँस</territory>
-			<territory type="FX">मैट्रोपोलिटन फ्राँस</territory>
 			<territory type="GA">गैबॉन</territory>
 			<territory type="GB">ब्रितन</territory>
 			<territory type="GD">ग्रेनडा</territory>
@@ -835,7 +833,6 @@
 			<territory type="NO">नॉर्वे</territory>
 			<territory type="NP">नेपाल</territory>
 			<territory type="NR">नाउरू</territory>
-			<territory type="NT">न्युट्रल क्षेत्र</territory>
 			<territory type="NU">नीयूए</territory>
 			<territory type="NZ">न्यूज़ीलैंड</territory>
 			<territory type="OM">ओमान</territory>
@@ -855,7 +852,6 @@
 			<territory type="PY">पारागुए</territory>
 			<territory type="QA">क़तार</territory>
 			<territory type="QO">बाहरिय ओशेआनिया</territory>
-			<territory type="QU">यूरोपीय संघ</territory>
 			<territory type="RE">रेयूनियॉं</territory>
 			<territory type="RO">रोमानिया</territory>
 			<territory type="RS">सर्बिया</territory>
@@ -877,7 +873,6 @@
 			<territory type="SO">सोमालिया</territory>
 			<territory type="SR">सुरिनाम</territory>
 			<territory type="ST">साउँ-तोमे एवं प्रिंसिप</territory>
-			<territory type="SU">यु.एस.एस.आर</territory>
 			<territory type="SV">ऍल साल्वाडोर</territory>
 			<territory type="SY">सीरिया</territory>
 			<territory type="SZ">स्वाज़ीलैंड</territory>
@@ -912,7 +907,6 @@
 			<territory type="VU">वानाऊटु</territory>
 			<territory type="WF">वॉलेस एवं फ़्यूचूना</territory>
 			<territory type="WS">समोआ</territory>
-			<territory type="YD">यमनी गनराज्य</territory>
 			<territory type="YE">यमन</territory>
 			<territory type="YT">मैयौट</territory>
 			<territory type="ZA">दक्षिण अफ्रीका</territory>
@@ -2360,6 +2354,7 @@
 			</zone>
 			<metazone type="Acre">
 				<long>
+					<generic>आकर टाईम</generic>
 					<standard>आकर स्टैंडर्ड टाईम</standard>
 					<daylight>आकर समर टाईम</daylight>
 				</long>
@@ -2491,7 +2486,7 @@
 			</metazone>
 			<metazone type="Argentina_Western">
 				<long>
-					<generic>पश्चीम अर्जण्टिना स्टैंडर्ड टाईम</generic>
+					<generic>पश्चीम अर्जण्टिना टाईम</generic>
 					<standard>पश्चीम अर्जण्टिना स्टैंडर्ड टाईम</standard>
 					<daylight>पश्चीम अर्जण्टिना समर टाईम</daylight>
 				</long>
@@ -3059,7 +3054,9 @@
 			</metazone>
 			<metazone type="Mauritius">
 				<long>
+					<generic>मॉरिशीयस टाईम</generic>
 					<standard>मॉरिशीयस स्टैंडर्ड टाईम</standard>
+					<daylight>मॉरिशीयस समर टाईम</daylight>
 				</long>
 			</metazone>
 			<metazone type="Mawson">
@@ -3198,9 +3195,9 @@
 			</metazone>
 			<metazone type="Pierre_Miquelon">
 				<long>
-					<generic>पीयॅर एवं मीकलों टाईम</generic>
-					<standard>पीयॅर एवं मीकलों स्टैंडर्ड टाईम</standard>
-					<daylight>पीयॅर एवं मीकलों डेलाईट टाईम</daylight>
+					<generic>सेँ पीयॅर एवं मीकलों टाईम</generic>
+					<standard>सेँ पीयॅर एवं मीकलों स्टैंडर्ड टाईम</standard>
+					<daylight>सेँ पीयॅर एवं मीकलों डेलाईट टाईम</daylight>
 				</long>
 			</metazone>
 			<metazone type="Pitcairn">
@@ -3246,7 +3243,7 @@
 			</metazone>
 			<metazone type="Samarkand">
 				<long>
-					<generic>समरकंद स्टैंडर्ड टाईम</generic>
+					<generic>समरकंद टाईम</generic>
 					<standard>समरकंद स्टैंडर्ड टाईम</standard>
 					<daylight>समरकंद समर टाईम</daylight>
 				</long>
@@ -4340,3 +4337,4 @@
 		</messages>
 	</posix>
 </ldml>
+
