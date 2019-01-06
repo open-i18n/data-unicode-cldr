@@ -92,7 +92,7 @@ public class RBNFWriter {
         out.println("<ldml>");
         out.println("    <identity>");
         out.println("        <version number=\"$Revision: 7860 $\"/>");
-        out.println("        <generation date=\"$Date: 2012-10-17 15:12:30 -0700 (Wed, 17 Oct 2012) $\"/>");
+        out.println("        <generation date=\"$Date: 2012-10-17 17:12:30 -0500 (Wed, 17 Oct 2012) $\"/>");
         out.println("        <language type=\"" + language + "\"/>");
 
         if (pieces.length > 1)

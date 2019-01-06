@@ -1,0 +1,67 @@
+{
+  "main": {
+    "ro": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8671 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"
+        },
+        "language": "ro"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "eră"
+          },
+          "year": {
+            "displayName": "an",
+            "-1": "Anul trecut",
+            "0": "Anul acesta",
+            "1": "Anul viitor"
+          },
+          "month": {
+            "displayName": "lună",
+            "-1": "Luna trecută",
+            "0": "Luna aceasta",
+            "1": "Luna viitoare"
+          },
+          "week": {
+            "displayName": "săptămână",
+            "-1": "Săptămâna trecută",
+            "0": "Săptămâna aceasta",
+            "1": "Săptămâna viitoare"
+          },
+          "day": {
+            "displayName": "zi",
+            "-2": "alaltăieri",
+            "-1": "ieri",
+            "0": "azi",
+            "1": "mâine",
+            "2": "poimâine"
+          },
+          "weekday": {
+            "displayName": "zi a săptămânii"
+          },
+          "dayperiod": {
+            "displayName": "perioada zilei"
+          },
+          "hour": {
+            "displayName": "oră"
+          },
+          "minute": {
+            "displayName": "minut"
+          },
+          "second": {
+            "displayName": "secundă"
+          },
+          "zone": {
+            "displayName": "zonă"
+          }
+        }
+      }
+    }
+  }
+}

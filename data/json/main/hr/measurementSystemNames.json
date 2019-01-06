@@ -1,0 +1,23 @@
+{
+  "main": {
+    "hr": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8671 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"
+        },
+        "language": "hr"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "metrički sustav",
+          "UK": "imperijalni sustav",
+          "US": "američki sustav"
+        }
+      }
+    }
+  }
+}

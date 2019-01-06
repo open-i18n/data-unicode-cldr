@@ -6,8 +6,8 @@ For terms of use, see http://www.unicode.org/copyright.html
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 8245 $"/>
-		<generation date="$Date: 2013-02-24 20:19:26 -0800 (Sun, 24 Feb 2013) $"/>
+		<version number="$Revision: 8671 $"/>
+		<generation date="$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"/>
 		<language type="ml"/>
 	</identity>
 	<localeDisplayNames>
@@ -959,6 +959,7 @@ For terms of use, see http://www.unicode.org/copyright.html
 			<territory type="VU">വന്വാത്തു</territory>
 			<territory type="WF">വാലിസ് ആൻഡ് ഫ്യുചൂന</territory>
 			<territory type="WS">സാമോവ</territory>
+			<territory type="XK">കൊസോവൊ</territory>
 			<territory type="YE">യമൻ</territory>
 			<territory type="YT">മയോട്ട്</territory>
 			<territory type="ZA">ദക്ഷിണാഫ്രിക്ക</territory>
@@ -3835,6 +3836,11 @@ For terms of use, see http://www.unicode.org/copyright.html
 			<metazone type="South_Georgia">
 				<long>
 					<standard>ദക്ഷിണ ജോർജ്ജിയ സമയം</standard>
+				</long>
+			</metazone>
+			<metazone type="Suriname">
+				<long>
+					<standard>സൂറിനാം സമയം</standard>
 				</long>
 			</metazone>
 			<metazone type="Syowa">

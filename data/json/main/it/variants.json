@@ -1,0 +1,83 @@
+{
+  "main": {
+    "it": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8671 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"
+        },
+        "language": "it"
+      },
+      "localeDisplayNames": {
+        "variants": {
+          "1901": "ortografia tradizionale tedesca",
+          "1994": "1994",
+          "1996": "ortografia tedesca del 1996",
+          "1606NICT": "1606NICT",
+          "1694ACAD": "1694ACAD",
+          "1959ACAD": "1959ACAD",
+          "ALALC97": "ALALC97",
+          "ALUKU": "ALUKU",
+          "AREVELA": "armeno orientale",
+          "AREVMDA": "armeno occidentale",
+          "BAKU1926": "BAKU1926",
+          "BAUDDHA": "BAUDDHA",
+          "BISCAYAN": "BISCAYAN",
+          "BISKE": "BISKE",
+          "BOHORIC": "BOHORIC",
+          "BOONT": "boontling",
+          "DAJNKO": "DAJNKO",
+          "EMODENG": "EMODENG",
+          "FONIPA": "alfabeto fonetico internazionale IPA",
+          "FONUPA": "alfabeto fonetico uralico UPA",
+          "FONXSAMP": "FONXSAMP",
+          "HEPBURN": "HEPBURN",
+          "HOGNORSK": "HOGNORSK",
+          "ITIHASA": "ITIHASA",
+          "JAUER": "JAUER",
+          "JYUTPING": "JYUTPING",
+          "KKCOR": "KKCOR",
+          "KSCOR": "KSCOR",
+          "LAUKIKA": "LAUKIKA",
+          "LIPAW": "LIPAW",
+          "LUNA1918": "LUNA1918",
+          "METELKO": "METELKO",
+          "MONOTON": "monotonico",
+          "NDYUKA": "NDYUKA",
+          "NEDIS": "dialetto del Natisone",
+          "NJIVA": "NJIVA",
+          "NULIK": "NULIK",
+          "OSOJS": "OSOJS",
+          "PAMAKA": "PAMAKA",
+          "PETR1708": "PETR1708",
+          "PINYIN": "PINYIN",
+          "POLYTON": "politonico",
+          "POSIX": "computer",
+          "PUTER": "PUTER",
+          "REVISED": "ortografia revisionata",
+          "RIGIK": "RIGIK",
+          "ROZAJ": "resiano",
+          "RUMGR": "RUMGR",
+          "SAAHO": "saho",
+          "SCOTLAND": "inglese scozzese standard",
+          "SCOUSE": "SCOUSE",
+          "SOLBA": "SOLBA",
+          "SURMIRAN": "SURMIRAN",
+          "SURSILV": "SURSILV",
+          "SUTSILV": "SUTSILV",
+          "TARASK": "TARASK",
+          "UCCOR": "UCCOR",
+          "UCRCOR": "UCRCOR",
+          "ULSTER": "ULSTER",
+          "VAIDIKA": "VAIDIKA",
+          "VALENCIA": "VALENCIA",
+          "VALLADER": "VALLADER",
+          "WADEGILE": "WADEGILE"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "main": {
+    "th": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8671 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"
+        },
+        "language": "root"
+      },
+      "units": {
+        "day": {
+          "unitPattern-count-other": "{0} วัน",
+          "unitPattern-count-other-alt-short": "{0} ว"
+        },
+        "day-future": {
+          "unitPattern-count-other": "ในอีก {0} วัน"
+        },
+        "day-past": {
+          "unitPattern-count-other": "{0} วันที่ผ่านมา"
+        },
+        "hour": {
+          "unitPattern-count-other": "{0} ชั่วโมง",
+          "unitPattern-count-other-alt-short": "{0} ชั่วโมง"
+        },
+        "hour-future": {
+          "unitPattern-count-other": "ในอีก {0} ชั่วโมง"
+        },
+        "hour-past": {
+          "unitPattern-count-other": "{0} ชั่วโมงที่ผ่านมา"
+        },
+        "minute": {
+          "unitPattern-count-other": "{0} นาที",
+          "unitPattern-count-other-alt-short": "{0} นา"
+        },
+        "minute-future": {
+          "unitPattern-count-other": "ในอีก {0} นาที"
+        },
+        "minute-past": {
+          "unitPattern-count-other": "{0} นาทีที่ผ่านมา"
+        },
+        "month": {
+          "unitPattern-count-other": "{0} เดือน",
+          "unitPattern-count-other-alt-short": "{0} ด"
+        },
+        "month-future": {
+          "unitPattern-count-other": "ในอีก {0} เดือน"
+        },
+        "month-past": {
+          "unitPattern-count-other": "{0} เดือนที่ผ่านมา"
+        },
+        "second": {
+          "unitPattern-count-other": "{0} วินาที",
+          "unitPattern-count-other-alt-short": "{0} วิ"
+        },
+        "second-future": {
+          "unitPattern-count-other": "ในอีก {0} วินาที"
+        },
+        "second-past": {
+          "unitPattern-count-other": "{0} วินาทีที่ผ่านมา"
+        },
+        "week": {
+          "unitPattern-count-other": "{0} สัปดาห์",
+          "unitPattern-count-other-alt-short": "{0} สัปดาห์"
+        },
+        "week-future": {
+          "unitPattern-count-other": "ในอีก {0} สัปดาห์"
+        },
+        "week-past": {
+          "unitPattern-count-other": "{0} สัปดาห์ที่ผ่านมา"
+        },
+        "year": {
+          "unitPattern-count-other": "{0} ปี",
+          "unitPattern-count-other-alt-short": "{0} ป"
+        },
+        "year-future": {
+          "unitPattern-count-other": "ในอีก {0} ปี"
+        },
+        "year-past": {
+          "unitPattern-count-other": "{0} ปีที่แล้ว"
+        }
+      }
+    }
+  }
+}

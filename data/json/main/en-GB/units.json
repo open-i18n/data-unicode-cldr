@@ -1,0 +1,117 @@
+{
+  "main": {
+    "en-GB": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8245 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-02-24 22:19:26 -0600 (Sun, 24 Feb 2013) $"
+        },
+        "language": "en",
+        "territory": "GB"
+      },
+      "units": {
+        "day": {
+          "unitPattern-count-one": "{0} day",
+          "unitPattern-count-one-alt-short": "{0} day",
+          "unitPattern-count-other": "{0} days",
+          "unitPattern-count-other-alt-short": "{0} days"
+        },
+        "day-future": {
+          "unitPattern-count-one": "In {0} day",
+          "unitPattern-count-other": "In {0} days"
+        },
+        "day-past": {
+          "unitPattern-count-one": "{0} day ago",
+          "unitPattern-count-other": "{0} days ago"
+        },
+        "hour": {
+          "unitPattern-count-one": "{0} hour",
+          "unitPattern-count-one-alt-short": "{0} hr",
+          "unitPattern-count-other": "{0} hours",
+          "unitPattern-count-other-alt-short": "{0} hrs"
+        },
+        "hour-future": {
+          "unitPattern-count-one": "In {0} hour",
+          "unitPattern-count-other": "In {0} hours"
+        },
+        "hour-past": {
+          "unitPattern-count-one": "{0} hour ago",
+          "unitPattern-count-other": "{0} hours ago"
+        },
+        "minute": {
+          "unitPattern-count-one": "{0} minute",
+          "unitPattern-count-one-alt-short": "{0} min",
+          "unitPattern-count-other": "{0} minutes",
+          "unitPattern-count-other-alt-short": "{0} mins"
+        },
+        "minute-future": {
+          "unitPattern-count-one": "In {0} minute",
+          "unitPattern-count-other": "In {0} minutes"
+        },
+        "minute-past": {
+          "unitPattern-count-one": "{0} minute ago",
+          "unitPattern-count-other": "{0} minutes ago"
+        },
+        "month": {
+          "unitPattern-count-one": "{0} month",
+          "unitPattern-count-one-alt-short": "{0} mth",
+          "unitPattern-count-other": "{0} months",
+          "unitPattern-count-other-alt-short": "{0} mths"
+        },
+        "month-future": {
+          "unitPattern-count-one": "In {0} month",
+          "unitPattern-count-other": "In {0} months"
+        },
+        "month-past": {
+          "unitPattern-count-one": "{0} month ago",
+          "unitPattern-count-other": "{0} months ago"
+        },
+        "second": {
+          "unitPattern-count-one": "{0} second",
+          "unitPattern-count-one-alt-short": "{0} sec",
+          "unitPattern-count-other": "{0} seconds",
+          "unitPattern-count-other-alt-short": "{0} secs"
+        },
+        "second-future": {
+          "unitPattern-count-one": "In {0} second",
+          "unitPattern-count-other": "In {0} seconds"
+        },
+        "second-past": {
+          "unitPattern-count-one": "{0} second ago",
+          "unitPattern-count-other": "{0} seconds ago"
+        },
+        "week": {
+          "unitPattern-count-one": "{0} week",
+          "unitPattern-count-one-alt-short": "{0} wk",
+          "unitPattern-count-other": "{0} weeks",
+          "unitPattern-count-other-alt-short": "{0} wks"
+        },
+        "week-future": {
+          "unitPattern-count-one": "In {0} week",
+          "unitPattern-count-other": "In {0} weeks"
+        },
+        "week-past": {
+          "unitPattern-count-one": "{0} week ago",
+          "unitPattern-count-other": "{0} weeks ago"
+        },
+        "year": {
+          "unitPattern-count-one": "{0} year",
+          "unitPattern-count-one-alt-short": "{0} yr",
+          "unitPattern-count-other": "{0} years",
+          "unitPattern-count-other-alt-short": "{0} yrs"
+        },
+        "year-future": {
+          "unitPattern-count-one": "In {0} year",
+          "unitPattern-count-other": "In {0} years"
+        },
+        "year-past": {
+          "unitPattern-count-one": "{0} year ago",
+          "unitPattern-count-other": "{0} years ago"
+        }
+      }
+    }
+  }
+}

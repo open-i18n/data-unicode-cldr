@@ -7,8 +7,8 @@ For terms of use, see http://www.unicode.org/copyright.html
 -->
 
 <supplementalData>
-    <version number="$Revision: 8329 $"/>
-    <generation date="$Date: 2013-03-13 14:53:17 -0700 (Wed, 13 Mar 2013) $"/>
+    <version number="$Revision: 8671 $"/>
+    <generation date="$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"/>
     <metadata>
         <attributeOrder>
 	_q type id choice key registry source target path day date version count lines characters before from to iso4217 mzone number time casing list uri digits rounding iso3166 hex request direction alternate backwards caseFirst caseLevel hiraganaQuarternary hiraganaQuaternary variableTop normalization numeric strength elements element attributes attribute attributeValue contains multizone order other replacement scripts services territories territory aliases tzidVersion value values variant variants visibility alpha3 code end exclude fips10 gdp internet literacyPercent locales population writingPercent populationPercent officialStatus start used otherVersion typeVersion access after allowsParsing at bcp47 decexp desired indexSource numberSystem numbers oneway ordering percent priority radix rules supported tender territoryId yeartype cldrVersion grouping inLanguage inScript inTerritory match parent private reason reorder status cashRounding allowed preferred regions validSubLocales standard references alt draft
@@ -117,6 +117,7 @@ For terms of use, see http://www.unicode.org/copyright.html
                 UA UG UM US UY UZ
                 VA VC VE VG VI VN VU
                 WF WS
+                XK
                 YE YT
                 ZA ZM ZW ZZ
             </variable>
@@ -403,7 +404,7 @@ For terms of use, see http://www.unicode.org/copyright.html
             <attributeValues elements="firstDay weekendEnd weekendStart" attributes="day" order="given">sun mon tue wed thu fri sat</attributeValues>
             <attributeValues elements="generation" attributes="date">$genDate</attributeValues>
             <attributeValues elements="group" attributes="contains type">$territory</attributeValues>
-            <attributeValues elements="hours" attributes="allowed" type="list">H K h</attributeValues>
+            <attributeValues elements="hours" attributes="allowed" type="regex">[HKh]( [HKh]{0,2})</attributeValues>
             <attributeValues elements="hours" attributes="preferred" type="choice">H h</attributeValues>
             <attributeValues elements="hours" attributes="regions" type="list">$territory</attributeValues>
             <attributeValues elements="info" attributes="digits" type="regex">[0-9]+</attributeValues>
@@ -554,6 +555,7 @@ For terms of use, see http://www.unicode.org/copyright.html
 			<languageAlias type="zsm" replacement="ms" reason="macrolanguage"/> <!-- Standard Malay ⇒ Malay -->
 			<languageAlias type="zyb" replacement="za" reason="macrolanguage"/> <!-- Yongbei Zhuang ⇒ Zhuang -->
 			<languageAlias type="him" replacement="srx" reason="macrolanguage"/> <!-- Himachali ⇒ Sirmauri (= Pahari, Himachali) -->
+			<languageAlias type="mnk" replacement="man" reason="macrolanguage"/> <!-- Mandinka ⇒ Mandingo -->
 			<!-- incorrect three-letter language codes -->
             <languageAlias type="aar" replacement="aa" reason="overlong"/> <!-- [Afar] -->
             <languageAlias type="abk" replacement="ab" reason="overlong"/> <!-- [Abkhazian] -->

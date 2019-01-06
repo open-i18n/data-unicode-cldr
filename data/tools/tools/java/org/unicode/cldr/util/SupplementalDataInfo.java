@@ -2428,7 +2428,7 @@ public class SupplementalDataInfo {
         /*
          * <supplementalData>
          * <version number="$Revision: 8278 $"/>
-         * <generation date="$Date: 2013-03-06 15:19:38 -0800 (Wed, 06 Mar 2013) $"/>
+         * <generation date="$Date: 2013-03-06 17:19:38 -0600 (Wed, 06 Mar 2013) $"/>
          * <dayPeriodRuleSet>
          * <dayPeriodRules locales = "en"> <!-- default for any locales not listed under other dayPeriods -->
          * <dayPeriodRule type = "am" from = "0:00" before="12:00"/>

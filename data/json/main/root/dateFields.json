@@ -1,0 +1,56 @@
+{
+  "main": {
+    "root": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8245 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-02-24 22:19:26 -0600 (Sun, 24 Feb 2013) $"
+        },
+        "language": "root"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "Era"
+          },
+          "year": {
+            "displayName": "Year"
+          },
+          "month": {
+            "displayName": "Month"
+          },
+          "week": {
+            "displayName": "Week"
+          },
+          "day": {
+            "displayName": "Day",
+            "-1": "Yesterday",
+            "0": "Today",
+            "1": "Tomorrow"
+          },
+          "weekday": {
+            "displayName": "Day of the Week"
+          },
+          "dayperiod": {
+            "displayName": "Dayperiod"
+          },
+          "hour": {
+            "displayName": "Hour"
+          },
+          "minute": {
+            "displayName": "Minute"
+          },
+          "second": {
+            "displayName": "Second"
+          },
+          "zone": {
+            "displayName": "Zone"
+          }
+        }
+      }
+    }
+  }
+}

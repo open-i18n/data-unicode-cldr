@@ -1,0 +1,24 @@
+{
+  "main": {
+    "nb": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8671 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"
+        },
+        "language": "nb"
+      },
+      "listPatterns": {
+        "listPattern": {
+          "2": "{0} og {1}",
+          "end": "{0} og {1}",
+          "middle": "{0}, {1}",
+          "start": "{0}, {1}"
+        }
+      }
+    }
+  }
+}

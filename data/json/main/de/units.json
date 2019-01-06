@@ -1,0 +1,116 @@
+{
+  "main": {
+    "de": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8671 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"
+        },
+        "language": "de"
+      },
+      "units": {
+        "day": {
+          "unitPattern-count-one": "{0} Tag",
+          "unitPattern-count-one-alt-short": "{0} Tag",
+          "unitPattern-count-other": "{0} Tage",
+          "unitPattern-count-other-alt-short": "{0} Tage"
+        },
+        "day-future": {
+          "unitPattern-count-one": "In {0} Tag",
+          "unitPattern-count-other": "In {0} Tagen"
+        },
+        "day-past": {
+          "unitPattern-count-one": "Vor {0} Tag",
+          "unitPattern-count-other": "Vor {0} Tagen"
+        },
+        "hour": {
+          "unitPattern-count-one": "{0} Stunde",
+          "unitPattern-count-one-alt-short": "{0} Std.",
+          "unitPattern-count-other": "{0} Stunden",
+          "unitPattern-count-other-alt-short": "{0} Std."
+        },
+        "hour-future": {
+          "unitPattern-count-one": "In {0} Stunde",
+          "unitPattern-count-other": "In {0} Stunden"
+        },
+        "hour-past": {
+          "unitPattern-count-one": "Vor {0} Stunde",
+          "unitPattern-count-other": "Vor {0} Stunden"
+        },
+        "minute": {
+          "unitPattern-count-one": "{0} Minute",
+          "unitPattern-count-one-alt-short": "{0} Min.",
+          "unitPattern-count-other": "{0} Minuten",
+          "unitPattern-count-other-alt-short": "{0} Min."
+        },
+        "minute-future": {
+          "unitPattern-count-one": "In {0} Minute",
+          "unitPattern-count-other": "In {0} Minuten"
+        },
+        "minute-past": {
+          "unitPattern-count-one": "Vor {0} Minute",
+          "unitPattern-count-other": "Vor {0} Minuten"
+        },
+        "month": {
+          "unitPattern-count-one": "{0} Monat",
+          "unitPattern-count-one-alt-short": "{0} Monat",
+          "unitPattern-count-other": "{0} Monate",
+          "unitPattern-count-other-alt-short": "{0} Monate"
+        },
+        "month-future": {
+          "unitPattern-count-one": "In {0} Monat",
+          "unitPattern-count-other": "In {0} Monaten"
+        },
+        "month-past": {
+          "unitPattern-count-one": "Vor {0} Monat",
+          "unitPattern-count-other": "Vor {0} Monaten"
+        },
+        "second": {
+          "unitPattern-count-one": "{0} Sekunde",
+          "unitPattern-count-one-alt-short": "{0} Sek.",
+          "unitPattern-count-other": "{0} Sekunden",
+          "unitPattern-count-other-alt-short": "{0} Sek."
+        },
+        "second-future": {
+          "unitPattern-count-one": "In {0} Sekunde",
+          "unitPattern-count-other": "In {0} Sekunden"
+        },
+        "second-past": {
+          "unitPattern-count-one": "Vor {0} Sekunde",
+          "unitPattern-count-other": "Vor {0} Sekunden"
+        },
+        "week": {
+          "unitPattern-count-one": "{0} Woche",
+          "unitPattern-count-one-alt-short": "{0} Woche",
+          "unitPattern-count-other": "{0} Wochen",
+          "unitPattern-count-other-alt-short": "{0} Wochen"
+        },
+        "week-future": {
+          "unitPattern-count-one": "In {0} Woche",
+          "unitPattern-count-other": "In {0} Wochen"
+        },
+        "week-past": {
+          "unitPattern-count-one": "Vor {0} Woche",
+          "unitPattern-count-other": "Vor {0} Wochen"
+        },
+        "year": {
+          "unitPattern-count-one": "{0} Jahr",
+          "unitPattern-count-one-alt-short": "{0} Jahr",
+          "unitPattern-count-other": "{0} Jahre",
+          "unitPattern-count-other-alt-short": "{0} Jahre"
+        },
+        "year-future": {
+          "unitPattern-count-one": "In {0} Jahr",
+          "unitPattern-count-other": "In {0} Jahren"
+        },
+        "year-past": {
+          "unitPattern-count-one": "Vor {0} Jahr",
+          "unitPattern-count-other": "Vor {0} Jahren"
+        }
+      }
+    }
+  }
+}

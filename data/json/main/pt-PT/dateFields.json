@@ -1,0 +1,68 @@
+{
+  "main": {
+    "pt-PT": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8663 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-02 15:03:19 -0500 (Thu, 02 May 2013) $"
+        },
+        "language": "pt",
+        "territory": "PT"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "Era"
+          },
+          "year": {
+            "displayName": "Ano",
+            "-1": "Ano passado",
+            "0": "Este ano",
+            "1": "Próximo ano"
+          },
+          "month": {
+            "displayName": "Mês",
+            "-1": "Mês passado",
+            "0": "Este mês",
+            "1": "Próximo mês"
+          },
+          "week": {
+            "displayName": "Semana",
+            "-1": "Semana passada",
+            "0": "Esta semana",
+            "1": "Próxima semana"
+          },
+          "day": {
+            "displayName": "Dia",
+            "-2": "Anteontem",
+            "-1": "Ontem",
+            "0": "Hoje",
+            "1": "Amanhã",
+            "2": "Depois de amanhã"
+          },
+          "weekday": {
+            "displayName": "Dia da semana"
+          },
+          "dayperiod": {
+            "displayName": "Período do dia"
+          },
+          "hour": {
+            "displayName": "Hora"
+          },
+          "minute": {
+            "displayName": "Minuto"
+          },
+          "second": {
+            "displayName": "Segundo"
+          },
+          "zone": {
+            "displayName": "Fuso horário"
+          }
+        }
+      }
+    }
+  }
+}

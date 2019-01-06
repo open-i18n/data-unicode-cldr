@@ -1,0 +1,88 @@
+{
+  "main": {
+    "ja": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8671 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"
+        },
+        "language": "ja"
+      },
+      "units": {
+        "day": {
+          "unitPattern-count-other": "{0}日",
+          "unitPattern-count-other-alt-short": "{0}日"
+        },
+        "day-future": {
+          "unitPattern-count-other": "{0}日後"
+        },
+        "day-past": {
+          "unitPattern-count-other": "{0}日前"
+        },
+        "hour": {
+          "unitPattern-count-other": "{0}時間",
+          "unitPattern-count-other-alt-short": "{0}時間"
+        },
+        "hour-future": {
+          "unitPattern-count-other": "{0}時間後"
+        },
+        "hour-past": {
+          "unitPattern-count-other": "{0}時間前"
+        },
+        "minute": {
+          "unitPattern-count-other": "{0}分",
+          "unitPattern-count-other-alt-short": "{0}分"
+        },
+        "minute-future": {
+          "unitPattern-count-other": "{0}分後"
+        },
+        "minute-past": {
+          "unitPattern-count-other": "{0}分前"
+        },
+        "month": {
+          "unitPattern-count-other": "{0}か月",
+          "unitPattern-count-other-alt-short": "{0}か月"
+        },
+        "month-future": {
+          "unitPattern-count-other": "{0}か月後"
+        },
+        "month-past": {
+          "unitPattern-count-other": "{0}か月前"
+        },
+        "second": {
+          "unitPattern-count-other": "{0}秒",
+          "unitPattern-count-other-alt-short": "{0}秒"
+        },
+        "second-future": {
+          "unitPattern-count-other": "{0}秒後"
+        },
+        "second-past": {
+          "unitPattern-count-other": "{0}秒前"
+        },
+        "week": {
+          "unitPattern-count-other": "{0}週",
+          "unitPattern-count-other-alt-short": "{0}週"
+        },
+        "week-future": {
+          "unitPattern-count-other": "{0} 週間後"
+        },
+        "week-past": {
+          "unitPattern-count-other": "{0}週前"
+        },
+        "year": {
+          "unitPattern-count-other": "{0}年",
+          "unitPattern-count-other-alt-short": "{0}年"
+        },
+        "year-future": {
+          "unitPattern-count-other": "{0}年後"
+        },
+        "year-past": {
+          "unitPattern-count-other": "{0}年前"
+        }
+      }
+    }
+  }
+}

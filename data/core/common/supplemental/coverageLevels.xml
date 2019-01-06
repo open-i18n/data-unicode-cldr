@@ -7,8 +7,8 @@ For terms of use, see http://www.unicode.org/copyright.html
 -->
 
 <supplementalData>
-	<version number="$Revision: 8285 $"/>
-	<generation date="$Date: 2013-03-07 12:25:27 -0800 (Thu, 07 Mar 2013) $"/>
+	<version number="$Revision: 8671 $"/>
+	<generation date="$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"/>
 	<coverageLevels>
 		<coverageVariable key="%allWidths" value="(wide|abbreviated|narrow)"/>
 		<coverageVariable key="%arabextLanguages" value="(fa|pa|ps|uz)"/>
@@ -51,7 +51,7 @@ For terms of use, see http://www.unicode.org/copyright.html
 		<coverageVariable key="%metazone60" value="(Africa_Western|Arabian|Australia_(Central(Western)?|(East|West)ern)|China|Israel|Japan|Korea|Moscow)"/> 
 		<coverageVariable key="%metazone60_stdonly" value="(Africa_(Central|(East|South)ern)|India|Indochina|Indonesia_(Central|(East|West)ern))"/> 
 		<coverageVariable key="%metazone80" value="(Alaska|Amazon|Argentina(_Western)?|Armenia|Azerbaijan|Azores|Bangladesh|Brasilia|Cape_Verde|Chatham|Chile|Choibalsan|Colombia|Cook|Cuba|Easter|Falkland|Fiji|Georgia|Greenland_(East|West)ern|Hawaii_Aleutian|Hong_Kong|Hovd|Iran|Irkutsk|Krasnoyarsk|Lord_Howe|Magadan|Mauritius|Mongolia|New_(Caledonia|Zealand)|Newfoundland|Noronha|Novosibirsk|Omsk|Pakistan|Paraguay|Peru|Philippines|Pierre_Miquelon|Sakhalin|Samoa|Taipei|Tonga|Turkmenistan|Uruguay|Uzbekistan|Vanuatu|Vladivostok|Volgograd|Yakutsk|Yekaterinburg)"/>
-		<coverageVariable key="%metazone80_stdonly" value="(Afghanistan|Bhutan|Bolivia|Brunei|Chamorro|Christmas|Cocos|Davis|DumontDUrville|East_Timor|Ecuador|French_(Guiana|Southern)|Gambier|Galapagos|Gilbert_Islands|Gulf|Guyana|Indian_Ocean|Kazakhstan_(East|West)ern|Kosrae|Kyrgystan|Line_Islands|Macquarie|Malaysia|Maldives|Marquesas|Marshall_Islands|Mawson|Myanmar|Nauru|Nepal|Niue|Norfolk|Palau|Papua_New_Guinea|Phoenix_Islands|Pitcairn|Ponape|Reunion|Rothera|Seychelles|Singapore|Solomon|South_Georgia|Syowa|Tahiti|Tajikistan|Tokelau|Truk|Tuvalu|Venezuela|Vostok|Wake|Wallis)"/>
+		<coverageVariable key="%metazone80_stdonly" value="(Afghanistan|Bhutan|Bolivia|Brunei|Chamorro|Christmas|Cocos|Davis|DumontDUrville|East_Timor|Ecuador|French_(Guiana|Southern)|Gambier|Galapagos|Gilbert_Islands|Gulf|Guyana|Indian_Ocean|Kazakhstan_(East|West)ern|Kosrae|Kyrgystan|Line_Islands|Macquarie|Malaysia|Maldives|Marquesas|Marshall_Islands|Mawson|Myanmar|Nauru|Nepal|Niue|Norfolk|Palau|Papua_New_Guinea|Phoenix_Islands|Pitcairn|Ponape|Reunion|Rothera|Seychelles|Singapore|Solomon|South_Georgia|Suriname|Syowa|Tahiti|Tajikistan|Tokelau|Truk|Tuvalu|Venezuela|Vostok|Wake|Wallis)"/>
 		<coverageVariable key="%metazone100" value="(Acre|Almaty|Anadyr|Aqtau|Aqtobe|Kamchatka|Macau|Qyzylorda|Samara)"/>
 		<coverageVariable key="%metazone100_stdonly" value="(Casey|Guam|Lanka|North_Mariana)"/>
 		<coverageVariable key="%metazoneTypes" value="(generic|standard|daylight)"/>
@@ -73,8 +73,8 @@ For terms of use, see http://www.unicode.org/copyright.html
 		<coverageVariable key="%territory40" value="(BR|CN|DE|GB|FR|IN|IT|JP|RU|US)"/>
 		<coverageVariable key="%territory60" value="(AT|AU|BE|CA|CH|DK|ES|FI|GR|HK|ID|IE|KR|MX|NL|NO|PL|PT|SA|SE|TH|TR|TW|ZA)"/>
 		<coverageVariable key="%territory60_EU" value="(CZ|EE|HU|LT|LU|LV|MT|SI|SK)"/>
-    		<coverageVariable key="%territory80" value="(0(0[12359]|1[1345789]|2[19]|3[0459]|5[347]|61)|1(4[235]|5[01459])|419|A[CDEFGILMOQRSTUWXZ]|B[ABDEFGHIJLMNOQRSTUVWYZ]|C[ACDFGHIKLMNOPRUVWXYZ]|D[EGJKMOZ]|E[ACEGHRSTU]|F[IJKMOR]|G[ABDEFGHILMNPQRSTUWY]|H[KMNRTU]|I[CDELMNOQRST]|J[EMOP]|K[EGHIMNPRWYZ]|L[ABCIKRSTUVY]|M[ACDEFGHKLMNOPQRSTUVWXYZ]|N[ACEFGILOPRUZ]|OM|P[AEFGHKLMNRSTWY]|Q[AO]|R[EOSUW]|S[ABCDEGHIJKLMNORSTVXYZ]|T[ACDFGHJKLMNOPRTVWZ]|U[AGMSYZ]|V[ACEGINU]|W[FS]|Y[ET]|Z[AMWZ])"/>
-    		<coverageVariable key="%territory100" value="AN"/>
+		<coverageVariable key="%territory80" value="(0(0[12359]|1[1345789]|2[19]|3[0459]|5[347]|61)|1(4[235]|5[01459])|419|A[CDEFGILMOQRSTUWXZ]|B[ABDEFGHIJLMNOQRSTUVWYZ]|C[ACDFGHIKLMNOPRUVWXYZ]|D[EGJKMOZ]|E[ACEGHRSTU]|F[IJKMOR]|G[ABDEFGHILMNPQRSTUWY]|H[KMNRTU]|I[CDELMNOQRST]|J[EMOP]|K[EGHIMNPRWYZ]|L[ABCIKRSTUVY]|M[ACDEFGHKLMNOPQRSTUVWXYZ]|N[ACEFGILOPRUZ]|OM|P[AEFGHKLMNRSTWY]|Q[AO]|R[EOSUW]|S[ABCDEGHIJKLMNORSTVXYZ]|T[ACDFGHJKLMNOPRTVWZ]|U[AGMSYZ]|V[ACEGINU]|W[FS]|XK|Y[ET]|Z[AMWZ])"/>
+		<coverageVariable key="%territory100" value="AN"/>
 		<coverageVariable key="%traditionalCollationLanguages" value="(bn|es|kn|sa)"/>
 		<coverageVariable key="%wideAbbr" value="(wide|abbreviated)"/>
 		<coverageVariable key="%wideNarrow" value="(wide|narrow)"/>

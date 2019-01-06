@@ -1,0 +1,116 @@
+{
+  "main": {
+    "it": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8671 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"
+        },
+        "language": "it"
+      },
+      "units": {
+        "day": {
+          "unitPattern-count-one": "{0} giorno",
+          "unitPattern-count-one-alt-short": "{0} g",
+          "unitPattern-count-other": "{0} giorni",
+          "unitPattern-count-other-alt-short": "{0} gg"
+        },
+        "day-future": {
+          "unitPattern-count-one": "tra {0} giorno",
+          "unitPattern-count-other": "tra {0} giorni"
+        },
+        "day-past": {
+          "unitPattern-count-one": "{0} giorno fa",
+          "unitPattern-count-other": "{0} giorni fa"
+        },
+        "hour": {
+          "unitPattern-count-one": "{0} ora",
+          "unitPattern-count-one-alt-short": "{0} h",
+          "unitPattern-count-other": "{0} ore",
+          "unitPattern-count-other-alt-short": "{0} h"
+        },
+        "hour-future": {
+          "unitPattern-count-one": "tra {0} ora",
+          "unitPattern-count-other": "tra {0} ore"
+        },
+        "hour-past": {
+          "unitPattern-count-one": "{0} ora fa",
+          "unitPattern-count-other": "{0} ore fa"
+        },
+        "minute": {
+          "unitPattern-count-one": "{0} minuto",
+          "unitPattern-count-one-alt-short": "{0} min",
+          "unitPattern-count-other": "{0} minuti",
+          "unitPattern-count-other-alt-short": "{0} min"
+        },
+        "minute-future": {
+          "unitPattern-count-one": "tra {0} minuto",
+          "unitPattern-count-other": "tra {0} minuti"
+        },
+        "minute-past": {
+          "unitPattern-count-one": "{0} minuto fa",
+          "unitPattern-count-other": "{0} minuti fa"
+        },
+        "month": {
+          "unitPattern-count-one": "{0} mese",
+          "unitPattern-count-one-alt-short": "{0} mese",
+          "unitPattern-count-other": "{0} mesi",
+          "unitPattern-count-other-alt-short": "{0} mesi"
+        },
+        "month-future": {
+          "unitPattern-count-one": "tra {0} mese",
+          "unitPattern-count-other": "tra {0} mesi"
+        },
+        "month-past": {
+          "unitPattern-count-one": "{0} mese fa",
+          "unitPattern-count-other": "{0} mesi fa"
+        },
+        "second": {
+          "unitPattern-count-one": "{0} secondo",
+          "unitPattern-count-one-alt-short": "{0} sec",
+          "unitPattern-count-other": "{0} secondi",
+          "unitPattern-count-other-alt-short": "{0} sec"
+        },
+        "second-future": {
+          "unitPattern-count-one": "tra {0} secondo",
+          "unitPattern-count-other": "tra {0} secondi"
+        },
+        "second-past": {
+          "unitPattern-count-one": "{0} secondo fa",
+          "unitPattern-count-other": "{0} secondi fa"
+        },
+        "week": {
+          "unitPattern-count-one": "{0} settimana",
+          "unitPattern-count-one-alt-short": "{0} sett.",
+          "unitPattern-count-other": "{0} settimane",
+          "unitPattern-count-other-alt-short": "{0} sett."
+        },
+        "week-future": {
+          "unitPattern-count-one": "tra {0} settimana",
+          "unitPattern-count-other": "tra {0} settimane"
+        },
+        "week-past": {
+          "unitPattern-count-one": "{0} settimana fa",
+          "unitPattern-count-other": "{0} settimane fa"
+        },
+        "year": {
+          "unitPattern-count-one": "{0} anno",
+          "unitPattern-count-one-alt-short": "{0} anno",
+          "unitPattern-count-other": "{0} anni",
+          "unitPattern-count-other-alt-short": "{0} anni"
+        },
+        "year-future": {
+          "unitPattern-count-one": "tra {0} anno",
+          "unitPattern-count-other": "tra {0} anni"
+        },
+        "year-past": {
+          "unitPattern-count-one": "{0} anno fa",
+          "unitPattern-count-other": "{0} anni fa"
+        }
+      }
+    }
+  }
+}

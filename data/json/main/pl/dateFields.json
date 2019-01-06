@@ -1,0 +1,67 @@
+{
+  "main": {
+    "pl": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8671 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"
+        },
+        "language": "pl"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "Era"
+          },
+          "year": {
+            "displayName": "Rok",
+            "-1": "Zeszły rok",
+            "0": "Bieżący rok",
+            "1": "Przyszły rok"
+          },
+          "month": {
+            "displayName": "Miesiąc",
+            "-1": "Zeszły miesiąc",
+            "0": "Bieżący miesiąc",
+            "1": "Przyszły miesiąc"
+          },
+          "week": {
+            "displayName": "Tydzień",
+            "-1": "Zeszły tydzień",
+            "0": "Bieżący tydzień",
+            "1": "Przyszły tydzień"
+          },
+          "day": {
+            "displayName": "Dzień",
+            "-2": "Przedwczoraj",
+            "-1": "Wczoraj",
+            "0": "Dzisiaj",
+            "1": "Jutro",
+            "2": "Pojutrze"
+          },
+          "weekday": {
+            "displayName": "Dzień tygodnia"
+          },
+          "dayperiod": {
+            "displayName": "Dayperiod"
+          },
+          "hour": {
+            "displayName": "Godzina"
+          },
+          "minute": {
+            "displayName": "Minuta"
+          },
+          "second": {
+            "displayName": "Sekunda"
+          },
+          "zone": {
+            "displayName": "Strefa"
+          }
+        }
+      }
+    }
+  }
+}

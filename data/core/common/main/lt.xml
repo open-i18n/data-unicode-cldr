@@ -6,8 +6,8 @@ For terms of use, see http://www.unicode.org/copyright.html
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 8257 $"/>
-		<generation date="$Date: 2013-02-26 20:38:03 -0800 (Tue, 26 Feb 2013) $"/>
+		<version number="$Revision: 8671 $"/>
+		<generation date="$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"/>
 		<language type="lt"/>
 	</identity>
 	<localeDisplayNames>
@@ -1021,6 +1021,7 @@ For terms of use, see http://www.unicode.org/copyright.html
 			<territory type="VU">Vanuatu</territory>
 			<territory type="WF">Wallisas ir Futuna</territory>
 			<territory type="WS">Samoa</territory>
+			<territory type="XK">Kosovas</territory>
 			<territory type="YE">Jemenas</territory>
 			<territory type="YT">Majotas</territory>
 			<territory type="ZA">Pietų Afrika</territory>
@@ -3621,6 +3622,11 @@ For terms of use, see http://www.unicode.org/copyright.html
 			<metazone type="South_Georgia">
 				<long>
 					<standard>Pietų Džordžijos laikas</standard>
+				</long>
+			</metazone>
+			<metazone type="Suriname">
+				<long>
+					<standard>Surinamo laikas</standard>
 				</long>
 			</metazone>
 			<metazone type="Syowa">

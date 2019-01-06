@@ -1,0 +1,52 @@
+{
+  "supplemental": {
+    "version": {
+      "@cldrVersion": "23.1",
+      "@number": "$Revision: 8721 $"
+    },
+    "generation": {
+      "@date": "$Date: 2013-05-15 14:50:20 -0500 (Wed, 15 May 2013) $"
+    },
+    "calendarPreferenceData": {
+      "001": "gregorian",
+      "AE": "gregorian islamic islamic-civil",
+      "AF": "persian gregorian islamic islamic-civil",
+      "BH": "gregorian islamic islamic-civil",
+      "CN": "gregorian chinese",
+      "CX": "gregorian chinese",
+      "DJ": "gregorian islamic islamic-civil",
+      "DZ": "gregorian islamic islamic-civil",
+      "EG": "gregorian coptic islamic islamic-civil",
+      "EH": "gregorian islamic islamic-civil",
+      "ER": "gregorian islamic islamic-civil",
+      "ET": "gregorian ethiopic",
+      "HK": "gregorian chinese",
+      "IL": "gregorian hebrew islamic islamic-civil",
+      "IN": "gregorian indian",
+      "IQ": "gregorian islamic islamic-civil",
+      "IR": "persian gregorian islamic islamic-civil",
+      "JO": "gregorian islamic islamic-civil",
+      "JP": "gregorian japanese",
+      "KM": "gregorian islamic islamic-civil",
+      "KR": "gregorian dangi",
+      "KW": "gregorian islamic islamic-civil",
+      "LB": "gregorian islamic islamic-civil",
+      "LY": "gregorian islamic islamic-civil",
+      "MA": "gregorian islamic islamic-civil",
+      "MO": "gregorian chinese",
+      "MR": "gregorian islamic islamic-civil",
+      "OM": "gregorian islamic islamic-civil",
+      "PS": "gregorian islamic islamic-civil",
+      "QA": "gregorian islamic islamic-civil",
+      "SA": "gregorian islamic islamic-civil",
+      "SD": "gregorian islamic islamic-civil",
+      "SG": "gregorian chinese",
+      "SY": "gregorian islamic islamic-civil",
+      "TD": "gregorian islamic islamic-civil",
+      "TH": "buddhist gregorian",
+      "TN": "gregorian islamic islamic-civil",
+      "TW": "gregorian roc chinese",
+      "YE": "gregorian islamic islamic-civil"
+    }
+  }
+}

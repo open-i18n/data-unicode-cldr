@@ -1,0 +1,67 @@
+{
+  "main": {
+    "da": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8671 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"
+        },
+        "language": "da"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "æra"
+          },
+          "year": {
+            "displayName": "år",
+            "-1": "sidste år",
+            "0": "i år",
+            "1": "næste år"
+          },
+          "month": {
+            "displayName": "måned",
+            "-1": "sidste måned",
+            "0": "denne måned",
+            "1": "næste måned"
+          },
+          "week": {
+            "displayName": "uge",
+            "-1": "sidste uge",
+            "0": "denne uge",
+            "1": "næste uge"
+          },
+          "day": {
+            "displayName": "dag",
+            "-2": "i forgårs",
+            "-1": "i går",
+            "0": "i dag",
+            "1": "i morgen",
+            "2": "i overmorgen"
+          },
+          "weekday": {
+            "displayName": "ugedag"
+          },
+          "dayperiod": {
+            "displayName": "dagtid"
+          },
+          "hour": {
+            "displayName": "time"
+          },
+          "minute": {
+            "displayName": "minut"
+          },
+          "second": {
+            "displayName": "sekund"
+          },
+          "zone": {
+            "displayName": "tidszone"
+          }
+        }
+      }
+    }
+  }
+}

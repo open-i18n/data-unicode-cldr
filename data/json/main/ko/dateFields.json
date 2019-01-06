@@ -1,0 +1,67 @@
+{
+  "main": {
+    "ko": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8671 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"
+        },
+        "language": "ko"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "연호"
+          },
+          "year": {
+            "displayName": "년",
+            "-1": "지난해",
+            "0": "올해",
+            "1": "내년"
+          },
+          "month": {
+            "displayName": "월",
+            "-1": "지난달",
+            "0": "이번 달",
+            "1": "다음 달"
+          },
+          "week": {
+            "displayName": "주",
+            "-1": "지난주",
+            "0": "이번 주",
+            "1": "다음 주"
+          },
+          "day": {
+            "displayName": "일",
+            "-2": "그저께",
+            "-1": "어제",
+            "0": "오늘",
+            "1": "내일",
+            "2": "모레"
+          },
+          "weekday": {
+            "displayName": "요일"
+          },
+          "dayperiod": {
+            "displayName": "오전/오후"
+          },
+          "hour": {
+            "displayName": "시"
+          },
+          "minute": {
+            "displayName": "분"
+          },
+          "second": {
+            "displayName": "초"
+          },
+          "zone": {
+            "displayName": "시간대"
+          }
+        }
+      }
+    }
+  }
+}

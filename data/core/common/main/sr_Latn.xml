@@ -6,8 +6,8 @@ For terms of use, see http://www.unicode.org/copyright.html
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 8251 $"/>
-		<generation date="$Date: 2013-02-25 16:18:23 -0800 (Mon, 25 Feb 2013) $"/>
+		<version number="$Revision: 8679 $"/>
+		<generation date="$Date: 2013-05-03 23:10:19 -0500 (Fri, 03 May 2013) $"/>
 		<language type="sr"/>
 		<script type="Latn"/>
 	</identity>
@@ -960,6 +960,7 @@ For terms of use, see http://www.unicode.org/copyright.html
 			<territory type="VU">Vanuatu</territory>
 			<territory type="WF">Valis i Futuna Ostrva</territory>
 			<territory type="WS">Samoa</territory>
+			<territory type="XK">Kosovo</territory>
 			<territory type="YE">Jemen</territory>
 			<territory type="YT">Majote</territory>
 			<territory type="ZA">Južnoafrička Republika</territory>
@@ -3912,6 +3913,11 @@ For terms of use, see http://www.unicode.org/copyright.html
 			<metazone type="South_Georgia">
 				<long>
 					<standard>Južna Džordžija vreme</standard>
+				</long>
+			</metazone>
+			<metazone type="Suriname">
+				<long>
+					<standard>Surinam vreme</standard>
 				</long>
 			</metazone>
 			<metazone type="Syowa">

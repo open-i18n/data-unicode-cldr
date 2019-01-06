@@ -1,0 +1,67 @@
+{
+  "main": {
+    "hr": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8671 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"
+        },
+        "language": "hr"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "era"
+          },
+          "year": {
+            "displayName": "godina",
+            "-1": "Prošla godina",
+            "0": "Ova godina",
+            "1": "Sljedeća godina"
+          },
+          "month": {
+            "displayName": "mjesec",
+            "-1": "Prošli mjesec",
+            "0": "Ovaj mjesec",
+            "1": "Sljedeći mjesec"
+          },
+          "week": {
+            "displayName": "tjedan",
+            "-1": "Prošli tjedan",
+            "0": "Ovaj tjedan",
+            "1": "Sljedeći tjedan"
+          },
+          "day": {
+            "displayName": "dan",
+            "-2": "prekjučer",
+            "-1": "jučer",
+            "0": "danas",
+            "1": "sutra",
+            "2": "prekosutra"
+          },
+          "weekday": {
+            "displayName": "dan u tjednu"
+          },
+          "dayperiod": {
+            "displayName": "dio dana"
+          },
+          "hour": {
+            "displayName": "sat"
+          },
+          "minute": {
+            "displayName": "minuta"
+          },
+          "second": {
+            "displayName": "sekunda"
+          },
+          "zone": {
+            "displayName": "vremenska zona"
+          }
+        }
+      }
+    }
+  }
+}

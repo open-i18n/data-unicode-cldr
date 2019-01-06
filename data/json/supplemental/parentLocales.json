@@ -1,0 +1,68 @@
+{
+  "supplemental": {
+    "version": {
+      "@cldrVersion": "23.1",
+      "@number": "$Revision: 8721 $"
+    },
+    "generation": {
+      "@date": "$Date: 2013-05-15 14:50:20 -0500 (Wed, 15 May 2013) $"
+    },
+    "parentLocales": {
+      "parentLocale": {
+        "az_Cyrl": "root",
+        "bs_Cyrl": "root",
+        "en_150": "en_GB",
+        "en_AU": "en_GB",
+        "en_BE": "en_GB",
+        "en_Dsrt": "root",
+        "en_GG": "en_GB",
+        "en_GI": "en_GB",
+        "en_HK": "en_GB",
+        "en_IE": "en_GB",
+        "en_IM": "en_GB",
+        "en_IN": "en_GB",
+        "en_JE": "en_GB",
+        "en_MT": "en_GB",
+        "en_NZ": "en_GB",
+        "en_PK": "en_GB",
+        "en_SG": "en_GB",
+        "es_AR": "es_419",
+        "es_BO": "es_419",
+        "es_CL": "es_419",
+        "es_CO": "es_419",
+        "es_CR": "es_419",
+        "es_CU": "es_419",
+        "es_DO": "es_419",
+        "es_EC": "es_419",
+        "es_GT": "es_419",
+        "es_HN": "es_419",
+        "es_MX": "es_419",
+        "es_NI": "es_419",
+        "es_PA": "es_419",
+        "es_PE": "es_419",
+        "es_PR": "es_419",
+        "es_PY": "es_419",
+        "es_SV": "es_419",
+        "es_US": "es_419",
+        "es_UY": "es_419",
+        "es_VE": "es_419",
+        "ha_Arab": "root",
+        "mn_Mong": "root",
+        "pa_Arab": "root",
+        "pt_AO": "pt_PT",
+        "pt_CV": "pt_PT",
+        "pt_GW": "pt_PT",
+        "pt_MO": "pt_PT",
+        "pt_MZ": "pt_PT",
+        "pt_ST": "pt_PT",
+        "pt_TL": "pt_PT",
+        "shi_Latn": "root",
+        "sr_Latn": "root",
+        "uz_Arab": "root",
+        "uz_Latn": "root",
+        "vai_Latn": "root",
+        "zh_Hant": "root"
+      }
+    }
+  }
+}

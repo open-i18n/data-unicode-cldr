@@ -2,7 +2,7 @@
 <!DOCTYPE keyboard SYSTEM "../dtd/ldmlKeyboard.dtd">
 <keyboard locale='sr-t-k0-osx'>
 	<version platform='10.4' number='$Revision: 8268 $'/>
-	<generation date='$Date: 2013-03-01 06:26:02 -0800 (Fri, 01 Mar 2013) $'/>
+	<generation date='$Date: 2013-03-01 08:26:02 -0600 (Fri, 01 Mar 2013) $'/>
 	<names>
 		<name value='Serbian'/>
 	</names>

@@ -6,8 +6,8 @@ For terms of use, see http://www.unicode.org/copyright.html
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 8245 $"/>
-		<generation date="$Date: 2013-02-24 20:19:26 -0800 (Sun, 24 Feb 2013) $"/>
+		<version number="$Revision: 8671 $"/>
+		<generation date="$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"/>
 		<language type="ne"/>
 	</identity>
 	<localeDisplayNames>
@@ -572,6 +572,7 @@ For terms of use, see http://www.unicode.org/copyright.html
 			<territory type="VU" draft="contributed">भानुआतु</territory>
 			<territory type="WF" draft="contributed">वालिस र फुटुना</territory>
 			<territory type="WS" draft="contributed">सामोआ</territory>
+			<territory type="XK">कोसोवो</territory>
 			<territory type="YE" draft="contributed">येमेन</territory>
 			<territory type="YT" draft="contributed">मायोट्ट</territory>
 			<territory type="ZA" draft="contributed">दक्षिण अफ्रिका</territory>

@@ -1,0 +1,116 @@
+{
+  "main": {
+    "pt": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8671 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"
+        },
+        "language": "pt"
+      },
+      "units": {
+        "day": {
+          "unitPattern-count-one": "{0} dia",
+          "unitPattern-count-one-alt-short": "{0} dia",
+          "unitPattern-count-other": "{0} dias",
+          "unitPattern-count-other-alt-short": "{0} dias"
+        },
+        "day-future": {
+          "unitPattern-count-one": "Dentro de {0} dia",
+          "unitPattern-count-other": "Dentro de {0} dias"
+        },
+        "day-past": {
+          "unitPattern-count-one": "Há {0} dia",
+          "unitPattern-count-other": "Há {0} dias"
+        },
+        "hour": {
+          "unitPattern-count-one": "{0} hora",
+          "unitPattern-count-one-alt-short": "{0} h",
+          "unitPattern-count-other": "{0} horas",
+          "unitPattern-count-other-alt-short": "{0} h"
+        },
+        "hour-future": {
+          "unitPattern-count-one": "Dentro de {0} hora",
+          "unitPattern-count-other": "Dentro de {0} horas"
+        },
+        "hour-past": {
+          "unitPattern-count-one": "Há {0} hora",
+          "unitPattern-count-other": "Há {0} horas"
+        },
+        "minute": {
+          "unitPattern-count-one": "{0} minuto",
+          "unitPattern-count-one-alt-short": "{0} min",
+          "unitPattern-count-other": "{0} minutos",
+          "unitPattern-count-other-alt-short": "{0} min"
+        },
+        "minute-future": {
+          "unitPattern-count-one": "Dentro de {0} minuto",
+          "unitPattern-count-other": "Dentro de {0} minutos"
+        },
+        "minute-past": {
+          "unitPattern-count-one": "Há {0} minuto",
+          "unitPattern-count-other": "Há {0} minutos"
+        },
+        "month": {
+          "unitPattern-count-one": "{0} mês",
+          "unitPattern-count-one-alt-short": "{0} mês",
+          "unitPattern-count-other": "{0} meses",
+          "unitPattern-count-other-alt-short": "{0} meses"
+        },
+        "month-future": {
+          "unitPattern-count-one": "Dentro de {0} mês",
+          "unitPattern-count-other": "Dentro de {0} meses"
+        },
+        "month-past": {
+          "unitPattern-count-one": "Há {0} mês",
+          "unitPattern-count-other": "Há {0} meses"
+        },
+        "second": {
+          "unitPattern-count-one": "{0} segundo",
+          "unitPattern-count-one-alt-short": "{0} seg",
+          "unitPattern-count-other": "{0} segundos",
+          "unitPattern-count-other-alt-short": "{0} seg"
+        },
+        "second-future": {
+          "unitPattern-count-one": "Dentro de {0} segundo",
+          "unitPattern-count-other": "Dentro de {0} segundos"
+        },
+        "second-past": {
+          "unitPattern-count-one": "Há {0} segundo",
+          "unitPattern-count-other": "Há {0} segundos"
+        },
+        "week": {
+          "unitPattern-count-one": "{0} semana",
+          "unitPattern-count-one-alt-short": "{0} sem.",
+          "unitPattern-count-other": "{0} semanas",
+          "unitPattern-count-other-alt-short": "{0} sem."
+        },
+        "week-future": {
+          "unitPattern-count-one": "Dentro de {0} semana",
+          "unitPattern-count-other": "Dentro de {0} semanas"
+        },
+        "week-past": {
+          "unitPattern-count-one": "Há {0} semana",
+          "unitPattern-count-other": "Há {0} semanas"
+        },
+        "year": {
+          "unitPattern-count-one": "{0} ano",
+          "unitPattern-count-one-alt-short": "{0} ano",
+          "unitPattern-count-other": "{0} anos",
+          "unitPattern-count-other-alt-short": "{0} anos"
+        },
+        "year-future": {
+          "unitPattern-count-one": "Dentro de {0} ano",
+          "unitPattern-count-other": "Dentro de {0} anos"
+        },
+        "year-past": {
+          "unitPattern-count-one": "Há {0} ano",
+          "unitPattern-count-other": "Há {0} anos"
+        }
+      }
+    }
+  }
+}

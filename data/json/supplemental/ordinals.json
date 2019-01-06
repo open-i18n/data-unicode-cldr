@@ -1,0 +1,115 @@
+{
+  "supplemental": {
+    "version": {
+      "@cldrVersion": "23.1",
+      "@number": "$Revision: 8268 $"
+    },
+    "generation": {
+      "@date": "$Date: 2013-03-01 08:26:02 -0600 (Fri, 01 Mar 2013) $"
+    },
+    "ordinal": {
+      "af": {},
+      "am": {},
+      "ar": {},
+      "bg": {},
+      "bn": {
+        "pluralRule-count-one": "n in 1,5,7,8,9,10",
+        "pluralRule-count-two": "n in 2,3",
+        "pluralRule-count-few": "n is 4",
+        "pluralRule-count-many": "n is 6"
+      },
+      "ca": {
+        "pluralRule-count-one": "n in 1,3",
+        "pluralRule-count-two": "n is 2",
+        "pluralRule-count-few": "n is 4"
+      },
+      "cs": {},
+      "da": {},
+      "de": {},
+      "el": {},
+      "en": {
+        "pluralRule-count-one": "n mod 10 is 1 and n mod 100 is not 11",
+        "pluralRule-count-two": "n mod 10 is 2 and n mod 100 is not 12",
+        "pluralRule-count-few": "n mod 10 is 3 and n mod 100 is not 13"
+      },
+      "es": {},
+      "et": {},
+      "eu": {},
+      "fa": {},
+      "fi": {},
+      "fil": {
+        "pluralRule-count-one": "n is 1"
+      },
+      "fr": {
+        "pluralRule-count-one": "n is 1"
+      },
+      "gl": {},
+      "gu": {
+        "pluralRule-count-one": "n is 1",
+        "pluralRule-count-two": "n in 2,3",
+        "pluralRule-count-few": "n is 4",
+        "pluralRule-count-many": "n is 6"
+      },
+      "he": {},
+      "hi": {
+        "pluralRule-count-one": "n is 1",
+        "pluralRule-count-two": "n in 2,3",
+        "pluralRule-count-few": "n is 4",
+        "pluralRule-count-many": "n is 6"
+      },
+      "hr": {},
+      "hu": {
+        "pluralRule-count-one": "n in 1,5"
+      },
+      "id": {},
+      "is": {},
+      "it": {
+        "pluralRule-count-many": "n in 11,8,80,800"
+      },
+      "ja": {},
+      "kn": {},
+      "ko": {},
+      "lt": {},
+      "lv": {},
+      "ml": {},
+      "mr": {
+        "pluralRule-count-one": "n is 1",
+        "pluralRule-count-two": "n in 2,3",
+        "pluralRule-count-few": "n is 4"
+      },
+      "ms": {
+        "pluralRule-count-one": "n is 1"
+      },
+      "nb": {},
+      "nl": {},
+      "pl": {},
+      "pt": {},
+      "ro": {
+        "pluralRule-count-one": "n is 1"
+      },
+      "ru": {},
+      "sk": {},
+      "sl": {},
+      "sr": {},
+      "sv": {
+        "pluralRule-count-one": "n mod 10 in 1,2 and n mod 100 not in 11,12"
+      },
+      "sw": {},
+      "ta": {},
+      "te": {},
+      "th": {},
+      "tr": {},
+      "uk": {},
+      "ur": {},
+      "vi": {
+        "pluralRule-count-one": "n is 1"
+      },
+      "zh": {},
+      "zu": {
+        "pluralRule-count-one": "n is 1",
+        "pluralRule-count-few": "n in 2..9",
+        "pluralRule-count-many": "n in 10..19,100..199,1000..1999"
+      }
+    }
+  }
+}

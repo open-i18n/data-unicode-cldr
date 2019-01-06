@@ -1,0 +1,30 @@
+{
+  "main": {
+    "nl": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8671 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"
+        },
+        "language": "nl"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "BGN",
+          "Numeric": "Numeriek",
+          "Tone": "Toon",
+          "UNGEGN": "UNGEGN",
+          "x-Accents": "Accenten",
+          "x-Fullwidth": "Volledige breedte",
+          "x-Halfwidth": "Halve breedte",
+          "x-Jamo": "Jamo",
+          "x-Pinyin": "Pinyin",
+          "x-Publishing": "Publicatie"
+        }
+      }
+    }
+  }
+}

@@ -152,7 +152,7 @@ public class LDMLNodesDeleter {
         Node gen = LDMLUtilities.getNode(doc, "//ldml/identity/generation");
         al = gen.getAttributes();
         Node date = al.getNamedItem("date");
-        date.setNodeValue("$Date: 2012-11-08 09:09:27 -0800 (Thu, 08 Nov 2012) $");
+        date.setNodeValue("$Date: 2012-11-08 11:09:27 -0600 (Thu, 08 Nov 2012) $");
     }
 
     private void deleteNodes(Document doc, String xpath) {

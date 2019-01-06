@@ -1,0 +1,67 @@
+{
+  "main": {
+    "vi": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8671 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"
+        },
+        "language": "root"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "Thời đại"
+          },
+          "year": {
+            "displayName": "Năm",
+            "-1": "Năm ngoái",
+            "0": "Năm nay",
+            "1": "Năm sau"
+          },
+          "month": {
+            "displayName": "Tháng",
+            "-1": "Tháng trước",
+            "0": "Tháng này",
+            "1": "Tháng sau"
+          },
+          "week": {
+            "displayName": "Tuần",
+            "-1": "Tuần trước",
+            "0": "Tuần này",
+            "1": "Tuần sau"
+          },
+          "day": {
+            "displayName": "Ngày",
+            "-2": "Ngày hôm kia",
+            "-1": "Ngày hôm qua",
+            "0": "Hôm nay",
+            "1": "Ngày mai",
+            "2": "Ngày kia"
+          },
+          "weekday": {
+            "displayName": "Ngày trong tuần"
+          },
+          "dayperiod": {
+            "displayName": "SA/CH"
+          },
+          "hour": {
+            "displayName": "Giờ"
+          },
+          "minute": {
+            "displayName": "Phút"
+          },
+          "second": {
+            "displayName": "Giây"
+          },
+          "zone": {
+            "displayName": "Múi giờ"
+          }
+        }
+      }
+    }
+  }
+}

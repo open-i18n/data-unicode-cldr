@@ -7,12 +7,12 @@ For terms of use, see http://www.unicode.org/copyright.html
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 8242 $"/>
-		<generation date="$Date: 2013-02-24 19:06:02 -0800 (Sun, 24 Feb 2013) $"/>
+		<version number="$Revision: 8678 $"/>
+		<generation date="$Date: 2013-05-03 22:16:36 -0500 (Fri, 03 May 2013) $"/>
 		<language type="sr" /> 
 		<script type="Latn" /> 
 	</identity>
-	<collations validSubLocales="sr_Latn_RS sr_Latn_BA sr_Latn_ME">
+	<collations validSubLocales="sr_Latn_RS sr_Latn_BA sr_Latn_ME sr_Latn_XK">
 		<collation type="search">
 			<rules><import source="hr" type="search"/></rules>
 		</collation>

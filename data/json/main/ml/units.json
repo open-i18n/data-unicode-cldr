@@ -1,0 +1,116 @@
+{
+  "main": {
+    "ml": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8671 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"
+        },
+        "language": "ml"
+      },
+      "units": {
+        "day": {
+          "unitPattern-count-one": "{0} ദിവസം",
+          "unitPattern-count-one-alt-short": "{0} ദിവസം‌",
+          "unitPattern-count-other": "{0} ദിവസം",
+          "unitPattern-count-other-alt-short": "{0} ദിവസം‌"
+        },
+        "day-future": {
+          "unitPattern-count-one": "{0} ദിവസത്തിൽ",
+          "unitPattern-count-other": "{0} ദിവസത്തിൽ"
+        },
+        "day-past": {
+          "unitPattern-count-one": "{0} ദിവസം മുമ്പ്",
+          "unitPattern-count-other": "{0} ദിവസം മുമ്പ്"
+        },
+        "hour": {
+          "unitPattern-count-one": "{0} മണിക്കൂർ",
+          "unitPattern-count-one-alt-short": "{0} മണിക്കൂർ‌",
+          "unitPattern-count-other": "{0} മണിക്കൂർ",
+          "unitPattern-count-other-alt-short": "{0} മണിക്കൂർ"
+        },
+        "hour-future": {
+          "unitPattern-count-one": "{0} മണിക്കൂറിൽ",
+          "unitPattern-count-other": "{0} മണിക്കൂറിൽ"
+        },
+        "hour-past": {
+          "unitPattern-count-one": "{0} മണിക്കൂർ മുമ്പ്",
+          "unitPattern-count-other": "{0} മണിക്കൂർ മുമ്പ്"
+        },
+        "minute": {
+          "unitPattern-count-one": "{0} മിനിട്ട്",
+          "unitPattern-count-one-alt-short": "{0} മിനിറ്റ്",
+          "unitPattern-count-other": "{0} മിനിട്ട്",
+          "unitPattern-count-other-alt-short": "{0} മിനിറ്റ്"
+        },
+        "minute-future": {
+          "unitPattern-count-one": "{0} മിനിറ്റിൽ",
+          "unitPattern-count-other": "{0} മിനിറ്റിനുള്ളിൽ"
+        },
+        "minute-past": {
+          "unitPattern-count-one": "{0} മിനിറ്റ് മുമ്പ്",
+          "unitPattern-count-other": "{0} മിനിറ്റ് മുമ്പ്"
+        },
+        "month": {
+          "unitPattern-count-one": "{0} മാസം",
+          "unitPattern-count-one-alt-short": "{0} മാസം",
+          "unitPattern-count-other": "{0} മാസം",
+          "unitPattern-count-other-alt-short": "{0} മാസം"
+        },
+        "month-future": {
+          "unitPattern-count-one": "{0} മാസത്തിൽ",
+          "unitPattern-count-other": "{0} മാസത്തിൽ"
+        },
+        "month-past": {
+          "unitPattern-count-one": "{0} മാസം മുമ്പ്",
+          "unitPattern-count-other": "{0} മാസം മുമ്പ്"
+        },
+        "second": {
+          "unitPattern-count-one": "{0} സെക്കന്റ്",
+          "unitPattern-count-one-alt-short": "{0} സെക്കൻറ്",
+          "unitPattern-count-other": "{0} സെക്കന്റ്",
+          "unitPattern-count-other-alt-short": "{0} സെക്കൻറ്"
+        },
+        "second-future": {
+          "unitPattern-count-one": "{0} സെക്കൻഡിൽ",
+          "unitPattern-count-other": "{0} സെക്കൻഡിൽ"
+        },
+        "second-past": {
+          "unitPattern-count-one": "{0} സെക്കൻറ് മുമ്പ്",
+          "unitPattern-count-other": "{0} സെക്കൻറ് മുമ്പ്"
+        },
+        "week": {
+          "unitPattern-count-one": "{0} ആഴ്ച",
+          "unitPattern-count-one-alt-short": "{0} ആഴ്‌ച",
+          "unitPattern-count-other": "{0} ആഴ്ച",
+          "unitPattern-count-other-alt-short": "{0} ആഴ്‌ച"
+        },
+        "week-future": {
+          "unitPattern-count-one": "{0} ആഴ്ചയിൽ",
+          "unitPattern-count-other": "{0} ആഴ്ചയിൽ"
+        },
+        "week-past": {
+          "unitPattern-count-one": "{0} ആഴ്ച മുമ്പ്",
+          "unitPattern-count-other": "{0} ആഴ്ച മുമ്പ്"
+        },
+        "year": {
+          "unitPattern-count-one": "{0} വർഷം",
+          "unitPattern-count-one-alt-short": "{0} വർ‌ഷം",
+          "unitPattern-count-other": "{0} വർഷം",
+          "unitPattern-count-other-alt-short": "{0} വർ‌ഷം"
+        },
+        "year-future": {
+          "unitPattern-count-one": "{0} വർഷത്തിൽ",
+          "unitPattern-count-other": "{0} വർഷത്തിൽ"
+        },
+        "year-past": {
+          "unitPattern-count-one": "{0} വർഷം മുമ്പ്",
+          "unitPattern-count-other": "{0} വർഷം മുമ്പ്"
+        }
+      }
+    }
+  }
+}

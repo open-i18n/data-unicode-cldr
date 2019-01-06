@@ -6,8 +6,8 @@ For terms of use, see http://www.unicode.org/copyright.html
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 8247 $"/>
-		<generation date="$Date: 2013-02-25 14:24:27 -0800 (Mon, 25 Feb 2013) $"/>
+		<version number="$Revision: 8671 $"/>
+		<generation date="$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"/>
 		<language type="zh"/>
 		<script type="Hant"/>
 		<territory type="HK"/>
@@ -34,6 +34,7 @@ For terms of use, see http://www.unicode.org/copyright.html
 			<territory type="019" draft="contributed">美洲地區</territory>
 			<territory type="029" draft="contributed">加勒比</territory>
 			<territory type="EA" draft="contributed">瑟塔與梅利拉</territory>
+			<territory type="XK">科索沃</territory>
 		</territories>
 		<variants>
 			<variant type="1901" draft="contributed">傳統德國拼字法</variant>

@@ -1,0 +1,23 @@
+{
+  "main": {
+    "pt-PT": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8663 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-02 15:03:19 -0500 (Thu, 02 May 2013) $"
+        },
+        "language": "pt",
+        "territory": "PT"
+      },
+      "posix": {
+        "messages": {
+          "yesstr": "sim:s",
+          "nostr": "não:n"
+        }
+      }
+    }
+  }
+}

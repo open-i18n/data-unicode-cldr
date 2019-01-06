@@ -1,0 +1,67 @@
+{
+  "main": {
+    "bg": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8663 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-02 15:03:19 -0500 (Thu, 02 May 2013) $"
+        },
+        "language": "bg"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "ера"
+          },
+          "year": {
+            "displayName": "година",
+            "-1": "Миналата година",
+            "0": "Тази година",
+            "1": "Следващата година"
+          },
+          "month": {
+            "displayName": "месец",
+            "-1": "Миналия месец",
+            "0": "Този месец",
+            "1": "Следващия месец"
+          },
+          "week": {
+            "displayName": "седмица",
+            "-1": "Миналата седмица",
+            "0": "Тази седмица",
+            "1": "Следващата седмица"
+          },
+          "day": {
+            "displayName": "Ден",
+            "-2": "Онзи ден",
+            "-1": "Вчера",
+            "0": "Днес",
+            "1": "Утре",
+            "2": "Вдругиден"
+          },
+          "weekday": {
+            "displayName": "Ден от седмицата"
+          },
+          "dayperiod": {
+            "displayName": "ден"
+          },
+          "hour": {
+            "displayName": "час"
+          },
+          "minute": {
+            "displayName": "минута"
+          },
+          "second": {
+            "displayName": "секунда"
+          },
+          "zone": {
+            "displayName": "зона"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "main": {
+    "zh": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8671 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"
+        },
+        "language": "root"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "时期"
+          },
+          "year": {
+            "displayName": "年",
+            "-1": "去年",
+            "0": "今年",
+            "1": "明年"
+          },
+          "month": {
+            "displayName": "月",
+            "-1": "上个月",
+            "0": "本月",
+            "1": "下个月"
+          },
+          "week": {
+            "displayName": "周",
+            "-1": "上周",
+            "0": "本周",
+            "1": "下周"
+          },
+          "day": {
+            "displayName": "日",
+            "-2": "前天",
+            "-1": "昨天",
+            "0": "今天",
+            "1": "明天",
+            "2": "后天"
+          },
+          "weekday": {
+            "displayName": "星期"
+          },
+          "dayperiod": {
+            "displayName": "上午/下午"
+          },
+          "hour": {
+            "displayName": "小时"
+          },
+          "minute": {
+            "displayName": "分钟"
+          },
+          "second": {
+            "displayName": "秒钟"
+          },
+          "zone": {
+            "displayName": "时区"
+          }
+        }
+      }
+    }
+  }
+}

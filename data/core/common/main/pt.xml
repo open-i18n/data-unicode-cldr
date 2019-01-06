@@ -6,8 +6,8 @@ For terms of use, see http://www.unicode.org/copyright.html
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 8247 $"/>
-		<generation date="$Date: 2013-02-25 14:24:27 -0800 (Mon, 25 Feb 2013) $"/>
+		<version number="$Revision: 8671 $"/>
+		<generation date="$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"/>
 		<language type="pt"/>
 	</identity>
 	<localeDisplayNames>
@@ -965,6 +965,7 @@ For terms of use, see http://www.unicode.org/copyright.html
 			<territory type="VU">Vanuatu</territory>
 			<territory type="WF">Wallis e Futuna</territory>
 			<territory type="WS">Samoa</territory>
+			<territory type="XK">Kosovo</territory>
 			<territory type="YE">Iêmen</territory>
 			<territory type="YT">Mayotte</territory>
 			<territory type="ZA">África do Sul</territory>
@@ -3523,6 +3524,11 @@ For terms of use, see http://www.unicode.org/copyright.html
 			<metazone type="South_Georgia">
 				<long>
 					<standard>Horário da Geórgia do Sul</standard>
+				</long>
+			</metazone>
+			<metazone type="Suriname">
+				<long>
+					<standard>Horário do Suriname</standard>
 				</long>
 			</metazone>
 			<metazone type="Syowa">

@@ -6,8 +6,8 @@ For terms of use, see http://www.unicode.org/copyright.html
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 8245 $"/>
-		<generation date="$Date: 2013-02-24 20:19:26 -0800 (Sun, 24 Feb 2013) $"/>
+		<version number="$Revision: 8682 $"/>
+		<generation date="$Date: 2013-05-06 00:45:57 -0500 (Mon, 06 May 2013) $"/>
 		<language type="sq"/>
 	</identity>
 	<localeDisplayNames>
@@ -276,6 +276,7 @@ For terms of use, see http://www.unicode.org/copyright.html
 			<territory type="VA">Vatikan</territory>
 			<territory type="VC">Saint Vincent e Grenadinet</territory>
 			<territory type="VE">Venezuelë</territory>
+			<territory type="XK">Kosovë</territory>
 			<territory type="YE">Jemen</territory>
 			<territory type="ZA">Afrika e Jugut</territory>
 			<territory type="ZM">Zambi</territory>

@@ -6,8 +6,8 @@ For terms of use, see http://www.unicode.org/copyright.html
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 8247 $"/>
-		<generation date="$Date: 2013-02-25 14:24:27 -0800 (Mon, 25 Feb 2013) $"/>
+		<version number="$Revision: 8671 $"/>
+		<generation date="$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"/>
 		<language type="he"/>
 	</identity>
 	<localeDisplayNames>
@@ -955,6 +955,7 @@ For terms of use, see http://www.unicode.org/copyright.html
 			<territory type="VU">ונואטו</territory>
 			<territory type="WF">איי ווליס ופוטונה</territory>
 			<territory type="WS">סמואה</territory>
+			<territory type="XK">קוסובו</territory>
 			<territory type="YE">תימן</territory>
 			<territory type="YT">מאיוט</territory>
 			<territory type="ZA">דרום אפריקה</territory>
@@ -4024,6 +4025,11 @@ For terms of use, see http://www.unicode.org/copyright.html
 			<metazone type="South_Georgia">
 				<long>
 					<standard draft="provisional">שעון דרום ג'ורג'יה</standard>
+				</long>
+			</metazone>
+			<metazone type="Suriname">
+				<long>
+					<standard>שעון סורינאם</standard>
 				</long>
 			</metazone>
 			<metazone type="Syowa">

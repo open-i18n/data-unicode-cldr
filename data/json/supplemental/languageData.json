@@ -1,0 +1,4879 @@
+{
+  "supplemental": {
+    "version": {
+      "@cldrVersion": "23.1",
+      "@number": "$Revision: 8721 $"
+    },
+    "generation": {
+      "@date": "$Date: 2013-05-15 14:50:20 -0500 (Wed, 15 May 2013) $"
+    },
+    "languageData": {
+      "aa": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "aa-alt-secondary": {
+        "@territories": [
+          "DJ",
+          "ET"
+        ]
+      },
+      "ab": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "ab-alt-secondary": {
+        "@territories": [
+          "GE"
+        ]
+      },
+      "abq": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "abr-alt-secondary": {
+        "@territories": [
+          "GH"
+        ]
+      },
+      "ace": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ace-alt-secondary": {
+        "@territories": [
+          "ID"
+        ]
+      },
+      "ach": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ada": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ady": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "ady-alt-secondary": {
+        "@territories": [
+          "RU"
+        ]
+      },
+      "ae-alt-secondary": {
+        "@scripts": [
+          "Avst"
+        ]
+      },
+      "af": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "NA",
+          "ZA"
+        ]
+      },
+      "agq": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "aii": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "aii-alt-secondary": {
+        "@scripts": [
+          "Syrc"
+        ]
+      },
+      "ain-alt-secondary": {
+        "@scripts": [
+          "Kana",
+          "Latn"
+        ]
+      },
+      "ak": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ak-alt-secondary": {
+        "@territories": [
+          "GH"
+        ]
+      },
+      "akk-alt-secondary": {
+        "@scripts": [
+          "Xsux"
+        ]
+      },
+      "ale": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "alt": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "am": {
+        "@scripts": [
+          "Ethi"
+        ],
+        "@territories": [
+          "ET"
+        ]
+      },
+      "amo": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "an": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "anp": {
+        "@scripts": [
+          "Deva"
+        ]
+      },
+      "ar": {
+        "@scripts": [
+          "Arab"
+        ],
+        "@territories": [
+          "AE",
+          "BH",
+          "DJ",
+          "DZ",
+          "EG",
+          "EH",
+          "ER",
+          "IL",
+          "IQ",
+          "JO",
+          "KM",
+          "KW",
+          "LB",
+          "LY",
+          "MA",
+          "MR",
+          "OM",
+          "PS",
+          "QA",
+          "SA",
+          "SD",
+          "SO",
+          "SS",
+          "SY",
+          "TD",
+          "TN",
+          "YE"
+        ]
+      },
+      "ar-alt-secondary": {
+        "@scripts": [
+          "Syrc"
+        ],
+        "@territories": [
+          "IR"
+        ]
+      },
+      "arc-alt-secondary": {
+        "@scripts": [
+          "Armi"
+        ]
+      },
+      "arn": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "arp": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "arw-alt-secondary": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "as": {
+        "@scripts": [
+          "Beng"
+        ]
+      },
+      "as-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "asa": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ast": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ast-alt-secondary": {
+        "@territories": [
+          "ES"
+        ]
+      },
+      "av": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "av-alt-secondary": {
+        "@territories": [
+          "RU"
+        ]
+      },
+      "awa": {
+        "@scripts": [
+          "Deva"
+        ]
+      },
+      "awa-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "ay": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "BO"
+        ]
+      },
+      "az": {
+        "@scripts": [
+          "Arab",
+          "Cyrl",
+          "Latn"
+        ],
+        "@territories": [
+          "AZ"
+        ]
+      },
+      "az-alt-secondary": {
+        "@territories": [
+          "IR"
+        ]
+      },
+      "ba": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "ba-alt-secondary": {
+        "@territories": [
+          "RU"
+        ]
+      },
+      "bal": {
+        "@scripts": [
+          "Arab"
+        ]
+      },
+      "bal-alt-secondary": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "IR",
+          "PK"
+        ]
+      },
+      "ban": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ban-alt-secondary": {
+        "@scripts": [
+          "Bali"
+        ],
+        "@territories": [
+          "ID"
+        ]
+      },
+      "bas": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "bax": {
+        "@scripts": [
+          "Bamu"
+        ]
+      },
+      "bbc": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "bbc-alt-secondary": {
+        "@scripts": [
+          "Batk"
+        ],
+        "@territories": [
+          "ID"
+        ]
+      },
+      "bci-alt-secondary": {
+        "@territories": [
+          "CI"
+        ]
+      },
+      "be": {
+        "@scripts": [
+          "Cyrl"
+        ],
+        "@territories": [
+          "BY"
+        ]
+      },
+      "bej": {
+        "@scripts": [
+          "Arab"
+        ]
+      },
+      "bem": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "bem-alt-secondary": {
+        "@territories": [
+          "ZM"
+        ]
+      },
+      "bew-alt-secondary": {
+        "@territories": [
+          "ID"
+        ]
+      },
+      "bez": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "bfq": {
+        "@scripts": [
+          "Taml"
+        ]
+      },
+      "bft": {
+        "@scripts": [
+          "Arab"
+        ]
+      },
+      "bft-alt-secondary": {
+        "@scripts": [
+          "Tibt"
+        ]
+      },
+      "bfy": {
+        "@scripts": [
+          "Deva"
+        ]
+      },
+      "bg": {
+        "@scripts": [
+          "Cyrl"
+        ],
+        "@territories": [
+          "BG"
+        ]
+      },
+      "bgc-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "bh-alt-secondary": {
+        "@scripts": [
+          "Deva",
+          "Kthi"
+        ]
+      },
+      "bhb": {
+        "@scripts": [
+          "Deva"
+        ]
+      },
+      "bhb-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "bhi-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "bhk-alt-secondary": {
+        "@territories": [
+          "PH"
+        ]
+      },
+      "bho": {
+        "@scripts": [
+          "Deva"
+        ]
+      },
+      "bho-alt-secondary": {
+        "@territories": [
+          "IN",
+          "MU",
+          "NP"
+        ]
+      },
+      "bi": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "VU"
+        ]
+      },
+      "bik": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "bik-alt-secondary": {
+        "@territories": [
+          "PH"
+        ]
+      },
+      "bin": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "bin-alt-secondary": {
+        "@territories": [
+          "NG"
+        ]
+      },
+      "bjj": {
+        "@scripts": [
+          "Deva"
+        ]
+      },
+      "bjj-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "bjn-alt-secondary": {
+        "@territories": [
+          "ID",
+          "MY"
+        ]
+      },
+      "bku": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "bku-alt-secondary": {
+        "@scripts": [
+          "Buhd"
+        ]
+      },
+      "bla": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "blt": {
+        "@scripts": [
+          "Tavt"
+        ]
+      },
+      "bm": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "bm-alt-secondary": {
+        "@territories": [
+          "ML"
+        ]
+      },
+      "bn": {
+        "@scripts": [
+          "Beng"
+        ],
+        "@territories": [
+          "BD"
+        ]
+      },
+      "bn-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "bo": {
+        "@scripts": [
+          "Tibt"
+        ]
+      },
+      "bo-alt-secondary": {
+        "@territories": [
+          "CN"
+        ]
+      },
+      "bqi-alt-secondary": {
+        "@territories": [
+          "IR"
+        ]
+      },
+      "bqv": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "br": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "bra": {
+        "@scripts": [
+          "Deva"
+        ]
+      },
+      "brh-alt-secondary": {
+        "@territories": [
+          "PK"
+        ]
+      },
+      "brx": {
+        "@scripts": [
+          "Deva"
+        ]
+      },
+      "brx-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "bs": {
+        "@scripts": [
+          "Cyrl",
+          "Latn"
+        ],
+        "@territories": [
+          "BA"
+        ]
+      },
+      "btv": {
+        "@scripts": [
+          "Deva"
+        ]
+      },
+      "bua": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "buc": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "buc-alt-secondary": {
+        "@territories": [
+          "YT"
+        ]
+      },
+      "bug": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "bug-alt-secondary": {
+        "@scripts": [
+          "Bugi"
+        ],
+        "@territories": [
+          "ID"
+        ]
+      },
+      "bya": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "bya-alt-secondary": {
+        "@territories": [
+          "ID"
+        ]
+      },
+      "byn": {
+        "@scripts": [
+          "Ethi"
+        ]
+      },
+      "ca": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "AD"
+        ]
+      },
+      "ca-alt-secondary": {
+        "@territories": [
+          "ES"
+        ]
+      },
+      "cad": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "car": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "cay": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "cch": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ccp": {
+        "@scripts": [
+          "Beng"
+        ]
+      },
+      "ccp-alt-secondary": {
+        "@scripts": [
+          "Cakm"
+        ]
+      },
+      "ce": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "ce-alt-secondary": {
+        "@territories": [
+          "RU"
+        ]
+      },
+      "ceb": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ceb-alt-secondary": {
+        "@territories": [
+          "PH"
+        ]
+      },
+      "cgg": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "cgg-alt-secondary": {
+        "@territories": [
+          "UG"
+        ]
+      },
+      "ch": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "GU"
+        ]
+      },
+      "chk": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "FM"
+        ]
+      },
+      "chm": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "chn-alt-secondary": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "cho": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "chp": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "chp-alt-secondary": {
+        "@scripts": [
+          "Cans"
+        ]
+      },
+      "chr": {
+        "@scripts": [
+          "Cher"
+        ]
+      },
+      "chy": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "cja": {
+        "@scripts": [
+          "Arab"
+        ]
+      },
+      "cja-alt-secondary": {
+        "@scripts": [
+          "Cham"
+        ]
+      },
+      "cjm": {
+        "@scripts": [
+          "Cham"
+        ]
+      },
+      "cjm-alt-secondary": {
+        "@scripts": [
+          "Arab"
+        ]
+      },
+      "cjs": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "ckb": {
+        "@scripts": [
+          "Arab"
+        ]
+      },
+      "ckb-alt-secondary": {
+        "@territories": [
+          "IQ",
+          "IR"
+        ]
+      },
+      "ckt": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "co": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "cop-alt-secondary": {
+        "@scripts": [
+          "Arab",
+          "Copt",
+          "Grek"
+        ]
+      },
+      "cpe-alt-secondary": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "cr": {
+        "@scripts": [
+          "Cans",
+          "Latn"
+        ]
+      },
+      "crh": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "crk": {
+        "@scripts": [
+          "Cans"
+        ]
+      },
+      "crs-alt-secondary": {
+        "@territories": [
+          "SC"
+        ]
+      },
+      "cs": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "CZ"
+        ]
+      },
+      "csb-alt-secondary": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "PL"
+        ]
+      },
+      "cu-alt-secondary": {
+        "@scripts": [
+          "Glag"
+        ]
+      },
+      "cv": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "cv-alt-secondary": {
+        "@territories": [
+          "RU"
+        ]
+      },
+      "cy": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "cy-alt-secondary": {
+        "@territories": [
+          "GB"
+        ]
+      },
+      "da": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "DK",
+          "GL"
+        ]
+      },
+      "dak": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "dar": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "dav": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "dcc-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "de": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "AT",
+          "BE",
+          "CH",
+          "DE",
+          "LI",
+          "LU",
+          "NA"
+        ]
+      },
+      "de-alt-secondary": {
+        "@scripts": [
+          "Runr"
+        ],
+        "@territories": [
+          "BR",
+          "KZ",
+          "US"
+        ]
+      },
+      "del": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "den": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "den-alt-secondary": {
+        "@scripts": [
+          "Cans"
+        ]
+      },
+      "dgr": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "din": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "dje": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "dje-alt-secondary": {
+        "@territories": [
+          "NE"
+        ]
+      },
+      "dng": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "doi": {
+        "@scripts": [
+          "Arab"
+        ]
+      },
+      "doi-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "dsb": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "dua": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "dv": {
+        "@scripts": [
+          "Thaa"
+        ],
+        "@territories": [
+          "MV"
+        ]
+      },
+      "dyo": {
+        "@scripts": [
+          "Arab"
+        ]
+      },
+      "dyo-alt-secondary": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "dyu": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "dyu-alt-secondary": {
+        "@territories": [
+          "BF"
+        ]
+      },
+      "dz": {
+        "@scripts": [
+          "Tibt"
+        ],
+        "@territories": [
+          "BT"
+        ]
+      },
+      "ebu": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ee": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ee-alt-secondary": {
+        "@territories": [
+          "GH",
+          "TG"
+        ]
+      },
+      "efi": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "NG"
+        ]
+      },
+      "egy-alt-secondary": {
+        "@scripts": [
+          "Egyp"
+        ]
+      },
+      "eka": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "eky": {
+        "@scripts": [
+          "Kali"
+        ]
+      },
+      "el": {
+        "@scripts": [
+          "Grek"
+        ],
+        "@territories": [
+          "CY",
+          "GR"
+        ]
+      },
+      "en": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "AG",
+          "AI",
+          "AS",
+          "AU",
+          "BB",
+          "BM",
+          "BS",
+          "BW",
+          "BZ",
+          "CA",
+          "CC",
+          "CK",
+          "CM",
+          "CX",
+          "DG",
+          "DM",
+          "FJ",
+          "FK",
+          "FM",
+          "GB",
+          "GD",
+          "GG",
+          "GH",
+          "GI",
+          "GM",
+          "GU",
+          "GY",
+          "HK",
+          "IE",
+          "IM",
+          "IN",
+          "IO",
+          "JE",
+          "JM",
+          "KE",
+          "KI",
+          "KN",
+          "KY",
+          "LC",
+          "LR",
+          "LS",
+          "MG",
+          "MH",
+          "MP",
+          "MS",
+          "MT",
+          "MU",
+          "MW",
+          "NA",
+          "NF",
+          "NG",
+          "NR",
+          "NU",
+          "NZ",
+          "PG",
+          "PH",
+          "PK",
+          "PN",
+          "PR",
+          "RW",
+          "SB",
+          "SC",
+          "SD",
+          "SG",
+          "SH",
+          "SL",
+          "SS",
+          "SX",
+          "SZ",
+          "TC",
+          "TK",
+          "TO",
+          "TT",
+          "TV",
+          "TZ",
+          "UG",
+          "UM",
+          "US",
+          "VC",
+          "VG",
+          "VI",
+          "VU",
+          "WS",
+          "ZA",
+          "ZM",
+          "ZW"
+        ]
+      },
+      "en-alt-secondary": {
+        "@scripts": [
+          "Dsrt",
+          "Shaw"
+        ],
+        "@territories": [
+          "AC",
+          "BE",
+          "DE",
+          "ES",
+          "ET",
+          "FR",
+          "IT",
+          "MY",
+          "NL",
+          "PW",
+          "TA"
+        ]
+      },
+      "eo": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "es": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "AR",
+          "BO",
+          "CL",
+          "CO",
+          "CR",
+          "CU",
+          "DO",
+          "EA",
+          "EC",
+          "ES",
+          "GQ",
+          "GT",
+          "HN",
+          "IC",
+          "MX",
+          "NI",
+          "PA",
+          "PE",
+          "PH",
+          "PR",
+          "PY",
+          "SV",
+          "UY",
+          "VE"
+        ]
+      },
+      "es-alt-secondary": {
+        "@territories": [
+          "AD",
+          "BZ",
+          "US"
+        ]
+      },
+      "et": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "EE"
+        ]
+      },
+      "ett-alt-secondary": {
+        "@scripts": [
+          "Ital",
+          "Latn"
+        ]
+      },
+      "eu": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "eu-alt-secondary": {
+        "@territories": [
+          "ES"
+        ]
+      },
+      "evn": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "ewo": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "fa": {
+        "@scripts": [
+          "Arab"
+        ],
+        "@territories": [
+          "AF",
+          "IR"
+        ]
+      },
+      "fa-alt-secondary": {
+        "@territories": [
+          "PK"
+        ]
+      },
+      "fan": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "fan-alt-secondary": {
+        "@territories": [
+          "GQ"
+        ]
+      },
+      "ff": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ff-alt-secondary": {
+        "@territories": [
+          "GN",
+          "SN"
+        ]
+      },
+      "ffm-alt-secondary": {
+        "@territories": [
+          "ML"
+        ]
+      },
+      "fi": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "FI"
+        ]
+      },
+      "fi-alt-secondary": {
+        "@territories": [
+          "SE"
+        ]
+      },
+      "fil": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "PH"
+        ]
+      },
+      "fil-alt-secondary": {
+        "@scripts": [
+          "Tglg"
+        ],
+        "@territories": [
+          "US"
+        ]
+      },
+      "fiu-alt-secondary": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "fj": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "FJ"
+        ]
+      },
+      "fo": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "FO"
+        ]
+      },
+      "fon": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "fon-alt-secondary": {
+        "@territories": [
+          "BJ"
+        ]
+      },
+      "fr": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "BE",
+          "BF",
+          "BI",
+          "BJ",
+          "BL",
+          "CA",
+          "CD",
+          "CF",
+          "CG",
+          "CH",
+          "CI",
+          "CM",
+          "CP",
+          "DJ",
+          "DZ",
+          "FR",
+          "GA",
+          "GF",
+          "GN",
+          "GP",
+          "GQ",
+          "HT",
+          "KM",
+          "LU",
+          "MA",
+          "MC",
+          "MF",
+          "MG",
+          "ML",
+          "MQ",
+          "MU",
+          "NC",
+          "NE",
+          "PF",
+          "PM",
+          "RE",
+          "RW",
+          "SC",
+          "SN",
+          "SY",
+          "TD",
+          "TG",
+          "TN",
+          "VU",
+          "WF",
+          "YT"
+        ]
+      },
+      "fr-alt-secondary": {
+        "@territories": [
+          "GB",
+          "TF",
+          "US"
+        ]
+      },
+      "frr": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "frs": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "fud-alt-secondary": {
+        "@territories": [
+          "WF"
+        ]
+      },
+      "fuq-alt-secondary": {
+        "@territories": [
+          "NE"
+        ]
+      },
+      "fur": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "fuv-alt-secondary": {
+        "@territories": [
+          "NG"
+        ]
+      },
+      "fy": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "fy-alt-secondary": {
+        "@territories": [
+          "NL"
+        ]
+      },
+      "ga": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "IE"
+        ]
+      },
+      "ga-alt-secondary": {
+        "@territories": [
+          "GB"
+        ]
+      },
+      "gaa": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "gaa-alt-secondary": {
+        "@territories": [
+          "GH"
+        ]
+      },
+      "gag": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "gag-alt-secondary": {
+        "@scripts": [
+          "Cyrl"
+        ],
+        "@territories": [
+          "MD"
+        ]
+      },
+      "gay": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "gba": {
+        "@scripts": [
+          "Arab"
+        ]
+      },
+      "gbm": {
+        "@scripts": [
+          "Deva"
+        ]
+      },
+      "gbm-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "gcr": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "gcr-alt-secondary": {
+        "@territories": [
+          "GF"
+        ]
+      },
+      "gd": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "gd-alt-secondary": {
+        "@territories": [
+          "GB"
+        ]
+      },
+      "gez-alt-secondary": {
+        "@scripts": [
+          "Ethi"
+        ]
+      },
+      "gil": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "KI"
+        ]
+      },
+      "gl": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "gl-alt-secondary": {
+        "@territories": [
+          "ES"
+        ]
+      },
+      "gld": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "glk-alt-secondary": {
+        "@territories": [
+          "IR"
+        ]
+      },
+      "gn": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "PY"
+        ]
+      },
+      "gon": {
+        "@scripts": [
+          "Deva",
+          "Telu"
+        ]
+      },
+      "gon-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "gor": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "gor-alt-secondary": {
+        "@territories": [
+          "ID"
+        ]
+      },
+      "got-alt-secondary": {
+        "@scripts": [
+          "Goth"
+        ]
+      },
+      "grb": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "grc-alt-secondary": {
+        "@scripts": [
+          "Cprt",
+          "Grek",
+          "Linb"
+        ]
+      },
+      "grt": {
+        "@scripts": [
+          "Beng"
+        ]
+      },
+      "gsw": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "CH",
+          "LI"
+        ]
+      },
+      "gu": {
+        "@scripts": [
+          "Gujr"
+        ]
+      },
+      "gu-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "guz": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "guz-alt-secondary": {
+        "@territories": [
+          "KE"
+        ]
+      },
+      "gv": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "IM"
+        ]
+      },
+      "gwi": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ha": {
+        "@scripts": [
+          "Arab",
+          "Latn"
+        ],
+        "@territories": [
+          "NG"
+        ]
+      },
+      "ha-alt-secondary": {
+        "@territories": [
+          "NE"
+        ]
+      },
+      "hai": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "haw": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "haw-alt-secondary": {
+        "@territories": [
+          "US"
+        ]
+      },
+      "haz-alt-secondary": {
+        "@territories": [
+          "AF"
+        ]
+      },
+      "he": {
+        "@scripts": [
+          "Hebr"
+        ],
+        "@territories": [
+          "IL"
+        ]
+      },
+      "hi": {
+        "@scripts": [
+          "Deva"
+        ],
+        "@territories": [
+          "IN"
+        ]
+      },
+      "hi-alt-secondary": {
+        "@territories": [
+          "FJ"
+        ]
+      },
+      "hil": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "hil-alt-secondary": {
+        "@territories": [
+          "PH"
+        ]
+      },
+      "hit-alt-secondary": {
+        "@scripts": [
+          "Xsux"
+        ]
+      },
+      "hmn": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "hne": {
+        "@scripts": [
+          "Deva"
+        ]
+      },
+      "hne-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "hnn": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "hnn-alt-secondary": {
+        "@scripts": [
+          "Hano"
+        ]
+      },
+      "hno-alt-secondary": {
+        "@territories": [
+          "PK"
+        ]
+      },
+      "ho": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "PG"
+        ]
+      },
+      "hoc": {
+        "@scripts": [
+          "Deva"
+        ]
+      },
+      "hoc-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "hoj": {
+        "@scripts": [
+          "Deva"
+        ]
+      },
+      "hoj-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "hop": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "hr": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "BA",
+          "HR"
+        ]
+      },
+      "hr-alt-secondary": {
+        "@territories": [
+          "AT"
+        ]
+      },
+      "hsb": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ht": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "HT"
+        ]
+      },
+      "hu": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "HU"
+        ]
+      },
+      "hu-alt-secondary": {
+        "@territories": [
+          "AT",
+          "RO",
+          "RS"
+        ]
+      },
+      "hup": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "hy": {
+        "@scripts": [
+          "Armn"
+        ],
+        "@territories": [
+          "AM"
+        ]
+      },
+      "hz": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ia-alt-secondary": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "iba": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ibb": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ibb-alt-secondary": {
+        "@territories": [
+          "NG"
+        ]
+      },
+      "id": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "ID"
+        ]
+      },
+      "id-alt-secondary": {
+        "@scripts": [
+          "Arab"
+        ]
+      },
+      "ig": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "NG"
+        ]
+      },
+      "ii": {
+        "@scripts": [
+          "Yiii"
+        ]
+      },
+      "ii-alt-secondary": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "CN"
+        ]
+      },
+      "ik": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ikt-alt-secondary": {
+        "@territories": [
+          "CA"
+        ]
+      },
+      "ilo": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ilo-alt-secondary": {
+        "@territories": [
+          "PH"
+        ]
+      },
+      "inh": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "inh-alt-secondary": {
+        "@scripts": [
+          "Arab",
+          "Latn"
+        ],
+        "@territories": [
+          "RU"
+        ]
+      },
+      "is": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "IS"
+        ]
+      },
+      "it": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "CH",
+          "IT",
+          "SM"
+        ]
+      },
+      "it-alt-secondary": {
+        "@territories": [
+          "FR",
+          "HR",
+          "US",
+          "VA"
+        ]
+      },
+      "iu": {
+        "@scripts": [
+          "Cans"
+        ]
+      },
+      "iu-alt-secondary": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "CA"
+        ]
+      },
+      "ja": {
+        "@scripts": [
+          "Jpan"
+        ],
+        "@territories": [
+          "JP"
+        ]
+      },
+      "jmc": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "jpr": {
+        "@scripts": [
+          "Hebr"
+        ]
+      },
+      "jrb": {
+        "@scripts": [
+          "Hebr"
+        ]
+      },
+      "jv": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "jv-alt-secondary": {
+        "@scripts": [
+          "Java"
+        ],
+        "@territories": [
+          "ID"
+        ]
+      },
+      "ka": {
+        "@scripts": [
+          "Geor"
+        ],
+        "@territories": [
+          "GE"
+        ]
+      },
+      "kaa": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "kab": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "kab-alt-secondary": {
+        "@territories": [
+          "DZ"
+        ]
+      },
+      "kac": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "kaj": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "kam": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "kam-alt-secondary": {
+        "@territories": [
+          "KE"
+        ]
+      },
+      "kbd": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "kbd-alt-secondary": {
+        "@territories": [
+          "RU"
+        ]
+      },
+      "kca": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "kcg": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "kde": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "kde-alt-secondary": {
+        "@territories": [
+          "TZ"
+        ]
+      },
+      "kdt": {
+        "@scripts": [
+          "Thai"
+        ]
+      },
+      "kea": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "kea-alt-secondary": {
+        "@territories": [
+          "CV"
+        ]
+      },
+      "kfo": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "kfr": {
+        "@scripts": [
+          "Deva"
+        ]
+      },
+      "kfy-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "kg": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "kg-alt-secondary": {
+        "@territories": [
+          "CD"
+        ]
+      },
+      "kha": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "kha-alt-secondary": {
+        "@scripts": [
+          "Beng"
+        ],
+        "@territories": [
+          "IN"
+        ]
+      },
+      "khb": {
+        "@scripts": [
+          "Talu"
+        ]
+      },
+      "khn-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "khq": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "kht": {
+        "@scripts": [
+          "Mymr"
+        ]
+      },
+      "ki": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ki-alt-secondary": {
+        "@territories": [
+          "KE"
+        ]
+      },
+      "kj": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "NA"
+        ]
+      },
+      "kjh": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "kk": {
+        "@scripts": [
+          "Arab",
+          "Cyrl"
+        ],
+        "@territories": [
+          "KZ"
+        ]
+      },
+      "kk-alt-secondary": {
+        "@territories": [
+          "CN"
+        ]
+      },
+      "kl": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "GL"
+        ]
+      },
+      "kl-alt-secondary": {
+        "@territories": [
+          "DK"
+        ]
+      },
+      "kln": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "kln-alt-secondary": {
+        "@territories": [
+          "KE"
+        ]
+      },
+      "km": {
+        "@scripts": [
+          "Khmr"
+        ],
+        "@territories": [
+          "KH"
+        ]
+      },
+      "kmb": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "kmb-alt-secondary": {
+        "@territories": [
+          "AO"
+        ]
+      },
+      "kn": {
+        "@scripts": [
+          "Knda"
+        ]
+      },
+      "kn-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "ko": {
+        "@scripts": [
+          "Kore"
+        ],
+        "@territories": [
+          "KP",
+          "KR"
+        ]
+      },
+      "ko-alt-secondary": {
+        "@territories": [
+          "CN"
+        ]
+      },
+      "koi": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "koi-alt-secondary": {
+        "@territories": [
+          "RU"
+        ]
+      },
+      "kok": {
+        "@scripts": [
+          "Deva"
+        ]
+      },
+      "kok-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "kos": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "FM"
+        ]
+      },
+      "kpe": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "kpy": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "kr": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "krc": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "krc-alt-secondary": {
+        "@territories": [
+          "RU"
+        ]
+      },
+      "kri": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "kri-alt-secondary": {
+        "@territories": [
+          "SL"
+        ]
+      },
+      "krl": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "kru": {
+        "@scripts": [
+          "Deva"
+        ]
+      },
+      "kru-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "ks": {
+        "@scripts": [
+          "Arab",
+          "Deva"
+        ]
+      },
+      "ks-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "ksb": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ksf": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ksh": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ku": {
+        "@scripts": [
+          "Arab",
+          "Cyrl",
+          "Latn"
+        ]
+      },
+      "ku-alt-secondary": {
+        "@territories": [
+          "SY",
+          "TR"
+        ]
+      },
+      "kum": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "kum-alt-secondary": {
+        "@territories": [
+          "RU"
+        ]
+      },
+      "kut": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "kv": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "kv-alt-secondary": {
+        "@territories": [
+          "RU"
+        ]
+      },
+      "kw": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "kxm-alt-secondary": {
+        "@territories": [
+          "TH"
+        ]
+      },
+      "ky": {
+        "@scripts": [
+          "Arab",
+          "Cyrl",
+          "Latn"
+        ],
+        "@territories": [
+          "KG"
+        ]
+      },
+      "kyu": {
+        "@scripts": [
+          "Kali"
+        ]
+      },
+      "la": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "VA"
+        ]
+      },
+      "lad": {
+        "@scripts": [
+          "Hebr"
+        ]
+      },
+      "lag": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "lah": {
+        "@scripts": [
+          "Arab"
+        ]
+      },
+      "lah-alt-secondary": {
+        "@territories": [
+          "PK"
+        ]
+      },
+      "laj-alt-secondary": {
+        "@territories": [
+          "UG"
+        ]
+      },
+      "lam": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "lb": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "LU"
+        ]
+      },
+      "lbe": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "lbe-alt-secondary": {
+        "@territories": [
+          "RU"
+        ]
+      },
+      "lcp": {
+        "@scripts": [
+          "Thai"
+        ]
+      },
+      "lep": {
+        "@scripts": [
+          "Lepc"
+        ]
+      },
+      "lez": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "lez-alt-secondary": {
+        "@territories": [
+          "RU"
+        ]
+      },
+      "lg": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "lg-alt-secondary": {
+        "@territories": [
+          "UG"
+        ]
+      },
+      "li": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "lif": {
+        "@scripts": [
+          "Deva",
+          "Limb"
+        ]
+      },
+      "lis": {
+        "@scripts": [
+          "Lisu"
+        ]
+      },
+      "ljp-alt-secondary": {
+        "@territories": [
+          "ID"
+        ]
+      },
+      "lki": {
+        "@scripts": [
+          "Arab"
+        ]
+      },
+      "lmn": {
+        "@scripts": [
+          "Telu"
+        ]
+      },
+      "lmn-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "ln": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "CG"
+        ]
+      },
+      "ln-alt-secondary": {
+        "@territories": [
+          "CD"
+        ]
+      },
+      "lo": {
+        "@scripts": [
+          "Laoo"
+        ],
+        "@territories": [
+          "LA"
+        ]
+      },
+      "lol": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "loz": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "lrc-alt-secondary": {
+        "@territories": [
+          "IR"
+        ]
+      },
+      "lt": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "LT"
+        ]
+      },
+      "lu": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "lu-alt-secondary": {
+        "@territories": [
+          "CD"
+        ]
+      },
+      "lua": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "lua-alt-secondary": {
+        "@territories": [
+          "CD"
+        ]
+      },
+      "lui": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "lun": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "luo": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "luo-alt-secondary": {
+        "@territories": [
+          "KE"
+        ]
+      },
+      "lus": {
+        "@scripts": [
+          "Beng"
+        ]
+      },
+      "lut-alt-secondary": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "luy": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "luy-alt-secondary": {
+        "@territories": [
+          "KE"
+        ]
+      },
+      "lv": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "LV"
+        ]
+      },
+      "lwl": {
+        "@scripts": [
+          "Thai"
+        ]
+      },
+      "mad": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "mad-alt-secondary": {
+        "@territories": [
+          "ID"
+        ]
+      },
+      "mag": {
+        "@scripts": [
+          "Deva"
+        ]
+      },
+      "mag-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "mai": {
+        "@scripts": [
+          "Deva"
+        ]
+      },
+      "mai-alt-secondary": {
+        "@territories": [
+          "IN",
+          "NP"
+        ]
+      },
+      "mak": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "mak-alt-secondary": {
+        "@scripts": [
+          "Bugi"
+        ],
+        "@territories": [
+          "ID"
+        ]
+      },
+      "man": {
+        "@scripts": [
+          "Latn",
+          "Nkoo"
+        ]
+      },
+      "man-alt-secondary": {
+        "@territories": [
+          "GM",
+          "GN"
+        ]
+      },
+      "mas": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "mdf": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "mdf-alt-secondary": {
+        "@territories": [
+          "RU"
+        ]
+      },
+      "mdh": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "mdh-alt-secondary": {
+        "@territories": [
+          "PH"
+        ]
+      },
+      "mdr": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "mdr-alt-secondary": {
+        "@scripts": [
+          "Bugi"
+        ]
+      },
+      "men": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "men-alt-secondary": {
+        "@territories": [
+          "SL"
+        ]
+      },
+      "mer": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "mer-alt-secondary": {
+        "@territories": [
+          "KE"
+        ]
+      },
+      "mfa-alt-secondary": {
+        "@territories": [
+          "TH"
+        ]
+      },
+      "mfe": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "mfe-alt-secondary": {
+        "@territories": [
+          "MU"
+        ]
+      },
+      "mg": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "MG"
+        ]
+      },
+      "mgh": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "mh": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "MH"
+        ]
+      },
+      "mi": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "NZ"
+        ]
+      },
+      "mic": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "min": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "min-alt-secondary": {
+        "@territories": [
+          "ID"
+        ]
+      },
+      "mk": {
+        "@scripts": [
+          "Cyrl"
+        ],
+        "@territories": [
+          "MK"
+        ]
+      },
+      "ml": {
+        "@scripts": [
+          "Mlym"
+        ]
+      },
+      "ml-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "mn": {
+        "@scripts": [
+          "Cyrl",
+          "Mong"
+        ],
+        "@territories": [
+          "MN"
+        ]
+      },
+      "mn-alt-secondary": {
+        "@scripts": [
+          "Phag"
+        ],
+        "@territories": [
+          "CN"
+        ]
+      },
+      "mnc-alt-secondary": {
+        "@scripts": [
+          "Mong"
+        ]
+      },
+      "mni": {
+        "@scripts": [
+          "Beng"
+        ]
+      },
+      "mni-alt-secondary": {
+        "@scripts": [
+          "Mtei"
+        ],
+        "@territories": [
+          "IN"
+        ]
+      },
+      "mns": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "mnw": {
+        "@scripts": [
+          "Mymr"
+        ]
+      },
+      "moh": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "mos": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "mos-alt-secondary": {
+        "@territories": [
+          "BF"
+        ]
+      },
+      "mr": {
+        "@scripts": [
+          "Deva"
+        ]
+      },
+      "mr-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "ms": {
+        "@scripts": [
+          "Arab",
+          "Latn"
+        ],
+        "@territories": [
+          "BN",
+          "MY",
+          "SG"
+        ]
+      },
+      "ms-alt-secondary": {
+        "@territories": [
+          "CC",
+          "ID"
+        ]
+      },
+      "mt": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "MT"
+        ]
+      },
+      "mtr-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "mua": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "mus": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "mwl": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "mwr": {
+        "@scripts": [
+          "Deva"
+        ]
+      },
+      "mwr-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "my": {
+        "@scripts": [
+          "Mymr"
+        ],
+        "@territories": [
+          "MM"
+        ]
+      },
+      "myv": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "myv-alt-secondary": {
+        "@territories": [
+          "RU"
+        ]
+      },
+      "myx-alt-secondary": {
+        "@territories": [
+          "UG"
+        ]
+      },
+      "myz-alt-secondary": {
+        "@scripts": [
+          "Mand"
+        ]
+      },
+      "na": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "NR"
+        ]
+      },
+      "nap": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "nap-alt-secondary": {
+        "@territories": [
+          "IT"
+        ]
+      },
+      "naq": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "nb": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "NO",
+          "SJ"
+        ]
+      },
+      "nd": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "ZW"
+        ]
+      },
+      "ndc-alt-secondary": {
+        "@territories": [
+          "MZ"
+        ]
+      },
+      "nds": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "nds-alt-secondary": {
+        "@territories": [
+          "DE"
+        ]
+      },
+      "ne": {
+        "@scripts": [
+          "Deva"
+        ],
+        "@territories": [
+          "NP"
+        ]
+      },
+      "ne-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "new": {
+        "@scripts": [
+          "Deva"
+        ]
+      },
+      "new-alt-secondary": {
+        "@territories": [
+          "NP"
+        ]
+      },
+      "ng": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ng-alt-secondary": {
+        "@territories": [
+          "NA"
+        ]
+      },
+      "ngl-alt-secondary": {
+        "@territories": [
+          "MZ"
+        ]
+      },
+      "nia": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "niu": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "NU"
+        ]
+      },
+      "nl": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "AW",
+          "BE",
+          "BQ",
+          "CW",
+          "NL",
+          "SR",
+          "SX"
+        ]
+      },
+      "nmg": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "nn": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "NO"
+        ]
+      },
+      "nod": {
+        "@scripts": [
+          "Lana"
+        ]
+      },
+      "nod-alt-secondary": {
+        "@territories": [
+          "TH"
+        ]
+      },
+      "noe-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "nog": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "nqo": {
+        "@scripts": [
+          "Nkoo"
+        ]
+      },
+      "nr": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "ZA"
+        ]
+      },
+      "nso": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "ZA"
+        ]
+      },
+      "nus": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "nv": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ny": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "MW"
+        ]
+      },
+      "ny-alt-secondary": {
+        "@territories": [
+          "ZM"
+        ]
+      },
+      "nym": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "nym-alt-secondary": {
+        "@territories": [
+          "TZ"
+        ]
+      },
+      "nyn": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "nyn-alt-secondary": {
+        "@territories": [
+          "UG"
+        ]
+      },
+      "nyo": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "nzi": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "oc": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "oc-alt-secondary": {
+        "@territories": [
+          "FR"
+        ]
+      },
+      "oj": {
+        "@scripts": [
+          "Cans"
+        ]
+      },
+      "oj-alt-secondary": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "om": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "om-alt-secondary": {
+        "@scripts": [
+          "Ethi"
+        ],
+        "@territories": [
+          "ET"
+        ]
+      },
+      "or": {
+        "@scripts": [
+          "Orya"
+        ]
+      },
+      "or-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "os": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "os-alt-secondary": {
+        "@territories": [
+          "GE"
+        ]
+      },
+      "osa": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "osc-alt-secondary": {
+        "@scripts": [
+          "Ital",
+          "Latn"
+        ]
+      },
+      "otk-alt-secondary": {
+        "@scripts": [
+          "Orkh"
+        ]
+      },
+      "pa": {
+        "@scripts": [
+          "Arab",
+          "Guru"
+        ]
+      },
+      "pa-alt-secondary": {
+        "@territories": [
+          "IN",
+          "PK"
+        ]
+      },
+      "pag": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "pag-alt-secondary": {
+        "@territories": [
+          "PH"
+        ]
+      },
+      "pal-alt-secondary": {
+        "@scripts": [
+          "Phli"
+        ]
+      },
+      "pam": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "pam-alt-secondary": {
+        "@territories": [
+          "PH"
+        ]
+      },
+      "pap": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "BQ",
+          "CW"
+        ]
+      },
+      "pap-alt-secondary": {
+        "@territories": [
+          "AW"
+        ]
+      },
+      "pau": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "PW"
+        ]
+      },
+      "peo-alt-secondary": {
+        "@scripts": [
+          "Xpeo"
+        ]
+      },
+      "phn-alt-secondary": {
+        "@scripts": [
+          "Phnx"
+        ]
+      },
+      "pi-alt-secondary": {
+        "@scripts": [
+          "Deva",
+          "Sinh",
+          "Thai"
+        ]
+      },
+      "pl": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "PL"
+        ]
+      },
+      "pl-alt-secondary": {
+        "@territories": [
+          "UA"
+        ]
+      },
+      "pon": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "FM"
+        ]
+      },
+      "pra-alt-secondary": {
+        "@scripts": [
+          "Brah",
+          "Khar"
+        ]
+      },
+      "prd": {
+        "@scripts": [
+          "Arab"
+        ]
+      },
+      "prg-alt-secondary": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "prs": {
+        "@scripts": [
+          "Arab"
+        ]
+      },
+      "ps": {
+        "@scripts": [
+          "Arab"
+        ],
+        "@territories": [
+          "AF"
+        ]
+      },
+      "ps-alt-secondary": {
+        "@territories": [
+          "PK"
+        ]
+      },
+      "pt": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "AO",
+          "BR",
+          "CV",
+          "GW",
+          "MO",
+          "MZ",
+          "PT",
+          "ST",
+          "TL"
+        ]
+      },
+      "qu": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "BO",
+          "PE"
+        ]
+      },
+      "raj": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "raj-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "rap": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "rar": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "rcf": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "rcf-alt-secondary": {
+        "@territories": [
+          "RE"
+        ]
+      },
+      "rej": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "rej-alt-secondary": {
+        "@scripts": [
+          "Rjng"
+        ],
+        "@territories": [
+          "ID"
+        ]
+      },
+      "rif-alt-secondary": {
+        "@territories": [
+          "MA"
+        ]
+      },
+      "rjs": {
+        "@scripts": [
+          "Deva"
+        ]
+      },
+      "rkt": {
+        "@scripts": [
+          "Beng"
+        ]
+      },
+      "rkt-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "rm": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "rm-alt-secondary": {
+        "@territories": [
+          "CH"
+        ]
+      },
+      "rmt-alt-secondary": {
+        "@territories": [
+          "IR"
+        ]
+      },
+      "rn": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "BI"
+        ]
+      },
+      "ro": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "MD",
+          "RO"
+        ]
+      },
+      "ro-alt-secondary": {
+        "@scripts": [
+          "Cyrl"
+        ],
+        "@territories": [
+          "RS"
+        ]
+      },
+      "rof": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "rom": {
+        "@scripts": [
+          "Cyrl",
+          "Latn"
+        ]
+      },
+      "ru": {
+        "@scripts": [
+          "Cyrl"
+        ],
+        "@territories": [
+          "BY",
+          "KG",
+          "KZ",
+          "RU",
+          "UA"
+        ]
+      },
+      "ru-alt-secondary": {
+        "@territories": [
+          "EE",
+          "LV",
+          "SJ",
+          "UZ"
+        ]
+      },
+      "rup": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "rw": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "RW"
+        ]
+      },
+      "rwk": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "sa-alt-secondary": {
+        "@scripts": [
+          "Deva",
+          "Sinh"
+        ],
+        "@territories": [
+          "IN"
+        ]
+      },
+      "sad": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "saf": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "sah": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "sah-alt-secondary": {
+        "@territories": [
+          "RU"
+        ]
+      },
+      "sam-alt-secondary": {
+        "@scripts": [
+          "Hebr",
+          "Samr"
+        ]
+      },
+      "saq": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "sas": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "sas-alt-secondary": {
+        "@territories": [
+          "ID"
+        ]
+      },
+      "sat": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "sat-alt-secondary": {
+        "@scripts": [
+          "Beng",
+          "Deva",
+          "Olck",
+          "Orya"
+        ],
+        "@territories": [
+          "IN"
+        ]
+      },
+      "saz": {
+        "@scripts": [
+          "Saur"
+        ]
+      },
+      "sbp": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "sc": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "sck-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "scn": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "scn-alt-secondary": {
+        "@territories": [
+          "IT"
+        ]
+      },
+      "sco": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "sco-alt-secondary": {
+        "@territories": [
+          "GB"
+        ]
+      },
+      "sd": {
+        "@scripts": [
+          "Arab",
+          "Deva"
+        ]
+      },
+      "sd-alt-secondary": {
+        "@territories": [
+          "IN",
+          "PK"
+        ]
+      },
+      "sdh": {
+        "@scripts": [
+          "Arab"
+        ]
+      },
+      "sdh-alt-secondary": {
+        "@territories": [
+          "IR"
+        ]
+      },
+      "se": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "se-alt-secondary": {
+        "@scripts": [
+          "Cyrl"
+        ],
+        "@territories": [
+          "NO"
+        ]
+      },
+      "see": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "seh": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "seh-alt-secondary": {
+        "@territories": [
+          "MZ"
+        ]
+      },
+      "sel-alt-secondary": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "ses": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "sg": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "CF"
+        ]
+      },
+      "sga-alt-secondary": {
+        "@scripts": [
+          "Latn",
+          "Ogam"
+        ]
+      },
+      "shi": {
+        "@scripts": [
+          "Arab",
+          "Latn",
+          "Tfng"
+        ]
+      },
+      "shi-alt-secondary": {
+        "@territories": [
+          "MA"
+        ]
+      },
+      "shn": {
+        "@scripts": [
+          "Mymr"
+        ]
+      },
+      "shn-alt-secondary": {
+        "@territories": [
+          "MM"
+        ]
+      },
+      "si": {
+        "@scripts": [
+          "Sinh"
+        ],
+        "@territories": [
+          "LK"
+        ]
+      },
+      "sid": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "sid-alt-secondary": {
+        "@territories": [
+          "ET"
+        ]
+      },
+      "sk": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "SK"
+        ]
+      },
+      "sk-alt-secondary": {
+        "@territories": [
+          "RS"
+        ]
+      },
+      "skr-alt-secondary": {
+        "@territories": [
+          "PK"
+        ]
+      },
+      "sl": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "SI"
+        ]
+      },
+      "sl-alt-secondary": {
+        "@territories": [
+          "AT"
+        ]
+      },
+      "sm": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "AS",
+          "WS"
+        ]
+      },
+      "sma": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "smi-alt-secondary": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "smj": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "smn": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "sms": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "sn": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "ZW"
+        ]
+      },
+      "snk": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "so": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "SO"
+        ]
+      },
+      "so-alt-secondary": {
+        "@scripts": [
+          "Arab",
+          "Osma"
+        ],
+        "@territories": [
+          "DJ",
+          "ET"
+        ]
+      },
+      "son-alt-secondary": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "sou-alt-secondary": {
+        "@territories": [
+          "TH"
+        ]
+      },
+      "sq": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "AL",
+          "MK",
+          "XK"
+        ]
+      },
+      "sq-alt-secondary": {
+        "@territories": [
+          "RS"
+        ]
+      },
+      "sr": {
+        "@scripts": [
+          "Cyrl",
+          "Latn"
+        ],
+        "@territories": [
+          "BA",
+          "ME",
+          "RS",
+          "XK"
+        ]
+      },
+      "srn": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "srn-alt-secondary": {
+        "@territories": [
+          "SR"
+        ]
+      },
+      "srr": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "srr-alt-secondary": {
+        "@territories": [
+          "SN"
+        ]
+      },
+      "ss": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "SZ",
+          "ZA"
+        ]
+      },
+      "ssy": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "st": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "LS",
+          "ZA"
+        ]
+      },
+      "su": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "ID"
+        ]
+      },
+      "su-alt-secondary": {
+        "@scripts": [
+          "Sund"
+        ]
+      },
+      "suk": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "suk-alt-secondary": {
+        "@territories": [
+          "TZ"
+        ]
+      },
+      "sus": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "sus-alt-secondary": {
+        "@scripts": [
+          "Arab"
+        ],
+        "@territories": [
+          "GN"
+        ]
+      },
+      "sv": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "AX",
+          "FI",
+          "SE"
+        ]
+      },
+      "sw": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "KE",
+          "TZ",
+          "UG"
+        ]
+      },
+      "sw-alt-secondary": {
+        "@territories": [
+          "CD"
+        ]
+      },
+      "swb": {
+        "@scripts": [
+          "Arab"
+        ]
+      },
+      "swb-alt-secondary": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "YT"
+        ]
+      },
+      "swc": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "swv-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "syl": {
+        "@scripts": [
+          "Beng"
+        ]
+      },
+      "syl-alt-secondary": {
+        "@scripts": [
+          "Sylo"
+        ],
+        "@territories": [
+          "BD"
+        ]
+      },
+      "syr-alt-secondary": {
+        "@scripts": [
+          "Syrc"
+        ]
+      },
+      "ta": {
+        "@scripts": [
+          "Taml"
+        ],
+        "@territories": [
+          "LK",
+          "SG"
+        ]
+      },
+      "ta-alt-secondary": {
+        "@territories": [
+          "IN",
+          "MY"
+        ]
+      },
+      "tab": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "tbw": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "tbw-alt-secondary": {
+        "@scripts": [
+          "Tagb"
+        ]
+      },
+      "tcy": {
+        "@scripts": [
+          "Knda"
+        ]
+      },
+      "tcy-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "tdd": {
+        "@scripts": [
+          "Tale"
+        ]
+      },
+      "te": {
+        "@scripts": [
+          "Telu"
+        ]
+      },
+      "te-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "tem": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "tem-alt-secondary": {
+        "@territories": [
+          "SL"
+        ]
+      },
+      "teo": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "teo-alt-secondary": {
+        "@territories": [
+          "UG"
+        ]
+      },
+      "ter": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "tet": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "TL"
+        ]
+      },
+      "tg": {
+        "@scripts": [
+          "Arab",
+          "Cyrl",
+          "Latn"
+        ],
+        "@territories": [
+          "TJ"
+        ]
+      },
+      "th": {
+        "@scripts": [
+          "Thai"
+        ],
+        "@territories": [
+          "TH"
+        ]
+      },
+      "ti": {
+        "@scripts": [
+          "Ethi"
+        ],
+        "@territories": [
+          "ER"
+        ]
+      },
+      "ti-alt-secondary": {
+        "@territories": [
+          "ET"
+        ]
+      },
+      "tig": {
+        "@scripts": [
+          "Ethi"
+        ]
+      },
+      "tig-alt-secondary": {
+        "@territories": [
+          "ER"
+        ]
+      },
+      "tiv": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "tiv-alt-secondary": {
+        "@territories": [
+          "NG"
+        ]
+      },
+      "tk": {
+        "@scripts": [
+          "Arab",
+          "Cyrl",
+          "Latn"
+        ],
+        "@territories": [
+          "TM"
+        ]
+      },
+      "tk-alt-secondary": {
+        "@territories": [
+          "IR"
+        ]
+      },
+      "tkl": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "TK"
+        ]
+      },
+      "tli": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "tmh": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "tmh-alt-secondary": {
+        "@territories": [
+          "NE"
+        ]
+      },
+      "tn": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "BW",
+          "ZA"
+        ]
+      },
+      "to": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "TO"
+        ]
+      },
+      "tog": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "tpi": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "PG"
+        ]
+      },
+      "tr": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "CY",
+          "TR"
+        ]
+      },
+      "tr-alt-secondary": {
+        "@scripts": [
+          "Arab"
+        ],
+        "@territories": [
+          "DE",
+          "MK"
+        ]
+      },
+      "tru": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "tru-alt-secondary": {
+        "@scripts": [
+          "Syrc"
+        ]
+      },
+      "trv": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ts": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "ZA"
+        ]
+      },
+      "ts-alt-secondary": {
+        "@territories": [
+          "MZ"
+        ]
+      },
+      "tsg": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "tsg-alt-secondary": {
+        "@territories": [
+          "PH"
+        ]
+      },
+      "tsi": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "tt": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "tt-alt-secondary": {
+        "@territories": [
+          "RU"
+        ]
+      },
+      "tts": {
+        "@scripts": [
+          "Thai"
+        ]
+      },
+      "tts-alt-secondary": {
+        "@territories": [
+          "TH"
+        ]
+      },
+      "tum": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "tum-alt-secondary": {
+        "@territories": [
+          "MW"
+        ]
+      },
+      "tut-alt-secondary": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "tvl": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "TV"
+        ]
+      },
+      "twq": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "ty": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "PF"
+        ]
+      },
+      "tyv": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "tyv-alt-secondary": {
+        "@territories": [
+          "RU"
+        ]
+      },
+      "tzm": {
+        "@scripts": [
+          "Latn",
+          "Tfng"
+        ],
+        "@territories": [
+          "MA"
+        ]
+      },
+      "ude": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "udm": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "udm-alt-secondary": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "RU"
+        ]
+      },
+      "ug": {
+        "@scripts": [
+          "Arab",
+          "Cyrl"
+        ]
+      },
+      "ug-alt-secondary": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "CN"
+        ]
+      },
+      "uga-alt-secondary": {
+        "@scripts": [
+          "Ugar"
+        ]
+      },
+      "uk": {
+        "@scripts": [
+          "Cyrl"
+        ],
+        "@territories": [
+          "UA"
+        ]
+      },
+      "uli": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "FM"
+        ]
+      },
+      "umb": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "umb-alt-secondary": {
+        "@territories": [
+          "AO"
+        ]
+      },
+      "und-alt-secondary": {
+        "@territories": [
+          "AQ",
+          "BV",
+          "GS",
+          "HM"
+        ]
+      },
+      "unr": {
+        "@scripts": [
+          "Beng",
+          "Deva"
+        ]
+      },
+      "unr-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "unx": {
+        "@scripts": [
+          "Beng",
+          "Deva"
+        ]
+      },
+      "ur": {
+        "@scripts": [
+          "Arab"
+        ],
+        "@territories": [
+          "PK"
+        ]
+      },
+      "ur-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "uz": {
+        "@scripts": [
+          "Arab",
+          "Cyrl",
+          "Latn"
+        ],
+        "@territories": [
+          "UZ"
+        ]
+      },
+      "uz-alt-secondary": {
+        "@territories": [
+          "AF"
+        ]
+      },
+      "vai": {
+        "@scripts": [
+          "Latn",
+          "Vaii"
+        ]
+      },
+      "ve": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "ZA"
+        ]
+      },
+      "vi": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "VN"
+        ]
+      },
+      "vi-alt-secondary": {
+        "@scripts": [
+          "Hani"
+        ],
+        "@territories": [
+          "US"
+        ]
+      },
+      "vmw-alt-secondary": {
+        "@territories": [
+          "MZ"
+        ]
+      },
+      "vo-alt-secondary": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "vot-alt-secondary": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "vun": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "wa": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "wae": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "wak-alt-secondary": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "wal": {
+        "@scripts": [
+          "Ethi"
+        ]
+      },
+      "wal-alt-secondary": {
+        "@territories": [
+          "ET"
+        ]
+      },
+      "war": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "war-alt-secondary": {
+        "@territories": [
+          "PH"
+        ]
+      },
+      "was": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "wbq-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "wbr-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "wls-alt-secondary": {
+        "@territories": [
+          "WF"
+        ]
+      },
+      "wo": {
+        "@scripts": [
+          "Arab",
+          "Latn"
+        ],
+        "@territories": [
+          "SN"
+        ]
+      },
+      "wtm-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "xal": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "xcr-alt-secondary": {
+        "@scripts": [
+          "Cari"
+        ]
+      },
+      "xh": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "ZA"
+        ]
+      },
+      "xnr-alt-secondary": {
+        "@territories": [
+          "IN"
+        ]
+      },
+      "xog": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "xog-alt-secondary": {
+        "@territories": [
+          "UG"
+        ]
+      },
+      "xpr-alt-secondary": {
+        "@scripts": [
+          "Prti"
+        ]
+      },
+      "xsa-alt-secondary": {
+        "@scripts": [
+          "Sarb"
+        ]
+      },
+      "xsr": {
+        "@scripts": [
+          "Deva"
+        ]
+      },
+      "xum-alt-secondary": {
+        "@scripts": [
+          "Ital",
+          "Latn"
+        ]
+      },
+      "yao": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "yap": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "FM"
+        ]
+      },
+      "yav": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "yi": {
+        "@scripts": [
+          "Hebr"
+        ]
+      },
+      "yo": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "NG"
+        ]
+      },
+      "yrk": {
+        "@scripts": [
+          "Cyrl"
+        ]
+      },
+      "yue": {
+        "@scripts": [
+          "Hans"
+        ]
+      },
+      "za": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "za-alt-secondary": {
+        "@scripts": [
+          "Hans"
+        ],
+        "@territories": [
+          "CN"
+        ]
+      },
+      "zap": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "zdj": {
+        "@territories": [
+          "KM"
+        ]
+      },
+      "zen-alt-secondary": {
+        "@scripts": [
+          "Tfng"
+        ]
+      },
+      "zh": {
+        "@scripts": [
+          "Hans",
+          "Hant"
+        ],
+        "@territories": [
+          "CN",
+          "HK",
+          "MO",
+          "SG",
+          "TW"
+        ]
+      },
+      "zh-alt-secondary": {
+        "@scripts": [
+          "Bopo",
+          "Phag"
+        ],
+        "@territories": [
+          "ID",
+          "MY",
+          "TH",
+          "US"
+        ]
+      },
+      "zu": {
+        "@scripts": [
+          "Latn"
+        ],
+        "@territories": [
+          "ZA"
+        ]
+      },
+      "zun": {
+        "@scripts": [
+          "Latn"
+        ]
+      },
+      "zza": {
+        "@scripts": [
+          "Arab"
+        ]
+      },
+      "zza-alt-secondary": {
+        "@territories": [
+          "TR"
+        ]
+      }
+    }
+  }
+}

@@ -7,7 +7,7 @@ For terms of use, see http://www.unicode.org/copyright.html
 -->
 <supplementalData>
     <version number="$Revision: 8269 $"/>
-    <generation date="$Date: 2013-03-01 11:48:01 -0800 (Fri, 01 Mar 2013) $"/>
+    <generation date="$Date: 2013-03-01 13:48:01 -0600 (Fri, 01 Mar 2013) $"/>
     <likelySubtags>
 		<likelySubtag from="aa" to="aa_Latn_ET"/>
 		<!--{ Afar; ?; ? } => { Afar; Latin; Ethiopia }-->

@@ -1,0 +1,67 @@
+{
+  "main": {
+    "hu": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8671 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"
+        },
+        "language": "hu"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "éra"
+          },
+          "year": {
+            "displayName": "év",
+            "-1": "Előző év",
+            "0": "Ez az év",
+            "1": "Következő év"
+          },
+          "month": {
+            "displayName": "hónap",
+            "-1": "Előző hónap",
+            "0": "Ez a hónap",
+            "1": "Következő hónap"
+          },
+          "week": {
+            "displayName": "hét",
+            "-1": "Előző hét",
+            "0": "Ez a hét",
+            "1": "Következő hét"
+          },
+          "day": {
+            "displayName": "nap",
+            "-2": "tegnapelőtt",
+            "-1": "tegnap",
+            "0": "ma",
+            "1": "holnap",
+            "2": "holnapután"
+          },
+          "weekday": {
+            "displayName": "hét napja"
+          },
+          "dayperiod": {
+            "displayName": "napszak"
+          },
+          "hour": {
+            "displayName": "óra"
+          },
+          "minute": {
+            "displayName": "perc"
+          },
+          "second": {
+            "displayName": "másodperc"
+          },
+          "zone": {
+            "displayName": "időzóna"
+          }
+        }
+      }
+    }
+  }
+}

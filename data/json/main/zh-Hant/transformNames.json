@@ -1,0 +1,31 @@
+{
+  "main": {
+    "zh-Hant": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8671 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"
+        },
+        "language": "root",
+        "script": "Hant"
+      },
+      "localeDisplayNames": {
+        "transformNames": {
+          "BGN": "美國地名委員會",
+          "Numeric": "數字",
+          "Tone": "聲調",
+          "UNGEGN": "聯合國地名專家組",
+          "x-Accents": "變音符號",
+          "x-Fullwidth": "全形",
+          "x-Halfwidth": "半形",
+          "x-Jamo": "諺文字母",
+          "x-Pinyin": "拼音",
+          "x-Publishing": "出版"
+        }
+      }
+    }
+  }
+}

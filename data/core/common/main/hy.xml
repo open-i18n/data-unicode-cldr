@@ -6,8 +6,8 @@ For terms of use, see http://www.unicode.org/copyright.html
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 8251 $"/>
-		<generation date="$Date: 2013-02-25 16:18:23 -0800 (Mon, 25 Feb 2013) $"/>
+		<version number="$Revision: 8671 $"/>
+		<generation date="$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"/>
 		<language type="hy"/>
 	</identity>
 	<localeDisplayNames>
@@ -494,6 +494,7 @@ For terms of use, see http://www.unicode.org/copyright.html
 			<territory type="VU">Վանուատու</territory>
 			<territory type="WF">Ուոլիս և Ֆուտունա</territory>
 			<territory type="WS">Սամոա</territory>
+			<territory type="XK">Կոսովո</territory>
 			<territory type="YE">Եմեն</territory>
 			<territory type="YT">Մայոտ</territory>
 			<territory type="ZA">Հարավաֆրիկյան Հանրապետություն</territory>

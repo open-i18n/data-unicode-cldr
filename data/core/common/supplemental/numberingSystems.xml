@@ -6,8 +6,8 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 For terms of use, see http://www.unicode.org/copyright.html
 -->
 <supplementalData>
-    <version number="$Revision: 8242 $"/>
-    <generation date="$Date: 2013-02-24 19:06:02 -0800 (Sun, 24 Feb 2013) $"/>
+    <version number="$Revision: 8663 $"/>
+    <generation date="$Date: 2013-05-02 15:03:19 -0500 (Thu, 02 May 2013) $"/>
     <numberingSystems>
         <numberingSystem id="arab" type="numeric" digits="٠١٢٣٤٥٦٧٨٩"/>
         <numberingSystem id="arabext" type="numeric" digits="۰۱۲۳۴۵۶۷۸۹"/>
@@ -49,7 +49,7 @@ For terms of use, see http://www.unicode.org/copyright.html
         <numberingSystem id="mtei" type="numeric" digits="꯰꯱꯲꯳꯴꯵꯶꯷꯸꯹"/>
         <numberingSystem id="mymr" type="numeric" digits="၀၁၂၃၄၅၆၇၈၉"/>
         <numberingSystem id="mymrshan" type="numeric" digits="႐႑႒႓႔႕႖႗႘႙"/>
-        <numberingSystem id="nkoo" type="numeric" digits="߉߈߇߆߅߄߃߂߁߀"/>
+        <numberingSystem id="nkoo" type="numeric" digits="߀߁߂߃߄߅߆߇߈߉"/>
         <numberingSystem id="olck" type="numeric" digits="᱐᱑᱒᱓᱔᱕᱖᱗᱘᱙"/>
         <numberingSystem id="orya" type="numeric" digits="୦୧୨୩୪୫୬୭୮୯"/>
         <numberingSystem id="osma" type="numeric" digits="𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩" draft="provisional"/>

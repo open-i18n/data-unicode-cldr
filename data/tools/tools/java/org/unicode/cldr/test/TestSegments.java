@@ -65,7 +65,7 @@ public class TestSegments {
         Log.println("<ldml>");
         Log.println("\t<identity>");
         Log.println("\t\t<version number=\"$Revision: 7967 $\"/>");
-        Log.println("\t\t<generation date=\"$Date: 2012-12-11 20:05:56 -0800 (Tue, 11 Dec 2012) $\"/>");
+        Log.println("\t\t<generation date=\"$Date: 2012-12-11 22:05:56 -0600 (Tue, 11 Dec 2012) $\"/>");
         Log.println("\t\t<language type=\"root\"/>");
         Log.println("\t</identity>");
         Log.println("\t<segmentations>");

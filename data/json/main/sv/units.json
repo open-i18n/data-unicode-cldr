@@ -1,0 +1,116 @@
+{
+  "main": {
+    "sv": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8671 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"
+        },
+        "language": "root"
+      },
+      "units": {
+        "day": {
+          "unitPattern-count-one": "{0} dygn",
+          "unitPattern-count-one-alt-short": "{0} d",
+          "unitPattern-count-other": "{0} dygn",
+          "unitPattern-count-other-alt-short": "{0} d"
+        },
+        "day-future": {
+          "unitPattern-count-one": "om {0} dagar",
+          "unitPattern-count-other": "om {0} dag"
+        },
+        "day-past": {
+          "unitPattern-count-one": "för {0} dagar sedan",
+          "unitPattern-count-other": "för {0} dag sedan"
+        },
+        "hour": {
+          "unitPattern-count-one": "{0} timme",
+          "unitPattern-count-one-alt-short": "{0} tim",
+          "unitPattern-count-other": "{0} timmar",
+          "unitPattern-count-other-alt-short": "{0} tim"
+        },
+        "hour-future": {
+          "unitPattern-count-one": "om {0} timme",
+          "unitPattern-count-other": "om {0} timmar"
+        },
+        "hour-past": {
+          "unitPattern-count-one": "för {0} timme sedan",
+          "unitPattern-count-other": "för {0} timmar sedan"
+        },
+        "minute": {
+          "unitPattern-count-one": "{0} minut",
+          "unitPattern-count-one-alt-short": "{0} min",
+          "unitPattern-count-other": "{0} minuter",
+          "unitPattern-count-other-alt-short": "{0} min"
+        },
+        "minute-future": {
+          "unitPattern-count-one": "om {0} minut",
+          "unitPattern-count-other": "om {0} minuter"
+        },
+        "minute-past": {
+          "unitPattern-count-one": "för {0} minut sedan",
+          "unitPattern-count-other": "för {0} minuter sedan"
+        },
+        "month": {
+          "unitPattern-count-one": "{0} månad",
+          "unitPattern-count-one-alt-short": "{0} mån",
+          "unitPattern-count-other": "{0} månader",
+          "unitPattern-count-other-alt-short": "{0} mån"
+        },
+        "month-future": {
+          "unitPattern-count-one": "om {0} månad",
+          "unitPattern-count-other": "om {0} månader"
+        },
+        "month-past": {
+          "unitPattern-count-one": "för {0} månad sedan",
+          "unitPattern-count-other": "för {0} månader sedan"
+        },
+        "second": {
+          "unitPattern-count-one": "{0} sekund",
+          "unitPattern-count-one-alt-short": "{0} s",
+          "unitPattern-count-other": "{0} sekunder",
+          "unitPattern-count-other-alt-short": "{0} s"
+        },
+        "second-future": {
+          "unitPattern-count-one": "om {0} sekund",
+          "unitPattern-count-other": "om {0} sekunder"
+        },
+        "second-past": {
+          "unitPattern-count-one": "för {0} sekund sedan",
+          "unitPattern-count-other": "för {0} sekunder sedan"
+        },
+        "week": {
+          "unitPattern-count-one": "{0} vecka",
+          "unitPattern-count-one-alt-short": "{0} v",
+          "unitPattern-count-other": "{0} veckor",
+          "unitPattern-count-other-alt-short": "{0} v"
+        },
+        "week-future": {
+          "unitPattern-count-one": "om {0} vecka",
+          "unitPattern-count-other": "om {0} veckor"
+        },
+        "week-past": {
+          "unitPattern-count-one": "för {0} vecka sedan",
+          "unitPattern-count-other": "för {0} veckor sedan"
+        },
+        "year": {
+          "unitPattern-count-one": "{0} år",
+          "unitPattern-count-one-alt-short": "{0} år",
+          "unitPattern-count-other": "{0} år",
+          "unitPattern-count-other-alt-short": "{0} år"
+        },
+        "year-future": {
+          "unitPattern-count-one": "om {0} år",
+          "unitPattern-count-other": "om {0} år"
+        },
+        "year-past": {
+          "unitPattern-count-one": "för {0} år sedan",
+          "unitPattern-count-other": "för {0} år sedan"
+        }
+      }
+    }
+  }
+}

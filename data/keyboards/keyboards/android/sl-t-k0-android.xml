@@ -2,7 +2,7 @@
 <!DOCTYPE keyboard SYSTEM "../dtd/ldmlKeyboard.dtd">
 <keyboard locale='sl-t-k0-android'>
 	<version platform='4.1' number='$Revision: 7917 $'/>
-	<generation date='$Date: 2012-11-14 18:06:52 -0800 (Wed, 14 Nov 2012) $'/>
+	<generation date='$Date: 2012-11-14 20:06:52 -0600 (Wed, 14 Nov 2012) $'/>
 	<names>
 		<name value='sl'/>
 	</names>

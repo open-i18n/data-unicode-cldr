@@ -1,0 +1,24 @@
+{
+  "main": {
+    "ru": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8663 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-02 15:03:19 -0500 (Thu, 02 May 2013) $"
+        },
+        "language": "root"
+      },
+      "listPatterns": {
+        "listPattern": {
+          "2": "{0} и {1}",
+          "end": "{0} и {1}",
+          "middle": "{0}, {1}",
+          "start": "{0}, {1}"
+        }
+      }
+    }
+  }
+}

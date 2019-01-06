@@ -1,0 +1,116 @@
+{
+  "main": {
+    "el": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8671 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"
+        },
+        "language": "el"
+      },
+      "units": {
+        "day": {
+          "unitPattern-count-one": "{0} ημέρα",
+          "unitPattern-count-one-alt-short": "{0} ημέρα",
+          "unitPattern-count-other": "{0} ημέρες",
+          "unitPattern-count-other-alt-short": "{0} ημέρες"
+        },
+        "day-future": {
+          "unitPattern-count-one": "Σε {0} ημέρα",
+          "unitPattern-count-other": "Σε {0} ημέρες"
+        },
+        "day-past": {
+          "unitPattern-count-one": "Πριν από {0} ημέρα",
+          "unitPattern-count-other": "Πριν από {0} ημέρες"
+        },
+        "hour": {
+          "unitPattern-count-one": "{0} ώρα",
+          "unitPattern-count-one-alt-short": "{0} ώρα",
+          "unitPattern-count-other": "{0} ώρες",
+          "unitPattern-count-other-alt-short": "{0} ώρες"
+        },
+        "hour-future": {
+          "unitPattern-count-one": "Σε {0} ώρα",
+          "unitPattern-count-other": "Σε {0} ώρες"
+        },
+        "hour-past": {
+          "unitPattern-count-one": "Πριν από {0} ώρα",
+          "unitPattern-count-other": "Πριν από {0} ώρες"
+        },
+        "minute": {
+          "unitPattern-count-one": "{0} λεπτό",
+          "unitPattern-count-one-alt-short": "{0} λεπτό",
+          "unitPattern-count-other": "{0} λεπτά",
+          "unitPattern-count-other-alt-short": "{0} λεπτά"
+        },
+        "minute-future": {
+          "unitPattern-count-one": "Σε {0} λεπτό",
+          "unitPattern-count-other": "Σε {0} λεπτά"
+        },
+        "minute-past": {
+          "unitPattern-count-one": "Πριν από {0} λεπτό",
+          "unitPattern-count-other": "Πριν από {0} λεπτά"
+        },
+        "month": {
+          "unitPattern-count-one": "{0} μήνας",
+          "unitPattern-count-one-alt-short": "{0} μήνας",
+          "unitPattern-count-other": "{0} μήνες",
+          "unitPattern-count-other-alt-short": "{0} μήνες"
+        },
+        "month-future": {
+          "unitPattern-count-one": "Σε {0} μήνα",
+          "unitPattern-count-other": "Σε {0} μήνες"
+        },
+        "month-past": {
+          "unitPattern-count-one": "Πριν από {0} μήνα",
+          "unitPattern-count-other": "Πριν από {0} μήνες"
+        },
+        "second": {
+          "unitPattern-count-one": "{0} δευτερόλεπτο",
+          "unitPattern-count-one-alt-short": "{0} δευτερόλεπτο",
+          "unitPattern-count-other": "{0} δευτερόλεπτα",
+          "unitPattern-count-other-alt-short": "{0} δευτερόλεπτα"
+        },
+        "second-future": {
+          "unitPattern-count-one": "Σε {0} δευτερόλεπτο",
+          "unitPattern-count-other": "Σε {0} δευτερόλεπτα"
+        },
+        "second-past": {
+          "unitPattern-count-one": "Πριν από {0} δευτερόλεπτο",
+          "unitPattern-count-other": "Πριν από {0} δευτερόλεπτα"
+        },
+        "week": {
+          "unitPattern-count-one": "{0} εβδομάδα",
+          "unitPattern-count-one-alt-short": "{0} εβδομάδα",
+          "unitPattern-count-other": "{0} εβδομάδες",
+          "unitPattern-count-other-alt-short": "{0} εβδομάδες"
+        },
+        "week-future": {
+          "unitPattern-count-one": "Σε {0} εβδομάδα",
+          "unitPattern-count-other": "Σε {0} εβδομάδες"
+        },
+        "week-past": {
+          "unitPattern-count-one": "Πριν από {0} εβδομάδα",
+          "unitPattern-count-other": "Πριν από {0} εβδομάδες"
+        },
+        "year": {
+          "unitPattern-count-one": "{0} έτος",
+          "unitPattern-count-one-alt-short": "{0} έτος",
+          "unitPattern-count-other": "{0} έτη",
+          "unitPattern-count-other-alt-short": "{0} έτη"
+        },
+        "year-future": {
+          "unitPattern-count-one": "Σε {0} έτος",
+          "unitPattern-count-other": "Σε {0} έτη"
+        },
+        "year-past": {
+          "unitPattern-count-one": "Πριν από {0} έτος",
+          "unitPattern-count-other": "Πριν από {0} έτη"
+        }
+      }
+    }
+  }
+}

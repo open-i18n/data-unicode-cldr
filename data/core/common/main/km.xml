@@ -6,8 +6,8 @@ For terms of use, see http://www.unicode.org/copyright.html
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 8245 $"/>
-		<generation date="$Date: 2013-02-24 20:19:26 -0800 (Sun, 24 Feb 2013) $"/>
+		<version number="$Revision: 8671 $"/>
+		<generation date="$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"/>
 		<language type="km"/>
 	</identity>
 	<localeDisplayNames>
@@ -503,6 +503,7 @@ For terms of use, see http://www.unicode.org/copyright.html
 			<territory type="VU">វ៉ាន់ណៅទូ</territory>
 			<territory type="WF">វ៉ាលីស និង​ហ្វូទូណា</territory>
 			<territory type="WS">សាមូអា</territory>
+			<territory type="XK">កូសូវ៉ូ</territory>
 			<territory type="YE">យេមែន</territory>
 			<territory type="YT">ម៉ាយុត</territory>
 			<territory type="ZA">អាព្រិក​ភាគ​ខាង​ត្បូង</territory>
@@ -3163,6 +3164,11 @@ For terms of use, see http://www.unicode.org/copyright.html
 			<metazone type="South_Georgia">
 				<long>
 					<standard>ម៉ោង​នៅ​កោះ​ហ្សកហ្ស៊ី</standard>
+				</long>
+			</metazone>
+			<metazone type="Suriname">
+				<long>
+					<standard>ម៉ោង​នៅ​សូរីណាម</standard>
 				</long>
 			</metazone>
 			<metazone type="Syowa">

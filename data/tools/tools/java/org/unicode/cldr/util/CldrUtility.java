@@ -1,6 +1,6 @@
 /*
  **********************************************************************
- * Copyright (c) 2002-2004, International Business Machines
+ * Copyright (c) 2002-2013, International Business Machines
  * Corporation and others.  All Rights Reserved.
  **********************************************************************
  * Author: Mark Davis
@@ -51,6 +51,7 @@ import com.ibm.icu.util.TimeZone;
 public class CldrUtility {
 
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
+    public static final String NO_INHERITANCE_MARKER = new String(new char [] {0x2205, 0x2205, 0x2205});
 
     /**
      * Very simple class, used to replace variables in a string. For example
@@ -164,7 +165,7 @@ public class CldrUtility {
     public static final String DEFAULT_SUPPLEMENTAL_DIRECTORY = getPath(COMMON_DIRECTORY, "supplemental/");
 
     public static final boolean BETA = false;
-    public static final String CHART_DISPLAY_VERSION = "23";
+    public static final String CHART_DISPLAY_VERSION = "23.1";
     public static final String CHART_DIRECTORY = getPath(AUX_DIRECTORY + "charts/", CHART_DISPLAY_VERSION);
     public static final String LOG_DIRECTORY = getPath(TMP_DIRECTORY, "logs/");
 
@@ -254,8 +255,8 @@ public class CldrUtility {
         private String[] CVS_TAGS = { "Revision", "Date" };
 
         private String stripTags(String line) {
-            // $Revision: 8338 $
-            // $Date: 2013-03-15 06:28:27 -0700 (Fri, 15 Mar 2013) $
+            // $Revision: 8670 $
+            // $Date: 2013-05-03 13:46:21 -0500 (Fri, 03 May 2013) $
             int pos = line.indexOf('$');
             if (pos < 0) return line;
             pos++;

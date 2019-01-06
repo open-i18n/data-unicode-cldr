@@ -1,0 +1,67 @@
+{
+  "main": {
+    "th": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8671 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"
+        },
+        "language": "root"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "สมัย"
+          },
+          "year": {
+            "displayName": "ปี",
+            "-1": "ปีที่แล้ว",
+            "0": "ปีนี้",
+            "1": "ปีหน้า"
+          },
+          "month": {
+            "displayName": "เดือน",
+            "-1": "เดือนที่แล้ว",
+            "0": "เดือนนี้",
+            "1": "เดือนหน้า"
+          },
+          "week": {
+            "displayName": "สัปดาห์",
+            "-1": "สัปดาห์ที่แล้ว",
+            "0": "สัปดาห์นี้",
+            "1": "สัปดาห์หน้า"
+          },
+          "day": {
+            "displayName": "วัน",
+            "-2": "เมื่อวานซืน",
+            "-1": "เมื่อวาน",
+            "0": "วันนี้",
+            "1": "พรุ่งนี้",
+            "2": "มะรืนนี้"
+          },
+          "weekday": {
+            "displayName": "วันในสัปดาห์"
+          },
+          "dayperiod": {
+            "displayName": "ช่วงวัน"
+          },
+          "hour": {
+            "displayName": "ชั่วโมง"
+          },
+          "minute": {
+            "displayName": "นาที"
+          },
+          "second": {
+            "displayName": "วินาที"
+          },
+          "zone": {
+            "displayName": "เขต"
+          }
+        }
+      }
+    }
+  }
+}

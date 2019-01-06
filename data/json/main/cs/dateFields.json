@@ -1,0 +1,67 @@
+{
+  "main": {
+    "cs": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8671 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"
+        },
+        "language": "cs"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "Letopočet"
+          },
+          "year": {
+            "displayName": "Rok",
+            "-1": "Minulý rok",
+            "0": "Tento rok",
+            "1": "Příští rok"
+          },
+          "month": {
+            "displayName": "Měsíc",
+            "-1": "Minulý měsíc",
+            "0": "Tento měsíc",
+            "1": "Příští měsíc"
+          },
+          "week": {
+            "displayName": "Týden",
+            "-1": "Minulý týden",
+            "0": "Tento týden",
+            "1": "Příští týden"
+          },
+          "day": {
+            "displayName": "Den",
+            "-2": "Předevčírem",
+            "-1": "Včera",
+            "0": "Dnes",
+            "1": "Zítra",
+            "2": "Pozítří"
+          },
+          "weekday": {
+            "displayName": "Den v týdnu"
+          },
+          "dayperiod": {
+            "displayName": "AM/PM"
+          },
+          "hour": {
+            "displayName": "Hodina"
+          },
+          "minute": {
+            "displayName": "Minuta"
+          },
+          "second": {
+            "displayName": "Sekunda"
+          },
+          "zone": {
+            "displayName": "Časové pásmo"
+          }
+        }
+      }
+    }
+  }
+}

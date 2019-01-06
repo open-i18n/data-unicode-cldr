@@ -1,0 +1,67 @@
+{
+  "main": {
+    "ca": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8671 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"
+        },
+        "language": "ca"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "era"
+          },
+          "year": {
+            "displayName": "any",
+            "-1": "Últim any",
+            "0": "Aquest any",
+            "1": "Any següent"
+          },
+          "month": {
+            "displayName": "mes",
+            "-1": "Últim mes",
+            "0": "Aquest mes",
+            "1": "Mes següent"
+          },
+          "week": {
+            "displayName": "setmana",
+            "-1": "Última setmana",
+            "0": "Aquesta setmana",
+            "1": "Setmana següent"
+          },
+          "day": {
+            "displayName": "dia",
+            "-2": "abans d'ahir",
+            "-1": "ahir",
+            "0": "avui",
+            "1": "demà",
+            "2": "demà passat"
+          },
+          "weekday": {
+            "displayName": "dia de la setmana"
+          },
+          "dayperiod": {
+            "displayName": "a.m./p.m."
+          },
+          "hour": {
+            "displayName": "hora"
+          },
+          "minute": {
+            "displayName": "minut"
+          },
+          "second": {
+            "displayName": "segon"
+          },
+          "zone": {
+            "displayName": "zona"
+          }
+        }
+      }
+    }
+  }
+}

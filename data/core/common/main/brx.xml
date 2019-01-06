@@ -6,8 +6,8 @@ For terms of use, see http://www.unicode.org/copyright.html
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 8245 $"/>
-		<generation date="$Date: 2013-02-24 20:19:26 -0800 (Sun, 24 Feb 2013) $"/>
+		<version number="$Revision: 8663 $"/>
+		<generation date="$Date: 2013-05-02 15:03:19 -0500 (Thu, 02 May 2013) $"/>
 		<language type="brx"/>
 	</identity>
 	<localeDisplayNames>
@@ -3203,6 +3203,11 @@ For terms of use, see http://www.unicode.org/copyright.html
 			<metazone type="South_Georgia">
 				<long>
 					<standard>साऊथ जॉर्जिया स्टैंडर्ड टाईम</standard>
+				</long>
+			</metazone>
+			<metazone type="Suriname">
+				<long>
+					<standard>सुरीनाम स्टैंडर्ड टाईम</standard>
 				</long>
 			</metazone>
 			<metazone type="Syowa">

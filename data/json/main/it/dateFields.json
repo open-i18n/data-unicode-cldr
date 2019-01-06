@@ -1,0 +1,67 @@
+{
+  "main": {
+    "it": {
+      "identity": {
+        "version": {
+          "@cldrVersion": "23.1",
+          "@number": "$Revision: 8671 $"
+        },
+        "generation": {
+          "@date": "$Date: 2013-05-03 14:17:48 -0500 (Fri, 03 May 2013) $"
+        },
+        "language": "it"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "era"
+          },
+          "year": {
+            "displayName": "anno",
+            "-1": "Anno scorso",
+            "0": "Questo anno",
+            "1": "Anno prossimo"
+          },
+          "month": {
+            "displayName": "mese",
+            "-1": "Mese scorso",
+            "0": "Questo mese",
+            "1": "Mese prossimo"
+          },
+          "week": {
+            "displayName": "settimana",
+            "-1": "Settimana scorsa",
+            "0": "Questa settimana",
+            "1": "Settimana prossima"
+          },
+          "day": {
+            "displayName": "giorno",
+            "-2": "l'altro ieri",
+            "-1": "ieri",
+            "0": "oggi",
+            "1": "domani",
+            "2": "dopodomani"
+          },
+          "weekday": {
+            "displayName": "giorno della settimana"
+          },
+          "dayperiod": {
+            "displayName": "periodo del giorno"
+          },
+          "hour": {
+            "displayName": "ora"
+          },
+          "minute": {
+            "displayName": "minuto"
+          },
+          "second": {
+            "displayName": "secondo"
+          },
+          "zone": {
+            "displayName": "zona"
+          }
+        }
+      }
+    }
+  }
+}

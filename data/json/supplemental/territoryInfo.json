@@ -1,0 +1,5822 @@
+{
+  "supplemental": {
+    "version": {
+      "@cldrVersion": "23.1",
+      "@number": "$Revision: 8721 $"
+    },
+    "generation": {
+      "@date": "$Date: 2013-05-15 14:50:20 -0500 (Wed, 15 May 2013) $"
+    },
+    "territoryInfo": {
+      "AC": {
+        "@gdp": "34440000",
+        "@literacyPercent": "99",
+        "@population": "940",
+        "languagePopulation": {
+          "en": {
+            "@populationPercent": "99"
+          }
+        }
+      },
+      "AD": {
+        "@gdp": "3119000000",
+        "@literacyPercent": "100",
+        "@population": "85293",
+        "languagePopulation": {
+          "ca": {
+            "@officialStatus": "official",
+            "@populationPercent": "51"
+          },
+          "es": {
+            "@populationPercent": "43"
+          },
+          "fr": {
+            "@populationPercent": "6.8"
+          }
+        }
+      },
+      "AE": {
+        "@gdp": "271200000000",
+        "@literacyPercent": "77.9",
+        "@population": "5473970",
+        "languagePopulation": {
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "78"
+          },
+          "bal": {
+            "@populationPercent": "2.3"
+          },
+          "fa": {
+            "@populationPercent": "1.9"
+          },
+          "ml": {
+            "@populationPercent": "7"
+          },
+          "ps": {
+            "@populationPercent": "2.9"
+          }
+        }
+      },
+      "AF": {
+        "@gdp": "33550000000",
+        "@literacyPercent": "28.1",
+        "@population": "31108100",
+        "languagePopulation": {
+          "bal": {
+            "@populationPercent": "0.67"
+          },
+          "fa": {
+            "@officialStatus": "official",
+            "@populationPercent": "50"
+          },
+          "haz": {
+            "@populationPercent": "5.9"
+          },
+          "kk_Arab": {
+            "@populationPercent": "0.0064"
+          },
+          "prd": {
+            "@populationPercent": "1.2"
+          },
+          "ps": {
+            "@officialStatus": "official",
+            "@populationPercent": "43"
+          },
+          "tk_Latn": {
+            "@populationPercent": "1.7"
+          },
+          "ug_Arab": {
+            "@populationPercent": "0.0096"
+          },
+          "uz_Arab": {
+            "@populationPercent": "4.7"
+          }
+        }
+      },
+      "AG": {
+        "@gdp": "1535000000",
+        "@literacyPercent": "85.8",
+        "@population": "90156",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "86"
+          },
+          "pt": {
+            "@populationPercent": "1.8"
+          }
+        }
+      },
+      "AI": {
+        "@gdp": "175400000",
+        "@literacyPercent": "95",
+        "@population": "15754",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "95"
+          }
+        }
+      },
+      "AL": {
+        "@gdp": "25860000000",
+        "@literacyPercent": "98.7",
+        "@population": "3011410",
+        "languagePopulation": {
+          "el": {
+            "@populationPercent": "1.9"
+          },
+          "mk": {
+            "@populationPercent": "0.47"
+          },
+          "sq": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          }
+        }
+      },
+      "AM": {
+        "@gdp": "18950000000",
+        "@literacyPercent": "99.6",
+        "@population": "2974180",
+        "languagePopulation": {
+          "az_Latn": {
+            "@populationPercent": "5.3"
+          },
+          "hy": {
+            "@officialStatus": "official",
+            "@populationPercent": "98"
+          },
+          "ku_Latn": {
+            "@populationPercent": "3.3"
+          }
+        }
+      },
+      "AO": {
+        "@gdp": "126200000000",
+        "@literacyPercent": "70.1",
+        "@population": "18565300",
+        "languagePopulation": {
+          "kmb": {
+            "@populationPercent": "25"
+          },
+          "ln": {
+            "@populationPercent": "0.67"
+          },
+          "pt": {
+            "@officialStatus": "official",
+            "@populationPercent": "67"
+          },
+          "umb": {
+            "@populationPercent": "29"
+          }
+        }
+      },
+      "AQ": {
+        "@gdp": "14840000",
+        "@literacyPercent": "99",
+        "@population": "300",
+        "languagePopulation": {
+          "und": {
+            "@populationPercent": "100"
+          }
+        }
+      },
+      "AR": {
+        "@gdp": "746900000000",
+        "@literacyPercent": "98.1",
+        "@population": "42611000",
+        "languagePopulation": {
+          "cy": {
+            "@populationPercent": "0.065"
+          },
+          "es": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          },
+          "gn": {
+            "@populationPercent": "0.047"
+          }
+        }
+      },
+      "AS": {
+        "@gdp": "575300000",
+        "@literacyPercent": "97",
+        "@population": "54719",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "97"
+          },
+          "sm": {
+            "@officialStatus": "official",
+            "@populationPercent": "99"
+          }
+        }
+      },
+      "AT": {
+        "@gdp": "357800000000",
+        "@literacyPercent": "98",
+        "@population": "8221650",
+        "languagePopulation": {
+          "de": {
+            "@officialStatus": "official",
+            "@populationPercent": "97"
+          },
+          "hr": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "1.2"
+          },
+          "hu": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.27"
+          },
+          "sl": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.37"
+          }
+        }
+      },
+      "AU": {
+        "@gdp": "960700000000",
+        "@literacyPercent": "99",
+        "@population": "22262500",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "96"
+          },
+          "it": {
+            "@populationPercent": "1.9"
+          },
+          "zh_Hant": {
+            "@populationPercent": "2.1"
+          }
+        }
+      },
+      "AW": {
+        "@gdp": "2258000000",
+        "@literacyPercent": "97.3",
+        "@population": "109153",
+        "languagePopulation": {
+          "en": {
+            "@populationPercent": "2.7"
+          },
+          "nl": {
+            "@officialStatus": "official",
+            "@populationPercent": "97"
+          },
+          "pap": {
+            "@populationPercent": "61"
+          }
+        }
+      },
+      "AX": {
+        "@gdp": "929800000",
+        "@literacyPercent": "100",
+        "@population": "26200",
+        "languagePopulation": {
+          "sv": {
+            "@officialStatus": "official",
+            "@populationPercent": "99"
+          }
+        }
+      },
+      "AZ": {
+        "@gdp": "98160000000",
+        "@literacyPercent": "99.8",
+        "@population": "9590160",
+        "languagePopulation": {
+          "az_Cyrl": {
+            "@officialStatus": "official",
+            "@populationPercent": "9.9"
+          },
+          "az_Latn": {
+            "@officialStatus": "official",
+            "@populationPercent": "89"
+          },
+          "ku_Latn": {
+            "@populationPercent": "0.24"
+          }
+        }
+      },
+      "BA": {
+        "@gdp": "32080000000",
+        "@literacyPercent": "97.9",
+        "@population": "3875720",
+        "languagePopulation": {
+          "bs_Cyrl": {
+            "@officialStatus": "official",
+            "@populationPercent": "99",
+            "@writingPercent": "5"
+          },
+          "bs_Latn": {
+            "@officialStatus": "official",
+            "@populationPercent": "99"
+          },
+          "hr": {
+            "@officialStatus": "official",
+            "@populationPercent": "12"
+          },
+          "sr_Cyrl": {
+            "@officialStatus": "official",
+            "@populationPercent": "10"
+          },
+          "sr_Latn": {
+            "@officialStatus": "official",
+            "@populationPercent": "10",
+            "@writingPercent": "5"
+          }
+        }
+      },
+      "BB": {
+        "@gdp": "7091000000",
+        "@literacyPercent": "99.7",
+        "@population": "288725",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          }
+        }
+      },
+      "BD": {
+        "@gdp": "305500000000",
+        "@literacyPercent": "56.8",
+        "@population": "163655000",
+        "languagePopulation": {
+          "bn": {
+            "@officialStatus": "official",
+            "@populationPercent": "98"
+          },
+          "ccp": {
+            "@populationPercent": "0.22"
+          },
+          "grt": {
+            "@populationPercent": "0.073"
+          },
+          "mni": {
+            "@populationPercent": "0.011"
+          },
+          "my": {
+            "@populationPercent": "0.21"
+          },
+          "rkt": {
+            "@populationPercent": "0",
+            "@writingPercent": "20"
+          },
+          "syl": {
+            "@populationPercent": "5"
+          }
+        }
+      },
+      "BE": {
+        "@gdp": "420600000000",
+        "@literacyPercent": "99",
+        "@population": "10444300",
+        "languagePopulation": {
+          "de": {
+            "@officialStatus": "official",
+            "@populationPercent": "1.4"
+          },
+          "en": {
+            "@populationPercent": "49"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "38"
+          },
+          "nl": {
+            "@officialStatus": "official",
+            "@populationPercent": "55"
+          },
+          "wa": {
+            "@populationPercent": "5.8",
+            "@writingPercent": "5"
+          }
+        }
+      },
+      "BF": {
+        "@gdp": "24030000000",
+        "@literacyPercent": "21.8",
+        "@population": "17813000",
+        "languagePopulation": {
+          "dyu": {
+            "@populationPercent": "32"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "22"
+          },
+          "mos": {
+            "@populationPercent": "40"
+          }
+        }
+      },
+      "BG": {
+        "@gdp": "103700000000",
+        "@literacyPercent": "98.4",
+        "@population": "6981640",
+        "languagePopulation": {
+          "bg": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          },
+          "tr": {
+            "@populationPercent": "11"
+          }
+        }
+      },
+      "BH": {
+        "@gdp": "32440000000",
+        "@literacyPercent": "94.6",
+        "@population": "1281330",
+        "languagePopulation": {
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "87"
+          },
+          "ml": {
+            "@populationPercent": "3.3"
+          }
+        }
+      },
+      "BI": {
+        "@gdp": "5489000000",
+        "@literacyPercent": "67.2",
+        "@population": "10888300",
+        "languagePopulation": {
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "59"
+          },
+          "rn": {
+            "@officialStatus": "official",
+            "@populationPercent": "63"
+          },
+          "sw": {
+            "@populationPercent": "0.058"
+          }
+        }
+      },
+      "BJ": {
+        "@gdp": "15510000000",
+        "@literacyPercent": "42.4",
+        "@population": "9877290",
+        "languagePopulation": {
+          "fon": {
+            "@populationPercent": "25"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "35"
+          },
+          "yo": {
+            "@populationPercent": "6.7"
+          }
+        }
+      },
+      "BL": {
+        "@gdp": "255000000",
+        "@literacyPercent": "99",
+        "@population": "7298",
+        "languagePopulation": {
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "94"
+          }
+        }
+      },
+      "BM": {
+        "@gdp": "4500000000",
+        "@literacyPercent": "98",
+        "@population": "69467",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "92"
+          }
+        }
+      },
+      "BN": {
+        "@gdp": "21940000000",
+        "@literacyPercent": "92.7",
+        "@population": "415717",
+        "languagePopulation": {
+          "en": {
+            "@populationPercent": "1.9"
+          },
+          "ms_Arab": {
+            "@officialStatus": "official",
+            "@populationPercent": "5"
+          },
+          "ms_Latn": {
+            "@officialStatus": "official",
+            "@populationPercent": "93"
+          },
+          "zh_Hant": {
+            "@populationPercent": "11"
+          }
+        }
+      },
+      "BO": {
+        "@gdp": "54360000000",
+        "@literacyPercent": "86.7",
+        "@population": "10461100",
+        "languagePopulation": {
+          "ay": {
+            "@officialStatus": "official",
+            "@populationPercent": "20"
+          },
+          "es": {
+            "@officialStatus": "official",
+            "@populationPercent": "61"
+          },
+          "gn": {
+            "@populationPercent": "0.45"
+          },
+          "qu": {
+            "@officialStatus": "official",
+            "@populationPercent": "32"
+          }
+        }
+      },
+      "BQ": {
+        "@gdp": "386600000",
+        "@literacyPercent": "99",
+        "@population": "20000",
+        "languagePopulation": {
+          "nl": {
+            "@officialStatus": "official",
+            "@populationPercent": "8"
+          },
+          "pap": {
+            "@officialStatus": "official",
+            "@populationPercent": "81"
+          }
+        }
+      },
+      "BR": {
+        "@gdp": "2362000000000",
+        "@literacyPercent": "88.6",
+        "@population": "201010000",
+        "languagePopulation": {
+          "de": {
+            "@populationPercent": "0.84"
+          },
+          "gub": {
+            "@populationPercent": "0.0084"
+          },
+          "it": {
+            "@populationPercent": "0.28"
+          },
+          "ja": {
+            "@populationPercent": "0.21"
+          },
+          "kgp": {
+            "@populationPercent": "0.01"
+          },
+          "ko": {
+            "@populationPercent": "0.021"
+          },
+          "pt": {
+            "@officialStatus": "official",
+            "@populationPercent": "91"
+          },
+          "xav": {
+            "@populationPercent": "0.005"
+          }
+        }
+      },
+      "BS": {
+        "@gdp": "11040000000",
+        "@literacyPercent": "95.6",
+        "@population": "319031",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          }
+        }
+      },
+      "BT": {
+        "@gdp": "4813000000",
+        "@literacyPercent": "47",
+        "@population": "725296",
+        "languagePopulation": {
+          "dz": {
+            "@officialStatus": "official",
+            "@populationPercent": "47"
+          },
+          "lep": {
+            "@populationPercent": "3.9"
+          },
+          "ne": {
+            "@populationPercent": "17"
+          },
+          "tsj": {
+            "@populationPercent": "15"
+          }
+        }
+      },
+      "BV": {
+        "@gdp": "36640",
+        "@literacyPercent": "99",
+        "@population": "1",
+        "languagePopulation": {
+          "und": {
+            "@populationPercent": "100"
+          }
+        }
+      },
+      "BW": {
+        "@gdp": "31490000000",
+        "@literacyPercent": "84.5",
+        "@population": "2127830",
+        "languagePopulation": {
+          "af": {
+            "@populationPercent": "0.28"
+          },
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "81"
+          },
+          "tn": {
+            "@officialStatus": "official",
+            "@populationPercent": "62"
+          }
+        }
+      },
+      "BY": {
+        "@gdp": "150300000000",
+        "@literacyPercent": "99.6",
+        "@population": "9625890",
+        "languagePopulation": {
+          "be": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          },
+          "ru": {
+            "@officialStatus": "official",
+            "@populationPercent": "12"
+          }
+        }
+      },
+      "BZ": {
+        "@gdp": "2896000000",
+        "@literacyPercent": "76.9",
+        "@population": "334297",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          },
+          "es": {
+            "@populationPercent": "28"
+          }
+        }
+      },
+      "CA": {
+        "@gdp": "1446000000000",
+        "@literacyPercent": "99",
+        "@population": "34568200",
+        "languagePopulation": {
+          "atj": {
+            "@populationPercent": "0.016"
+          },
+          "chp": {
+            "@populationPercent": "0.0022"
+          },
+          "cr_Cans": {
+            "@populationPercent": "0.11"
+          },
+          "crj": {
+            "@populationPercent": "0.021"
+          },
+          "crk": {
+            "@populationPercent": "0.11"
+          },
+          "crl": {
+            "@populationPercent": "0.015"
+          },
+          "crm": {
+            "@populationPercent": "0.013"
+          },
+          "csw": {
+            "@populationPercent": "0.014"
+          },
+          "de": {
+            "@populationPercent": "1.9"
+          },
+          "den": {
+            "@populationPercent": "0.0067"
+          },
+          "dgr": {
+            "@populationPercent": "0.0076"
+          },
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "85"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "22"
+          },
+          "gwi": {
+            "@populationPercent": "0.0016"
+          },
+          "ikt": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.012",
+            "@writingPercent": "30"
+          },
+          "it": {
+            "@populationPercent": "2"
+          },
+          "iu": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.042",
+            "@writingPercent": "30"
+          },
+          "moe": {
+            "@populationPercent": "0.033"
+          },
+          "nsk": {
+            "@populationPercent": "0.0034"
+          },
+          "scs": {
+            "@populationPercent": "0.0036"
+          }
+        }
+      },
+      "CC": {
+        "@gdp": "25720000",
+        "@literacyPercent": "99",
+        "@population": "596",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "17"
+          },
+          "ms_Arab": {
+            "@populationPercent": "83"
+          }
+        }
+      },
+      "CD": {
+        "@gdp": "27530000000",
+        "@literacyPercent": "66.8",
+        "@population": "75507300",
+        "languagePopulation": {
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "3.8"
+          },
+          "kg": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "1.5"
+          },
+          "ln": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "3.1"
+          },
+          "lol": {
+            "@populationPercent": "0.61"
+          },
+          "lu": {
+            "@populationPercent": "2.3"
+          },
+          "lua": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "9.6"
+          },
+          "rw": {
+            "@populationPercent": "0.38"
+          },
+          "sw": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "50"
+          }
+        }
+      },
+      "CF": {
+        "@gdp": "3847000000",
+        "@literacyPercent": "56",
+        "@population": "5166510",
+        "languagePopulation": {
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "49"
+          },
+          "ln": {
+            "@populationPercent": "0.24"
+          },
+          "sg": {
+            "@officialStatus": "official",
+            "@populationPercent": "49"
+          }
+        }
+      },
+      "CG": {
+        "@gdp": "19270000000",
+        "@literacyPercent": "83.8",
+        "@population": "4492690",
+        "languagePopulation": {
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "84"
+          },
+          "ln": {
+            "@officialStatus": "official",
+            "@populationPercent": "2.4"
+          }
+        }
+      },
+      "CH": {
+        "@gdp": "362400000000",
+        "@literacyPercent": "99",
+        "@population": "7996030",
+        "languagePopulation": {
+          "de": {
+            "@officialStatus": "official",
+            "@populationPercent": "73"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "21"
+          },
+          "gsw": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "12",
+            "@writingPercent": "5"
+          },
+          "it": {
+            "@officialStatus": "official",
+            "@populationPercent": "4.3"
+          },
+          "lmo": {
+            "@populationPercent": "4.1",
+            "@writingPercent": "5"
+          },
+          "rm": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.5"
+          },
+          "rmo": {
+            "@populationPercent": "0.28"
+          },
+          "wae": {
+            "@populationPercent": "0.13"
+          }
+        }
+      },
+      "CI": {
+        "@gdp": "39640000000",
+        "@literacyPercent": "56.2",
+        "@population": "22400800",
+        "languagePopulation": {
+          "bci": {
+            "@populationPercent": "11",
+            "@writingPercent": "10"
+          },
+          "bqv": {
+            "@populationPercent": "0.17",
+            "@writingPercent": "10"
+          },
+          "daf": {
+            "@populationPercent": "4",
+            "@writingPercent": "1"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "49"
+          },
+          "kfo": {
+            "@populationPercent": "0.23"
+          },
+          "sef": {
+            "@populationPercent": "4.3",
+            "@writingPercent": "5"
+          }
+        }
+      },
+      "CK": {
+        "@gdp": "183200000",
+        "@literacyPercent": "95",
+        "@population": "10447",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "95"
+          }
+        }
+      },
+      "CL": {
+        "@gdp": "319400000000",
+        "@literacyPercent": "95.7",
+        "@population": "17216900",
+        "languagePopulation": {
+          "es": {
+            "@officialStatus": "official",
+            "@populationPercent": "98"
+          }
+        }
+      },
+      "CM": {
+        "@gdp": "50320000000",
+        "@literacyPercent": "75.9",
+        "@population": "20549200",
+        "languagePopulation": {
+          "agq": {
+            "@populationPercent": "0.14"
+          },
+          "ar": {
+            "@populationPercent": "0.39"
+          },
+          "bas": {
+            "@populationPercent": "1.2"
+          },
+          "bax": {
+            "@populationPercent": "1.2"
+          },
+          "bbj": {
+            "@populationPercent": "1.4"
+          },
+          "bfd": {
+            "@populationPercent": "0.57"
+          },
+          "bkm": {
+            "@populationPercent": "1.3"
+          },
+          "bss": {
+            "@populationPercent": "0.54"
+          },
+          "bum": {
+            "@populationPercent": "4.6"
+          },
+          "byv": {
+            "@populationPercent": "1.1"
+          },
+          "dua": {
+            "@populationPercent": "0.47"
+          },
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "14"
+          },
+          "ewo": {
+            "@populationPercent": "3.1"
+          },
+          "ff": {
+            "@populationPercent": "3.6"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "68"
+          },
+          "ha_Arab": {
+            "@populationPercent": "0.14"
+          },
+          "kkj": {
+            "@populationPercent": "0.54"
+          },
+          "ksf": {
+            "@populationPercent": "0.32"
+          },
+          "maf": {
+            "@populationPercent": "0.74"
+          },
+          "mua": {
+            "@populationPercent": "1"
+          },
+          "nmg": {
+            "@populationPercent": "0.044"
+          },
+          "nnh": {
+            "@populationPercent": "1.4"
+          },
+          "yav": {
+            "@populationPercent": "0.011"
+          },
+          "ybb": {
+            "@populationPercent": "1.6"
+          }
+        }
+      },
+      "CN": {
+        "@gdp": "12380000000000",
+        "@literacyPercent": "92.2",
+        "@population": "1349590000",
+        "languagePopulation": {
+          "bo": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.2"
+          },
+          "en": {
+            "@populationPercent": "0.0045"
+          },
+          "ii": {
+            "@populationPercent": "0.6"
+          },
+          "khb": {
+            "@populationPercent": "0.019"
+          },
+          "kk_Arab": {
+            "@populationPercent": "0.086"
+          },
+          "ko": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.15"
+          },
+          "ky_Arab": {
+            "@populationPercent": "0.034"
+          },
+          "lcp": {
+            "@populationPercent": "0.0058"
+          },
+          "lis": {
+            "@populationPercent": "0.045"
+          },
+          "mn_Mong": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.26"
+          },
+          "nbf": {
+            "@populationPercent": "0.024"
+          },
+          "ru": {
+            "@populationPercent": "0.001"
+          },
+          "tdd": {
+            "@populationPercent": "0.019"
+          },
+          "ug_Arab": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.55"
+          },
+          "uz_Cyrl": {
+            "@populationPercent": "0.0004"
+          },
+          "vi": {
+            "@populationPercent": "0.0005"
+          },
+          "za": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.31"
+          },
+          "zh_Hans": {
+            "@officialStatus": "official",
+            "@populationPercent": "90"
+          }
+        }
+      },
+      "CO": {
+        "@gdp": "500000000000",
+        "@literacyPercent": "90.4",
+        "@population": "45745800",
+        "languagePopulation": {
+          "es": {
+            "@officialStatus": "official",
+            "@populationPercent": "93"
+          }
+        }
+      },
+      "CP": {
+        "@gdp": "34160",
+        "@literacyPercent": "99",
+        "@population": "1",
+        "languagePopulation": {
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          }
+        }
+      },
+      "CR": {
+        "@gdp": "58600000000",
+        "@literacyPercent": "94.9",
+        "@population": "4695940",
+        "languagePopulation": {
+          "es": {
+            "@officialStatus": "official",
+            "@populationPercent": "95"
+          }
+        }
+      },
+      "CU": {
+        "@gdp": "114100000000",
+        "@literacyPercent": "99.8",
+        "@population": "11061900",
+        "languagePopulation": {
+          "es": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          }
+        }
+      },
+      "CV": {
+        "@gdp": "2188000000",
+        "@literacyPercent": "84.3",
+        "@population": "531046",
+        "languagePopulation": {
+          "kea": {
+            "@populationPercent": "92"
+          },
+          "pt": {
+            "@officialStatus": "official",
+            "@populationPercent": "76"
+          }
+        }
+      },
+      "CW": {
+        "@gdp": "2838000000",
+        "@literacyPercent": "99",
+        "@population": "146836",
+        "languagePopulation": {
+          "es": {
+            "@populationPercent": "3.9"
+          },
+          "nl": {
+            "@officialStatus": "official",
+            "@populationPercent": "8"
+          },
+          "pap": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "81"
+          }
+        }
+      },
+      "CX": {
+        "@gdp": "64560000",
+        "@literacyPercent": "99",
+        "@population": "1496",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "94"
+          }
+        }
+      },
+      "CY": {
+        "@gdp": "23570000000",
+        "@literacyPercent": "97.6",
+        "@population": "1186800",
+        "languagePopulation": {
+          "ar": {
+            "@populationPercent": "0.11"
+          },
+          "el": {
+            "@officialStatus": "official",
+            "@populationPercent": "75"
+          },
+          "hy": {
+            "@populationPercent": "0.23"
+          },
+          "tr": {
+            "@officialStatus": "official",
+            "@populationPercent": "23"
+          }
+        }
+      },
+      "CZ": {
+        "@gdp": "286700000000",
+        "@literacyPercent": "99",
+        "@population": "10162900",
+        "languagePopulation": {
+          "cs": {
+            "@officialStatus": "official",
+            "@populationPercent": "98"
+          },
+          "de": {
+            "@populationPercent": "0.49"
+          },
+          "pl": {
+            "@populationPercent": "0.49"
+          }
+        }
+      },
+      "DE": {
+        "@gdp": "3194000000000",
+        "@literacyPercent": "99",
+        "@population": "81147300",
+        "languagePopulation": {
+          "da": {
+            "@populationPercent": "0.061"
+          },
+          "de": {
+            "@officialStatus": "official",
+            "@populationPercent": "91"
+          },
+          "dsb": {
+            "@populationPercent": "0.0086",
+            "@writingPercent": "5"
+          },
+          "el": {
+            "@populationPercent": "0.38"
+          },
+          "en": {
+            "@populationPercent": "44"
+          },
+          "es": {
+            "@populationPercent": "0.16"
+          },
+          "hr": {
+            "@populationPercent": "0.79"
+          },
+          "it": {
+            "@populationPercent": "0.66"
+          },
+          "ksh": {
+            "@populationPercent": "0.3"
+          },
+          "ku_Latn": {
+            "@populationPercent": "0.66"
+          },
+          "nds": {
+            "@populationPercent": "12",
+            "@writingPercent": "5"
+          },
+          "nl": {
+            "@populationPercent": "0.12"
+          },
+          "pl": {
+            "@populationPercent": "0.29"
+          },
+          "ru": {
+            "@populationPercent": "0.44"
+          },
+          "tr": {
+            "@populationPercent": "2.5"
+          }
+        }
+      },
+      "DG": {
+        "@gdp": "18320000",
+        "@literacyPercent": "99",
+        "@population": "500",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "99"
+          }
+        }
+      },
+      "DJ": {
+        "@gdp": "2377000000",
+        "@literacyPercent": "67.9",
+        "@population": "792198",
+        "languagePopulation": {
+          "aa": {
+            "@populationPercent": "42"
+          },
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "7.3"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "2.2"
+          },
+          "so": {
+            "@populationPercent": "41"
+          }
+        }
+      },
+      "DK": {
+        "@gdp": "208500000000",
+        "@literacyPercent": "99",
+        "@population": "5556450",
+        "languagePopulation": {
+          "da": {
+            "@officialStatus": "official",
+            "@populationPercent": "93"
+          },
+          "de": {
+            "@populationPercent": "0.43"
+          },
+          "kl": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.13"
+          }
+        }
+      },
+      "DM": {
+        "@gdp": "1035000000",
+        "@literacyPercent": "94",
+        "@population": "73286",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "94"
+          }
+        }
+      },
+      "DO": {
+        "@gdp": "98740000000",
+        "@literacyPercent": "87",
+        "@population": "10219600",
+        "languagePopulation": {
+          "en": {
+            "@populationPercent": "0.078"
+          },
+          "es": {
+            "@officialStatus": "official",
+            "@populationPercent": "78"
+          }
+        }
+      },
+      "DZ": {
+        "@gdp": "274500000000",
+        "@literacyPercent": "69.9",
+        "@population": "38087800",
+        "languagePopulation": {
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "74"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "20"
+          },
+          "kab": {
+            "@populationPercent": "7.8"
+          }
+        }
+      },
+      "EA": {
+        "@gdp": "4455000000",
+        "@literacyPercent": "97.7",
+        "@population": "150000",
+        "languagePopulation": {
+          "es": {
+            "@officialStatus": "official",
+            "@populationPercent": "98"
+          }
+        }
+      },
+      "EC": {
+        "@gdp": "134700000000",
+        "@literacyPercent": "93.2",
+        "@population": "15439400",
+        "languagePopulation": {
+          "es": {
+            "@officialStatus": "official",
+            "@populationPercent": "96"
+          }
+        }
+      },
+      "EE": {
+        "@gdp": "28440000000",
+        "@literacyPercent": "99.8",
+        "@population": "1266380",
+        "languagePopulation": {
+          "et": {
+            "@officialStatus": "official",
+            "@populationPercent": "71"
+          },
+          "ru": {
+            "@populationPercent": "30"
+          }
+        }
+      },
+      "EG": {
+        "@gdp": "537800000000",
+        "@literacyPercent": "72",
+        "@population": "85294400",
+        "languagePopulation": {
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "94"
+          },
+          "el": {
+            "@populationPercent": "0.061"
+          }
+        }
+      },
+      "EH": {
+        "@gdp": "906500000",
+        "@literacyPercent": "50",
+        "@population": "538811",
+        "languagePopulation": {
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          }
+        }
+      },
+      "ER": {
+        "@gdp": "4412000000",
+        "@literacyPercent": "67.8",
+        "@population": "6233680",
+        "languagePopulation": {
+          "aa": {
+            "@populationPercent": "3.6"
+          },
+          "ar": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "4.9",
+            "@writingPercent": "5"
+          },
+          "byn": {
+            "@populationPercent": "0.0011"
+          },
+          "ssy": {
+            "@populationPercent": "3.6"
+          },
+          "ti": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "60"
+          },
+          "tig": {
+            "@populationPercent": "18"
+          }
+        }
+      },
+      "ES": {
+        "@gdp": "1407000000000",
+        "@literacyPercent": "97.7",
+        "@population": "47370500",
+        "languagePopulation": {
+          "ast": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "1.3"
+          },
+          "ca": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "17"
+          },
+          "en": {
+            "@populationPercent": "24"
+          },
+          "es": {
+            "@officialStatus": "official",
+            "@populationPercent": "99"
+          },
+          "eu": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "2"
+          },
+          "gl": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "7"
+          }
+        }
+      },
+      "ET": {
+        "@gdp": "103100000000",
+        "@literacyPercent": "42.7",
+        "@population": "93877000",
+        "languagePopulation": {
+          "aa": {
+            "@populationPercent": "1.4"
+          },
+          "am": {
+            "@officialStatus": "official",
+            "@populationPercent": "33"
+          },
+          "en": {
+            "@populationPercent": "43"
+          },
+          "om": {
+            "@populationPercent": "32"
+          },
+          "sid": {
+            "@populationPercent": "3.5"
+          },
+          "so": {
+            "@populationPercent": "6"
+          },
+          "ti": {
+            "@populationPercent": "6"
+          },
+          "wal": {
+            "@populationPercent": "1.8"
+          }
+        }
+      },
+      "FI": {
+        "@gdp": "198100000000",
+        "@literacyPercent": "100",
+        "@population": "5266110",
+        "languagePopulation": {
+          "en": {
+            "@populationPercent": "0.18"
+          },
+          "et": {
+            "@populationPercent": "0.11"
+          },
+          "fi": {
+            "@officialStatus": "official",
+            "@populationPercent": "94"
+          },
+          "rmf": {
+            "@populationPercent": "0.095"
+          },
+          "ru": {
+            "@populationPercent": "0.81"
+          },
+          "se": {
+            "@populationPercent": "0.038"
+          },
+          "smn": {
+            "@populationPercent": "0.011"
+          },
+          "sms": {
+            "@populationPercent": "0.011"
+          },
+          "sv": {
+            "@officialStatus": "official",
+            "@populationPercent": "5.7"
+          }
+        }
+      },
+      "FJ": {
+        "@gdp": "4307000000",
+        "@literacyPercent": "93.7",
+        "@population": "896758",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "94"
+          },
+          "fj": {
+            "@officialStatus": "official",
+            "@populationPercent": "39"
+          },
+          "hi": {
+            "@populationPercent": "44"
+          }
+        }
+      },
+      "FK": {
+        "@gdp": "164500000",
+        "@literacyPercent": "99",
+        "@population": "3140",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "99"
+          }
+        }
+      },
+      "FM": {
+        "@gdp": "238100000",
+        "@literacyPercent": "89",
+        "@population": "106104",
+        "languagePopulation": {
+          "chk": {
+            "@officialStatus": "official",
+            "@populationPercent": "30"
+          },
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "5"
+          },
+          "kos": {
+            "@officialStatus": "official",
+            "@populationPercent": "7.5"
+          },
+          "pon": {
+            "@officialStatus": "official",
+            "@populationPercent": "23"
+          },
+          "uli": {
+            "@officialStatus": "official",
+            "@populationPercent": "2.8"
+          },
+          "yap": {
+            "@officialStatus": "official",
+            "@populationPercent": "6.2"
+          }
+        }
+      },
+      "FO": {
+        "@gdp": "1471000000",
+        "@literacyPercent": "99",
+        "@population": "49709",
+        "languagePopulation": {
+          "fo": {
+            "@officialStatus": "official",
+            "@populationPercent": "95"
+          }
+        }
+      },
+      "FR": {
+        "@gdp": "2253000000000",
+        "@literacyPercent": "99",
+        "@population": "65951600",
+        "languagePopulation": {
+          "br": {
+            "@populationPercent": "0.83",
+            "@writingPercent": "3"
+          },
+          "ca": {
+            "@populationPercent": "0.17"
+          },
+          "co": {
+            "@populationPercent": "0.57",
+            "@writingPercent": "5"
+          },
+          "en": {
+            "@populationPercent": "27"
+          },
+          "eu": {
+            "@populationPercent": "0.13"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "99"
+          },
+          "gsw": {
+            "@populationPercent": "0.91",
+            "@writingPercent": "5"
+          },
+          "it": {
+            "@populationPercent": "1.7"
+          },
+          "nl": {
+            "@populationPercent": "0.13"
+          },
+          "oc": {
+            "@populationPercent": "3",
+            "@writingPercent": "5"
+          },
+          "pt": {
+            "@populationPercent": "1.3"
+          }
+        }
+      },
+      "GA": {
+        "@gdp": "26710000000",
+        "@literacyPercent": "88.4",
+        "@population": "1640290",
+        "languagePopulation": {
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "63"
+          },
+          "mdt": {
+            "@populationPercent": "8"
+          },
+          "puu": {
+            "@populationPercent": "9"
+          }
+        }
+      },
+      "GB": {
+        "@gdp": "2323000000000",
+        "@literacyPercent": "99",
+        "@population": "63395600",
+        "languagePopulation": {
+          "bn": {
+            "@populationPercent": "0.67"
+          },
+          "cy": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.77"
+          },
+          "el": {
+            "@populationPercent": "0.34"
+          },
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "99"
+          },
+          "fr": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.024"
+          },
+          "ga": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.026"
+          },
+          "gd": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.099",
+            "@writingPercent": "5"
+          },
+          "it": {
+            "@populationPercent": "0.34"
+          },
+          "ks_Arab": {
+            "@populationPercent": "0.19"
+          },
+          "kw": {
+            "@populationPercent": "0.0032"
+          },
+          "ml": {
+            "@populationPercent": "0.035"
+          },
+          "pa_Guru": {
+            "@populationPercent": "0.79"
+          },
+          "sco": {
+            "@populationPercent": "2.7",
+            "@writingPercent": "5"
+          },
+          "syl": {
+            "@populationPercent": "0.51"
+          },
+          "zh_Hant": {
+            "@populationPercent": "0.54"
+          }
+        }
+      },
+      "GD": {
+        "@gdp": "1471000000",
+        "@literacyPercent": "96",
+        "@population": "109590",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "96"
+          }
+        }
+      },
+      "GE": {
+        "@gdp": "26400000000",
+        "@literacyPercent": "99.7",
+        "@population": "4555910",
+        "languagePopulation": {
+          "ab": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "2.2"
+          },
+          "hy": {
+            "@populationPercent": "7"
+          },
+          "ka": {
+            "@officialStatus": "official",
+            "@populationPercent": "86"
+          },
+          "ku_Latn": {
+            "@populationPercent": "0.89"
+          },
+          "os": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "2.2"
+          },
+          "ru": {
+            "@populationPercent": "9"
+          }
+        }
+      },
+      "GF": {
+        "@gdp": "1551000000",
+        "@literacyPercent": "83",
+        "@population": "199509",
+        "languagePopulation": {
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "77"
+          },
+          "gcr": {
+            "@populationPercent": "26"
+          },
+          "zh_Hant": {
+            "@populationPercent": "2.5"
+          }
+        }
+      },
+      "GG": {
+        "@gdp": "2742000000",
+        "@literacyPercent": "100",
+        "@population": "65605",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "100"
+          }
+        }
+      },
+      "GH": {
+        "@gdp": "83180000000",
+        "@literacyPercent": "71.5",
+        "@population": "25199600",
+        "languagePopulation": {
+          "abr": {
+            "@populationPercent": "5"
+          },
+          "ak": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "39"
+          },
+          "ee": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "11"
+          },
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "36"
+          },
+          "gaa": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "2.8"
+          },
+          "ha_Latn": {
+            "@populationPercent": "0.86"
+          },
+          "saf": {
+            "@populationPercent": "0.016"
+          }
+        }
+      },
+      "GI": {
+        "@gdp": "1275000000",
+        "@literacyPercent": "80",
+        "@population": "29111",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "80"
+          }
+        }
+      },
+      "GL": {
+        "@gdp": "2133000000",
+        "@literacyPercent": "100",
+        "@population": "57714",
+        "languagePopulation": {
+          "da": {
+            "@officialStatus": "official",
+            "@populationPercent": "14"
+          },
+          "kl": {
+            "@officialStatus": "official",
+            "@populationPercent": "84"
+          }
+        }
+      },
+      "GM": {
+        "@gdp": "3495000000",
+        "@literacyPercent": "50",
+        "@population": "1883050",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "40"
+          },
+          "man_Latn": {
+            "@populationPercent": "29"
+          }
+        }
+      },
+      "GN": {
+        "@gdp": "12250000000",
+        "@literacyPercent": "41",
+        "@population": "11176000",
+        "languagePopulation": {
+          "ff": {
+            "@populationPercent": "26"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "29"
+          },
+          "kpe": {
+            "@populationPercent": "3.8"
+          },
+          "man_Nkoo": {
+            "@populationPercent": "23"
+          },
+          "sus": {
+            "@populationPercent": "11"
+          }
+        }
+      },
+      "GP": {
+        "@gdp": "3513000000",
+        "@literacyPercent": "90",
+        "@population": "452776",
+        "languagePopulation": {
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "90"
+          }
+        }
+      },
+      "GQ": {
+        "@gdp": "28030000000",
+        "@literacyPercent": "93.9",
+        "@population": "704001",
+        "languagePopulation": {
+          "bvb": {
+            "@populationPercent": "7.9"
+          },
+          "es": {
+            "@officialStatus": "official",
+            "@populationPercent": "87"
+          },
+          "fan": {
+            "@populationPercent": "51"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "8.8"
+          },
+          "syi": {
+            "@populationPercent": "2.2"
+          }
+        }
+      },
+      "GR": {
+        "@gdp": "280800000000",
+        "@literacyPercent": "96",
+        "@population": "10773000",
+        "languagePopulation": {
+          "bg": {
+            "@populationPercent": "0.27"
+          },
+          "el": {
+            "@officialStatus": "official",
+            "@populationPercent": "99"
+          },
+          "mk": {
+            "@populationPercent": "1.6"
+          },
+          "sq": {
+            "@populationPercent": "0.093"
+          },
+          "tr": {
+            "@populationPercent": "1.2"
+          }
+        }
+      },
+      "GS": {
+        "@gdp": "732900",
+        "@literacyPercent": "99",
+        "@population": "20",
+        "languagePopulation": {
+          "und": {
+            "@populationPercent": "100",
+            "@writingPercent": "100"
+          }
+        }
+      },
+      "GT": {
+        "@gdp": "78420000000",
+        "@literacyPercent": "69.1",
+        "@population": "14373500",
+        "languagePopulation": {
+          "es": {
+            "@officialStatus": "official",
+            "@populationPercent": "93"
+          }
+        }
+      },
+      "GU": {
+        "@gdp": "2500000000",
+        "@literacyPercent": "99",
+        "@population": "160378",
+        "languagePopulation": {
+          "ch": {
+            "@officialStatus": "official",
+            "@populationPercent": "22"
+          },
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "38"
+          }
+        }
+      },
+      "GW": {
+        "@gdp": "1902000000",
+        "@literacyPercent": "54.2",
+        "@population": "1660870",
+        "languagePopulation": {
+          "pt": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          }
+        }
+      },
+      "GY": {
+        "@gdp": "6164000000",
+        "@literacyPercent": "91.8",
+        "@population": "739903",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          }
+        }
+      },
+      "HK": {
+        "@gdp": "363700000000",
+        "@literacyPercent": "93.5",
+        "@population": "7182720",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "51"
+          },
+          "zh_Hans": {
+            "@populationPercent": "5"
+          },
+          "zh_Hant": {
+            "@officialStatus": "official",
+            "@populationPercent": "95"
+          }
+        }
+      },
+      "HM": {
+        "@gdp": "43150",
+        "@literacyPercent": "99",
+        "@population": "1",
+        "languagePopulation": {
+          "und": {
+            "@populationPercent": "100",
+            "@writingPercent": "100"
+          }
+        }
+      },
+      "HN": {
+        "@gdp": "37670000000",
+        "@literacyPercent": "80",
+        "@population": "8448470",
+        "languagePopulation": {
+          "en": {
+            "@populationPercent": "0.44"
+          },
+          "es": {
+            "@officialStatus": "official",
+            "@populationPercent": "78"
+          }
+        }
+      },
+      "HR": {
+        "@gdp": "79670000000",
+        "@literacyPercent": "98.8",
+        "@population": "4475610",
+        "languagePopulation": {
+          "hr": {
+            "@officialStatus": "official",
+            "@populationPercent": "99"
+          },
+          "it": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "1.6"
+          }
+        }
+      },
+      "HT": {
+        "@gdp": "13130000000",
+        "@literacyPercent": "52.9",
+        "@population": "9893930",
+        "languagePopulation": {
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "4.7",
+            "@writingPercent": "100"
+          },
+          "ht": {
+            "@officialStatus": "official",
+            "@populationPercent": "81"
+          }
+        }
+      },
+      "HU": {
+        "@gdp": "196800000000",
+        "@literacyPercent": "99",
+        "@population": "9939470",
+        "languagePopulation": {
+          "de": {
+            "@populationPercent": "2.5"
+          },
+          "hr": {
+            "@populationPercent": "0.32"
+          },
+          "hu": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          },
+          "ro": {
+            "@populationPercent": "0.99"
+          },
+          "sk": {
+            "@populationPercent": "0.11"
+          },
+          "sl": {
+            "@populationPercent": "0.05"
+          }
+        }
+      },
+      "IC": {
+        "@gdp": "62330000000",
+        "@literacyPercent": "97.7",
+        "@population": "2098590",
+        "languagePopulation": {
+          "es": {
+            "@officialStatus": "official",
+            "@populationPercent": "98"
+          }
+        }
+      },
+      "ID": {
+        "@gdp": "1212000000000",
+        "@literacyPercent": "90.4",
+        "@population": "251160000",
+        "languagePopulation": {
+          "ace": {
+            "@populationPercent": "1.4"
+          },
+          "aoz": {
+            "@populationPercent": "0.27"
+          },
+          "ban": {
+            "@populationPercent": "1.8"
+          },
+          "bbc": {
+            "@populationPercent": "0.92"
+          },
+          "bew": {
+            "@populationPercent": "1.2"
+          },
+          "bjn": {
+            "@populationPercent": "2.3"
+          },
+          "bug": {
+            "@populationPercent": "1.6"
+          },
+          "bya": {
+            "@populationPercent": "2.3"
+          },
+          "gor": {
+            "@populationPercent": "0.41"
+          },
+          "id": {
+            "@officialStatus": "official",
+            "@populationPercent": "64"
+          },
+          "jv": {
+            "@populationPercent": "34"
+          },
+          "kge": {
+            "@populationPercent": "0.32"
+          },
+          "kvr": {
+            "@populationPercent": "0.14"
+          },
+          "lbw": {
+            "@populationPercent": "0.13"
+          },
+          "ljp": {
+            "@populationPercent": "0.69"
+          },
+          "mad": {
+            "@populationPercent": "6.3"
+          },
+          "mak": {
+            "@populationPercent": "0.73"
+          },
+          "mdr": {
+            "@populationPercent": "0.092"
+          },
+          "mgy": {
+            "@populationPercent": "0.23"
+          },
+          "min": {
+            "@populationPercent": "3"
+          },
+          "ms_Arab": {
+            "@populationPercent": "4.6"
+          },
+          "nij": {
+            "@populationPercent": "0.37"
+          },
+          "rej": {
+            "@populationPercent": "0.46"
+          },
+          "rob": {
+            "@populationPercent": "0.11"
+          },
+          "sas": {
+            "@populationPercent": "0.96"
+          },
+          "su": {
+            "@officialStatus": "official",
+            "@populationPercent": "12"
+          },
+          "sxn": {
+            "@populationPercent": "0.092"
+          },
+          "zh_Hant": {
+            "@populationPercent": "0.92"
+          }
+        }
+      },
+      "IE": {
+        "@gdp": "191500000000",
+        "@literacyPercent": "99",
+        "@population": "4775980",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "94"
+          },
+          "ga": {
+            "@officialStatus": "official",
+            "@populationPercent": "11"
+          }
+        }
+      },
+      "IL": {
+        "@gdp": "247900000000",
+        "@literacyPercent": "97.1",
+        "@population": "7707040",
+        "languagePopulation": {
+          "am": {
+            "@populationPercent": "0.59"
+          },
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "20"
+          },
+          "en": {
+            "@populationPercent": "1.5"
+          },
+          "he": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          },
+          "hu": {
+            "@populationPercent": "1"
+          },
+          "ml": {
+            "@populationPercent": "0.1"
+          },
+          "pl": {
+            "@populationPercent": "1.5"
+          },
+          "ro": {
+            "@populationPercent": "3.7"
+          },
+          "ru": {
+            "@populationPercent": "11"
+          },
+          "ti": {
+            "@populationPercent": "0.13"
+          }
+        }
+      },
+      "IM": {
+        "@gdp": "2719000000",
+        "@literacyPercent": "99",
+        "@population": "86159",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "100"
+          },
+          "gv": {
+            "@officialStatus": "official",
+            "@populationPercent": "2"
+          }
+        }
+      },
+      "IN": {
+        "@gdp": "4735000000000",
+        "@literacyPercent": "61",
+        "@population": "1220800000",
+        "languagePopulation": {
+          "as": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "1.3"
+          },
+          "awa": {
+            "@populationPercent": "1.9",
+            "@writingPercent": "5"
+          },
+          "bfq": {
+            "@populationPercent": "0.023"
+          },
+          "bft": {
+            "@populationPercent": "0.0062"
+          },
+          "bfy": {
+            "@populationPercent": "0.037"
+          },
+          "bgc": {
+            "@populationPercent": "1.2",
+            "@writingPercent": "55"
+          },
+          "bhb": {
+            "@populationPercent": "0.12"
+          },
+          "bhi": {
+            "@populationPercent": "0.092"
+          },
+          "bho": {
+            "@populationPercent": "2.3"
+          },
+          "bjj": {
+            "@populationPercent": "0.56"
+          },
+          "bn": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "8.1"
+          },
+          "bo": {
+            "@populationPercent": "0.011"
+          },
+          "bra": {
+            "@populationPercent": "0.0041"
+          },
+          "brx": {
+            "@populationPercent": "0.14"
+          },
+          "btv": {
+            "@populationPercent": "0.0026"
+          },
+          "ccp": {
+            "@populationPercent": "0.028"
+          },
+          "dcc": {
+            "@populationPercent": "0.99"
+          },
+          "doi": {
+            "@populationPercent": "0.2"
+          },
+          "dv": {
+            "@populationPercent": "0.0004"
+          },
+          "dz": {
+            "@populationPercent": "0.0002"
+          },
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "11"
+          },
+          "gbm": {
+            "@populationPercent": "0.27"
+          },
+          "gon_Telu": {
+            "@populationPercent": "0.24"
+          },
+          "grt": {
+            "@populationPercent": "0.053"
+          },
+          "gu": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "4.5"
+          },
+          "hi": {
+            "@officialStatus": "official",
+            "@populationPercent": "41"
+          },
+          "hne": {
+            "@populationPercent": "1.1"
+          },
+          "hoc": {
+            "@populationPercent": "0.099"
+          },
+          "hoj": {
+            "@populationPercent": "0.082"
+          },
+          "kfr": {
+            "@populationPercent": "0.075"
+          },
+          "kfy": {
+            "@populationPercent": "0.22"
+          },
+          "kha": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.08",
+            "@writingPercent": "29"
+          },
+          "khn": {
+            "@populationPercent": "0.15"
+          },
+          "kht": {
+            "@populationPercent": "0.0007"
+          },
+          "kn": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "3.7"
+          },
+          "kok": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.37"
+          },
+          "kru": {
+            "@populationPercent": "0.19"
+          },
+          "ks_Arab": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.41"
+          },
+          "lah": {
+            "@populationPercent": "0.0025"
+          },
+          "lep": {
+            "@populationPercent": "0.0035"
+          },
+          "lif_Deva": {
+            "@populationPercent": "0.0026"
+          },
+          "lmn": {
+            "@populationPercent": "0.27"
+          },
+          "mag": {
+            "@populationPercent": "1.2"
+          },
+          "mai": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "1.2"
+          },
+          "ml": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "3.2"
+          },
+          "mni": {
+            "@populationPercent": "0.11"
+          },
+          "mr": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "7"
+          },
+          "mtr": {
+            "@populationPercent": "0.098"
+          },
+          "mwr": {
+            "@populationPercent": "1.2"
+          },
+          "ne": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.56"
+          },
+          "noe": {
+            "@populationPercent": "0.13"
+          },
+          "or": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "3.2"
+          },
+          "pa_Guru": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "2.8"
+          },
+          "raj": {
+            "@populationPercent": "0.1"
+          },
+          "ria": {
+            "@populationPercent": "0.013"
+          },
+          "rkt": {
+            "@populationPercent": "0.44",
+            "@writingPercent": "20"
+          },
+          "sa": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.0012"
+          },
+          "sat": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.55"
+          },
+          "saz": {
+            "@populationPercent": "0.029"
+          },
+          "sck": {
+            "@populationPercent": "0.18"
+          },
+          "sd_Arab": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.26"
+          },
+          "sd_Deva": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.026"
+          },
+          "srx": {
+            "@populationPercent": "0.035"
+          },
+          "swv": {
+            "@populationPercent": "0.28"
+          },
+          "ta": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "5.9"
+          },
+          "tcy": {
+            "@populationPercent": "0.18"
+          },
+          "te": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "7.2"
+          },
+          "unr_Beng": {
+            "@populationPercent": "0.095"
+          },
+          "unx_Beng": {
+            "@populationPercent": "0.048"
+          },
+          "ur": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "5"
+          },
+          "wbq": {
+            "@populationPercent": "0.18"
+          },
+          "wbr": {
+            "@populationPercent": "0.15"
+          },
+          "wtm": {
+            "@populationPercent": "0.46"
+          },
+          "xnr": {
+            "@populationPercent": "0.16"
+          }
+        }
+      },
+      "IO": {
+        "@gdp": "128300000",
+        "@literacyPercent": "99",
+        "@population": "3500",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "100",
+            "@writingPercent": "100"
+          }
+        }
+      },
+      "IQ": {
+        "@gdp": "155400000000",
+        "@literacyPercent": "78.2",
+        "@population": "31858500",
+        "languagePopulation": {
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "68"
+          },
+          "ckb": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "20"
+          },
+          "fa": {
+            "@populationPercent": "0.87"
+          },
+          "syr": {
+            "@populationPercent": "0.5"
+          }
+        }
+      },
+      "IR": {
+        "@gdp": "997400000000",
+        "@literacyPercent": "77",
+        "@population": "79853900",
+        "languagePopulation": {
+          "ar": {
+            "@populationPercent": "2"
+          },
+          "az_Arab": {
+            "@populationPercent": "24"
+          },
+          "bal": {
+            "@populationPercent": "2"
+          },
+          "bqi": {
+            "@populationPercent": "1.4"
+          },
+          "ckb": {
+            "@populationPercent": "3.9"
+          },
+          "fa": {
+            "@officialStatus": "official",
+            "@populationPercent": "75"
+          },
+          "glk": {
+            "@populationPercent": "4.6"
+          },
+          "hy": {
+            "@populationPercent": "0.24"
+          },
+          "ka": {
+            "@populationPercent": "0.071"
+          },
+          "kk_Arab": {
+            "@populationPercent": "0.0038"
+          },
+          "lki": {
+            "@populationPercent": "0.76"
+          },
+          "lrc": {
+            "@populationPercent": "2.1"
+          },
+          "luz": {
+            "@populationPercent": "1.2"
+          },
+          "prd": {
+            "@populationPercent": "0.5"
+          },
+          "ps": {
+            "@populationPercent": "0.16"
+          },
+          "rmt": {
+            "@populationPercent": "1.9"
+          },
+          "sdh": {
+            "@populationPercent": "2.4"
+          },
+          "tk_Latn": {
+            "@populationPercent": "2.8"
+          }
+        }
+      },
+      "IS": {
+        "@gdp": "12950000000",
+        "@literacyPercent": "99",
+        "@population": "315281",
+        "languagePopulation": {
+          "da": {
+            "@populationPercent": "0.71"
+          },
+          "is": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          }
+        }
+      },
+      "IT": {
+        "@gdp": "1834000000000",
+        "@literacyPercent": "98.4",
+        "@population": "61482300",
+        "languagePopulation": {
+          "ca": {
+            "@populationPercent": "0.035"
+          },
+          "de": {
+            "@populationPercent": "0.39"
+          },
+          "el": {
+            "@populationPercent": "0.035"
+          },
+          "en": {
+            "@populationPercent": "24"
+          },
+          "fr": {
+            "@populationPercent": "0.17"
+          },
+          "fur": {
+            "@populationPercent": "1.4",
+            "@writingPercent": "5"
+          },
+          "hr": {
+            "@populationPercent": "0.0057"
+          },
+          "it": {
+            "@officialStatus": "official",
+            "@populationPercent": "95"
+          },
+          "nap": {
+            "@populationPercent": "12",
+            "@writingPercent": "5"
+          },
+          "scn": {
+            "@populationPercent": "8.4",
+            "@writingPercent": "5"
+          },
+          "sl": {
+            "@populationPercent": "0.17"
+          }
+        }
+      },
+      "JE": {
+        "@gdp": "5100000000",
+        "@literacyPercent": "99",
+        "@population": "95732",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "95"
+          }
+        }
+      },
+      "JM": {
+        "@gdp": "25180000000",
+        "@literacyPercent": "87.9",
+        "@population": "2909710",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "98"
+          }
+        }
+      },
+      "JO": {
+        "@gdp": "38670000000",
+        "@literacyPercent": "92.6",
+        "@population": "6482080",
+        "languagePopulation": {
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          }
+        }
+      },
+      "JP": {
+        "@gdp": "4617000000000",
+        "@literacyPercent": "99",
+        "@population": "127253000",
+        "languagePopulation": {
+          "ja": {
+            "@officialStatus": "official",
+            "@populationPercent": "95"
+          },
+          "ko": {
+            "@populationPercent": "0.52"
+          },
+          "ryu": {
+            "@populationPercent": "0.77",
+            "@writingPercent": "5"
+          }
+        }
+      },
+      "KE": {
+        "@gdp": "76070000000",
+        "@literacyPercent": "87.4",
+        "@population": "44037700",
+        "languagePopulation": {
+          "ar": {
+            "@populationPercent": "0.046"
+          },
+          "dav": {
+            "@populationPercent": "0.82",
+            "@writingPercent": "5"
+          },
+          "ebu": {
+            "@populationPercent": "1.5",
+            "@writingPercent": "1"
+          },
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "85"
+          },
+          "gu": {
+            "@populationPercent": "0.011"
+          },
+          "guz": {
+            "@populationPercent": "4.9"
+          },
+          "kam": {
+            "@populationPercent": "7.6"
+          },
+          "ki": {
+            "@populationPercent": "17"
+          },
+          "kln": {
+            "@populationPercent": "7.6"
+          },
+          "luo": {
+            "@populationPercent": "9.8"
+          },
+          "luy": {
+            "@populationPercent": "11"
+          },
+          "mas": {
+            "@populationPercent": "1.6",
+            "@writingPercent": "50"
+          },
+          "mer": {
+            "@populationPercent": "4"
+          },
+          "om": {
+            "@populationPercent": "0.47"
+          },
+          "pa_Guru": {
+            "@populationPercent": "0.023"
+          },
+          "pko": {
+            "@populationPercent": "0.7",
+            "@writingPercent": "1"
+          },
+          "saq": {
+            "@populationPercent": "0.46",
+            "@writingPercent": "1"
+          },
+          "so": {
+            "@populationPercent": "1.3"
+          },
+          "sw": {
+            "@officialStatus": "official",
+            "@populationPercent": "66"
+          },
+          "teo": {
+            "@populationPercent": "0.74"
+          }
+        }
+      },
+      "KG": {
+        "@gdp": "13470000000",
+        "@literacyPercent": "98.7",
+        "@population": "5548040",
+        "languagePopulation": {
+          "ky_Cyrl": {
+            "@officialStatus": "official",
+            "@populationPercent": "48"
+          },
+          "ru": {
+            "@officialStatus": "official",
+            "@populationPercent": "28"
+          }
+        }
+      },
+      "KH": {
+        "@gdp": "36590000000",
+        "@literacyPercent": "77.6",
+        "@population": "15205500",
+        "languagePopulation": {
+          "cja": {
+            "@populationPercent": "1.6"
+          },
+          "kdt": {
+            "@populationPercent": "0.11"
+          },
+          "km": {
+            "@officialStatus": "official",
+            "@populationPercent": "89"
+          }
+        }
+      },
+      "KI": {
+        "@gdp": "624000000",
+        "@literacyPercent": "90",
+        "@population": "103248",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          },
+          "gil": {
+            "@officialStatus": "official",
+            "@populationPercent": "60"
+          }
+        }
+      },
+      "KM": {
+        "@gdp": "872000000",
+        "@literacyPercent": "74.9",
+        "@population": "752288",
+        "languagePopulation": {
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "66"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "56"
+          },
+          "zdj": {
+            "@officialStatus": "official",
+            "@populationPercent": "37"
+          }
+        }
+      },
+      "KN": {
+        "@gdp": "890000000",
+        "@literacyPercent": "97.8",
+        "@population": "51134",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "98"
+          }
+        }
+      },
+      "KP": {
+        "@gdp": "40000000000",
+        "@literacyPercent": "99",
+        "@population": "24720400",
+        "languagePopulation": {
+          "ko": {
+            "@officialStatus": "official",
+            "@populationPercent": "88"
+          }
+        }
+      },
+      "KR": {
+        "@gdp": "1622000000000",
+        "@literacyPercent": "97.9",
+        "@population": "48955200",
+        "languagePopulation": {
+          "ko": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          }
+        }
+      },
+      "KW": {
+        "@gdp": "165900000000",
+        "@literacyPercent": "93.3",
+        "@population": "2695320",
+        "languagePopulation": {
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          }
+        }
+      },
+      "KY": {
+        "@gdp": "2250000000",
+        "@literacyPercent": "98",
+        "@population": "53737",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "98"
+          }
+        }
+      },
+      "KZ": {
+        "@gdp": "232300000000",
+        "@literacyPercent": "99.5",
+        "@population": "17736900",
+        "languagePopulation": {
+          "de": {
+            "@populationPercent": "6.4"
+          },
+          "kk_Cyrl": {
+            "@officialStatus": "official",
+            "@populationPercent": "64"
+          },
+          "ru": {
+            "@officialStatus": "official",
+            "@populationPercent": "95"
+          },
+          "ug_Cyrl": {
+            "@populationPercent": "2"
+          }
+        }
+      },
+      "LA": {
+        "@gdp": "19160000000",
+        "@literacyPercent": "73",
+        "@population": "6695170",
+        "languagePopulation": {
+          "kdt": {
+            "@populationPercent": "0.96"
+          },
+          "kjg": {
+            "@populationPercent": "5.8"
+          },
+          "lo": {
+            "@officialStatus": "official",
+            "@populationPercent": "69"
+          }
+        }
+      },
+      "LB": {
+        "@gdp": "63690000000",
+        "@literacyPercent": "87.4",
+        "@population": "4131580",
+        "languagePopulation": {
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "86"
+          },
+          "en": {
+            "@populationPercent": "0.08"
+          },
+          "fr": {
+            "@populationPercent": "0.37"
+          },
+          "hy": {
+            "@populationPercent": "5.2"
+          },
+          "ku_Arab": {
+            "@populationPercent": "1.6"
+          }
+        }
+      },
+      "LC": {
+        "@gdp": "2234000000",
+        "@literacyPercent": "90.1",
+        "@population": "162781",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "90"
+          }
+        }
+      },
+      "LI": {
+        "@gdp": "3200000000",
+        "@literacyPercent": "100",
+        "@population": "37009",
+        "languagePopulation": {
+          "de": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          },
+          "gsw": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "85",
+            "@writingPercent": "5"
+          },
+          "wae": {
+            "@populationPercent": "3.5"
+          }
+        }
+      },
+      "LK": {
+        "@gdp": "126200000000",
+        "@literacyPercent": "91.2",
+        "@population": "21675600",
+        "languagePopulation": {
+          "en": {
+            "@populationPercent": "0.38"
+          },
+          "si": {
+            "@officialStatus": "official",
+            "@populationPercent": "68"
+          },
+          "ta": {
+            "@officialStatus": "official",
+            "@populationPercent": "15"
+          }
+        }
+      },
+      "LR": {
+        "@gdp": "2693000000",
+        "@literacyPercent": "60.8",
+        "@population": "3989700",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "20"
+          },
+          "kpe": {
+            "@populationPercent": "14"
+          },
+          "men": {
+            "@populationPercent": "0.48"
+          },
+          "vai_Latn": {
+            "@populationPercent": "2.6"
+          },
+          "vai_Vaii": {
+            "@populationPercent": "2.6"
+          }
+        }
+      },
+      "LS": {
+        "@gdp": "3945000000",
+        "@literacyPercent": "89.6",
+        "@population": "1936180",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "2.3"
+          },
+          "ss": {
+            "@populationPercent": "2.4"
+          },
+          "st": {
+            "@officialStatus": "official",
+            "@populationPercent": "98"
+          },
+          "xh": {
+            "@populationPercent": "1"
+          },
+          "zu": {
+            "@populationPercent": "14"
+          }
+        }
+      },
+      "LT": {
+        "@gdp": "64320000000",
+        "@literacyPercent": "99.7",
+        "@population": "3515860",
+        "languagePopulation": {
+          "lt": {
+            "@officialStatus": "official",
+            "@populationPercent": "86"
+          },
+          "ru": {
+            "@populationPercent": "8"
+          }
+        }
+      },
+      "LU": {
+        "@gdp": "42190000000",
+        "@literacyPercent": "100",
+        "@population": "514862",
+        "languagePopulation": {
+          "de": {
+            "@officialStatus": "official",
+            "@populationPercent": "63"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "87"
+          },
+          "lb": {
+            "@officialStatus": "official",
+            "@populationPercent": "67",
+            "@writingPercent": "5"
+          }
+        }
+      },
+      "LV": {
+        "@gdp": "37040000000",
+        "@literacyPercent": "99.8",
+        "@population": "2178440",
+        "languagePopulation": {
+          "lv": {
+            "@officialStatus": "official",
+            "@populationPercent": "61"
+          },
+          "ru": {
+            "@populationPercent": "38"
+          }
+        }
+      },
+      "LY": {
+        "@gdp": "87910000000",
+        "@literacyPercent": "89.2",
+        "@population": "6002350",
+        "languagePopulation": {
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "74"
+          }
+        }
+      },
+      "MA": {
+        "@gdp": "171000000000",
+        "@literacyPercent": "56.1",
+        "@population": "32649100",
+        "languagePopulation": {
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "62"
+          },
+          "es": {
+            "@populationPercent": "0.065"
+          },
+          "fr": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "20"
+          },
+          "rif": {
+            "@populationPercent": "4.9"
+          },
+          "shi_Latn": {
+            "@populationPercent": "8.7"
+          },
+          "shi_Tfng": {
+            "@populationPercent": "8.7"
+          },
+          "tzm_Latn": {
+            "@officialStatus": "official",
+            "@populationPercent": "9.8"
+          }
+        }
+      },
+      "MC": {
+        "@gdp": "5470000000",
+        "@literacyPercent": "99",
+        "@population": "30500",
+        "languagePopulation": {
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "99"
+          }
+        }
+      },
+      "MD": {
+        "@gdp": "12560000000",
+        "@literacyPercent": "98.5",
+        "@population": "3619930",
+        "languagePopulation": {
+          "bg": {
+            "@populationPercent": "9.4"
+          },
+          "gag": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "3.3"
+          },
+          "ro": {
+            "@officialStatus": "official",
+            "@populationPercent": "63"
+          },
+          "ru": {
+            "@populationPercent": "3"
+          }
+        }
+      },
+      "ME": {
+        "@gdp": "7288000000",
+        "@literacyPercent": "98.4",
+        "@population": "653474",
+        "languagePopulation": {
+          "sq": {
+            "@populationPercent": "7.9"
+          },
+          "sr_Latn": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          }
+        }
+      },
+      "MF": {
+        "@gdp": "449000000",
+        "@literacyPercent": "99",
+        "@population": "31264",
+        "languagePopulation": {
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          }
+        }
+      },
+      "MG": {
+        "@gdp": "21370000000",
+        "@literacyPercent": "64.5",
+        "@population": "22599100",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "5"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "69"
+          },
+          "mg": {
+            "@officialStatus": "official",
+            "@populationPercent": "90"
+          }
+        }
+      },
+      "MH": {
+        "@gdp": "133500000",
+        "@literacyPercent": "93.7",
+        "@population": "69747",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "93"
+          },
+          "mh": {
+            "@officialStatus": "official",
+            "@populationPercent": "73"
+          }
+        }
+      },
+      "MK": {
+        "@gdp": "22150000000",
+        "@literacyPercent": "97.3",
+        "@population": "2087170",
+        "languagePopulation": {
+          "mk": {
+            "@officialStatus": "official",
+            "@populationPercent": "67"
+          },
+          "sq": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "25"
+          },
+          "tr": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "9.7"
+          }
+        }
+      },
+      "ML": {
+        "@gdp": "17350000000",
+        "@literacyPercent": "27.7",
+        "@population": "15968900",
+        "languagePopulation": {
+          "ar": {
+            "@populationPercent": "0.89"
+          },
+          "bm": {
+            "@populationPercent": "46"
+          },
+          "bmq": {
+            "@populationPercent": "0.86"
+          },
+          "bze": {
+            "@populationPercent": "0.84"
+          },
+          "bzx": {
+            "@populationPercent": "0.99"
+          },
+          "dtm": {
+            "@populationPercent": "1.1"
+          },
+          "ffm": {
+            "@populationPercent": "7.7"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "46"
+          },
+          "kao": {
+            "@populationPercent": "1"
+          },
+          "khq": {
+            "@populationPercent": "1.7"
+          },
+          "mwk": {
+            "@populationPercent": "5"
+          },
+          "ses": {
+            "@populationPercent": "3.4"
+          },
+          "snk": {
+            "@populationPercent": "5.9"
+          },
+          "tmh": {
+            "@populationPercent": "2.1"
+          }
+        }
+      },
+      "MM": {
+        "@gdp": "89230000000",
+        "@literacyPercent": "89.9",
+        "@population": "55167300",
+        "languagePopulation": {
+          "kht": {
+            "@populationPercent": "0.0077"
+          },
+          "mnw": {
+            "@populationPercent": "1.5"
+          },
+          "my": {
+            "@officialStatus": "official",
+            "@populationPercent": "64"
+          },
+          "shn": {
+            "@populationPercent": "6.4"
+          }
+        }
+      },
+      "MN": {
+        "@gdp": "15220000000",
+        "@literacyPercent": "97.4",
+        "@population": "3226520",
+        "languagePopulation": {
+          "kk_Arab": {
+            "@populationPercent": "7.2"
+          },
+          "mn_Cyrl": {
+            "@officialStatus": "official",
+            "@populationPercent": "93"
+          },
+          "ru": {
+            "@populationPercent": "0.12"
+          },
+          "ug_Cyrl": {
+            "@populationPercent": "0.031"
+          },
+          "zh_Hans": {
+            "@populationPercent": "1.4"
+          }
+        }
+      },
+      "MO": {
+        "@gdp": "42900000000",
+        "@literacyPercent": "91.3",
+        "@population": "583003",
+        "languagePopulation": {
+          "pt": {
+            "@officialStatus": "official",
+            "@populationPercent": "5"
+          },
+          "zh_Hans": {
+            "@populationPercent": "5"
+          },
+          "zh_Hant": {
+            "@officialStatus": "official",
+            "@populationPercent": "98"
+          }
+        }
+      },
+      "MP": {
+        "@gdp": "900000000",
+        "@literacyPercent": "97",
+        "@population": "51170",
+        "languagePopulation": {
+          "ch": {
+            "@populationPercent": "18"
+          },
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "97"
+          }
+        }
+      },
+      "MQ": {
+        "@gdp": "6117000000",
+        "@literacyPercent": "98",
+        "@population": "436131",
+        "languagePopulation": {
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "98"
+          }
+        }
+      },
+      "MR": {
+        "@gdp": "7615000000",
+        "@literacyPercent": "58",
+        "@population": "3437610",
+        "languagePopulation": {
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "85"
+          },
+          "ff": {
+            "@populationPercent": "5.7"
+          },
+          "fr": {
+            "@populationPercent": "17"
+          },
+          "wo_Latn": {
+            "@populationPercent": "0.29"
+          }
+        }
+      },
+      "MS": {
+        "@gdp": "43780000",
+        "@literacyPercent": "97",
+        "@population": "5189",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "98"
+          }
+        }
+      },
+      "MT": {
+        "@gdp": "11140000000",
+        "@literacyPercent": "92.8",
+        "@population": "411277",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "88"
+          },
+          "mt": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          }
+        }
+      },
+      "MU": {
+        "@gdp": "20260000000",
+        "@literacyPercent": "88.5",
+        "@population": "1322240",
+        "languagePopulation": {
+          "bho": {
+            "@populationPercent": "27"
+          },
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "72"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "3"
+          },
+          "mfe": {
+            "@populationPercent": "90"
+          },
+          "ta": {
+            "@populationPercent": "2.5"
+          },
+          "ur": {
+            "@populationPercent": "5.2"
+          }
+        }
+      },
+      "MV": {
+        "@gdp": "2945000000",
+        "@literacyPercent": "93.8",
+        "@population": "393988",
+        "languagePopulation": {
+          "dv": {
+            "@officialStatus": "official",
+            "@populationPercent": "94"
+          }
+        }
+      },
+      "MW": {
+        "@gdp": "14580000000",
+        "@literacyPercent": "74.8",
+        "@population": "16777500",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "63"
+          },
+          "ny": {
+            "@officialStatus": "official",
+            "@populationPercent": "63"
+          },
+          "tum": {
+            "@populationPercent": "8.4"
+          },
+          "zu": {
+            "@populationPercent": "0.33"
+          }
+        }
+      },
+      "MX": {
+        "@gdp": "1758000000000",
+        "@literacyPercent": "86.1",
+        "@population": "116221000",
+        "languagePopulation": {
+          "es": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "83"
+          },
+          "maz": {
+            "@populationPercent": "0.34"
+          },
+          "nch": {
+            "@populationPercent": "0.19"
+          },
+          "nhe": {
+            "@populationPercent": "0.39"
+          },
+          "nhw": {
+            "@populationPercent": "0.38"
+          },
+          "yua": {
+            "@populationPercent": "0.67"
+          }
+        }
+      },
+      "MY": {
+        "@gdp": "492000000000",
+        "@literacyPercent": "88.7",
+        "@population": "29628400",
+        "languagePopulation": {
+          "bjn": {
+            "@populationPercent": "3.6"
+          },
+          "bug": {
+            "@populationPercent": "0.08"
+          },
+          "en": {
+            "@populationPercent": "29"
+          },
+          "jv": {
+            "@populationPercent": "1.2"
+          },
+          "ml": {
+            "@populationPercent": "0.15"
+          },
+          "ms_Latn": {
+            "@officialStatus": "official",
+            "@populationPercent": "75"
+          },
+          "ta": {
+            "@populationPercent": "4.2"
+          },
+          "zh_Hant": {
+            "@populationPercent": "17"
+          },
+          "zmi": {
+            "@populationPercent": "1.2"
+          }
+        }
+      },
+      "MZ": {
+        "@gdp": "26220000000",
+        "@literacyPercent": "56.1",
+        "@population": "24096700",
+        "languagePopulation": {
+          "ndc": {
+            "@populationPercent": "9.9"
+          },
+          "ngl": {
+            "@populationPercent": "6.8"
+          },
+          "ny": {
+            "@populationPercent": "2.6"
+          },
+          "pt": {
+            "@officialStatus": "official",
+            "@populationPercent": "27"
+          },
+          "rng": {
+            "@populationPercent": "3.4"
+          },
+          "seh": {
+            "@populationPercent": "4.6"
+          },
+          "sw": {
+            "@populationPercent": "0.038"
+          },
+          "ts": {
+            "@populationPercent": "7.9"
+          },
+          "vmw": {
+            "@populationPercent": "13"
+          },
+          "yao": {
+            "@populationPercent": "2.4"
+          },
+          "zu": {
+            "@populationPercent": "0.0075"
+          }
+        }
+      },
+      "NA": {
+        "@gdp": "16840000000",
+        "@literacyPercent": "88.8",
+        "@population": "2182850",
+        "languagePopulation": {
+          "af": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "6.6"
+          },
+          "de": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "1"
+          },
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "7"
+          },
+          "kj": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "35"
+          },
+          "naq": {
+            "@populationPercent": "9.2"
+          },
+          "ng": {
+            "@populationPercent": "21"
+          },
+          "tn": {
+            "@populationPercent": "0.28"
+          }
+        }
+      },
+      "NC": {
+        "@gdp": "3158000000",
+        "@literacyPercent": "96.2",
+        "@population": "264022",
+        "languagePopulation": {
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "96"
+          }
+        }
+      },
+      "NE": {
+        "@gdp": "13530000000",
+        "@literacyPercent": "28.7",
+        "@population": "16899300",
+        "languagePopulation": {
+          "ar": {
+            "@populationPercent": "0.21"
+          },
+          "dje": {
+            "@populationPercent": "17"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "29"
+          },
+          "fuq": {
+            "@populationPercent": "7"
+          },
+          "ha_Latn": {
+            "@populationPercent": "41"
+          },
+          "tmh": {
+            "@populationPercent": "6"
+          },
+          "twq": {
+            "@populationPercent": "0.047"
+          }
+        }
+      },
+      "NF": {
+        "@gdp": "94160000",
+        "@literacyPercent": "99",
+        "@population": "2182",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "77"
+          }
+        }
+      },
+      "NG": {
+        "@gdp": "450500000000",
+        "@literacyPercent": "61.3",
+        "@population": "174508000",
+        "languagePopulation": {
+          "amo": {
+            "@populationPercent": "0.0088"
+          },
+          "ar": {
+            "@populationPercent": "0.071"
+          },
+          "bin": {
+            "@populationPercent": "0.71"
+          },
+          "cch": {
+            "@populationPercent": "0.021"
+          },
+          "efi": {
+            "@officialStatus": "official",
+            "@populationPercent": "1.4"
+          },
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "75"
+          },
+          "fuv": {
+            "@populationPercent": "6.7"
+          },
+          "ha_Arab": {
+            "@officialStatus": "official",
+            "@populationPercent": "1"
+          },
+          "ha_Latn": {
+            "@officialStatus": "official",
+            "@populationPercent": "13"
+          },
+          "ibb": {
+            "@populationPercent": "1.4"
+          },
+          "ig": {
+            "@officialStatus": "official",
+            "@populationPercent": "13"
+          },
+          "kaj": {
+            "@populationPercent": "0.21"
+          },
+          "kcg": {
+            "@populationPercent": "0.093"
+          },
+          "tiv": {
+            "@populationPercent": "1.6",
+            "@writingPercent": "25"
+          },
+          "yo": {
+            "@officialStatus": "official",
+            "@populationPercent": "13"
+          }
+        }
+      },
+      "NI": {
+        "@gdp": "19890000000",
+        "@literacyPercent": "67.5",
+        "@population": "5788530",
+        "languagePopulation": {
+          "es": {
+            "@officialStatus": "official",
+            "@populationPercent": "78"
+          }
+        }
+      },
+      "NL": {
+        "@gdp": "709500000000",
+        "@literacyPercent": "99",
+        "@population": "16805000",
+        "languagePopulation": {
+          "en": {
+            "@populationPercent": "74"
+          },
+          "fy": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "4.3"
+          },
+          "gos": {
+            "@populationPercent": "3.6"
+          },
+          "id": {
+            "@populationPercent": "1.8"
+          },
+          "li": {
+            "@populationPercent": "5.5",
+            "@writingPercent": "5"
+          },
+          "nl": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          },
+          "rif": {
+            "@populationPercent": "1.2"
+          },
+          "tr": {
+            "@populationPercent": "1.2"
+          },
+          "zea": {
+            "@populationPercent": "1.4"
+          }
+        }
+      },
+      "NO": {
+        "@gdp": "278100000000",
+        "@literacyPercent": "100",
+        "@population": "4722700",
+        "languagePopulation": {
+          "nb": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          },
+          "nn": {
+            "@officialStatus": "official",
+            "@populationPercent": "25"
+          },
+          "se": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "3.3"
+          }
+        }
+      },
+      "NP": {
+        "@gdp": "40490000000",
+        "@literacyPercent": "60.3",
+        "@population": "30430300",
+        "languagePopulation": {
+          "awa": {
+            "@populationPercent": "2.2"
+          },
+          "bap": {
+            "@populationPercent": "1.5"
+          },
+          "bfy": {
+            "@populationPercent": "0.54"
+          },
+          "bho": {
+            "@populationPercent": "6.8"
+          },
+          "bn": {
+            "@populationPercent": "0.093"
+          },
+          "bo": {
+            "@populationPercent": "0.24"
+          },
+          "ggn": {
+            "@populationPercent": "0.42"
+          },
+          "gvr": {
+            "@populationPercent": "0.29"
+          },
+          "hi": {
+            "@populationPercent": "0.42"
+          },
+          "jml": {
+            "@populationPercent": "3.2"
+          },
+          "lep": {
+            "@populationPercent": "0.0093"
+          },
+          "lif_Deva": {
+            "@populationPercent": "1.1"
+          },
+          "mai": {
+            "@populationPercent": "11"
+          },
+          "mgp": {
+            "@populationPercent": "1.1"
+          },
+          "mrd": {
+            "@populationPercent": "0.83"
+          },
+          "ne": {
+            "@officialStatus": "official",
+            "@populationPercent": "44"
+          },
+          "new": {
+            "@populationPercent": "3.3"
+          },
+          "rjs": {
+            "@populationPercent": "0.44",
+            "@writingPercent": "67"
+          },
+          "taj": {
+            "@populationPercent": "3"
+          },
+          "tdg": {
+            "@populationPercent": "1.3"
+          },
+          "tdh": {
+            "@populationPercent": "0.12"
+          },
+          "thl": {
+            "@populationPercent": "2"
+          },
+          "thq": {
+            "@populationPercent": "1"
+          },
+          "thr": {
+            "@populationPercent": "1.2"
+          },
+          "tkt": {
+            "@populationPercent": "0.24"
+          },
+          "tsf": {
+            "@populationPercent": "0.43"
+          },
+          "unr_Deva": {
+            "@populationPercent": "0.019"
+          },
+          "xsr": {
+            "@populationPercent": "0.51"
+          }
+        }
+      },
+      "NR": {
+        "@gdp": "60000000",
+        "@literacyPercent": "99",
+        "@population": "9434",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "99"
+          },
+          "na": {
+            "@officialStatus": "official",
+            "@populationPercent": "73"
+          }
+        }
+      },
+      "NU": {
+        "@gdp": "10010000",
+        "@literacyPercent": "95",
+        "@population": "1269",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "95"
+          },
+          "niu": {
+            "@officialStatus": "official",
+            "@populationPercent": "95"
+          }
+        }
+      },
+      "NZ": {
+        "@gdp": "128500000000",
+        "@literacyPercent": "99",
+        "@population": "4365110",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "91"
+          },
+          "mi": {
+            "@officialStatus": "official",
+            "@populationPercent": "2.5"
+          }
+        }
+      },
+      "OM": {
+        "@gdp": "90660000000",
+        "@literacyPercent": "81.4",
+        "@population": "3154130",
+        "languagePopulation": {
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "81"
+          },
+          "bal": {
+            "@populationPercent": "4.9"
+          },
+          "fa": {
+            "@populationPercent": "0.94"
+          }
+        }
+      },
+      "PA": {
+        "@gdp": "55800000000",
+        "@literacyPercent": "91.9",
+        "@population": "3559410",
+        "languagePopulation": {
+          "en": {
+            "@populationPercent": "14"
+          },
+          "es": {
+            "@officialStatus": "official",
+            "@populationPercent": "69"
+          },
+          "zh_Hant": {
+            "@populationPercent": "0.17"
+          }
+        }
+      },
+      "PE": {
+        "@gdp": "325400000000",
+        "@literacyPercent": "92.9",
+        "@population": "29849300",
+        "languagePopulation": {
+          "ay": {
+            "@populationPercent": "1.6"
+          },
+          "es": {
+            "@officialStatus": "official",
+            "@populationPercent": "73"
+          },
+          "qu": {
+            "@officialStatus": "official",
+            "@populationPercent": "15"
+          }
+        }
+      },
+      "PF": {
+        "@gdp": "4718000000",
+        "@literacyPercent": "98",
+        "@population": "277293",
+        "languagePopulation": {
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "61"
+          },
+          "ty": {
+            "@officialStatus": "official",
+            "@populationPercent": "31"
+          },
+          "zh_Hant": {
+            "@populationPercent": "7.8"
+          }
+        }
+      },
+      "PG": {
+        "@gdp": "18450000000",
+        "@literacyPercent": "57.3",
+        "@population": "6431900",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "20"
+          },
+          "ho": {
+            "@officialStatus": "official",
+            "@populationPercent": "2.1",
+            "@writingPercent": "5"
+          },
+          "tpi": {
+            "@officialStatus": "official",
+            "@populationPercent": "71",
+            "@writingPercent": "45"
+          }
+        }
+      },
+      "PH": {
+        "@gdp": "416700000000",
+        "@literacyPercent": "92.6",
+        "@population": "105721000",
+        "languagePopulation": {
+          "bhk": {
+            "@populationPercent": "2.3"
+          },
+          "bik": {
+            "@populationPercent": "3"
+          },
+          "bku": {
+            "@populationPercent": "0.0076"
+          },
+          "bto": {
+            "@populationPercent": "0.28"
+          },
+          "ceb": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "24",
+            "@writingPercent": "13"
+          },
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "64"
+          },
+          "es": {
+            "@officialStatus": "official",
+            "@populationPercent": "31"
+          },
+          "fil": {
+            "@officialStatus": "official",
+            "@populationPercent": "60"
+          },
+          "hil": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "8.4",
+            "@writingPercent": "8"
+          },
+          "hnn": {
+            "@populationPercent": "0.016"
+          },
+          "ilo": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "9.6",
+            "@writingPercent": "10"
+          },
+          "mdh": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "1.2"
+          },
+          "pag": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "1.4"
+          },
+          "pam": {
+            "@populationPercent": "2.3"
+          },
+          "tbw": {
+            "@populationPercent": "0.0095",
+            "@writingPercent": "36"
+          },
+          "tsg": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "1.1"
+          },
+          "war": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "2.9"
+          },
+          "zh_Hant": {
+            "@populationPercent": "0.73"
+          }
+        }
+      },
+      "PK": {
+        "@gdp": "514600000000",
+        "@literacyPercent": "54.9",
+        "@population": "193239000",
+        "languagePopulation": {
+          "bal": {
+            "@populationPercent": "3.7"
+          },
+          "bft": {
+            "@populationPercent": "0.18"
+          },
+          "brh": {
+            "@populationPercent": "1.3"
+          },
+          "btv": {
+            "@populationPercent": "0.019"
+          },
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "50"
+          },
+          "fa": {
+            "@populationPercent": "0.66"
+          },
+          "gjk": {
+            "@populationPercent": "0.11"
+          },
+          "gju": {
+            "@populationPercent": "0.2"
+          },
+          "hnd": {
+            "@populationPercent": "0.41"
+          },
+          "hno": {
+            "@populationPercent": "1.2"
+          },
+          "khw": {
+            "@populationPercent": "0.15"
+          },
+          "ks_Arab": {
+            "@populationPercent": "0.069"
+          },
+          "kvx": {
+            "@populationPercent": "0.16"
+          },
+          "kxp": {
+            "@populationPercent": "0.12"
+          },
+          "lah": {
+            "@populationPercent": "40"
+          },
+          "mvy": {
+            "@populationPercent": "0.14"
+          },
+          "pa_Arab": {
+            "@populationPercent": "70"
+          },
+          "ps": {
+            "@populationPercent": "15"
+          },
+          "sd_Arab": {
+            "@populationPercent": "12"
+          },
+          "skr": {
+            "@populationPercent": "9.1",
+            "@writingPercent": "1"
+          },
+          "tg_Arab": {
+            "@populationPercent": "0.33"
+          },
+          "ur": {
+            "@officialStatus": "official",
+            "@populationPercent": "95"
+          }
+        }
+      },
+      "PL": {
+        "@gdp": "802000000000",
+        "@literacyPercent": "99.5",
+        "@population": "38383800",
+        "languagePopulation": {
+          "be": {
+            "@populationPercent": "0.58"
+          },
+          "csb": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.0001"
+          },
+          "de": {
+            "@populationPercent": "1.3"
+          },
+          "pl": {
+            "@officialStatus": "official",
+            "@populationPercent": "96"
+          },
+          "uk": {
+            "@populationPercent": "0.39"
+          }
+        }
+      },
+      "PM": {
+        "@gdp": "48300000",
+        "@literacyPercent": "99",
+        "@population": "5774",
+        "languagePopulation": {
+          "en": {
+            "@populationPercent": "3.3"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "89"
+          }
+        }
+      },
+      "PN": {
+        "@gdp": "1759000",
+        "@literacyPercent": "99",
+        "@population": "48",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "96"
+          }
+        }
+      },
+      "PR": {
+        "@gdp": "64840000000",
+        "@literacyPercent": "94.1",
+        "@population": "3674210",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "49"
+          },
+          "es": {
+            "@officialStatus": "official",
+            "@populationPercent": "87"
+          }
+        }
+      },
+      "PS": {
+        "@gdp": "8020000000",
+        "@literacyPercent": "92.4",
+        "@population": "4440130",
+        "languagePopulation": {
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          }
+        }
+      },
+      "PT": {
+        "@gdp": "245000000000",
+        "@literacyPercent": "95.2",
+        "@population": "10799300",
+        "languagePopulation": {
+          "gl": {
+            "@populationPercent": "0.14"
+          },
+          "pt": {
+            "@officialStatus": "official",
+            "@populationPercent": "96"
+          }
+        }
+      },
+      "PW": {
+        "@gdp": "164000000",
+        "@literacyPercent": "92",
+        "@population": "21108",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "8.9"
+          },
+          "pau": {
+            "@officialStatus": "official",
+            "@populationPercent": "74"
+          }
+        }
+      },
+      "PY": {
+        "@gdp": "41100000000",
+        "@literacyPercent": "94",
+        "@population": "6623250",
+        "languagePopulation": {
+          "de": {
+            "@populationPercent": "2.9"
+          },
+          "es": {
+            "@officialStatus": "official",
+            "@populationPercent": "3.2"
+          },
+          "gn": {
+            "@officialStatus": "official",
+            "@populationPercent": "80"
+          }
+        }
+      },
+      "QA": {
+        "@gdp": "189000000000",
+        "@literacyPercent": "96.3",
+        "@population": "2042440",
+        "languagePopulation": {
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "89"
+          },
+          "fa": {
+            "@populationPercent": "11"
+          },
+          "ml": {
+            "@populationPercent": "0.32"
+          }
+        }
+      },
+      "RE": {
+        "@gdp": "4791000000",
+        "@literacyPercent": "88",
+        "@population": "787584",
+        "languagePopulation": {
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "89"
+          },
+          "rcf": {
+            "@populationPercent": "71"
+          },
+          "ta": {
+            "@populationPercent": "15"
+          }
+        }
+      },
+      "RO": {
+        "@gdp": "274100000000",
+        "@literacyPercent": "97.7",
+        "@population": "21790500",
+        "languagePopulation": {
+          "bg": {
+            "@populationPercent": "0.031"
+          },
+          "de": {
+            "@populationPercent": "0.21"
+          },
+          "el": {
+            "@populationPercent": "0.019"
+          },
+          "hu": {
+            "@populationPercent": "6.6"
+          },
+          "pl": {
+            "@populationPercent": "0.013"
+          },
+          "ro": {
+            "@officialStatus": "official",
+            "@populationPercent": "90"
+          },
+          "sr_Latn": {
+            "@populationPercent": "0.12"
+          },
+          "tr": {
+            "@populationPercent": "0.13"
+          }
+        }
+      },
+      "RS": {
+        "@gdp": "79650000000",
+        "@literacyPercent": "91.9",
+        "@population": "7243007",
+        "languagePopulation": {
+          "hu": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "4.8"
+          },
+          "ro": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "2.1"
+          },
+          "sk": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.85"
+          },
+          "sq": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "19"
+          },
+          "sr_Cyrl": {
+            "@officialStatus": "official",
+            "@populationPercent": "99"
+          },
+          "sr_Latn": {
+            "@officialStatus": "official",
+            "@populationPercent": "99",
+            "@writingPercent": "5"
+          }
+        }
+      },
+      "RU": {
+        "@gdp": "2509000000000",
+        "@literacyPercent": "99.6",
+        "@population": "142500000",
+        "languagePopulation": {
+          "ady": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.087"
+          },
+          "alt": {
+            "@populationPercent": "0.014"
+          },
+          "av": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.39"
+          },
+          "ba": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "1.3"
+          },
+          "bua": {
+            "@populationPercent": "0.22"
+          },
+          "ce": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.66"
+          },
+          "chm": {
+            "@populationPercent": "0.37"
+          },
+          "cv": {
+            "@populationPercent": "1.3"
+          },
+          "dar": {
+            "@populationPercent": "0.26"
+          },
+          "fi": {
+            "@populationPercent": "0.012"
+          },
+          "inh": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.16"
+          },
+          "kbd": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.31"
+          },
+          "koi": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.081"
+          },
+          "krc": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.16"
+          },
+          "krl": {
+            "@populationPercent": "0.082"
+          },
+          "kum": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.2"
+          },
+          "kv": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.18"
+          },
+          "lbe": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.078"
+          },
+          "lez": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.18"
+          },
+          "mdf": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.21"
+          },
+          "mn_Cyrl": {
+            "@populationPercent": "0.0015"
+          },
+          "mrj": {
+            "@populationPercent": "0.046"
+          },
+          "myv": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.31"
+          },
+          "os": {
+            "@populationPercent": "0.32"
+          },
+          "ru": {
+            "@officialStatus": "official",
+            "@populationPercent": "94"
+          },
+          "sah": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.32"
+          },
+          "sr_Latn": {
+            "@populationPercent": "0.0035"
+          },
+          "tt": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "1.4"
+          },
+          "tyv": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.13"
+          },
+          "udm": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.38"
+          }
+        }
+      },
+      "RW": {
+        "@gdp": "14910000000",
+        "@literacyPercent": "71.1",
+        "@population": "12012600",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "0.0025"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "0.019"
+          },
+          "rw": {
+            "@officialStatus": "official",
+            "@populationPercent": "77"
+          }
+        }
+      },
+      "SA": {
+        "@gdp": "740500000000",
+        "@literacyPercent": "86.6",
+        "@population": "26939600",
+        "languagePopulation": {
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          }
+        }
+      },
+      "SB": {
+        "@gdp": "1922000000",
+        "@literacyPercent": "77",
+        "@population": "597248",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          }
+        }
+      },
+      "SC": {
+        "@gdp": "2410000000",
+        "@literacyPercent": "91.8",
+        "@population": "90846",
+        "languagePopulation": {
+          "crs": {
+            "@populationPercent": "98"
+          },
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "4.5"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "60"
+          }
+        }
+      },
+      "SD": {
+        "@gdp": "80430000000",
+        "@literacyPercent": "61.1",
+        "@population": "34847900",
+        "languagePopulation": {
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "61"
+          },
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "61"
+          },
+          "ha_Arab": {
+            "@populationPercent": "1.4"
+          }
+        }
+      },
+      "SE": {
+        "@gdp": "395800000000",
+        "@literacyPercent": "99",
+        "@population": "9119420",
+        "languagePopulation": {
+          "fi": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "2.2"
+          },
+          "ia": {
+            "@populationPercent": "0.0011"
+          },
+          "se": {
+            "@populationPercent": "0.33"
+          },
+          "sma": {
+            "@populationPercent": "0.0033",
+            "@writingPercent": "75"
+          },
+          "smj": {
+            "@populationPercent": "0.016"
+          },
+          "sv": {
+            "@officialStatus": "official",
+            "@populationPercent": "95"
+          }
+        }
+      },
+      "SG": {
+        "@gdp": "326700000000",
+        "@literacyPercent": "92.5",
+        "@population": "5460300",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "93"
+          },
+          "ml": {
+            "@populationPercent": "0.18"
+          },
+          "ms_Latn": {
+            "@officialStatus": "official",
+            "@populationPercent": "14"
+          },
+          "pa_Guru": {
+            "@populationPercent": "0.17"
+          },
+          "ta": {
+            "@officialStatus": "official",
+            "@populationPercent": "2.1"
+          },
+          "zh_Hans": {
+            "@officialStatus": "official",
+            "@populationPercent": "77"
+          }
+        }
+      },
+      "SH": {
+        "@gdp": "18000000",
+        "@literacyPercent": "97",
+        "@population": "7754",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "70"
+          }
+        }
+      },
+      "SI": {
+        "@gdp": "57930000000",
+        "@literacyPercent": "99.7",
+        "@population": "1992690",
+        "languagePopulation": {
+          "hu": {
+            "@populationPercent": "0.46"
+          },
+          "it": {
+            "@populationPercent": "0.2"
+          },
+          "sl": {
+            "@officialStatus": "official",
+            "@populationPercent": "87"
+          }
+        }
+      },
+      "SJ": {
+        "@gdp": "116000000",
+        "@literacyPercent": "100",
+        "@population": "1970",
+        "languagePopulation": {
+          "nb": {
+            "@officialStatus": "official",
+            "@populationPercent": "76"
+          },
+          "ru": {
+            "@populationPercent": "61"
+          }
+        }
+      },
+      "SK": {
+        "@gdp": "132400000000",
+        "@literacyPercent": "99.6",
+        "@population": "5488340",
+        "languagePopulation": {
+          "de": {
+            "@populationPercent": "0.28"
+          },
+          "hu": {
+            "@populationPercent": "11"
+          },
+          "pl": {
+            "@populationPercent": "0.93"
+          },
+          "sk": {
+            "@officialStatus": "official",
+            "@populationPercent": "90"
+          },
+          "uk": {
+            "@populationPercent": "1.9"
+          }
+        }
+      },
+      "SL": {
+        "@gdp": "8376000000",
+        "@literacyPercent": "35.1",
+        "@population": "5612690",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "35"
+          },
+          "kri": {
+            "@populationPercent": "95"
+          },
+          "men": {
+            "@populationPercent": "27"
+          },
+          "tem": {
+            "@populationPercent": "26",
+            "@writingPercent": "6"
+          }
+        }
+      },
+      "SM": {
+        "@gdp": "1357000000",
+        "@literacyPercent": "96",
+        "@population": "32448",
+        "languagePopulation": {
+          "eo": {
+            "@populationPercent": "0.92"
+          },
+          "it": {
+            "@officialStatus": "official",
+            "@populationPercent": "89"
+          }
+        }
+      },
+      "SN": {
+        "@gdp": "26500000000",
+        "@literacyPercent": "39.3",
+        "@population": "13300400",
+        "languagePopulation": {
+          "ff": {
+            "@populationPercent": "21"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "39"
+          },
+          "srr": {
+            "@populationPercent": "11"
+          },
+          "wo_Latn": {
+            "@officialStatus": "official",
+            "@populationPercent": "34"
+          }
+        }
+      },
+      "SO": {
+        "@gdp": "5896000000",
+        "@literacyPercent": "37.8",
+        "@population": "10251600",
+        "languagePopulation": {
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "34",
+            "@writingPercent": "99"
+          },
+          "om": {
+            "@populationPercent": "0.42"
+          },
+          "so": {
+            "@officialStatus": "official",
+            "@populationPercent": "78"
+          },
+          "sw": {
+            "@populationPercent": "2"
+          }
+        }
+      },
+      "SR": {
+        "@gdp": "6685000000",
+        "@literacyPercent": "89.6",
+        "@population": "566846",
+        "languagePopulation": {
+          "nl": {
+            "@officialStatus": "official",
+            "@populationPercent": "90"
+          },
+          "srn": {
+            "@populationPercent": "68",
+            "@writingPercent": "75"
+          },
+          "zh_Hant": {
+            "@populationPercent": "1.2"
+          }
+        }
+      },
+      "SS": {
+        "@gdp": "9664000000",
+        "@literacyPercent": "27",
+        "@population": "11090100",
+        "languagePopulation": {
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "27"
+          },
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "27"
+          }
+        }
+      },
+      "ST": {
+        "@gdp": "403000000",
+        "@literacyPercent": "84.9",
+        "@population": "186817",
+        "languagePopulation": {
+          "pt": {
+            "@officialStatus": "official",
+            "@populationPercent": "85"
+          }
+        }
+      },
+      "SV": {
+        "@gdp": "45980000000",
+        "@literacyPercent": "81.1",
+        "@population": "6108590",
+        "languagePopulation": {
+          "es": {
+            "@officialStatus": "official",
+            "@populationPercent": "89"
+          }
+        }
+      },
+      "SX": {
+        "@gdp": "794700000",
+        "@literacyPercent": "99",
+        "@population": "39689",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "68"
+          },
+          "es": {
+            "@populationPercent": "12"
+          },
+          "nl": {
+            "@officialStatus": "official",
+            "@populationPercent": "4"
+          },
+          "vic": {
+            "@populationPercent": "7.8"
+          }
+        }
+      },
+      "SY": {
+        "@gdp": "107600000000",
+        "@literacyPercent": "79.6",
+        "@population": "22457300",
+        "languagePopulation": {
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "80"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "5.9"
+          },
+          "hy": {
+            "@populationPercent": "1.8"
+          },
+          "ku_Latn": {
+            "@populationPercent": "8"
+          },
+          "syr": {
+            "@populationPercent": "0.084",
+            "@writingPercent": "5"
+          }
+        }
+      },
+      "SZ": {
+        "@gdp": "6148000000",
+        "@literacyPercent": "81.6",
+        "@population": "1403360",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "80"
+          },
+          "ss": {
+            "@officialStatus": "official",
+            "@populationPercent": "58"
+          },
+          "ts": {
+            "@populationPercent": "1.7"
+          },
+          "zu": {
+            "@populationPercent": "6.8"
+          }
+        }
+      },
+      "TA": {
+        "@gdp": "10080000",
+        "@literacyPercent": "99",
+        "@population": "275",
+        "languagePopulation": {
+          "en": {
+            "@populationPercent": "99"
+          }
+        }
+      },
+      "TC": {
+        "@gdp": "216000000",
+        "@literacyPercent": "98",
+        "@population": "47754",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "98"
+          }
+        }
+      },
+      "TD": {
+        "@gdp": "21340000000",
+        "@literacyPercent": "34.5",
+        "@population": "11193500",
+        "languagePopulation": {
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "17"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "26"
+          }
+        }
+      },
+      "TF": {
+        "@gdp": "4783000",
+        "@literacyPercent": "99",
+        "@population": "140",
+        "languagePopulation": {
+          "fr": {
+            "@populationPercent": "100",
+            "@writingPercent": "100"
+          }
+        }
+      },
+      "TG": {
+        "@gdp": "6899000000",
+        "@literacyPercent": "60.9",
+        "@population": "7154240",
+        "languagePopulation": {
+          "ee": {
+            "@populationPercent": "17"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "61"
+          }
+        }
+      },
+      "TH": {
+        "@gdp": "646100000000",
+        "@literacyPercent": "92.6",
+        "@population": "67448100",
+        "languagePopulation": {
+          "kdt": {
+            "@populationPercent": "0.48",
+            "@writingPercent": "50"
+          },
+          "kxm": {
+            "@populationPercent": "1.7"
+          },
+          "lcp": {
+            "@populationPercent": "0.01",
+            "@writingPercent": "25"
+          },
+          "lwl": {
+            "@populationPercent": "0.01"
+          },
+          "mfa": {
+            "@populationPercent": "5"
+          },
+          "mnw": {
+            "@populationPercent": "0.17"
+          },
+          "nod": {
+            "@populationPercent": "9.6",
+            "@writingPercent": "5"
+          },
+          "shn": {
+            "@populationPercent": "0.096"
+          },
+          "sou": {
+            "@populationPercent": "8",
+            "@writingPercent": "5"
+          },
+          "th": {
+            "@officialStatus": "official",
+            "@populationPercent": "80",
+            "@writingPercent": "93"
+          },
+          "tts": {
+            "@populationPercent": "24",
+            "@writingPercent": "5"
+          },
+          "zh_Hant": {
+            "@populationPercent": "1.8"
+          }
+        }
+      },
+      "TJ": {
+        "@gdp": "17610000000",
+        "@literacyPercent": "99.7",
+        "@population": "7910040",
+        "languagePopulation": {
+          "ar": {
+            "@populationPercent": "0.013"
+          },
+          "fa": {
+            "@populationPercent": "0.78"
+          },
+          "tg_Cyrl": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          }
+        }
+      },
+      "TK": {
+        "@gdp": "1500000",
+        "@literacyPercent": "94",
+        "@population": "1368",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          },
+          "tkl": {
+            "@officialStatus": "official",
+            "@populationPercent": "99",
+            "@writingPercent": "5"
+          }
+        }
+      },
+      "TL": {
+        "@gdp": "10630000000",
+        "@literacyPercent": "58.6",
+        "@population": "1172390",
+        "languagePopulation": {
+          "pt": {
+            "@officialStatus": "official",
+            "@populationPercent": "59",
+            "@writingPercent": "100"
+          },
+          "tet": {
+            "@officialStatus": "official",
+            "@populationPercent": "59"
+          }
+        }
+      },
+      "TM": {
+        "@gdp": "47550000000",
+        "@literacyPercent": "98.8",
+        "@population": "5113040",
+        "languagePopulation": {
+          "ku_Latn": {
+            "@populationPercent": "0.41"
+          },
+          "ru": {
+            "@populationPercent": "12"
+          },
+          "tk_Latn": {
+            "@officialStatus": "official",
+            "@populationPercent": "70"
+          },
+          "uz_Latn": {
+            "@populationPercent": "9"
+          }
+        }
+      },
+      "TN": {
+        "@gdp": "104400000000",
+        "@literacyPercent": "74.3",
+        "@population": "10835900",
+        "languagePopulation": {
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "90"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "74"
+          }
+        }
+      },
+      "TO": {
+        "@gdp": "786000000",
+        "@literacyPercent": "98.9",
+        "@population": "106322",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "28"
+          },
+          "to": {
+            "@officialStatus": "official",
+            "@populationPercent": "95"
+          }
+        }
+      },
+      "TR": {
+        "@gdp": "1125000000000",
+        "@literacyPercent": "87.4",
+        "@population": "80694500",
+        "languagePopulation": {
+          "ab": {
+            "@populationPercent": "0.005"
+          },
+          "ady": {
+            "@populationPercent": "0.39"
+          },
+          "ar": {
+            "@populationPercent": "0.56"
+          },
+          "az_Latn": {
+            "@populationPercent": "0.74"
+          },
+          "bg": {
+            "@populationPercent": "0.42"
+          },
+          "bgx": {
+            "@populationPercent": "0.46"
+          },
+          "el": {
+            "@populationPercent": "0.005"
+          },
+          "hy": {
+            "@populationPercent": "0.056"
+          },
+          "ka": {
+            "@populationPercent": "0.056"
+          },
+          "kbd": {
+            "@populationPercent": "0.77"
+          },
+          "kk_Cyrl": {
+            "@populationPercent": "0.0007"
+          },
+          "ku_Latn": {
+            "@populationPercent": "5.5"
+          },
+          "ky_Latn": {
+            "@populationPercent": "0.0014"
+          },
+          "sq": {
+            "@populationPercent": "0.021"
+          },
+          "sr_Latn": {
+            "@populationPercent": "0.028",
+            "@writingPercent": "5"
+          },
+          "tr": {
+            "@officialStatus": "official",
+            "@populationPercent": "93"
+          },
+          "uz_Latn": {
+            "@populationPercent": "0.0025"
+          },
+          "zza": {
+            "@populationPercent": "1.4"
+          }
+        }
+      },
+      "TT": {
+        "@gdp": "27120000000",
+        "@literacyPercent": "98.6",
+        "@population": "1225230",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "99"
+          },
+          "es": {
+            "@populationPercent": "0.33"
+          }
+        }
+      },
+      "TV": {
+        "@gdp": "37000000",
+        "@literacyPercent": "95",
+        "@population": "10698",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "10"
+          },
+          "tvl": {
+            "@officialStatus": "official",
+            "@populationPercent": "92"
+          }
+        }
+      },
+      "TW": {
+        "@gdp": "901900000000",
+        "@literacyPercent": "96.1",
+        "@population": "23299700",
+        "languagePopulation": {
+          "trv": {
+            "@populationPercent": "0.02"
+          },
+          "zh_Hant": {
+            "@officialStatus": "official",
+            "@populationPercent": "95"
+          }
+        }
+      },
+      "TZ": {
+        "@gdp": "73500000000",
+        "@literacyPercent": "69.4",
+        "@population": "48261900",
+        "languagePopulation": {
+          "asa": {
+            "@populationPercent": "1.2"
+          },
+          "bez": {
+            "@populationPercent": "1.7"
+          },
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "69"
+          },
+          "jmc": {
+            "@populationPercent": "0.75"
+          },
+          "kde": {
+            "@populationPercent": "2.4"
+          },
+          "ksb": {
+            "@populationPercent": "1.7"
+          },
+          "lag": {
+            "@populationPercent": "0.87"
+          },
+          "mas": {
+            "@populationPercent": "1.5",
+            "@writingPercent": "50"
+          },
+          "nym": {
+            "@populationPercent": "3.3"
+          },
+          "rof": {
+            "@populationPercent": "0.75"
+          },
+          "rwk": {
+            "@populationPercent": "0.22"
+          },
+          "suk": {
+            "@populationPercent": "8.7"
+          },
+          "sw": {
+            "@officialStatus": "official",
+            "@populationPercent": "90"
+          },
+          "vun": {
+            "@populationPercent": "0.75"
+          }
+        }
+      },
+      "UA": {
+        "@gdp": "344700000000",
+        "@literacyPercent": "99.7",
+        "@population": "44573200",
+        "languagePopulation": {
+          "be": {
+            "@populationPercent": "0.83"
+          },
+          "bg": {
+            "@populationPercent": "0.49"
+          },
+          "el": {
+            "@populationPercent": "0.016"
+          },
+          "hu": {
+            "@populationPercent": "0.37"
+          },
+          "pl": {
+            "@populationPercent": "2.4"
+          },
+          "ro": {
+            "@populationPercent": "0.52"
+          },
+          "ru": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "46"
+          },
+          "rue": {
+            "@populationPercent": "1.2"
+          },
+          "tr": {
+            "@populationPercent": "0.42"
+          },
+          "uk": {
+            "@officialStatus": "official",
+            "@populationPercent": "65"
+          },
+          "yi": {
+            "@populationPercent": "1.3"
+          }
+        }
+      },
+      "UG": {
+        "@gdp": "50590000000",
+        "@literacyPercent": "66.8",
+        "@population": "34758800",
+        "languagePopulation": {
+          "cgg": {
+            "@populationPercent": "5.4"
+          },
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "3.9"
+          },
+          "hi": {
+            "@populationPercent": "0.0063"
+          },
+          "laj": {
+            "@populationPercent": "3.8"
+          },
+          "lg": {
+            "@populationPercent": "13"
+          },
+          "myx": {
+            "@populationPercent": "2.9"
+          },
+          "nyn": {
+            "@populationPercent": "6.3"
+          },
+          "rw": {
+            "@populationPercent": "2.1"
+          },
+          "sw": {
+            "@officialStatus": "official",
+            "@populationPercent": "75"
+          },
+          "teo": {
+            "@populationPercent": "3.9"
+          },
+          "ttj": {
+            "@populationPercent": "1.9"
+          },
+          "xog": {
+            "@populationPercent": "5.3"
+          }
+        }
+      },
+      "UM": {
+        "@gdp": "15630000",
+        "@literacyPercent": "99",
+        "@population": "316",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "100"
+          }
+        }
+      },
+      "US": {
+        "@gdp": "15660000000000",
+        "@literacyPercent": "99",
+        "@population": "316669000",
+        "languagePopulation": {
+          "chr": {
+            "@populationPercent": "0.0077",
+            "@writingPercent": "5"
+          },
+          "de": {
+            "@populationPercent": "0.47"
+          },
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "96"
+          },
+          "es": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "9.6"
+          },
+          "fil": {
+            "@populationPercent": "0.42"
+          },
+          "fr": {
+            "@populationPercent": "0.56"
+          },
+          "haw": {
+            "@officialStatus": "official_regional",
+            "@populationPercent": "0.0089"
+          },
+          "ik": {
+            "@populationPercent": "0.0025",
+            "@writingPercent": "5"
+          },
+          "it": {
+            "@populationPercent": "0.34"
+          },
+          "ko": {
+            "@populationPercent": "0.3"
+          },
+          "lkt": {
+            "@populationPercent": "0.0026"
+          },
+          "nv": {
+            "@populationPercent": "0.05"
+          },
+          "ru": {
+            "@populationPercent": "0.24"
+          },
+          "vi": {
+            "@populationPercent": "0.34"
+          },
+          "zh_Hant": {
+            "@populationPercent": "0.69"
+          }
+        }
+      },
+      "UY": {
+        "@gdp": "53550000000",
+        "@literacyPercent": "98",
+        "@population": "3324460",
+        "languagePopulation": {
+          "es": {
+            "@officialStatus": "official",
+            "@populationPercent": "88"
+          }
+        }
+      },
+      "UZ": {
+        "@gdp": "103900000000",
+        "@literacyPercent": "99.3",
+        "@population": "28661600",
+        "languagePopulation": {
+          "kaa": {
+            "@populationPercent": "1.6"
+          },
+          "ru": {
+            "@populationPercent": "14"
+          },
+          "tr": {
+            "@populationPercent": "0.76"
+          },
+          "uz_Cyrl": {
+            "@officialStatus": "official",
+            "@populationPercent": "56"
+          },
+          "uz_Latn": {
+            "@officialStatus": "official",
+            "@populationPercent": "19"
+          }
+        }
+      },
+      "VA": {
+        "@gdp": "24940000",
+        "@literacyPercent": "100",
+        "@population": "836",
+        "languagePopulation": {
+          "it": {
+            "@populationPercent": "99"
+          },
+          "la": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "99"
+          }
+        }
+      },
+      "VC": {
+        "@gdp": "1301000000",
+        "@literacyPercent": "96",
+        "@population": "103220",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "96"
+          }
+        }
+      },
+      "VE": {
+        "@gdp": "402100000000",
+        "@literacyPercent": "93",
+        "@population": "28459100",
+        "languagePopulation": {
+          "es": {
+            "@officialStatus": "official",
+            "@populationPercent": "82"
+          }
+        }
+      },
+      "VG": {
+        "@gdp": "853400000",
+        "@literacyPercent": "97.8",
+        "@population": "31912",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "98"
+          }
+        }
+      },
+      "VI": {
+        "@gdp": "1577000000",
+        "@literacyPercent": "95",
+        "@population": "104737",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "de_facto_official",
+            "@populationPercent": "75"
+          }
+        }
+      },
+      "VN": {
+        "@gdp": "320500000000",
+        "@literacyPercent": "94",
+        "@population": "92477900",
+        "languagePopulation": {
+          "cjm": {
+            "@populationPercent": "0.089",
+            "@writingPercent": "60"
+          },
+          "vi": {
+            "@officialStatus": "official",
+            "@populationPercent": "86"
+          },
+          "zh_Hant": {
+            "@populationPercent": "1"
+          }
+        }
+      },
+      "VU": {
+        "@gdp": "1237000000",
+        "@literacyPercent": "74",
+        "@population": "261565",
+        "languagePopulation": {
+          "bi": {
+            "@officialStatus": "official",
+            "@populationPercent": "90"
+          },
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "74"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "50"
+          }
+        }
+      },
+      "WF": {
+        "@gdp": "60000000",
+        "@literacyPercent": "50",
+        "@population": "15507",
+        "languagePopulation": {
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "49"
+          },
+          "fud": {
+            "@populationPercent": "31"
+          },
+          "wls": {
+            "@populationPercent": "61"
+          }
+        }
+      },
+      "WS": {
+        "@gdp": "1128000000",
+        "@literacyPercent": "99.7",
+        "@population": "195476",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "2.2"
+          },
+          "sm": {
+            "@officialStatus": "official",
+            "@populationPercent": "100"
+          }
+        }
+      },
+      "XK": {
+        "@gdp": "13560000000",
+        "@literacyPercent": "91.9",
+        "@population": "1847708",
+        "languagePopulation": {
+          "sq": {
+            "@officialStatus": "official",
+            "@populationPercent": "92"
+          },
+          "sr_Cyrl": {
+            "@officialStatus": "official",
+            "@populationPercent": "5"
+          },
+          "sr_Latn": {
+            "@officialStatus": "official",
+            "@populationPercent": "99",
+            "@writingPercent": "5"
+          }
+        }
+      },
+      "YE": {
+        "@gdp": "57760000000",
+        "@literacyPercent": "63.9",
+        "@population": "25408300",
+        "languagePopulation": {
+          "ar": {
+            "@officialStatus": "official",
+            "@populationPercent": "74"
+          }
+        }
+      },
+      "YT": {
+        "@gdp": "953600000",
+        "@literacyPercent": "92",
+        "@population": "194000",
+        "languagePopulation": {
+          "buc": {
+            "@populationPercent": "23"
+          },
+          "fr": {
+            "@officialStatus": "official",
+            "@populationPercent": "57"
+          },
+          "sw": {
+            "@populationPercent": "1.4"
+          },
+          "swb": {
+            "@populationPercent": "88"
+          }
+        }
+      },
+      "ZA": {
+        "@gdp": "578600000000",
+        "@literacyPercent": "86.4",
+        "@population": "48601100",
+        "languagePopulation": {
+          "af": {
+            "@officialStatus": "official",
+            "@populationPercent": "13",
+            "@writingPercent": "99"
+          },
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "30",
+            "@writingPercent": "99"
+          },
+          "hi": {
+            "@populationPercent": "2",
+            "@writingPercent": "69"
+          },
+          "nr": {
+            "@officialStatus": "official",
+            "@populationPercent": "1.6",
+            "@writingPercent": "50"
+          },
+          "nso": {
+            "@officialStatus": "official",
+            "@populationPercent": "9.4",
+            "@writingPercent": "50"
+          },
+          "ss": {
+            "@officialStatus": "official",
+            "@populationPercent": "2.7",
+            "@writingPercent": "50"
+          },
+          "st": {
+            "@officialStatus": "official",
+            "@populationPercent": "7.9",
+            "@writingPercent": "50"
+          },
+          "sw": {
+            "@populationPercent": "0.0021",
+            "@writingPercent": "50"
+          },
+          "tn": {
+            "@officialStatus": "official",
+            "@populationPercent": "8.2",
+            "@writingPercent": "50"
+          },
+          "ts": {
+            "@officialStatus": "official",
+            "@populationPercent": "4.4",
+            "@writingPercent": "50"
+          },
+          "ve": {
+            "@officialStatus": "official",
+            "@populationPercent": "2.3",
+            "@writingPercent": "50"
+          },
+          "xh": {
+            "@officialStatus": "official",
+            "@populationPercent": "18",
+            "@writingPercent": "50"
+          },
+          "zu": {
+            "@officialStatus": "official",
+            "@populationPercent": "24",
+            "@writingPercent": "50"
+          }
+        }
+      },
+      "ZM": {
+        "@gdp": "23680000000",
+        "@literacyPercent": "80.6",
+        "@population": "14222200",
+        "languagePopulation": {
+          "bem": {
+            "@populationPercent": "31"
+          },
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "81"
+          },
+          "ny": {
+            "@populationPercent": "15"
+          }
+        }
+      },
+      "ZW": {
+        "@gdp": "6909000000",
+        "@literacyPercent": "90.7",
+        "@population": "13182900",
+        "languagePopulation": {
+          "en": {
+            "@officialStatus": "official",
+            "@populationPercent": "91"
+          },
+          "kck": {
+            "@populationPercent": "5.3"
+          },
+          "mxc": {
+            "@populationPercent": "6.5"
+          },
+          "nd": {
+            "@officialStatus": "official",
+            "@populationPercent": "12"
+          },
+          "ndc": {
+            "@populationPercent": "6.1"
+          },
+          "ny": {
+            "@populationPercent": "1.9"
+          },
+          "sn": {
+            "@officialStatus": "official",
+            "@populationPercent": "81"
+          },
+          "tn": {
+            "@populationPercent": "0.22"
+          },
+          "ve": {
+            "@populationPercent": "0.64"
+          }
+        }
+      },
+      "ZZ": {
+        "@gdp": "0",
+        "@literacyPercent": "0",
+        "@population": "0"
+      }
+    }
+  }
+}
