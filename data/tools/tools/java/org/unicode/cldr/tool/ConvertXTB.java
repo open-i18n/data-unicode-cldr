@@ -1,9 +1,9 @@
 package org.unicode.cldr.tool;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -22,8 +22,9 @@ import org.unicode.cldr.test.DisplayAndInputProcessor;
 import org.unicode.cldr.tool.Option.Options;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRLocale;
-import org.unicode.cldr.util.CldrUtility;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.Factory;
+import org.unicode.cldr.util.InputStreamFactory;
 import org.unicode.cldr.util.PathDescription;
 import org.unicode.cldr.util.PatternPlaceholders;
 import org.unicode.cldr.util.PatternPlaceholders.PlaceholderInfo;
@@ -89,7 +90,7 @@ public class ConvertXTB {
         xtbDir = new File(inputDir, "xtb");
         this.inputDir = new File(inputDir);
         this.outputDir = outputDir;
-        factory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
+        factory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
         englishFile = factory.make("en", true);
         this.checkCldr = CheckCLDR.getCheckAll(factory, checkFilter);
         CheckCLDR.setDisplayInformation(englishFile);
@@ -427,18 +428,19 @@ public class ConvertXTB {
         XMLReader xmlReader = XMLFileReader.createXMLReader(false);
         xmlReader.setContentHandler(handler);
         File inputFile = new File(xtbDir, locale + ".xtb");
-        try {
-            FileInputStream fis = new FileInputStream(inputFile);
+        try (InputStream fis = InputStreamFactory.createInputStream(inputFile)) {
+            //  FileInputStream fis = new FileInputStream(inputFile);
             InputSource is = new InputSource(fis);
             xmlReader.parse(is);
-            fis.close();
-        } catch (IOException e) {
-            System.err.println("Error loading " + inputFile.getAbsolutePath());
-            e.printStackTrace();
-        } catch (SAXException e) {
+            // fis.close();
+        } catch (SAXException | IOException e) {
             System.err.println("Error loading " + inputFile.getAbsolutePath());
             e.printStackTrace();
         }
+//            catch (SAXException e) {
+//            System.err.println("Error loading " + inputFile.getAbsolutePath());
+//            e.printStackTrace();
+//        }
         return info;
     }
 

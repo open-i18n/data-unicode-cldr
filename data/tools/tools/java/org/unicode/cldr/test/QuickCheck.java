@@ -1,22 +1,32 @@
 package org.unicode.cldr.test;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.unicode.cldr.unittest.TestAll.TestInfo;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.DtdType;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
+import org.unicode.cldr.util.DateTimeFormats;
 import org.unicode.cldr.util.Factory;
+import org.unicode.cldr.util.InputStreamFactory;
+import org.unicode.cldr.util.LanguageTagParser;
+import org.unicode.cldr.util.Level;
 import org.unicode.cldr.util.PrettyPath;
+import org.unicode.cldr.util.StandardCodes;
 import org.unicode.cldr.util.XMLFileReader;
 import org.unicode.cldr.util.XPathParts;
 import org.xml.sax.ErrorHandler;
@@ -26,6 +36,9 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 import com.ibm.icu.dev.util.Relation;
+import com.ibm.icu.text.DateFormatSymbols;
+import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.util.ULocale;
 
 /**
  * Simple test that loads each file in the cldr directory, thus verifying that
@@ -34,7 +47,7 @@ import com.ibm.icu.dev.util.Relation;
  * @author markdavis
  */
 public class QuickCheck {
-    private static final Set skipAttributes = new HashSet(Arrays.asList(new String[] {
+    private static final Set<String> skipAttributes = new HashSet<String>(Arrays.asList(new String[] {
         "alt", "draft", "references" }));
 
     private static String localeRegex;
@@ -44,8 +57,6 @@ public class QuickCheck {
     private static String commonDirectory;
     private static String mainDirectory;
 
-    private static boolean showForceZoom;
-
     private static boolean resolved;
 
     private static Exception[] internalException = new Exception[1];
@@ -53,21 +64,21 @@ public class QuickCheck {
     private static boolean verbose;
 
     public static void main(String[] args) throws IOException {
+        checkStock();
+        if (true) return;
         verbose = CldrUtility.getProperty("verbose", "false", "true").matches("(?i)T|TRUE");
         localeRegex = CldrUtility.getProperty("locale", ".*");
 
         showInfo = CldrUtility.getProperty("showinfo", "false", "true").matches("(?i)T|TRUE");
 
-        commonDirectory = CldrUtility.COMMON_DIRECTORY; // Utility.getProperty("common", Utility.COMMON_DIRECTORY);
+        commonDirectory = CLDRPaths.COMMON_DIRECTORY; // Utility.getProperty("common", Utility.COMMON_DIRECTORY);
         // if (commonDirectory == null) commonDirectory = Utility.COMMON_DIRECTORY
         // System.out.println("Main Source Directory: " + commonDirectory +
         // "\t\t(to change, use -DSOURCE=xxx, eg -DSOURCE=C:/cvsdata/unicode/cldr/incoming/proposed/main)");
 
-        mainDirectory = CldrUtility.getProperty("main", CldrUtility.COMMON_DIRECTORY + "/main");
+        mainDirectory = CldrUtility.getProperty("main", CLDRPaths.COMMON_DIRECTORY + "/main");
         // System.out.println("Main Source Directory: " + commonDirectory +
         // "\t\t(to change, use -DSOURCE=xxx, eg -DSOURCE=C:/cvsdata/unicode/cldr/incoming/proposed/main)");
-
-        showForceZoom = CldrUtility.getProperty("forcezoom", "false", "true").matches("(?i)T|TRUE");
 
         resolved = CldrUtility.getProperty("resolved", "false", "true").matches("(?i)T|TRUE");
 
@@ -133,24 +144,25 @@ public class QuickCheck {
     }
 
     public static void check(File systemID) {
-        try {
-            FileInputStream fis = new FileInputStream(systemID);
+        try (InputStream fis = InputStreamFactory.createInputStream(systemID)) {
+//            FileInputStream fis = new FileInputStream(systemID);
             XMLReader xmlReader = XMLFileReader.createXMLReader(true);
             xmlReader.setErrorHandler(new MyErrorHandler());
             InputSource is = new InputSource(fis);
             is.setSystemId(systemID.toString());
             xmlReader.parse(is);
-            fis.close();
-        } catch (SAXParseException e) {
-            System.out.println("\t" + "Can't read " + systemID);
-            System.out.println("\t" + e.getClass() + "\t" + e.getMessage());
-        } catch (SAXException e) {
-            System.out.println("\t" + "Can't read " + systemID);
-            System.out.println("\t" + e.getClass() + "\t" + e.getMessage());
-        } catch (IOException e) {
+//            fis.close();
+        } catch (SAXException | IOException e) { // SAXParseException is a Subtype of SaxException
             System.out.println("\t" + "Can't read " + systemID);
             System.out.println("\t" + e.getClass() + "\t" + e.getMessage());
         }
+//        catch (SAXException e) {
+//            System.out.println("\t" + "Can't read " + systemID);
+//            System.out.println("\t" + e.getClass() + "\t" + e.getMessage());
+//        } catch (IOException e) {
+//            System.out.println("\t" + "Can't read " + systemID);
+//            System.out.println("\t" + e.getClass() + "\t" + e.getMessage());
+//        }
     }
 
     static Matcher skipPaths = Pattern.compile("/identity" + "|/alias" + "|\\[@alt=\"proposed").matcher("");
@@ -158,13 +170,15 @@ public class QuickCheck {
     private static boolean pretty;
 
     private static void checkPaths() {
-        Relation<String, String> distinguishing = new Relation(new TreeMap(), TreeSet.class, null);
-        Relation<String, String> nonDistinguishing = new Relation(new TreeMap(), TreeSet.class, null);
+        Relation<String, String> distinguishing = Relation.<String, String> of(new TreeMap<String, Set<String>>(), TreeSet.class, null);
+        Relation<String, String> nonDistinguishing = Relation.<String, String> of(new TreeMap<String, Set<String>>(), TreeSet.class, null);
         XPathParts parts = new XPathParts();
         Factory cldrFactory = Factory.make(mainDirectory, localeRegex);
         CLDRFile english = cldrFactory.make("en", true);
 
-        Relation<String, String> pathToLocale = new Relation(new TreeMap(CLDRFile.ldmlComparator), TreeSet.class, null);
+        Relation<String, String> pathToLocale = Relation.of(
+            new TreeMap<String, Set<String>>(CLDRFile.getComparator(DtdType.ldml)),
+            TreeSet.class, null);
         for (String locale : cldrFactory.getAvailable()) {
             // if (locale.equals("root") && !localeRegex.equals("root"))
             // continue;
@@ -217,7 +231,7 @@ public class QuickCheck {
                 if (path.contains("proposed")) {
                     String sourceLocale = file.getSourceLocaleID(path, null);
                     if (locale.equals(sourceLocale)) {
-                        String nonAltPath = file.getNondraftNonaltXPath(path);
+                        String nonAltPath = CLDRFile.getNondraftNonaltXPath(path);
                         if (!path.equals(nonAltPath)) {
                             String nonAltLocale = file.getSourceLocaleID(nonAltPath, null);
                             String nonAltValue = file.getStringValue(nonAltPath);
@@ -275,7 +289,7 @@ public class QuickCheck {
                     + CldrUtility.LINE_SEPARATOR);
             }
             PrettyPath prettyPath = new PrettyPath().setShowErrors(true);
-            Set<String> badPaths = new TreeSet();
+            Set<String> badPaths = new TreeSet<String>();
             for (String path : pathToLocale.keySet()) {
                 String prettied = prettyPath.getPrettyPath(path, false);
                 if (showInfo) System.out.println(prettied + "\t\t" + path);
@@ -306,6 +320,68 @@ public class QuickCheck {
                     + " Paths were not prettied: use -DSHOW and look for ones with %% in them.");
             }
         }
+    }
+
+    static void checkStock() {
+        TestInfo testInfo = TestInfo.getInstance();
+        Factory factory = testInfo.getCldrFactory();
+
+        String[][] items = {
+            { "full", "yMMMMEEEEd", "jmmsszzzz" },
+            { "long", "yMMMMd", "jmmssz" },
+            { "medium", "yMMMd", "jmmss" },
+            { "short", "yMd", "jmm" },
+        };
+        String calendarID = "gregorian";
+        String datetimePathPrefix = "//ldml/dates/calendars/calendar[@type=\"" + calendarID + "\"]/";
+
+        int total = 0;
+        int mismatch = 0;
+        LanguageTagParser ltp = new LanguageTagParser();
+        for (String locale : StandardCodes.make().getLocaleCoverageLocales("google", EnumSet.of(Level.MODERN))) {
+            if (!ltp.set(locale).getRegion().isEmpty()) {
+                continue;
+            }
+            CLDRFile file = factory.make(locale, false);
+            DateTimeFormats dtf = new DateTimeFormats();
+            dtf.set(file, "gregorian", false);
+            for (String[] stockInfo : items) {
+                String length = stockInfo[0];
+                //ldml/dates/calendars/calendar[@type="gregorian"]/dateFormats/dateFormatLength[@type="full"]/dateFormat[@type="standard"]/pattern[@type="standard"]
+                String path = datetimePathPrefix + "dateFormats/dateFormatLength[@type=\"" +
+                    length + "\"]/dateFormat[@type=\"standard\"]/pattern[@type=\"standard\"]";
+                String stockDatePattern = file.getStringValue(path);
+                String flexibleDatePattern = dtf.getBestPattern(stockInfo[1]);
+                mismatch += showStatus(++total, locale, "date", length, stockInfo[1], stockDatePattern, flexibleDatePattern);
+                path = datetimePathPrefix + "timeFormats/timeFormatLength[@type=\"" + length +
+                    "\"]/timeFormat[@type=\"standard\"]/pattern[@type=\"standard\"]";
+                String stockTimePattern = file.getStringValue(path);
+                String flexibleTimePattern = dtf.getBestPattern(stockInfo[2]);
+                mismatch += showStatus(++total, locale, "time", length, stockInfo[2], stockTimePattern, flexibleTimePattern);
+            }
+        }
+        System.out.println("Mismatches:\t" + mismatch + "\tTotal:\t" + total);
+    }
+
+    static final Date SAMPLE_DATE = new Date(2013 - 1900, 1 - 1, 29, 13, 59, 59);
+
+    private static int showStatus(int total, String locale, String type, String length,
+        String skeleton, String stockPattern, String flexiblePattern) {
+        ULocale ulocale = new ULocale(locale);
+        DateFormatSymbols dfs = new DateFormatSymbols(ulocale); // just use ICU for now
+        boolean areSame = Objects.equals(stockPattern, flexiblePattern);
+        System.out.println(total
+            + "\t" + (areSame ? "ok" : "diff")
+            + "\t" + locale
+            + "\t" + type
+            + "\t" + length
+            + "\t" + skeleton
+            + "\t" + stockPattern
+            + "\t" + (areSame ? "" : flexiblePattern)
+            + "\t'" + new SimpleDateFormat(stockPattern, dfs, ulocale).format(SAMPLE_DATE)
+            + "\t'" + (areSame ? "" : new SimpleDateFormat(flexiblePattern, dfs, ulocale).format(SAMPLE_DATE))
+            );
+        return areSame ? 0 : 1;
     }
 
 }

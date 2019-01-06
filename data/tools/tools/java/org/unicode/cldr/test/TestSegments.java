@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Log;
 import org.unicode.cldr.util.RandomStringGenerator;
@@ -48,8 +49,8 @@ public class TestSegments {
     private static final boolean SHOW_RULE_LIST = false;
     private static final int monkeyLimit = 1000, monkeyStringCount = 10;
 
-    private static final Matcher flagItems = Pattern.compile(
-        "[$](BK|CR|LF|CM|NL|WJ|ZW|GL|SP|CB)").matcher("");
+//    private static final Matcher flagItems = Pattern.compile(
+//        "[$](BK|CR|LF|CM|NL|WJ|ZW|GL|SP|CB)").matcher("");
 
     /**
      * Quick test of features for debugging
@@ -59,20 +60,20 @@ public class TestSegments {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-        Log.setLogNoBOM(CldrUtility.GEN_DIRECTORY + "/segments/root.xml");
+        Log.setLogNoBOM(CLDRPaths.GEN_DIRECTORY + "/segments/root.xml");
         Log.println("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
         Log.println("<!DOCTYPE ldml SYSTEM \"../../common/dtd/ldml.dtd\">");
         Log.println("<ldml>");
         Log.println("\t<identity>");
-        Log.println("\t\t<version number=\"$Revision: 7967 $\"/>");
-        Log.println("\t\t<generation date=\"$Date: 2012-12-11 22:05:56 -0600 (Tue, 11 Dec 2012) $\"/>");
+        Log.println("\t\t<version number=\"$Revision: 9561 $\"/>");
+        Log.println("\t\t<generation date=\"$Date: 2013-12-16 14:24:11 -0600 (Mon, 16 Dec 2013) $\"/>");
         Log.println("\t\t<language type=\"root\"/>");
         Log.println("\t</identity>");
         Log.println("\t<segmentations>");
 
         if (args.length == 0)
             args = new String[] { "GraphemeClusterBreak", "LineBreak", "SentenceBreak", "WordBreak" };
-        List testChoice = Arrays.asList(args);
+        List<String> testChoice = Arrays.asList(args);
 
         UnicodeProperty.Factory propFactory = ICUPropertyFactory.make();
 
@@ -104,7 +105,7 @@ public class TestSegments {
             System.out.println();
             System.out.println("Testing");
             Segmenter rl = rb.make();
-            Collection values = rl.getSamples().getAvailableValues();
+            Collection<Object> values = rl.getSamples().getAvailableValues();
             System.out.println("Value Partition: " + values);
 
             if (false) debugRule(rb);
@@ -181,8 +182,6 @@ public class TestSegments {
 
             String test = rsg.next(monkeyStringCount);
             icuBreak.setText(test);
-            int[] icuStatus = new int[20];
-            int[] ruleStatus = new int[20];
             for (int j = 0; j <= test.length(); ++j) {
                 boolean icuBreakResults = icuBreak.isBoundary(j);
                 boolean ruleListResults = rl.breaksAt(test, j);

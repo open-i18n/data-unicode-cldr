@@ -17,6 +17,7 @@ import org.unicode.cldr.icu.RegexManager.PathValueInfo;
 import org.unicode.cldr.icu.RegexManager.RegexResult;
 import org.unicode.cldr.util.Builder;
 import org.unicode.cldr.util.CLDRFile;
+import org.unicode.cldr.util.CLDRFile.DtdType;
 import org.unicode.cldr.util.Pair;
 import org.unicode.cldr.util.RegexLookup;
 import org.unicode.cldr.util.RegexLookup.Finder;
@@ -101,7 +102,7 @@ public class SupplementalMapper {
                 }
                 return compareElem;
             }
-            return CLDRFile.ldmlComparator.compare(arg0, arg1);
+            return CLDRFile.getComparator(DtdType.supplementalData).compare(arg0, arg1);
         }
     };
 

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Comparator;
 import java.util.EnumMap;
-import java.util.EnumSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +14,9 @@ import java.util.TreeSet;
 import org.unicode.cldr.util.Builder;
 import org.unicode.cldr.util.Builder.CBuilder;
 import org.unicode.cldr.util.CLDRFile;
+import org.unicode.cldr.util.CLDRFile.DtdType;
 import org.unicode.cldr.util.CLDRFile.Status;
-import org.unicode.cldr.util.CldrUtility;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.Counter;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.LanguageTagParser;
@@ -40,15 +40,15 @@ public class GenerateCoverageLevels {
     private static boolean SKIP_UNCONFIRMED = true;
     private static int SHOW_EXAMPLES = 5;
     private static final String FILES = ".*";
-    private static final String MAIN_DIRECTORY = CldrUtility.MAIN_DIRECTORY;// CldrUtility.SUPPLEMENTAL_DIRECTORY;
-                                                                            // //CldrUtility.MAIN_DIRECTORY;
-    private static final String COLLATION_DIRECTORY = CldrUtility.COMMON_DIRECTORY + "/collation/";// CldrUtility.SUPPLEMENTAL_DIRECTORY;
-                                                                                                   // //CldrUtility.MAIN_DIRECTORY;
-    private static final String RBNF_DIRECTORY = CldrUtility.COMMON_DIRECTORY + "/rbnf/";// CldrUtility.SUPPLEMENTAL_DIRECTORY;
-                                                                                         // //CldrUtility.MAIN_DIRECTORY;
-    private static final String OUT_DIRECTORY = CldrUtility.GEN_DIRECTORY + "/coverage/"; // CldrUtility.MAIN_DIRECTORY;
+    private static final String MAIN_DIRECTORY = CLDRPaths.MAIN_DIRECTORY;// CldrUtility.SUPPLEMENTAL_DIRECTORY;
+                                                                          // //CldrUtility.MAIN_DIRECTORY;
+    private static final String COLLATION_DIRECTORY = CLDRPaths.COMMON_DIRECTORY + "/collation/";// CldrUtility.SUPPLEMENTAL_DIRECTORY;
+                                                                                                 // //CldrUtility.MAIN_DIRECTORY;
+    private static final String RBNF_DIRECTORY = CLDRPaths.COMMON_DIRECTORY + "/rbnf/";// CldrUtility.SUPPLEMENTAL_DIRECTORY;
+                                                                                       // //CldrUtility.MAIN_DIRECTORY;
+    private static final String OUT_DIRECTORY = CLDRPaths.GEN_DIRECTORY + "/coverage/"; // CldrUtility.MAIN_DIRECTORY;
     private static final Factory cldrFactory = Factory.make(MAIN_DIRECTORY, FILES);
-    private static final Comparator<String> attributeComparator = CLDRFile.getAttributeComparator();
+    private static final Comparator<String> attributeComparator = CLDRFile.getAttributeOrdering();
     private static final CLDRFile english = cldrFactory.make("en", true);
     private static SupplementalDataInfo supplementalData = SupplementalDataInfo.getInstance(english
         .getSupplementalDirectory());
@@ -119,7 +119,7 @@ public class GenerateCoverageLevels {
         public int compare(R3<Level, String, Inheritance> o1, R3<Level, String, Inheritance> o2) {
             int result = o1.get0().compareTo(o2.get0());
             if (result != 0) return result;
-            result = CLDRFile.ldmlComparator.compare(o1.get1(), o2.get1());
+            result = CLDRFile.getComparator(DtdType.ldml).compare(o1.get1(), o2.get1());
             if (result != 0) return result;
             result = o1.get2().compareTo(o2.get2());
             return result;
@@ -235,7 +235,7 @@ public class GenerateCoverageLevels {
                     String element = lastParts.getElement(i);
                     Relation<String, String> old = differences.get(element);
                     if (old == null) {
-                        old = new Relation(new TreeMap(attributeComparator), TreeSet.class);
+                        old = Relation.of(new TreeMap<String, Set<String>>(attributeComparator), TreeSet.class);
                         differences.put(element, old);
                     }
                     Set<String> union = Builder.with(new TreeSet<String>()).addAll(lastAttrs.keySet())
@@ -334,7 +334,7 @@ public class GenerateCoverageLevels {
         LanguageTagParser languageTagParser = new LanguageTagParser();
 
         StringBuilder header = new StringBuilder();
-        EnumSet<Level> skipLevels = EnumSet.of(Level.CORE, Level.POSIX, Level.COMPREHENSIVE, Level.OPTIONAL);
+        //EnumSet<Level> skipLevels = EnumSet.of(Level.CORE, Level.POSIX, Level.COMPREHENSIVE, Level.OPTIONAL);
         for (String locale : mapLevelData.keySet()) {
             LevelData levelData = mapLevelData.get(locale);
             String max = LikelySubtags.maximize(locale, supplementalData.getLikelySubtags());
@@ -524,7 +524,7 @@ public class GenerateCoverageLevels {
         Status status = new Status();
         Set<String> sorted = Builder.with(new TreeSet<String>()).addAll(cldrFile.iterator())
             .addAll(cldrFile.getExtraPaths()).get();
-        SupplementalDataInfo sdi = SupplementalDataInfo.getInstance(CldrUtility.DEFAULT_SUPPLEMENTAL_DIRECTORY);
+        SupplementalDataInfo sdi = SupplementalDataInfo.getInstance(CLDRPaths.DEFAULT_SUPPLEMENTAL_DIRECTORY);
         for (String path : sorted) {
             if (path.endsWith("/alias")) {
                 continue;

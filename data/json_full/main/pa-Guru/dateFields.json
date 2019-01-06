@@ -1,0 +1,158 @@
+{
+  "main": {
+    "pa-Guru": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "25",
+          "_number": "$Revision: 91 $"
+        },
+        "generation": {
+          "_date": "$Date: 2014-03-13 22:27:12 -0500 (Thu, 13 Mar 2014) $"
+        },
+        "language": "pa",
+        "script": "Guru"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "ਯੁੱਗ"
+          },
+          "year": {
+            "displayName": "ਸਾਲ",
+            "relative-type--1": "ਪਿਛਲਾ ਸਾਲ",
+            "relative-type-0": "ਇਹ ਸਾਲ",
+            "relative-type-1": "ਅਗਲਾ ਸਾਲ",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} ਸਾਲ ਵਿਚ",
+              "relativeTimePattern-count-other": "{0} ਸਾਲ ਵਿਚ"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} ਸਾਲ ਪਹਿਲਾਂ",
+              "relativeTimePattern-count-other": "{0} ਸਾਲ ਪਹਿਲਾਂ"
+            }
+          },
+          "month": {
+            "displayName": "ਮਹੀਨਾ",
+            "relative-type--1": "ਪਿਛਲਾ ਮਹੀਨਾ",
+            "relative-type-0": "ਇਹ ਮਹੀਨਾ",
+            "relative-type-1": "ਅਗਲਾ ਮਹੀਨਾ",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} ਮਹੀਨੇ ਵਿਚ",
+              "relativeTimePattern-count-other": "{0} ਮਹੀਨੇ ਵਿਚ"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} ਮਹੀਨੇ ਪਹਿਲਾਂ",
+              "relativeTimePattern-count-other": "{0} ਮਹੀਨੇ ਪਹਿਲਾਂ"
+            }
+          },
+          "week": {
+            "displayName": "ਹਫ਼ਤਾ",
+            "relative-type--1": "ਪਿਛਲਾ ਹਫ਼ਤਾ",
+            "relative-type-0": "ਇਹ ਹਫ਼ਤਾ",
+            "relative-type-1": "ਅਗਲਾ ਹਫ਼ਤਾ",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} ਹਫ਼ਤੇ ਵਿਚ",
+              "relativeTimePattern-count-other": "{0} ਹਫ਼ਤੇ ਵਿਚ"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} ਹਫ਼ਤਾ ਪਹਿਲਾਂ",
+              "relativeTimePattern-count-other": "{0} ਹਫ਼ਤੇ ਪਹਿਲਾਂ"
+            }
+          },
+          "day": {
+            "displayName": "ਦਿਨ",
+            "relative-type--1": "ਲੰਘਿਆ ਕੱਲ",
+            "relative-type-0": "ਅੱਜ",
+            "relative-type-1": "ਭਲਕੇ",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} ਦਿਨ ਵਿਚ",
+              "relativeTimePattern-count-other": "{0} ਦਿਨਾਂ ਵਿਚ"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} ਦਿਨ ਪਹਿਲਾਂ",
+              "relativeTimePattern-count-other": "{0} ਦਿਨ ਪਹਿਲਾਂ"
+            }
+          },
+          "weekday": {
+            "displayName": "ਹਫ਼ਤੇ ਦਾ ਦਿਨ"
+          },
+          "sun": {
+            "relative-type--1": "ਪਿਛਲਾ ਐਤਵਾਰ",
+            "relative-type-0": "ਇਹ ਐਤਵਾਰ",
+            "relative-type-1": "ਅਗਲਾ ਐਤਵਾਰ"
+          },
+          "mon": {
+            "relative-type--1": "ਪਿਛਲਾ ਸੋਮਵਾਰ",
+            "relative-type-0": "ਇਹ ਸੋਮਵਾਰ",
+            "relative-type-1": "ਅਗਲਾ ਸੋਮਵਾਰ"
+          },
+          "tue": {
+            "relative-type--1": "ਪਿਛਲਾ ਮੰਗਲਵਾਰ",
+            "relative-type-0": "ਇਹ ਮੰਗਲਵਾਰ",
+            "relative-type-1": "ਅਗਲਾ ਮੰਗਲਵਾਰ"
+          },
+          "wed": {
+            "relative-type--1": "ਪਿਛਲਾ ਬੁੱਧਵਾਰ",
+            "relative-type-0": "ਇਹ ਬੁੱਧਵਾਰ",
+            "relative-type-1": "ਅਗਲਾ ਬੁੱਧਵਾਰ"
+          },
+          "thu": {
+            "relative-type--1": "ਪਿਛਲਾ ਵੀਰਵਾਰ",
+            "relative-type-0": "ਇਹ ਵੀਰਵਾਰ",
+            "relative-type-1": "ਅਗਲਾ ਵੀਰਵਾਰ"
+          },
+          "fri": {
+            "relative-type--1": "ਪਿਛਲਾ ਸ਼ੁੱਕਰਵਾਰ",
+            "relative-type-0": "ਇਹ ਸ਼ੁੱਕਰਵਾਰ",
+            "relative-type-1": "ਅਗਲਾ ਸ਼ੁੱਕਰਵਾਰ"
+          },
+          "sat": {
+            "relative-type--1": "ਪਿਛਲਾ ਸ਼ਨਿੱਚਰਵਾਰ",
+            "relative-type-0": "ਇਹ ਸ਼ਨਿੱਚਰਵਾਰ",
+            "relative-type-1": "ਅਗਲਾ ਸ਼ਨਿੱਚਰਵਾਰ"
+          },
+          "dayperiod": {
+            "displayName": "AM/PM"
+          },
+          "hour": {
+            "displayName": "ਘੰਟਾ",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} ਘੰਟੇ ਵਿਚ",
+              "relativeTimePattern-count-other": "{0} ਘੰਟੇ ਵਿਚ"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} ਘੰਟਾ ਪਹਿਲਾਂ",
+              "relativeTimePattern-count-other": "{0} ਘੰਟੇ ਪਹਿਲਾਂ"
+            }
+          },
+          "minute": {
+            "displayName": "ਮਿੰਟ",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} ਮਿੰਟ ਵਿਚ",
+              "relativeTimePattern-count-other": "{0} ਮਿੰਟ ਵਿਚ"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} ਮਿੰਟ ਪਹਿਲਾਂ",
+              "relativeTimePattern-count-other": "{0} ਮਿੰਟ ਪਹਿਲਾਂ"
+            }
+          },
+          "second": {
+            "displayName": "ਸਕਿੰਟ",
+            "relative-type-0": "ਹੁਣ",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} ਸਕਿੰਟ ਵਿਚ",
+              "relativeTimePattern-count-other": "{0} ਸਕਿੰਟ ਵਿਚ"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} ਸਕਿੰਟ ਪਹਿਲਾਂ",
+              "relativeTimePattern-count-other": "{0} ਸਕਿੰਟ ਪਹਿਲਾਂ"
+            }
+          },
+          "zone": {
+            "displayName": "ਖੇਤਰ"
+          }
+        }
+      }
+    }
+  }
+}

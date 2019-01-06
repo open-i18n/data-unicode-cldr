@@ -23,7 +23,11 @@ import java.util.TreeSet;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+//import org.unicode.cldr.test.TestCLDRTests.Handler;
+//import org.unicode.cldr.test.TestCLDRTests.MutableInteger;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
+import org.unicode.cldr.util.Level;
 import org.unicode.cldr.util.LocaleIDParser;
 import org.unicode.cldr.util.StandardCodes;
 import org.xml.sax.Attributes;
@@ -48,7 +52,7 @@ public class TestCLDRTests extends TestFmwk {
     Locale oLocale = Locale.ENGLISH; // TODO Drop once ICU4J has ULocale everywhere
     PrintWriter log;
     SAXParser SAX;
-    TreeMap results = new TreeMap();
+    TreeMap<String, MutableInteger> results = new TreeMap<String, MutableInteger>();
 
     public static void main(String[] args) throws Exception {
         double deltaTime = System.currentTimeMillis();
@@ -67,17 +71,17 @@ public class TestCLDRTests extends TestFmwk {
     }
 
     TestCLDRTests() throws IOException {
-        log = BagFormatter.openUTF8Writer(CldrUtility.GEN_DIRECTORY, "collationTestLog.txt");
+        log = BagFormatter.openUTF8Writer(CLDRPaths.GEN_DIRECTORY, "collationTestLog.txt");
         log.write(0xFEFF);
     }
 
-    Set languagesToTest;
+    Set<String> languagesToTest;
 
     public void TestAll() throws Exception {
-        Map platform_locale_status = StandardCodes.make().getLocaleTypes();
-        Map onlyLocales = (Map) platform_locale_status.get("IBM");
-        Set locales = onlyLocales.keySet();
-        languagesToTest = (Set) new CldrUtility.CollectionTransform() {
+        Map<String, Map<String, Level>> platform_locale_status = StandardCodes.make().getLocaleTypes();
+        Map<String, Level> onlyLocales = (Map<String, Level>) platform_locale_status.get("IBM");
+        Set<String> locales = onlyLocales.keySet();
+        languagesToTest = (Set<String>) new CldrUtility.CollectionTransform() {
             LocaleIDParser lip = new LocaleIDParser();
 
             public Object transform(Object source) {
@@ -86,7 +90,7 @@ public class TestCLDRTests extends TestFmwk {
         }.transform(locales, new TreeSet());
         languagesToTest.remove("th"); // JDK endless loop in collation
 
-        File[] list = new File(CldrUtility.TEST_DIR).listFiles();
+        File[] list = new File(CLDRPaths.TEST_DIR).listFiles();
         for (int i = 0; i < list.length; ++i) {
             String name = list[i].getName();
             if (!name.endsWith(".xml")) continue;
@@ -107,14 +111,14 @@ public class TestCLDRTests extends TestFmwk {
         uLocale = new ULocale(localeName);
         oLocale = uLocale.toLocale();
 
-        File f = new File(CldrUtility.TEST_DIR, localeName + ".xml");
+        File f = new File(CLDRPaths.TEST_DIR, localeName + ".xml");
         SAX.parse(f, DEFAULT_HANDLER);
     }
 
     // ============ SAX Handler Infrastructure ============
 
     abstract public class Handler {
-        Map settings = new TreeMap();
+        Map<String, String> settings = new TreeMap<String, String>();
         String name;
         String attributes;
 
@@ -138,7 +142,7 @@ public class TestCLDRTests extends TestFmwk {
 
         public void myerrln(String message) {
             String temp = uLocale + "\t" + message + "\t[" + name;
-            for (Iterator it = settings.keySet().iterator(); it.hasNext();) {
+            for (Iterator<String> it = settings.keySet().iterator(); it.hasNext();) {
                 String attributeName = (String) it.next();
                 String attributeValue = (String) settings.get(attributeName);
                 temp += " " + attributeName + "=<" + attributeValue + ">";
@@ -190,7 +194,7 @@ public class TestCLDRTests extends TestFmwk {
         RegisteredHandlers.put(name, handler);
     }
 
-    Map RegisteredHandlers = new HashMap();
+    Map<String, Handler> RegisteredHandlers = new HashMap<String, Handler>();
 
     // ============ Statics for Date/Number Support ============
 
@@ -238,7 +242,7 @@ public class TestCLDRTests extends TestFmwk {
             public void handleResult(String result) {
                 NumberFormat nf = null;
                 double v = Double.NaN;
-                for (Iterator it = settings.keySet().iterator(); it.hasNext();) {
+                for (Iterator<String> it = settings.keySet().iterator(); it.hasNext();) {
                     String attributeName = (String) it.next();
                     String attributeValue = (String) settings
                         .get(attributeName);
@@ -281,7 +285,7 @@ public class TestCLDRTests extends TestFmwk {
                 int dateFormat = DateFormat.DEFAULT;
                 int timeFormat = DateFormat.DEFAULT;
                 Date date = new Date();
-                for (Iterator it = settings.keySet().iterator(); it.hasNext();) {
+                for (Iterator<String> it = settings.keySet().iterator(); it.hasNext();) {
                     String attributeName = (String) it.next();
                     String attributeValue = (String) settings
                         .get(attributeName);
@@ -327,7 +331,6 @@ public class TestCLDRTests extends TestFmwk {
     DefaultHandler DEFAULT_HANDLER = new DefaultHandler() {
         static final boolean DEBUG = false;
         StringBuffer lastChars = new StringBuffer();
-        boolean justPopped = false;
         Handler handler;
 
         public void startElement(
@@ -351,7 +354,6 @@ public class TestCLDRTests extends TestFmwk {
                     // handler.set("locale", uLocale.toString());
                 }
                 // if (DEBUG) System.out.println("startElement:\t" + contextStack);
-                justPopped = false;
             } catch (RuntimeException e) {
                 e.printStackTrace();
                 throw e;
@@ -368,7 +370,6 @@ public class TestCLDRTests extends TestFmwk {
                     // logln("Unexpected contents of: " + qName + ", <" + lastChars + ">");
                 }
                 lastChars.setLength(0);
-                justPopped = true;
             } catch (RuntimeException e) {
                 e.printStackTrace();
                 throw e;
@@ -382,7 +383,6 @@ public class TestCLDRTests extends TestFmwk {
                 String value = new String(ch, start, length);
                 if (DEBUG) System.out.println("characters:\t" + value);
                 lastChars.append(value);
-                justPopped = false;
             } catch (RuntimeException e) {
                 e.printStackTrace();
                 throw e;

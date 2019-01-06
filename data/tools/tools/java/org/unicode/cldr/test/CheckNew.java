@@ -1,7 +1,6 @@
 package org.unicode.cldr.test;
 
 import java.util.List;
-import java.util.Map;
 
 import org.unicode.cldr.test.CheckCLDR.CheckStatus.Subtype;
 import org.unicode.cldr.util.CLDRFile;
@@ -17,7 +16,7 @@ public class CheckNew extends CheckCLDR {
     }
 
     @Override
-    public CheckCLDR setCldrFileToCheck(CLDRFile cldrFileToCheck, Map<String, String> options,
+    public CheckCLDR setCldrFileToCheck(CLDRFile cldrFileToCheck, Options options,
         List<CheckStatus> possibleErrors) {
         if (cldrFileToCheck == null) {
             return this;
@@ -34,7 +33,7 @@ public class CheckNew extends CheckCLDR {
     }
 
     @Override
-    public CheckCLDR handleCheck(String path, String fullPath, String value, Map<String, String> options,
+    public CheckCLDR handleCheck(String path, String fullPath, String value, Options options,
         List<CheckStatus> result) {
 
         boolean isOutdated = outdatedPaths.isOutdated(getCldrFileToCheck().getLocaleID(), path);

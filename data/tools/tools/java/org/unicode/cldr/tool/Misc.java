@@ -14,8 +14,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -27,6 +27,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.unicode.cldr.util.CLDRFile;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.LanguageTagParser;
@@ -81,8 +82,8 @@ public class Misc {
     private static final UOption[] options = {
         UOption.HELP_H(),
         UOption.HELP_QUESTION_MARK(),
-        UOption.SOURCEDIR().setDefault(CldrUtility.COMMON_DIRECTORY),
-        UOption.DESTDIR().setDefault(CldrUtility.GEN_DIRECTORY + "timezones/"),
+        UOption.SOURCEDIR().setDefault(CLDRPaths.COMMON_DIRECTORY),
+        UOption.DESTDIR().setDefault(CLDRPaths.GEN_DIRECTORY + "timezones/"),
         UOption.create("match", 'm', UOption.REQUIRES_ARG).setDefault(".*"),
         UOption.create("to_localize", 't', UOption.NO_ARG),
         UOption.create("current", 'c', UOption.NO_ARG),
@@ -98,9 +99,9 @@ public class Misc {
     private static final String HELP_TEXT = "Use the following options" + XPathParts.NEWLINE
         + "-h or -?\tfor this message" + XPathParts.NEWLINE
         + "-" + options[SOURCEDIR].shortName + "\tsource directory. Default = "
-        + CldrUtility.getCanonicalName(CldrUtility.MAIN_DIRECTORY) + XPathParts.NEWLINE
+        + CldrUtility.getCanonicalName(CLDRPaths.MAIN_DIRECTORY) + XPathParts.NEWLINE
         + "-" + options[DESTDIR].shortName + "\tdestination directory. Default = "
-        + CldrUtility.getCanonicalName(CldrUtility.GEN_DIRECTORY + "main/") + XPathParts.NEWLINE
+        + CldrUtility.getCanonicalName(CLDRPaths.GEN_DIRECTORY + "main/") + XPathParts.NEWLINE
         + "-m<regex>\tto restrict the locales to what matches <regex>" + XPathParts.NEWLINE
         + "-t\tgenerates files that contain items missing localizations" + XPathParts.NEWLINE
         + "-c\tgenerates missing timezone localizations" + XPathParts.NEWLINE
@@ -144,7 +145,7 @@ public class Misc {
             english = cldrFactory.make("en", false);
             resolvedRoot = cldrFactory.make("root", true);
             if (options[MATCH].value.equals("group1")) options[MATCH].value = "(en|fr|de|it|es|pt|ja|ko|zh)";
-            Set languages = new TreeSet(cldrFactory.getAvailableLanguages());
+            Set<String> languages = new TreeSet<String>(cldrFactory.getAvailableLanguages());
             // new Utility.MatcherFilter(options[MATCH].value).retainAll(languages);
             // new Utility.MatcherFilter("(sh|zh_Hans|sr_Cyrl)").removeAll(languages);
 
@@ -157,8 +158,8 @@ public class Misc {
             }
 
             if (options[TO_LOCALIZE].doesOccur) {
-                for (Iterator it = languages.iterator(); it.hasNext();) {
-                    String language = (String) it.next();
+                for (Iterator<String> it = languages.iterator(); it.hasNext();) {
+                    String language = it.next();
                     printSupplementalData(language);
                 }
             }
@@ -168,7 +169,7 @@ public class Misc {
             }
 
             if (options[INFO].doesOccur) {
-                PrintWriter pw = BagFormatter.openUTF8Writer(CldrUtility.TMP_DIRECTORY + "logs/",
+                PrintWriter pw = BagFormatter.openUTF8Writer(CLDRPaths.TMP_DIRECTORY + "logs/",
                     "attributesAndValues.html");
                 new GenerateAttributeList(cldrFactory).show(pw);
                 pw.close();
@@ -252,14 +253,14 @@ public class Misc {
     }
 
     private static void listObsoletes() {
-        java.util.TimeZone t;
+        //java.util.TimeZone t;
         StandardCodes sc = StandardCodes.make();
-        for (Iterator typeIt = sc.getAvailableTypes().iterator(); typeIt.hasNext();) {
-            String type = (String) typeIt.next();
+        for (Iterator<String> typeIt = sc.getAvailableTypes().iterator(); typeIt.hasNext();) {
+            String type = typeIt.next();
             System.out.println(type);
-            for (Iterator codeIt = sc.getAvailableCodes(type).iterator(); codeIt.hasNext();) {
-                String code = (String) codeIt.next();
-                List list = sc.getFullData(type, code);
+            for (Iterator<String> codeIt = sc.getAvailableCodes(type).iterator(); codeIt.hasNext();) {
+                String code = codeIt.next();
+                List<String> list = sc.getFullData(type, code);
                 if (list.size() < 3) continue;
                 String replacementCode = (String) list.get(2);
                 if (replacementCode.length() == 0) continue;
@@ -274,7 +275,7 @@ public class Misc {
     // ICU info: http://oss.software.ibm.com/cvs/icu/~checkout~/icu/source/common/putil.c
     // search for "Mapping between Windows zone IDs"
 
-    static Set priorities = new TreeSet(Arrays.asList(new String[] { "en", "zh_Hans",
+    static Set<String> priorities = new TreeSet<String>(Arrays.asList(new String[] { "en", "zh_Hans",
         "zh_Hant", "da", "nl", "fi", "fr", "de", "it",
         "ja", "ko", "nb", "pt_BR", "ru", "es", "sv", "ar", "bg", "ca",
         "hr", "cs", "et", "el", "he", "hi", "hu", "is", "id", "lv", "lt",
@@ -284,15 +285,15 @@ public class Misc {
 
     private static void printAllZoneLocalizations() throws IOException {
         StandardCodes sc = StandardCodes.make();
-        Set zones = sc.getAvailableCodes("tzid");
-        Map offset_zone_locale_name = new TreeMap();
-        for (Iterator it2 = priorities.iterator(); it2.hasNext();) {
-            String locale = (String) it2.next();
+        Set<String> zones = sc.getAvailableCodes("tzid");
+        Map<Integer, Map<String, Map<String, String>>> offset_zone_locale_name = new TreeMap<Integer, Map<String, Map<String, String>>>();
+        for (Iterator<String> it2 = priorities.iterator(); it2.hasNext();) {
+            String locale = it2.next();
             System.out.println(locale);
             try {
                 TimezoneFormatter tzf = new TimezoneFormatter(cldrFactory, locale, true);
-                for (Iterator it = zones.iterator(); it.hasNext();) {
-                    String zone = (String) it.next();
+                for (Iterator<String> it = zones.iterator(); it.hasNext();) {
+                    String zone = it.next();
                     TimeZone tzone = TimeZone.getTimeZone(zone);
                     int stdOffset = tzone.getRawOffset();
                     Integer standardOffset = new Integer(-stdOffset);
@@ -301,12 +302,12 @@ public class Misc {
                     String fullName = "(" + gmt + ") "
                         + (zone.startsWith("Etc") ? "" : name);
 
-                    Map zone_locale_name = (Map) offset_zone_locale_name.get(standardOffset);
+                    Map<String, Map<String, String>> zone_locale_name = offset_zone_locale_name.get(standardOffset);
                     if (zone_locale_name == null)
-                        offset_zone_locale_name.put(standardOffset, zone_locale_name = new TreeMap());
+                        offset_zone_locale_name.put(standardOffset, zone_locale_name = new TreeMap<String, Map<String, String>>());
 
-                    Map locale_name = (Map) zone_locale_name.get(zone);
-                    if (locale_name == null) zone_locale_name.put(zone, locale_name = new TreeMap());
+                    Map<String, String> locale_name = zone_locale_name.get(zone);
+                    if (locale_name == null) zone_locale_name.put(zone, locale_name = new TreeMap<String, String>());
 
                     locale_name.put(locale, fullName);
                 }
@@ -328,33 +329,33 @@ public class Misc {
         out.println("<tr><th></th><th>No</th><th>Country</th><th>Offset(s)</th>");
 
         // do the header
-        for (Iterator it2 = priorities.iterator(); it2.hasNext();) {
-            String locale = (String) it2.next();
+        for (Iterator<String> it2 = priorities.iterator(); it2.hasNext();) {
+            String locale = it2.next();
             String englishLocaleName = english.getName(locale);
             out.println("<th>" + locale + " (" + englishLocaleName + ")" + "</th>");
         }
 
         // now the rows
         out.println("</tr>");
-        Map zone_country = sc.getZoneToCounty();
+        Map<String, String> zone_country = sc.getZoneToCounty();
         int count = 0;
-        for (Iterator it = offset_zone_locale_name.keySet().iterator(); it.hasNext();) {
-            Integer offset = (Integer) it.next();
+        for (Iterator<Integer> it = offset_zone_locale_name.keySet().iterator(); it.hasNext();) {
+            Integer offset = it.next();
             // out.println(offset);
-            Map zone_locale_name = (Map) offset_zone_locale_name.get(offset);
-            for (Iterator it2 = zone_locale_name.keySet().iterator(); it2.hasNext();) {
-                String zone = (String) it2.next();
+            Map<String, Map<String, String>> zone_locale_name = offset_zone_locale_name.get(offset);
+            for (Iterator<String> it2 = zone_locale_name.keySet().iterator(); it2.hasNext();) {
+                String zone = it2.next();
                 out.println("<tr>");
                 out.println("<th>" + (++count) + "</th>");
                 out.println("<th>" + zone + "</th>");
                 String country = (String) zone_country.get(zone);
-                String countryName = english.getName(english.TERRITORY_NAME, country);
+                String countryName = english.getName(CLDRFile.TERRITORY_NAME, country);
                 out.println("<td>" + country + " (" + countryName + ")" + "</td>");
                 TimeZone tzone = TimeZone.getTimeZone(zone);
                 out.println("<td>" + offsetString(tzone) + "</td>");
-                Map locale_name = (Map) zone_locale_name.get(zone);
-                for (Iterator it3 = priorities.iterator(); it3.hasNext();) {
-                    String locale = (String) it3.next();
+                Map<String, String> locale_name = zone_locale_name.get(zone);
+                for (Iterator<String> it3 = priorities.iterator(); it3.hasNext();) {
+                    String locale = it3.next();
                     String name = (String) locale_name.get(locale);
                     out.println("<td>");
                     if (name == null) {
@@ -386,18 +387,25 @@ public class Misc {
         return result;
     }
 
-    static long JAN152006 = new Date(2006 - 1900, 1 - 1, 15, 0, 0, 0).getTime();
-    static long JUNE152006 = new Date(2006 - 1900, 6 - 1, 15, 0, 0, 0).getTime();
+    // Get Date-Time in milliseconds
+    private static long getDateTimeinMillis(int year, int month, int date, int hourOfDay, int minute, int second) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month, date, hourOfDay, minute, second);
+        return cal.getTimeInMillis();
+    }
+
+    static long JAN152006 = getDateTimeinMillis(2006, 1, 15, 0, 0, 0);
+    static long JUNE152006 = getDateTimeinMillis(2006, 6, 15, 0, 0, 0);
     static NumberFormat hours = new DecimalFormat("0.##");
 
     /**
      * @param languages
      * @throws IOException
      */
-    private static void printCurrentTimezoneLocalizations(Set languages) throws IOException {
-        Set rtlLanguages = new TreeSet();
-        for (Iterator it = languages.iterator(); it.hasNext();) {
-            String language = (String) it.next();
+    private static void printCurrentTimezoneLocalizations(Set<String> languages) throws IOException {
+        Set<String> rtlLanguages = new TreeSet<String>();
+        for (Iterator<String> it = languages.iterator(); it.hasNext();) {
+            String language = it.next();
             CLDRFile desiredLocaleFile = cldrFactory.make(language, true);
             String orientation = desiredLocaleFile.getStringValue("//ldml/layout/orientation/characterOrder");
             boolean rtl = orientation == null ? false : orientation.equals("right-to-left");
@@ -434,39 +442,39 @@ public class Misc {
         RuleBasedCollator col = (RuleBasedCollator) Collator.getInstance(ULocale.ENGLISH);
         col.setNumericCollation(true);
         StandardCodes sc = StandardCodes.make();
-        Map zone_countries = sc.getZoneToCounty();
-        Map old_new = sc.getZoneLinkold_new();
-        Map new_old = new TreeMap(col);
-        Map country_zones = new TreeMap(col);
-        for (Iterator it = zone_countries.keySet().iterator(); it.hasNext();) {
-            String zone = (String) it.next();
-            new_old.put(zone, new TreeSet(col));
-            String country = (String) zone_countries.get(zone);
+        Map<String, String> zone_countries = sc.getZoneToCounty();
+        Map<String, String> old_new = sc.getZoneLinkold_new();
+        Map<String, Set<String>> new_old = new TreeMap<String, Set<String>>(col);
+        Map<String, Set<String>> country_zones = new TreeMap<String, Set<String>>(col);
+        for (Iterator<String> it = zone_countries.keySet().iterator(); it.hasNext();) {
+            String zone = it.next();
+            new_old.put(zone, new TreeSet<String>(col));
+            String country = zone_countries.get(zone);
             String name = english.getName("territory", country) + " (" + country + ")";
-            Set oldSet = (Set) country_zones.get(name);
-            if (oldSet == null) country_zones.put(name, oldSet = new TreeSet(col));
+            Set<String> oldSet = country_zones.get(name);
+            if (oldSet == null) country_zones.put(name, oldSet = new TreeSet<String>(col));
             oldSet.add(zone);
         }
-        for (Iterator it = old_new.keySet().iterator(); it.hasNext();) {
-            String oldOne = (String) it.next();
-            String newOne = (String) old_new.get(oldOne);
-            Set oldSet = (Set) new_old.get(newOne);
+        for (Iterator<String> it = old_new.keySet().iterator(); it.hasNext();) {
+            String oldOne = it.next();
+            String newOne = old_new.get(oldOne);
+            Set<String> oldSet = new_old.get(newOne);
             if (false && oldSet == null) {
                 System.out.println("Warning: missing zone: " + newOne);
                 new_old.put(newOne, oldSet = new TreeSet(col));
             }
             oldSet.add(oldOne);
         }
-        for (Iterator it3 = country_zones.keySet().iterator(); it3.hasNext();) {
-            String country = (String) it3.next();
+        for (Iterator<String> it3 = country_zones.keySet().iterator(); it3.hasNext();) {
+            String country = it3.next();
             System.out.println(country);
-            Set zones = (Set) country_zones.get(country);
-            for (Iterator it = zones.iterator(); it.hasNext();) {
-                String newOne = (String) it.next();
+            Set<String> zones = country_zones.get(country);
+            for (Iterator<String> it = zones.iterator(); it.hasNext();) {
+                String newOne = it.next();
                 System.out.println("    tzid:\t" + newOne);
-                Set oldSet = (Set) new_old.get(newOne);
-                for (Iterator it2 = oldSet.iterator(); it2.hasNext();) {
-                    String oldOne = (String) it2.next();
+                Set<String> oldSet = new_old.get(newOne);
+                for (Iterator<String> it2 = oldSet.iterator(); it2.hasNext();) {
+                    String oldOne = it2.next();
                     System.out.println("        alias:\t" + oldOne);
                 }
             }
@@ -615,7 +623,7 @@ public class Misc {
     private static void printCurrentTimezoneLocalizations(PrintWriter log, String locale) throws IOException {
         StandardCodes sc = StandardCodes.make();
 
-        Map linkNew_Old = sc.getZoneLinkNew_OldSet();
+        Map<String, Set<String>> linkNew_Old = sc.getZoneLinkNew_OldSet();
         TimezoneFormatter tzf = new TimezoneFormatter(cldrFactory, locale, true);
         /*
          * <hourFormat>+HHmm;-HHmm</hourFormat>
@@ -628,17 +636,17 @@ public class Misc {
          */
         RuleBasedCollator col = (RuleBasedCollator) Collator.getInstance(new ULocale(locale));
         col.setNumericCollation(true);
-        Set orderedAliases = new TreeSet(col);
+        Set<String> orderedAliases = new TreeSet<String>(col);
 
-        Map zone_countries = StandardCodes.make().getZoneToCounty();
-        Map countries_zoneSet = StandardCodes.make().getCountryToZoneSet();
+        Map<String, String> zone_countries = StandardCodes.make().getZoneToCounty();
+        //Map<String, Set<String>> countries_zoneSet = StandardCodes.make().getCountryToZoneSet();
 
-        Map reordered = new TreeMap(col);
+        Map<String, String> reordered = new TreeMap<String, String>(col);
         CLDRFile desiredLocaleFile = cldrFactory.make(locale, true);
 
-        for (Iterator it = zone_countries.keySet().iterator(); it.hasNext();) {
-            String zoneID = (String) it.next();
-            String country = (String) zone_countries.get(zoneID);
+        for (Iterator<String> it = zone_countries.keySet().iterator(); it.hasNext();) {
+            String zoneID = it.next();
+            String country = zone_countries.get(zoneID);
             String countryName = desiredLocaleFile.getName(CLDRFile.TERRITORY_NAME, country);
             if (countryName == null) countryName = UTF16.valueOf(0x10FFFD) + country;
             reordered.put(countryName + "0" + zoneID, zoneID);
@@ -647,23 +655,23 @@ public class Misc {
         String[] field = new String[TimezoneFormatter.TYPE_LIMIT];
         boolean first = true;
         int count = 0;
-        for (Iterator it = reordered.keySet().iterator(); it.hasNext();) {
-            String key = (String) it.next();
-            String zoneID = (String) reordered.get(key);
-            String country = (String) zone_countries.get(zoneID);
+        for (Iterator<String> it = reordered.keySet().iterator(); it.hasNext();) {
+            String key = it.next();
+            String zoneID = reordered.get(key);
+            String country = zone_countries.get(zoneID);
             String countryName = desiredLocaleFile.getName(CLDRFile.TERRITORY_NAME, country);
             if (countryName == null) countryName = country;
             log.println("<tr><th class='ID' colspan=\"4\"><table><tr><th class='I'>"
                 + (++count) + "</th><th class='T'>" + TransliteratorUtilities.toHTML.transliterate(countryName)
                 + "</th><th class='I'>\u200E" + TransliteratorUtilities.toHTML.transliterate(zoneID));
-            Set s = (Set) linkNew_Old.get(zoneID);
+            Set<String> s = linkNew_Old.get(zoneID);
             if (s != null) {
                 log.println("\u200E</th><td class='A'>\u200E");
                 orderedAliases.clear();
                 orderedAliases.addAll(s);
                 boolean first2 = true;
-                for (Iterator it9 = s.iterator(); it9.hasNext();) {
-                    String alias = (String) it9.next();
+                for (Iterator<String> it9 = s.iterator(); it9.hasNext();) {
+                    String alias = it9.next();
                     if (first2)
                         first2 = false;
                     else
@@ -697,8 +705,7 @@ public class Misc {
     }
 
     void showOrderedTimezones() {
-        StandardCodes sc = StandardCodes.make();
-        String world = sc.getData("territory", "001");
+        StandardCodes.make();
     }
 
     static CldrUtility.VariableReplacer langTag = new CldrUtility.VariableReplacer()
@@ -736,20 +743,20 @@ public class Misc {
     public static void getZoneData() {
         StandardCodes sc = StandardCodes.make();
         System.out.println("Links: Old->New");
-        Map m = sc.getZoneLinkold_new();
+        Map<String, String> m = sc.getZoneLinkold_new();
         int count = 0;
-        for (Iterator it = m.keySet().iterator(); it.hasNext();) {
-            String key = (String) it.next();
+        for (Iterator<String> it = m.keySet().iterator(); it.hasNext();) {
+            String key = it.next();
             String newOne = (String) m.get(key);
             System.out.println(++count + "\t" + key + " => " + newOne);
         }
         count = 0;
         System.out.println();
         System.out.println("Links: Old->New, not final");
-        Set oldIDs = m.keySet();
-        for (Iterator it = oldIDs.iterator(); it.hasNext();) {
+        Set<String> oldIDs = m.keySet();
+        for (Iterator<String> it = oldIDs.iterator(); it.hasNext();) {
             ++count;
-            String key = (String) it.next();
+            String key = it.next();
             String newOne = (String) m.get(key);
             String further = (String) m.get(newOne);
             if (further == null) continue;
@@ -761,54 +768,54 @@ public class Misc {
             System.out.println(count + "\t" + key + " => " + newOne + " # NOT FINAL => " + further);
         }
 
-        m = sc.getZone_rules();
+        Map<String, List<ZoneLine>> m2 = sc.getZone_rules();
         System.out.println();
         System.out.println("Zones with old IDs");
-        for (Iterator it = m.keySet().iterator(); it.hasNext();) {
-            String key = (String) it.next();
+        for (Iterator<String> it = m2.keySet().iterator(); it.hasNext();) {
+            String key = it.next();
             if (oldIDs.contains(key)) System.out.println(key);
         }
 
-        Set modernIDs = sc.getZoneData().keySet();
+        Set<String> modernIDs = sc.getZoneData().keySet();
         System.out.println();
         System.out.println("Zones without countries");
-        TreeSet temp = new TreeSet(m.keySet());
+        TreeSet<String> temp = new TreeSet<String>(m2.keySet());
         temp.removeAll(modernIDs);
         System.out.println(temp);
 
-        Set countries = sc.getAvailableCodes("territory");
+        Set<String> countries = sc.getAvailableCodes("territory");
         System.out.println();
         System.out.println("Countries without zones");
         temp.clear();
         temp.addAll(countries);
         temp.removeAll(sc.getOld3166());
-        for (Iterator it = sc.getZoneData().values().iterator(); it.hasNext();) {
-            Object x = it.next();
-            List list = (List) x;
+        for (Iterator<List<String>> it = sc.getZoneData().values().iterator(); it.hasNext();) {
+            List<String> x = it.next();
+            List<String> list = x;
             temp.remove(list.get(2));
         }
-        for (Iterator it = temp.iterator(); it.hasNext();) {
-            String item = (String) it.next();
+        for (Iterator<String> it = temp.iterator(); it.hasNext();) {
+            String item = it.next();
             if (UCharacter.isDigit(item.charAt(0))) it.remove();
         }
         System.out.println(temp);
 
         System.out.println();
         System.out.println("Zone->RulesIDs");
-        m = sc.getZone_rules();
-        for (Iterator it = m.keySet().iterator(); it.hasNext();) {
-            String key = (String) it.next();
+        m2 = sc.getZone_rules();
+        for (Iterator<String> it = m2.keySet().iterator(); it.hasNext();) {
+            String key = it.next();
             System.out.println(key + " => " + XPathParts.NEWLINE + "\t"
-                + getSeparated((Collection) m.get(key), XPathParts.NEWLINE + "\t"));
+                + getSeparated(m2.get(key), XPathParts.NEWLINE + "\t"));
         }
 
         System.out.println();
         System.out.println("RulesID->Rules");
-        m = sc.getZoneRuleID_rules();
-        for (Iterator it = m.keySet().iterator(); it.hasNext();) {
-            String key = (String) it.next();
+        m2 = sc.getZoneRuleID_rules();
+        for (Iterator<String> it = m2.keySet().iterator(); it.hasNext();) {
+            String key = it.next();
             System.out.println(key + " => " + XPathParts.NEWLINE + "\t"
-                + getSeparated((Collection) m.get(key), XPathParts.NEWLINE + "\t"));
+                + getSeparated(m2.get(key), XPathParts.NEWLINE + "\t"));
         }
 
         System.out.println();
@@ -817,26 +824,26 @@ public class Misc {
         // now get all the abbreviations
         // Map rule_abbreviations = getAbbreviations(m);
 
-        Map ruleID_Rules = sc.getZoneRuleID_rules();
-        Map abb_zones = new TreeMap();
-        m = sc.getZone_rules();
-        for (Iterator it = m.keySet().iterator(); it.hasNext();) {
-            String key = (String) it.next();
-            Set abbreviations = new TreeSet();
+        Map<String, List<RuleLine>> ruleID_Rules = sc.getZoneRuleID_rules();
+        Map<String, Set<String>> abb_zones = new TreeMap<String, Set<String>>();
+        m2 = sc.getZone_rules();
+        for (Iterator<String> it = m2.keySet().iterator(); it.hasNext();) {
+            String key = it.next();
+            Set<String> abbreviations = new TreeSet<String>();
             // rule_abbreviations.put(key, abbreviations);
             ZoneLine lastZoneLine = null;
 
-            for (Iterator it2 = ((Collection) m.get(key)).iterator(); it2.hasNext();) {
-                ZoneLine zoneLine = (ZoneLine) it2.next();
-                int thisYear = zoneLine.untilYear;
+            for (Iterator<ZoneLine> it2 = m2.get(key).iterator(); it2.hasNext();) {
+                ZoneLine zoneLine = it2.next();
+                //int thisYear = zoneLine.untilYear;
                 String format = zoneLine.format;
                 if (format.indexOf('/') >= 0) {
-                    Collection abb = Arrays.asList(format.split("/"));
-                    for (Iterator it3 = abb.iterator(); it3.hasNext();) {
-                        add(abbreviations, format.replaceAll("%s", it3.next().toString()), key, lastZoneLine, zoneLine);
+                    List<String> abb = Arrays.asList(format.split("/"));
+                    for (Iterator<String> it3 = abb.iterator(); it3.hasNext();) {
+                        add(abbreviations, format.replaceAll("%s", it3.next()), key, lastZoneLine, zoneLine);
                     }
                 } else if (format.indexOf('%') >= 0) {
-                    Set abb = getAbbreviations(ruleID_Rules, lastZoneLine, zoneLine);
+                    Set<String> abb = getAbbreviations(ruleID_Rules, lastZoneLine, zoneLine);
                     if (abb.size() == 0) {
                         System.out.println("??? Didn't find %s values for " + format + " under " + key
                             + ";" + CldrUtility.LINE_SEPARATOR + "\tLast:" + lastZoneLine + ";"
@@ -848,8 +855,8 @@ public class Misc {
                         System.out.println("??? " + zoneLine.rulesSave);
                         add(abbreviations, format, key, lastZoneLine, zoneLine);
                     } else {
-                        for (Iterator it3 = abb.iterator(); it3.hasNext();) {
-                            add(abbreviations, format.replaceAll("%s", it3.next().toString()), key, lastZoneLine,
+                        for (Iterator<String> it3 = abb.iterator(); it3.hasNext();) {
+                            add(abbreviations, format.replaceAll("%s", it3.next()), key, lastZoneLine,
                                 zoneLine);
                         }
                     }
@@ -858,14 +865,14 @@ public class Misc {
                 }
                 lastZoneLine = zoneLine;
             }
-            for (Iterator it3 = abbreviations.iterator(); it3.hasNext();) {
-                String abb = (String) it3.next();
+            for (Iterator<String> it3 = abbreviations.iterator(); it3.hasNext();) {
+                String abb = it3.next();
                 if (abb.equals("")) {
                     it3.remove();
                     continue;
                 }
-                Set zones = (Set) abb_zones.get(abb);
-                if (zones == null) abb_zones.put(abb, zones = new TreeSet());
+                Set<String> zones = abb_zones.get(abb);
+                if (zones == null) abb_zones.put(abb, zones = new TreeSet<String>());
                 zones.add(key);
             }
             System.out.println(key + " => " + XPathParts.NEWLINE + "\t"
@@ -874,10 +881,10 @@ public class Misc {
 
         System.out.println();
         System.out.println("Abbreviations->ZoneIDs");
-        for (Iterator it = abb_zones.keySet().iterator(); it.hasNext();) {
-            String key = (String) it.next();
+        for (Iterator<String> it = abb_zones.keySet().iterator(); it.hasNext();) {
+            String key = it.next();
             System.out.println(key + " => " + XPathParts.NEWLINE + "\t"
-                + getSeparated((Collection) abb_zones.get(key), XPathParts.NEWLINE + "\t"));
+                + getSeparated((Set<String>) abb_zones.get(key), XPathParts.NEWLINE + "\t"));
         }
 
         System.out.println("Types: " + ZoneParser.RuleLine.types);
@@ -887,7 +894,7 @@ public class Misc {
 
     }
 
-    private static void add(Set abbreviations, String format, String zone, ZoneLine lastZoneLine, ZoneLine zoneLine) {
+    private static void add(Set<String> abbreviations, String format, String zone, ZoneLine lastZoneLine, ZoneLine zoneLine) {
         if (format.length() < 3) {
             System.out.println("??? Format too short: '" + format + "' under " + zone
                 + ";" + CldrUtility.LINE_SEPARATOR + "\tLast:" + lastZoneLine + ";" + CldrUtility.LINE_SEPARATOR
@@ -897,11 +904,11 @@ public class Misc {
         abbreviations.add(format);
     }
 
-    private static Set getAbbreviations(Map rules, ZoneLine lastZoneLine, ZoneLine zoneLine) {
-        Set result = new TreeSet();
-        List ruleList = (List) rules.get(zoneLine.rulesSave);
-        for (Iterator it2 = ruleList.iterator(); it2.hasNext();) {
-            RuleLine ruleLine = (RuleLine) it2.next();
+    private static Set<String> getAbbreviations(Map<String, List<RuleLine>> rules, ZoneLine lastZoneLine, ZoneLine zoneLine) {
+        Set<String> result = new TreeSet<String>();
+        List<RuleLine> ruleList = rules.get(zoneLine.rulesSave);
+        for (Iterator<RuleLine> it2 = ruleList.iterator(); it2.hasNext();) {
+            RuleLine ruleLine = it2.next();
             int from = ruleLine.fromYear;
             int to = ruleLine.toYear;
             // they overlap?
@@ -912,6 +919,7 @@ public class Misc {
         return result;
     }
 
+    @SuppressWarnings("rawtypes")
     private static String getSeparated(Collection c, String separator) {
         StringBuffer result = new StringBuffer();
         boolean first = true;
@@ -927,17 +935,17 @@ public class Misc {
 
     private static void getCities() throws IOException {
         StandardCodes sc = StandardCodes.make();
-        Set territories = sc.getAvailableCodes("territory");
-        Map zoneData = sc.getZoneData();
+        Set<String> territories = sc.getAvailableCodes("territory");
+        Map<String, List<String>> zoneData = sc.getZoneData();
 
-        Set s = new TreeSet(sc.getTZIDComparator());
+        Set<String> s = new TreeSet<String>(sc.getTZIDComparator());
         s.addAll(sc.getZoneData().keySet());
         int counter = 0;
-        for (Iterator it = s.iterator(); it.hasNext();) {
-            String key = (String) it.next();
+        for (Iterator<String> it = s.iterator(); it.hasNext();) {
+            String key = it.next();
             System.out.println(++counter + "\t" + key + "\t" + zoneData.get(key));
         }
-        Set missing2 = new TreeSet(sc.getZoneData().keySet());
+        Set<String> missing2 = new TreeSet<String>(sc.getZoneData().keySet());
         missing2.removeAll(sc.getZoneToCounty().keySet());
         System.out.println(missing2);
         missing2.clear();
@@ -946,11 +954,11 @@ public class Misc {
         System.out.println(missing2);
         if (true) return;
 
-        Map country_city_data = new TreeMap();
-        Map territoryName_code = new HashMap();
-        Map zone_to_country = sc.getZoneToCounty();
-        for (Iterator it = territories.iterator(); it.hasNext();) {
-            String code = (String) it.next();
+        Map<String, Map<String, String>> country_city_data = new TreeMap<String, Map<String, String>>();
+        Map<String, String> territoryName_code = new HashMap<String, String>();
+        Map<String, String> zone_to_country = sc.getZoneToCounty();
+        for (Iterator<String> it = territories.iterator(); it.hasNext();) {
+            String code = it.next();
             territoryName_code.put(sc.getData("territory", code), code);
         }
         Transliterator t = Transliterator.getInstance(
@@ -959,12 +967,12 @@ public class Misc {
             "NFD; [:m:]Remove; NFC");
         BufferedReader br = BagFormatter.openUTF8Reader("c:/data/", "cities.txt");
         counter = 0;
-        Set missing = new TreeSet();
+        Set<String> missing = new TreeSet<String>();
         while (true) {
             String line = br.readLine();
             if (line == null) break;
             if (line.startsWith("place name")) continue;
-            List list = CldrUtility.splitList(line, '\t', true);
+            List<String> list = CldrUtility.splitList(line, '\t', true);
             String place = (String) list.get(0);
             place = t.transliterate(place);
             String place2 = t2.transliterate(place);
@@ -974,40 +982,40 @@ public class Misc {
             String longitude = (String) list.get(4);
             String code = (String) territoryName_code.get(country);
             if (code == null) missing.add(country);
-            Map city_data = (Map) country_city_data.get(code);
+            Map<String, String> city_data = country_city_data.get(code);
             if (city_data == null) {
-                city_data = new TreeMap();
+                city_data = new TreeMap<String, String>();
                 country_city_data.put(code, city_data);
             }
             city_data.put(place2,
                 place + "_" + population + "_" + latitude + "_" + longitude);
         }
-        if (false) for (Iterator it = missing.iterator(); it.hasNext();) {
+        if (false) for (Iterator<String> it = missing.iterator(); it.hasNext();) {
             System.out.println("\"" + it.next() + "\", \"XXX\",");
         }
 
-        for (Iterator it = country_city_data.keySet().iterator(); it.hasNext();) {
-            String key = (String) it.next();
-            Map city_data = (Map) country_city_data.get(key);
-            for (Iterator it2 = city_data.keySet().iterator(); it2.hasNext();) {
-                String key2 = (String) it2.next();
-                String value = (String) city_data.get(key2);
+        for (Iterator<String> it = country_city_data.keySet().iterator(); it.hasNext();) {
+            String key = it.next();
+            Map<String, String> city_data = country_city_data.get(key);
+            for (Iterator<String> it2 = city_data.keySet().iterator(); it2.hasNext();) {
+                String key2 = it2.next();
+                String value = city_data.get(key2);
                 System.out.println(++counter + "\t" + key + "\t"
                     + key2 + "\t" + value);
             }
         }
-        for (Iterator it = zone_to_country.keySet().iterator(); it.hasNext();) {
-            String zone = (String) it.next();
+        for (Iterator<String> it = zone_to_country.keySet().iterator(); it.hasNext();) {
+            String zone = it.next();
             if (zone.startsWith("Etc")) continue;
             String country = (String) zone_to_country.get(zone);
-            Map city_data = (Map) country_city_data.get(country);
+            Map<String, String> city_data = country_city_data.get(country);
             if (city_data == null) {
                 System.out.println("Missing country: " + zone + "\t" + country);
                 continue;
             }
 
-            List pieces = CldrUtility.splitList(zone, '/', true);
-            String city = (String) pieces.get(pieces.size() - 1);
+            List<String> pieces = CldrUtility.splitList(zone, '/', true);
+            String city = pieces.get(pieces.size() - 1);
             city = city.replace('_', ' ');
             String data = (String) city_data.get(city);
             if (data != null) continue;
@@ -1031,10 +1039,10 @@ public class Misc {
         Collator col = Collator.getInstance(new ULocale(locale));
         CLDRFile supp = cldrFactory.make(CLDRFile.SUPPLEMENTAL_NAME, false);
         XPathParts parts = new XPathParts(null, null);
-        for (Iterator it = supp.iterator(); it.hasNext();) {
-            String path = (String) it.next();
+        for (Iterator<String> it = supp.iterator(); it.hasNext();) {
+            String path = it.next();
             parts.set(supp.getFullXPath(path));
-            Map m = parts.findAttributes("language");
+            Map<String, String> m = parts.findAttributes("language");
             if (m == null) continue;
             if (false) System.out.println("Type: " + m.get("type")
                 + "\tscripts: " + m.get("scripts")
@@ -1043,41 +1051,41 @@ public class Misc {
         }
 
         // territories
-        Map groups = new TreeMap();
-        for (Iterator it = supp.iterator(); it.hasNext();) {
-            String path = (String) it.next();
+        Map<String, Collection<String>> groups = new TreeMap<String, Collection<String>>();
+        for (Iterator<String> it = supp.iterator(); it.hasNext();) {
+            String path = it.next();
             parts.set(supp.getFullXPath(path));
-            Map m = parts.findAttributes("territoryContainment");
+            Map<String, String> m = parts.findAttributes("territoryContainment");
             if (m == null) continue;
-            Map attributes = parts.getAttributes(2);
+            Map<String, String> attributes = parts.getAttributes(2);
             String type = (String) attributes.get("type");
-            Collection contents = CldrUtility
-                .splitList((String) attributes.get("contains"), ' ', true, new ArrayList());
+            Collection<String> contents = CldrUtility
+                .splitList((String) attributes.get("contains"), ' ', true, new ArrayList<String>());
             groups.put(type, contents);
             if (false) {
                 System.out.print("\t\t<group type=\"" + fixNumericKey(type)
                     + "\" contains=\"");
                 boolean first = true;
-                for (Iterator it2 = contents.iterator(); it2.hasNext();) {
+                for (Iterator<String> it2 = contents.iterator(); it2.hasNext();) {
                     if (first)
                         first = false;
                     else
                         System.out.print(" ");
-                    System.out.print(fixNumericKey((String) it2.next()));
+                    System.out.print(fixNumericKey(it2.next()));
                 }
                 System.out.println("\"> <!--" + desiredLocaleFile.getName(CLDRFile.TERRITORY_NAME, type) + " -->");
             }
         }
-        Set seen = new TreeSet();
+        Set<String> seen = new TreeSet<String>();
         printTimezonesToLocalize(log, desiredLocaleFile, groups, seen, col, false, english);
         StandardCodes sc = StandardCodes.make();
-        Set codes = sc.getAvailableCodes("territory");
-        Set missing = new TreeSet(codes);
+        Set<String> codes = sc.getAvailableCodes("territory");
+        Set<String> missing = new TreeSet<String>(codes);
         missing.removeAll(seen);
         if (false) {
             if (missing.size() != 0) System.out.println("Missing: ");
-            for (Iterator it = missing.iterator(); it.hasNext();) {
-                String key = (String) it.next();
+            for (Iterator<String> it = missing.iterator(); it.hasNext();) {
+                String key = it.next();
                 // String name = english.getName(CLDRFile.TERRITORY_NAME, key, false);
                 System.out.println("\t" + key + "\t" + sc.getFullData("territory", key));
             }
@@ -1090,12 +1098,13 @@ public class Misc {
     // <ldml><dates><timeZoneNames>
     // <zone type="America/Anchorage" draft="true"><exemplarCity draft="true">Anchorage</exemplarCity></zone>
 
-    private static void printTimezonesToLocalize(PrintWriter log, CLDRFile localization, Map groups, Set seen,
+    private static void printTimezonesToLocalize(PrintWriter log, CLDRFile localization, Map<String, Collection<String>> groups, Set<String> seen,
         Collator col, boolean showCode,
         CLDRFile english) throws IOException {
-        Set[] missing = new Set[2];
-        missing[0] = new TreeSet();
-        missing[1] = new TreeSet(StandardCodes.make().getTZIDComparator());
+        @SuppressWarnings("unchecked")
+        Set<String>[] missing = new Set[2];
+        missing[0] = new TreeSet<String>();
+        missing[1] = new TreeSet<String>(StandardCodes.make().getTZIDComparator());
         printWorldTimezoneCategorization(log, localization, groups, "001", 0, seen, col, showCode, zones_countrySet(),
             missing);
         if (missing[0].size() == 0 && missing[1].size() == 0) return;
@@ -1110,8 +1119,8 @@ public class Misc {
             "but need valid translations for localizing timezones. -->");
         if (missing[0].size() != 0) {
             log2.println("<localeDisplayNames><territories>");
-            for (Iterator it = missing[0].iterator(); it.hasNext();) {
-                String key = (String) it.next();
+            for (Iterator<String> it = missing[0].iterator(); it.hasNext();) {
+                String key = it.next();
                 log2.println("\t<territory type=\""
                     + key
                     + "\" draft=\"unconfirmed\">"
@@ -1129,9 +1138,9 @@ public class Misc {
             log2.println("\t<gmtFormat>TODO GMT{0}</gmtFormat>");
             log2.println("\t<regionFormat>TODO {0}</regionFormat>");
             log2.println("\t<fallbackFormat>TODO {0} ({1})</fallbackFormat>");
-            for (Iterator it = missing[1].iterator(); it.hasNext();) {
-                String key = (String) it.next();
-                List data = (List) StandardCodes.make().getZoneData().get(key);
+            for (Iterator<String> it = missing[1].iterator(); it.hasNext();) {
+                String key = it.next();
+                List<String> data = StandardCodes.make().getZoneData().get(key);
                 String countryCode = (String) data.get(2);
                 String country = english.getName(CLDRFile.TERRITORY_NAME, countryCode);
                 if (!country.equals(lastCountry)) {
@@ -1151,24 +1160,21 @@ public class Misc {
     static String[] levelNames = { "world", "continent", "subcontinent", "country", "subzone" };
 
     private static void printWorldTimezoneCategorization(PrintWriter log, CLDRFile localization,
-        Map groups, String key, int indent, Set seen, Collator col, boolean showCode,
-        Map zone_countrySet, Set[] missing) {
+        Map<String, Collection<String>> groups, String key, int indent, Set<String> seen, Collator col, boolean showCode,
+        Map<String, Set<String>> zone_countrySet, Set<String>[] missing) {
         // String fixedKey = fixNumericKey(key);
         seen.add(key);
         String name = getName(localization, key, missing);
-        Collection s = (Collection) groups.get(key);
+        Collection<String> s = groups.get(key);
         String element = levelNames[indent];
 
         if (log != null)
             log.print(Utility.repeat("\t", indent) + "<" + element + " n=\"" + name
                 + (showCode ? " (" + key + ")" : "") + "\"");
-        boolean gotZones = true;
         if (s == null) {
-            s = (Collection) zone_countrySet.get(key);
+            s = zone_countrySet.get(key);
             if (s == null || s.size() == 1)
                 s = null; // skip singletons
-            else
-                gotZones = true;
         }
         if (s == null) {
             if (log != null) log.println("/>");
@@ -1176,9 +1182,9 @@ public class Misc {
         }
 
         if (log != null) log.println(">");
-        Map reorder = new TreeMap(col);
-        for (Iterator it = s.iterator(); it.hasNext();) {
-            key = (String) it.next();
+        Map<String, String> reorder = new TreeMap<String, String>(col);
+        for (Iterator<String> it = s.iterator(); it.hasNext();) {
+            key = it.next();
             String value = getName(localization, key, missing);
             if (value == null) {
                 System.out.println("Missing value for: " + key);
@@ -1186,8 +1192,8 @@ public class Misc {
             }
             reorder.put(value, key);
         }
-        for (Iterator it = reorder.keySet().iterator(); it.hasNext();) {
-            key = (String) it.next();
+        for (Iterator<String> it = reorder.keySet().iterator(); it.hasNext();) {
+            key = it.next();
             String value = (String) reorder.get(key);
             printWorldTimezoneCategorization(log, localization, groups, value, indent + 1, seen, col, showCode,
                 zone_countrySet, missing);
@@ -1202,7 +1208,7 @@ public class Misc {
      *            TODO
      * @return
      */
-    private static String getName(CLDRFile localization, String key, Set[] missing) {
+    private static String getName(CLDRFile localization, String key, Set<String>[] missing) {
         String name;
         int pos = key.lastIndexOf('/');
         if (pos >= 0) {
@@ -1229,16 +1235,16 @@ public class Misc {
         return name;
     }
 
-    static Map zones_countrySet() {
-        Map m = StandardCodes.make().getZoneData();
-        Map result = new TreeMap();
-        for (Iterator it = m.keySet().iterator(); it.hasNext();) {
-            String tzid = (String) it.next();
-            List list = (List) m.get(tzid);
+    static Map<String, Set<String>> zones_countrySet() {
+        Map<String, List<String>> m = StandardCodes.make().getZoneData();
+        Map<String, Set<String>> result = new TreeMap<String, Set<String>>();
+        for (Iterator<String> it = m.keySet().iterator(); it.hasNext();) {
+            String tzid = it.next();
+            List<String> list = m.get(tzid);
             String country = (String) list.get(2);
-            Set zones = (Set) result.get(country);
+            Set<String> zones = result.get(country);
             if (zones == null) {
-                zones = new TreeSet();
+                zones = new TreeSet<String>();
                 result.put(country, zones);
             }
             zones.add(tzid);
@@ -1260,22 +1266,21 @@ public class Misc {
 
     private static void compareLists() throws IOException {
         BufferedReader in = BagFormatter.openUTF8Reader("", "language_list.txt");
-        String[] pieces = new String[4];
         Factory cldrFactory = Factory.make(options[SOURCEDIR].value + "main\\", ".*");
         // CLDRKey.main(new String[]{"-mde.*"});
-        Set locales = cldrFactory.getAvailable();
-        Set cldr = new TreeSet();
+        Set<String> locales = cldrFactory.getAvailable();
+        Set<String> cldr = new TreeSet<String>();
         LanguageTagParser parser = new LanguageTagParser();
-        for (Iterator it = locales.iterator(); it.hasNext();) {
+        for (Iterator<String> it = locales.iterator(); it.hasNext();) {
             // if doesn't have exactly one _, skip
-            String locale = (String) it.next();
+            String locale = it.next();
             parser.set(locale);
             if (parser.getScript().length() == 0 && parser.getRegion().length() == 0) continue;
             if (parser.getVariants().size() > 0) continue;
             cldr.add(locale.replace('_', '-'));
         }
 
-        Set tex = new TreeSet();
+        Set<String> tex = new TreeSet<String>();
         while (true) {
             String line = in.readLine();
             if (line == null) break;
@@ -1284,10 +1289,10 @@ public class Misc {
             int p = line.indexOf(' ');
             tex.add(line.substring(0, p));
         }
-        Set inCldrButNotTex = new TreeSet(cldr);
+        Set<String> inCldrButNotTex = new TreeSet<String>(cldr);
         inCldrButNotTex.removeAll(tex);
         System.out.println(" inCldrButNotTex " + inCldrButNotTex);
-        Set inTexButNotCLDR = new TreeSet(tex);
+        Set<String> inTexButNotCLDR = new TreeSet<String>(tex);
         inTexButNotCLDR.removeAll(cldr);
         System.out.println(" inTexButNotCLDR " + inTexButNotCLDR);
     }
@@ -1308,13 +1313,13 @@ public class Misc {
             int count = 0;
             while (true) {
                 String line = input.readLine();
-                String contents = line;
+                //String contents = line;
                 if (line == null) break;
                 if (line.length() == 0) continue;
                 count++;
                 outFile.add("//supplementalData/transforms/transform/line[@_q=\"" + count + "\"]", line);
             }
-            PrintWriter pw = BagFormatter.openUTF8Writer(CldrUtility.GEN_DIRECTORY + "/translit/", fixedName + ".xml");
+            PrintWriter pw = BagFormatter.openUTF8Writer(CLDRPaths.GEN_DIRECTORY + "/translit/", fixedName + ".xml");
             outFile.write(pw);
             pw.close();
         }

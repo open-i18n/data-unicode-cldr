@@ -31,7 +31,7 @@ public class MapComparator<K> implements Comparator<K>, Freezable<MapComparator<
     private Map<K, Integer> ordering = new TreeMap<K, Integer>(); // maps from name to rank
     private List<K> rankToName = new ArrayList<K>();
     private boolean errorOnMissing = true;
-    private boolean locked = false;
+    private volatile boolean locked = false;
 
     /**
      * @return Returns the errorOnMissing.
@@ -85,6 +85,7 @@ public class MapComparator<K> implements Comparator<K>, Freezable<MapComparator<
         return this;
     }
 
+    @SuppressWarnings("unchecked")
     public MapComparator<K> add(K... data) {
         for (int i = 0; i < data.length; ++i) {
             add(data[i]);
@@ -92,8 +93,9 @@ public class MapComparator<K> implements Comparator<K>, Freezable<MapComparator<
         return this;
     }
 
-    private static final UnicodeSet numbers = new UnicodeSet("[\\-0-9.]");
+    private static final UnicodeSet numbers = new UnicodeSet("[\\-0-9.]").freeze();
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public int compare(K a, K b) {
         if (false && (a.equals("lines") || b.equals("lines"))) {
             System.out.println();
@@ -103,10 +105,11 @@ public class MapComparator<K> implements Comparator<K>, Freezable<MapComparator<
         if (aa != null && bb != null) {
             return aa.compareTo(bb);
         }
-        if (errorOnMissing) throw new IllegalArgumentException("Missing Map Comparator value(s): "
-            + a.toString() + "(" + aa + "),\t"
-            + b.toString() + "(" + bb + "),\t"
-            );
+        if (errorOnMissing) {
+            throw new IllegalArgumentException("Missing Map Comparator value(s): "
+                + a.toString() + "(" + aa + "),\t"
+                + b.toString() + "(" + bb + "),\t");
+        }
         // must handle halfway case, otherwise we are not transitive!!!
         if (aa == null && bb != null) {
             return 1;

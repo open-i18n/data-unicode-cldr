@@ -10,6 +10,7 @@ import java.util.TreeSet;
 
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.Status;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Counter;
 import org.unicode.cldr.util.EscapingUtilities;
@@ -64,11 +65,11 @@ public class GenerateComparison {
 
         // Get the args
 
-        String oldDirectory = CldrUtility.getProperty("oldDirectory", new File(CldrUtility.BASE_DIRECTORY,
+        String oldDirectory = CldrUtility.getProperty("oldDirectory", new File(CLDRPaths.BASE_DIRECTORY,
             "common/main").getCanonicalPath() + "/");
-        String newDirectory = CldrUtility.getProperty("newDirectory", new File(CldrUtility.BASE_DIRECTORY,
+        String newDirectory = CldrUtility.getProperty("newDirectory", new File(CLDRPaths.BASE_DIRECTORY,
             "../cldr-release-1-7/common/main").getCanonicalPath() + "/");
-        String changesDirectory = CldrUtility.getProperty("changesDirectory", new File(CldrUtility.CHART_DIRECTORY
+        String changesDirectory = CldrUtility.getProperty("changesDirectory", new File(CLDRPaths.CHART_DIRECTORY
             + "/changes/").getCanonicalPath()
             + "/");
 
@@ -80,7 +81,6 @@ public class GenerateComparison {
         Factory oldFactory = Factory.make(oldDirectory, filter);
         Factory newFactory = Factory.make(newDirectory, filter);
         CLDRFile english = newFactory.make("en", true);
-        CLDRFile oldRoot = oldFactory.make("root", true);
         CLDRFile newRoot = newFactory.make("root", true);
 
         // Get the union of all the language locales, sorted by English name
@@ -229,9 +229,6 @@ public class GenerateComparison {
 
                 // get the actual place the data is stored
                 // AND adjust if the same as root!
-
-                Status oldStatus = new Status();
-                String oldFoundLocale = getStatus(oldFile, oldRoot, cleanedPath, oldValue, oldStatus);
 
                 Status newStatus = new Status();
                 String newFoundLocale = getStatus(newFile, newRoot, path, newValue, newStatus);

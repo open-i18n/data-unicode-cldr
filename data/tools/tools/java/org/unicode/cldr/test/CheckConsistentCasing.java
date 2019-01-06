@@ -1,5 +1,6 @@
 package org.unicode.cldr.test;
 
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,9 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.unicode.cldr.draft.ScriptMetadata;
+import org.unicode.cldr.draft.ScriptMetadata.Info;
+import org.unicode.cldr.draft.ScriptMetadata.Trinary;
 import org.unicode.cldr.test.CheckCLDR.CheckStatus.Subtype;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CldrUtility;
@@ -42,25 +46,36 @@ public class CheckConsistentCasing extends FactoryCheckCLDR {
         casingInfo = new CasingInfo(factory.getSupplementalDirectory().getAbsolutePath() + "/../casing"); // TODO: fix.
     }
 
-    public CheckCLDR setCldrFileToCheck(CLDRFile cldrFileToCheck, Map<String, String> options,
+    @Override
+    public CheckCLDR setCldrFileToCheck(CLDRFile cldrFileToCheck, Options options,
         List<CheckStatus> possibleErrors) {
         if (cldrFileToCheck == null) return this;
         super.setCldrFileToCheck(cldrFileToCheck, options, possibleErrors);
         locale = cldrFileToCheck.getLocaleID();
-        types = casingInfo.getLocaleCasing(locale);
-        if (types == null) {
+        // get info about casing; note that this is done in two steps since 
+        // ScriptMetadata.getInfo() returns null, in some instances.
+        Info localeInfo = ScriptMetadata.getInfo(locale);
+        if (localeInfo != null && localeInfo.hasCase == Trinary.YES) {
+            // this script has casing info, so we can request it here
+            types = casingInfo.getLocaleCasing(locale);
+        } else {
+            // no casing info - since the types Map is global, and null checks aren't done, 
+            // we are better off  with an empty map here
+            types = Collections.emptyMap();
+        }
+        if (types == null || types.isEmpty()) {
             possibleErrors.add(new CheckStatus().setCause(this)
                 .setMainType(CheckStatus.warningType)
                 .setSubtype(Subtype.incorrectCasing)
                 .setMessage("Could not load casing info for {0}", locale));
-            hasCasingInfo = false;
         }
-        hasCasingInfo = types.size() > 0;
+        // types may be null, avoid NPE
+        hasCasingInfo = (types == null) ? false : types.size() > 0;
         return this;
     }
 
     // If you don't need any file initialization or postprocessing, you only need this one routine
-    public CheckCLDR handleCheck(String path, String fullPath, String value, Map<String, String> options,
+    public CheckCLDR handleCheck(String path, String fullPath, String value, Options options,
         List<CheckStatus> result) {
         // it helps performance to have a quick reject of most paths
         if (fullPath == null) return this; // skip paths that we don't have
@@ -138,7 +153,7 @@ public class CheckConsistentCasing extends FactoryCheckCLDR {
         .add("//ldml/localeDisplayNames/territories/territory", Category.territory)
         .add("//ldml/localeDisplayNames/variants/variant", Category.variant)
         .add("//ldml/localeDisplayNames/keys/key", Category.key)
-        .add("//ldml/localeDisplayNames/types/type", Category.type)
+        .add("//ldml/localeDisplayNames/types/type", Category.keyValue)
         .add("//ldml/dates/calendars/calendar.*/months.*narrow", Category.month_narrow)
         .add("//ldml/dates/calendars/calendar.*/months.*format", Category.month_format_except_narrow)
         .add("//ldml/dates/calendars/calendar.*/months", Category.month_standalone_except_narrow)
@@ -152,7 +167,7 @@ public class CheckConsistentCasing extends FactoryCheckCLDR {
         .add("//ldml/dates/calendars/calendar.*/quarters.*abbreviated", Category.quarter_abbreviated)
         .add("//ldml/dates/calendars/calendar.*/quarters.*format", Category.quarter_format_wide)
         .add("//ldml/dates/calendars/calendar.*/quarters", Category.quarter_standalone_wide)
-        .add("//ldml/.*/relative", Category.tense)
+        .add("//ldml/.*/relative", Category.relative)
         .add("//ldml/dates/fields", Category.calendar_field)
         .add("//ldml/dates/timeZoneNames/zone.*/exemplarCity", Category.zone_exemplarCity)
         .add("//ldml/dates/timeZoneNames/zone.*/short", Category.zone_short)
@@ -161,9 +176,9 @@ public class CheckConsistentCasing extends FactoryCheckCLDR {
         .add("//ldml/dates/timeZoneNames/metazone.*/short", Category.metazone_long)
         .add("//ldml/dates/timeZoneNames/metazone", Category.metazone_long)
         .add("//ldml/numbers/currencies/currency.*/symbol", Category.symbol)
-        .add("//ldml/numbers/currencies/currency.*/displayName.*@count", Category.displayName_count)
-        .add("//ldml/numbers/currencies/currency.*/displayName", Category.displayName)
-        .add("//ldml/units/unit.*/unitPattern.*(past|future)", Category.tense)
+        .add("//ldml/numbers/currencies/currency.*/displayName.*@count", Category.currencyName_count)
+        .add("//ldml/numbers/currencies/currency.*/displayName", Category.currencyName)
+        .add("//ldml/units/unit.*/unitPattern.*(past|future)", Category.relative)
         .add("//ldml/units/unit.*/unitPattern", Category.unit_pattern)
     // ldml/localeDisplayNames/keys/key[@type=".*"]
     // ldml/localeDisplayNames/measurementSystemNames/measurementSystemName[@type=".*"]
@@ -173,7 +188,7 @@ public class CheckConsistentCasing extends FactoryCheckCLDR {
     Map<Category, CasingType> types = new EnumMap<Category, CasingType>(Category.class);
 
     public enum Category {
-        language, script, territory, variant, type,
+        language, script, territory, variant, keyValue,
         month_narrow, month_format_except_narrow, month_standalone_except_narrow,
         day_narrow, day_format_except_narrow, day_standalone_except_narrow,
         era_narrow, era_abbr, era_name,
@@ -183,8 +198,8 @@ public class CheckConsistentCasing extends FactoryCheckCLDR {
         NOT_USED,
         metazone_short, metazone_long,
         symbol,
-        displayName_count, displayName,
-        tense, unit_pattern,
+        currencyName_count, currencyName,
+        relative, unit_pattern,
         key;
     }
 
@@ -263,14 +278,17 @@ public class CheckConsistentCasing extends FactoryCheckCLDR {
     }
 
     private void checkConsistentCasing(Category category, String path, String fullPath, String value,
-        Map<String, String> options, List<CheckStatus> result) {
-        CasingType ft = CasingType.from(value);
-        if (!ft.worksWith(types.get(category))) {
-            result.add(new CheckStatus().setCause(this)
-                .setMainType(CheckStatus.warningType)
-                .setSubtype(Subtype.incorrectCasing) // typically warningType or errorType
-                .setMessage("The first letter of 〈{0}〉 is {1}, which differs from the majority of this type: {2}",
-                    value, ft, types.get(category))); // the message; can be MessageFormat with arguments
+        Options options, List<CheckStatus> result) {
+        // Avoid NPE
+        if (types != null) {
+            CasingType ft = CasingType.from(value);
+            if (!ft.worksWith(types.get(category))) {
+                result.add(new CheckStatus().setCause(this)
+                    .setMainType(CheckStatus.warningType)
+                    .setSubtype(Subtype.incorrectCasing) // typically warningType or errorType
+                    .setMessage("The first letter of 〈{0}〉 is {1}, which differs from the majority of this type: {2}",
+                        value, ft, types.get(category))); // the message; can be MessageFormat with arguments
+            }
         }
     }
 }

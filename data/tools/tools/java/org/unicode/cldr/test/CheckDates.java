@@ -3,6 +3,7 @@ package org.unicode.cldr.test;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EnumMap;
@@ -140,7 +141,8 @@ public class CheckDates extends FactoryCheckCLDR {
         super(factory);
     }
 
-    public CheckCLDR setCldrFileToCheck(CLDRFile cldrFileToCheck, Map<String, String> options,
+    @Override
+    public CheckCLDR setCldrFileToCheck(CLDRFile cldrFileToCheck, Options options,
         List<CheckStatus> possibleErrors) {
         if (cldrFileToCheck == null) return this;
         super.setCldrFileToCheck(cldrFileToCheck, options, possibleErrors);
@@ -167,7 +169,7 @@ public class CheckDates extends FactoryCheckCLDR {
         String localeID = getCldrFileToCheck().getLocaleID();
         SupplementalDataInfo sdi = SupplementalDataInfo.getInstance();
         coverageLevel = CoverageLevel2.getInstance(sdi, localeID);
-        requiredLevel = CoverageLevel2.getRequiredLevel(localeID, options);
+        requiredLevel = options.getRequiredLevel(localeID);
 
         // load gregorian appendItems
         for (Iterator<String> it = resolved.iterator("//ldml/dates/calendars/calendar[@type=\"gregorian\"]"); it.hasNext();) {
@@ -247,7 +249,7 @@ public class CheckDates extends FactoryCheckCLDR {
     PathStarrer pathStarrer = new PathStarrer();
     PathHeader.Factory pathHeaderFactory;
 
-    public CheckCLDR handleCheck(String path, String fullPath, String value, Map<String, String> options,
+    public CheckCLDR handleCheck(String path, String fullPath, String value, Options options,
         List<CheckStatus> result) {
         if (fullPath == null) {
             return this; // skip paths that we don't have
@@ -564,7 +566,7 @@ public class CheckDates extends FactoryCheckCLDR {
 
     static final Pattern HACK_CONFLICTING = Pattern.compile("Conflicting fields:\\s+M+,\\s+l");
 
-    public CheckCLDR handleGetExamples(String path, String fullPath, String value, Map<String, String> options, List<CheckStatus> result) {
+    public CheckCLDR handleGetExamples(String path, String fullPath, String value, Options options, List<CheckStatus> result) {
         if (path.indexOf("/dates") < 0 || path.indexOf("gregorian") < 0) return this;
         try {
             if (path.indexOf("/pattern") >= 0 && path.indexOf("/dateTimeFormat") < 0
@@ -585,9 +587,16 @@ public class CheckDates extends FactoryCheckCLDR {
     }
     XPathParts pathParts = new XPathParts(null, null);
 
-    static long date1950 = new Date(50, 0, 1, 0, 0, 0).getTime();
-    static long date2010 = new Date(110, 0, 1, 0, 0, 0).getTime();
-    static long date4004BC = new Date(-4004 - 1900, 9, 23, 2, 0, 0).getTime();
+    // Get Date-Time in milliseconds
+    private static long getDateTimeinMillis(int year, int month, int date, int hourOfDay, int minute, int second) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month, date, hourOfDay, minute, second);
+        return cal.getTimeInMillis();
+    }
+
+    static long date1950 = getDateTimeinMillis(1950, 0, 1, 0, 0, 0);
+    static long date2010 = getDateTimeinMillis(2010, 0, 1, 0, 0, 0);
+    static long date4004BC = getDateTimeinMillis(-4004, 9, 23, 2, 0, 0);
     static Random random = new Random(0);
 
     private void checkPattern(DateTimePatternType dateTypePatternType, String path, String fullPath, String value, List<CheckStatus> result)

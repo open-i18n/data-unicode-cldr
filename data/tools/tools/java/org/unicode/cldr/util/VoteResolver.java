@@ -1,12 +1,10 @@
 package org.unicode.cldr.util;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -70,13 +68,6 @@ public class VoteResolver<T> {
             return source == null ? missing : Status.valueOf(source);
         }
     }
-
-    private final static Set<String> ESTABLISHED_LOCALES = Collections
-        .unmodifiableSet(new HashSet(
-            Arrays
-                .asList(
-                "ar ca cs da de el es fi fr he hi hr hu it ja ko nb nl pl pt pt_PT ro ru sk sl sr sv th tr uk vi zh zh_Hant"
-                    .split(" "))));
 
     /**
      * This list needs updating as a new organizations are added; that's by design
@@ -144,11 +135,17 @@ public class VoteResolver<T> {
     static final Map<String, Organization> OrganizationNameMap = new HashMap<String, Organization>();
 
     /**
+     * This is the "high bar" level where flagging is required.
+     * @see #getRequiredVotes()
+     */
+    public static final int HIGH_BAR = Level.tc.votes;
+
+    /**
      * This is the level at which a vote counts. Each level also contains the
      * weight.
      */
     public enum Level {
-        locked(0, 999), street(1, 10), vetter(4, 5), expert(8, 3), manager(4, 2), tc(8, 1), admin(100, 0);
+        locked(0, 999), street(1, 10), vetter(4, 5), expert(8, 3), manager(4, 2), tc(20, 1), admin(100, 0);
         private int votes;
         private int stlevel;
 
@@ -209,6 +206,18 @@ public class VoteResolver<T> {
          */
         public boolean canManageSomeUsers() {
             return this.getSTLevel() <= manager.getSTLevel();
+        }
+
+        /**
+         * Can this user vote at a reduced level?
+         * @return the vote count this user can vote at, or null if it must vote at its assigned level
+         */
+        public Integer canVoteAtReducedLevel() {
+            if (this.getSTLevel() <= tc.getSTLevel()) {
+                return vetter.votes;
+            } else {
+                return null;
+            }
         }
 
         /**
@@ -364,13 +373,32 @@ public class VoteResolver<T> {
          * 
          * @param value
          * @param voter
+         * @param withVotes optionally, vote at a reduced voting level. May not exceed voter's typical level. null = use default level.
          */
-        public void add(T value, int voter) {
-            VoterInfo info = getVoterToInfo().get(voter);
+        public void add(T value, int voter, Integer withVotes) {
+            final VoterInfo info = getVoterToInfo().get(voter);
             if (info == null) {
                 throw new UnknownVoterException(voter);
             }
-            final int votes = info.getLevel().getVotes();
+            final int maxVotes = info.getLevel().getVotes(); // max votes available for user
+            if (withVotes == null) {
+                withVotes = maxVotes; // use max (default)
+            } else {
+                withVotes = Math.min(withVotes, maxVotes); // override to lower vote count
+            }
+            addInternal(value, voter, info, withVotes); // do the add
+        }
+
+        /**
+         * Called by add(T,int,Integer) to actually add a value.
+         * 
+         * @param value
+         * @param voter
+         * @param info
+         * @param votes
+         * @see #add(Object, int, Integer)
+         */
+        private void addInternal(T value, int voter, final VoterInfo info, final int votes) {
             totalVotes.add(value, votes);
             orgToVotes.get(info.getOrganization()).add(value, votes);
             // add the new votes to orgToMax, if they are greater that what was there
@@ -470,7 +498,7 @@ public class VoteResolver<T> {
         }
 
         public Map<T, Long> getOrgToVotes(Organization org) {
-            Map<T, Long> result = new LinkedHashMap();
+            Map<T, Long> result = new LinkedHashMap<T, Long>();
             MaxCounter<T> counter = orgToVotes.get(org);
             for (T item : counter) {
                 result.put(item, counter.getCount(item));
@@ -505,7 +533,8 @@ public class VoteResolver<T> {
     private Status trunkStatus;
 
     private boolean resolved;
-    private boolean isEstablished;
+    private int requiredVotes;
+    private SupplementalDataInfo supplementalDataInfo = SupplementalDataInfo.getInstance();
 
     private final Comparator<T> ucaCollator = new Comparator<T>() {
         Collator col = Collator.getInstance(ULocale.ENGLISH);
@@ -553,28 +582,45 @@ public class VoteResolver<T> {
 
     /**
      * You must call this locale whenever you are using a VoteResolver with a new locale.
+     * More efficient to call the CLDRLocale version.
      * 
      * @param locale
      * @return
+     * @deprecated need to use the other version to get path-based voting requirements right. 
      */
-    public VoteResolver<T> setEstablishedFromLocale(String locale) {
-        isEstablished = ESTABLISHED_LOCALES.contains(new LanguageTagParser().set(locale).getLanguage());
+    @Deprecated
+    public VoteResolver<T> setLocale(String locale) {
+        setLocale(CLDRLocale.getInstance(locale), null);
         return this;
     }
 
     /**
-     * You must call this locale whenever you are using a VoteResolver with a new locale.
+     * You must call this locale whenever you are using a VoteResolver with a new locale or a new Pathheader
      * 
      * @param locale
      * @return
      */
-    public VoteResolver<T> setEstablishedFromLocale(CLDRLocale locale) {
-        isEstablished = ESTABLISHED_LOCALES.contains(locale.getLanguage());
+    public VoteResolver<T> setLocale(CLDRLocale locale, PathHeader path) {
+        requiredVotes = supplementalDataInfo.getRequiredVotes(locale.getLanguageLocale(), path);
         return this;
     }
 
+    /**
+     * Is this an established locale? If so, the requiredVotes is higher.
+     * @return
+     * @deprecated use {@link #getRequiredVotes()}
+     */
+    @Deprecated
     public boolean isEstablished() {
-        return isEstablished;
+        return (requiredVotes == 8);
+    }
+
+    /**
+     * What are the required votes for this item?
+     * @return the number of votes (as of this writing: usually 4, 8 for established locales)
+     */
+    public int getRequiredVotes() {
+        return requiredVotes;
     }
 
     /**
@@ -597,13 +643,24 @@ public class VoteResolver<T> {
      * 
      * @param value
      * @param voter
+     * @param withVotes override to lower the user's voting permission. May be null for default.
      */
-    public void add(T value, int voter) {
+    public void add(T value, int voter, Integer withVotes) {
         if (resolved) {
             throw new IllegalArgumentException("Must be called after clear, and before any getters.");
         }
-        organizationToValueAndVote.add(value, voter);
+        organizationToValueAndVote.add(value, voter, withVotes);
         values.add(value);
+    }
+
+    /**
+     * Call once for each voter for a value. If there are no voters for an item, then call add(value);
+     * 
+     * @param value
+     * @param voter
+     */
+    public void add(T value, int voter) {
+        add(value, voter, null);
     }
 
     /**
@@ -700,8 +757,7 @@ public class VoteResolver<T> {
     private Status computeStatus(long weight1, long weight2, Status oldStatus) {
         int orgCount = organizationToValueAndVote.getOrgCount(winningValue);
         return weight1 > weight2 &&
-            (weight1 >= 8
-            || (weight1 >= 4 && !isEstablished)) ? Status.approved
+            (weight1 >= requiredVotes) ? Status.approved
             : weight1 > weight2 &&
                 (weight1 >= 4 && Status.contributed.compareTo(oldStatus) > 0
                 || weight1 >= 2 && orgCount >= 2) ? Status.contributed
@@ -845,7 +901,7 @@ public class VoteResolver<T> {
                 }
                 Relation<Level, Integer> rel = orgToVoter.get(info.getOrganization());
                 if (rel == null) {
-                    orgToVoter.put(info.getOrganization(), rel = new Relation(new TreeMap(), TreeSet.class));
+                    orgToVoter.put(info.getOrganization(), rel = Relation.of(new TreeMap<Level, Set<Integer>>(), TreeSet.class));
                 }
                 rel.put(info.getLevel(), voter);
             }
@@ -1150,6 +1206,10 @@ public class VoteResolver<T> {
     }
 
     public static class UnknownVoterException extends RuntimeException {
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 3430877787936678609L;
         int voter;
 
         public UnknownVoterException(int voter) {

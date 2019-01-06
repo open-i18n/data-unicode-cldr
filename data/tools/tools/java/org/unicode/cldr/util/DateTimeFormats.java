@@ -91,9 +91,22 @@ public class DateTimeFormats {
      * @return
      */
     public DateTimeFormats set(CLDRFile file, String calendarID) {
+        return set(file, calendarID, true);
+    }
+
+    /**
+     * Set a CLDRFile and calendar. Must be done before calling addTable.
+     * 
+     * @param file
+     * @param calendarID
+     * @return
+     */
+    public DateTimeFormats set(CLDRFile file, String calendarID, boolean useStock) {
         this.file = file;
         locale = new ULocale(file.getLocaleID());
-        icuServiceBuilder = new ICUServiceBuilder().setCldrFile(file);
+        if (useStock) {
+            icuServiceBuilder = new ICUServiceBuilder().setCldrFile(file);
+        }
         PatternInfo returnInfo = new PatternInfo();
         XPathParts parts = new XPathParts();
         generator = DateTimePatternGenerator.getEmptyInstance();
@@ -106,13 +119,17 @@ public class DateTimeFormats {
                 stock +
                 "\"]/dateFormat[@type=\"standard\"]/pattern[@type=\"standard\"]";
             String dateTimePattern = file.getStringValue(path);
-            generator.addPattern(dateTimePattern, true, returnInfo);
+            if (useStock) {
+                generator.addPattern(dateTimePattern, true, returnInfo);
+            }
             path = "//ldml/dates/calendars/calendar[@type=\"" + calendarID
                 + "\"]/timeFormats/timeFormatLength[@type=\"" +
                 stock +
                 "\"]/timeFormat[@type=\"standard\"]/pattern[@type=\"standard\"]";
             dateTimePattern = file.getStringValue(path);
-            generator.addPattern(dateTimePattern, true, returnInfo);
+            if (useStock) {
+                generator.addPattern(dateTimePattern, true, returnInfo);
+            }
             if (DEBUG
                 && DEBUG_LIST_PATTERNS.equals(locale)) {
                 System.out.println("* Adding: " + locale + "\t" + dateTimePattern);
@@ -193,8 +210,11 @@ public class DateTimeFormats {
             String intervalPattern = file.getStringValue(path);
             dateIntervalInfo.setIntervalPattern(skeleton, diffNumber, intervalPattern);
         }
-        dateIntervalInfo.setFallbackIntervalPattern(file.getStringValue("//ldml/dates/calendars/calendar[@type=\""
-            + calendarID + "\"]/dateTimeFormats/intervalFormats/intervalFormatFallback"));
+        if (useStock) {
+            dateIntervalInfo.setFallbackIntervalPattern(
+                file.getStringValue("//ldml/dates/calendars/calendar[@type=\""
+                    + calendarID + "\"]/dateTimeFormats/intervalFormats/intervalFormatFallback"));
+        }
         return this;
     }
 
@@ -767,14 +787,14 @@ public class DateTimeFormats {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-        Factory englishFactory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
+        Factory englishFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
         CLDRFile englishFile = englishFactory.make("en", true);
         String dateString = CldrUtility.isoFormat(new Date());
 
-        Factory factory = Factory.make(CldrUtility.MAIN_DIRECTORY, LOCALES);
+        Factory factory = Factory.make(CLDRPaths.MAIN_DIRECTORY, LOCALES);
         System.out.println("Total locales: " + factory.getAvailableLanguages().size());
         DateTimeFormats english = new DateTimeFormats().set(englishFile, "gregorian");
-        PrintWriter index = BagFormatter.openUTF8Writer(CldrUtility.CHART_DIRECTORY + "dates/", "index.html");
+        PrintWriter index = BagFormatter.openUTF8Writer(CLDRPaths.CHART_DIRECTORY + "dates/", "index.html");
         index
             .println(
             "<html><head>\n"
@@ -806,7 +826,7 @@ public class DateTimeFormats {
             sorted.put(englishFile.getName(localeID, true), localeID);
         }
 
-        PrintWriter out = BagFormatter.openUTF8Writer(CldrUtility.CHART_DIRECTORY + "dates/", "index.css");
+        PrintWriter out = BagFormatter.openUTF8Writer(CLDRPaths.CHART_DIRECTORY + "dates/", "index.css");
         out.println(".dtf-table, .dtf-int {margin-left:auto; margin-right:auto; border-collapse:collapse;}\n"
             +
             ".dtf-table, .dtf-s, .dtf-nopad, .dtf-fix, .dtf-th, .dtf-h, .dtf-sep, .dtf-left, .dtf-int {border:1px solid gray;}\n"
@@ -828,7 +848,7 @@ public class DateTimeFormats {
             String localeID = nameAndLocale.getValue();
             DateTimeFormats formats = new DateTimeFormats().set(factory.make(localeID, true), "gregorian");
             String filename = localeID + ".html";
-            out = BagFormatter.openUTF8Writer(CldrUtility.CHART_DIRECTORY + "dates/", filename);
+            out = BagFormatter.openUTF8Writer(CLDRPaths.CHART_DIRECTORY + "dates/", filename);
             String redirect = "http://st.unicode.org/cldr-apps/survey?_=" + localeID
                 + "&x=r_datetime&calendar=gregorian";
             out.println(

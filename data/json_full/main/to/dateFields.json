@@ -1,0 +1,145 @@
+{
+  "main": {
+    "to": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "25",
+          "_number": "$Revision: 91 $"
+        },
+        "generation": {
+          "_date": "$Date: 2014-03-13 22:27:12 -0500 (Thu, 13 Mar 2014) $"
+        },
+        "language": "root"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "kuonga"
+          },
+          "year": {
+            "displayName": "taʻu",
+            "relative-type--1": "taʻu kuoʻosi",
+            "relative-type-0": "taʻu⸍ni",
+            "relative-type-1": "taʻu kahaʻu",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "ʻi he taʻu ʻe {0}"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "taʻu ʻe {0} kuo hili"
+            }
+          },
+          "month": {
+            "displayName": "māhina",
+            "relative-type--1": "māhina kuoʻosi",
+            "relative-type-0": "māhina⸍ni",
+            "relative-type-1": "māhina kahaʻu",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "ʻi he māhina ʻe {0}"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "māhina ʻe {0} kuoʻosi"
+            }
+          },
+          "week": {
+            "displayName": "uike",
+            "relative-type--1": "uike kuoʻosi",
+            "relative-type-0": "uike⸍ni",
+            "relative-type-1": "uike kahaʻu",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "ʻi he uike ʻe {0}"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "uike ʻe {0} kuoʻosi"
+            }
+          },
+          "day": {
+            "displayName": "ʻaho",
+            "relative-type--1": "ʻaneafi",
+            "relative-type--2": "ʻaneheafi",
+            "relative-type-0": "ʻaho⸍ni",
+            "relative-type-1": "ʻapongipongi",
+            "relative-type-2": "ʻahepongipongi",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "ʻi he ʻaho ʻe {0}"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "ʻaho ʻe {0} kuoʻosi"
+            }
+          },
+          "weekday": {
+            "displayName": "ʻaho ʻo e uike"
+          },
+          "sun": {
+            "relative-type--1": "Sāpate kuoʻosi",
+            "relative-type-0": "Sāpate⸍ni",
+            "relative-type-1": "Sāpate kahaʻu"
+          },
+          "mon": {
+            "relative-type--1": "Mōnite kuoʻosi",
+            "relative-type-0": "Mōnite⸍ni",
+            "relative-type-1": "Mōnite kahaʻu"
+          },
+          "tue": {
+            "relative-type--1": "Tūsite kuoʻosi",
+            "relative-type-0": "Tūsite⸍ni",
+            "relative-type-1": "Tūsite kahaʻu"
+          },
+          "wed": {
+            "relative-type--1": "Pulelulu kuoʻosi",
+            "relative-type-0": "Pulelulu⸍ni",
+            "relative-type-1": "Pulelulu kahaʻu"
+          },
+          "thu": {
+            "relative-type--1": "Tuʻapulelulu kuoʻosi",
+            "relative-type-0": "Tuʻapulelulu⸍ni",
+            "relative-type-1": "Tuʻapulelulu kahaʻu"
+          },
+          "fri": {
+            "relative-type--1": "Falaite kuoʻosi",
+            "relative-type-0": "Falaite⸍ni",
+            "relative-type-1": "Falaite kahaʻu"
+          },
+          "sat": {
+            "relative-type--1": "Tokonaki kuoʻosi",
+            "relative-type-0": "Tokonaki⸍ni",
+            "relative-type-1": "Tokonaki kahaʻu"
+          },
+          "dayperiod": {
+            "displayName": "AM/PM"
+          },
+          "hour": {
+            "displayName": "houa",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "ʻi he houa ʻe {0}"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "houa ʻe {0} kuoʻosi"
+            }
+          },
+          "minute": {
+            "displayName": "miniti",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "ʻi he miniti ʻe {0}"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "miniti ʻe {0} kuoʻosi"
+            }
+          },
+          "second": {
+            "displayName": "sekoni",
+            "relative-type-0": "taimiʻni",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "ʻi he sekoni ʻe {0}"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "sekoni ʻe {0} kuoʻosi"
+            }
+          },
+          "zone": {
+            "displayName": "taimi fakavahe"
+          }
+        }
+      }
+    }
+  }
+}

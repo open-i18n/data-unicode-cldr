@@ -26,6 +26,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.unicode.cldr.util.CLDRFile;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.SimpleFactory;
 
@@ -56,7 +57,7 @@ public class ExtractICUData {
     public static void main(String[] args) throws Exception {
         String file = CldrUtility.getProperty("file", null);
         if (file != null) {
-            String targetDirectory = CldrUtility.getProperty("target", CldrUtility.GEN_DIRECTORY + "/translit/gen/");
+            String targetDirectory = CldrUtility.getProperty("target", CLDRPaths.GEN_DIRECTORY + "/translit/gen/");
             convertFile(file, targetDirectory);
         } else {
             generateTransliterators();
@@ -89,23 +90,23 @@ public class ExtractICUData {
         File[] fileArray = translitSource.listFiles();
         List<Object> list = new ArrayList<Object>(Arrays.asList(fileArray));
 
-        List<String> extras = Arrays.asList(new String[] {
-            "Arabic_Latin.txt",
-            "CanadianAboriginal_Latin.txt",
-            "Cyrillic_Latin.txt",
-            "Georgian_Latin.txt",
-            // "Khmer_Latin.txt", "Lao_Latin.txt", "Tibetan_Latin.txt"
-            "Latin_Armenian.txt",
-            "Latin_Ethiopic.txt",
-            "Syriac_Latin.txt", "Thaana_Latin.txt", });
-        list.addAll(extras);
+//        List<String> extras = Arrays.asList(new String[] {
+//            "Arabic_Latin.txt",
+//            "CanadianAboriginal_Latin.txt",
+//            "Cyrillic_Latin.txt",
+//            "Georgian_Latin.txt",
+//            // "Khmer_Latin.txt", "Lao_Latin.txt", "Tibetan_Latin.txt"
+//            "Latin_Armenian.txt",
+//            "Latin_Ethiopic.txt",
+//            "Syriac_Latin.txt", "Thaana_Latin.txt", });
+//        list.addAll(extras);
 
         String[] attributesOut = new String[1];
         for (Object file : list) {
             String fileName = (file instanceof File) ? ((File) file).getName() : (String) file;
-            if (file instanceof File && extras.contains(fileName)) {
-                System.out.println("Skipping old version: " + fileName);
-            }
+//            if (file instanceof File && extras.contains(fileName)) {
+//                System.out.println("Skipping old version: " + fileName);
+//            }
             if (!fileName.endsWith(".txt")) continue;
             String coreName = fileName.substring(0, fileName.length() - 4);
             if (skipFiles.contains(coreName)) continue;
@@ -124,36 +125,37 @@ public class ExtractICUData {
             } else {
                 input = CldrUtility.getUTF8Data(fileName);
             }
-            CLDRFile outFile = SimpleFactory.makeSupplemental(fileName);
-            int count = 0;
-            String prefixBase = "//supplementalData[@version=\"" + CLDRFile.GEN_VERSION + "\"]/transforms/transform"
-                + attributes;
-            String rulePrefix = prefixBase + "/tRule[@_q=\"";
-            String commentPrefix = prefixBase + "/comment[@_q=\"";
+            {
+                CLDRFile outFile = SimpleFactory.makeSupplemental(fileName);
+                int count = 0;
+                String prefixBase = "//supplementalData[@version=\"" + CLDRFile.GEN_VERSION + "\"]/transforms/transform"
+                    + attributes;
+                String rulePrefix = prefixBase + "/tRule[@_q=\"";
+                String commentPrefix = prefixBase + "/comment[@_q=\"";
 
-            StringBuffer accumulatedLines = new StringBuffer();
-            while (true) {
-                String line = input.readLine();
-                if (line == null) break;
-                if (line.startsWith("\uFEFF")) line = line.substring(1); // remove BOM
-                line = line.trim();
-                if (skipLines.contains(line)) continue;
-                if (line.length() == 0) continue;
-                String fixedLine = fixTransRule(line);
-                // if (accumulatedLines.length() == 0)
-                accumulatedLines.append("\n\t\t");
-                accumulatedLines.append(fixedLine);
-                String prefix = (line.startsWith("#")) ? commentPrefix : rulePrefix;
-                addInTwo(outFile, accumulatedItems, prefix + (++count) + "\"]", fixedLine);
+                StringBuffer accumulatedLines = new StringBuffer();
+                while (true) {
+                    String line = input.readLine();
+                    if (line == null) break;
+                    if (line.startsWith("\uFEFF")) line = line.substring(1); // remove BOM
+                    line = line.trim();
+                    if (skipLines.contains(line)) continue;
+                    if (line.length() == 0) continue;
+                    String fixedLine = fixTransRule(line);
+                    // if (accumulatedLines.length() == 0)
+                    accumulatedLines.append("\n\t\t");
+                    accumulatedLines.append(fixedLine);
+                    String prefix = (line.startsWith("#")) ? commentPrefix : rulePrefix;
+                    addInTwo(outFile, accumulatedItems, prefix + (++count) + "\"]", fixedLine);
+                }
+
+                PrintWriter pw = BagFormatter
+                    .openUTF8Writer(CLDRPaths.GEN_DIRECTORY + "/translit/gen/", outName + ".xml");
+                outFile.write(pw);
+                pw.close();
             }
-
-            PrintWriter pw = BagFormatter
-                .openUTF8Writer(CldrUtility.GEN_DIRECTORY + "/translit/gen/", outName + ".xml");
-            outFile.write(pw);
-            pw.close();
-
         }
-        PrintWriter pw = BagFormatter.openUTF8Writer(CldrUtility.GEN_DIRECTORY + "/translit/gen/", "All" + ".xml");
+        PrintWriter pw = BagFormatter.openUTF8Writer(CLDRPaths.GEN_DIRECTORY + "/translit/gen/", "All" + ".xml");
         accumulatedItems.write(pw);
         pw.close();
     }
@@ -302,7 +304,7 @@ public class ExtractICUData {
                         accumulatedItems.add(prefix + (++count) + "\"]", "::" + piece + ";");
                     }
                 }
-                PrintWriter pw = BagFormatter.openUTF8Writer(CldrUtility.GEN_DIRECTORY + "/translit/gen/", outName
+                PrintWriter pw = BagFormatter.openUTF8Writer(CLDRPaths.GEN_DIRECTORY + "/translit/gen/", outName
                     + ".xml");
                 outFile.write(pw);
                 pw.close();
@@ -438,6 +440,8 @@ public class ExtractICUData {
             }
             out.println("</table></td></tr>");
         }
+        Collator c = Collator.getInstance(ULocale.ENGLISH);
+        ((RuleBasedCollator) c).setNumericCollation(true);
 
         // int enumValue = UCharacter.getIntPropertyValue(codePoint, propEnum);
         // return UCharacter.getPropertyValueName(propEnum,enumValue, (int)nameChoice);

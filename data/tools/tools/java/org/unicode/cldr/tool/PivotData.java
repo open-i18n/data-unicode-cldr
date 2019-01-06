@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.Status;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.CldrUtility.SimpleLineComparator;
 import org.unicode.cldr.util.Factory;
@@ -54,8 +55,8 @@ public class PivotData {
         }
 
         try {
-            Factory cldrFactory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
-            PivotData pd = new PivotData(cldrFactory, CldrUtility.MAIN_DIRECTORY, CldrUtility.GEN_DIRECTORY + "pivot/");
+            Factory cldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
+            PivotData pd = new PivotData(cldrFactory, CLDRPaths.MAIN_DIRECTORY, CLDRPaths.GEN_DIRECTORY + "pivot/");
             pd.pivotGroup(cldrFactory, conditions);
         } finally {
             System.out.println("DONE");
@@ -64,7 +65,7 @@ public class PivotData {
 
     private void pivotGroup(Factory cldrFactory, Set<LocaleIDParser.Level> conditions) throws IOException {
         CLDRFile supplementalMetadata = cldrFactory.make("supplementalMetadata", false);
-        if (false) for (Iterator it = supplementalMetadata.iterator(); it.hasNext();) {
+        if (false) for (Iterator<String> it = supplementalMetadata.iterator(); it.hasNext();) {
             System.out.println(it.next());
         }
         String defaultContentList = supplementalMetadata.getFullXPath("//supplementalData/metadata/defaultContent",
@@ -197,10 +198,11 @@ public class PivotData {
         return countChanges;
     }
 
+    @SuppressWarnings("rawtypes")
     private int size(Iterator name) {
         int count = 0;
         while (name.hasNext()) {
-            Object x = name.next();
+            name.next();
             count++;
         }
         return count;
@@ -260,7 +262,7 @@ public class PivotData {
         newFile.write(out);
         out.println();
         out.close();
-        CldrUtility.generateBat(sourceDirectory, id + ".xml", outputDirectory, id + ".xml", lineComparer);
+        ToolUtilities.generateBat(sourceDirectory, id + ".xml", outputDirectory, id + ".xml", lineComparer);
     }
 
 }

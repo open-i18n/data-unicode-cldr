@@ -35,6 +35,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.unicode.cldr.util.DayPeriodInfo.DayPeriod;
+import org.unicode.cldr.util.DtdData.AttributeValueComparator;
+import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo.Count;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralType;
 import org.unicode.cldr.util.With.SimpleIterator;
@@ -55,7 +57,6 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.dev.util.Relation;
 import com.ibm.icu.impl.Utility;
-import com.ibm.icu.text.DateTimePatternGenerator;
 import com.ibm.icu.text.MessageFormat;
 import com.ibm.icu.text.PluralRules;
 import com.ibm.icu.text.Transform;
@@ -89,6 +90,15 @@ import com.ibm.icu.util.VersionInfo;
 
 public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
 
+    /**
+     * Variable to control whether File reads are buffered; this will about halve the time spent in 
+     * loadFromFile() and Factory.make() from about 20 % to about 10 %. It will also noticeably improve the different 
+     * unit tests take in the TestAll fixture. 
+     *  TRUE - use buffering (default)
+     *  FALSE - do not use buffering
+     */
+    private static final boolean USE_LOADING_BUFFER = true;
+
     private static final boolean DEBUG = false;
 
     public static final Pattern ALT_PROPOSED_PATTERN = Pattern.compile(".*\\[@alt=\"[^\"]*proposed[^\"]*\"].*");
@@ -96,7 +106,26 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
     static Pattern FIRST_ELEMENT = Pattern.compile("//([^/\\[]*)");
 
     public enum DtdType {
-        ldml, supplementalData, ldmlBCP47, keyboard, platform;
+        ldml("common/dtd/ldml.dtd"),
+        ldmlICU("common/dtd/ldmlICU.dtd", ldml),
+        supplementalData("common/dtd/ldmlSupplemental.dtd"),
+        ldmlBCP47("common/dtd/ldmlBCP47.dtd"),
+        keyboard("keyboards/dtd/ldmlKeyboard.dtd"),
+        platform("keyboards/dtd/ldmlPlatform.dtd");
+
+        public final String dtdPath;
+        public final DtdType rootType;
+
+        private DtdType(String dtdPath) {
+            this.dtdPath = dtdPath;
+            this.rootType = this;
+        }
+
+        private DtdType(String dtdPath, DtdType realType) {
+            this.dtdPath = dtdPath;
+            this.rootType = realType;
+        }
+
         public static DtdType fromPath(String elementOrPath) {
             Matcher m = FIRST_ELEMENT.matcher(elementOrPath);
             m.lookingAt();
@@ -112,11 +141,16 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
     public static final String SUPPLEMENTAL_NAME = "supplementalData";
     public static final String SUPPLEMENTAL_METADATA = "supplementalMetadata";
     public static final String SUPPLEMENTAL_PREFIX = "supplemental";
-    public static final String GEN_VERSION = "24";
+    public static final String GEN_VERSION = "25";
+    public static final List<String> SUPPLEMENTAL_NAMES = Arrays.asList("characters", "coverageLevels", "dayPeriods", "genderList", "languageInfo",
+        "likelySubtags", "metaZones", "numberingSystems", "ordinals", "plurals", "postalCodeData", "supplementalData", "supplementalMetadata",
+        "telephoneCodeData", "windowsZones");
 
     private Collection<String> extraPaths = null;
 
     private boolean locked;
+    private DtdType dtdType;
+
     XMLSource dataSource; // TODO(jchye): make private
 
     private File supplementalDirectory;
@@ -188,14 +222,32 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
                 System.out.println("Parsing: " + fullFileName);
                 Log.logln(LOG_PROGRESS, "Parsing: " + fullFileName);
             }
-            FileInputStream fis = new FileInputStream(f);
-            CLDRFile cldrFile = load(fullFileName, localeName, fis, minimalDraftStatus, source);
-            fis.close();
-            return cldrFile;
-        } catch (Exception e) {
+            final CLDRFile cldrFile;
+            if (USE_LOADING_BUFFER) {
+                // Use Buffering -  improves performance at little cost to memory footprint
+                // try (InputStream fis = new BufferedInputStream(new FileInputStream(f),32000);) {
+                try (InputStream fis = InputStreamFactory.createInputStream(f)) {
+                    cldrFile = load(fullFileName, localeName, fis, minimalDraftStatus, source);
+                    return cldrFile;
+                }
+            } else {
+                // previous version - do not use buffering
+                try (InputStream fis = new FileInputStream(f);) {
+                    cldrFile = load(fullFileName, localeName, fis, minimalDraftStatus, source);
+                    return cldrFile;
+                }
+            }
+
+        } catch (IOException e) {
             // e.printStackTrace();
-            throw (IllegalArgumentException) new IllegalArgumentException("Can't read " + fullFileName + " - "
-                + e.toString()).initCause(e);
+            // use a StringBuilder to construct the message.
+            StringBuilder sb = new StringBuilder("Cannot read the file '");
+            sb.append(fullFileName);
+            sb.append("': ");
+            sb.append(e.getMessage());
+            throw new IllegalArgumentException(sb.toString(), e);
+//            throw (IllegalArgumentException) new IllegalArgumentException("Can't read " + fullFileName + " - "
+//                + e.toString()).initCause(e);
         }
     }
 
@@ -245,7 +297,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
                 throw new IllegalArgumentException("Internal problems: either data file has duplicate path, or" +
                     " CLDRFile.isDistinguishing() or CLDRFile.isOrdered() need updating: "
                     + DEFAULT_DECLHANDLER.overrideCount
-                    + "; The exact problems are printed on the consol above.");
+                    + "; The exact problems are printed on the console above.");
             }
             if (localeName == null) {
                 cldrFile.dataSource.setLocaleID(cldrFile.getLocaleIDFromIdentity());
@@ -312,7 +364,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
      *            map of options for writing
      */
     public CLDRFile write(PrintWriter pw, Map<String, Object> options) {
-        Set<String> orderedSet = new TreeSet<String>(ldmlComparator);
+        Set<String> orderedSet = new TreeSet<String>(getComparator());
         CollectionUtilities.addAll(dataSource.iterator(), orderedSet);
 
         String firstPath = null;
@@ -347,7 +399,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
          * <language type="en"/>
          */
         // if ldml has any attributes, get them.
-        Set<String> identitySet = new TreeSet<String>(ldmlComparator);
+        Set<String> identitySet = new TreeSet<String>(getComparator());
         if (isNonInheriting()) {
             // identitySet.add("//supplementalData[@version=\"" + GEN_VERSION + "\"]/version[@number=\"$" +
             // "Revision: $\"]");
@@ -391,14 +443,15 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
         XPathParts.Comments tempComments = (XPathParts.Comments) dataSource.getXpathComments().clone();
         tempComments.fixLineEndings();
 
-        MapComparator<String> modAttComp = attributeOrdering;
-        if (HACK_ORDER) modAttComp = new MapComparator<String>()
-            .add("alt").add("draft").add(modAttComp.getOrder());
+        //        MapComparator<String> modAttComp = attributeOrdering;
+        //        if (HACK_ORDER) modAttComp = new MapComparator<String>()
+        //            .add("alt").add("draft").add(modAttComp.getOrder());
 
-        XPathParts last = new XPathParts(attributeOrdering, defaultSuppressionMap);
-        XPathParts current = new XPathParts(attributeOrdering, defaultSuppressionMap);
-        XPathParts lastFiltered = new XPathParts(attributeOrdering, defaultSuppressionMap);
-        XPathParts currentFiltered = new XPathParts(attributeOrdering, defaultSuppressionMap);
+        MapComparator<String> attributeOrdering2 = getAttributeOrdering();
+        XPathParts last = new XPathParts(attributeOrdering2, defaultSuppressionMap);
+        XPathParts current = new XPathParts(attributeOrdering2, defaultSuppressionMap);
+        XPathParts lastFiltered = new XPathParts(attributeOrdering2, defaultSuppressionMap);
+        XPathParts currentFiltered = new XPathParts(attributeOrdering2, defaultSuppressionMap);
         boolean isResolved = dataSource.isResolving();
 
         for (Iterator<String> it2 = identitySet.iterator(); it2.hasNext();) {
@@ -443,8 +496,8 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
         List<String> x = tempComments.extractCommentsWithoutBase();
         if (x.size() != 0) {
             String extras = "Comments without bases" + XPathParts.NEWLINE;
-            for (Iterator it = x.iterator(); it.hasNext();) {
-                String key = (String) it.next();
+            for (Iterator<String> it = x.iterator(); it.hasNext();) {
+                String key = it.next();
                 // Log.logln("Writing extra comment: " + key);
                 extras += XPathParts.NEWLINE + key;
             }
@@ -651,15 +704,15 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
         if (locked) throw new UnsupportedOperationException("Attempt to modify locked object");
         XPathParts parts = new XPathParts(null, null);
         if (conflict_resolution == MERGE_KEEP_MINE) {
-            Map temp = isNonInheriting() ? new TreeMap() : new TreeMap(ldmlComparator);
+            Map temp = isNonInheriting() ? new TreeMap() : new TreeMap(getComparator());
             dataSource.putAll(other.dataSource, MERGE_KEEP_MINE);
         } else if (conflict_resolution == MERGE_REPLACE_MINE) {
             dataSource.putAll(other.dataSource, MERGE_REPLACE_MINE);
         } else if (conflict_resolution == MERGE_REPLACE_MY_DRAFT) {
             // first find all my alt=..proposed items
-            Set hasDraftVersion = new HashSet();
-            for (Iterator it = dataSource.iterator(); it.hasNext();) {
-                String cpath = (String) it.next();
+            Set<String> hasDraftVersion = new HashSet<String>();
+            for (Iterator<String> it = dataSource.iterator(); it.hasNext();) {
+                String cpath = it.next();
                 String fullpath = getFullXPath(cpath);
                 if (fullpath.indexOf("[@draft") >= 0) {
                     hasDraftVersion.add(getNondraftNonaltXPath(cpath)); // strips the alt and the draft
@@ -668,8 +721,8 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
             // only replace draft items!
             // this is either an item with draft in the fullpath
             // or an item with draft and alt in the full path
-            for (Iterator it = other.iterator(); it.hasNext();) {
-                String cpath = (String) it.next();
+            for (Iterator<String> it = other.iterator(); it.hasNext();) {
+                String cpath = it.next();
                 // Value otherValueOld = (Value) other.getXpath_value().get(cpath);
                 // fix the data
                 // cpath = Utility.replace(cpath, "[@type=\"ZZ\"]", "[@type=\"QO\"]"); // fix because tag meaning
@@ -696,8 +749,8 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
                 dataSource.putValueAtPath(newFullPath, newValue);
             }
         } else if (conflict_resolution == MERGE_ADD_ALTERNATE) {
-            for (Iterator it = other.iterator(); it.hasNext();) {
-                String key = (String) it.next();
+            for (Iterator<String> it = other.iterator(); it.hasNext();) {
+                String key = it.next();
                 String otherValue = other.getStringValue(key);
                 String myValue = dataSource.getValueAtPath(key);
                 if (myValue == null) {
@@ -746,8 +799,8 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
         XPathParts parts = new XPathParts(null, null).set(fullXPath);
         String accummulatedReferences = null;
         for (int i = 0; i < parts.size(); ++i) {
-            Map attributes = parts.getAttributes(i);
-            String references = (String) attributes.get("references");
+            Map<String, String> attributes = parts.getAttributes(i);
+            String references = attributes.get("references");
             if (references == null) continue;
             if (accummulatedReferences == null)
                 accummulatedReferences = references;
@@ -756,8 +809,8 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
         }
         if (accummulatedReferences == null) return newFullPath;
         XPathParts newParts = new XPathParts(null, null).set(newFullPath);
-        Map attributes = newParts.getAttributes(newParts.size() - 1);
-        String references = (String) attributes.get("references");
+        Map<String, String> attributes = newParts.getAttributes(newParts.size() - 1);
+        String references = attributes.get("references");
         if (references == null)
             references = accummulatedReferences;
         else
@@ -791,10 +844,10 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
     /**
      * Removes all xpaths from a CLDRFile.
      */
-    public CLDRFile removeAll(Set xpaths, boolean butComment) {
+    public CLDRFile removeAll(Set<String> xpaths, boolean butComment) {
         if (butComment) appendFinalComment("Illegal attributes removed:");
-        for (Iterator it = xpaths.iterator(); it.hasNext();) {
-            remove((String) it.next(), butComment);
+        for (Iterator<String> it = xpaths.iterator(); it.hasNext();) {
+            remove(it.next(), butComment);
         }
         return this;
     }
@@ -853,8 +906,8 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
         } else {
             removedItems.clear();
         }
-        for (Iterator it = iterator(); it.hasNext();) { // see what items we have that the other also has
-            String xpath = (String) it.next();
+        for (Iterator<String> it = iterator(); it.hasNext();) { // see what items we have that the other also has
+            String xpath = it.next();
             switch (keepIfMatches.getRetention(xpath)) {
             case RETAIN:
                 continue;
@@ -915,9 +968,9 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
 
     public CLDRFile putRoot(CLDRFile rootFile) {
         Matcher specialPathMatcher = specialsToPushFromRoot.matcher("");
-        XPathParts parts = new XPathParts(attributeOrdering, defaultSuppressionMap);
-        for (Iterator it = rootFile.iterator(); it.hasNext();) {
-            String xpath = (String) it.next();
+        XPathParts parts = new XPathParts(getAttributeOrdering(), defaultSuppressionMap);
+        for (Iterator<String> it = rootFile.iterator(); it.hasNext();) {
+            String xpath = it.next();
 
             // skip aliases, choices
             if (xpath.contains("/alias")) continue;
@@ -936,7 +989,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
             String otherFullXPath = rootFile.dataSource.getFullPath(xpath);
             if (!otherFullXPath.contains("[@draft")) {
                 parts.set(otherFullXPath);
-                Map attributes = parts.getAttributes(-1);
+                Map<String, String> attributes = parts.getAttributes(-1);
                 attributes.put("draft", "unconfirmed");
                 otherFullXPath = parts.toString();
             }
@@ -1143,7 +1196,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
     }
 
     public static String getDistinguishingXPath(String xpath, String[] normalizedPath, boolean nonInheriting) {
-        return distinguishedXPath.getDistinguishingXPath(xpath, normalizedPath, nonInheriting);
+        return DistinguishedXPath.getDistinguishingXPath(xpath, normalizedPath, nonInheriting);
     }
 
     private static boolean equalsIgnoringDraft(String path1, String path2) {
@@ -1165,26 +1218,33 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
         synchronized (nondraftParts) {
             XPathParts parts = new XPathParts(null, null).set(xpath);
             String restore;
+            HashSet<String> toRemove = new HashSet<String>();
             for (int i = 0; i < parts.size(); ++i) {
-                String element = parts.getElement(i);
-                Map attributes = parts.getAttributes(i);
+                if (parts.getAttributeCount(i) == 0) {
+                    continue;
+                }
+                Map<String, String> attributes = parts.getAttributes(i);
+                toRemove.clear();
                 restore = null;
-                for (Iterator it = attributes.keySet().iterator(); it.hasNext();) {
-                    String attribute = (String) it.next();
-                    if (attribute.equals("draft"))
-                        it.remove();
-                    else if (attribute.equals("alt")) {
+                for (Iterator<String> it = attributes.keySet().iterator(); it.hasNext();) {
+                    String attribute = it.next();
+                    if (attribute.equals("draft")) {
+                        toRemove.add(attribute);
+                    } else if (attribute.equals("alt")) {
                         String value = (String) attributes.get(attribute);
                         int proposedPos = value.indexOf("proposed");
                         if (proposedPos >= 0) {
-                            it.remove();
+                            toRemove.add(attribute);
                             if (proposedPos > 0) {
                                 restore = value.substring(0, proposedPos - 1); // is of form xxx-proposedyyy
                             }
                         }
                     }
                 }
-                if (restore != null) attributes.put("alt", restore);
+                parts.removeAttributes(i, toRemove);
+                if (restore != null) {
+                    attributes.put("alt", restore);
+                }
             }
             return parts.toString();
         }
@@ -1205,25 +1265,25 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
     // }
     // }
 
-    static String[][] distinguishingData = {
-        { "*", "key" },
-        { "*", "id" },
-        { "*", "_q" },
-        { "*", "alt" },
-        { "*", "iso4217" },
-        { "*", "iso3166" },
-        { "*", "indexSource" },
-        { "default", "type" },
-        { "measurementSystem", "type" },
-        { "mapping", "type" },
-        { "abbreviationFallback", "type" },
-        { "preferenceOrdering", "type" },
-        { "deprecatedItems", "iso3166" },
-        { "ruleset", "type" },
-        { "rbnfrule", "value" },
-    };
-
-    private final static Map distinguishingAttributeMap = asMap(distinguishingData, true);
+    //    private static String[][] distinguishingData = {
+    //        { "*", "key" },
+    //        { "*", "id" },
+    //        { "*", "_q" },
+    //        { "*", "alt" },
+    //        { "*", "iso4217" },
+    //        { "*", "iso3166" },
+    //        { "*", "indexSource" },
+    //        { "default", "type" },
+    //        { "measurementSystem", "type" },
+    //        { "mapping", "type" },
+    //        { "abbreviationFallback", "type" },
+    //        { "preferenceOrdering", "type" },
+    //        { "deprecatedItems", "iso3166" },
+    //        { "ruleset", "type" },
+    //        { "rbnfrule", "value" },
+    //    };
+    //
+    //    private final static Map distinguishingAttributeMap = asMap(distinguishingData, true);
 
     /**
      * Determine if an attribute is a distinguishing attribute.
@@ -1265,9 +1325,11 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
                 || attribute.equals("iso4217")
                 || attribute.equals("iso3166")
                 || attribute.equals("code")
+                || attribute.equals("type")
+                || attribute.equals("alt")
                 || elementName.equals("deprecatedItems")
-                && (attribute.equals("type") || attribute.equals("elements") || attribute.equals("attributes") || attribute
-                    .equals("values"))
+                && (attribute.equals("type") || attribute.equals("elements") || attribute.equals("attributes") || attribute.equals("values"))
+                || elementName.equals("character") && attribute.equals("value")
                 || elementName.equals("dayPeriodRules") && attribute.equals("locales")
                 || elementName.equals("dayPeriodRule") && attribute.equals("type")
                 || elementName.equals("metazones") && attribute.equals("type")
@@ -1281,19 +1343,36 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
                 || elementName.equals("measurementSystem") && attribute.equals("territories")
                 || elementName.equals("distinguishingItems") && attribute.equals("attributes")
                 || elementName.equals("codesByTerritory") && attribute.equals("territory")
-                || elementName.equals("currency") &&
-                (attribute.equals("iso4217") || attribute.equals("tender"))
-                || elementName.equals("territoryAlias") &&
-                (attribute.equals("replacement") || attribute.equals("type"))
-                || elementName.equals("territoryCodes") &&
-                (attribute.equals("alpha3") || attribute.equals("numeric") || attribute.equals("type"))
+                || elementName.equals("currency") && (attribute.equals("iso4217") || attribute.equals("tender"))
+                || elementName.equals("territoryAlias") && attribute.equals("type")
+                || elementName.equals("territoryCodes") && (attribute.equals("alpha3") || attribute.equals("numeric") || attribute.equals("type"))
                 || elementName.equals("group") && attribute.equals("status")
                 || elementName.equals("plurals") && attribute.equals("type")
                 || elementName.equals("pluralRules") && attribute.equals("locales")
-                || elementName.equals("hours") && attribute.equals("regions");
+                || elementName.equals("pluralRule") && attribute.equals("count")
+                || elementName.equals("hours") && attribute.equals("regions")
+                || elementName.equals("personList") && attribute.equals("type")
+                || elementName.equals("likelySubtag") && attribute.equals("from")
+                || elementName.equals("timezone") && attribute.equals("type")
+                || elementName.equals("usesMetazone") && attribute.equals("mzone")
+                || elementName.equals("usesMetazone") && attribute.equals("to")
+                || elementName.equals("numberingSystem") && attribute.equals("id")
+                || elementName.equals("group") && attribute.equals("type")
+                || elementName.equals("currency") && attribute.equals("from")
+                || elementName.equals("currency") && attribute.equals("to")
+                || elementName.equals("currency") && attribute.equals("iso4217")
+                || elementName.equals("parentLocale") && attribute.equals("parent");
         case keyboard:
+            return attribute.equals("_q")
+                || elementName.equals("keyboard") && attribute.equals("locale")
+                || elementName.equals("keyMap") && attribute.equals("modifiers")
+                || elementName.equals("map") && attribute.equals("iso")
+                || elementName.equals("transforms") && attribute.equals("type")
+                || elementName.equals("transform") && attribute.equals("from");
         case platform:
-            return false;
+            return attribute.equals("_q")
+                || elementName.equals("platform") && attribute.equals("id")
+                || elementName.equals("map") && attribute.equals("keycode");
         }
         // if (result != matches(distinguishingAttributeMap, new String[]{elementName, attribute}, true)) {
         // matches(distinguishingAttributeMap, new String[]{elementName, attribute}, true);
@@ -1353,7 +1432,8 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
      */
     public File getSupplementalDirectory() {
         if (supplementalDirectory == null) {
-            supplementalDirectory = new File(CldrUtility.DEFAULT_SUPPLEMENTAL_DIRECTORY);
+            // ask CLDRConfig.
+            supplementalDirectory = CLDRConfig.getInstance().getSupplementalDataInfo().getDirectory();
         }
         return supplementalDirectory;
     }
@@ -1390,7 +1470,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
     }
 
     public static boolean isSupplementalName(String localeName) {
-        return localeName.startsWith(SUPPLEMENTAL_PREFIX) || localeName.equals("characters");
+        return SUPPLEMENTAL_NAMES.contains(localeName);
     }
 
     // static String[] keys = {"calendar", "collation", "currency"};
@@ -1453,7 +1533,8 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
         // private String currentXPath = "/";
         private String currentFullXPath = "/";
         private String comment = null;
-        private Map attributeOrder = new TreeMap(attributeOrdering);
+        private Map<String, String> attributeOrder;
+        private DtdData dtdData;
         private CLDRFile target;
         private String lastActiveLeafNode;
         private String lastLeafNode;
@@ -1519,9 +1600,9 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
                         putAndFixDeprecatedAttribute(qName, attribute, value);
                     }
                 }
-                for (Iterator it = attributeOrder.keySet().iterator(); it.hasNext();) {
-                    String attribute = (String) it.next();
-                    String value = (String) attributeOrder.get(attribute);
+                for (Iterator<String> it = attributeOrder.keySet().iterator(); it.hasNext();) {
+                    String attribute = it.next();
+                    String value = attributeOrder.get(attribute);
                     String both = "[@" + attribute + "=\"" + value + "\"]"; // TODO quote the value??
                     currentFullXPath += both;
                     // distinguishing = key, registry, alt, and type (except for the type attribute on the elements
@@ -1574,14 +1655,14 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
             attributeOrder.put(attribute, value);
         }
 
-        private Set<String> fixedSkeletons = new HashSet();
+        //private Set<String> fixedSkeletons = new HashSet();
 
-        private DateTimePatternGenerator dateGenerator = DateTimePatternGenerator.getEmptyInstance();
+        //private DateTimePatternGenerator dateGenerator = DateTimePatternGenerator.getEmptyInstance();
 
         /**
          * Types which changed from 'type' to 'choice', but not in supplemental data.
          */
-        private static Set changedTypes = new HashSet(Arrays.asList(new String[] {
+        private static Set<String> changedTypes = new HashSet<String>(Arrays.asList(new String[] {
             "abbreviationFallback",
             "default", "mapping", "measurementSystem", "preferenceOrdering" }));
 
@@ -1682,10 +1763,11 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
 
         private void warnOnOverride(String former, String formerPath) {
             String distinguishing = CLDRFile.getDistinguishingXPath(formerPath, null, true);
-            System.out.println("\tWARNING! in " + target.getLocaleID() + ";\toverriding old value <" + former
-                + "> at path " + distinguishing +
-                CldrUtility.LINE_SEPARATOR + "\twith\t<" + lastChars + ">;\told fullpath: " + formerPath +
-                CldrUtility.LINE_SEPARATOR + "new fullpath: " + currentFullXPath);
+            System.out.println("\tERROR in " + target.getLocaleID()
+                + ";\toverriding old value <" + former + "> at path " + distinguishing +
+                "\twith\t<" + lastChars + ">" +
+                CldrUtility.LINE_SEPARATOR + "\told fullpath: " + formerPath +
+                CldrUtility.LINE_SEPARATOR + "\tnew fullpath: " + currentFullXPath);
             overrideCount += 1;
         }
 
@@ -1702,17 +1784,32 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
 
         private static int findLastSlash(String input) {
             int braceStack = 0;
+            char inQuote = 0;
             for (int i = input.length() - 1; i >= 0; --i) {
                 char ch = input.charAt(i);
                 switch (ch) {
+                case '\'':
+                case '"':
+                    if (inQuote == 0) {
+                        inQuote = ch;
+                    } else if (inQuote == ch) {
+                        inQuote = 0; // come out of quote
+                    }
+                    break;
                 case '/':
-                    if (braceStack == 0) return i;
+                    if (inQuote == 0 && braceStack == 0) {
+                        return i;
+                    }
                     break;
                 case '[':
-                    --braceStack;
+                    if (inQuote == 0) {
+                        --braceStack;
+                    }
                     break;
                 case ']':
-                    ++braceStack;
+                    if (inQuote == 0) {
+                        ++braceStack;
+                    }
                     break;
                 }
             }
@@ -1734,14 +1831,21 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
                 );
             try {
                 if (isSupplemental < 0) { // set by first element
-                    if (qName.equals("ldml"))
-                        isSupplemental = 0;
-                    else if (qName.equals("supplementalData"))
-                        isSupplemental = 1;
-                    else if (qName.equals("ldmlBCP47"))
-                        isSupplemental = 1;
-                    else
-                        throw new IllegalArgumentException("File is neither ldml or supplementalData!");
+                    attributeOrder = new TreeMap<String, String>(
+                        // HACK for ldmlIcu
+                        dtdData.dtdType == DtdType.ldml
+                            ? CLDRFile.getAttributeOrdering() :
+                            dtdData.getAttributeComparator()
+                        );
+                    isSupplemental = target.dtdType == DtdType.ldml ? 0 : 1;
+                    //                    if (qName.equals("ldml"))
+                    //                        isSupplemental = 0;
+                    //                    else if (qName.equals("supplementalData"))
+                    //                        isSupplemental = 1;
+                    //                    else if (qName.equals("ldmlBCP47"))
+                    //                        isSupplemental = 1;
+                    //                    else
+                    //                        throw new IllegalArgumentException("File is neither ldml or supplementalData!");
                 }
                 push(qName, attributes);
             } catch (RuntimeException e) {
@@ -1762,8 +1866,8 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
             }
         }
 
-        static final char XML_LINESEPARATOR = (char) 0xA;
-        static final String XML_LINESEPARATOR_STRING = String.valueOf(XML_LINESEPARATOR);
+        //static final char XML_LINESEPARATOR = (char) 0xA;
+        //static final String XML_LINESEPARATOR_STRING = String.valueOf(XML_LINESEPARATOR);
 
         public void characters(char[] ch, int start, int length)
             throws SAXException {
@@ -1788,6 +1892,8 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
                 + ", systemId: " + systemId
                 );
             commentStack++;
+            target.dtdType = DtdType.valueOf(name);
+            dtdData = DtdData.getInstance(target.dtdType);
         }
 
         public void endDTD() throws SAXException {
@@ -2103,6 +2209,13 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
                 if (set != null) {
                     return set.iterator().next();
                 }
+            } else if (type == TERRITORY_NAME) {
+                Map<String, String> info = StandardCodes.getLStreg()
+                    .get("region")
+                    .get(code);
+                if (info != null) {
+                    return info.get("Description");
+                }
             }
         }
         return result;
@@ -2327,9 +2440,10 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
      * Get standard ordering for elements.
      * 
      * @return ordered collection with items.
+     * @deprecated
      */
     public static List<String> getElementOrder() {
-        return elementOrdering.getOrder(); // already unmodifiable
+        return Collections.emptyList(); // elementOrdering.getOrder(); // already unmodifiable
     }
 
     /**
@@ -2338,16 +2452,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
      * @return ordered collection with items.
      */
     public static List<String> getAttributeOrder() {
-        return attributeOrdering.getOrder(); // already unmodifiable
-    }
-
-    /**
-     * Get standard ordering for attributes.
-     * 
-     * @return ordered collection with items.
-     */
-    public static Comparator<String> getAttributeComparator() {
-        return attributeOrdering; // already unmodifiable
+        return getAttributeOrdering().getOrder(); // already unmodifiable
     }
 
     /**
@@ -2362,26 +2467,26 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
     // note: run FindDTDOrder to get this list
     // TODO, convert to use SupplementalInfo
 
-    private static MapComparator<String> attributeOrdering = new MapComparator<String>()
-        .add(
-            // START MECHANICALLY attributeOrdering GENERATED BY FindDTDOrder
-            "_q type id choice key registry source target path day date version count lines characters before from to iso4217 mzone number time casing list uri digits rounding iso3166 hex request direction alternate backwards caseFirst caseLevel hiraganaQuarternary hiraganaQuaternary variableTop normalization numeric strength elements element attributes attribute attributeValue contains multizone order other replacement scripts services territories territory aliases tzidVersion value values variant variants visibility alpha3 code end exclude fips10 gdp internet literacyPercent locales population writingPercent populationPercent officialStatus start used otherVersion typeVersion access after allowsParsing at bcp47 decexp desired indexSource numberSystem numbers oneway ordering percent priority radix rules supported tender territoryId yeartype cldrVersion grouping inLanguage inScript inTerritory match parent private reason reorder status cashDigits cashRounding allowed override preferred regions validSubLocales standard references alt draft" // END
-            // MECHANICALLY
-            // attributeOrdering
-            // GENERATED
-            // BY
-            // FindDTDOrder
-            .trim().split("\\s+"))
-        .setErrorOnMissing(false)
-        .freeze();
+    //    private static MapComparator<String> attributeOrdering = new MapComparator<String>()
+    //        .add(
+    //            // START MECHANICALLY attributeOrdering GENERATED BY FindDTDOrder
+    //            "_q type id choice key registry source target path day date version count lines characters before from to iso4217 mzone number time casing list uri digits rounding iso3166 hex request direction alternate backwards caseFirst caseLevel hiraganaQuarternary hiraganaQuaternary variableTop normalization numeric strength elements element attributes attribute attributeValue contains multizone order other replacement scripts services territories territory aliases tzidVersion value values variant variants visibility alpha3 code end exclude fips10 gdp internet literacyPercent locales population writingPercent populationPercent officialStatus start used otherVersion typeVersion access after allowsParsing at bcp47 decexp desired indexSource numberSystem numbers oneway ordering percent priority radix rules supported tender territoryId yeartype cldrVersion grouping inLanguage inScript inTerritory match parent private reason reorder status cashDigits cashRounding allowed override preferred regions validSubLocales standard references alt draft" // END
+    //            // MECHANICALLY
+    //            // attributeOrdering
+    //            // GENERATED
+    //            // BY
+    //            // FindDTDOrder
+    //            .trim().split("\\s+"))
+    //            .setErrorOnMissing(false)
+    //            .freeze();
 
-    private static MapComparator<String> elementOrdering = new MapComparator<String>()
-        .add(
-            // START MECHANICALLY elementOrdering GENERATED BY FindDTDOrder
-            "ldml alternate attributeOrder attributes blockingItems calendarPreference calendarSystem casingData casingItem character character-fallback characterOrder codesByTerritory comment context coverageVariable coverageLevel cp dayPeriodRule dayPeriodRules deprecatedItems distinguishingItems elementOrder exception first_variable fractions hours identity indexSeparator compressedIndexSeparator indexRangePattern indexLabelBefore indexLabelAfter indexLabel info keyMap languageAlias languageCodes languageCoverage languageMatch languageMatches languagePopulation last_variable first_tertiary_ignorable last_tertiary_ignorable first_secondary_ignorable last_secondary_ignorable first_primary_ignorable last_primary_ignorable first_non_ignorable last_non_ignorable first_trailing last_trailing likelySubtag lineOrder mapKeys mapTypes mapZone numberingSystem parentLocale personList pluralRule pluralRules postCodeRegex primaryZone reference region scriptAlias scriptCoverage serialElements stopwordList substitute suppress tRule telephoneCountryCode territoryAlias territoryCodes territoryCoverage currencyCoverage timezone timezoneCoverage transform typeMap usesMetazone validity alias appendItem base beforeCurrency afterCurrency codePattern compoundUnit compoundUnitPattern contextTransform contextTransformUsage currencyMatch cyclicName cyclicNameContext cyclicNameSet cyclicNameWidth dateFormatItem day dayPeriod dayPeriodContext dayPeriodWidth defaultCollation defaultNumberingSystem deprecated distinguishing blocking coverageAdditions durationUnitPattern era eraNames eraAbbr eraNarrow exemplarCharacters ellipsis fallback field generic greatestDifference height hourFormat hoursFormat gmtFormat gmtZeroFormat intervalFormatFallback intervalFormatItem key listPattern listPatternPart localeDisplayNames layout contextTransforms localeDisplayPattern languages localePattern localeSeparator localeKeyTypePattern localizedPatternChars dateRangePattern calendars long measurementSystem measurementSystemName messages minDays firstDay month monthPattern monthPatternContext monthPatternWidth months monthNames monthAbbr monthPatterns days dayNames dayAbbr moreInformation native orientation inList inText otherNumberingSystems paperSize quarter quarters quotationStart quotationEnd alternateQuotationStart alternateQuotationEnd rbnfrule regionFormat fallbackFormat fallbackRegionFormat abbreviationFallback preferenceOrdering relativeTimePattern reset import p pc rule ruleset rulesetGrouping s sc scripts segmentation settings short commonlyUsed exemplarCity singleCountries default calendar collation currency currencyFormat currencySpacing currencyFormatLength dateFormat dateFormatLength dateTimeFormat dateTimeFormatLength availableFormats appendItems dayContext dayWidth decimalFormat decimalFormatLength intervalFormats monthContext monthWidth pattern displayName percentFormat percentFormatLength quarterContext quarterWidth relative relativeTime scientificFormat scientificFormatLength skipDefaultLocale defaultContent standard daylight stopwords indexLabels mapping suppress_contractions optimize cr rules surroundingMatch insertBetween symbol decimal group list percentSign nativeZeroDigit patternDigit plusSign minusSign exponential superscriptingExponent perMille infinity nan currencyDecimal currencyGroup symbols decimalFormats scientificFormats percentFormats currencyFormats currencies miscPatterns t tc q qc i ic extend territories timeFormat timeFormatLength traditional finance transformName type unit unitLength durationUnit unitPattern variable attributeValues variables segmentRules exceptions variantAlias variants keys types transformNames measurementSystemNames codePatterns version generation cldrVersion currencyData language script territory territoryContainment languageData territoryInfo postalCodeData calendarData calendarPreferenceData variant week am pm dayPeriods eras cyclicNameSets dateFormats timeFormats dateTimeFormats fields timeZoneNames weekData timeData measurementData timezoneData characters delimiters measurement dates numbers transforms units listPatterns collations posix segmentations rbnf metadata codeMappings parentLocales likelySubtags metazoneInfo mapTimezones plurals telephoneCodeData numberingSystems bcp47KeywordMappings gender references languageMatching dayPeriodRuleSet metaZones primaryZones weekendStart weekendEnd width windowsZones coverageLevels x yesstr nostr yesexpr noexpr zone metazone special zoneAlias zoneFormatting zoneItem supplementalData"
-                .trim().split("\\s+"))
-        .setErrorOnMissing(false)
-        .freeze();
+    //    private static MapComparator<String> elementOrdering = new MapComparator<String>()
+    //        .add(
+    //            // START MECHANICALLY elementOrdering GENERATED BY FindDTDOrder
+    //            "ldml alternate attributeOrder attributes blockingItems calendarPreference calendarSystem casingData casingItem character character-fallback characterOrder codesByTerritory comment context coverageVariable coverageLevel cp dayPeriodRule dayPeriodRules deprecatedItems distinguishingItems elementOrder exception first_variable fractions hours identity indexSeparator compressedIndexSeparator indexRangePattern indexLabelBefore indexLabelAfter indexLabel info keyMap languageAlias languageCodes languageCoverage languageMatch languageMatches languagePopulation last_variable first_tertiary_ignorable last_tertiary_ignorable first_secondary_ignorable last_secondary_ignorable first_primary_ignorable last_primary_ignorable first_non_ignorable last_non_ignorable first_trailing last_trailing likelySubtag lineOrder mapKeys mapTypes mapZone numberingSystem parentLocale personList pluralRule pluralRules postCodeRegex primaryZone reference region scriptAlias scriptCoverage serialElements stopwordList substitute suppress tRule telephoneCountryCode territoryAlias territoryCodes territoryCoverage currencyCoverage timezone timezoneCoverage transform typeMap usesMetazone validity alias appendItem base beforeCurrency afterCurrency codePattern compoundUnit compoundUnitPattern contextTransform contextTransformUsage currencyMatch cyclicName cyclicNameContext cyclicNameSet cyclicNameWidth dateFormatItem day dayPeriod dayPeriodContext dayPeriodWidth defaultCollation defaultNumberingSystem deprecated distinguishing blocking coverageAdditions durationUnitPattern era eraNames eraAbbr eraNarrow exemplarCharacters ellipsis fallback field generic greatestDifference height hourFormat hoursFormat gmtFormat gmtZeroFormat intervalFormatFallback intervalFormatItem key listPattern listPatternPart localeDisplayNames layout contextTransforms localeDisplayPattern languages localePattern localeSeparator localeKeyTypePattern localizedPatternChars dateRangePattern calendars long measurementSystem measurementSystemName messages minDays firstDay month monthPattern monthPatternContext monthPatternWidth months monthNames monthAbbr monthPatterns days dayNames dayAbbr moreInformation native orientation inList inText otherNumberingSystems paperSize quarter quarters quotationStart quotationEnd alternateQuotationStart alternateQuotationEnd rbnfrule regionFormat fallbackFormat fallbackRegionFormat abbreviationFallback preferenceOrdering relativeTimePattern reset import p pc rule ruleset rulesetGrouping s sc scripts segmentation settings short commonlyUsed exemplarCity singleCountries default calendar collation currency currencyFormat currencySpacing currencyFormatLength dateFormat dateFormatLength dateTimeFormat dateTimeFormatLength availableFormats appendItems dayContext dayWidth decimalFormat decimalFormatLength intervalFormats monthContext monthWidth pattern displayName percentFormat percentFormatLength quarterContext quarterWidth relative relativeTime scientificFormat scientificFormatLength skipDefaultLocale defaultContent standard daylight stopwords indexLabels mapping suppress_contractions optimize cr rules surroundingMatch insertBetween symbol decimal group list percentSign nativeZeroDigit patternDigit plusSign minusSign exponential superscriptingExponent perMille infinity nan currencyDecimal currencyGroup symbols decimalFormats scientificFormats percentFormats currencyFormats currencies miscPatterns t tc q qc i ic extend territories timeFormat timeFormatLength traditional finance transformName type unit unitLength durationUnit unitPattern variable attributeValues variables segmentRules exceptions variantAlias variants keys types transformNames measurementSystemNames codePatterns version generation cldrVersion currencyData language script territory territoryContainment languageData territoryInfo postalCodeData calendarData calendarPreferenceData variant week am pm dayPeriods eras cyclicNameSets dateFormats timeFormats dateTimeFormats fields timeZoneNames weekData timeData measurementData timezoneData characters delimiters measurement dates numbers transforms units listPatterns collations posix segmentations rbnf metadata codeMappings parentLocales likelySubtags metazoneInfo mapTimezones plurals telephoneCodeData numberingSystems bcp47KeywordMappings gender references languageMatching dayPeriodRuleSet metaZones primaryZones weekendStart weekendEnd width windowsZones coverageLevels x yesstr nostr yesexpr noexpr zone metazone special zoneAlias zoneFormatting zoneItem supplementalData"
+    //            .trim().split("\\s+"))
+    //            .setErrorOnMissing(false)
+    //            .freeze();
 
     private static MapComparator<String> valueOrdering = new MapComparator<String>().setErrorOnMissing(false).freeze();
     /*
@@ -2473,6 +2578,9 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
             // <ruleset> children
             "rbnfrule",
 
+            // <exceptions> children
+            "exception",
+
             // DTD: supplementalData
             // <territory> children
             // "languagePopulation",
@@ -2515,8 +2623,11 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
             "attributes", // shouldn't need this in //supplementalData/metadata/suppress/attributes, except that the
             // element is badly designed
 
-            "languageMatch"
+            "languageMatch",
 
+            "exception", // needed for new segmentations
+            "coverageLevel", // needed for supplemental/coverageLevel.xml
+            "coverageVariable" // needed for supplemental/coverageLevel.xml
         )));
 
     public static boolean isOrdered(String element, DtdType type) {
@@ -2557,79 +2668,88 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
     /**
      * Comparator for attributes in CLDR files
      */
-    public static Comparator<String> ldmlComparator = new LDMLComparator();
-
-    static class LDMLComparator implements Comparator<String> {
-
-        transient XPathParts a = new XPathParts(attributeOrdering, null);
-        transient XPathParts b = new XPathParts(attributeOrdering, null);
-
-        public void addElement(String a) {
-            // elementOrdering.add(a);
+    private static AttributeValueComparator avc = new AttributeValueComparator() {
+        @Override
+        public int compare(String element, String attribute, String value1, String value2) {
+            Comparator<String> comp = CLDRFile.getAttributeValueComparator(element, attribute);
+            return comp.compare(value1, value2);
         }
+    };
 
-        public void addAttribute(String a) {
-            // attributeOrdering.add(a);
-        }
+    private static Comparator<String> ldmlComparator = DtdData.getInstance(DtdType.ldmlICU).getDtdComparator(avc);
+    // new LDMLComparator();
 
-        public void addValue(String a) {
-            // valueOrdering.add(a);
-        }
+    //    private static class LDMLComparator implements Comparator<String> {
+    //
+    //        transient XPathParts a = new XPathParts(getAttributeOrdering(), null);
+    //        transient XPathParts b = new XPathParts(getAttributeOrdering(), null);
+    //
+    //        public void addElement(String a) {
+    //            // elementOrdering.add(a);
+    //        }
+    //
+    //        public void addAttribute(String a) {
+    //            // attributeOrdering.add(a);
+    //        }
+    //
+    //        public void addValue(String a) {
+    //            // valueOrdering.add(a);
+    //        }
+    //
+    //        public int compare(String o1, String o2) {
+    //            if (o1 == o2) return 0; // quick test for common case
+    //            int result;
+    //            a.set(o1);
+    //            b.set(o2);
+    //            int minSize = a.size();
+    //            if (b.size() < minSize) minSize = b.size();
+    //            for (int i = 0; i < minSize; ++i) {
+    //                String aname = a.getElement(i);
+    //                String bname = b.getElement(i);
+    //                if (0 != (result = elementOrdering.compare(aname, bname))) {
+    //                    // if they are different, then
+    //                    // all ordered items are equal, and > than all unordered
+    //                    boolean aOrdered = orderedElements.contains(aname);
+    //                    boolean bOrdered = orderedElements.contains(bname);
+    //                    // if both ordered, continue, return result
+    //                    if (aOrdered && bOrdered) {
+    //                        // continue with comparison
+    //                    } else {
+    //                        if (aOrdered == bOrdered) return result; // both off
+    //                        return aOrdered ? 1 : -1;
+    //                    }
+    //                }
+    //                Map<String, String> am = a.getAttributes(i);
+    //                Map<String, String> bm = b.getAttributes(i);
+    //                int minMapSize = am.size();
+    //                if (bm.size() < minMapSize) minMapSize = bm.size();
+    //                if (minMapSize != 0) {
+    //                    Iterator ait = am.keySet().iterator();
+    //                    Iterator bit = bm.keySet().iterator();
+    //                    for (int j = 0; j < minMapSize; ++j) {
+    //                        String akey = (String) ait.next();
+    //                        String bkey = (String) bit.next();
+    //                        if (0 != (result = getAttributeOrdering().compare(akey, bkey))) return result;
+    //                        String avalue = (String) am.get(akey);
+    //                        String bvalue = (String) bm.get(bkey);
+    //                        if (!avalue.equals(bvalue)) {
+    //                            Comparator<String> comp = getAttributeValueComparator(aname, akey);
+    //                            if (0 != (result = comp.compare(avalue, bvalue))) {
+    //                                return result;
+    //                            }
+    //                        }
+    //                    }
+    //                }
+    //                if (am.size() < bm.size()) return -1;
+    //                if (am.size() > bm.size()) return 1;
+    //            }
+    //            if (a.size() < b.size()) return -1;
+    //            if (a.size() > b.size()) return 1;
+    //            return 0;
+    //        }
+    //    }
 
-        public int compare(String o1, String o2) {
-            if (o1 == o2) return 0; // quick test for common case
-            int result;
-            a.set(o1);
-            b.set(o2);
-            int minSize = a.size();
-            if (b.size() < minSize) minSize = b.size();
-            for (int i = 0; i < minSize; ++i) {
-                String aname = a.getElement(i);
-                String bname = b.getElement(i);
-                if (0 != (result = elementOrdering.compare(aname, bname))) {
-                    // if they are different, then
-                    // all ordered items are equal, and > than all unordered
-                    boolean aOrdered = orderedElements.contains(aname);
-                    boolean bOrdered = orderedElements.contains(bname);
-                    // if both ordered, continue, return result
-                    if (aOrdered && bOrdered) {
-                        // continue with comparison
-                    } else {
-                        if (aOrdered == bOrdered) return result; // both off
-                        return aOrdered ? 1 : -1;
-                    }
-                }
-                Map<String, String> am = a.getAttributes(i);
-                Map<String, String> bm = b.getAttributes(i);
-                int minMapSize = am.size();
-                if (bm.size() < minMapSize) minMapSize = bm.size();
-                if (minMapSize != 0) {
-                    Iterator ait = am.keySet().iterator();
-                    Iterator bit = bm.keySet().iterator();
-                    for (int j = 0; j < minMapSize; ++j) {
-                        String akey = (String) ait.next();
-                        String bkey = (String) bit.next();
-                        if (0 != (result = attributeOrdering.compare(akey, bkey))) return result;
-                        String avalue = (String) am.get(akey);
-                        String bvalue = (String) bm.get(bkey);
-                        if (!avalue.equals(bvalue)) {
-                            Comparator<String> comp = getAttributeValueComparator(aname, akey);
-                            if (0 != (result = comp.compare(avalue, bvalue))) {
-                                return result;
-                            }
-                        }
-                    }
-                }
-                if (am.size() < bm.size()) return -1;
-                if (am.size() > bm.size()) return 1;
-            }
-            if (a.size() < b.size()) return -1;
-            if (a.size() > b.size()) return 1;
-            return 0;
-        }
-    }
-
-    private final static Map defaultSuppressionMap;
+    private final static Map<String, Map<String, String>> defaultSuppressionMap;
     static {
         String[][] data = {
             { "ldml", "version", GEN_VERSION },
@@ -2651,14 +2771,15 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
             { "transform", "visibility", "external" },
             { "*", "_q", "*" },
         };
-        Map tempmain = asMap(data, true);
+        Map<String, Map<String, String>> tempmain = asMap(data, true);
         defaultSuppressionMap = Collections.unmodifiableMap(tempmain);
     }
 
-    public static Map getDefaultSuppressionMap() {
+    public static Map<String, Map<String, String>> getDefaultSuppressionMap() {
         return defaultSuppressionMap;
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private static Map asMap(String[][] data, boolean tree) {
         Map tempmain = tree ? (Map) new TreeMap() : new HashMap();
         int len = data[0].length; // must be same for all elements
@@ -2765,13 +2886,21 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
 
         private static Map<String, String> distinguishingMap = new HashMap<String, String>();
         private static Map<String, String> normalizedPathMap = new HashMap<String, String>();
-        private static XPathParts distinguishingParts = new XPathParts(attributeOrdering, null);
+        private static XPathParts distinguishingParts = new XPathParts(getAttributeOrdering(), null);
+        static {
+            distinguishingMap.put("", ""); // seed this to make the code simpler
+        }
 
         public static String getDistinguishingXPath(String xpath, String[] normalizedPath, boolean nonInheriting) {
             synchronized (distinguishingMap) {
                 String result = (String) distinguishingMap.get(xpath);
                 if (result == null) {
                     distinguishingParts.set(xpath);
+                    if (distinguishingParts.getDtdData() == null) {
+                        distinguishingParts.set(xpath);
+                    }
+                    DtdType type = distinguishingParts.getDtdData().dtdType;
+                    Set<String> toRemove = new HashSet<String>();
 
                     // first clean up draft and alt
 
@@ -2786,21 +2915,26 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
                     for (int i = 0; i < distinguishingParts.size() - 1; ++i) {
                         // String element = distinguishingParts.getElement(i);
                         // if (atomicElements.contains(element)) break;
+                        if (distinguishingParts.getAttributeCount(i) == 0) {
+                            continue;
+                        }
+                        toRemove.clear();
                         Map<String, String> attributes = distinguishingParts.getAttributes(i);
                         for (Iterator<String> it = attributes.keySet().iterator(); it.hasNext();) {
                             String attribute = (String) it.next();
                             if (attribute.equals("draft")) {
                                 draft = (String) attributes.get(attribute);
-                                it.remove();
+                                toRemove.add(attribute);
                             } else if (attribute.equals("alt")) {
                                 alt = (String) attributes.get(attribute);
-                                it.remove();
+                                toRemove.add(attribute);
                             } else if (attribute.equals("references")) {
                                 if (references.length() != 0) references += " ";
                                 references += (String) attributes.get("references");
-                                it.remove();
+                                toRemove.add(attribute);
                             }
                         }
+                        distinguishingParts.removeAttributes(i, toRemove);
                     }
                     if (draft != null || alt != null || references.length() != 0) {
                         // get the last element that is not ordered.
@@ -2810,15 +2944,14 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
                             if (!orderedElements.contains(element)) break;
                             --placementIndex;
                         }
-                        Map<String, String> attributes = distinguishingParts.getAttributes(placementIndex);
                         if (draft != null) {
-                            attributes.put("draft", draft);
+                            distinguishingParts.putAttributeValue(placementIndex, "draft", draft);
                         }
                         if (alt != null) {
-                            attributes.put("alt", alt);
+                            distinguishingParts.putAttributeValue(placementIndex, "alt", alt);
                         }
                         if (references.length() != 0) {
-                            attributes.put("references", references);
+                            distinguishingParts.putAttributeValue(placementIndex, "references", references);
                         }
                         String newXPath = distinguishingParts.toString();
                         if (!newXPath.equals(xpath)) {
@@ -2827,16 +2960,18 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
                     }
 
                     // now remove non-distinguishing attributes (if non-inheriting)
-
                     for (int i = 0; i < distinguishingParts.size(); ++i) {
+                        if (distinguishingParts.getAttributeCount(i) == 0) {
+                            continue;
+                        }
                         String element = distinguishingParts.getElement(i);
-                        Map<String, String> attributes = distinguishingParts.getAttributes(i);
-                        for (Iterator<String> it = attributes.keySet().iterator(); it.hasNext();) {
-                            String attribute = it.next();
-                            if (!isDistinguishing(element, attribute)) {
-                                it.remove();
+                        toRemove.clear();
+                        for (String attribute : distinguishingParts.getAttributeKeys(i)) {
+                            if (!isDistinguishing(type, element, attribute)) {
+                                toRemove.add(attribute);
                             }
                         }
+                        distinguishingParts.removeAttributes(i, toRemove);
                     }
 
                     result = distinguishingParts.toString();
@@ -2847,7 +2982,9 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
                 }
                 if (normalizedPath != null) {
                     normalizedPath[0] = (String) normalizedPathMap.get(xpath);
-                    if (normalizedPath[0] == null) normalizedPath[0] = xpath;
+                    if (normalizedPath[0] == null) {
+                        normalizedPath[0] = xpath;
+                    }
                 }
                 return result;
             }
@@ -2862,13 +2999,14 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
             }
             synchronized (distinguishingMap) {
                 distinguishingParts.set(fullPath);
+                DtdType type = distinguishingParts.getDtdData().dtdType;
                 for (int i = 0; i < distinguishingParts.size(); ++i) {
                     String element = distinguishingParts.getElement(i);
                     // if (atomicElements.contains(element)) break;
                     Map<String, String> attributes = distinguishingParts.getAttributes(i);
                     for (Iterator<String> it = attributes.keySet().iterator(); it.hasNext();) {
                         String attribute = it.next();
-                        if (!isDistinguishing(element, attribute) && !skipList.contains(attribute)) {
+                        if (!isDistinguishing(type, element, attribute) && !skipList.contains(attribute)) {
                             result.put(attribute, attributes.get(attribute));
                         }
                     }
@@ -3108,7 +3246,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
             if (!baseFile.isResolved()) {
                 throw new IllegalArgumentException("baseFile must be resolved");
             }
-            Relation<String, String> pathMap = new Relation(new HashMap<String, String>(), TreeSet.class,
+            Relation<String, String> pathMap = Relation.of(new HashMap<String, Set<String>>(), TreeSet.class,
                 new WinningComparator(user));
             for (String path : baseFile) {
                 String newPath = getNondraftNonaltXPath(path);
@@ -3226,15 +3364,20 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
     private Collection<String> getRawExtraPathsPrivate(Collection<String> toAddTo) {
         SupplementalDataInfo supplementalData = SupplementalDataInfo.getInstance(getSupplementalDirectory());
         // units
-        final Set<Count> pluralCounts = supplementalData
-            .getPlurals(PluralType.cardinal, getLocaleID())
-            .getCounts();
-        if (pluralCounts.size() != 1) {
-            // we get all the root paths with count
-            addPluralCounts(toAddTo, pluralCounts, this);
-            //            addPluralCounts(toAddTo, pluralCounts, getRootCountOther());
-            if (false) {
-                showStars(getLocaleID() + " toAddTo", toAddTo);
+        PluralInfo plurals = supplementalData.getPlurals(PluralType.cardinal, getLocaleID());
+        if (plurals == null && DEBUG) {
+            System.err.println("No " + PluralType.cardinal + "  plurals for " + getLocaleID() + " in " + supplementalData.getDirectory().getAbsolutePath());
+        }
+        Set<Count> pluralCounts = null;
+        if (plurals != null) {
+            pluralCounts = plurals.getCounts();
+            if (pluralCounts.size() != 1) {
+                // we get all the root paths with count
+                addPluralCounts(toAddTo, pluralCounts, this);
+                //            addPluralCounts(toAddTo, pluralCounts, getRootCountOther());
+                if (false) {
+                    showStars(getLocaleID() + " toAddTo", toAddTo);
+                }
             }
         }
         // dayPeriods
@@ -3285,8 +3428,10 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
             String currencyCode = code.toUpperCase();
             toAddTo.add("//ldml/numbers/currencies/currency[@type=\"" + currencyCode + "\"]/symbol");
             toAddTo.add("//ldml/numbers/currencies/currency[@type=\"" + currencyCode + "\"]/displayName");
-            for (Count count : pluralCounts) {
-                toAddTo.add("//ldml/numbers/currencies/currency[@type=\"" + currencyCode + "\"]/displayName[@count=\"" + count.toString() + "\"]");
+            if (pluralCounts != null) {
+                for (Count count : pluralCounts) {
+                    toAddTo.add("//ldml/numbers/currencies/currency[@type=\"" + currencyCode + "\"]/displayName[@count=\"" + count.toString() + "\"]");
+                }
             }
         }
 
@@ -3528,5 +3673,35 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
 
     public boolean isAliasedAtTopLevel() {
         return iterator("//ldml/alias").hasNext();
+    }
+
+    public static Comparator<String> getComparator(DtdType dtdType) {
+        if (dtdType == null) {
+            return ldmlComparator;
+        }
+        switch (dtdType) {
+        default:
+            return DtdData.getInstance(dtdType).getDtdComparator(null);
+        case ldml:
+        case ldmlICU:
+            return ldmlComparator;
+        }
+    }
+
+    public Comparator<String> getComparator() {
+        return getComparator(dtdType);
+    }
+
+    public static MapComparator<String> getAttributeOrdering() {
+        //return attributeOrdering;
+        return DtdData.getInstance(DtdType.ldmlICU).getAttributeComparator();
+    }
+
+    public CLDRFile getUnresolved() {
+        if (!isResolved()) {
+            return this;
+        }
+        XMLSource source = dataSource.getUnresolving();
+        return new CLDRFile(source);
     }
 }

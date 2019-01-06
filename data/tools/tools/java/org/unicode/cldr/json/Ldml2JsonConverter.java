@@ -19,7 +19,10 @@ import org.unicode.cldr.draft.FileUtilities;
 import org.unicode.cldr.tool.Option.Options;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.DraftStatus;
+import org.unicode.cldr.util.CLDRFile.DtdType;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
+import org.unicode.cldr.util.DtdData;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.Level;
 import org.unicode.cldr.util.SupplementalDataInfo;
@@ -37,20 +40,21 @@ import com.ibm.icu.impl.Utility;
 public class Ldml2JsonConverter {
     private static boolean DEBUG = false;
     private static final String MAIN = "main";
+    private static final String SEGMENTS = "segments";
 
     private static final Options options = new Options(
         "Usage: LDML2JsonConverter [OPTIONS] [FILES]\n" +
             "This program converts CLDR data to the JSON format.\n" +
             "Please refer to the following options. \n" +
             "\texample: org.unicode.cldr.json.Ldml2JsonConverter -c xxx -d yyy")
-        .add("commondir", 'c', ".*", CldrUtility.COMMON_DIRECTORY,
+        .add("commondir", 'c', ".*", CLDRPaths.COMMON_DIRECTORY,
             "Common directory for CLDR files, defaults to CldrUtility.COMMON_DIRECTORY")
-        .add("destdir", 'd', ".*", CldrUtility.GEN_DIRECTORY,
+        .add("destdir", 'd', ".*", CLDRPaths.GEN_DIRECTORY,
             "Destination directory for output files, defaults to CldrUtility.GEN_DIRECTORY")
         .add("match", 'm', ".*", ".*",
             "Regular expression to define only specific locales or files to be generated")
-        .add("type", 't', "(main|supplemental)", "main",
-            "Type of CLDR data being generated, main or supplemental.")
+        .add("type", 't', "(main|supplemental|segments)", "main",
+            "Type of CLDR data being generated, main, supplemental, or segments.")
         .add("resolved", 'r', "(true|false)", "false",
             "Whether the output JSON for the main directory should be based on resolved or unresolved data")
         .add("draftstatus", 's', "(approved|contributed|provisional|unconfirmed)", "unconfirmed",
@@ -203,6 +207,14 @@ public class Ldml2JsonConverter {
         result = result.replaceFirst("/ldml/", pathPrefix);
         result = result.replaceFirst("/supplementalData/", pathPrefix);
 
+        if (result.contains("languages") ||
+            result.contains("languageAlias") ||
+            result.contains("languageMatches") ||
+            result.contains("likelySubtags") ||
+            result.contains("parentLocale") ||
+            result.contains("locales=")) {
+            result = result.replaceAll("_", "-");
+        }
         if (DEBUG) {
             System.out.println("OUT pathStr : " + result);
         }
@@ -224,8 +236,13 @@ public class Ldml2JsonConverter {
                 activeNumberingSystems.add(ns);
             }
         }
-
-        for (Iterator<String> it = file.iterator("", CLDRFile.ldmlComparator); it.hasNext();) {
+        DtdType fileDtdType;
+        if (CLDRFile.isSupplementalName(locID)) {
+            fileDtdType = DtdType.supplementalData;
+        } else {
+            fileDtdType = DtdType.ldml;
+        }
+        for (Iterator<String> it = file.iterator("", DtdData.getInstance(fileDtdType).getDtdComparator(null)); it.hasNext();) {
             int cv = Level.UNDETERMINED.getLevel();
             String path = it.next();
             String fullPath = file.getFullXPath(path);
@@ -270,7 +287,7 @@ public class Ldml2JsonConverter {
             for (JSONSection js : sections) {
                 js.matcher.reset(transformedPath);
                 if (js.matcher.matches()) {
-                    CldrItem item = new CldrItem(transformedPath, transformedFullPath, file.getWinningValue(path));
+                    CldrItem item = new CldrItem(transformedPath, transformedFullPath, path, fullPath, file.getWinningValue(path));
                     List<CldrItem> cldrItems = sectionItems.get(js);
                     if (cldrItems == null) {
                         cldrItems = new ArrayList<CldrItem>();
@@ -555,7 +572,7 @@ public class Ldml2JsonConverter {
         }
 
         String leadingPath = matcher.group(1);
-        CldrItem fakeItem = new CldrItem(leadingPath, leadingPath, "");
+        CldrItem fakeItem = new CldrItem(leadingPath, leadingPath, leadingPath, leadingPath, "");
         return fakeItem.getNodesInPath().size() - 1;
     }
 
@@ -858,7 +875,7 @@ public class Ldml2JsonConverter {
             mapPathsToSections(file, pathPrefix, sdi);
 
             String outputDirname;
-            if (dirName.equals(MAIN)) {
+            if (dirName.equals(MAIN) || dirName.equals(SEGMENTS)) {
                 outputDirname = outputDir + File.separator + filename.replaceAll("_", "-");
             } else {
                 outputDirname = outputDir + File.separator + dirName;

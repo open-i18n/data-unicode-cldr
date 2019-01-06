@@ -31,12 +31,12 @@ import org.unicode.cldr.test.QuickCheck;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.DraftStatus;
 import org.unicode.cldr.util.CLDRFile.Status;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.CldrUtility.SimpleLineComparator;
 import org.unicode.cldr.util.DateTimeCanonicalizer;
 import org.unicode.cldr.util.DateTimeCanonicalizer.DateTimePatternType;
 import org.unicode.cldr.util.Factory;
-import org.unicode.cldr.util.LanguageTagParser;
 import org.unicode.cldr.util.LocaleIDParser;
 import org.unicode.cldr.util.Log;
 import org.unicode.cldr.util.PathHeader;
@@ -46,6 +46,7 @@ import org.unicode.cldr.util.StringId;
 import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo.Count;
+import org.unicode.cldr.util.XMLSource;
 import org.unicode.cldr.util.XPathParts;
 
 import com.ibm.icu.dev.tool.UOption;
@@ -212,8 +213,8 @@ public class CLDRModify {
     private static final UOption[] options = {
         UOption.HELP_H(),
         UOption.HELP_QUESTION_MARK(),
-        UOption.SOURCEDIR().setDefault(CldrUtility.MAIN_DIRECTORY),
-        UOption.DESTDIR().setDefault(CldrUtility.GEN_DIRECTORY + "main/"),
+        UOption.SOURCEDIR().setDefault(CLDRPaths.MAIN_DIRECTORY),
+        UOption.DESTDIR().setDefault(CLDRPaths.GEN_DIRECTORY + "main/"),
         UOption.create("match", 'm', UOption.REQUIRES_ARG).setDefault(".*"),
         UOption.create("join", 'j', UOption.OPTIONAL_ARG),
         UOption.create("minimize", 'r', UOption.NO_ARG),
@@ -237,14 +238,14 @@ public class CLDRModify {
         + "-"
         + options[SOURCEDIR].shortName
         + "\t source directory. Default = -s"
-        + CldrUtility.getCanonicalName(CldrUtility.MAIN_DIRECTORY)
+        + CldrUtility.getCanonicalName(CLDRPaths.MAIN_DIRECTORY)
         + XPathParts.NEWLINE
         + "\tExample:-sC:\\Unicode-CVS2\\cldr\\common\\gen\\source\\"
         + XPathParts.NEWLINE
         + "-"
         + options[DESTDIR].shortName
         + "\t destination directory. Default = -d"
-        + CldrUtility.getCanonicalName(CldrUtility.GEN_DIRECTORY + "main/")
+        + CldrUtility.getCanonicalName(CLDRPaths.GEN_DIRECTORY + "main/")
         + XPathParts.NEWLINE
         + "-m<regex>\t to restrict the locales to what matches <regex>"
         + XPathParts.NEWLINE
@@ -393,6 +394,7 @@ public class CLDRModify {
                 long lastTime = System.currentTimeMillis();
                 int spin = 0;
                 System.out.format(locales.size() + " Locales:\t%s\n", locales.toString());
+                int totalRemoved = 0;
                 for (String test : locales) {
                     spin++;
                     if (SHOW_PROCESSING) {
@@ -472,14 +474,16 @@ public class CLDRModify {
                             retainIfTrue.setParentFile(toRemove);
                             List<String> removed = DEBUG ? null : new ArrayList<String>();
                             k.removeDuplicates(toRemove, COMMENT_REMOVALS, retainIfTrue, removed);
-                            if (removed != null) {
+                            if (removed != null && removed.size() != 0) {
+                                totalRemoved += removed.size();
                                 Set<PathHeader> sorted = new TreeSet<PathHeader>();
                                 for (String path : removed) {
                                     sorted.add(pathHeaderFactory.fromPath(path));
                                 }
                                 for (PathHeader pathHeader : sorted) {
-                                    System.out.println(test + "\t" + pathHeader + "\t" + pathHeader.getOriginalPath());
+                                    System.out.println("\t# " + test + "\t" + pathHeader + "\t" + pathHeader.getOriginalPath());
                                 }
+                                System.out.println("\t# " + test + "\t# Removed:\t" + removed.size());
                             }
                         }
                     }
@@ -514,7 +518,7 @@ public class CLDRModify {
 
                         System.out.println(k.getStringValue(testPath));
                         // if (true) return;
-                        Set orderedSet = new TreeSet(CLDRFile.ldmlComparator);
+                        Set orderedSet = new TreeSet(k.getComparator());
                         CollectionUtilities.addAll(k.iterator(), orderedSet);
                         for (Iterator it3 = orderedSet.iterator(); it3.hasNext();) {
                             String path = (String) it3.next();
@@ -537,7 +541,7 @@ public class CLDRModify {
                         QuickCheck.check(new File(targetDir, test + ".xml"));
                     }
 
-                    CldrUtility.generateBat(sourceDir, test + ".xml", targetDir, test + ".xml", lineComparer);
+                    ToolUtilities.generateBat(sourceDir, test + ".xml", targetDir, test + ".xml", lineComparer);
 
                     /*
                      * boolean ok = Utility.areFileIdentical(sourceDir + test + ".xml",
@@ -551,6 +555,9 @@ public class CLDRModify {
                 }
                 if (totalSkeletons.size() != 0) {
                     System.out.println("Total Skeletons" + totalSkeletons);
+                }
+                if (totalRemoved > 0) {
+                    System.out.println("# Removed:\t" + totalRemoved);
                 }
             } finally {
                 fixList.handleCleanup();
@@ -592,7 +599,7 @@ public class CLDRModify {
             // if (!path.equals(status.pathWhereFound)) { // remove items just there for aliases
             // return Retention.REMOVE;
             // }
-            if ("root".equals(localeId)) {
+            if (XMLSource.ROOT_ID.equals(localeId) || XMLSource.CODE_FALLBACK_ID.equals(localeId)) {
                 return Retention.RETAIN;
             }
             return Retention.RETAIN_IF_DIFFERENT;
@@ -931,10 +938,10 @@ public class CLDRModify {
         fixList.add('z', "remove metaData deprecated", new CLDRFilter() {
 
             Set<String> didRemove = new TreeSet<String>();
-            SupplementalDataInfo sdi = SupplementalDataInfo.getInstance(CldrUtility.DEFAULT_SUPPLEMENTAL_DIRECTORY);
+            SupplementalDataInfo sdi = SupplementalDataInfo.getInstance(CLDRPaths.DEFAULT_SUPPLEMENTAL_DIRECTORY);
             Map<String, Map<String, Relation<String, String>>> deprecationInfo = sdi.getDeprecationInfo();
 
-            Map ourTypes[] = null;
+            Map<String, Relation<String, String>> ourTypes[] = null;
 
             @Override
             public void handleSetup() {
@@ -1063,7 +1070,7 @@ public class CLDRModify {
                 String v = cldrFileToFilter.getStringValue(xpath);
                 String fullXPath = cldrFileToFilter.getFullXPath(xpath);
                 fullparts.set(fullXPath);
-                Map attributes = fullparts.findAttributes("transform");
+                Map<String, String> attributes = fullparts.findAttributes("transform");
                 String oldValue = (String) attributes.get("direction");
                 if ("both".equals(oldValue)) {
                     attributes.put("direction", "forward");
@@ -1094,7 +1101,7 @@ public class CLDRModify {
                 if (m == null) {
                     m = Pattern.compile(options[PATH].value).matcher("");
                 }
-                String v = cldrFileToFilter.getStringValue(xpath);
+                //String v = cldrFileToFilter.getStringValue(xpath);
                 String fullXPath = cldrFileToFilter.getFullXPath(xpath);
                 if (!m.reset(fullXPath).matches()) {
                     remove(xpath);
@@ -1126,6 +1133,23 @@ public class CLDRModify {
                 if (v.equals(spacelessGeneratedTranslation)) {
                     remove(xpath, "superfluous compound language (after removing space)");
                 }
+            }
+        });
+
+        fixList.add('l', "change language code", new CLDRFilter() {
+            private CLDRFile resolved;
+
+            public void handleStart() {
+                resolved = factory.make(cldrFileToFilter.getLocaleID(), true);
+            }
+
+            public void handlePath(String xpath) {
+                if (!xpath.contains("/language")) return;
+                String languageCode = parts.set(xpath).findAttributeValue("language", "type");
+                String v = resolved.getStringValue(xpath);
+                if (!languageCode.equals("mo")) return;
+                parts.setAttribute("language", "type", "ro_MD");
+                replace(xpath, parts.toString(), v);
             }
         });
 
@@ -1475,14 +1499,14 @@ public class CLDRModify {
             }
         });
 
-        fixList.add('l', "Remove losing items", new CLDRFilter() {
-            public void handlePath(String xpath) {
-                String fullXPath = cldrFileToFilter.getFullXPath(xpath);
-                if (fullXPath.indexOf("proposed-x10") < 0) return;
-                if (fullXPath.indexOf("unconfirmed") < 0) return;
-                remove(fullXPath, "Losing item");
-            }
-        });
+//        fixList.add('l', "Remove losing items", new CLDRFilter() {
+//            public void handlePath(String xpath) {
+//                String fullXPath = cldrFileToFilter.getFullXPath(xpath);
+//                if (fullXPath.indexOf("proposed-x10") < 0) return;
+//                if (fullXPath.indexOf("unconfirmed") < 0) return;
+//                remove(fullXPath, "Losing item");
+//            }
+//        });
 
         if (false) fixList.add('z', "fix ZZ", new CLDRFilter() {
             public void handlePath(String xpath) {
@@ -1747,7 +1771,7 @@ public class CLDRModify {
                     String fullpath = cldrFileToFilter.getFullXPath(xpath);
                     String value = cldrFileToFilter.getStringValue(xpath);
                     boolean gotChange = false;
-                    List list = formatParser.set(value).getItems();
+                    List<Object> list = formatParser.set(value).getItems();
                     for (int i = 0; i < list.size(); ++i) {
                         Object item = list.get(i);
                         if (item instanceof DateTimePatternGenerator.VariableField) {
@@ -1792,7 +1816,7 @@ public class CLDRModify {
 
             private String toStringWorkaround() {
                 StringBuffer result = new StringBuffer();
-                List items = formatParser.getItems();
+                List<Object> items = formatParser.getItems();
                 for (int i = 0; i < items.size(); ++i) {
                     Object item = items.get(i);
                     if (item instanceof String) {
@@ -1889,7 +1913,8 @@ public class CLDRModify {
             int currentRef = 500;
             Map<String, TreeMap<String, String>> locale_oldref_newref = new TreeMap<String, TreeMap<String, String>>();
             TreeMap<String, String> oldref_newref;
-            LanguageTagParser ltp = new LanguageTagParser();
+
+            //LanguageTagParser ltp = new LanguageTagParser();
 
             // References standards = new References(true);
             // References references = new References(false);
@@ -1898,7 +1923,7 @@ public class CLDRModify {
                 String locale = cldrFileToFilter.getLocaleID();
                 oldref_newref = locale_oldref_newref.get(locale);
                 if (oldref_newref == null) {
-                    oldref_newref = new TreeMap();
+                    oldref_newref = new TreeMap<String, String>();
                     locale_oldref_newref.put(locale, oldref_newref);
                 }
             }
@@ -1984,7 +2009,7 @@ public class CLDRModify {
                     System.out.println("# Checking entries & adding:\t" + keyValues.size());
                     for (Map<ConfigKeys, ConfigMatch> entry : keyValues) {
                         ConfigMatch action = entry.get(ConfigKeys.action);
-                        ConfigMatch locale = entry.get(ConfigKeys.locale);
+                        //ConfigMatch locale = entry.get(ConfigKeys.locale);
                         ConfigMatch pathMatch = entry.get(ConfigKeys.path);
                         ConfigMatch valueMatch = entry.get(ConfigKeys.value);
                         ConfigMatch newPath = entry.get(ConfigKeys.new_path);
@@ -2309,7 +2334,7 @@ public class CLDRModify {
         // TODO before modifying, make sure that it is fully resolved.
         // then minimize against the NEW parents
 
-        Set<String> removal = new TreeSet<String>(CLDRFile.ldmlComparator);
+        Set<String> removal = new TreeSet<String>(k.getComparator());
         CLDRFile replacements = SimpleFactory.makeFile("temp");
         fixList.setFile(k, cldrFactory, removal, replacements);
 

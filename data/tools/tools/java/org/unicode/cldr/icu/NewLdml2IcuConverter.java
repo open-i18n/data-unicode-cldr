@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -153,7 +154,7 @@ public class NewLdml2IcuConverter extends CLDRConverterTool {
 
         destinationDir = options.get("destdir").getValue();
         if (!options.get("type").doesOccur()) {
-            throw new IllegalArgumentException("Type not specified");
+            throw new IllegalArgumentException("Type not specified: " + Arrays.asList(Type.values()));
         }
         Type type = Type.valueOf(options.get("type").getValue());
         keepTogether = options.get("keeptogether").doesOccur();
@@ -180,7 +181,7 @@ public class NewLdml2IcuConverter extends CLDRConverterTool {
                 specialFactory = Factory.make(option.getValue(), ".*");
             }
         } else if (type == Type.brkitr) {
-            specialFactory = Factory.make(sourceDir, ".*");
+            specialFactory = Factory.make(options.get("specialsdir").getValue(), ".*");
         }
 
         // Get list of locales if defined.
@@ -241,7 +242,7 @@ public class NewLdml2IcuConverter extends CLDRConverterTool {
             processBcp47Data();
             break;
         case brkitr:
-            mapper = new BreakIteratorMapper(specialFactory);
+            mapper = new BreakIteratorMapper(sourceDir, specialFactory);
             break;
         case collation:
             mapper = new CollationMapper(sourceDir, specialFactory);
@@ -324,11 +325,12 @@ public class NewLdml2IcuConverter extends CLDRConverterTool {
     private void convert(Mapper mapper) {
         IcuData icuData;
         Iterator<IcuData> iterator = mapper.iterator(filter);
+        final Type type = Type.valueOf(options.get("type").getValue());
         while (iterator.hasNext()) {
             long time = System.currentTimeMillis();
             icuData = iterator.next();
             writeIcuData(icuData, destinationDir);
-            System.out.println("Converted " + icuData.getName() + ".xml in " +
+            System.out.println("Converted " + type + ": " + icuData.getName() + ".xml in " +
                 (System.currentTimeMillis() - time) + "ms");
         }
     }

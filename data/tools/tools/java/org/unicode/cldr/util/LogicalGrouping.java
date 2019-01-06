@@ -25,7 +25,7 @@ public class LogicalGrouping {
         "Europe_Central", "Europe_Eastern", "Europe_Western", "Falkland", "Fiji", "Frunze", "Georgia",
         "Greenland_Central", "Greenland_Eastern", "Greenland_Western", "Hawaii_Aleutian", "Hong_Kong", "Hovd",
         "Iran", "Irkutsk", "Israel", "Japan", "Kamchatka", "Kizilorda", "Korea", "Krasnoyarsk", "Kuybyshev",
-        "Lord_Howe", "Macau", "Magadan", "Mauritius", "Mongolia", "Moscow", "New_Caledonia", "New_Zealand",
+        "Lord_Howe", "Macau", "Magadan", "Mauritius", "Mexico_Northwest", "Mexico_Pacific", "Mongolia", "Moscow", "New_Caledonia", "New_Zealand",
         "Newfoundland", "Noronha", "Novosibirsk", "Omsk", "Pakistan", "Paraguay", "Peru", "Philippines",
         "Pierre_Miquelon", "Qyzylorda", "Sakhalin", "Samara", "Samarkand", "Samoa", "Shevchenko", "Sverdlovsk",
         "Taipei", "Tashkent", "Tbilisi", "Tonga", "Turkey", "Turkmenistan", "Uralsk", "Uruguay", "Uzbekistan",
@@ -139,13 +139,12 @@ public class LogicalGrouping {
         if (!pluralType.equals("zero") && !pluralType.equals("one")) return false;
 
         PluralRules pluralRules = getPluralInfo(cldrFile).getPluralRules();
-        String lastElement = parts.getElement(-1);
-        parts.setAttribute(lastElement, "count", "0");
+        parts.setAttribute(-1, "count", "0");
         Set<Double> explicits = new HashSet<Double>();
         if (cldrFile.isHere(parts.toString())) {
             explicits.add(0.0);
         }
-        parts.setAttribute(lastElement, "count", "1");
+        parts.setAttribute(-1, "count", "1");
         if (cldrFile.isHere(parts.toString())) {
             explicits.add(1.0);
         }

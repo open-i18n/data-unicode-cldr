@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.WinningChoice;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.Pair;
@@ -38,13 +39,13 @@ class ExtractMessages {
 
     public static boolean SKIPEQUALS = true;
     public static boolean SKIPIFCLDR = true;
-    public static String DIR = CldrUtility.GEN_DIRECTORY + "/../additions/";
+    public static String DIR = CLDRPaths.GEN_DIRECTORY + "/../additions/";
 
     public static void main(String[] args) throws IOException {
         double startTime = System.currentTimeMillis();
         output = BagFormatter.openUTF8Writer(DIR, "additions.txt");
         int totalCount = 0;
-        Set<String> skipped = new TreeSet();
+        Set<String> skipped = new TreeSet<String>();
 
         try {
             String sourceDirectory = getProperty("SOURCE", null);
@@ -158,9 +159,9 @@ class ExtractMessages {
         return fileRegex;
     }
 
-    private static Map<String, Pair<String, DataHandler>> numericId_Id = new TreeMap();
+    private static Map<String, Pair<String, DataHandler>> numericId_Id = new TreeMap<String, Pair<String, DataHandler>>();
     private static Matcher numericIdMatcher = Pattern.compile("\\[@id=\"([^\"]+)\"\\]").matcher("");
-    private static Factory cldrFactory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
+    private static Factory cldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
     private static CLDRFile english = cldrFactory.make("en", true);
 
     private static class EnglishHandler extends XMLFileReader.SimpleHandler {
@@ -179,7 +180,7 @@ class ExtractMessages {
                         handler.missing.add(value);
                         return;
                     }
-                    numericId_Id.put(id, new Pair(realID, handler));
+                    numericId_Id.put(id, new Pair<String, DataHandler>(realID, handler));
                     // System.out.println(id + "\t" + path + "\t" + value);
                 }
             }
@@ -333,7 +334,7 @@ class ExtractMessages {
         private Set<String> missing = new TreeSet<String>();
 
         // changes with each locale, must call reset
-        private Relation<String, String> id_to_value = new Relation(new TreeMap<String, String>(), TreeSet.class);
+        private Relation<String, String> id_to_value = Relation.of(new TreeMap<String, Set<String>>(), TreeSet.class);
         private Map<String, String> id_to_cldrValue = new TreeMap<String, String>();
         private CasingAction forceCasing = CasingAction.NONE;
 

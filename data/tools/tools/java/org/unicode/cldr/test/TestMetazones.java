@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.unicode.cldr.util.CLDRFile;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.Pair;
@@ -50,7 +52,7 @@ public class TestMetazones {
 
     // WARNING: right now, the only metazone rules are in root, so that's all we're testing.
     // if there were rules in other files, we'd have to check them to, by changing this line.
-    Factory factory = Factory.make(CldrUtility.MAIN_DIRECTORY, "root");
+    Factory factory = Factory.make(CLDRPaths.MAIN_DIRECTORY, "root");
 
     XPathParts parts = new XPathParts();
 
@@ -78,12 +80,12 @@ public class TestMetazones {
             skipConsistency = CldrUtility.getProperty("skipconsistency", null, "") != null;
 
             String exemplarOutFile = CldrUtility.getProperty("log", null,
-                CldrUtility.GEN_DIRECTORY + "metazoneLog.txt");
+                CLDRPaths.GEN_DIRECTORY + "metazoneLog.txt");
             if (exemplarOutFile != null) {
                 log = BagFormatter.openUTF8Writer("", exemplarOutFile);
             }
             String errorOutFile = CldrUtility.getProperty("errors", null,
-                CldrUtility.GEN_DIRECTORY + "metazoneErrors" +
+                CLDRPaths.GEN_DIRECTORY + "metazoneErrors" +
                     (noDaylight ? "-noDaylight" : "") +
                     (skipPartialDays ? "-skipPartialDays" : "")
                     + ".txt");
@@ -120,11 +122,11 @@ public class TestMetazones {
         errorLog.println("Testing metazone info in: " + locale);
         // get the resolved version
         file = factory.make(locale, true);
-        Relation<String, DateRangeAndZone> mzoneToData = new Relation(
-            new TreeMap(), TreeSet.class);
+        Relation<String, DateRangeAndZone> mzoneToData = Relation.<String, DateRangeAndZone> of(
+            new TreeMap<String, Set<DateRangeAndZone>>(), TreeSet.class);
 
-        Relation<String, DateRangeAndZone> zoneToDateRanges = new Relation(
-            new TreeMap(), TreeSet.class);
+        Relation<String, DateRangeAndZone> zoneToDateRanges = Relation.<String, DateRangeAndZone> of(
+            new TreeMap<String, Set<DateRangeAndZone>>(), TreeSet.class);
 
         fillMetazoneData(file, mzoneToData, zoneToDateRanges);
 
@@ -715,9 +717,16 @@ public class TestMetazones {
             return 0;
         }
 
-        static long MIN_DATE = new Date(70, 0, 1, 0, 0, 0).getTime();
+        // Get Date-Time in milliseconds
+        private static long getDateTimeinMillis(int year, int month, int date, int hourOfDay, int minute, int second) {
+            Calendar cal = Calendar.getInstance();
+            cal.set(year, month, date, hourOfDay, minute, second);
+            return cal.getTimeInMillis();
+        }
 
-        static long MAX_DATE = new Date(110, 0, 1, 0, 0, 0).getTime();
+        static long MIN_DATE = getDateTimeinMillis(70, 0, 1, 0, 0, 0);
+
+        static long MAX_DATE = getDateTimeinMillis(110, 0, 1, 0, 0, 0);
 
         public String toString() {
             return "{" + format(startDate) + " to " + format(endDate) + "}";

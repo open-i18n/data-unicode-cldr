@@ -70,8 +70,6 @@ public class VerifyZones {
     }
 
     public static class ZoneFormats {
-        private String regionFormat;
-        private String fallbackFormat;
         private String gmtFormat;
         private String hourFormat;
         private String[] hourFormatPlusMinus;
@@ -91,8 +89,6 @@ public class VerifyZones {
 
         public ZoneFormats set(CLDRFile cldrFile) {
             this.cldrFile = cldrFile;
-            regionFormat = cldrFile.getWinningValue("//ldml/dates/timeZoneNames/regionFormat");
-            fallbackFormat = cldrFile.getWinningValue("//ldml/dates/timeZoneNames/fallbackFormat");
 
             gmtFormat = cldrFile.getWinningValue("//ldml/dates/timeZoneNames/gmtFormat");
             hourFormat = cldrFile.getWinningValue("//ldml/dates/timeZoneNames/hourFormat");
@@ -132,7 +128,7 @@ public class VerifyZones {
     private final static Map<String, Map<String, String>> metazoneToRegionToZone = sdi.getMetazoneToRegionToZone();
     private final static Set<MetazoneRow> rows = new TreeSet<MetazoneRow>();
     private final static Set<String> goldenZones = new HashSet<String>();
-    private final static Map<String, Integer> countryToOrder = new HashMap();
+    private final static Map<String, Integer> countryToOrder = new HashMap<String, Integer>();
 
     private final static List<Format> FORMAT_LIST = Arrays.asList(Format.VVVV, Format.vvvv, Format.v, Format.zzzz,
         Format.z, Format.zzzz, Format.z);
@@ -172,7 +168,7 @@ public class VerifyZones {
 
         Set<String> zonesInMetazones = new LinkedHashSet<String>();
         for (String metazone : metazones) {
-            String container = PathHeader.getMetazonePageTerritory(metazone);
+            //String container = PathHeader.getMetazonePageTerritory(metazone);
             Map<String, String> regionToZone = metazoneToRegionToZone.get(metazone);
             String zone = regionToZone.get("001");
             goldenZones.add(zone);
@@ -219,9 +215,6 @@ public class VerifyZones {
     }
 
     private static void addRow(String metaZone, String tz_string, int orderInMetazone) {
-        if (tz_string.contains("Jamaica") || tz_string.contains("Iqaluit")) {
-            int x = 3;
-        }
         TimeZone currentZone = TimeZone.getTimeZone(tz_string);
         String container = PathHeader.getMetazonePageTerritory(metaZone);
         if (container == null) {
@@ -263,6 +256,7 @@ public class VerifyZones {
         secondMinusFirst.removeAll(common);
     }
 
+    @SuppressWarnings("unused")
     private static <T> void vennSets(Set<T> first, Set<T> second, Set<T> common) {
         common.clear();
         common.addAll(first);
@@ -291,12 +285,12 @@ public class VerifyZones {
         Matcher timezoneFilter = timezoneFilterString == null ? null : Pattern.compile(timezoneFilterString)
             .matcher("");
 
-        Factory factory2 = Factory.make(CldrUtility.MAIN_DIRECTORY, filter);
+        Factory factory2 = Factory.make(CLDRPaths.MAIN_DIRECTORY, filter);
         CLDRFile englishCldrFile = factory2.make("en", true);
 
         for (String localeID : factory2.getAvailableLanguages()) {
             CLDRFile cldrFile = factory2.make(localeID, true);
-            PrintWriter out = BagFormatter.openUTF8Writer(CldrUtility.TMP_DIRECTORY + "verify/zones/", localeID +
+            PrintWriter out = BagFormatter.openUTF8Writer(CLDRPaths.TMP_DIRECTORY + "verify/zones/", localeID +
                 ".html");
             String title = "Verify Time Zones: " + englishCldrFile.getName(localeID);
             out.println("<html><head>\n" +
@@ -426,7 +420,7 @@ public class VerifyZones {
     private static void addZones(ZoneFormats englishZoneFormats, CLDRFile cldrFile, Matcher timezoneFilter,
         TablePrinter output) throws IOException {
         CLDRFile englishCldrFile = englishZoneFormats.cldrFile;
-        ZoneFormats nativeZoneFormats = new ZoneFormats().set(cldrFile);
+        //ZoneFormats nativeZoneFormats = new ZoneFormats().set(cldrFile);
         TimezoneFormatter tzformatter = new TimezoneFormatter(cldrFile);
 
         for (MetazoneRow row : rows) {

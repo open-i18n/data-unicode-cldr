@@ -1,0 +1,594 @@
+{
+  "main": {
+    "te": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "25",
+          "_number": "$Revision: 91 $"
+        },
+        "generation": {
+          "_date": "$Date: 2014-03-13 22:27:12 -0500 (Thu, 13 Mar 2014) $"
+        },
+        "language": "root"
+      },
+      "units": {
+        "long": {
+          "per": {
+            "compoundUnitPattern": "{0}/{1}"
+          },
+          "acceleration-g-force": {
+            "unitPattern-count-one": "{0} గు-శక్తి",
+            "unitPattern-count-other": "{0} గు-శక్తి"
+          },
+          "angle-arc-minute": {
+            "unitPattern-count-one": "{0} నిమిషం",
+            "unitPattern-count-other": "{0} నిమిషాలు"
+          },
+          "angle-arc-second": {
+            "unitPattern-count-one": "{0} సెకను",
+            "unitPattern-count-other": "{0} సెకన్లు"
+          },
+          "angle-degree": {
+            "unitPattern-count-one": "{0} డిగ్రీ",
+            "unitPattern-count-other": "{0} డిగ్రీలు"
+          },
+          "area-acre": {
+            "unitPattern-count-one": "{0} ఎకరం",
+            "unitPattern-count-other": "{0} ఎకరాలు"
+          },
+          "area-hectare": {
+            "unitPattern-count-one": "{0} హెక్టారు",
+            "unitPattern-count-other": "{0} హెక్టార్లు"
+          },
+          "area-square-foot": {
+            "unitPattern-count-one": "{0} చదరపు అడుగు",
+            "unitPattern-count-other": "{0} చదరపు అడుగులు"
+          },
+          "area-square-kilometer": {
+            "unitPattern-count-one": "{0} చదరపు కిలోమీటర్",
+            "unitPattern-count-other": "{0} చదరపు కిలోమీటర్లు"
+          },
+          "area-square-meter": {
+            "unitPattern-count-one": "{0} చదరపు మీటర్",
+            "unitPattern-count-other": "{0} చదరపు మీటర్లు"
+          },
+          "area-square-mile": {
+            "unitPattern-count-one": "{0} చదరపు మైలు",
+            "unitPattern-count-other": "{0} చదరపు మైళ్లు"
+          },
+          "duration-day": {
+            "unitPattern-count-one": "{0} రోజు",
+            "unitPattern-count-other": "{0} రోజులు"
+          },
+          "duration-hour": {
+            "unitPattern-count-one": "{0} గంట",
+            "unitPattern-count-other": "{0} గంటలు"
+          },
+          "duration-millisecond": {
+            "unitPattern-count-one": "{0} మిల్లీసెకను",
+            "unitPattern-count-other": "{0} మిల్లీసెకన్లు"
+          },
+          "duration-minute": {
+            "unitPattern-count-one": "{0} నిమిషం",
+            "unitPattern-count-other": "{0} నిమిషాలు"
+          },
+          "duration-month": {
+            "unitPattern-count-one": "{0} నెల",
+            "unitPattern-count-other": "{0} నెలలు"
+          },
+          "duration-second": {
+            "unitPattern-count-one": "{0} సెకను",
+            "unitPattern-count-other": "{0} సెకన్లు"
+          },
+          "duration-week": {
+            "unitPattern-count-one": "{0} వారం",
+            "unitPattern-count-other": "{0} వారాలు"
+          },
+          "duration-year": {
+            "unitPattern-count-one": "{0} సంవత్సరం",
+            "unitPattern-count-other": "{0} సంవత్సరాలు"
+          },
+          "length-centimeter": {
+            "unitPattern-count-one": "{0} సెంటీమీటర్",
+            "unitPattern-count-other": "{0} సెంటీమీటర్లు"
+          },
+          "length-foot": {
+            "unitPattern-count-one": "{0} అడుగు",
+            "unitPattern-count-other": "{0} అడుగులు"
+          },
+          "length-inch": {
+            "unitPattern-count-one": "{0} అంగుళం",
+            "unitPattern-count-other": "{0} అంగుళాలు"
+          },
+          "length-kilometer": {
+            "unitPattern-count-one": "{0} కిలోమీటర్",
+            "unitPattern-count-other": "{0} కిలోమీటర్లు"
+          },
+          "length-light-year": {
+            "unitPattern-count-one": "{0} కాంతి సంవత్సరం",
+            "unitPattern-count-other": "{0} కాంతి సంవత్సరాలు"
+          },
+          "length-meter": {
+            "unitPattern-count-one": "{0} మీటర్",
+            "unitPattern-count-other": "{0} మీటర్లు"
+          },
+          "length-mile": {
+            "unitPattern-count-one": "{0} మైలు",
+            "unitPattern-count-other": "{0} మైళ్లు"
+          },
+          "length-millimeter": {
+            "unitPattern-count-one": "{0} మిల్లీమీటర్",
+            "unitPattern-count-other": "{0} మిల్లీమీటర్లు"
+          },
+          "length-picometer": {
+            "unitPattern-count-one": "{0} పికోమీటర్",
+            "unitPattern-count-other": "{0} పికోమీటర్లు"
+          },
+          "length-yard": {
+            "unitPattern-count-one": "{0} గజం",
+            "unitPattern-count-other": "{0} గజాలు"
+          },
+          "mass-gram": {
+            "unitPattern-count-one": "{0} గ్రాము",
+            "unitPattern-count-other": "{0} గ్రాములు"
+          },
+          "mass-kilogram": {
+            "unitPattern-count-one": "{0} కిలోగ్రాము",
+            "unitPattern-count-other": "{0} కిలోగ్రాములు"
+          },
+          "mass-ounce": {
+            "unitPattern-count-one": "{0} ఔన్సు",
+            "unitPattern-count-other": "{0} ఔన్సులు"
+          },
+          "mass-pound": {
+            "unitPattern-count-one": "{0} పౌండు",
+            "unitPattern-count-other": "{0} పౌండ్లు"
+          },
+          "power-horsepower": {
+            "unitPattern-count-one": "{0} హార్స్‌పవర్",
+            "unitPattern-count-other": "{0} హార్స్‌పవర్"
+          },
+          "power-kilowatt": {
+            "unitPattern-count-one": "{0} కిలోవాట్",
+            "unitPattern-count-other": "{0} కిలోవాట్లు"
+          },
+          "power-watt": {
+            "unitPattern-count-one": "{0} వాట్",
+            "unitPattern-count-other": "{0} వాట్లు"
+          },
+          "pressure-hectopascal": {
+            "unitPattern-count-one": "{0} హెక్టోపాస్కల్",
+            "unitPattern-count-other": "{0} హెక్టోపాస్కల్‌లు"
+          },
+          "pressure-inch-hg": {
+            "unitPattern-count-one": "{0} అంగుళం పాదరసం",
+            "unitPattern-count-other": "{0} అంగుళాల పాదరసం"
+          },
+          "pressure-millibar": {
+            "unitPattern-count-one": "{0} మిల్లీబార్",
+            "unitPattern-count-other": "{0} మిల్లీబార్‌లు"
+          },
+          "speed-kilometer-per-hour": {
+            "unitPattern-count-one": "{0} కిలోమీటర్/గంట",
+            "unitPattern-count-other": "{0} కిలోమీటర్లు/గంట"
+          },
+          "speed-meter-per-second": {
+            "unitPattern-count-one": "{0} మీటర్/సెకను",
+            "unitPattern-count-other": "{0} మీటర్లు/సెకను"
+          },
+          "speed-mile-per-hour": {
+            "unitPattern-count-one": "{0} మైలు/గంట",
+            "unitPattern-count-other": "{0} మైళ్లు/గంట"
+          },
+          "temperature-celsius": {
+            "unitPattern-count-one": "{0}డిగ్రీ సెల్సియస్",
+            "unitPattern-count-other": "{0}డిగ్రీల సెల్సియస్"
+          },
+          "temperature-fahrenheit": {
+            "unitPattern-count-one": "{0}డిగ్రీ ఫారన్హీట్",
+            "unitPattern-count-other": "{0}డిగ్రీల ఫారన్హీట్"
+          },
+          "volume-cubic-kilometer": {
+            "unitPattern-count-one": "{0} క్యూబిక్ కిలోమీటర్",
+            "unitPattern-count-other": "{0} క్యూబిక్ కిలోమీటర్లు"
+          },
+          "volume-cubic-mile": {
+            "unitPattern-count-one": "{0} క్యూబిక్ మైలు",
+            "unitPattern-count-other": "{0} క్యూబిక్ మైళ్లు"
+          },
+          "volume-liter": {
+            "unitPattern-count-one": "{0} లీటర్",
+            "unitPattern-count-other": "{0} లీటర్లు"
+          }
+        },
+        "short": {
+          "per": {
+            "compoundUnitPattern": "{0}/{1}"
+          },
+          "acceleration-g-force": {
+            "unitPattern-count-one": "{0} గు",
+            "unitPattern-count-other": "{0} గు"
+          },
+          "angle-arc-minute": {
+            "unitPattern-count-one": "{0} నిమి.",
+            "unitPattern-count-other": "{0} నిమి."
+          },
+          "angle-arc-second": {
+            "unitPattern-count-one": "{0} సెక.",
+            "unitPattern-count-other": "{0} సెక."
+          },
+          "angle-degree": {
+            "unitPattern-count-one": "{0} డి.",
+            "unitPattern-count-other": "{0} డి."
+          },
+          "area-acre": {
+            "unitPattern-count-one": "{0} ఎక.",
+            "unitPattern-count-other": "{0} ఎక."
+          },
+          "area-hectare": {
+            "unitPattern-count-one": "{0} హె.",
+            "unitPattern-count-other": "{0} హె."
+          },
+          "area-square-foot": {
+            "unitPattern-count-one": "{0} చద. అ.",
+            "unitPattern-count-other": "{0} చద. అ."
+          },
+          "area-square-kilometer": {
+            "unitPattern-count-one": "{0} కి.మీ²",
+            "unitPattern-count-other": "{0} కి.మీ²"
+          },
+          "area-square-meter": {
+            "unitPattern-count-one": "{0} మీ²",
+            "unitPattern-count-other": "{0} మీ²"
+          },
+          "area-square-mile": {
+            "unitPattern-count-one": "{0} చద. మై.",
+            "unitPattern-count-other": "{0} చద. మై."
+          },
+          "duration-day": {
+            "unitPattern-count-one": "{0} రోజు",
+            "unitPattern-count-other": "{0} రోజులు"
+          },
+          "duration-hour": {
+            "unitPattern-count-one": "{0} గంట",
+            "unitPattern-count-other": "{0} గంటలు"
+          },
+          "duration-millisecond": {
+            "unitPattern-count-one": "{0} మి.సె",
+            "unitPattern-count-other": "{0} మి.సె"
+          },
+          "duration-minute": {
+            "unitPattern-count-one": "{0} నిమి.",
+            "unitPattern-count-other": "{0} నిమి."
+          },
+          "duration-month": {
+            "unitPattern-count-one": "{0} నెల",
+            "unitPattern-count-other": "{0} నెలలు"
+          },
+          "duration-second": {
+            "unitPattern-count-one": "{0} సెకను",
+            "unitPattern-count-other": "{0} సెకన్లు"
+          },
+          "duration-week": {
+            "unitPattern-count-one": "{0} వా.",
+            "unitPattern-count-other": "{0} వా."
+          },
+          "duration-year": {
+            "unitPattern-count-one": "{0} సంవత్సరం",
+            "unitPattern-count-other": "{0} సంవత్సరాలు"
+          },
+          "length-centimeter": {
+            "unitPattern-count-one": "{0} సెం.మీ",
+            "unitPattern-count-other": "{0} సెం.మీ"
+          },
+          "length-foot": {
+            "unitPattern-count-one": "{0} అ.",
+            "unitPattern-count-other": "{0} అ."
+          },
+          "length-inch": {
+            "unitPattern-count-one": "{0} అం.",
+            "unitPattern-count-other": "{0} అం."
+          },
+          "length-kilometer": {
+            "unitPattern-count-one": "{0} కి.మీ",
+            "unitPattern-count-other": "{0} కి.మీ"
+          },
+          "length-light-year": {
+            "unitPattern-count-one": "{0} కాం. సం",
+            "unitPattern-count-other": "{0} కాం. సం"
+          },
+          "length-meter": {
+            "unitPattern-count-one": "{0} మీ",
+            "unitPattern-count-other": "{0} మీ"
+          },
+          "length-mile": {
+            "unitPattern-count-one": "{0} మై",
+            "unitPattern-count-other": "{0} మై"
+          },
+          "length-millimeter": {
+            "unitPattern-count-one": "{0} మి.మీ",
+            "unitPattern-count-other": "{0} మి.మీ"
+          },
+          "length-picometer": {
+            "unitPattern-count-one": "{0} పి.మీ",
+            "unitPattern-count-other": "{0} పి.మీ"
+          },
+          "length-yard": {
+            "unitPattern-count-one": "{0} గ.",
+            "unitPattern-count-other": "{0} గ."
+          },
+          "mass-gram": {
+            "unitPattern-count-one": "{0} గ్రా.",
+            "unitPattern-count-other": "{0} గ్రా."
+          },
+          "mass-kilogram": {
+            "unitPattern-count-one": "{0} కి.గ్రా",
+            "unitPattern-count-other": "{0} కి.గ్రా"
+          },
+          "mass-ounce": {
+            "unitPattern-count-one": "{0} ఔ.",
+            "unitPattern-count-other": "{0} ఔ."
+          },
+          "mass-pound": {
+            "unitPattern-count-one": "{0} పౌ.",
+            "unitPattern-count-other": "{0} పౌ."
+          },
+          "power-horsepower": {
+            "unitPattern-count-one": "{0} హా.ప",
+            "unitPattern-count-other": "{0} హా.ప"
+          },
+          "power-kilowatt": {
+            "unitPattern-count-one": "{0} కి.వా",
+            "unitPattern-count-other": "{0} కి.వా"
+          },
+          "power-watt": {
+            "unitPattern-count-one": "{0} వా.",
+            "unitPattern-count-other": "{0} వా."
+          },
+          "pressure-hectopascal": {
+            "unitPattern-count-one": "{0} హె.పా",
+            "unitPattern-count-other": "{0} హె.పా"
+          },
+          "pressure-inch-hg": {
+            "unitPattern-count-one": "{0} అం.పాద",
+            "unitPattern-count-other": "{0} అం.పాద"
+          },
+          "pressure-millibar": {
+            "unitPattern-count-one": "{0} మి.బార్",
+            "unitPattern-count-other": "{0} మి.బార్"
+          },
+          "speed-kilometer-per-hour": {
+            "unitPattern-count-one": "{0} కి/గం.",
+            "unitPattern-count-other": "{0} కిమీ/గం."
+          },
+          "speed-meter-per-second": {
+            "unitPattern-count-one": "{0} మీ/సె",
+            "unitPattern-count-other": "{0} మీ/సె"
+          },
+          "speed-mile-per-hour": {
+            "unitPattern-count-one": "{0} మై/గం.",
+            "unitPattern-count-other": "{0} మై/గం."
+          },
+          "temperature-celsius": {
+            "unitPattern-count-one": "{0}°C",
+            "unitPattern-count-other": "{0}°C"
+          },
+          "temperature-fahrenheit": {
+            "unitPattern-count-one": "{0}°F",
+            "unitPattern-count-other": "{0}°F"
+          },
+          "volume-cubic-kilometer": {
+            "unitPattern-count-one": "{0} కిమీ³",
+            "unitPattern-count-other": "{0} కిమీ³"
+          },
+          "volume-cubic-mile": {
+            "unitPattern-count-one": "{0} మై³",
+            "unitPattern-count-other": "{0} మై³"
+          },
+          "volume-liter": {
+            "unitPattern-count-one": "{0} లీ.",
+            "unitPattern-count-other": "{0} లీ."
+          }
+        },
+        "narrow": {
+          "per": {
+            "compoundUnitPattern": "{0}/{1}"
+          },
+          "acceleration-g-force": {
+            "unitPattern-count-one": "{0} గు",
+            "unitPattern-count-other": "{0} గు"
+          },
+          "angle-arc-minute": {
+            "unitPattern-count-one": "{0}′",
+            "unitPattern-count-other": "{0}′"
+          },
+          "angle-arc-second": {
+            "unitPattern-count-one": "{0}″",
+            "unitPattern-count-other": "{0}″"
+          },
+          "angle-degree": {
+            "unitPattern-count-one": "{0}°",
+            "unitPattern-count-other": "{0}°"
+          },
+          "area-acre": {
+            "unitPattern-count-one": "{0} ఎక.",
+            "unitPattern-count-other": "{0} ఎక."
+          },
+          "area-hectare": {
+            "unitPattern-count-one": "{0} హె.",
+            "unitPattern-count-other": "{0} హె."
+          },
+          "area-square-foot": {
+            "unitPattern-count-one": "{0} అ²",
+            "unitPattern-count-other": "{0} అ²"
+          },
+          "area-square-kilometer": {
+            "unitPattern-count-one": "{0} కి.మీ²",
+            "unitPattern-count-other": "{0} కి.మీ²"
+          },
+          "area-square-meter": {
+            "unitPattern-count-one": "{0} మీ²",
+            "unitPattern-count-other": "{0} మీ²"
+          },
+          "area-square-mile": {
+            "unitPattern-count-one": "{0} మై²",
+            "unitPattern-count-other": "{0} మై²"
+          },
+          "duration-day": {
+            "unitPattern-count-one": "{0} రో",
+            "unitPattern-count-other": "{0} రో"
+          },
+          "duration-hour": {
+            "unitPattern-count-one": "{0}గం",
+            "unitPattern-count-other": "{0}గం"
+          },
+          "duration-millisecond": {
+            "unitPattern-count-one": "{0} మి.సె",
+            "unitPattern-count-other": "{0} మి.సె"
+          },
+          "duration-minute": {
+            "unitPattern-count-one": "{0}ని",
+            "unitPattern-count-other": "{0} ని"
+          },
+          "duration-month": {
+            "unitPattern-count-one": "{0} నె",
+            "unitPattern-count-other": "{0} నె"
+          },
+          "duration-second": {
+            "unitPattern-count-one": "{0} సె",
+            "unitPattern-count-other": "{0} సె"
+          },
+          "duration-week": {
+            "unitPattern-count-one": "{0} వా.",
+            "unitPattern-count-other": "{0} వా."
+          },
+          "duration-year": {
+            "unitPattern-count-one": "{0}సం",
+            "unitPattern-count-other": "{0}సం"
+          },
+          "length-centimeter": {
+            "unitPattern-count-one": "{0} సెం.మీ",
+            "unitPattern-count-other": "{0} సెం.మీ"
+          },
+          "length-foot": {
+            "unitPattern-count-one": "{0}′",
+            "unitPattern-count-other": "{0}′"
+          },
+          "length-inch": {
+            "unitPattern-count-one": "{0}″",
+            "unitPattern-count-other": "{0}″"
+          },
+          "length-kilometer": {
+            "unitPattern-count-one": "{0} కి.మీ",
+            "unitPattern-count-other": "{0} కి.మీ"
+          },
+          "length-light-year": {
+            "unitPattern-count-one": "{0} కాం. సం",
+            "unitPattern-count-other": "{0} కాం. సం"
+          },
+          "length-meter": {
+            "unitPattern-count-one": "{0} మీ",
+            "unitPattern-count-other": "{0} మీ"
+          },
+          "length-mile": {
+            "unitPattern-count-one": "{0} మై",
+            "unitPattern-count-other": "{0} మై"
+          },
+          "length-millimeter": {
+            "unitPattern-count-one": "{0} మి.మీ",
+            "unitPattern-count-other": "{0} మి.మీ"
+          },
+          "length-picometer": {
+            "unitPattern-count-one": "{0} పి.మీ",
+            "unitPattern-count-other": "{0} పి.మీ"
+          },
+          "length-yard": {
+            "unitPattern-count-one": "{0} గ.",
+            "unitPattern-count-other": "{0} గ."
+          },
+          "mass-gram": {
+            "unitPattern-count-one": "{0} గ్రా.",
+            "unitPattern-count-other": "{0} గ్రా."
+          },
+          "mass-kilogram": {
+            "unitPattern-count-one": "{0} కి.గ్రా",
+            "unitPattern-count-other": "{0} కి.గ్రా"
+          },
+          "mass-ounce": {
+            "unitPattern-count-one": "{0} ఔ.",
+            "unitPattern-count-other": "{0} ఔ."
+          },
+          "mass-pound": {
+            "unitPattern-count-one": "{0} పౌ.",
+            "unitPattern-count-other": "{0} పౌ."
+          },
+          "power-horsepower": {
+            "unitPattern-count-one": "{0} హా.ప",
+            "unitPattern-count-other": "{0} హా.ప"
+          },
+          "power-kilowatt": {
+            "unitPattern-count-one": "{0} కి.వా",
+            "unitPattern-count-other": "{0} కి.వా"
+          },
+          "power-watt": {
+            "unitPattern-count-one": "{0} వా.",
+            "unitPattern-count-other": "{0} వా."
+          },
+          "pressure-hectopascal": {
+            "unitPattern-count-one": "{0} హె.పా",
+            "unitPattern-count-other": "{0} హె.పా"
+          },
+          "pressure-inch-hg": {
+            "unitPattern-count-one": "{0} అం.పాద",
+            "unitPattern-count-other": "{0} అం.పాద"
+          },
+          "pressure-millibar": {
+            "unitPattern-count-one": "{0} మి.బార్",
+            "unitPattern-count-other": "{0} మి.బార్"
+          },
+          "speed-kilometer-per-hour": {
+            "unitPattern-count-one": "{0} కిమీ/గం.",
+            "unitPattern-count-other": "{0} కిమీ/గం."
+          },
+          "speed-meter-per-second": {
+            "unitPattern-count-one": "{0} మీ/సె",
+            "unitPattern-count-other": "{0} మీ/సె"
+          },
+          "speed-mile-per-hour": {
+            "unitPattern-count-one": "{0} మై/గం.",
+            "unitPattern-count-other": "{0} మై/గం."
+          },
+          "temperature-celsius": {
+            "unitPattern-count-one": "{0}°",
+            "unitPattern-count-other": "{0}°"
+          },
+          "temperature-fahrenheit": {
+            "unitPattern-count-one": "{0}°F",
+            "unitPattern-count-other": "{0}°F"
+          },
+          "volume-cubic-kilometer": {
+            "unitPattern-count-one": "{0} కిమీ³",
+            "unitPattern-count-other": "{0} కిమీ³"
+          },
+          "volume-cubic-mile": {
+            "unitPattern-count-one": "{0} మై³",
+            "unitPattern-count-other": "{0} మై³"
+          },
+          "volume-liter": {
+            "unitPattern-count-one": "{0} లీ.",
+            "unitPattern-count-other": "{0} లీ."
+          }
+        },
+        "durationUnit-type-hm": {
+          "durationUnitPattern": "h:mm"
+        },
+        "durationUnit-type-hms": {
+          "durationUnitPattern": "h:mm:ss"
+        },
+        "durationUnit-type-ms": {
+          "durationUnitPattern": "m:ss"
+        }
+      }
+    }
+  }
+}

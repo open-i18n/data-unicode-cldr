@@ -36,7 +36,7 @@ import com.ibm.icu.text.UnicodeFilter;
 
 public class CLDRTransforms {
 
-    public static final String TRANSFORM_DIR = (CldrUtility.COMMON_DIRECTORY + "transforms/");
+    public static final String TRANSFORM_DIR = (CLDRPaths.COMMON_DIRECTORY + "transforms/");
 
     static final CLDRTransforms SINGLETON = new CLDRTransforms();
 
@@ -123,7 +123,7 @@ public class CLDRTransforms {
         // the following are file names, not IDs, so the dependencies have to go both directions
         // List<String> extras = new ArrayList<String>();
 
-        Relation<Matcher, String> dependsOn = new Relation(new LinkedHashMap(), LinkedHashSet.class);
+        Relation<Matcher, String> dependsOn = Relation.of(new LinkedHashMap<Matcher, Set<String>>(), LinkedHashSet.class);
         {
             addDependency("Latin-(Jamo|Hangul)(/.*)?", "Latin-ConjoiningJamo", "ConjoiningJamo-Latin");
             addDependency("(Jamo|Hangul)-Latin(/.*)?", "Latin-ConjoiningJamo", "ConjoiningJamo-Latin");

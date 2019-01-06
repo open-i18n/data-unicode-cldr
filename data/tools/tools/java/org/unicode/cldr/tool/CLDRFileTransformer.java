@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.unicode.cldr.util.CLDRFile;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CLDRTransforms;
 import org.unicode.cldr.util.CLDRTransforms.ParsedTransformID;
-import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.SimpleXMLSource;
 import org.unicode.cldr.util.XMLSource;
@@ -30,7 +30,8 @@ public class CLDRFileTransformer {
      * from the conversion.
      */
     public enum LocaleTransform {
-        sr_Latn("sr", "Serbian-Latin-BGN.xml", Transliterator.FORWARD, "[:script=Cyrl:]");
+        sr_Latn("sr", "Serbian-Latin-BGN.xml", Transliterator.FORWARD, "[:script=Cyrl:]"),
+        yo_BJ("yo", "yo-yo_BJ.xml", Transliterator.FORWARD, "[:script=Latn:]");
 
         private final String inputLocale;
         private final String transformFilename;
@@ -97,13 +98,12 @@ public class CLDRFileTransformer {
         this.transformDir = transformDir;
     }
 
-    private Transliterator loadTransliterator(LocaleTransform localeTransform) {
+    public Transliterator loadTransliterator(LocaleTransform localeTransform) {
         if (transliterators.containsKey(localeTransform)) {
             return transliterators.get(localeTransform);
         }
-        CLDRTransforms transforms = CLDRTransforms.getInstance();
         ParsedTransformID directionInfo = new ParsedTransformID();
-        String ruleString = transforms.getIcuRulesFromXmlFile(
+        String ruleString = CLDRTransforms.getIcuRulesFromXmlFile(
             transformDir, localeTransform.getTransformFilename(), directionInfo);
         Transliterator transliterator = Transliterator.createFromRules(directionInfo.getId(),
             ruleString, localeTransform.getDirection());
@@ -154,11 +154,11 @@ public class CLDRFileTransformer {
     }
 
     public static void main(String[] args) throws Exception {
-        Factory factory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
-        CLDRFileTransformer transformer = new CLDRFileTransformer(factory, CldrUtility.COMMON_DIRECTORY + "transforms/");
+        Factory factory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
+        CLDRFileTransformer transformer = new CLDRFileTransformer(factory, CLDRPaths.COMMON_DIRECTORY + "transforms" + File.separator);
         for (LocaleTransform localeTransform : LocaleTransform.values()) {
             CLDRFile output = transformer.transform(localeTransform);
-            String outputDir = CldrUtility.GEN_DIRECTORY + "main" + File.separator;
+            String outputDir = CLDRPaths.GEN_DIRECTORY + "main" + File.separator;
             String outputFile = output.getLocaleID() + ".xml";
             PrintWriter out = BagFormatter.openUTF8Writer(outputDir, outputFile);
             System.out.println("Generating locale file: " + outputDir + outputFile);

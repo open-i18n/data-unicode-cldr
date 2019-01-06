@@ -1,0 +1,589 @@
+{
+  "main": {
+    "ug-Arab": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "25",
+          "_number": "$Revision: 91 $"
+        },
+        "generation": {
+          "_date": "$Date: 2014-03-13 22:27:12 -0500 (Thu, 13 Mar 2014) $"
+        },
+        "language": "root",
+        "script": "Arab"
+      },
+      "units": {
+        "long": {
+          "per": {
+            "compoundUnitPattern": "{0}/{1}"
+          },
+          "acceleration-g-force": {
+            "unitPattern-count-one": "{0} ئېغىرلىق كۈچى",
+            "unitPattern-count-other": "{0} ئېغىرلىق كۈچى"
+          },
+          "angle-arc-minute": {
+            "unitPattern-count-other": "{0}′"
+          },
+          "angle-arc-second": {
+            "unitPattern-count-other": "{0}″"
+          },
+          "angle-degree": {
+            "unitPattern-count-one": "{0} گىرادۇس",
+            "unitPattern-count-other": "{0} گىرادۇس"
+          },
+          "area-acre": {
+            "unitPattern-count-one": "{0} ئىنگلىز موسى",
+            "unitPattern-count-other": "{0} ئىنگلىز موسى"
+          },
+          "area-hectare": {
+            "unitPattern-count-one": "{0} گېكتار",
+            "unitPattern-count-other": "{0} hectares"
+          },
+          "area-square-foot": {
+            "unitPattern-count-one": "{0} كۋادرات فۇت",
+            "unitPattern-count-other": "{0} كۋادرات فۇت"
+          },
+          "area-square-kilometer": {
+            "unitPattern-count-one": "{0} كۋادرات كىلومېتىر",
+            "unitPattern-count-other": "{0} كۋادرات كىلومېتىر"
+          },
+          "area-square-meter": {
+            "unitPattern-count-one": "{0} كۋادرات مېتىر",
+            "unitPattern-count-other": "{0} كۋادرات مېتىر"
+          },
+          "area-square-mile": {
+            "unitPattern-count-one": "{0} كۋادرات مىل",
+            "unitPattern-count-other": "{0} كۋادرات مىل"
+          },
+          "duration-day": {
+            "unitPattern-count-one": "{0} كۈن",
+            "unitPattern-count-other": "{0} كۈن"
+          },
+          "duration-hour": {
+            "unitPattern-count-one": "{0} سائەت",
+            "unitPattern-count-other": "{0} سائەت"
+          },
+          "duration-millisecond": {
+            "unitPattern-count-one": "{0} مىللى سېكۇنت",
+            "unitPattern-count-other": "{0} مىللى سېكۇنت"
+          },
+          "duration-minute": {
+            "unitPattern-count-one": "{0} مىنۇت",
+            "unitPattern-count-other": "{0} مىنۇت"
+          },
+          "duration-month": {
+            "unitPattern-count-one": "{0} ئاي",
+            "unitPattern-count-other": "{0} ئاي"
+          },
+          "duration-second": {
+            "unitPattern-count-one": "{0} سېكۇنت",
+            "unitPattern-count-other": "{0} سېكۇنت"
+          },
+          "duration-week": {
+            "unitPattern-count-one": "{0} ھەپتە",
+            "unitPattern-count-other": "{0} ھەپتە"
+          },
+          "duration-year": {
+            "unitPattern-count-one": "{0} يىل",
+            "unitPattern-count-other": "{0} يىل"
+          },
+          "length-centimeter": {
+            "unitPattern-count-one": "{0} سانتىمېتىر",
+            "unitPattern-count-other": "{0} سانتىمېتىر"
+          },
+          "length-foot": {
+            "unitPattern-count-one": "{0} فۇت",
+            "unitPattern-count-other": "{0} فۇت"
+          },
+          "length-inch": {
+            "unitPattern-count-one": "{0} ديۇيم",
+            "unitPattern-count-other": "{0} ديۇيم"
+          },
+          "length-kilometer": {
+            "unitPattern-count-one": "{0} كىلومېتىر",
+            "unitPattern-count-other": "{0} كىلومېتىر"
+          },
+          "length-light-year": {
+            "unitPattern-count-one": "{0} يورۇقلۇق يىلى",
+            "unitPattern-count-other": "{0} يورۇقلۇق يىلى"
+          },
+          "length-meter": {
+            "unitPattern-count-one": "{0} مېتىر",
+            "unitPattern-count-other": "{0} مېتىر"
+          },
+          "length-mile": {
+            "unitPattern-count-one": "{0} مىل",
+            "unitPattern-count-other": "{0} مىل"
+          },
+          "length-millimeter": {
+            "unitPattern-count-one": "{0} مىللىمېتىر",
+            "unitPattern-count-other": "{0} مىللىمېتىر"
+          },
+          "length-picometer": {
+            "unitPattern-count-one": "{0} پىكومېتىر",
+            "unitPattern-count-other": "{0} پىكومېتىر"
+          },
+          "length-yard": {
+            "unitPattern-count-one": "{0} يارد",
+            "unitPattern-count-other": "{0} يارد"
+          },
+          "mass-gram": {
+            "unitPattern-count-one": "{0} گرام",
+            "unitPattern-count-other": "{0} گرام"
+          },
+          "mass-kilogram": {
+            "unitPattern-count-one": "{0} كىلوگرام",
+            "unitPattern-count-other": "{0} كىلوگرام"
+          },
+          "mass-ounce": {
+            "unitPattern-count-one": "{0} ئۇنسىيە",
+            "unitPattern-count-other": "{0} ئۇنسىيە"
+          },
+          "mass-pound": {
+            "unitPattern-count-one": "{0} قاداق",
+            "unitPattern-count-other": "{0} قاداق"
+          },
+          "power-horsepower": {
+            "unitPattern-count-one": "{0} ئات كۈچى",
+            "unitPattern-count-other": "{0} ئات كۈچى"
+          },
+          "power-kilowatt": {
+            "unitPattern-count-one": "{0} كىلوۋات",
+            "unitPattern-count-other": "{0} كىلوۋات"
+          },
+          "power-watt": {
+            "unitPattern-count-one": "{0} ۋات",
+            "unitPattern-count-other": "{0} ۋات"
+          },
+          "pressure-hectopascal": {
+            "unitPattern-count-one": "{0} يۈز پاسكال",
+            "unitPattern-count-other": "{0} يۈز پاسكال"
+          },
+          "pressure-inch-hg": {
+            "unitPattern-count-one": "{0} ديۇيم سىماب تۈۋرۇكى",
+            "unitPattern-count-other": "{0} ديۇيم سىماب تۈۋرۇكى"
+          },
+          "pressure-millibar": {
+            "unitPattern-count-one": "{0} مىللىبار",
+            "unitPattern-count-other": "{0} مىللىبار"
+          },
+          "speed-kilometer-per-hour": {
+            "unitPattern-count-one": "{0} كىلومېتىر ھەر سائەت",
+            "unitPattern-count-other": "{0} كىلومېتىر ھەر سائەت"
+          },
+          "speed-meter-per-second": {
+            "unitPattern-count-one": "{0} مېتىر ھەر سېكۇنت",
+            "unitPattern-count-other": "{0} مېتىر ھەر سېكۇنت"
+          },
+          "speed-mile-per-hour": {
+            "unitPattern-count-one": "{0} مىل ھەر سائەت",
+            "unitPattern-count-other": "{0} مىل ھەر سائەت"
+          },
+          "temperature-celsius": {
+            "unitPattern-count-one": "{0} سېلسىيە گرادۇس",
+            "unitPattern-count-other": "{0} سېلسىيە گرادۇس"
+          },
+          "temperature-fahrenheit": {
+            "unitPattern-count-one": "{0} فارېنگېيت گرادۇس",
+            "unitPattern-count-other": "{0} فارېنگېيت گرادۇس"
+          },
+          "volume-cubic-kilometer": {
+            "unitPattern-count-one": "{0} كۇب كىلومېتىر",
+            "unitPattern-count-other": "{0} كۇب كىلومېتىر"
+          },
+          "volume-cubic-mile": {
+            "unitPattern-count-one": "{0} كۇب مىل",
+            "unitPattern-count-other": "{0} كۇب مىل"
+          },
+          "volume-liter": {
+            "unitPattern-count-one": "{0} لىتېر",
+            "unitPattern-count-other": "{0} لىتېر"
+          }
+        },
+        "short": {
+          "per": {
+            "compoundUnitPattern": "{0}/{1}"
+          },
+          "acceleration-g-force": {
+            "unitPattern-count-one": "{0} G",
+            "unitPattern-count-other": "{0} G"
+          },
+          "angle-arc-minute": {
+            "unitPattern-count-other": "{0}′"
+          },
+          "angle-arc-second": {
+            "unitPattern-count-other": "{0}″"
+          },
+          "angle-degree": {
+            "unitPattern-count-one": "{0} گىرادۇس",
+            "unitPattern-count-other": "{0} گىرادۇس"
+          },
+          "area-acre": {
+            "unitPattern-count-one": "{0} ئىنگلىز موسى",
+            "unitPattern-count-other": "{0} ئىنگلىز موسى"
+          },
+          "area-hectare": {
+            "unitPattern-count-one": "{0} گېكتار",
+            "unitPattern-count-other": "{0} گېكتار"
+          },
+          "area-square-foot": {
+            "unitPattern-count-one": "{0} كۋادرات فۇت",
+            "unitPattern-count-other": "{0} كۋادرات فۇت"
+          },
+          "area-square-kilometer": {
+            "unitPattern-count-one": "{0} km²",
+            "unitPattern-count-other": "{0} km²"
+          },
+          "area-square-meter": {
+            "unitPattern-count-one": "{0} m²",
+            "unitPattern-count-other": "{0} m²"
+          },
+          "area-square-mile": {
+            "unitPattern-count-one": "{0} كۋادرات مىل",
+            "unitPattern-count-other": "{0} كۋادرات مىل"
+          },
+          "duration-day": {
+            "unitPattern-count-one": "{0} كۈن",
+            "unitPattern-count-other": "{0} كۈن"
+          },
+          "duration-hour": {
+            "unitPattern-count-one": "{0} سائەت",
+            "unitPattern-count-other": "{0} سائەت"
+          },
+          "duration-millisecond": {
+            "unitPattern-count-one": "{0} مىللىسېكۇنت",
+            "unitPattern-count-other": "{0} مىللىسېكۇنت"
+          },
+          "duration-minute": {
+            "unitPattern-count-one": "{0} مىنۇت",
+            "unitPattern-count-other": "{0} مىنۇت"
+          },
+          "duration-month": {
+            "unitPattern-count-one": "{0} ئاي",
+            "unitPattern-count-other": "{0} ئاي"
+          },
+          "duration-second": {
+            "unitPattern-count-one": "{0} سېكۇنت",
+            "unitPattern-count-other": "{0} سېكۇنت"
+          },
+          "duration-week": {
+            "unitPattern-count-one": "{0} ھەپتە",
+            "unitPattern-count-other": "{0} ھەپتە"
+          },
+          "duration-year": {
+            "unitPattern-count-one": "{0} يىل",
+            "unitPattern-count-other": "{0} يىل"
+          },
+          "length-centimeter": {
+            "unitPattern-count-one": "{0} سانتىمېتىر",
+            "unitPattern-count-other": "{0} سانتىمېتىر"
+          },
+          "length-foot": {
+            "unitPattern-count-one": "{0} پۇت",
+            "unitPattern-count-other": "{0} پۇت"
+          },
+          "length-inch": {
+            "unitPattern-count-one": "{0} ئىنگلىز چىسى",
+            "unitPattern-count-other": "{0} ئىنگلىز چىسى"
+          },
+          "length-kilometer": {
+            "unitPattern-count-one": "{0} كىلومېتىر",
+            "unitPattern-count-other": "{0} كىلومېتىر"
+          },
+          "length-light-year": {
+            "unitPattern-count-one": "{0} يورۇقلۇق يىلى",
+            "unitPattern-count-other": "{0} يورۇقلۇق يىلى"
+          },
+          "length-meter": {
+            "unitPattern-count-one": "{0} مېتىر",
+            "unitPattern-count-other": "{0} مېتىر"
+          },
+          "length-mile": {
+            "unitPattern-count-one": "{0} مىل",
+            "unitPattern-count-other": "{0} مىل"
+          },
+          "length-millimeter": {
+            "unitPattern-count-one": "{0} مىللىمېتىر",
+            "unitPattern-count-other": "{0} مىللىمېتىر"
+          },
+          "length-picometer": {
+            "unitPattern-count-one": "{0} پىكومېتىر",
+            "unitPattern-count-other": "{0} پىكومېتىر"
+          },
+          "length-yard": {
+            "unitPattern-count-one": "{0} يارد",
+            "unitPattern-count-other": "{0} يارد"
+          },
+          "mass-gram": {
+            "unitPattern-count-one": "{0} g",
+            "unitPattern-count-other": "{0} g"
+          },
+          "mass-kilogram": {
+            "unitPattern-count-one": "{0} kg",
+            "unitPattern-count-other": "{0} kg"
+          },
+          "mass-ounce": {
+            "unitPattern-count-one": "{0} ئۇنسىيە",
+            "unitPattern-count-other": "{0} ئۇنسىيە"
+          },
+          "mass-pound": {
+            "unitPattern-count-one": "{0} قاداق",
+            "unitPattern-count-other": "{0} قاداق"
+          },
+          "power-horsepower": {
+            "unitPattern-count-one": "{0} ئات كۈچى",
+            "unitPattern-count-other": "{0} ئات كۈچى"
+          },
+          "power-kilowatt": {
+            "unitPattern-count-one": "{0} kW",
+            "unitPattern-count-other": "{0} kW"
+          },
+          "power-watt": {
+            "unitPattern-count-one": "{0} W",
+            "unitPattern-count-other": "{0} W"
+          },
+          "pressure-hectopascal": {
+            "unitPattern-count-one": "{0} ھېكتوپاسكال",
+            "unitPattern-count-other": "{0} ھېكتوپاسكال"
+          },
+          "pressure-inch-hg": {
+            "unitPattern-count-one": "{0} inHg",
+            "unitPattern-count-other": "{0} inHg"
+          },
+          "pressure-millibar": {
+            "unitPattern-count-one": "{0} mbar",
+            "unitPattern-count-other": "{0} mbar"
+          },
+          "speed-kilometer-per-hour": {
+            "unitPattern-count-one": "{0} سائەت/كىلومېتىر",
+            "unitPattern-count-other": "{0} سائەت/كىلومېتىر"
+          },
+          "speed-meter-per-second": {
+            "unitPattern-count-one": "{0} سېكۇنت/مېتىر",
+            "unitPattern-count-other": "{0} سېكۇنت/مېتىر"
+          },
+          "speed-mile-per-hour": {
+            "unitPattern-count-one": "{0} سائەت/مىل",
+            "unitPattern-count-other": "{0} سائەت/مىل"
+          },
+          "temperature-celsius": {
+            "unitPattern-count-one": "{0}°C",
+            "unitPattern-count-other": "{0}°C"
+          },
+          "temperature-fahrenheit": {
+            "unitPattern-count-one": "{0}°F",
+            "unitPattern-count-other": "{0}°F"
+          },
+          "volume-cubic-kilometer": {
+            "unitPattern-count-one": "{0} km³",
+            "unitPattern-count-other": "{0} km³"
+          },
+          "volume-cubic-mile": {
+            "unitPattern-count-one": "{0} mi³",
+            "unitPattern-count-other": "{0} mi³"
+          },
+          "volume-liter": {
+            "unitPattern-count-one": "{0} l",
+            "unitPattern-count-other": "{0} l"
+          }
+        },
+        "narrow": {
+          "per": {
+            "compoundUnitPattern": "{0}/{1}"
+          },
+          "acceleration-g-force": {
+            "unitPattern-count-one": "{0}G",
+            "unitPattern-count-other": "{0}Gs"
+          },
+          "angle-arc-minute": {
+            "unitPattern-count-other": "{0}′"
+          },
+          "angle-arc-second": {
+            "unitPattern-count-other": "{0}″"
+          },
+          "angle-degree": {
+            "unitPattern-count-one": "{0}°",
+            "unitPattern-count-other": "{0}°"
+          },
+          "area-acre": {
+            "unitPattern-count-one": "{0}ac",
+            "unitPattern-count-other": "{0}ac"
+          },
+          "area-hectare": {
+            "unitPattern-count-one": "{0}گېكتار",
+            "unitPattern-count-other": "{0}گېكتار"
+          },
+          "area-square-foot": {
+            "unitPattern-count-one": "{0}ft²",
+            "unitPattern-count-other": "{0}ft²"
+          },
+          "area-square-kilometer": {
+            "unitPattern-count-one": "{0} km²",
+            "unitPattern-count-other": "{0} km²"
+          },
+          "area-square-meter": {
+            "unitPattern-count-one": "{0} m²",
+            "unitPattern-count-other": "{0} m²"
+          },
+          "area-square-mile": {
+            "unitPattern-count-one": "{0}mi²",
+            "unitPattern-count-other": "{0}mi²"
+          },
+          "duration-day": {
+            "unitPattern-count-one": "{0} كۈن",
+            "unitPattern-count-other": "{0} كۈن"
+          },
+          "duration-hour": {
+            "unitPattern-count-one": "{0}h",
+            "unitPattern-count-other": "{0}h"
+          },
+          "duration-millisecond": {
+            "unitPattern-count-one": "{0}ms",
+            "unitPattern-count-other": "{0}ms"
+          },
+          "duration-minute": {
+            "unitPattern-count-one": "{0}m",
+            "unitPattern-count-other": "{0}m"
+          },
+          "duration-month": {
+            "unitPattern-count-one": "{0} ئاي",
+            "unitPattern-count-other": "{0} ئاي"
+          },
+          "duration-second": {
+            "unitPattern-count-one": "{0}s",
+            "unitPattern-count-other": "{0}s"
+          },
+          "duration-week": {
+            "unitPattern-count-one": "{0} ھەپتە",
+            "unitPattern-count-other": "{0} ھەپتە"
+          },
+          "duration-year": {
+            "unitPattern-count-one": "{0} يىل",
+            "unitPattern-count-other": "{0} يىل"
+          },
+          "length-centimeter": {
+            "unitPattern-count-one": "{0}cm",
+            "unitPattern-count-other": "{0}cm"
+          },
+          "length-foot": {
+            "unitPattern-count-one": "{0}′",
+            "unitPattern-count-other": "{0}′"
+          },
+          "length-inch": {
+            "unitPattern-count-one": "{0}″",
+            "unitPattern-count-other": "{0}″"
+          },
+          "length-kilometer": {
+            "unitPattern-count-one": "{0}km",
+            "unitPattern-count-other": "{0}km"
+          },
+          "length-light-year": {
+            "unitPattern-count-one": "{0}ly",
+            "unitPattern-count-other": "{0}ly"
+          },
+          "length-meter": {
+            "unitPattern-count-one": "{0}m",
+            "unitPattern-count-other": "{0}m"
+          },
+          "length-mile": {
+            "unitPattern-count-one": "{0}mi",
+            "unitPattern-count-other": "{0}mi"
+          },
+          "length-millimeter": {
+            "unitPattern-count-one": "{0}mm",
+            "unitPattern-count-other": "{0}mm"
+          },
+          "length-picometer": {
+            "unitPattern-count-one": "{0}pm",
+            "unitPattern-count-other": "{0}pm"
+          },
+          "length-yard": {
+            "unitPattern-count-one": "{0}yd",
+            "unitPattern-count-other": "{0}yd"
+          },
+          "mass-gram": {
+            "unitPattern-count-one": "{0}g",
+            "unitPattern-count-other": "{0}g"
+          },
+          "mass-kilogram": {
+            "unitPattern-count-one": "{0}kg",
+            "unitPattern-count-other": "{0}kg"
+          },
+          "mass-ounce": {
+            "unitPattern-count-one": "{0}oz",
+            "unitPattern-count-other": "{0}oz"
+          },
+          "mass-pound": {
+            "unitPattern-count-one": "{0}#",
+            "unitPattern-count-other": "{0}#"
+          },
+          "power-horsepower": {
+            "unitPattern-count-one": "{0}hp",
+            "unitPattern-count-other": "{0}hp"
+          },
+          "power-kilowatt": {
+            "unitPattern-count-one": "{0}kW",
+            "unitPattern-count-other": "{0}kW"
+          },
+          "power-watt": {
+            "unitPattern-count-one": "{0}W",
+            "unitPattern-count-other": "{0}W"
+          },
+          "pressure-hectopascal": {
+            "unitPattern-count-one": "{0}hPa",
+            "unitPattern-count-other": "{0}hPa"
+          },
+          "pressure-inch-hg": {
+            "unitPattern-count-one": "{0}\" Hg",
+            "unitPattern-count-other": "{0}\" Hg"
+          },
+          "pressure-millibar": {
+            "unitPattern-count-one": "{0}mb",
+            "unitPattern-count-other": "{0}mb"
+          },
+          "speed-kilometer-per-hour": {
+            "unitPattern-count-one": "{0}kph",
+            "unitPattern-count-other": "{0}kph"
+          },
+          "speed-meter-per-second": {
+            "unitPattern-count-one": "{0}m/s",
+            "unitPattern-count-other": "{0}m/s"
+          },
+          "speed-mile-per-hour": {
+            "unitPattern-count-one": "{0}mph",
+            "unitPattern-count-other": "{0}mph"
+          },
+          "temperature-celsius": {
+            "unitPattern-count-one": "{0}°",
+            "unitPattern-count-other": "{0}°"
+          },
+          "temperature-fahrenheit": {
+            "unitPattern-count-one": "{0}°F",
+            "unitPattern-count-other": "{0}°F"
+          },
+          "volume-cubic-kilometer": {
+            "unitPattern-count-one": "{0}km³",
+            "unitPattern-count-other": "{0}km³"
+          },
+          "volume-cubic-mile": {
+            "unitPattern-count-one": "{0}mi³",
+            "unitPattern-count-other": "{0}mi³"
+          },
+          "volume-liter": {
+            "unitPattern-count-one": "{0}l",
+            "unitPattern-count-other": "{0}l"
+          }
+        },
+        "durationUnit-type-hm": {
+          "durationUnitPattern": "h:mm"
+        },
+        "durationUnit-type-hms": {
+          "durationUnitPattern": "h:mm:ss"
+        },
+        "durationUnit-type-ms": {
+          "durationUnitPattern": "m:ss"
+        }
+      }
+    }
+  }
+}

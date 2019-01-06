@@ -23,7 +23,7 @@ import org.unicode.cldr.test.ExampleGenerator;
 import org.unicode.cldr.unittest.TestAll.TestInfo;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.Status;
-import org.unicode.cldr.util.CldrUtility;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.Containment;
 import org.unicode.cldr.util.Counter;
 import org.unicode.cldr.util.Factory;
@@ -175,7 +175,7 @@ public class TestPathHeader extends TestFmwkPlus {
             assertEquals("appendItem:Timezone placeholders", "APPEND_FIELD_FORMAT", placeholderInfo2.name);
             assertEquals("appendItem:Timezone placeholders", "Pacific Time", placeholderInfo2.example);
         }
-        ExampleGenerator eg = new ExampleGenerator(cldrFile, cldrFile, CldrUtility.SUPPLEMENTAL_DIRECTORY);
+        ExampleGenerator eg = new ExampleGenerator(cldrFile, cldrFile, CLDRPaths.SUPPLEMENTAL_DIRECTORY);
         String example = eg.getExampleHtml(APPEND_TIMEZONE, cldrFile.getStringValue(APPEND_TIMEZONE));
         String result = ExampleGenerator.simplify(example, false);
         assertEquals("", "〖❬6:25:59 PM❭ ❬GMT❭〗", result);
@@ -204,7 +204,7 @@ public class TestPathHeader extends TestFmwkPlus {
 
                 PathHeader p = pathHeaderFactory.fromPath(path);
                 final SurveyToolStatus status = p.getSurveyToolStatus();
-                if (status == status.DEPRECATED) {
+                if (status == SurveyToolStatus.DEPRECATED) {
                     continue;
                 }
                 sorted.put(p, locale + "\t" + status + "\t" + p + "\t" + p.getOriginalPath());
@@ -253,14 +253,30 @@ public class TestPathHeader extends TestFmwkPlus {
         Set<String> filePaths = pathHeaderFactory.pathsForFile(english);
 
         // check that English doesn't contain few or many
-        verifyContains(PageId.Currencies, filePaths, "many", false);
         verifyContains(PageId.Duration, filePaths, "few", false);
+        verifyContains(PageId.C_NAmerica, filePaths, "many", false);
+        verifyContains(PageId.C_SAmerica, filePaths, "many", false);
+        verifyContains(PageId.C_Europe, filePaths, "many", false);
+        verifyContains(PageId.C_NWAfrica, filePaths, "many", false);
+        verifyContains(PageId.C_SEAfrica, filePaths, "many", false);
+        verifyContains(PageId.C_WCAsia, filePaths, "many", false);
+        verifyContains(PageId.C_SEAsia, filePaths, "many", false);
+        verifyContains(PageId.C_Oceania, filePaths, "many", false);
+        verifyContains(PageId.C_Unknown, filePaths, "many", false);
 
         // check that Arabic does contain few and many
         filePaths = pathHeaderFactory.pathsForFile(info.getCldrFactory().make("ar", true));
 
-        verifyContains(PageId.Currencies, filePaths, "many", true);
         verifyContains(PageId.Duration, filePaths, "few", true);
+        verifyContains(PageId.C_NAmerica, filePaths, "many", true);
+        verifyContains(PageId.C_SAmerica, filePaths, "many", true);
+        verifyContains(PageId.C_Europe, filePaths, "many", true);
+        verifyContains(PageId.C_NWAfrica, filePaths, "many", true);
+        verifyContains(PageId.C_SEAfrica, filePaths, "many", true);
+        verifyContains(PageId.C_WCAsia, filePaths, "many", true);
+        verifyContains(PageId.C_SEAsia, filePaths, "many", true);
+        verifyContains(PageId.C_Oceania, filePaths, "many", true);
+        verifyContains(PageId.C_Unknown, filePaths, "many", true);
     }
 
     public void TestCoverage() {
@@ -369,9 +385,8 @@ public class TestPathHeader extends TestFmwkPlus {
     public void TestMetazones() {
 
         CLDRFile nativeFile = factory.make("en", true);
-        PathStarrer starrer = new PathStarrer();
         Set<PathHeader> pathHeaders = getPathHeaders(nativeFile);
-        String oldPage = "";
+        //String oldPage = "";
         String oldHeader = "";
         for (PathHeader entry : pathHeaders) {
             final String page = entry.getPage();
@@ -427,8 +442,8 @@ public class TestPathHeader extends TestFmwkPlus {
 
     public void TestUniqueness() {
         CLDRFile nativeFile = factory.make("en", true);
-        Map<PathHeader, String> headerToPath = new HashMap();
-        Map<String, String> headerVisibleToPath = new HashMap();
+        Map<PathHeader, String> headerToPath = new HashMap<PathHeader, String>();
+        Map<String, String> headerVisibleToPath = new HashMap<String, String>();
         for (String path : nativeFile.fullIterable()) {
             PathHeader p = pathHeaderFactory.fromPath(path);
             if (p.getSectionId() == SectionId.Special) {
@@ -455,7 +470,6 @@ public class TestPathHeader extends TestFmwkPlus {
         PathStarrer starrer = new PathStarrer();
         EnumMap<SurveyToolStatus, Relation<String, String>> info2 = new EnumMap<SurveyToolStatus, Relation<String, String>>(
             SurveyToolStatus.class);
-        Counter<SurveyToolStatus> counter = new Counter<SurveyToolStatus>();
         Set<String> nuked = new HashSet<String>();
         PrettyPath pp = new PrettyPath();
         XPathParts parts = new XPathParts();
@@ -529,11 +543,11 @@ public class TestPathHeader extends TestFmwkPlus {
     }
 
     public void TestPathsNotInEnglish() {
-        Set<String> englishPaths = new HashSet();
+        Set<String> englishPaths = new HashSet<String>();
         for (String path : english.fullIterable()) {
             englishPaths.add(path);
         }
-        Set<String> alreadySeen = new HashSet(englishPaths);
+        Set<String> alreadySeen = new HashSet<String>(englishPaths);
 
         for (String locale : factory.getAvailable()) {
             CLDRFile nativeFile = factory.make(locale, false);
@@ -599,7 +613,7 @@ public class TestPathHeader extends TestFmwkPlus {
     public void TestTerritoryOrder() {
         final Set<String> goodAvailableCodes = TestInfo.getInstance().getStandardCodes()
             .getGoodAvailableCodes("territory");
-        Set<String> results = showContained("001", 0, new HashSet(goodAvailableCodes));
+        Set<String> results = showContained("001", 0, new HashSet<String>(goodAvailableCodes));
         results.remove("ZZ");
         for (String territory : results) {
             String sub = Containment.getSubcontinent(territory);
@@ -635,8 +649,8 @@ public class TestPathHeader extends TestFmwkPlus {
     }
 
     public void TestZCompleteness() {
-        Map<String, PathHeader> uniqueness = new HashMap();
-        Set<String> alreadySeen = new HashSet();
+        Map<String, PathHeader> uniqueness = new HashMap<String, PathHeader>();
+        Set<String> alreadySeen = new HashSet<String>();
         LanguageTagParser ltp = new LanguageTagParser();
         int count = 0;
         for (String locale : factory.getAvailable()) {
@@ -773,7 +787,6 @@ public class TestPathHeader extends TestFmwkPlus {
 
         for (PathHeader pathHeader : sorted) {
             String original = pathHeader.getOriginalPath();
-            String sourceLocale = english.getSourceLocaleID(original, status);
             if (!original.equals(status.pathWhereFound)) {
                 continue;
             }

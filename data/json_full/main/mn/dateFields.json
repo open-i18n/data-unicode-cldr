@@ -1,0 +1,159 @@
+{
+  "main": {
+    "mn": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "25",
+          "_number": "$Revision: 91 $"
+        },
+        "generation": {
+          "_date": "$Date: 2014-03-13 22:27:12 -0500 (Thu, 13 Mar 2014) $"
+        },
+        "language": "mn"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "Эрин"
+          },
+          "year": {
+            "displayName": "Жил",
+            "relative-type--1": "өнгөрсөн жил",
+            "relative-type-0": "энэ жил",
+            "relative-type-1": "ирэх жил",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} жилийн дараа",
+              "relativeTimePattern-count-other": "{0} жилийн дараа"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} жилийн өмнө",
+              "relativeTimePattern-count-other": "{0} жилийн өмнө"
+            }
+          },
+          "month": {
+            "displayName": "Сар",
+            "relative-type--1": "өнгөрсөн сар",
+            "relative-type-0": "энэ сар",
+            "relative-type-1": "ирэх сар",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} сарын дараа",
+              "relativeTimePattern-count-other": "{0} сарын дараа"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} сарын өмнө",
+              "relativeTimePattern-count-other": "{0} сарын өмнө"
+            }
+          },
+          "week": {
+            "displayName": "Долоо хоног",
+            "relative-type--1": "өнгөрсөн долоо хоног",
+            "relative-type-0": "энэ долоо хоног",
+            "relative-type-1": "ирэх долоо хоног",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} долоо хоногийн дараа",
+              "relativeTimePattern-count-other": "{0} долоо хоногийн дараа"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} долоо хоногийн өмнө",
+              "relativeTimePattern-count-other": "{0} долоо хоногийн өмнө"
+            }
+          },
+          "day": {
+            "displayName": "Өдөр",
+            "relative-type--1": "өчигдөр",
+            "relative-type--2": "Уржигдар",
+            "relative-type-0": "өнөөдөр",
+            "relative-type-1": "маргааш",
+            "relative-type-2": "Нөгөөдөр",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} өдрийн дараа",
+              "relativeTimePattern-count-other": "{0} өдрийн дараа"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} өдрийн өмнө",
+              "relativeTimePattern-count-other": "{0} өдрийн өмнө"
+            }
+          },
+          "weekday": {
+            "displayName": "Гараг"
+          },
+          "sun": {
+            "relative-type--1": "өнгөрсөн ням гараг",
+            "relative-type-0": "энэ ням гараг",
+            "relative-type-1": "ирэх ням гараг"
+          },
+          "mon": {
+            "relative-type--1": "өнгөрсөн даваа гараг",
+            "relative-type-0": "энэ даваа гараг",
+            "relative-type-1": "ирэх даваа гараг"
+          },
+          "tue": {
+            "relative-type--1": "өнгөрсөн мягмар гараг",
+            "relative-type-0": "энэ мягмар гараг",
+            "relative-type-1": "ирэх мягмар гараг"
+          },
+          "wed": {
+            "relative-type--1": "өнгөрсөн лхагва гараг",
+            "relative-type-0": "энэ лхагва гараг",
+            "relative-type-1": "ирэх лхагва гараг"
+          },
+          "thu": {
+            "relative-type--1": "өнгөрсөн пүрэв гараг",
+            "relative-type-0": "энэ пүрэв гараг",
+            "relative-type-1": "ирэх пүрэв гараг"
+          },
+          "fri": {
+            "relative-type--1": "өнгөрсөн баасан гараг",
+            "relative-type-0": "энэ баасан гараг",
+            "relative-type-1": "ирэх баасан гараг"
+          },
+          "sat": {
+            "relative-type--1": "өнгөрсөн бямба гараг",
+            "relative-type-0": "энэ бямба гараг",
+            "relative-type-1": "ирэх бямба гараг"
+          },
+          "dayperiod": {
+            "displayName": "Өдрийн цаг"
+          },
+          "hour": {
+            "displayName": "Цаг",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} цагийн дараа",
+              "relativeTimePattern-count-other": "{0} цагийн дараа"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} цагийн өмнө",
+              "relativeTimePattern-count-other": "{0} цагийн өмнө"
+            }
+          },
+          "minute": {
+            "displayName": "Минут",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} минутын дараа",
+              "relativeTimePattern-count-other": "{0} минутын дараа"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} минутын өмнө",
+              "relativeTimePattern-count-other": "{0} минутын өмнө"
+            }
+          },
+          "second": {
+            "displayName": "Секунд",
+            "relative-type-0": "Одоо",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} секундын дараа",
+              "relativeTimePattern-count-other": "{0} секундын дараа"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} секундын өмнө",
+              "relativeTimePattern-count-other": "{0} секундын өмнө"
+            }
+          },
+          "zone": {
+            "displayName": "Цагийн бүс"
+          }
+        }
+      }
+    }
+  }
+}

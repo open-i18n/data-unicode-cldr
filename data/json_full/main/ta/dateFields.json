@@ -1,0 +1,159 @@
+{
+  "main": {
+    "ta": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "25",
+          "_number": "$Revision: 91 $"
+        },
+        "generation": {
+          "_date": "$Date: 2014-03-13 22:27:12 -0500 (Thu, 13 Mar 2014) $"
+        },
+        "language": "root"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "காலம்"
+          },
+          "year": {
+            "displayName": "ஆண்டு",
+            "relative-type--1": "கடந்த ஆண்டு",
+            "relative-type-0": "இந்த ஆண்டு",
+            "relative-type-1": "அடுத்த ஆண்டு",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} ஆண்டில்",
+              "relativeTimePattern-count-other": "{0} ஆண்டுகளில்"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} ஆண்டிற்கு முன்",
+              "relativeTimePattern-count-other": "{0} ஆண்டுகளுக்கு முன்"
+            }
+          },
+          "month": {
+            "displayName": "மாதம்",
+            "relative-type--1": "கடந்த மாதம்",
+            "relative-type-0": "இந்த மாதம்",
+            "relative-type-1": "அடுத்த மாதம்",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} மாதத்தில்",
+              "relativeTimePattern-count-other": "{0} மாதங்களில்"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} மாதத்துக்கு முன்",
+              "relativeTimePattern-count-other": "{0} மாதங்களுக்கு முன்"
+            }
+          },
+          "week": {
+            "displayName": "வாரம்",
+            "relative-type--1": "கடந்த வாரம்",
+            "relative-type-0": "இந்த வாரம்",
+            "relative-type-1": "அடுத்த வாரம்",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} வாரத்தில்",
+              "relativeTimePattern-count-other": "{0} வாரங்களில்"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} வாரத்திற்கு முன்பு",
+              "relativeTimePattern-count-other": "{0} வாரத்திற்கு முன்"
+            }
+          },
+          "day": {
+            "displayName": "நாள்",
+            "relative-type--1": "நேற்று",
+            "relative-type--2": "நேற்று முன் தினம்",
+            "relative-type-0": "இன்று",
+            "relative-type-1": "நாளை",
+            "relative-type-2": "நாளை மறுநாள்",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} நாளில்",
+              "relativeTimePattern-count-other": "{0} நாட்களில்"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} நாளுக்கு முன்",
+              "relativeTimePattern-count-other": "{0} நாட்களுக்கு முன்"
+            }
+          },
+          "weekday": {
+            "displayName": "வார நாள்"
+          },
+          "sun": {
+            "relative-type--1": "கடந்த ஞாயிறு",
+            "relative-type-0": "இந்த ஞாயிறு",
+            "relative-type-1": "அடுத்த ஞாயிறு"
+          },
+          "mon": {
+            "relative-type--1": "கடந்த திங்கள்",
+            "relative-type-0": "இந்த திங்கள்",
+            "relative-type-1": "அடுத்த திங்கள்"
+          },
+          "tue": {
+            "relative-type--1": "கடந்த செவ்வாய்",
+            "relative-type-0": "இந்த செவ்வாய்",
+            "relative-type-1": "அடுத்த செவ்வாய்"
+          },
+          "wed": {
+            "relative-type--1": "கடந்த புதன்",
+            "relative-type-0": "இந்த புதன்",
+            "relative-type-1": "அடுத்த புதன்"
+          },
+          "thu": {
+            "relative-type--1": "கடந்த வியாழன்",
+            "relative-type-0": "இந்த வியாழன்",
+            "relative-type-1": "அடுத்த வியாழன்"
+          },
+          "fri": {
+            "relative-type--1": "கடந்த வெள்ளி",
+            "relative-type-0": "இந்த வெள்ளி",
+            "relative-type-1": "அடுத்த வெள்ளி"
+          },
+          "sat": {
+            "relative-type--1": "கடந்த சனி",
+            "relative-type-0": "இந்த சனி",
+            "relative-type-1": "அடுத்த சனி"
+          },
+          "dayperiod": {
+            "displayName": "முற்பகல்/பிற்பகல்"
+          },
+          "hour": {
+            "displayName": "மணி",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} மணிநேரத்தில்",
+              "relativeTimePattern-count-other": "{0} மணிநேரத்தில்"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} மணிநேரம் முன்",
+              "relativeTimePattern-count-other": "{0} மணிநேரம் முன்"
+            }
+          },
+          "minute": {
+            "displayName": "நிமிடம்",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} நிமிடத்தில்",
+              "relativeTimePattern-count-other": "{0} நிமிடங்களில்"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} நிமிடத்திற்கு முன்",
+              "relativeTimePattern-count-other": "{0} நிமிடங்களுக்கு முன்"
+            }
+          },
+          "second": {
+            "displayName": "வினாடி",
+            "relative-type-0": "இப்போது",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} வினாடியில்",
+              "relativeTimePattern-count-other": "{0} விநாடிகளில்"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} வினாடிக்கு முன்",
+              "relativeTimePattern-count-other": "{0} வினாடிக்கு முன்"
+            }
+          },
+          "zone": {
+            "displayName": "மண்டலம்"
+          }
+        }
+      }
+    }
+  }
+}

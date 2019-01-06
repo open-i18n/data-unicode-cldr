@@ -1,6 +1,7 @@
 package org.unicode.cldr.tool;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -143,42 +144,96 @@ public class LikelySubtags {
             ltp.setRegion(region = "");
         }
         if (variants.size() != 0) {
-            variants = new ArrayList(variants); // make copy
-            ltp.setVariants(Collections.EMPTY_SET);
+            variants = new ArrayList<String>(variants); // make copy
+            ltp.setVariants(Collections.<String> emptySet());
         }
         if (extensions.size() != 0) {
-            extensions = new LinkedHashMap(extensions);
-            ltp.setExtensions(Collections.EMPTY_MAP);
+            extensions = new LinkedHashMap<String, String>(extensions);
+            ltp.setExtensions(Collections.<String, String> emptyMap());
         }
 
         // check whole
         String result = toMaximized.get(ltp.toString());
         if (result != null) {
-            return ltp.set(result).setVariants(variants).setExtensions(extensions).toString();
+            return result;
         }
-        // try empty region
-        if (region.length() != 0) {
-            result = toMaximized.get(ltp.setRegion("").toString());
-            if (result != null) {
-                return ltp.set(result).setRegion(region).setVariants(variants).setExtensions(extensions).toString();
-            }
-            ltp.setRegion(region); // restore
-        }
-        // try empty script
-        if (script.length() != 0) {
-            result = toMaximized.get(ltp.setScript("").toString());
-            if (result != null) {
-                return ltp.set(result).setScript(script).setVariants(variants).setExtensions(extensions).toString();
-            }
-            // try empty script and region
-            if (region.length() != 0) {
-                result = toMaximized.get(ltp.setRegion("").toString());
+
+        boolean noLanguage = language.equals("und");
+        boolean noScript = script.isEmpty();
+        boolean noRegion = region.isEmpty();
+
+        // not efficient, but simple to match spec.        
+        for (String region2 : noRegion ? Arrays.asList(region) : Arrays.asList(region, "")) {
+            ltp.setRegion(region2);
+            for (String script2 : noScript ? Arrays.asList(script) : Arrays.asList(script, "")) {
+                ltp.setScript(script2);
+
+                result = toMaximized.get(ltp.toString());
                 if (result != null) {
-                    return ltp.set(result).setScript(script).setRegion(region).setVariants(variants)
-                        .setExtensions(extensions).toString();
+                    ltp.set(result);
+                    if (!noLanguage) {
+                        ltp.setLanguage(language);
+                    }
+                    if (!noScript) {
+                        ltp.setScript(script);
+                    }
+                    if (!noRegion) {
+                        ltp.setRegion(region);
+                    }
+                    ltp.setVariants(variants).setExtensions(extensions);
+                    return ltp.toString();
                 }
             }
         }
+
+        // now check und_script
+        if (!noScript) {
+            ltp.setLanguage("und");
+            ltp.setScript(script);
+            result = toMaximized.get(ltp.toString());
+            if (result != null) {
+                ltp.set(result);
+                if (!noLanguage) {
+                    ltp.setLanguage(language);
+                }
+                if (!noScript) {
+                    ltp.setScript(script);
+                }
+                if (!noRegion) {
+                    ltp.setRegion(region);
+                }
+                ltp.setVariants(variants).setExtensions(extensions);
+                return ltp.toString();
+            }
+        }
+
+        //        String result = toMaximized.get(ltp.toString());
+        //        if (result != null) {
+        //            return ltp.set(result).setVariants(variants).setExtensions(extensions).toString();
+        //        }
+        //        // try empty region
+        //        if (region.length() != 0) {
+        //            result = toMaximized.get(ltp.setRegion("").toString());
+        //            if (result != null) {
+        //                return ltp.set(result).setRegion(region).setVariants(variants).setExtensions(extensions).toString();
+        //            }
+        //            ltp.setRegion(region); // restore
+        //        }
+        //        // try empty script
+        //        if (script.length() != 0) {
+        //            result = toMaximized.get(ltp.setScript("").toString());
+        //            if (result != null) {
+        //                return ltp.set(result).setScript(script).setVariants(variants).setExtensions(extensions).toString();
+        //            }
+        //            // try empty script and region
+        //            if (region.length() != 0) {
+        //                result = toMaximized.get(ltp.setRegion("").toString());
+        //                if (result != null) {
+        //                    return ltp.set(result).setScript(script).setRegion(region).setVariants(variants)
+        //                        .setExtensions(extensions).toString();
+        //                }
+        //            }
+        //        }
         // if (!language.equals("und") && script.length() != 0 && region.length() != 0) {
         // return languageTag; // it was ok, and we couldn't do anything with it
         // }

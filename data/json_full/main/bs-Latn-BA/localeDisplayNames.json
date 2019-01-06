@@ -1,0 +1,185 @@
+{
+  "main": {
+    "bs-Latn-BA": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "25",
+          "_number": "$Revision: 91 $"
+        },
+        "generation": {
+          "_date": "$Date: 2014-03-13 22:27:12 -0500 (Thu, 13 Mar 2014) $"
+        },
+        "language": "bs",
+        "script": "Latn",
+        "territory": "BA"
+      },
+      "localeDisplayNames": {
+        "localeDisplayPattern": {
+          "localePattern": "{0} ({1})",
+          "localeSeparator": "{0}, {1}",
+          "localeKeyTypePattern": "{0}: {1}"
+        },
+        "keys": {
+          "calendar": "Kalendar",
+          "collation": "Sortiranje",
+          "currency": "Valuta",
+          "numbers": "numbers"
+        },
+        "types": {
+          "numbers": {
+            "arab": "arab",
+            "arabext": "arabext",
+            "armn": "armn",
+            "armnlow": "armnlow",
+            "bali": "bali",
+            "beng": "beng"
+          },
+          "collation": {
+            "big5han": "Tradicionalno kinesko sortiranje"
+          },
+          "numbers": {
+            "brah": "brah"
+          },
+          "calendar": {
+            "buddhist": "Budistički kalendar"
+          },
+          "numbers": {
+            "cakm": "cakm",
+            "cham": "cham"
+          },
+          "calendar": {
+            "chinese": "Kineski kalendar",
+            "coptic": "coptic",
+            "dangi": "dangi"
+          },
+          "numbers": {
+            "deva": "deva"
+          },
+          "collation": {
+            "dictionary": "dictionary",
+            "ducet": "ducet",
+            "eor": "eor"
+          },
+          "numbers": {
+            "ethi": "ethi"
+          },
+          "calendar": {
+            "ethiopic": "ethiopic",
+            "ethiopic-amete-alem": "ethiopic-amete-alem"
+          },
+          "numbers": {
+            "fullwide": "fullwide"
+          },
+          "collation": {
+            "gb2312han": "Pojednostavljeno kinesko sortiranje"
+          },
+          "numbers": {
+            "geor": "geor"
+          },
+          "calendar": {
+            "gregorian": "Gregorijanski kalendar"
+          },
+          "numbers": {
+            "grek": "grek",
+            "greklow": "greklow",
+            "gujr": "gujr",
+            "guru": "guru",
+            "hanidec": "hanidec",
+            "hans": "hans",
+            "hansfin": "hansfin",
+            "hant": "hant",
+            "hantfin": "hantfin",
+            "hebr": "hebr"
+          },
+          "calendar": {
+            "hebrew": "Hebrejski kalendar",
+            "indian": "Indijski nacionalni kalendar",
+            "islamic": "Islamski kalendar",
+            "islamic-civil": "Islamski civilni kalendar",
+            "islamic-rgsa": "islamic-rgsa",
+            "islamic-tbla": "islamic-tbla",
+            "islamic-umalqura": "islamic-umalqura",
+            "iso8601": "iso8601",
+            "japanese": "Japanski kalendar"
+          },
+          "numbers": {
+            "java": "java",
+            "jpan": "jpan",
+            "jpanfin": "jpanfin",
+            "kali": "kali",
+            "khmr": "khmr",
+            "knda": "knda",
+            "lana": "lana",
+            "lanatham": "lanatham",
+            "laoo": "laoo",
+            "latn": "latn",
+            "lepc": "lepc",
+            "limb": "limb",
+            "mlym": "mlym",
+            "mong": "mong",
+            "mtei": "mtei",
+            "mymr": "mymr",
+            "mymrshan": "mymrshan",
+            "nkoo": "nkoo",
+            "olck": "olck",
+            "orya": "orya",
+            "osma": "osma"
+          },
+          "calendar": {
+            "persian": "persian"
+          },
+          "collation": {
+            "phonebook": "Sortiranje kao telefonski imenik",
+            "pinyin": "Pinjin sortiranje",
+            "reformed": "reformed"
+          },
+          "calendar": {
+            "roc": "Kalendar Republike Kine"
+          },
+          "numbers": {
+            "roman": "roman",
+            "romanlow": "romanlow",
+            "saur": "saur"
+          },
+          "collation": {
+            "search": "search",
+            "searchjl": "searchjl"
+          },
+          "numbers": {
+            "shrd": "shrd",
+            "sora": "sora"
+          },
+          "collation": {
+            "standard": "standard",
+            "stroke": "Sortiranje po broju crta"
+          },
+          "numbers": {
+            "sund": "sund",
+            "takr": "takr",
+            "talu": "talu",
+            "taml": "taml",
+            "tamldec": "tamldec",
+            "telu": "telu",
+            "thai": "thai",
+            "tibt": "tibt"
+          },
+          "collation": {
+            "traditional": "Tradicionalno sortiranje",
+            "unihan": "unihan"
+          },
+          "numbers": {
+            "vaii": "vaii"
+          },
+          "collation": {
+            "zhuyin": "zhuyin"
+          }
+        },
+        "codePatterns": {
+          "language": "Jezik: {0}",
+          "script": "Skript: {0}",
+          "territory": "Region: {0}"
+        }
+      }
+    }
+  }
+}

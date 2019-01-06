@@ -3,7 +3,6 @@ package org.unicode.cldr.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -36,6 +35,7 @@ public class MergeLists<T> {
         return this;
     }
 
+    @SuppressWarnings("unchecked")
     public MergeLists<T> add(T... stuff) {
         return add(Arrays.asList(stuff));
     }
@@ -58,7 +58,7 @@ public class MergeLists<T> {
         // this is slower, but puts things into as much of the order specified as possible
         // could be optimized further, but we don't care that much
 
-        Set<T> first = new HashSet<T>();
+        Set<T> first = new LinkedHashSet<T>();
         while (orderedWorkingSet.size() != 0) {
             getFirsts(first);
             if (first.size() == 0) {

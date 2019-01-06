@@ -23,6 +23,7 @@ import org.unicode.cldr.unittest.TestAll.TestInfo;
 import org.unicode.cldr.util.Builder;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRLocale;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.ChainedMap;
 import org.unicode.cldr.util.ChainedMap.M3;
 import org.unicode.cldr.util.CldrUtility;
@@ -49,8 +50,6 @@ public class TestInheritance extends TestFmwk {
 
     private static boolean DEBUG = CldrUtility.getProperty("DEBUG", false);
 
-    private static String fileMatcher = CldrUtility.getProperty("FILE", ".*");
-
     private static Matcher pathMatcher = Pattern.compile(CldrUtility.getProperty("XPATH", ".*")).matcher("");
 
     public static void main(String[] args) throws IOException {
@@ -64,7 +63,7 @@ public class TestInheritance extends TestFmwk {
 
     public void TestLocalesHaveOfficial() {
         // If we have a language, we have all the region locales where the language is official
-        Set<String> SKIP_TERRITORIES = new HashSet(Arrays.asList("001", "150"));
+        Set<String> SKIP_TERRITORIES = new HashSet<String>(Arrays.asList("001", "150"));
         for (Entry<String, R2<List<String>, String>> s : dataInfo.getLocaleAliasInfo().get("territory").entrySet()) {
             SKIP_TERRITORIES.add(s.getKey());
         }
@@ -129,7 +128,7 @@ public class TestInheritance extends TestFmwk {
                 }
                 Set<String> officalChildren = entry.getValue().keySet();
                 if (!children.containsAll(officalChildren)) {
-                    Set<String> missing = new TreeSet(officalChildren);
+                    Set<String> missing = new TreeSet<String>(officalChildren);
                     missing.removeAll(children);
                     String message = "Missing CLDR locales for " + status + " languages: " + missing;
                     errln(message);
@@ -141,7 +140,7 @@ public class TestInheritance extends TestFmwk {
         }
 
         if (DEBUG) {
-            Set<String> languages = new TreeSet(languageToChildren.keySet());
+            Set<String> languages = new TreeSet<String>(languageToChildren.keySet());
             languages.addAll(languageToOfficialChildren.keySet());
             System.out.print("\ncode\tlanguage");
             for (OfficialStatus status : OfficialStatus.values()) {
@@ -207,7 +206,7 @@ public class TestInheritance extends TestFmwk {
             return lang;
         }
         LanguageTagParser ltp = new LanguageTagParser().set(lang);
-        String ls = ltp.getLanguageScript();
+        //String ls = ltp.getLanguageScript();
         //if (defaultContents.contains(ls)) {
         ltp.setScript("");
         //}
@@ -216,14 +215,13 @@ public class TestInheritance extends TestFmwk {
 
     public void TestLikelyAndDefaultConsistency() {
         LikelySubtags likelySubtags = new LikelySubtags();
-        Factory factory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
-        Factory factory2 = Factory.make(CldrUtility.BASE_DIRECTORY + "seed/", ".*");
+        Factory factory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
+        Factory factory2 = Factory.make(CLDRPaths.BASE_DIRECTORY + "seed/", ".*");
         Set<String> available = Builder.with(new TreeSet<String>()).addAll(factory.getAvailable())
             .addAll(factory2.getAvailable()).freeze();
         LanguageTagParser ltp = new LanguageTagParser();
         // find multiscript locales
         Relation<String, String> base2scripts = Relation.of(new TreeMap<String, Set<String>>(), TreeSet.class);
-        Relation<String, String> base2likely = Relation.of(new TreeMap<String, Set<String>>(), TreeSet.class);
         Map<String, String> parent2default = new TreeMap<String, String>();
         Map<String, String> default2parent = new TreeMap<String, String>();
         Relation<String, String> base2locales = Relation.of(new TreeMap<String, Set<String>>(), TreeSet.class);
@@ -394,9 +392,7 @@ public class TestInheritance extends TestFmwk {
                         }
                         continue;
                     }
-                    String dcLang = ltp.set(dc).getLanguage();
-                    String dcScript = ltp.getScript();
-                    String dcRegion = ltp.getRegion();
+                    String dcScript = ltp.set(dc).getScript();
                     consistent = likelyLangScript.equals(dc) && likelyMax.equals(dcFromLangScript)
                         || dcScript.isEmpty() && !likelyMax.equals(dcFromLangScript);
                     // || dcScript.isEmpty() && dcRegion.equals(likelyMaxRegion) && dcFromLangScript == null;
@@ -519,10 +515,10 @@ public class TestInheritance extends TestFmwk {
 
     public void TestLanguageTagCanonicalizer() {
         String[][] tests = {
+            { "en-POLYTONI-WHATEVER-ANYTHING-AALAND", "en_AX_ANYTHING_POLYTON_WHATEVER" },
             { "eng-840", "en_US" },
             { "sh_ba", "sr_Latn_BA" },
             { "iw-arab-010", "he_Arab_AQ" },
-            { "en-POLYTONI-WHATEVER-ANYTHING-AALAND", "en_AX_ANYTHING_POLYTON_WHATEVER" },
         };
         LanguageTagCanonicalizer canon = new LanguageTagCanonicalizer();
         for (String[] inputExpected : tests) {

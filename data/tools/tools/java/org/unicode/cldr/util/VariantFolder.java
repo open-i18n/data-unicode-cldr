@@ -10,9 +10,9 @@ import com.ibm.icu.text.UnicodeSetIterator;
 public class VariantFolder {
     private AlternateFetcher alternateFetcher;
 
-    private String source;
+    //private String source;
 
-    private Set<String> result;
+    //private Set<String> result;
 
     public interface AlternateFetcher {
         /**
@@ -46,10 +46,11 @@ public class VariantFolder {
     // {0,2}, {1,3}
     // {0,3}}
 
+    @SuppressWarnings("unchecked")
     public Set<String> getClosure(String source) {
         int stringLength = source.length();
         if (stringLength == 0) {
-            Set<String> result = new HashSet();
+            Set<String> result = new HashSet<String>();
             result.add(source);
             return result;
         }

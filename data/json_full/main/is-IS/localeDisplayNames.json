@@ -1,0 +1,272 @@
+{
+  "main": {
+    "is-IS": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "25",
+          "_number": "$Revision: 91 $"
+        },
+        "generation": {
+          "_date": "$Date: 2014-03-13 22:27:12 -0500 (Thu, 13 Mar 2014) $"
+        },
+        "language": "is",
+        "territory": "IS"
+      },
+      "localeDisplayNames": {
+        "localeDisplayPattern": {
+          "localePattern": "{0} ({1})",
+          "localeSeparator": "{0}, {1}",
+          "localeKeyTypePattern": "{0}: {1}"
+        },
+        "keys": {
+          "calendar": "Dagatal",
+          "colAlternate": "Röðun óháð táknum",
+          "colBackwards": "Röðun með viðsnúnum áherslum",
+          "colCaseFirst": "Röðun eftir hástöfum/lágstöfum",
+          "colCaseLevel": "Stafrétt röðun",
+          "colHiraganaQuaternary": "Kana-röðun",
+          "colNormalization": "Stöðluð röðun",
+          "colNumeric": "Talnaröðun",
+          "colStrength": "Röðunarstyrkur",
+          "collation": "Röðun",
+          "currency": "Gjaldmiðill",
+          "numbers": "Tölur",
+          "timezone": "Tímabelti",
+          "va": "Landsstaðalsafbrigði",
+          "variableTop": "Raða sem táknum",
+          "x": "Einkanotkun"
+        },
+        "types": {
+          "numbers": {
+            "arab": "Arabískar-indverskar tölur",
+            "arabext": "Auknar arabískar-indverskar tölur",
+            "armn": "Armenskir tölustafir",
+            "armnlow": "Armenskar lágstafatölur",
+            "bali": "bali",
+            "beng": "Bengalskar tölur"
+          },
+          "collation": {
+            "big5han": "hefðbundin kínversk röðun - Big5"
+          },
+          "numbers": {
+            "brah": "brah"
+          },
+          "calendar": {
+            "buddhist": "Búddískt dagatal"
+          },
+          "numbers": {
+            "cakm": "cakm",
+            "cham": "cham"
+          },
+          "calendar": {
+            "chinese": "Kínverskt dagatal",
+            "coptic": "Koptískt tímatal",
+            "dangi": "dangi"
+          },
+          "numbers": {
+            "deva": "Tölur í devanagari"
+          },
+          "collation": {
+            "dictionary": "Orðabókarröð",
+            "ducet": "Sjálfgefin Unicode-röðun",
+            "eor": "röðina fyrir fjöltyngi evrópskum skjölum"
+          },
+          "numbers": {
+            "ethi": "Eþíópískir tölustafir"
+          },
+          "calendar": {
+            "ethiopic": "Eþíópískt tímatal",
+            "ethiopic-amete-alem": "Eþíópískt 'amete alem' tímatal"
+          },
+          "numbers": {
+            "finance": "Viðskiptafræðileg töluorð",
+            "fullwide": "Tölur með fullri breidd"
+          },
+          "collation": {
+            "gb2312han": "einfölduð kínversk röðun - GB2312"
+          },
+          "numbers": {
+            "geor": "Tölustafir í georgísku"
+          },
+          "calendar": {
+            "gregorian": "Gregorískt dagatal"
+          },
+          "numbers": {
+            "grek": "Grískir tölustafir",
+            "greklow": "Grískar lágstafatölur",
+            "gujr": "Tölur í gujarati",
+            "guru": "Tölur í gurmukhi",
+            "hanidec": "Kínverskir tugatölustafir",
+            "hans": "Einfaldaðir kínverskir tölustafir",
+            "hansfin": "Einfaldaðar kínverskar fjármálatölur",
+            "hant": "Hefðbundnir kínverskir tölustafir",
+            "hantfin": "Hefðbundnar kínverskar fjármálatölur",
+            "hebr": "Hebreskir tölustafir"
+          },
+          "calendar": {
+            "hebrew": "Hebreskt dagatal"
+          },
+          "colStrength": {
+            "identical": "Raða öllu"
+          },
+          "calendar": {
+            "indian": "indverskt dagatal",
+            "islamic": "Íslamskt dagatal",
+            "islamic-civil": "Íslamskt borgaradagatal",
+            "islamic-rgsa": "islamic-rgsa",
+            "islamic-tbla": "islamic-tbla",
+            "islamic-umalqura": "islamic-umalqura",
+            "iso8601": "iso8601",
+            "japanese": "Japanskt dagatal"
+          },
+          "numbers": {
+            "java": "java",
+            "jpan": "Japanskir tölustafir",
+            "jpanfin": "Japanskar fjármálatölur",
+            "kali": "kali",
+            "khmr": "Tölur í khmer",
+            "knda": "Tölur í kannada",
+            "lana": "lana",
+            "lanatham": "lanatham",
+            "laoo": "Tölur í lao",
+            "latn": "Vestrænar tölur",
+            "lepc": "lepc",
+            "limb": "limb"
+          },
+          "colCaseFirst": {
+            "lower": "Raða lágstöfum fyrst"
+          },
+          "numbers": {
+            "mlym": "Tölur í malayalam",
+            "mong": "Mongólskar tölur",
+            "mtei": "mtei",
+            "mymr": "Tölur í myanmar",
+            "mymrshan": "mymrshan",
+            "native": "Upprunalegir tölustafir",
+            "nkoo": "nkoo"
+          },
+          "colBackwards": {
+            "no": "Raða áherslum eðlilega"
+          },
+          "colCaseFirst": {
+            "no": "Raða eðlilega eftir hástöfum og lágstöfum"
+          },
+          "colCaseLevel": {
+            "no": "Raða óháð hástöfum og lágstöfum"
+          },
+          "colHiraganaQuaternary": {
+            "no": "Raða Kana sér"
+          },
+          "colNormalization": {
+            "no": "Raða án stöðlunar"
+          },
+          "colNumeric": {
+            "no": "Raða tölustöfum sér"
+          },
+          "colAlternate": {
+            "non-ignorable": "Raða táknum"
+          },
+          "numbers": {
+            "olck": "olck",
+            "orya": "Tölur í oriya",
+            "osma": "osma"
+          },
+          "calendar": {
+            "persian": "Persneskt tímatal"
+          },
+          "collation": {
+            "phonebook": "Símaskráarröðun",
+            "phonetic": "Hljóðfræðileg röð",
+            "pinyin": "Pinyin-röðun"
+          },
+          "colStrength": {
+            "primary": "Raða aðeins grunnstöfum",
+            "quaternary": "Raða áherslum/hástaf eða lágstaf/breidd/Kana"
+          },
+          "collation": {
+            "reformed": "Endurbætt röð"
+          },
+          "calendar": {
+            "roc": "kínverskt dagatal"
+          },
+          "numbers": {
+            "roman": "Rómverskir tölustafir",
+            "romanlow": "Rómverkar lágstafatölur",
+            "saur": "saur"
+          },
+          "collation": {
+            "search": "Almenn leit",
+            "searchjl": "Leita eftir upphafssamhljóða í Hangul"
+          },
+          "colStrength": {
+            "secondary": "Raða áherslum"
+          },
+          "colAlternate": {
+            "shifted": "Raða óháð táknum"
+          },
+          "numbers": {
+            "shrd": "shrd",
+            "sora": "sora"
+          },
+          "collation": {
+            "standard": "Stöðluð röðun",
+            "stroke": "Strikaröðun"
+          },
+          "numbers": {
+            "sund": "sund",
+            "takr": "takr",
+            "talu": "talu",
+            "taml": "Tamílskir tölustafir",
+            "tamldec": "Tamílskar tölur",
+            "telu": "Tölur í telúgú"
+          },
+          "colStrength": {
+            "tertiary": "Raða áherslum/hástaf eða lágstaf/breidd"
+          },
+          "numbers": {
+            "thai": "Tælenskar tölur",
+            "tibt": "Tíbeskir tölustafir"
+          },
+          "collation": {
+            "traditional": "Hefðbundin"
+          },
+          "numbers": {
+            "traditional": "Hefðbundin tölutákn"
+          },
+          "collation": {
+            "unihan": "Röðun eftir grunnstrikum"
+          },
+          "colCaseFirst": {
+            "upper": "Raða hástöfum fyrst"
+          },
+          "numbers": {
+            "vaii": "Vai-tölustafir"
+          },
+          "colBackwards": {
+            "yes": "Raða öfugt eftir áherslum"
+          },
+          "colCaseLevel": {
+            "yes": "Raða stafrétt"
+          },
+          "colHiraganaQuaternary": {
+            "yes": "Raða Kana öðruvísi"
+          },
+          "colNormalization": {
+            "yes": "Raða Unicode með stöðluðum hætti"
+          },
+          "colNumeric": {
+            "yes": "Raða tölustöfum tölulega"
+          },
+          "collation": {
+            "zhuyin": "zhuyin"
+          }
+        },
+        "codePatterns": {
+          "language": "tungumál: {0}",
+          "script": "leturgerð: {0}",
+          "territory": "svæði: {0}"
+        }
+      }
+    }
+  }
+}

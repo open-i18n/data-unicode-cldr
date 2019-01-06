@@ -1,0 +1,183 @@
+{
+  "main": {
+    "sq": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "25",
+          "_number": "$Revision: 91 $"
+        },
+        "generation": {
+          "_date": "$Date: 2014-03-13 22:27:12 -0500 (Thu, 13 Mar 2014) $"
+        },
+        "language": "root"
+      },
+      "localeDisplayNames": {
+        "localeDisplayPattern": {
+          "localePattern": "{0} ({1})",
+          "localeSeparator": "{0}, {1}",
+          "localeKeyTypePattern": "{0}: {1}"
+        },
+        "keys": {
+          "calendar": "Kalendar",
+          "collation": "Radhitje",
+          "currency": "Valuta",
+          "numbers": "Numra"
+        },
+        "types": {
+          "numbers": {
+            "arab": "Shifra indo-arabe",
+            "arabext": "Shifra indo-arabe të zgjatura",
+            "armn": "Numra armenë",
+            "armnlow": "Numra armenë të vegjël",
+            "bali": "bali",
+            "beng": "Numra bengalë"
+          },
+          "collation": {
+            "big5han": "Radhitje e kinezishtes tradicionale - Big5"
+          },
+          "numbers": {
+            "brah": "brah"
+          },
+          "calendar": {
+            "buddhist": "Kalendari Budist"
+          },
+          "numbers": {
+            "cakm": "cakm",
+            "cham": "cham"
+          },
+          "calendar": {
+            "chinese": "Kalendari Kinez",
+            "coptic": "Kalendari Koptik",
+            "dangi": "Kalendari Dangi"
+          },
+          "numbers": {
+            "deva": "Shifra devanagari"
+          },
+          "collation": {
+            "dictionary": "Radhitje fjalori",
+            "ducet": "Radhitje Unikode e parazgjedhur",
+            "eor": "eor"
+          },
+          "numbers": {
+            "ethi": "Numra etiopas"
+          },
+          "calendar": {
+            "ethiopic": "Kalendari Etiopas",
+            "ethiopic-amete-alem": "Kalendari Etiopas Amete Alem"
+          },
+          "numbers": {
+            "fullwide": "Shifra me largësi të brendshme"
+          },
+          "collation": {
+            "gb2312han": "Radhitje e kinezishtes së thjeshtësuar - GB2312"
+          },
+          "numbers": {
+            "geor": "Numra gjeorgjianë"
+          },
+          "calendar": {
+            "gregorian": "Kalendari Gregorian"
+          },
+          "numbers": {
+            "grek": "Numra grekë",
+            "greklow": "Numra grekë të vegjël",
+            "gujr": "Shifra guxharati",
+            "guru": "Shifra gurmuki",
+            "hanidec": "Numra dhjetorë kinezë",
+            "hans": "Numra të kinezishtes së thjeshtësuar",
+            "hansfin": "Numra financiarë të kinezishtes së thjeshtësuar",
+            "hant": "Numra të kinezishtes tradicionale",
+            "hantfin": "Numra financiarë të kinezishtes tradicionale",
+            "hebr": "Numra hebraikë"
+          },
+          "calendar": {
+            "hebrew": "Kalendari Hebraik",
+            "indian": "Kalendari Kombëtar Indian",
+            "islamic": "Kalendari Islamik",
+            "islamic-civil": "Kalendari Islamik (tabelor, periudha civile)",
+            "islamic-rgsa": "islamic-rgsa",
+            "islamic-tbla": "Kalendari Islamik (tabelor, epoka austromikale)",
+            "islamic-umalqura": "Kalendari Islamik (Um al-Qura)",
+            "iso8601": "Kalendari ISO-8601",
+            "japanese": "Kalendari Japonez"
+          },
+          "numbers": {
+            "java": "java",
+            "jpan": "Numra japonezë",
+            "jpanfin": "Numra financiarë japonezë",
+            "kali": "kali",
+            "khmr": "Shifra kmere",
+            "knda": "Shifra Kenëda",
+            "lana": "lana",
+            "lanatham": "lanatham",
+            "laoo": "Shifra lao",
+            "latn": "Shifra perëndimore-latine",
+            "lepc": "lepc",
+            "limb": "limb",
+            "mlym": "Shifra malajalame",
+            "mong": "mong",
+            "mtei": "mtei",
+            "mymr": "Shifra mianmari",
+            "mymrshan": "mymrshan",
+            "nkoo": "nkoo",
+            "olck": "olck",
+            "orya": "Shifra orije",
+            "osma": "osma"
+          },
+          "calendar": {
+            "persian": "Kalendari Persian"
+          },
+          "collation": {
+            "phonebook": "Radhitje libri telefonik",
+            "pinyin": "Radhitje pinini",
+            "reformed": "Radhitje e reformuar"
+          },
+          "calendar": {
+            "roc": "Kalendari Kinez (Minguo)"
+          },
+          "numbers": {
+            "roman": "Numra romakë",
+            "romanlow": "Numra romakë të vegjël",
+            "saur": "saur"
+          },
+          "collation": {
+            "search": "Kërkim i përgjithshëm",
+            "searchjl": "searchjl"
+          },
+          "numbers": {
+            "shrd": "shrd",
+            "sora": "sora"
+          },
+          "collation": {
+            "standard": "Radhitje standarde",
+            "stroke": "stroke"
+          },
+          "numbers": {
+            "sund": "sund",
+            "takr": "takr",
+            "talu": "talu",
+            "taml": "Numra tamile tradicionale",
+            "tamldec": "Shifra tamile",
+            "telu": "Shifra teluguje",
+            "thai": "Shifra tajlandeze",
+            "tibt": "Shifra tibetiane"
+          },
+          "collation": {
+            "traditional": "traditional",
+            "unihan": "unihan"
+          },
+          "numbers": {
+            "vaii": "vaii"
+          },
+          "collation": {
+            "zhuyin": "zhuyin"
+          }
+        },
+        "codePatterns": {
+          "language": "Gjuha: {0}",
+          "script": "Shkrimi: {0}",
+          "territory": "Rajoni: {0}"
+        }
+      }
+    }
+  }
+}

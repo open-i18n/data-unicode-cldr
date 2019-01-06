@@ -314,7 +314,7 @@ public class CheckIBMCoverage extends CLDRConverterTool {
         printInfo("Processing file " + locale);
         coverage.setCldrFileToCheck(file, options, result);
         CLDRFile resolved = coverage.getResolvedCldrFileToCheck();
-        Set<String> paths = new TreeSet<String>(CLDRFile.ldmlComparator);
+        Set<String> paths = new TreeSet<String>(resolved.getComparator());
         com.ibm.icu.dev.util.CollectionUtilities.addAll(resolved.iterator(), paths);
         int ret = 0;
         if (level != null) {

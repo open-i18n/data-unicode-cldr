@@ -1,6 +1,6 @@
 package org.unicode.cldr.test;
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -22,11 +22,22 @@ import org.unicode.cldr.util.XMLSource;
 import org.unicode.cldr.util.XPathParts;
 
 public class CheckDisplayCollisions extends FactoryCheckCLDR {
+    /**
+     * Set to true to get verbose logging of path removals
+     */
+    private static final boolean LOG_PATH_REMOVALS = false;
+
+    // Get Date-Time in milliseconds
+    private static long getDateTimeinMillis(int year, int month, int date) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month, date);
+        return cal.getTimeInMillis();
+    }
 
     // TODO probably need to fix this to be more accurate over time
     static long year = (long) (365.2425 * 86400 * 1000); // can be approximate
-    static long startDate = new Date(1995 - 1900, 1 - 1, 15).getTime(); // can be approximate
-    static long endDate = new Date(2011 - 1900, 1 - 1, 15).getTime(); // can be approximate
+    static long startDate = getDateTimeinMillis(1995, 1 - 1, 15); // can be approximate
+    static long endDate = getDateTimeinMillis(2011, 1 - 1, 15); // can be approximate
 
     /**
      * An enum representing the types of xpaths that we don't want display collisions for.
@@ -86,7 +97,7 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
         pathHeaderFactory = PathHeader.getFactory(factory.make("en", true));
     }
 
-    public CheckCLDR handleCheck(String path, String fullPath, String value, Map<String, String> options,
+    public CheckCLDR handleCheck(String path, String fullPath, String value, Options options,
         List<CheckStatus> result) {
         if (fullPath == null) return this; // skip paths that we don't have
 
@@ -145,6 +156,7 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
                     String duplicateRegion = getRegion(otherType, duplicatePath);
                     if (exceptionRegion.equals(duplicateRegion)) {
                         duplicatePaths.remove(duplicatePath);
+                        log("Removed duplicate path: '" + duplicatePath + "'");
                     }
                 }
             }
@@ -152,6 +164,8 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
         }
 
         if (paths.isEmpty()) {
+//            System.out.println("Paths is empty");
+//            log("Paths is empty");
             return this;
         }
 
@@ -161,9 +175,11 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
             String currency = parts.getAttributeValue(-2, "type");
             Iterator<String> iterator = paths.iterator();
             while (iterator.hasNext()) {
-                parts.set(iterator.next());
+                String curVal = iterator.next();
+                parts.set(curVal);
                 if (currency.equals(parts.getAttributeValue(-2, "type"))) {
                     iterator.remove();
+                    log("Removed '" + curVal + "': COLLISON WITH CURRENCY " + currency);
                 }
             }
         }
@@ -177,12 +193,14 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
             boolean isDuration = myUnit.startsWith("duration");
             Iterator<String> iterator = paths.iterator();
             while (iterator.hasNext()) {
-                parts.set(iterator.next());
+                String curVal = iterator.next();
+                parts.set(curVal);
                 String unit = parts.getAttributeValue(3, "type");
                 // we also break the units into two groups: durations and others.
                 if (myUnit.equals(unit)
                     || unit != null && isDuration != unit.startsWith("duration")) {
                     iterator.remove();
+                    log("Removed '" + curVal + "': COLLISON WITH UNIT  " + unit);
                 }
             }
         }
@@ -228,10 +246,12 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
 
             // check one last time...
             if (collidingTypes.isEmpty()) {
+                log("CollidingTypes is empty");
                 return this;
             }
         }
 
+        log("CollidingTypes has a size of " + collidingTypes.size());
         CheckStatus.Type thisErrorType;
         // Specifically allow display collisions during the submission phase only, so that
         // we don't prevent people from entering stuff properly.
@@ -283,6 +303,15 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
             .setMessage(message, new Object[] { collidingTypes.toString() });
         result.add(item);
         return this;
+    }
+
+    /*
+     * Log a message
+     */
+    private void log(String string) {
+        if (LOG_PATH_REMOVALS) {
+            System.out.println(string);
+        }
     }
 
     enum Equivalence {
@@ -338,8 +367,11 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
             String newPath = currentAttributesToIgnore.reset(pathName).replaceAll("");
             paths.add(newPath);
         }
+        //   System.out.println("Paths has a size of:"+paths.size());
         String cleanPath = currentAttributesToIgnore.reset(path).replaceAll("");
         paths.remove(cleanPath);
+        //  System.out.println("Removed path: '"+cleanPath+"'");
+        //System.out.println("Paths returned has a size of "+paths.size());
         return paths;
     }
 
@@ -348,7 +380,8 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
         return locale.equals(XMLSource.CODE_FALLBACK_ID);
     }
 
-    public CheckCLDR setCldrFileToCheck(CLDRFile cldrFileToCheck, Map<String, String> options,
+    @Override
+    public CheckCLDR setCldrFileToCheck(CLDRFile cldrFileToCheck, Options options,
         List<CheckStatus> possibleErrors) {
         if (cldrFileToCheck == null) return this;
         super.setCldrFileToCheck(cldrFileToCheck, options, possibleErrors);
@@ -366,6 +399,10 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
         return new XPathParts().set(xpath).getAttributeValue(index, "type");
     }
 
+    /**
+     * Map with the exceptions
+     */
+    //private Map<String, String> exceptions;
     private Map<String, String> exceptions;
 
     /**
@@ -378,7 +415,11 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
      *         the specified region code
      */
     public String getRegionException(String regionCode) {
-        if (exceptions != null) return exceptions.get(regionCode);
+        if (exceptions != null)
+        {
+            String lookup = exceptions.get(regionCode);
+            return lookup;
+        }
 
         CLDRFile english = getFactory().make("en", true);
         // Pick up all instances in English where the exemplarCity and territory match

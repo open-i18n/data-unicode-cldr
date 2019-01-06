@@ -17,7 +17,7 @@ import java.util.TreeSet;
 import org.unicode.cldr.draft.FileUtilities;
 import org.unicode.cldr.util.Builder;
 import org.unicode.cldr.util.CLDRFile;
-import org.unicode.cldr.util.CldrUtility;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo.Count;
 
@@ -201,8 +201,8 @@ public class GeneratePluralList {
         String realZeroType = rules.select(0);
         for (String category : finalExamples) {
             String exampleValue = exampleMap.get(category);
-            String overallCategory = rules.select(Double.valueOf(exampleValue));
-            String exampleFormat = nouns.get(overallCategory);
+            //String overallCategory = rules.select(Double.valueOf(exampleValue));
+            //String exampleFormat = nouns.get(overallCategory);
 
             out.println(locale + "\t" + exampleValue + "\t" +
                 category.replace("zero", realZeroType).replace('|', '\t'));
@@ -255,7 +255,7 @@ public class GeneratePluralList {
         GeneratePluralList generator = new GeneratePluralList(out);
         generator.loadNouns();
 
-        Factory factory = Factory.make(CldrUtility.MAIN_DIRECTORY, stock);
+        Factory factory = Factory.make(CLDRPaths.MAIN_DIRECTORY, stock);
         for (String locale : factory.getAvailable()) {
             generator.getExamples(locale);
             //generator.getForms(factory.make(locale, true));

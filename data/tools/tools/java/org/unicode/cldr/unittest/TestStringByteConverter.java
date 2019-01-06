@@ -28,9 +28,6 @@ public class TestStringByteConverter {
     };
 
     public static void main(String[] args) throws IOException {
-        byte[] bytes = new byte[1000];
-        StringBuilder chars = new StringBuilder();
-        int[] ioBytePosition = new int[1];
 
         String testString = "Mauritania";
         for (int i = 0; i < testString.length(); ++i) {
@@ -96,7 +93,7 @@ public class TestStringByteConverter {
 
     private static void testWithLocale(String locale, Type type) throws IOException {
         totalUtf8Bytes = totalBytes = 0;
-        Factory cldrFactory = Factory.make(org.unicode.cldr.util.CldrUtility.MAIN_DIRECTORY, ".*");
+        Factory cldrFactory = Factory.make(org.unicode.cldr.util.CLDRPaths.MAIN_DIRECTORY, ".*");
         CLDRFile file = cldrFactory.make(locale, false);
         for (String path : file) {
             if (path.contains("exemplarCh")) {

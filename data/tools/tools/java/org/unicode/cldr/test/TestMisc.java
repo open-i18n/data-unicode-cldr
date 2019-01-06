@@ -26,6 +26,7 @@ import org.unicode.cldr.unittest.TestVariantFolder.CaseVariantFolder;
 import org.unicode.cldr.unittest.TestVariantFolder.CompatibilityFolder;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.Status;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.Iso639Data;
@@ -165,9 +166,9 @@ public class TestMisc {
 
         checkCollections();
 
-        Factory cldrFactory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
+        Factory cldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
         CLDRFile englishFile = cldrFactory.make("en", true);
-        ExampleGenerator eg = new ExampleGenerator(englishFile, englishFile, CldrUtility.SUPPLEMENTAL_DIRECTORY);
+        ExampleGenerator eg = new ExampleGenerator(englishFile, englishFile, CLDRPaths.SUPPLEMENTAL_DIRECTORY);
         System.out
             .println(eg
                 .getHelpHtml(
@@ -177,15 +178,15 @@ public class TestMisc {
         System.out.println(eg.getHelpHtml("/calendar/pattern", ""));
 
         if (true) return;
-        Set s = new HashSet(Arrays.asList("a", "A", "c"));
+        Set<String> s = new HashSet<String>(Arrays.asList("a", "A", "c"));
         Collator caselessCompare = Collator.getInstance(Locale.ENGLISH);
         caselessCompare.setStrength(Collator.PRIMARY);
-        Set t = new TreeSet((Comparator) caselessCompare);
+        Set<String> t = new TreeSet<String>((Comparator) caselessCompare);
         t.addAll(Arrays.asList("a", "b", "c"));
         System.out.println("s equals t: " + s.equals(t));
         System.out.println("t equals s: " + t.equals(s));
 
-        Set u = Collections.unmodifiableSet(t);
+        Set<String> u = Collections.unmodifiableSet(t);
         System.out.println("s==t " + (s.equals(t)));
         System.out.println("s==u " + (s.equals(u)));
         UnicodeSet x = new UnicodeSet("[a-z]");
@@ -201,16 +202,16 @@ public class TestMisc {
     }
 
     private static void checkAliases() {
-        Factory cldrFactory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
+        Factory cldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
         CLDRFile en = cldrFactory.make("root", true);
         Status status = new Status();
         Matcher m = Pattern.compile("gregorian.*dayPeriods").matcher("");
-        for (Iterator<String> it = en.iterator(null, CLDRFile.ldmlComparator); it.hasNext();) {
+        for (Iterator<String> it = en.iterator(null, en.getComparator()); it.hasNext();) {
             String path = it.next();
             if (!m.reset(path).find()) {
                 continue;
             }
-            String locale = en.getSourceLocaleID(path, status);
+            //String locale = en.getSourceLocaleID(path, status);
             String value = en.getStringValue(path);
             String fullPath = en.getFullXPath(path);
             System.out.println("value:\t" + value + "\tpath:\t" + fullPath);
@@ -223,12 +224,12 @@ public class TestMisc {
     }
 
     private static void testWeights() {
-        Factory cldrFactory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
+        Factory cldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
         CLDRFile english = cldrFactory.make("en", true);
-        Set<Pair<Integer, String>> rel = new TreeSet();
+        Set<Pair<Integer, String>> rel = new TreeSet<Pair<Integer, String>>();
         for (String desiredLocale : cldrFactory.getAvailable()) {
             int vote = Level.getDefaultWeight("google", desiredLocale);
-            rel.add(new Pair(vote, desiredLocale));
+            rel.add(new Pair<Integer, String>(vote, desiredLocale));
         }
         for (Pair<Integer, String> p : rel) {
             System.out.println(p + "\t" + english.getName(p.getSecond()));
@@ -349,7 +350,7 @@ public class TestMisc {
             }
             scripts.set(script);
         }
-        Set<String> toPrint = new TreeSet();
+        Set<String> toPrint = new TreeSet<String>();
         for (int script = 0; script < scripts.size(); ++script) {
             if (!scripts.get(script)) continue;
             String code = UScript.getShortName(script);
@@ -499,25 +500,25 @@ public class TestMisc {
     }
 
     private static void checkDistinguishing() {
-        Factory cldrFactory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
-        Set cldrFiles = cldrFactory.getAvailableLanguages();
-        Set distinguishing = new TreeSet();
-        Set nondistinguishing = new TreeSet();
+        Factory cldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
+        Set<String> cldrFiles = cldrFactory.getAvailableLanguages();
+        Set<String> distinguishing = new TreeSet<String>();
+        Set<String> nondistinguishing = new TreeSet<String>();
         XPathParts parts = new XPathParts();
-        for (Iterator it = cldrFiles.iterator(); it.hasNext();) {
-            CLDRFile cldrFile = cldrFactory.make(it.next().toString(), false);
+        for (Iterator<String> it = cldrFiles.iterator(); it.hasNext();) {
+            CLDRFile cldrFile = cldrFactory.make(it.next(), false);
             if (cldrFile.isNonInheriting()) continue;
-            for (Iterator it2 = cldrFile.iterator(); it2.hasNext();) {
-                String path = (String) it2.next();
+            for (Iterator<String> it2 = cldrFile.iterator(); it2.hasNext();) {
+                String path = it2.next();
                 String fullPath = cldrFile.getFullXPath(path);
                 if (path.equals(fullPath)) continue;
                 parts.set(fullPath);
                 for (int i = 0; i < parts.size(); ++i) {
-                    Map m = parts.getAttributes(i);
+                    Map<String, String> m = parts.getAttributes(i);
                     if (m.size() == 0) continue;
                     String element = parts.getElement(i);
-                    for (Iterator mit = m.keySet().iterator(); mit.hasNext();) {
-                        String attribute = (String) mit.next();
+                    for (Iterator<String> mit = m.keySet().iterator(); mit.hasNext();) {
+                        String attribute = mit.next();
                         if (CLDRFile.isDistinguishing(element, attribute)) {
                             distinguishing.add(attribute + "\tD\t" + element);
                         } else {
@@ -528,23 +529,23 @@ public class TestMisc {
             }
         }
         System.out.println("Distinguishing");
-        for (Iterator it = distinguishing.iterator(); it.hasNext();) {
+        for (Iterator<String> it = distinguishing.iterator(); it.hasNext();) {
             System.out.println(it.next());
         }
         System.out.println();
         System.out.println("Non-Distinguishing");
-        for (Iterator it = nondistinguishing.iterator(); it.hasNext();) {
+        for (Iterator<String> it = nondistinguishing.iterator(); it.hasNext();) {
             System.out.println(it.next());
         }
     }
 
     private static void showEnglish() {
-        Factory cldrFactory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
+        Factory cldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
         String requestedLocale = "en";
         CLDRFile cldrFile = cldrFactory.make(requestedLocale, true);
         CLDRFile.Status status = new CLDRFile.Status();
-        for (Iterator it = cldrFile.iterator(); it.hasNext();) {
-            String requestedPath = (String) it.next();
+        for (Iterator<String> it = cldrFile.iterator(); it.hasNext();) {
+            String requestedPath = it.next();
             String localeWhereFound = cldrFile.getSourceLocaleID(requestedPath, status);
             if (!localeWhereFound.equals(requestedLocale) || !status.pathWhereFound.equals(requestedPath)) {
                 System.out.println("requested path:\t" + requestedPath
@@ -558,27 +559,26 @@ public class TestMisc {
     }
 
     private static void checkPrivateUse() {
-        Factory cldrFactory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
+        Factory cldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
         String requestedLocale = "en";
         CLDRFile cldrFile = cldrFactory.make(requestedLocale, true);
-        CLDRFile.Status status = new CLDRFile.Status();
         StandardCodes sc = StandardCodes.make();
         XPathParts parts = new XPathParts();
-        Set careAbout = new HashSet(Arrays.asList(new String[] { "language", "script", "territory", "variant" }));
-        HashMap foundItems = new HashMap();
-        TreeSet problems = new TreeSet();
-        for (Iterator it = cldrFile.iterator("", new UTF16.StringComparator(true, false, 0)); it.hasNext();) {
-            String requestedPath = (String) it.next();
+        Set<String> careAbout = new HashSet<String>(Arrays.asList(new String[] { "language", "script", "territory", "variant" }));
+        HashMap<String, Set<String>> foundItems = new HashMap<String, Set<String>>();
+        TreeSet<String> problems = new TreeSet<String>();
+        for (Iterator<String> it = cldrFile.iterator("", new UTF16.StringComparator(true, false, 0)); it.hasNext();) {
+            String requestedPath = it.next();
             parts.set(requestedPath);
             String element = parts.getElement(-1);
             if (!careAbout.contains(element)) continue;
             String type = parts.getAttributeValue(-1, "type");
             if (type == null) continue;
-            Set foundSet = (Set) foundItems.get(element);
-            if (foundSet == null) foundItems.put(element, foundSet = new TreeSet());
+            Set<String> foundSet = (Set<String>) foundItems.get(element);
+            if (foundSet == null) foundItems.put(element, foundSet = new TreeSet<String>());
             foundSet.add(type);
 
-            List data = sc.getFullData(element, type);
+            List<String> data = sc.getFullData(element, type);
             if (data == null) {
                 problems.add("No RFC3066bis data for: " + element + "\t" + type + "\t"
                     + cldrFile.getStringValue(requestedPath));
@@ -590,17 +590,17 @@ public class TestMisc {
             }
             // String canonical_value = (String)data.get(2);
         }
-        for (Iterator it = problems.iterator(); it.hasNext();) {
+        for (Iterator<String> it = problems.iterator(); it.hasNext();) {
             System.out.println(it.next());
         }
-        for (Iterator it = careAbout.iterator(); it.hasNext();) {
+        for (Iterator<String> it = careAbout.iterator(); it.hasNext();) {
             String element = (String) it.next();
-            Set real = sc.getAvailableCodes(element);
-            Set notFound = new TreeSet(real);
-            notFound.removeAll((Set) foundItems.get(element));
-            for (Iterator it2 = notFound.iterator(); it2.hasNext();) {
-                String type = (String) it2.next();
-                List data = sc.getFullData(element, type);
+            Set<String> real = sc.getAvailableCodes(element);
+            Set<String> notFound = new TreeSet<String>(real);
+            notFound.removeAll((Set<String>) foundItems.get(element));
+            for (Iterator<String> it2 = notFound.iterator(); it2.hasNext();) {
+                String type = it2.next();
+                List<String> data = sc.getFullData(element, type);
                 if (isPrivateOrDeprecated(data)) continue;
                 System.out.println("Missing Translation for: " + element + "\t" + type + "\t"
                     + "\t" + data);
@@ -608,7 +608,7 @@ public class TestMisc {
         }
     }
 
-    static boolean isPrivateOrDeprecated(List data) {
+    static boolean isPrivateOrDeprecated(List<String> data) {
         if (data.toString().indexOf("PRIVATE") >= 0) {
             return true;
         }
@@ -620,13 +620,13 @@ public class TestMisc {
     }
 
     static void testPopulous() {
-        Factory cldrFactory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
+        Factory cldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
         CLDRFile supp = cldrFactory.make("supplementalData", false);
         CLDRFile temp = SimpleFactory.makeFile("supplemental");
         temp.setNonInheriting(true);
         XPathParts parts = new XPathParts(null, null);
-        for (Iterator it = supp.iterator(null, CLDRFile.ldmlComparator); it.hasNext();) {
-            String path = it.next().toString();
+        for (Iterator<String> it = supp.iterator(null, supp.getComparator()); it.hasNext();) {
+            String path = it.next();
             String value = supp.getStringValue(path);
             String fullPath = supp.getFullXPath(path);
             parts.set(fullPath);
@@ -644,7 +644,7 @@ public class TestMisc {
         pw.close();
     }
 
-    private static final Map language_territory_hack_map = new HashMap();
+    private static final Map<String, String> language_territory_hack_map = new HashMap<String, String>();
     private static final String[][] language_territory_hack = {
         { "af", "ZA" },
         { "am", "ET" },

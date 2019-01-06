@@ -1,0 +1,159 @@
+{
+  "main": {
+    "fil": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "25",
+          "_number": "$Revision: 91 $"
+        },
+        "generation": {
+          "_date": "$Date: 2014-03-13 22:27:12 -0500 (Thu, 13 Mar 2014) $"
+        },
+        "language": "fil"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "Era"
+          },
+          "year": {
+            "displayName": "Taon",
+            "relative-type--1": "nakaraang taon",
+            "relative-type-0": "ngayong taon",
+            "relative-type-1": "susunod na taon",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "Sa loob ng {0} taon",
+              "relativeTimePattern-count-other": "Sa loob ng {0} taon"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} taon ang nakalipas",
+              "relativeTimePattern-count-other": "{0} taon ang nakalipas"
+            }
+          },
+          "month": {
+            "displayName": "Buwan",
+            "relative-type--1": "nakaraang buwan",
+            "relative-type-0": "ngayong buwan",
+            "relative-type-1": "susunod na buwan",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "Sa loob ng {0} buwan",
+              "relativeTimePattern-count-other": "Sa loob ng {0} buwan"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} buwan ang nakalipas",
+              "relativeTimePattern-count-other": "{0} buwan ang nakalipas"
+            }
+          },
+          "week": {
+            "displayName": "Linggo",
+            "relative-type--1": "nakaraang linggo",
+            "relative-type-0": "ngayong linggo",
+            "relative-type-1": "susunod na linggo",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "Sa loob ng {0} linggo",
+              "relativeTimePattern-count-other": "Sa loob ng {0} linggo"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} na linggo ang nakalipas",
+              "relativeTimePattern-count-other": "{0} linggo ang nakalipas"
+            }
+          },
+          "day": {
+            "displayName": "Araw",
+            "relative-type--1": "Kahapon",
+            "relative-type--2": "Araw bago ang kahapon",
+            "relative-type-0": "Ngayon",
+            "relative-type-1": "Bukas",
+            "relative-type-2": "Samakalawa",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "Sa loob ng {0} araw",
+              "relativeTimePattern-count-other": "Sa loob ng {0} araw"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} araw ang nakalipas",
+              "relativeTimePattern-count-other": "{0} araw ang nakalipas"
+            }
+          },
+          "weekday": {
+            "displayName": "Araw ng Linggo"
+          },
+          "sun": {
+            "relative-type--1": "nakaraang Linggo",
+            "relative-type-0": "ngayong Linggo",
+            "relative-type-1": "susunod na Linggo"
+          },
+          "mon": {
+            "relative-type--1": "nakaraang Lunes",
+            "relative-type-0": "ngayong Lunes",
+            "relative-type-1": "susunod na Lunes"
+          },
+          "tue": {
+            "relative-type--1": "nakaraang Martes",
+            "relative-type-0": "ngayong Martes",
+            "relative-type-1": "susunod na Martes"
+          },
+          "wed": {
+            "relative-type--1": "nakaraang Miyerkules",
+            "relative-type-0": "ngayong Miyerkules",
+            "relative-type-1": "susunod na Miyerkules"
+          },
+          "thu": {
+            "relative-type--1": "nakaraan Huwebes",
+            "relative-type-0": "ngayong Huwebes",
+            "relative-type-1": "susunod na Huwebes"
+          },
+          "fri": {
+            "relative-type--1": "nakaraang Biyernes",
+            "relative-type-0": "ngayong Biyernes",
+            "relative-type-1": "susunod na Biyernes"
+          },
+          "sat": {
+            "relative-type--1": "nakaraang Sabado",
+            "relative-type-0": "ngayong Sabado",
+            "relative-type-1": "susunod na Sabado"
+          },
+          "dayperiod": {
+            "displayName": "AM/PM"
+          },
+          "hour": {
+            "displayName": "Oras",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "Sa loob ng {0} oras",
+              "relativeTimePattern-count-other": "Sa loob ng {0} oras"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} oras ang nakalipas",
+              "relativeTimePattern-count-other": "{0} oras ang nakalipas"
+            }
+          },
+          "minute": {
+            "displayName": "Minuto",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "Sa loob ng {0} minuto",
+              "relativeTimePattern-count-other": "Sa loob ng {0} minuto"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} minuto ang nakalipas",
+              "relativeTimePattern-count-other": "{0} minuto ang nakalipas"
+            }
+          },
+          "second": {
+            "displayName": "Segundo",
+            "relative-type-0": "ngayon",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "Sa loob ng {0} segundo",
+              "relativeTimePattern-count-other": "Sa loob ng {0} segundo"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} segundo ang nakalipas",
+              "relativeTimePattern-count-other": "{0} segundo ang nakalipas"
+            }
+          },
+          "zone": {
+            "displayName": "Time Zone"
+          }
+        }
+      }
+    }
+  }
+}

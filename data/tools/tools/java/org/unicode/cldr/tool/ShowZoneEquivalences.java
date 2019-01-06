@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.ICUServiceBuilder;
@@ -45,50 +46,50 @@ public class ShowZoneEquivalences {
         // System.out.println("in available? " + Arrays.asList(TimeZone.getAvailableIDs()).contains(tzid));
         // System.out.println(new TreeSet(Arrays.asList(TimeZone.getAvailableIDs())));
 
-        Set needsTranslation = new TreeSet(Arrays.asList(CountItems.needsTranslationString
+        Set<String> needsTranslation = new TreeSet<String>(Arrays.asList(CountItems.needsTranslationString
             .split("[,]?\\s+")));
-        Set singleCountries = new TreeSet(
+        Set<String> singleCountries = new TreeSet<String>(
             Arrays
                 .asList("Africa/Bamako America/Godthab America/Santiago America/Guayaquil     Asia/Shanghai Asia/Tashkent Asia/Kuala_Lumpur Europe/Madrid Europe/Lisbon Europe/London Pacific/Auckland Pacific/Tahiti"
                     .split("\\s")));
-        Set defaultItems = new TreeSet(
+        Set<String> defaultItems = new TreeSet<String>(
             Arrays
                 .asList("Antarctica/McMurdo America/Buenos_Aires Australia/Sydney America/Sao_Paulo America/Toronto Africa/Kinshasa America/Santiago Asia/Shanghai America/Guayaquil Europe/Madrid Europe/London America/Godthab Asia/Jakarta Africa/Bamako America/Mexico_City Asia/Kuala_Lumpur Pacific/Auckland Europe/Lisbon Europe/Moscow Europe/Kiev America/New_York Asia/Tashkent Pacific/Tahiti Pacific/Kosrae Pacific/Tarawa Asia/Almaty Pacific/Majuro Asia/Ulaanbaatar Arctic/Longyearbyen Pacific/Midway"
                     .split("\\s")));
 
         StandardCodes sc = StandardCodes.make();
-        Collection codes = sc.getGoodAvailableCodes("tzid");
-        TreeSet extras = new TreeSet();
-        Map m = sc.getZoneLinkNew_OldSet();
+        Collection<String> codes = sc.getGoodAvailableCodes("tzid");
+        TreeSet<String> extras = new TreeSet<String>();
+        Map<String, Set<String>> m = sc.getZoneLinkNew_OldSet();
         for (String code : (Collection<String>) codes) {
-            Collection s = (Collection) m.get(code);
+            Collection<String> s = m.get(code);
             if (s == null)
                 continue;
             extras.addAll(s);
         }
         extras.addAll(codes);
-        Set icu4jTZIDs = new TreeSet(Arrays.asList(TimeZone.getAvailableIDs()));
-        Set diff2 = new TreeSet(icu4jTZIDs);
+        Set<String> icu4jTZIDs = new TreeSet<String>(Arrays.asList(TimeZone.getAvailableIDs()));
+        Set<String> diff2 = new TreeSet<String>(icu4jTZIDs);
         diff2.removeAll(extras);
         System.out.println("icu4jTZIDs - StandardCodes: " + diff2);
-        diff2 = new TreeSet(extras);
+        diff2 = new TreeSet<String>(extras);
         diff2.removeAll(icu4jTZIDs);
         System.out.println("StandardCodes - icu4jTZIDs: " + diff2);
         ArrayComparator ac = new ArrayComparator(new Comparator[] {
             ArrayComparator.COMPARABLE, ArrayComparator.COMPARABLE,
             ArrayComparator.COMPARABLE });
-        Map zone_countries = sc.getZoneToCounty();
+        Map<String, String> zone_countries = sc.getZoneToCounty();
 
-        TreeSet country_inflection_names = new TreeSet(ac);
-        PrintWriter out = BagFormatter.openUTF8Writer(CldrUtility.GEN_DIRECTORY,
+        TreeSet<Object[]> country_inflection_names = new TreeSet<Object[]>(ac);
+        PrintWriter out = BagFormatter.openUTF8Writer(CLDRPaths.GEN_DIRECTORY,
             "inflections.txt");
 
         TreeMap<Integer, TreeSet<String>> minOffsetMap = new TreeMap<Integer, TreeSet<String>>();
         TreeMap<Integer, TreeSet<String>> maxOffsetMap = new TreeMap<Integer, TreeSet<String>>();
 
-        for (Iterator it = codes.iterator(); it.hasNext();) {
-            String zoneID = (String) it.next();
-            String country = (String) zone_countries.get(zoneID);
+        for (Iterator<String> it = codes.iterator(); it.hasNext();) {
+            String zoneID = it.next();
+            String country = zone_countries.get(zoneID);
             TimeZone zone = TimeZone.getTimeZone(zoneID);
             ZoneInflections zip = new ZoneInflections(zone);
             out.println(zoneID + "\t" + zip);
@@ -109,7 +110,7 @@ public class ShowZoneEquivalences {
         System.out.println("Maximum Offset: " + maxOffsetMap);
         out.close();
 
-        out = BagFormatter.openUTF8Writer(CldrUtility.GEN_DIRECTORY,
+        out = BagFormatter.openUTF8Writer(CLDRPaths.GEN_DIRECTORY,
             "modernTimezoneEquivalents.html");
         out.println("<html>" + "<head>"
             + "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>"
@@ -149,25 +150,23 @@ public class ShowZoneEquivalences {
         out.println("<p>Zones identical after: "
             + ICUServiceBuilder.isoDateFormat(minimumDate) + "</p>");
         String lastCountry = "";
-        ZoneInflections lastZip = null;
         ZoneInflections.OutputLong diff = new ZoneInflections.OutputLong(0);
-        Factory cldrFactory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
+        Factory cldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
         TimezoneFormatter tzf = new TimezoneFormatter(cldrFactory, "en", true);
-        Map country_zoneSet = sc.getCountryToZoneSet();
+        Map<String, Set<String>> country_zoneSet = sc.getCountryToZoneSet();
         boolean shortList = true;
         boolean first = true;
         int category = 1;
         Tabber tabber = tabber1;
-        for (Iterator it = country_inflection_names.iterator(); it.hasNext();) {
+        for (Iterator<Object[]> it = country_inflection_names.iterator(); it.hasNext();) {
             Object[] row = (Object[]) it.next();
             String country = (String) row[0];
             if (country.equals("001"))
                 continue;
-            if (shortList && ((Set) country_zoneSet.get(country)).size() < 2)
+            if (shortList && (country_zoneSet.get(country)).size() < 2)
                 continue;
             ZoneInflections zip = (ZoneInflections) row[1];
             String zoneID = (String) row[2];
-            int zipComp = zip.compareTo(lastZip, diff);
 
             if (!country.equals(lastCountry)) {
                 if (first)
@@ -197,8 +196,8 @@ public class ShowZoneEquivalences {
                 newCountry = "<a target='map' href='" + mapLink + "'>" + country
                     + "</a>";
             }
-            String minOffset = zip.formatHours(zip.getMinOffset(minimumDate));
-            String maxOffset = zip.formatHours(zip.getMaxOffset(minimumDate));
+            String minOffset = ZoneInflections.formatHours(zip.getMinOffset(minimumDate));
+            String maxOffset = ZoneInflections.formatHours(zip.getMaxOffset(minimumDate));
             if (!icu4jTZIDs.contains(zoneID)) {
                 minOffset = maxOffset = "??";
             }
@@ -208,7 +207,6 @@ public class ShowZoneEquivalences {
                 + tzf.getFormattedZone(zoneID, "vvvv", minimumDate, false) + "\t"
                 + minOffset + "\t" + maxOffset));
             lastCountry = country;
-            lastZip = zip;
         }
         CountItems.subheader(out, tabber3);
         out.println("</table>");

@@ -32,12 +32,12 @@ import java.util.regex.Pattern;
 import org.unicode.cldr.util.Builder;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.DraftStatus;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.ICUServiceBuilder;
 import org.unicode.cldr.util.LanguageTagParser;
 import org.unicode.cldr.util.Log;
-import org.unicode.cldr.util.StandardCodes;
 import org.unicode.cldr.util.TimezoneFormatter;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -82,9 +82,9 @@ public class GenerateCldrTests {
     private static final UOption[] options = {
         UOption.HELP_H(),
         UOption.HELP_QUESTION_MARK(),
-        UOption.SOURCEDIR().setDefault(CldrUtility.COMMON_DIRECTORY),
-        UOption.DESTDIR().setDefault(CldrUtility.GEN_DIRECTORY + "/test/"),
-        UOption.create("log", 'l', UOption.REQUIRES_ARG).setDefault(CldrUtility.GEN_DIRECTORY),
+        UOption.SOURCEDIR().setDefault(CLDRPaths.COMMON_DIRECTORY),
+        UOption.DESTDIR().setDefault(CLDRPaths.GEN_DIRECTORY + "/test/"),
+        UOption.create("log", 'l', UOption.REQUIRES_ARG).setDefault(CLDRPaths.GEN_DIRECTORY),
         UOption.create("match", 'm', UOption.REQUIRES_ARG).setDefault(".*"),
         UOption.create("notresolved", 'n', UOption.NO_ARG),
         UOption.create("languages", 'g', UOption.NO_ARG),
@@ -172,9 +172,9 @@ public class GenerateCldrTests {
     /**
      * @param sLocs
      */
-    private static void showLocales(Set sLocs) {
-        for (Iterator it = sLocs.iterator(); it.hasNext();) {
-            String s = (String) it.next();
+    private static void showLocales(Set<String> sLocs) {
+        for (Iterator<String> it = sLocs.iterator(); it.hasNext();) {
+            String s = it.next();
             Log.logln(s + "\t" + ULocale.getDisplayLanguage(s, "en"));
         }
     }
@@ -183,8 +183,8 @@ public class GenerateCldrTests {
      * @param cols
      * @return
      */
-    private static Set filter(Object[] cols) {
-        Set result = new TreeSet();
+    private static Set<String> filter(Object[] cols) {
+        Set<String> result = new TreeSet<String>();
         for (int i = 0; i < cols.length; ++i) {
             String s = cols[i].toString();
             if (s.indexOf('_') >= 0)
@@ -194,7 +194,7 @@ public class GenerateCldrTests {
         return result;
     }
 
-    Set addULocales(Object[] objects, Set target) {
+    Set<String> addULocales(Object[] objects, Set<String> target) {
         for (int i = 0; i < objects.length; ++i) {
             target.add(objects[i].toString());
         }
@@ -240,7 +240,7 @@ public class GenerateCldrTests {
 
     // Relation rulesToLocales = new Relation(new TreeMap(ULocaleComparator),TreeSet.class);
 
-    Relation<String, String> parentToLocales = new Relation(new TreeMap<String, Set<String>>(), TreeSet.class);
+    Relation<String, String> parentToLocales = Relation.of(new TreeMap<String, Set<String>>(), TreeSet.class);
 
     /*
      * void getLocaleList() { collationLocales = new TreeSet(ULocaleComparator);
@@ -285,8 +285,8 @@ public class GenerateCldrTests {
         english = mainCldrFactory.make("en", true);
         Factory collationCldrFactory = Factory.make(options[SOURCEDIR].value
             + "collation" + File.separator, pat);
-        Factory supplementalCldrFactory = Factory.make(options[SOURCEDIR].value
-            + "supplemental" + File.separator, ".*");
+        //Factory supplementalCldrFactory = Factory.make(options[SOURCEDIR].value
+        //    + "supplemental" + File.separator, ".*");
 
         // allLocales = Builder.with(allLocales)
         // .addAll(mainCldrFactory.getAvailable(), TO_LOCALE)
@@ -330,8 +330,8 @@ public class GenerateCldrTests {
         }
 
         Matcher m = Pattern.compile(pat).matcher("");
-        for (Iterator it = parentToLocales.keySet().iterator(); it.hasNext();) {
-            String p = it.next().toString();
+        for (Iterator<String> it = parentToLocales.keySet().iterator(); it.hasNext();) {
+            String p = it.next();
             if (!m.reset(p).matches())
                 continue;
             generate2(p);
@@ -359,7 +359,7 @@ public class GenerateCldrTests {
         generateItems(locale, collationLocales, CollationShower);
         out.println(" </cldrTest>");
         out.close();
-        CldrUtility.generateBat(options[SOURCEDIR].value + "test" + File.separator,
+        ToolUtilities.generateBat(options[SOURCEDIR].value + "test" + File.separator,
             locale + ".xml", options[DESTDIR].value, locale + ".xml",
             new CldrUtility.SimpleLineComparator(0));
     }
@@ -395,16 +395,16 @@ public class GenerateCldrTests {
      * 
      * @param locale
      */
-    void add(String locale, Map uniqueLocales) {
+    void add(String locale, Map<String, Set<String>> uniqueLocales) {
         try {
             RuleBasedCollator col = cldrCollations.getInstance(locale); // (RuleBasedCollator)
             // Collator.getInstance(locale);
             // for our purposes, separate locales if we are using different
             // exemplars
             String key = col.getRules() + "\uFFFF" + getExemplarSet(locale, 0, DraftStatus.unconfirmed);
-            Set s = (Set) uniqueLocales.get(key);
+            Set<String> s = uniqueLocales.get(key);
             if (s == null) {
-                s = new TreeSet(ULocaleComparator);
+                s = new TreeSet<String>(ULocaleComparator);
                 uniqueLocales.put(key, s);
             }
             System.out.println("Adding " + locale);
@@ -437,7 +437,7 @@ public class GenerateCldrTests {
         return result;
     }
 
-    public static final Comparator ULocaleComparator = new Comparator() {
+    public static final Comparator<Object> ULocaleComparator = new Comparator<Object>() {
         public int compare(Object o1, Object o2) {
             return o1.toString().compareTo(o2.toString());
         }
@@ -446,6 +446,7 @@ public class GenerateCldrTests {
     /*
      * public interface Equator { public boolean equals(Object o1, Object o2); }
      */
+    @SuppressWarnings("rawtypes")
     static boolean intersects(Collection a, Collection b) {
         for (Iterator it = a.iterator(); it.hasNext();) {
             if (b.contains(it.next()))
@@ -463,24 +464,24 @@ public class GenerateCldrTests {
      * output; }
      */
     class ResultsPrinter {
-        private Set listOfSettings = new LinkedHashSet();
+        private Set<Map> listOfSettings = new LinkedHashSet<Map>();
 
-        private transient LinkedHashMap settings = new LinkedHashMap();
+        private transient LinkedHashMap<String, String> settings = new LinkedHashMap<String, String>();
 
         ResultsPrinter() {
         }
 
         ResultsPrinter(ResultsPrinter rpIncludeDraft, ResultsPrinter rpNoDraft) {
-            Set listOfSettings1 = rpIncludeDraft.getListOfSettings();
-            Set listOfSettings2 = rpNoDraft.getListOfSettings();
+            Set<Map> listOfSettings1 = rpIncludeDraft.getListOfSettings();
+            Set<Map> listOfSettings2 = rpNoDraft.getListOfSettings();
             if (listOfSettings1.size() != listOfSettings2.size()) {
                 throw new InternalError("can't combine");
             }
-            Iterator it1 = listOfSettings1.iterator();
-            Iterator it2 = listOfSettings2.iterator();
+            Iterator<Map> it1 = listOfSettings1.iterator();
+            Iterator<Map> it2 = listOfSettings2.iterator();
             while (it1.hasNext()) {
-                Map settings1 = (Map) it1.next();
-                Map settings2 = (Map) it2.next();
+                Map settings1 = it1.next();
+                Map settings2 = it2.next();
                 if (settings1.equals(settings2)) {
                     settings1.put("draft", "unconfirmed approved");
                     addToListOfSettings(settings1);
@@ -562,7 +563,7 @@ public class GenerateCldrTests {
             this.listOfSettings = listOfSettings;
         }
 
-        private Set getListOfSettings() {
+        private Set<Map> getListOfSettings() {
             return Collections.unmodifiableSet(listOfSettings);
         }
     }
@@ -585,17 +586,17 @@ public class GenerateCldrTests {
 
     private void generateItems(String locale, Collection<String> onlyLocales,
         DataShower generator) throws Exception {
-        Set<String> sublocales = new TreeSet(); // ULocaleComparator
+        Set<String> sublocales = new TreeSet<String>(); // ULocaleComparator
         sublocales.add(locale);
         sublocales.addAll(parentToLocales.getAll(locale));
         sublocales.retainAll(onlyLocales);
-        Map locale_results = new TreeMap(ULocaleComparator);
+        Map<String, ResultsPrinter> locale_results = new TreeMap<String, ResultsPrinter>(ULocaleComparator);
         for (Iterator<String> it = sublocales.iterator(); it.hasNext();) {
             String current = it.next();
             locale_results.put(current, generator.show(current));
         }
         // do it this way so that the locales stay in order
-        Set matchingLocales = new TreeSet(ULocaleComparator);
+        Set<String> matchingLocales = new TreeSet<String>(ULocaleComparator);
         while (sublocales.size() != 0) {
             String first = sublocales.iterator().next();
             ResultsPrinter r = (ResultsPrinter) locale_results.get(first);
@@ -611,10 +612,10 @@ public class GenerateCldrTests {
             sublocales.removeAll(matchingLocales);
             matchingLocales.clear();
         }
-        Comparator c;
+        //Comparator c;
     }
 
-    public void showLocales(String elementName, Collection others) {
+    public void showLocales(String elementName, Collection<String> others) {
         // System.out.println(elementName + ": " + locale);
         out.println("  <" + elementName + " ");
         StringBuffer comment = new StringBuffer();
@@ -652,11 +653,10 @@ public class GenerateCldrTests {
     }
 
     DataShower ZoneFieldShower = new DataShower() {
-        StandardCodes sc = StandardCodes.make();
 
         // Set zones = new
         // TreeSet(sc.getAvailableCodes("tzid"));
-        List zones = Arrays.asList(new String[] { "America/Los_Angeles",
+        List<String> zones = Arrays.asList(new String[] { "America/Los_Angeles",
             "America/Argentina/Buenos_Aires", "America/Buenos_Aires",
             "America/Havana", "Australia/ACT", "Australia/Sydney", "Europe/London",
             "Europe/Moscow", "Etc/GMT+3" });
@@ -746,7 +746,7 @@ public class GenerateCldrTests {
                 }
                 rp.set("input", ICUServiceBuilder.isoDateFormat(datetime));
                 for (int i = 0; i < ICUServiceBuilder.LIMIT_DATE_FORMAT_INDEX; ++i) {
-                    rp.set("dateType", icuServiceBuilder.getDateNames(i));
+                    rp.set("dateType", ICUServiceBuilder.getDateNames(i));
                     for (int k = 0; k < ICUServiceBuilder.LIMIT_DATE_FORMAT_INDEX; ++k) {
                         if (i == 0 && k == 0)
                             continue;
@@ -755,7 +755,7 @@ public class GenerateCldrTests {
                         if (!METAZONES_WORK && (pattern.contains("z") || pattern.contains("V"))) {
                             continue;
                         }
-                        rp.set("timeType", icuServiceBuilder.getDateNames(k));
+                        rp.set("timeType", ICUServiceBuilder.getDateNames(k));
                         if (false && i == 2 && k == 0) {
                             System.out.println("debug: date "
                                 + icuServiceBuilder.getDateNames(i) + ", time "
@@ -944,8 +944,8 @@ public class GenerateCldrTests {
         String last = "";
         boolean needEquals = false;
         StringBuffer tempResult = new StringBuffer(CldrUtility.LINE_SEPARATOR);
-        for (Iterator it = bag.iterator(); it.hasNext();) {
-            String s = (String) it.next();
+        for (Iterator<String> it = bag.iterator(); it.hasNext();) {
+            String s = it.next();
             if (col.compare(s, last) != 0) {
                 if (needEquals)
                     tempResult.append(last).append(CldrUtility.LINE_SEPARATOR);
@@ -962,9 +962,9 @@ public class GenerateCldrTests {
         return result;
     }
 
-    static public Set getMatchingXMLFiles(String dir, String localeRegex) {
+    static public Set<String> getMatchingXMLFiles(String dir, String localeRegex) {
         Matcher m = Pattern.compile(localeRegex).matcher("");
-        Set s = new TreeSet();
+        Set<String> s = new TreeSet<String>();
         File[] files = new File(dir).listFiles();
         for (int i = 0; i < files.length; ++i) {
             String name = files[i].getName();
@@ -1064,7 +1064,7 @@ public class GenerateCldrTests {
         return target;
     }
 
-    public static class UnicodeSetComparator implements Comparator {
+    public static class UnicodeSetComparator implements Comparator<Object> {
         UnicodeSetIterator ait = new UnicodeSetIterator();
 
         UnicodeSetIterator bit = new UnicodeSetIterator();
@@ -1105,7 +1105,7 @@ public class GenerateCldrTests {
 
         UnicodeSet NONE = new UnicodeSet();
 
-        UnicodeMap map = new UnicodeMap(); // new
+        UnicodeMap<UnicodeSet> map = new UnicodeMap<UnicodeSet>(); // new
 
         // UnicodeSetComparator()
 

@@ -1,0 +1,184 @@
+{
+  "main": {
+    "ast-ES": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "25",
+          "_number": "$Revision: 91 $"
+        },
+        "generation": {
+          "_date": "$Date: 2014-03-13 22:27:12 -0500 (Thu, 13 Mar 2014) $"
+        },
+        "language": "ast",
+        "territory": "ES"
+      },
+      "localeDisplayNames": {
+        "localeDisplayPattern": {
+          "localePattern": "{0} ({1})",
+          "localeSeparator": "{0}, {1}",
+          "localeKeyTypePattern": "{0}: {1}"
+        },
+        "keys": {
+          "calendar": "calendariu",
+          "collation": "orde de clasificación",
+          "currency": "moneda",
+          "numbers": "númberos"
+        },
+        "types": {
+          "numbers": {
+            "arab": "arábicos",
+            "arabext": "arábicos estendíos",
+            "armn": "armenios",
+            "armnlow": "armenios en minúscules",
+            "bali": "bali",
+            "beng": "bengalinos"
+          },
+          "collation": {
+            "big5han": "big5han"
+          },
+          "numbers": {
+            "brah": "brah"
+          },
+          "calendar": {
+            "buddhist": "buddhist"
+          },
+          "numbers": {
+            "cakm": "cakm",
+            "cham": "cham"
+          },
+          "calendar": {
+            "chinese": "chinese",
+            "coptic": "coptic",
+            "dangi": "dangi"
+          },
+          "numbers": {
+            "deva": "devanagari"
+          },
+          "collation": {
+            "dictionary": "dictionary",
+            "ducet": "orde de clasificación predetermináu d'Unicode",
+            "eor": "eor"
+          },
+          "numbers": {
+            "ethi": "etíopes"
+          },
+          "calendar": {
+            "ethiopic": "ethiopic",
+            "ethiopic-amete-alem": "ethiopic-amete-alem"
+          },
+          "numbers": {
+            "fullwide": "anchu completu"
+          },
+          "collation": {
+            "gb2312han": "gb2312han"
+          },
+          "numbers": {
+            "geor": "xeorxanos"
+          },
+          "calendar": {
+            "gregorian": "gregorianu"
+          },
+          "numbers": {
+            "grek": "griegos",
+            "greklow": "griegos en minúscules",
+            "gujr": "gujarati",
+            "guru": "gurmukhi",
+            "hanidec": "chinos decimales",
+            "hans": "chinos simplificaos",
+            "hansfin": "chinos simplificaos financieros",
+            "hant": "chinos tradicionales",
+            "hantfin": "chinos tradicionales financieros",
+            "hebr": "hebreos"
+          },
+          "calendar": {
+            "hebrew": "hebrew",
+            "indian": "indian",
+            "islamic": "islamic",
+            "islamic-civil": "islamic-civil",
+            "islamic-rgsa": "islamic-rgsa",
+            "islamic-tbla": "islamic-tbla",
+            "islamic-umalqura": "islamic-umalqura",
+            "iso8601": "iso8601",
+            "japanese": "japanese"
+          },
+          "numbers": {
+            "java": "java",
+            "jpan": "xaponeses",
+            "jpanfin": "xaponeses financieros",
+            "kali": "kali",
+            "khmr": "numberación ḥemer",
+            "knda": "numberación kannada",
+            "lana": "lana",
+            "lanatham": "lanatham",
+            "laoo": "laosianos",
+            "latn": "occidentales",
+            "lepc": "lepc",
+            "limb": "limb",
+            "mlym": "malayalam",
+            "mong": "mong",
+            "mtei": "mtei",
+            "mymr": "myanmar",
+            "mymrshan": "mymrshan",
+            "nkoo": "nkoo",
+            "olck": "olck",
+            "orya": "oriya",
+            "osma": "osma"
+          },
+          "calendar": {
+            "persian": "persian"
+          },
+          "collation": {
+            "phonebook": "phonebook",
+            "pinyin": "pinyin",
+            "reformed": "reformed"
+          },
+          "calendar": {
+            "roc": "roc"
+          },
+          "numbers": {
+            "roman": "romanos",
+            "romanlow": "romanos en minúscules",
+            "saur": "saur"
+          },
+          "collation": {
+            "search": "gueta",
+            "searchjl": "searchjl"
+          },
+          "numbers": {
+            "shrd": "shrd",
+            "sora": "sora"
+          },
+          "collation": {
+            "standard": "standard",
+            "stroke": "stroke"
+          },
+          "numbers": {
+            "sund": "sund",
+            "takr": "takr",
+            "talu": "talu",
+            "taml": "tamil tradicional",
+            "tamldec": "tamil",
+            "telu": "telugu",
+            "thai": "tailandeses",
+            "tibt": "tibetanos"
+          },
+          "collation": {
+            "traditional": "traditional",
+            "unihan": "unihan"
+          },
+          "numbers": {
+            "vaii": "vaii"
+          },
+          "collation": {
+            "zhuyin": "zhuyin"
+          }
+        },
+        "codePatterns": {
+          "language": "Llingua: {0}",
+          "script": "Alfabetu: {0}",
+          "territory": "Rexón: {0}"
+        }
+      }
+    }
+  }
+}

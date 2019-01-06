@@ -1,0 +1,24 @@
+{
+  "main": {
+    "vai-Vaii-LR": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "25",
+          "_number": "$Revision: 91 $"
+        },
+        "generation": {
+          "_date": "$Date: 2014-03-13 22:27:12 -0500 (Thu, 13 Mar 2014) $"
+        },
+        "language": "root",
+        "script": "Vaii",
+        "territory": "LR"
+      },
+      "layout": {
+        "orientation": {
+          "characterOrder": "left-to-right",
+          "lineOrder": "top-to-bottom"
+        }
+      }
+    }
+  }
+}

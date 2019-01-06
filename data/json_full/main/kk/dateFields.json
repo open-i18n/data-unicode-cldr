@@ -1,0 +1,159 @@
+{
+  "main": {
+    "kk": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "25",
+          "_number": "$Revision: 91 $"
+        },
+        "generation": {
+          "_date": "$Date: 2014-03-13 22:27:12 -0500 (Thu, 13 Mar 2014) $"
+        },
+        "language": "kk"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "ғасыр"
+          },
+          "year": {
+            "displayName": "жыл",
+            "relative-type--1": "былтырғы жыл",
+            "relative-type-0": "биылғы жыл",
+            "relative-type-1": "келесі жыл",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} жылдан кейін",
+              "relativeTimePattern-count-other": "{0} жылдан кейін"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} жыл бұрын",
+              "relativeTimePattern-count-other": "{0} жыл бұрын"
+            }
+          },
+          "month": {
+            "displayName": "ай",
+            "relative-type--1": "өткен ай",
+            "relative-type-0": "осы ай",
+            "relative-type-1": "келесі ай",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} айдан кейін",
+              "relativeTimePattern-count-other": "{0} айдан кейін"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} ай бұрын",
+              "relativeTimePattern-count-other": "{0} ай бұрын"
+            }
+          },
+          "week": {
+            "displayName": "апта",
+            "relative-type--1": "өткен апта",
+            "relative-type-0": "осы апта",
+            "relative-type-1": "келесі апта",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} аптадан кейін",
+              "relativeTimePattern-count-other": "{0} аптадан кейін"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} апта бұрын",
+              "relativeTimePattern-count-other": "{0} апта бұрын"
+            }
+          },
+          "day": {
+            "displayName": "күн",
+            "relative-type--1": "кеше",
+            "relative-type--2": "алдыңғы күні",
+            "relative-type-0": "бүгін",
+            "relative-type-1": "ертең",
+            "relative-type-2": "арғы күні",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} күннен кейін",
+              "relativeTimePattern-count-other": "{0} күннен кейін"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} күн бұрын",
+              "relativeTimePattern-count-other": "{0} күн бұрын"
+            }
+          },
+          "weekday": {
+            "displayName": "апта күні"
+          },
+          "sun": {
+            "relative-type--1": "өткен жексенбі",
+            "relative-type-0": "осы жексенбі",
+            "relative-type-1": "келесі жексенбі"
+          },
+          "mon": {
+            "relative-type--1": "өткен дүйсенбі",
+            "relative-type-0": "осы дүйсенбі",
+            "relative-type-1": "келесі дүйсенбі"
+          },
+          "tue": {
+            "relative-type--1": "өткен сейсенбі",
+            "relative-type-0": "осы сейсенбі",
+            "relative-type-1": "келесі сейсенбі"
+          },
+          "wed": {
+            "relative-type--1": "өткен сәрсенбі",
+            "relative-type-0": "осы сәрсенбі",
+            "relative-type-1": "келесі сәрсенбі"
+          },
+          "thu": {
+            "relative-type--1": "өткен бейсенбі",
+            "relative-type-0": "осы бейсенбі",
+            "relative-type-1": "келесі бейсенбі"
+          },
+          "fri": {
+            "relative-type--1": "өткен жұма",
+            "relative-type-0": "осы жұма",
+            "relative-type-1": "келесі жұма"
+          },
+          "sat": {
+            "relative-type--1": "өткен сенбі",
+            "relative-type-0": "осы сенбі",
+            "relative-type-1": "келесі сенбі"
+          },
+          "dayperiod": {
+            "displayName": "түске дейін/түстен кейін"
+          },
+          "hour": {
+            "displayName": "сағат",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} сағаттан кейін",
+              "relativeTimePattern-count-other": "{0} сағаттан кейін"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} сағат бұрын",
+              "relativeTimePattern-count-other": "{0} сағат бұрын"
+            }
+          },
+          "minute": {
+            "displayName": "минут",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} минуттан кейін",
+              "relativeTimePattern-count-other": "{0} минуттан кейін"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} минут бұрын",
+              "relativeTimePattern-count-other": "{0} минут бұрын"
+            }
+          },
+          "second": {
+            "displayName": "секунд",
+            "relative-type-0": "қазір",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} секундтан кейін",
+              "relativeTimePattern-count-other": "{0} секундтан кейін"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} секунд бұрын",
+              "relativeTimePattern-count-other": "{0} секунд бұрын"
+            }
+          },
+          "zone": {
+            "displayName": "уақыт белдеуі"
+          }
+        }
+      }
+    }
+  }
+}

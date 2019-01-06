@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -23,6 +24,7 @@ import java.util.regex.Pattern;
 import org.unicode.cldr.draft.ScriptMetadata;
 import org.unicode.cldr.tool.LikelySubtags;
 import org.unicode.cldr.tool.PluralRulesFactory;
+import org.unicode.cldr.tool.PluralRulesFactory.SamplePatterns;
 import org.unicode.cldr.unittest.TestAll.TestInfo;
 import org.unicode.cldr.util.Builder;
 import org.unicode.cldr.util.CLDRFile;
@@ -30,11 +32,14 @@ import org.unicode.cldr.util.CLDRFile.WinningChoice;
 import org.unicode.cldr.util.CLDRLocale;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.DayPeriodInfo;
+import org.unicode.cldr.util.DayPeriodInfo.DayPeriod;
 import org.unicode.cldr.util.Iso639Data;
 import org.unicode.cldr.util.Iso639Data.Scope;
 import org.unicode.cldr.util.IsoCurrencyParser;
 import org.unicode.cldr.util.LanguageTagParser;
+import org.unicode.cldr.util.Level;
 import org.unicode.cldr.util.Pair;
+import org.unicode.cldr.util.PluralRanges;
 import org.unicode.cldr.util.PreferredAndAllowedHour;
 import org.unicode.cldr.util.PreferredAndAllowedHour.HourStyle;
 import org.unicode.cldr.util.StandardCodes;
@@ -42,6 +47,7 @@ import org.unicode.cldr.util.StandardCodes.CodeType;
 import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.BasicLanguageData;
 import org.unicode.cldr.util.SupplementalDataInfo.BasicLanguageData.Type;
+import org.unicode.cldr.util.SupplementalDataInfo.ContainmentStyle;
 import org.unicode.cldr.util.SupplementalDataInfo.CurrencyDateInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.OfficialStatus;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo;
@@ -60,8 +66,12 @@ import com.ibm.icu.impl.Utility;
 import com.ibm.icu.lang.UScript;
 import com.ibm.icu.text.PluralRules;
 import com.ibm.icu.text.PluralRules.FixedDecimal;
+import com.ibm.icu.text.PluralRules.FixedDecimalRange;
+import com.ibm.icu.text.PluralRules.FixedDecimalSamples;
+import com.ibm.icu.text.PluralRules.SampleType;
 import com.ibm.icu.text.StringTransform;
 import com.ibm.icu.text.UnicodeSet;
+import com.ibm.icu.util.Output;
 import com.ibm.icu.util.ULocale;
 
 public class TestSupplementalInfo extends TestFmwk {
@@ -73,6 +83,120 @@ public class TestSupplementalInfo extends TestFmwk {
 
     public static void main(String[] args) {
         new TestSupplementalInfo().run(args);
+    }
+
+    public void TestPluralSampleOrder() {
+        HashSet<PluralInfo> seen = new HashSet<PluralInfo>();
+        for (String locale : SUPPLEMENTAL.getPluralLocales()) {
+            if (locale.equals("root")) {
+                continue;
+            }
+            PluralInfo pi = SUPPLEMENTAL.getPlurals(locale);
+            if (seen.contains(pi)) {
+                continue;
+            }
+            seen.add(pi);
+            for (SampleType s : SampleType.values()) {
+                for (Count c : pi.getCounts(s)) {
+                    FixedDecimalSamples sSamples = pi.getPluralRules().getDecimalSamples(c.toString(), s);
+                    if (sSamples == null) {
+                        errln(locale + " no sample for " + c);
+                        continue;
+                    }
+                    if (s == SampleType.DECIMAL) {
+                        continue; // skip
+                    }
+                    FixedDecimalRange lastSample = null;
+                    for (FixedDecimalRange sample : sSamples.samples) {
+                        if (lastSample != null) {
+                            if (lastSample.start.compareTo(sample.start) > 0) {
+                                errln(locale + ":" + c + ": out of order with " + lastSample + " > " + sample);
+                            } else if (false) {
+                                logln(locale + ":" + c + ": in order with " + lastSample + " < " + sample);
+                            }
+                        }
+                        lastSample = sample;
+                    }
+                }
+            }
+        }
+    }
+
+    public void TestPluralRanges() {
+        Set<String> localesToTest = new TreeSet<String>(SUPPLEMENTAL.getPluralRangesLocales());
+        for (String locale : StandardCodes.make().getLocaleCoverageLocales("google")) { //superset
+            if (locale.equals("*") || locale.contains("_")) {
+                continue;
+            }
+            localesToTest.add(locale);
+        }
+
+        for (String locale : localesToTest) {
+
+            // check that there are no null values
+            PluralRanges pluralRanges = SUPPLEMENTAL.getPluralRanges(locale);
+            if (pluralRanges == null) {
+                ignoreErrln("Missing plural ranges for " + locale);
+                pluralRanges = new PluralRanges().freeze();
+            }
+            PluralInfo pluralInfo = SUPPLEMENTAL.getPlurals(locale);
+            Set<Count> counts = pluralInfo.getCounts();
+            EnumSet<Count> found = EnumSet.noneOf(Count.class);
+            for (Count count : Count.values()) {
+                if (pluralRanges.isExplicitlySet(count) && !counts.contains(count)) {
+                    assertTrue(locale + "\t pluralRanges categories must be valid for locale:\t"
+                        + count + " must be in " + counts,
+                        !pluralRanges.isExplicitlySet(count));
+                }
+                for (Count end : Count.values()) {
+                    Count result = pluralRanges.getExplicit(count, end);
+                    if (result != null) {
+                        found.add(result);
+                    }
+                }
+            }
+
+            // check empty range results
+            if (found.isEmpty()) {
+                ignoreErrln("Empty range results for " + locale);
+            } else {
+                final SamplePatterns samplePatterns = PluralRulesFactory.getSamplePatterns(new ULocale(locale));
+                for (Count result : found) {
+                    String samplePattern = samplePatterns.get(PluralRules.PluralType.CARDINAL, result);
+                    if (samplePattern != null && !samplePattern.contains("{0}")) {
+                        errln("Plural Ranges cannot have results that don't use {0} in samples: "
+                            + locale + ", " + result + "\t«" + samplePattern + "»");
+                    }
+                }
+                if (isVerbose()) {
+                    logln("Range results for " + locale + ":\t" + found);
+                }
+            }
+
+            // check for missing values
+            Output<FixedDecimal> maxSample = new Output<FixedDecimal>();
+            Output<FixedDecimal> minSample = new Output<FixedDecimal>();
+            for (Count start : counts) {
+                for (Count end : counts) {
+                    boolean needsValue = pluralInfo.rangeExists(start, end, minSample, maxSample);
+                    Count explicitValue = pluralRanges.getExplicit(start, end);
+                    if (needsValue && explicitValue == null) {
+                        ignoreErrln(locale + "\tNeeds value, but has none: " + PluralRanges.showRange(start, end, Count.other)
+                            + ", eg: " + minSample + "–" + maxSample);
+                    } else if (!needsValue && explicitValue != null) {
+                        ignoreErrln(locale + "\tDoesn't need value, but has one: " + PluralRanges.showRange(start, end, explicitValue));
+                    }
+                }
+            }
+        }
+    }
+
+    public void ignoreErrln(String s) {
+        if (logKnownIssue("Cldrbug:7137", "Missing/extra plural ranges")) {
+            logln(s);
+        } else {
+            errln(s);
+        }
     }
 
     public void TestPluralSamples() {
@@ -88,6 +212,38 @@ public class TestSupplementalInfo extends TestFmwk {
         }
     }
 
+    public void TestPluralSamples2() {
+        for (ULocale locale : PluralRulesFactory.getLocales()) {
+            if (locale.toString().equals("und")) {
+                continue;
+            }
+            final SamplePatterns samplePatterns = PluralRulesFactory.getSamplePatterns(locale);
+            for (PluralRules.PluralType type : PluralRules.PluralType.values()) {
+                PluralInfo rules = SUPPLEMENTAL.getPlurals(
+                    SupplementalDataInfo.PluralType.fromStandardType(type),
+                    locale.toString());
+                for (Count count : rules.getCounts()) {
+                    String sample = samplePatterns.get(type, count);
+                    if (sample == null) {
+                        if (type == PluralRules.PluralType.ORDINAL
+                            && logKnownIssue("cldrbug:7075", "Missing ordinal minimal pairs")) {
+                            continue;
+                        }
+                        assertNotNull("Missing sample for " + locale + ", " + type + ", " + count, sample);
+                    } else {
+                        PluralRules pRules = rules.getPluralRules();
+                        double unique = pRules.getUniqueKeywordValue(count.toString());
+                        if (unique == PluralRules.NO_UNIQUE_VALUE
+                            && !sample.contains("{0}")) {
+                            errln("Missing {0} in sample: " + locale + ", " + type + ", " + count
+                                + " «" + sample + "»");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public void checkPluralSamples(String... row) {
         PluralInfo pluralInfo = SUPPLEMENTAL.getPlurals(PluralType.valueOf(row[1]), row[0]);
         Count count = pluralInfo.getCount(new FixedDecimal(row[2]));
@@ -97,7 +253,7 @@ public class TestSupplementalInfo extends TestFmwk {
     public void TestPluralLocales() {
         // get the unique rules
         for (PluralType type : PluralType.values()) {
-            Relation<PluralInfo, String> pluralsToLocale = new Relation(new HashMap(), TreeSet.class);
+            Relation<PluralInfo, String> pluralsToLocale = Relation.of(new HashMap<PluralInfo, Set<String>>(), TreeSet.class);
             for (String locale : new TreeSet<String>(SUPPLEMENTAL.getPluralLocales(type))) {
                 PluralInfo pluralInfo = SUPPLEMENTAL.getPlurals(type, locale);
                 pluralsToLocale.put(pluralInfo, locale);
@@ -203,8 +359,8 @@ public class TestSupplementalInfo extends TestFmwk {
             { "cy", "zero", "0" }, // n is 0
             { "ksh", "zero", "0" }, // n is 0
             { "lag", "zero", "0" }, // n is 0
-            { "pt", "one", "0"}, // i = 1 and v = 0 or i = 0 and t = 1
-            { "pt_PT", "one", "0"},  // n = 1 and v = 0 
+            { "pt", "one", "0" }, // i = 1 and v = 0 or i = 0 and t = 1
+            { "pt_PT", "one", "0" }, // n = 1 and v = 0 
             { "ar", "two", "0" }, // n is 2
             { "cy", "two", "0" }, // n is 2
             { "ga", "two", "0" }, // n is 2
@@ -225,9 +381,11 @@ public class TestSupplementalInfo extends TestFmwk {
             { "lv", "one", "0,00,000,0000" }, // n mod 10 is 1 and n mod 100 is not 11 or v is 2 and f mod 10 is 1 and f mod 100 is not 11 or v is not 2 and f mod 10 is 1
             { "br", "one", "0,00,000,0000" }, // n mod 10 is 1 and n mod 100 not in 11,71,91
             { "lt", "one", "0,00,000,0000" }, // n mod 10 is 1 and n mod 100 not in 11..19
+            { "fil", "one", "0,00,000,0000" }, // v = 0 and i = 1,2,3 or v = 0 and i % 10 != 4,6,9 or v != 0 and f % 10 != 4,6,9
+            { "tl", "one", "0,00,000,0000" }, // v = 0 and i = 1,2,3 or v = 0 and i % 10 != 4,6,9 or v != 0 and f % 10 != 4,6,9
         };
         // parse out the exceptions
-        Map<PluralInfo, Relation<Count, Integer>> exceptions = new HashMap();
+        Map<PluralInfo, Relation<Count, Integer>> exceptions = new HashMap<PluralInfo, Relation<Count, Integer>>();
         Relation<Count, Integer> fallback = Relation.of(new EnumMap<Count, Set<Integer>>(Count.class), TreeSet.class);
         for (String[] row : exceptionStrings) {
             Relation<Count, Integer> countToDigits;
@@ -246,8 +404,8 @@ public class TestSupplementalInfo extends TestFmwk {
                 countToDigits.put(c, digit.length());
             }
         }
-        Set<PluralInfo> seen = new HashSet();
-        Set<String> sorted = new TreeSet(SUPPLEMENTAL.getPluralLocales(PluralType.cardinal));
+        Set<PluralInfo> seen = new HashSet<PluralInfo>();
+        Set<String> sorted = new TreeSet<String>(SUPPLEMENTAL.getPluralLocales(PluralType.cardinal));
         Relation<String, String> ruleToExceptions = Relation.of(new TreeMap<String, Set<String>>(), TreeSet.class);
 
         for (String locale : sorted) {
@@ -327,8 +485,8 @@ public class TestSupplementalInfo extends TestFmwk {
     }
 
     public void TestEquivalentLocales() {
-        Set<Set<String>> seen = new HashSet();
-        Set<String> toTest = new TreeSet(testInfo.getCldrFactory().getAvailable());
+        Set<Set<String>> seen = new HashSet<Set<String>>();
+        Set<String> toTest = new TreeSet<String>(testInfo.getCldrFactory().getAvailable());
         toTest.addAll(SUPPLEMENTAL.getLikelySubtags().keySet());
         toTest.addAll(SUPPLEMENTAL.getLikelySubtags().values());
         toTest.addAll(SUPPLEMENTAL.getDefaultContentLocales());
@@ -478,8 +636,8 @@ public class TestSupplementalInfo extends TestFmwk {
         // The feedback gathered from our translators is that the following use 24 hour time ONLY:
         Set<String> only24lang = new TreeSet<String>(Arrays.asList(("sq, br, bu, ca, hr, cs, da, de, nl, et, eu, fi, " +
             "fr, gl, he, is, id, it, nb, pt, ro, ru, sr, sk, sl, sv, tr, hy").split(",\\s*")));
-        Set<String> only24region = new TreeSet();
-        Set<String> either24or12region = new TreeSet();
+        Set<String> only24region = new TreeSet<String>();
+        Set<String> either24or12region = new TreeSet<String>();
 
         // get all countries where official or de-facto official
         // add them two one of two lists, based on the above list of languages
@@ -503,7 +661,7 @@ public class TestSupplementalInfo extends TestFmwk {
         only24region.removeAll(current12preferred);
         // now verify
         if (!current24only.containsAll(only24region)) {
-            Set<String> missing24only = new TreeSet(only24region);
+            Set<String> missing24only = new TreeSet<String>(only24region);
             missing24only.removeAll(current24only);
 
             errln("24-hour-only doesn't include needed items:\n"
@@ -605,8 +763,10 @@ public class TestSupplementalInfo extends TestFmwk {
         }
     }
 
+    static final List<String> oldRegions = Arrays.asList("NT, YD, QU, SU, DD, FX, ZR, AN, BU, TP, CS, YU".split(", "));
+
     public void TestTerritoryContainment() {
-        Relation<String, String> map = SUPPLEMENTAL.getTerritoryToContained(false);
+        Relation<String, String> map = SUPPLEMENTAL.getTerritoryToContained(ContainmentStyle.all);
         Relation<String, String> mapCore = SUPPLEMENTAL.getContainmentCore();
         Set<String> mapItems = new LinkedHashSet<String>();
         // get all the items
@@ -632,6 +792,7 @@ public class TestSupplementalInfo extends TestFmwk {
         }
 
         if (!mapItems.equals(bcp47Regions)) {
+            mapItems.removeAll(oldRegions);
             errlnDiff("containment items not in bcp47 regions: ", mapItems, bcp47Regions);
             errlnDiff("bcp47 regions not in containment items: ", bcp47Regions, mapItems);
         }
@@ -693,7 +854,7 @@ public class TestSupplementalInfo extends TestFmwk {
             .getLocaleAliasInfo();
         Map<String, R2<List<String>, String>> tagToReplacement = typeToTagToReplacement.get("language");
 
-        Relation<String, String> replacementToReplaced = new Relation(new TreeMap(), TreeSet.class);
+        Relation<String, String> replacementToReplaced = Relation.of(new TreeMap<String, Set<String>>(), TreeSet.class);
         for (String language : tagToReplacement.keySet()) {
             List<String> replacements = tagToReplacement.get(language).get0();
             if (replacements != null) {
@@ -705,7 +866,7 @@ public class TestSupplementalInfo extends TestFmwk {
         Map<String, Map<String, Map<String, String>>> lstreg = StandardCodes.getLStreg();
         Map<String, Map<String, String>> lstregLanguageInfo = lstreg.get("language");
 
-        Relation<Scope, String> scopeToCodes = new Relation(new TreeMap(), TreeSet.class);
+        Relation<Scope, String> scopeToCodes = Relation.of(new TreeMap<Scope, Set<String>>(), TreeSet.class);
         // the invariant is that every macrolanguage has exactly 1 encompassed language that maps to it
 
         main: for (String language : Builder.with(new TreeSet<String>()).addAll(languageCodes)
@@ -1012,7 +1173,7 @@ public class TestSupplementalInfo extends TestFmwk {
 
         SupplementalDataInfo supplementalData = SupplementalDataInfo.getInstance(file.getSupplementalDirectory());
         DayPeriodInfo dayPeriods = supplementalData.getDayPeriods(file.getLocaleID());
-        LinkedHashSet<DayPeriodInfo.DayPeriod> items = new LinkedHashSet(dayPeriods.getPeriods());
+        LinkedHashSet<DayPeriodInfo.DayPeriod> items = new LinkedHashSet<DayPeriod>(dayPeriods.getPeriods());
         String prefix = "//ldml/dates/calendars/calendar[@type=\"gregorian\"]/dayPeriods/dayPeriodContext[@type=\"format\"]/dayPeriodWidth[@type=\"wide\"]/dayPeriod[@type=\"";
 
         for (DayPeriodInfo.DayPeriod dayPeriod : items) {
@@ -1061,7 +1222,7 @@ public class TestSupplementalInfo extends TestFmwk {
             String likelyScript = likely == null ? null : CLDRLocale.getInstance(likely).getScript();
             Map<Type, BasicLanguageData> scriptInfo = supp.getBasicLanguageDataMap(baseLanguage);
             if (scriptInfo == null) {
-                if (!logKnownIssue("cldrbug:6114", "Use of scripts in locales")) {
+                if (!logKnownIssue("cldrbug:7120", "Missing basic language data for CLDR locales")) {
                     errln(loc + ": has no BasicLanguageData");
                 }
             } else {
@@ -1072,7 +1233,7 @@ public class TestSupplementalInfo extends TestFmwk {
                 if (data == null) {
                     errln(loc + ": has no scripts in BasicLanguageData");
                 } else if (!data.getScripts().contains(defaultScript)) {
-                    if (!logKnownIssue("cldrbug:6114", "Use of scripts in locales")) {
+                    if (!logKnownIssue("cldrbug:7120", "Missing basic language data for CLDR locales")) {
                         errln(loc + ": " + defaultScript + " not in BasicLanguageData " + data.getScripts());
                     }
                 }
@@ -1084,9 +1245,7 @@ public class TestSupplementalInfo extends TestFmwk {
 
             if (!loc.getScript().isEmpty()) {
                 if (!loc.getScript().equals(defaultScript)) {
-                    if (!logKnownIssue("cldrbug:6114", "Use of scripts in locales")) {
-                        assertNotEquals(locale + ": only include script if not default", loc.getScript(), defaultScript);
-                    }
+                    assertNotEquals(locale + ": only include script if not default", loc.getScript(), defaultScript);
                 }
             }
 
@@ -1094,53 +1253,71 @@ public class TestSupplementalInfo extends TestFmwk {
     }
 
     public void TestPluralCompleteness() {
-        Set<String> cardinalLocales = new TreeSet(SUPPLEMENTAL.getPluralLocales(PluralType.cardinal));
-        Set<String> ordinalLocales = new TreeSet(SUPPLEMENTAL.getPluralLocales(PluralType.ordinal));
-        Map<ULocale, PluralRulesFactory.SamplePatterns> sampleCardinals = PluralRulesFactory.getLocaleToSamplePatterns();
-        Set<ULocale> sampleCardinalLocales = new HashSet(sampleCardinals.keySet());
-        Map<ULocale, PluralRules> overrideCardinals = PluralRulesFactory.getPluralOverrides();
-        Set<ULocale> overrideCardinalLocales = new HashSet(overrideCardinals.keySet());
+        //Set<String> cardinalLocales = new TreeSet<String>(SUPPLEMENTAL.getPluralLocales(PluralType.cardinal));
+        //Set<String> ordinalLocales = new TreeSet<String>(SUPPLEMENTAL.getPluralLocales(PluralType.ordinal));
+        //Map<ULocale, PluralRulesFactory.SamplePatterns> sampleCardinals = PluralRulesFactory.getLocaleToSamplePatterns();
+        //Set<ULocale> sampleCardinalLocales = PluralRulesFactory.getLocales(); // new HashSet(PluralRulesFactory.getSampleCounts(uLocale, type).keySet());
+        //Map<ULocale, PluralRules> overrideCardinals = PluralRulesFactory.getPluralOverrides();
+        //Set<ULocale> overrideCardinalLocales = new HashSet<ULocale>(overrideCardinals.keySet());
 
-        Set<String> testLocales = STANDARD_CODES.getLocaleCoverageLocales("google");
+        Set<String> testLocales = STANDARD_CODES.getLocaleCoverageLocales("google",EnumSet.of(Level.MODERN, Level.MODERATE));
         Set<String> allLocales = testInfo.getCldrFactory().getAvailable();
         LanguageTagParser ltp = new LanguageTagParser();
-        for (boolean test : Arrays.asList(true, false)) {
-            for (String locale : allLocales) {
-                // the only known case where plural rules depend on region or script is pt_PT
-                if (locale.equals("root")) {
-                    continue;
-                }
-                ltp.set(locale);
-                if (!ltp.getRegion().isEmpty() || !ltp.getScript().isEmpty()) {
-                    continue;
-                }
-                if (test != testLocales.contains(locale)) {
-                    continue;
-                }
-                ULocale ulocale = new ULocale(locale);
-                PluralRules overrideRules = overrideCardinals.get(ulocale);
-                PluralRules cardinalRules = SUPPLEMENTAL.getPlurals(locale).getPluralRules();
-                boolean hasSamples = sampleCardinalLocales.contains(ulocale);
-                boolean hasCardinalRules = cardinalLocales.contains(locale);
-                boolean hasOrdinals = ordinalLocales.contains(locale);
-                if (test) {
-                    if (!hasSamples || !hasCardinalRules) {
-                        errln("Plurals for " + locale + ", Missing samples or cardinal rules");
-                    }
-                    if (!hasOrdinals) {
-                        logln("Plurals for " + locale + ", Missing ordinal rules");
-                    }
-                }
-                logln(test
-                    + "\t" + locale
-                    + "\t" + (hasCardinalRules ? "card" : "NO-card")
-                    + "\t" + (hasOrdinals ? "ord" : "NO-ord")
-                    + "\t" + (hasSamples ? "samp" : "NO-samp")
-                    + (!overrideCardinalLocales.contains(ulocale) ? ""
-                        : overrideRules.equals(cardinalRules) ? ""
-                            : "\t" + cardinalRules + "\t" + overrideRules));
-
+        for (String locale : allLocales) {
+            // the only known case where plural rules depend on region or script is pt_PT
+            if (locale.equals("root")) {
+                continue;
             }
+            ltp.set(locale);
+            if (!ltp.getRegion().isEmpty() || !ltp.getScript().isEmpty()) {
+                continue;
+            }
+            boolean needsCoverage = testLocales.contains(locale);
+            ULocale ulocale = new ULocale(locale);
+
+            for (PluralType type : PluralType.values()) {
+                PluralInfo pluralInfo = SUPPLEMENTAL.getPlurals(type, locale, false);
+                if (pluralInfo == null) {
+                    errOrLog(needsCoverage, locale + ", missing plural " + type + " rules");
+                    continue;
+                }
+                Set<Count> counts = pluralInfo.getCounts();
+                //                if (counts.size() == 1) {
+                //                    continue; // skip checking samples
+                //                }
+                HashSet<String> samples = new HashSet<String>();
+                EnumSet<Count> countsWithNoSamples = EnumSet.noneOf(Count.class);
+                Relation<String, Count> samplesToCounts = Relation.of(new HashMap(), LinkedHashSet.class);
+                Set<Count> countsFound = PluralRulesFactory.getSampleCounts(ulocale, type.standardType);
+                for (Count count : counts) {
+                    String pattern = PluralRulesFactory.getSamplePattern(ulocale, type.standardType, count);
+                    if (countsFound == null || !countsFound.contains(count)) {
+                        countsWithNoSamples.add(count);
+                    } else {
+                        samplesToCounts.put(pattern, count);
+                        logln(ulocale + "\t" + type + "\t" + count + "\t" + pattern);
+                    }
+                }
+                if (!countsWithNoSamples.isEmpty() && (type == PluralType.cardinal || !logKnownIssue("cldrbug:7075","Missing ordinal minimal pairs"))) {
+                    errOrLog(needsCoverage, ulocale + "\t" + type + "\t missing samples: " + countsWithNoSamples);
+                }
+                for (Entry<String, Set<Count>> entry : samplesToCounts.keyValuesSet()) {
+                    if (entry.getValue().size() != 1 && !logKnownIssue("cldrbug:7119","Some duplicate minimal pairs")) {
+                        errOrLog(needsCoverage, ulocale + "\t" + type
+                            + "\t duplicate samples: " + entry.getValue()
+                            + " => «" + entry.getKey() + "»");
+                    }
+                }
+            }
+        }
+    }
+
+
+    public void errOrLog(boolean causeError, String message) {
+        if (causeError) {
+            errln(message);
+        } else {
+            logln(message);
         }
     }
 

@@ -12,6 +12,7 @@ import org.unicode.cldr.draft.ScriptMetadata.Info;
 import org.unicode.cldr.tool.LikelySubtags;
 import org.unicode.cldr.unittest.TestAll.TestInfo;
 import org.unicode.cldr.util.CLDRFile;
+import org.unicode.cldr.util.Containment;
 import org.unicode.cldr.util.LanguageTagParser;
 import org.unicode.cldr.util.StandardCodes;
 import org.unicode.cldr.util.SupplementalDataInfo;
@@ -25,9 +26,126 @@ public class LikelySubtagsTest extends TestFmwk {
 
     private static final SupplementalDataInfo SUPPLEMENTAL_DATA_INFO = TestInfo.getInstance().getSupplementalDataInfo();
     static final Map<String, String> likely = SUPPLEMENTAL_DATA_INFO.getLikelySubtags();
+    static final LikelySubtags LIKELY = new LikelySubtags(SUPPLEMENTAL_DATA_INFO, likely);
 
     public static void main(String[] args) {
         new LikelySubtagsTest().run(args);
+    }
+
+    static class Tags {
+        final Set<String> languages = new TreeSet<String>();
+        final Set<String> scripts = new TreeSet<String>();
+        final Set<String> regions = new TreeSet<String>();
+        final Set<String> scriptRegion = new TreeSet<String>();
+        final Set<String> languageScript = new TreeSet<String>();
+        final Set<String> languageRegion = new TreeSet<String>();
+        final Set<String> all = new TreeSet<String>();
+
+        public Tags() {
+            final LanguageTagParser ltp = new LanguageTagParser();
+            for (Entry<String, String> entry : likely.entrySet()) {
+                add(ltp.set(entry.getKey()), true);
+                add(ltp.set(entry.getValue()), false);
+            }
+            //            System.out.println("all: " + all);
+            //            System.out.println("scriptRegion: " + scriptRegion);
+            //            System.out.println("languageScript: " + languageScript);
+            //            System.out.println("languageRegion: " + languageRegion);
+        }
+
+        void add(LanguageTagParser ltp, boolean source) {
+            String sourceLanguage = ltp.getLanguage();
+            String sourceScript = ltp.getScript();
+            String sourceRegion = ltp.getRegion();
+            // capture all cases of 2 items
+            if (source) {
+                if (!sourceScript.isEmpty() && !sourceRegion.isEmpty()) {
+                    if (!sourceLanguage.equals("und")) {
+                        all.add(ltp.toString());
+                    } else {
+                        scriptRegion.add(ltp.toString());
+                    }
+                } else if (!sourceLanguage.equals("und")) {
+                    if (!sourceScript.isEmpty()) {
+                        languageScript.add(ltp.toString());
+                    } else if (!sourceRegion.isEmpty()) {
+                        languageRegion.add(ltp.toString());
+                    }
+                }
+            }
+            languages.add(sourceLanguage);
+            scripts.add(sourceScript);
+            regions.add(sourceRegion);
+        }
+    }
+
+    static final Tags TAGS = new Tags();
+
+    final LanguageTagParser maxLtp = new LanguageTagParser();
+    final LanguageTagParser sourceLtp = new LanguageTagParser();
+
+    /**
+     * Return false if we should skip the language
+     * @param source
+     * @return
+     */
+    public boolean checkAdding(String source) {
+        // if X maps to Y, then adding a field from Y to X will still map to Y
+        // Example:
+        // und_AF      => fa_Arab_AF
+        // therefore, the following should also be true:
+        // und_Arab_AF => fa_Arab_AF
+        // fa_AF       => fa_Arab_AF 
+        // fa_Arab_AF  => fa_Arab_AF
+
+        String max = LIKELY.maximize(source);
+        if (!assertNotEquals("Maximize " + source, null, max)) {
+            return source.contains("_");
+        }
+        sourceLtp.set(source);
+        maxLtp.set(max);
+        for (int i = 1; i < 8; ++i) {
+            if ((i & 1) != 0) {
+                if (!sourceLtp.getLanguage().equals("und")) continue;
+                sourceLtp.setLanguage(maxLtp.getLanguage());
+            }
+            if ((i & 2) != 0) {
+                if (!sourceLtp.getScript().isEmpty()) continue;
+                sourceLtp.setScript(maxLtp.getScript());
+            }
+            if ((i & 4) != 0) {
+                if (!sourceLtp.getRegion().isEmpty()) continue;
+                sourceLtp.setRegion(maxLtp.getRegion());
+            }
+            String test = sourceLtp.toString();
+            if (!assertEquals(source + " -> " + max + ", so testing " + test, max, LIKELY.maximize(test))) {
+                LIKELY.maximize(test); // do again for debugging
+            }
+            sourceLtp.set(source); // restore
+        }
+        return true;
+    }
+
+    public void TestCompleteness() {
+        if (logKnownIssue("Cldrbug:7121", "Problems with likely subtags test")) {
+            return;
+        }
+        checkAdding("und_Bopo");
+        checkAdding("und_AF");
+        final LanguageTagParser ltp = new LanguageTagParser();
+        main: for (String language : TAGS.languages) {
+            ltp.setLanguage(language);
+            for (String script : TAGS.scripts) {
+                ltp.setScript(script);
+                for (String region : TAGS.regions) {
+                    ltp.setRegion(region);
+                    String testTag = ltp.toString();
+                    if (!checkAdding(testTag)) {
+                        continue main;
+                    }
+                }
+            }
+        }
     }
 
     static Set<String> exceptions = new HashSet<String>(Arrays.asList("Zyyy", "Zinh", "Zzzz", "Brai"));
@@ -37,9 +155,6 @@ public class LikelySubtagsTest extends TestFmwk {
         // first get all the subtags
         // then test all the combinations
         LanguageTagParser ltp = new LanguageTagParser();
-        Set<String> languages = new HashSet();
-        Set<String> scripts = new HashSet();
-        Set<String> regions = new HashSet();
         for (Entry<String, String> entry : likely.entrySet()) {
             ltp.set(entry.getKey());
             String sourceLanguage = ltp.getLanguage();
@@ -59,7 +174,9 @@ public class LikelySubtagsTest extends TestFmwk {
                 assertEquals("script", sourceScript, targetScript);
             }
             if (!sourceRegion.isEmpty()) {
-                assertEquals("region", sourceRegion, targetRegion);
+                if (Containment.isLeaf(sourceRegion)) {
+                    assertEquals("region", sourceRegion, targetRegion);
+                }
             }
         }
 
@@ -80,7 +197,11 @@ public class LikelySubtagsTest extends TestFmwk {
                 continue;
             }
             if (i.likelyLanguage.equals("und") && !exceptions.contains(shortName)) {
-                errln("Script has no likely language: " + shortName);
+                if (logKnownIssue("Cldrbug:7134","Missing script metadata for Brah") && shortName.equals("Brah")) {
+                    logln("Script has no likely language: " + shortName);                   
+                } else {
+                    errln("Script has no likely language: " + shortName);
+                }
             }
             toRemove.applyIntPropertyValue(UProperty.SCRIPT, script);
             current.removeAll(toRemove);
@@ -119,19 +240,14 @@ public class LikelySubtagsTest extends TestFmwk {
         for (String region : StandardCodes.make().getGoodAvailableCodes("territory")) {
             String likelyExpansion = likely.get("und_" + region);
             if (likelyExpansion == null) {
-                if (region.equals("ZZ") || SUPPLEMENTAL_DATA_INFO.getContained(region) == null) { // not container
+                if (region.equals("ZZ") || region.equals("001") || SUPPLEMENTAL_DATA_INFO.getContained(region) == null) { // not container
                     String likelyTag = LikelySubtags.maximize("und_" + region, likely);
                     if (likelyTag == null || !likelyTag.startsWith("en_Latn_")) {
                         errln("Missing likely subtags for region: " + region + "\t" + english.getName("territory", region));
                     }
                 } else { // container
-                    if (logKnownIssue("ICU:9447", "Fix after warnings don't cause failure")) {
-                        logln("Missing likely subtags for macroregion (fix to exclude regions having 'en'): " + region + "\t"
-                            + english.getName("territory", region));
-                    } else {
-                        errln("Missing likely subtags for macroregion (fix to exclude regions having 'en'): " + region + "\t"
-                            + english.getName("territory", region));
-                    }
+                    errln("Missing likely subtags for macroregion (fix to exclude regions having 'en'): " + region + "\t"
+                        + english.getName("territory", region));
                 }
             } else {
                 logln("Likely subtags for region: " + region + ":\t " + likely);
@@ -164,8 +280,13 @@ public class LikelySubtagsTest extends TestFmwk {
                 errln("Missing likely language for script (und_" + script + ")  should be something like:\t "
                     + showOverride(script, originCountry, langScript));
             } else if (!exceptions2.contains(likelyExpansion) && !likelyExpansion.startsWith(langScript)) {
-                errln("Wrong likely language for script (und_" + script + "). Should not be " + likelyExpansion
-                    + ", but something like:\t " + showOverride(script, originCountry, langScript));
+                if (logKnownIssue("Cldrbug:7134","Missing script metadata for Brah") && script.equals("Brah")) {
+                    logln("Wrong likely language for script (und_" + script + "). Should not be " + likelyExpansion
+                        + ", but something like:\t " + showOverride(script, originCountry, langScript));                    
+                } else {
+                    errln("Wrong likely language for script (und_" + script + "). Should not be " + likelyExpansion
+                        + ", but something like:\t " + showOverride(script, originCountry, langScript));
+                }
             } else {
                 logln("OK: " + undScript + " => " + likelyExpansion);
             }

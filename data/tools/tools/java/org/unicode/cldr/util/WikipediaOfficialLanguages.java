@@ -90,7 +90,7 @@ public class WikipediaOfficialLanguages {
         Pattern commentBreak = Pattern.compile("\\)\\s*\\(?|\\s*\\(");
         int count = 0;
         try {
-            BufferedReader input = BagFormatter.openUTF8Reader(CldrUtility.UTIL_DATA_DIR, "WikipediaOfficialLanguages.txt");
+            BufferedReader input = BagFormatter.openUTF8Reader(CLDRPaths.UTIL_DATA_DIR, "WikipediaOfficialLanguages.txt");
             Set<String> regionSet = null;
             while (true) {
                 String line = input.readLine();
@@ -103,7 +103,7 @@ public class WikipediaOfficialLanguages {
                     Set<String> replacement = REPLACE_REGIONS.get(items[0]);
                     if (replacement != null) {
                         if (replacement.contains("SKIP")) {
-                            regionSet = Collections.EMPTY_SET;
+                            regionSet = Collections.emptySet();
                         } else {
                             regionSet = replacement;
                         }
@@ -113,9 +113,9 @@ public class WikipediaOfficialLanguages {
                     String region = CountryCodeConverter.getCodeFromName(items[0]);
                     if (region == null) {
                         System.out.println(++count + " Couldn't parse region: <" + items[0] + "> in line: " + line);
-                        regionSet = Collections.EMPTY_SET;
+                        regionSet = Collections.emptySet();
                     } else {
-                        regionSet = new HashSet();
+                        regionSet = new HashSet<String>();
                         regionSet.add(region);
                     }
                 } else if (line.contains("[edit]") || line.trim().isEmpty()) {
@@ -226,9 +226,9 @@ public class WikipediaOfficialLanguages {
         Set<String> locales = sc.getLocaleCoverageLocales("google"); // for now, restrict this
 
         System.out.println("Cc\tCountry\tLc\tLanguage Name\tWiki status (heuristic)\tCLDR status\t\tWiki notes");
-        Set<String> seen = new HashSet();
+        Set<String> seen = new HashSet<String>();
         for (String region : getRegions()) {
-            boolean regionShown = false;
+            //boolean regionShown = false;
             Set<String> cldrLanguagesRaw = supplementalDataInfo.getLanguagesForTerritoryWithPopulationData(region);
             Map<String, PopulationData> cldrLanguageInfo = new HashMap<String, PopulationData>();
             for (String s : cldrLanguagesRaw) {

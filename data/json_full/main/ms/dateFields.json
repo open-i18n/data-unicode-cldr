@@ -1,0 +1,145 @@
+{
+  "main": {
+    "ms": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "25",
+          "_number": "$Revision: 91 $"
+        },
+        "generation": {
+          "_date": "$Date: 2014-03-13 22:27:12 -0500 (Thu, 13 Mar 2014) $"
+        },
+        "language": "ms"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "Era"
+          },
+          "year": {
+            "displayName": "Tahun",
+            "relative-type--1": "tahun lepas",
+            "relative-type-0": "tahun ini",
+            "relative-type-1": "tahun depan",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "Dalam {0} tahun"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} tahun lalu"
+            }
+          },
+          "month": {
+            "displayName": "Bulan",
+            "relative-type--1": "bulan lalu",
+            "relative-type-0": "bulan ini",
+            "relative-type-1": "bulan depan",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "Dalam {0} bulan"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} bulan lalu"
+            }
+          },
+          "week": {
+            "displayName": "Minggu",
+            "relative-type--1": "minggu lepas",
+            "relative-type-0": "minggu ini",
+            "relative-type-1": "minggu depan",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "Dalam {0} minggu"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} minggu lalu"
+            }
+          },
+          "day": {
+            "displayName": "Hari",
+            "relative-type--1": "Semalam",
+            "relative-type--2": "Hari sebelum semalam",
+            "relative-type-0": "Hari ini",
+            "relative-type-1": "Esok",
+            "relative-type-2": "Hari selepas esok",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "Dalam {0} hari"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} hari lalu"
+            }
+          },
+          "weekday": {
+            "displayName": "Hari dalam Minggu"
+          },
+          "sun": {
+            "relative-type--1": "Ahad lalu",
+            "relative-type-0": "Ahad ini",
+            "relative-type-1": "Ahad depan"
+          },
+          "mon": {
+            "relative-type--1": "Isnin lalu",
+            "relative-type-0": "Isnin ini",
+            "relative-type-1": "Isnin depan"
+          },
+          "tue": {
+            "relative-type--1": "Selasa lalu",
+            "relative-type-0": "Selasa ini",
+            "relative-type-1": "Selasa depan"
+          },
+          "wed": {
+            "relative-type--1": "Rabu lalu",
+            "relative-type-0": "Rabu ini",
+            "relative-type-1": "Rabu depan"
+          },
+          "thu": {
+            "relative-type--1": "Khamis lalu",
+            "relative-type-0": "Khamis ini",
+            "relative-type-1": "Khamis depan"
+          },
+          "fri": {
+            "relative-type--1": "Jumaat lalu",
+            "relative-type-0": "Jumaat ini",
+            "relative-type-1": "Jumaat depan"
+          },
+          "sat": {
+            "relative-type--1": "Sabtu lalu",
+            "relative-type-0": "Sabtu ini",
+            "relative-type-1": "Sabtu depan"
+          },
+          "dayperiod": {
+            "displayName": "PG/PTG"
+          },
+          "hour": {
+            "displayName": "Jam",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "Dalam {0} jam"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} jam lalu"
+            }
+          },
+          "minute": {
+            "displayName": "Minit",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "Dalam {0} minit"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} minit lalu"
+            }
+          },
+          "second": {
+            "displayName": "Kedua",
+            "relative-type-0": "sekarang",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "Dalam {0} saat"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "{0} saat lalu"
+            }
+          },
+          "zone": {
+            "displayName": "Zon Waktu"
+          }
+        }
+      }
+    }
+  }
+}

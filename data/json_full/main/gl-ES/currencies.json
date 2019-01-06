@@ -1,0 +1,1368 @@
+{
+  "main": {
+    "gl-ES": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "25",
+          "_number": "$Revision: 91 $"
+        },
+        "generation": {
+          "_date": "$Date: 2014-03-13 22:27:12 -0500 (Thu, 13 Mar 2014) $"
+        },
+        "language": "gl",
+        "territory": "ES"
+      },
+      "numbers": {
+        "currencies": {
+          "ADP": {
+            "displayName": "peseta andorrana",
+            "displayName-count-one": "peseta andorrana",
+            "displayName-count-other": "pesetas andorranas",
+            "symbol": "ADP"
+          },
+          "AED": {
+            "displayName": "Dirham dos Emiratos Árabes Unidos",
+            "symbol": "AED"
+          },
+          "AFA": {
+            "displayName": "AFA",
+            "symbol": "AFA"
+          },
+          "AFN": {
+            "displayName": "Afgani afgano",
+            "symbol": "AFN"
+          },
+          "ALL": {
+            "displayName": "Lek albanés",
+            "symbol": "ALL"
+          },
+          "AMD": {
+            "displayName": "Dram armenio",
+            "symbol": "AMD"
+          },
+          "ANG": {
+            "displayName": "Florín das Antillas Neerlandesas",
+            "symbol": "ANG"
+          },
+          "AOA": {
+            "displayName": "Kwanza angoleño",
+            "symbol": "AOA"
+          },
+          "AOK": {
+            "displayName": "AOK",
+            "symbol": "AOK"
+          },
+          "AON": {
+            "displayName": "AON",
+            "symbol": "AON"
+          },
+          "AOR": {
+            "displayName": "AOR",
+            "symbol": "AOR"
+          },
+          "ARA": {
+            "displayName": "ARA",
+            "symbol": "ARA"
+          },
+          "ARL": {
+            "displayName": "ARL",
+            "symbol": "ARL"
+          },
+          "ARM": {
+            "displayName": "ARM",
+            "symbol": "ARM"
+          },
+          "ARP": {
+            "displayName": "Peso arxentino (1983–1985)",
+            "displayName-count-one": "peso arxentino (ARP)",
+            "displayName-count-other": "pesos arxentinos (ARP)",
+            "symbol": "ARP"
+          },
+          "ARS": {
+            "displayName": "Peso arxentino",
+            "displayName-count-one": "peso arxentino",
+            "displayName-count-other": "pesos arxentinos",
+            "symbol": "ARS",
+            "symbol-alt-narrow": "$"
+          },
+          "ATS": {
+            "displayName": "ATS",
+            "symbol": "ATS"
+          },
+          "AUD": {
+            "displayName": "Dólar australiano",
+            "displayName-count-one": "dólar australiano",
+            "displayName-count-other": "dólares australianos",
+            "symbol": "A$",
+            "symbol-alt-narrow": "$"
+          },
+          "AWG": {
+            "displayName": "Florín arubeño",
+            "symbol": "AWG"
+          },
+          "AZM": {
+            "displayName": "AZM",
+            "symbol": "AZM"
+          },
+          "AZN": {
+            "displayName": "Manat acerbaixano",
+            "symbol": "AZN"
+          },
+          "BAD": {
+            "displayName": "BAD",
+            "symbol": "BAD"
+          },
+          "BAM": {
+            "displayName": "Marco convertible de Bosnia e Hercegovina",
+            "symbol": "BAM"
+          },
+          "BAN": {
+            "displayName": "BAN",
+            "symbol": "BAN"
+          },
+          "BBD": {
+            "displayName": "Dólar de Barbados",
+            "symbol": "BBD",
+            "symbol-alt-narrow": "$"
+          },
+          "BDT": {
+            "displayName": "Taka de Bangladesh",
+            "symbol": "BDT",
+            "symbol-alt-narrow": "৳"
+          },
+          "BEC": {
+            "displayName": "Franco belga (convertible)",
+            "displayName-count-one": "franco belga (convertible)",
+            "displayName-count-other": "francos belgas (convertibles)",
+            "symbol": "BEC"
+          },
+          "BEF": {
+            "displayName": "Franco belga",
+            "displayName-count-one": "franco belga",
+            "displayName-count-other": "francos belgas",
+            "symbol": "BEF"
+          },
+          "BEL": {
+            "displayName": "Franco belga (financeiro)",
+            "displayName-count-one": "franco belga (financeiro)",
+            "displayName-count-other": "francos belgas (financeiros)",
+            "symbol": "BEL"
+          },
+          "BGL": {
+            "displayName": "BGL",
+            "symbol": "BGL"
+          },
+          "BGM": {
+            "displayName": "BGM",
+            "symbol": "BGM"
+          },
+          "BGN": {
+            "displayName": "Lev búlgaro",
+            "symbol": "BGN"
+          },
+          "BGO": {
+            "displayName": "BGO",
+            "symbol": "BGO"
+          },
+          "BHD": {
+            "displayName": "Dinar de Baréin",
+            "symbol": "BHD"
+          },
+          "BIF": {
+            "displayName": "Franco burundés",
+            "symbol": "BIF"
+          },
+          "BMD": {
+            "displayName": "Dólar das Bemudas",
+            "symbol": "BMD",
+            "symbol-alt-narrow": "$"
+          },
+          "BND": {
+            "displayName": "Dólar de Brunei",
+            "symbol": "BND",
+            "symbol-alt-narrow": "$"
+          },
+          "BOB": {
+            "displayName": "Boliviano",
+            "displayName-count-one": "boliviano",
+            "displayName-count-other": "bolivianos",
+            "symbol": "BOB"
+          },
+          "BOL": {
+            "displayName": "BOL",
+            "symbol": "BOL"
+          },
+          "BOP": {
+            "displayName": "Peso boliviano",
+            "displayName-count-one": "peso boliviano",
+            "displayName-count-other": "pesos bolivianos",
+            "symbol": "BOP"
+          },
+          "BOV": {
+            "displayName": "MVDOL boliviano",
+            "symbol": "BOV"
+          },
+          "BRB": {
+            "displayName": "Cruzeiro novo brasileiro (1967–1986)",
+            "displayName-count-one": "cruzeiro novo brasileiro",
+            "displayName-count-other": "cruzeiros novos brasileiros",
+            "symbol": "BRB"
+          },
+          "BRC": {
+            "displayName": "Cruzado brasileiro",
+            "displayName-count-one": "cruzado brasileiro",
+            "displayName-count-other": "cruzados brasileiros",
+            "symbol": "BRC"
+          },
+          "BRE": {
+            "displayName": "Cruzeiro brasileiro (1990–1993)",
+            "displayName-count-one": "cruzeiro brasileiro (BRE)",
+            "displayName-count-other": "cruzeiros brasileiros (BRE)",
+            "symbol": "BRE"
+          },
+          "BRL": {
+            "displayName": "Real brasileiro",
+            "displayName-count-one": "real brasileiro",
+            "displayName-count-other": "reais brasileiros",
+            "symbol": "R$",
+            "symbol-alt-narrow": "R$"
+          },
+          "BRN": {
+            "displayName": "Cruzado novo brasileiro",
+            "displayName-count-one": "cruzado novo brasileiro",
+            "displayName-count-other": "cruzados novos brasileiros",
+            "symbol": "BRN"
+          },
+          "BRR": {
+            "displayName": "Cruzeiro brasileiro",
+            "displayName-count-one": "cruzeiro brasileiro",
+            "displayName-count-other": "cruzeiros brasileiros",
+            "symbol": "BRR"
+          },
+          "BRZ": {
+            "displayName": "BRZ",
+            "symbol": "BRZ"
+          },
+          "BSD": {
+            "displayName": "Dólar das Bahamas",
+            "symbol": "BSD",
+            "symbol-alt-narrow": "$"
+          },
+          "BTN": {
+            "displayName": "Ngultrum butanés",
+            "symbol": "BTN"
+          },
+          "BUK": {
+            "displayName": "BUK",
+            "symbol": "BUK"
+          },
+          "BWP": {
+            "displayName": "Pula botsuano",
+            "symbol": "BWP"
+          },
+          "BYB": {
+            "displayName": "BYB",
+            "symbol": "BYB"
+          },
+          "BYR": {
+            "displayName": "Rublo bielorruso",
+            "symbol": "BYR",
+            "symbol-alt-narrow": "р."
+          },
+          "BZD": {
+            "displayName": "Dólar beliceño",
+            "symbol": "BZD",
+            "symbol-alt-narrow": "$"
+          },
+          "CAD": {
+            "displayName": "Dólar canadiano",
+            "displayName-count-one": "dólar canadiano",
+            "displayName-count-other": "dólares canadianos",
+            "symbol": "$CA",
+            "symbol-alt-narrow": "$"
+          },
+          "CDF": {
+            "displayName": "Franco congolés",
+            "symbol": "CDF"
+          },
+          "CHE": {
+            "displayName": "CHE",
+            "symbol": "CHE"
+          },
+          "CHF": {
+            "displayName": "Franco suízo",
+            "displayName-count-one": "franco suízo",
+            "displayName-count-other": "francos suizos",
+            "symbol": "CHF"
+          },
+          "CHW": {
+            "displayName": "CHW",
+            "symbol": "CHW"
+          },
+          "CLE": {
+            "displayName": "CLE",
+            "symbol": "CLE"
+          },
+          "CLF": {
+            "displayName": "Unidades de fomento chilenas",
+            "displayName-count-one": "unidade de fomento chilena",
+            "displayName-count-other": "unidades de fomento chilenas",
+            "symbol": "CLF"
+          },
+          "CLP": {
+            "displayName": "Peso chileno",
+            "displayName-count-one": "peso chileno",
+            "displayName-count-other": "pesos chilenos",
+            "symbol": "CLP",
+            "symbol-alt-narrow": "$"
+          },
+          "CNY": {
+            "displayName": "Iuán chinés",
+            "displayName-count-one": "iuán chinés",
+            "displayName-count-other": "iuáns chineses",
+            "symbol": "CN¥",
+            "symbol-alt-narrow": "¥"
+          },
+          "COP": {
+            "displayName": "Peso colombiano",
+            "displayName-count-one": "peso colombiano",
+            "displayName-count-other": "pesos colombianos",
+            "symbol": "COP",
+            "symbol-alt-narrow": "$"
+          },
+          "COU": {
+            "displayName": "COU",
+            "symbol": "COU"
+          },
+          "CRC": {
+            "displayName": "Colón costarricense",
+            "displayName-count-one": "colón costarricense",
+            "displayName-count-other": "colóns costarricenses",
+            "symbol": "CRC",
+            "symbol-alt-narrow": "₡"
+          },
+          "CSD": {
+            "displayName": "CSD",
+            "symbol": "CSD"
+          },
+          "CSK": {
+            "displayName": "CSK",
+            "symbol": "CSK"
+          },
+          "CUC": {
+            "displayName": "Peso cubano convertible",
+            "symbol": "CUC"
+          },
+          "CUP": {
+            "displayName": "Peso cubano",
+            "displayName-count-one": "peso cubano",
+            "displayName-count-other": "pesos cubanos",
+            "symbol": "CUP",
+            "symbol-alt-narrow": "$"
+          },
+          "CVE": {
+            "displayName": "Escudo caboverdiano",
+            "symbol": "CVE"
+          },
+          "CYP": {
+            "displayName": "CYP",
+            "symbol": "CYP"
+          },
+          "CZK": {
+            "displayName": "Coroa checa",
+            "symbol": "CZK"
+          },
+          "DDM": {
+            "displayName": "DDM",
+            "symbol": "DDM"
+          },
+          "DEM": {
+            "displayName": "Marco alemán",
+            "displayName-count-one": "marco alemán",
+            "displayName-count-other": "marcos alemáns",
+            "symbol": "DEM"
+          },
+          "DJF": {
+            "displayName": "Franco xibutiano",
+            "symbol": "DJF"
+          },
+          "DKK": {
+            "displayName": "Coroa dinamarquesa",
+            "displayName-count-one": "coroa dinamarquesa",
+            "displayName-count-other": "coroas dinamarquesas",
+            "symbol": "DKK"
+          },
+          "DOP": {
+            "displayName": "Peso dominicano",
+            "displayName-count-one": "peso dominicano",
+            "displayName-count-other": "pesos dominicanos",
+            "symbol": "DOP",
+            "symbol-alt-narrow": "$"
+          },
+          "DZD": {
+            "displayName": "Dinar alxeriano",
+            "symbol": "DZD"
+          },
+          "ECS": {
+            "displayName": "Sucre ecuatoriano",
+            "displayName-count-one": "sucre ecuatoriano",
+            "displayName-count-other": "sucres ecuatorianos",
+            "symbol": "ECS"
+          },
+          "ECV": {
+            "displayName": "Unidade de valor constante ecuatoriana",
+            "symbol": "ECV"
+          },
+          "EEK": {
+            "displayName": "EEK",
+            "symbol": "EEK"
+          },
+          "EGP": {
+            "displayName": "Libra exipcia",
+            "symbol": "EGP"
+          },
+          "ERN": {
+            "displayName": "Nakfa eritreo",
+            "symbol": "ERN"
+          },
+          "ESA": {
+            "displayName": "Peseta española (conta A)",
+            "symbol": "ESA"
+          },
+          "ESB": {
+            "displayName": "Peseta española (conta convertible)",
+            "symbol": "ESB"
+          },
+          "ESP": {
+            "pattern": "#,##0.00 ¤",
+            "displayName": "Peseta española",
+            "displayName-count-one": "peseta",
+            "displayName-count-other": "pesetas",
+            "symbol": "₧",
+            "symbol-alt-narrow": "₧",
+            "decimal": ",",
+            "group": "."
+          },
+          "ETB": {
+            "displayName": "Birr etíope",
+            "symbol": "ETB"
+          },
+          "EUR": {
+            "displayName": "Euro",
+            "displayName-count-one": "euro",
+            "displayName-count-other": "euros",
+            "symbol": "€",
+            "symbol-alt-narrow": "€"
+          },
+          "FIM": {
+            "displayName": "FIM",
+            "symbol": "FIM"
+          },
+          "FJD": {
+            "displayName": "Dólar fixiano",
+            "symbol": "FJD",
+            "symbol-alt-narrow": "$"
+          },
+          "FKP": {
+            "displayName": "Libra das Malvinas",
+            "symbol": "FKP"
+          },
+          "FRF": {
+            "displayName": "Franco francés",
+            "displayName-count-one": "franco francés",
+            "displayName-count-other": "francos franceses",
+            "symbol": "FRF"
+          },
+          "GBP": {
+            "displayName": "Libra esterlina",
+            "displayName-count-one": "libra esterlina",
+            "displayName-count-other": "libras esterlinas",
+            "symbol": "£",
+            "symbol-alt-narrow": "£"
+          },
+          "GEK": {
+            "displayName": "GEK",
+            "symbol": "GEK"
+          },
+          "GEL": {
+            "displayName": "Lari xeorxiano",
+            "symbol": "GEL"
+          },
+          "GHC": {
+            "displayName": "GHC",
+            "symbol": "GHC"
+          },
+          "GHS": {
+            "displayName": "Cedi de Gana",
+            "symbol": "GHS",
+            "symbol-alt-narrow": "₵"
+          },
+          "GIP": {
+            "displayName": "Libra de Xibraltar",
+            "displayName-count-one": "libra xibraltareña",
+            "displayName-count-other": "libras xibraltareñas",
+            "symbol": "GIP",
+            "symbol-alt-narrow": "£"
+          },
+          "GMD": {
+            "displayName": "Dalasi gambiano",
+            "symbol": "GMD"
+          },
+          "GNF": {
+            "displayName": "Franco guineano",
+            "symbol": "GNF"
+          },
+          "GNS": {
+            "displayName": "Syli guineano",
+            "symbol": "GNS"
+          },
+          "GQE": {
+            "displayName": "Ekwele guineana",
+            "symbol": "GQE"
+          },
+          "GRD": {
+            "displayName": "Dracma grego",
+            "symbol": "GRD"
+          },
+          "GTQ": {
+            "displayName": "Quetzal guatemalteco",
+            "symbol": "GTQ"
+          },
+          "GWE": {
+            "displayName": "GWE",
+            "symbol": "GWE"
+          },
+          "GWP": {
+            "displayName": "GWP",
+            "symbol": "GWP"
+          },
+          "GYD": {
+            "displayName": "Dólar güianés",
+            "symbol": "GYD",
+            "symbol-alt-narrow": "$"
+          },
+          "HKD": {
+            "displayName": "Dólar de Hong Kong",
+            "displayName-count-one": "dólar de Hong Kong",
+            "displayName-count-other": "dólares de Hong Kong",
+            "symbol": "$HK",
+            "symbol-alt-narrow": "$"
+          },
+          "HNL": {
+            "displayName": "Lempira hondureño",
+            "symbol": "HNL"
+          },
+          "HRD": {
+            "displayName": "HRD",
+            "symbol": "HRD"
+          },
+          "HRK": {
+            "displayName": "Kuna croata",
+            "symbol": "HRK"
+          },
+          "HTG": {
+            "displayName": "Gourde haitiano",
+            "symbol": "HTG"
+          },
+          "HUF": {
+            "displayName": "Florín húngaro",
+            "symbol": "HUF"
+          },
+          "IDR": {
+            "displayName": "Rupia indonesia",
+            "displayName-count-one": "rupia indonesia",
+            "displayName-count-other": "rupias indonesias",
+            "symbol": "IDR"
+          },
+          "IEP": {
+            "displayName": "Libra irlandesa",
+            "displayName-count-one": "libra irlandesa",
+            "displayName-count-other": "libras irlandesas",
+            "symbol": "IEP"
+          },
+          "ILP": {
+            "displayName": "ILP",
+            "symbol": "ILP"
+          },
+          "ILS": {
+            "displayName": "Novo shequel israelí",
+            "symbol": "₪",
+            "symbol-alt-narrow": "₪"
+          },
+          "INR": {
+            "displayName": "Rupia india",
+            "displayName-count-one": "rupia india",
+            "displayName-count-other": "rupias indias",
+            "symbol": "₹",
+            "symbol-alt-narrow": "₹"
+          },
+          "IQD": {
+            "displayName": "Dinar iraquí",
+            "symbol": "IQD"
+          },
+          "IRR": {
+            "displayName": "Rial iraniano",
+            "symbol": "IRR"
+          },
+          "ISK": {
+            "displayName": "Coroa islandesa",
+            "symbol": "ISK"
+          },
+          "ITL": {
+            "displayName": "Lira italiana",
+            "symbol": "ITL"
+          },
+          "JMD": {
+            "displayName": "Dólar xamaicano",
+            "symbol": "JMD",
+            "symbol-alt-narrow": "$"
+          },
+          "JOD": {
+            "displayName": "Dinar xordano",
+            "symbol": "JOD"
+          },
+          "JPY": {
+            "displayName": "Ien xaponés",
+            "displayName-count-one": "ien xaponés",
+            "displayName-count-other": "iens xaponeses",
+            "symbol": "¥JP",
+            "symbol-alt-narrow": "¥"
+          },
+          "KES": {
+            "displayName": "Chelín kenyano",
+            "symbol": "KES"
+          },
+          "KGS": {
+            "displayName": "Som quirguizo",
+            "symbol": "KGS"
+          },
+          "KHR": {
+            "displayName": "Riel camboxano",
+            "symbol": "KHR",
+            "symbol-alt-narrow": "៛"
+          },
+          "KMF": {
+            "displayName": "Franco comoriano",
+            "symbol": "KMF"
+          },
+          "KPW": {
+            "displayName": "Won norcoreano",
+            "symbol": "KPW"
+          },
+          "KRH": {
+            "displayName": "KRH",
+            "symbol": "KRH"
+          },
+          "KRO": {
+            "displayName": "KRO",
+            "symbol": "KRO"
+          },
+          "KRW": {
+            "displayName": "Won surcoreano",
+            "displayName-count-one": "won surcoreano",
+            "displayName-count-other": "wons surcoreanos",
+            "symbol": "₩",
+            "symbol-alt-narrow": "₩"
+          },
+          "KWD": {
+            "displayName": "Dinar kuwaití",
+            "symbol": "KWD"
+          },
+          "KYD": {
+            "displayName": "Dólar das Illas Caimán",
+            "symbol": "KYD",
+            "symbol-alt-narrow": "$"
+          },
+          "KZT": {
+            "displayName": "Tenge casaco",
+            "symbol": "KZT",
+            "symbol-alt-narrow": "₸"
+          },
+          "LAK": {
+            "displayName": "Kip laosiano",
+            "symbol": "LAK",
+            "symbol-alt-narrow": "₭"
+          },
+          "LBP": {
+            "displayName": "Libra libanesa",
+            "symbol": "LBP"
+          },
+          "LKR": {
+            "displayName": "Rupia de Sri Lanka",
+            "symbol": "LKR"
+          },
+          "LRD": {
+            "displayName": "Dólar liberiano",
+            "symbol": "LRD",
+            "symbol-alt-narrow": "$"
+          },
+          "LSL": {
+            "displayName": "Loti de Lesoto",
+            "symbol": "LSL"
+          },
+          "LTL": {
+            "displayName": "Litas lituana",
+            "symbol": "LTL"
+          },
+          "LTT": {
+            "displayName": "LTT",
+            "symbol": "LTT"
+          },
+          "LUC": {
+            "displayName": "Franco convertible luxemburgués",
+            "symbol": "LUC"
+          },
+          "LUF": {
+            "displayName": "Franco luxemburgués",
+            "symbol": "LUF"
+          },
+          "LUL": {
+            "displayName": "Franco financeiro luxemburgués",
+            "symbol": "LUL"
+          },
+          "LVL": {
+            "displayName": "Lats letón",
+            "symbol": "LVL"
+          },
+          "LVR": {
+            "displayName": "LVR",
+            "symbol": "LVR"
+          },
+          "LYD": {
+            "displayName": "Dinar libio",
+            "symbol": "LYD"
+          },
+          "MAD": {
+            "displayName": "Dirham marroquí",
+            "symbol": "MAD"
+          },
+          "MAF": {
+            "displayName": "Franco marroquí",
+            "symbol": "MAF"
+          },
+          "MCF": {
+            "displayName": "MCF",
+            "symbol": "MCF"
+          },
+          "MDC": {
+            "displayName": "MDC",
+            "symbol": "MDC"
+          },
+          "MDL": {
+            "displayName": "Leu moldavo",
+            "symbol": "MDL"
+          },
+          "MGA": {
+            "displayName": "Ariary malgaxe",
+            "symbol": "MGA"
+          },
+          "MGF": {
+            "displayName": "MGF",
+            "symbol": "MGF"
+          },
+          "MKD": {
+            "displayName": "Dinar macedonio",
+            "symbol": "MKD"
+          },
+          "MKN": {
+            "displayName": "MKN",
+            "symbol": "MKN"
+          },
+          "MLF": {
+            "displayName": "MLF",
+            "symbol": "MLF"
+          },
+          "MMK": {
+            "displayName": "Kiat birmano",
+            "symbol": "MMK"
+          },
+          "MNT": {
+            "displayName": "Tugrik mongol",
+            "symbol": "MNT",
+            "symbol-alt-narrow": "₮"
+          },
+          "MOP": {
+            "displayName": "Pataca de Macau",
+            "symbol": "MOP"
+          },
+          "MRO": {
+            "displayName": "Ouguiya mauritano",
+            "symbol": "MRO"
+          },
+          "MTL": {
+            "displayName": "MTL",
+            "symbol": "MTL"
+          },
+          "MTP": {
+            "displayName": "MTP",
+            "symbol": "MTP"
+          },
+          "MUR": {
+            "displayName": "Rupia de Mauricio",
+            "symbol": "MUR"
+          },
+          "MVR": {
+            "displayName": "Rupia maldiva",
+            "symbol": "MVR"
+          },
+          "MWK": {
+            "displayName": "Kwacha de Malaui",
+            "symbol": "MWK"
+          },
+          "MXN": {
+            "displayName": "Peso mexicano",
+            "displayName-count-one": "peso mexicano",
+            "displayName-count-other": "pesos mexicanos",
+            "symbol": "$MX",
+            "symbol-alt-narrow": "$"
+          },
+          "MXP": {
+            "displayName": "Peso de prata mexicano (1861–1992)",
+            "symbol": "MXP"
+          },
+          "MXV": {
+            "displayName": "Unidade de inversión mexicana",
+            "symbol": "MXV"
+          },
+          "MYR": {
+            "displayName": "Ringgit malaio",
+            "symbol": "MYR"
+          },
+          "MZE": {
+            "displayName": "MZE",
+            "symbol": "MZE"
+          },
+          "MZM": {
+            "displayName": "MZM",
+            "symbol": "MZM"
+          },
+          "MZN": {
+            "displayName": "Metical de Mozambique",
+            "displayName-count-one": "metical de Mozambique",
+            "displayName-count-other": "meticais de Mozambique",
+            "symbol": "MZN"
+          },
+          "NAD": {
+            "displayName": "Dólar namibio",
+            "symbol": "NAD",
+            "symbol-alt-narrow": "$"
+          },
+          "NGN": {
+            "displayName": "Naira nixeriano",
+            "symbol": "NGN",
+            "symbol-alt-narrow": "₦"
+          },
+          "NIC": {
+            "displayName": "Córdoba nicaragüense",
+            "symbol": "NIC"
+          },
+          "NIO": {
+            "displayName": "Córdoba de ouro nicaragüense",
+            "symbol": "NIO"
+          },
+          "NLG": {
+            "displayName": "Florín holandés",
+            "symbol": "NLG"
+          },
+          "NOK": {
+            "displayName": "Coroa norueguesa",
+            "displayName-count-one": "coroa norueguesa",
+            "displayName-count-other": "coroas norueguesas",
+            "symbol": "NOK"
+          },
+          "NPR": {
+            "displayName": "Rupia nepalesa",
+            "symbol": "NPR"
+          },
+          "NZD": {
+            "displayName": "Dólar neozelandés",
+            "symbol": "NZ$",
+            "symbol-alt-narrow": "$"
+          },
+          "OMR": {
+            "displayName": "Rial omaní",
+            "symbol": "OMR"
+          },
+          "PAB": {
+            "displayName": "Balboa panameño",
+            "symbol": "PAB"
+          },
+          "PEI": {
+            "displayName": "Inti peruano",
+            "symbol": "PEI"
+          },
+          "PEN": {
+            "displayName": "Sol novo peruano",
+            "symbol": "PEN"
+          },
+          "PES": {
+            "displayName": "Sol peruano",
+            "symbol": "PES"
+          },
+          "PGK": {
+            "displayName": "Kina de Papúa Nova Guinea",
+            "symbol": "PGK"
+          },
+          "PHP": {
+            "displayName": "Peso filipino",
+            "symbol": "PHP",
+            "symbol-alt-narrow": "₱"
+          },
+          "PKR": {
+            "displayName": "Rupia paquistaní",
+            "symbol": "PKR"
+          },
+          "PLN": {
+            "displayName": "Zloty polaco",
+            "displayName-count-one": "zloty polaco",
+            "displayName-count-other": "zlotys polacos",
+            "symbol": "PLN"
+          },
+          "PLZ": {
+            "displayName": "PLZ",
+            "symbol": "PLZ"
+          },
+          "PTE": {
+            "displayName": "Escudo portugués",
+            "displayName-count-one": "escudo portugués",
+            "displayName-count-other": "escudos portugueses",
+            "symbol": "PTE"
+          },
+          "PYG": {
+            "displayName": "Guaraní paraguaio",
+            "displayName-count-one": "Guaraní paraguaio",
+            "displayName-count-other": "Guaranís paraguaios",
+            "symbol": "PYG",
+            "symbol-alt-narrow": "₲"
+          },
+          "QAR": {
+            "displayName": "Rial qatarí",
+            "symbol": "QAR"
+          },
+          "RHD": {
+            "displayName": "RHD",
+            "symbol": "RHD"
+          },
+          "ROL": {
+            "displayName": "ROL",
+            "symbol": "ROL"
+          },
+          "RON": {
+            "displayName": "Leu romanés",
+            "displayName-count-one": "leu romanés",
+            "displayName-count-other": "lei romanés",
+            "symbol": "RON"
+          },
+          "RSD": {
+            "displayName": "Dinar serbio",
+            "symbol": "RSD"
+          },
+          "RUB": {
+            "displayName": "Rublo ruso",
+            "displayName-count-one": "rublo ruso",
+            "displayName-count-other": "rublos rusos",
+            "symbol": "RUB"
+          },
+          "RUR": {
+            "displayName": "Rublo ruso (1991–1998)",
+            "symbol": "RUR",
+            "symbol-alt-narrow": "р."
+          },
+          "RWF": {
+            "displayName": "Franco ruandés",
+            "symbol": "RWF"
+          },
+          "SAR": {
+            "displayName": "Rial saudita",
+            "displayName-count-one": "rial saudita",
+            "displayName-count-other": "riais sauditas",
+            "symbol": "SAR"
+          },
+          "SBD": {
+            "displayName": "Dólar das Illas Salomón",
+            "symbol": "SBD",
+            "symbol-alt-narrow": "$"
+          },
+          "SCR": {
+            "displayName": "Rupia de Seixeles",
+            "symbol": "SCR"
+          },
+          "SDD": {
+            "displayName": "SDD",
+            "symbol": "SDD"
+          },
+          "SDG": {
+            "displayName": "Libra sudanesa",
+            "symbol": "SDG"
+          },
+          "SDP": {
+            "displayName": "SDP",
+            "symbol": "SDP"
+          },
+          "SEK": {
+            "displayName": "Coroa sueca",
+            "displayName-count-one": "coroa sueca",
+            "displayName-count-other": "coroas suecas",
+            "symbol": "SEK"
+          },
+          "SGD": {
+            "displayName": "Dólar de Singapur",
+            "symbol": "SGD",
+            "symbol-alt-narrow": "$"
+          },
+          "SHP": {
+            "displayName": "Libra de Santa Helena",
+            "symbol": "SHP"
+          },
+          "SIT": {
+            "displayName": "SIT",
+            "symbol": "SIT"
+          },
+          "SKK": {
+            "displayName": "SKK",
+            "symbol": "SKK"
+          },
+          "SLL": {
+            "displayName": "Leone de Serra Leoa",
+            "symbol": "SLL"
+          },
+          "SOS": {
+            "displayName": "Chelín somalí",
+            "symbol": "SOS"
+          },
+          "SRD": {
+            "displayName": "Dólar surinamés",
+            "symbol": "SRD",
+            "symbol-alt-narrow": "$"
+          },
+          "SRG": {
+            "displayName": "SRG",
+            "symbol": "SRG"
+          },
+          "SSP": {
+            "displayName": "Libra sursudanesa",
+            "displayName-count-one": "libra sursudanesa",
+            "displayName-count-other": "libras sursudanesa",
+            "symbol": "SSP",
+            "symbol-alt-narrow": "£"
+          },
+          "STD": {
+            "displayName": "Dobra de San Tomé e Príncipe",
+            "symbol": "STD"
+          },
+          "SUR": {
+            "displayName": "Rublo soviético",
+            "displayName-count-one": "rublo soviético",
+            "displayName-count-other": "rublos soviéticos",
+            "symbol": "SUR"
+          },
+          "SVC": {
+            "displayName": "Colón salvadoreño",
+            "displayName-count-one": "colón salvadoreño",
+            "displayName-count-other": "colóns salvadoreños",
+            "symbol": "SVC"
+          },
+          "SYP": {
+            "displayName": "Libra siria",
+            "symbol": "SYP"
+          },
+          "SZL": {
+            "displayName": "Lilanxeni de Suacilandia",
+            "symbol": "SZL"
+          },
+          "THB": {
+            "displayName": "Baht tailandés",
+            "displayName-count-one": "baht tailandés",
+            "displayName-count-other": "bahts tailandeses",
+            "symbol": "฿",
+            "symbol-alt-narrow": "฿"
+          },
+          "TJR": {
+            "displayName": "TJR",
+            "symbol": "TJR"
+          },
+          "TJS": {
+            "displayName": "Somoni taxico",
+            "symbol": "TJS"
+          },
+          "TMM": {
+            "displayName": "TMM",
+            "symbol": "TMM"
+          },
+          "TMT": {
+            "displayName": "Manat turcomano",
+            "symbol": "TMT"
+          },
+          "TND": {
+            "displayName": "Dinar tunesino",
+            "symbol": "TND"
+          },
+          "TOP": {
+            "displayName": "Paʻanga de Tonga",
+            "symbol": "TOP"
+          },
+          "TPE": {
+            "displayName": "TPE",
+            "symbol": "TPE"
+          },
+          "TRL": {
+            "displayName": "TRL",
+            "symbol": "TRL"
+          },
+          "TRY": {
+            "displayName": "Lira turca",
+            "displayName-count-one": "lira turca",
+            "displayName-count-other": "liras turcas",
+            "symbol": "TRY",
+            "symbol-alt-narrow": "₺",
+            "symbol-alt-variant": "TL"
+          },
+          "TTD": {
+            "displayName": "Dólar de Trinidade e Tobago",
+            "symbol": "TTD",
+            "symbol-alt-narrow": "$"
+          },
+          "TWD": {
+            "displayName": "Novo dólar taiwanés",
+            "displayName-count-one": "novo dólar taiwanés",
+            "displayName-count-other": "novos dólares taiwaneses",
+            "symbol": "NT$",
+            "symbol-alt-narrow": "NT$"
+          },
+          "TZS": {
+            "displayName": "Chelín tanzano",
+            "symbol": "TZS"
+          },
+          "UAH": {
+            "displayName": "Grivna ucraína",
+            "symbol": "UAH",
+            "symbol-alt-narrow": "₴"
+          },
+          "UAK": {
+            "displayName": "UAK",
+            "symbol": "UAK"
+          },
+          "UGS": {
+            "displayName": "UGS",
+            "symbol": "UGS"
+          },
+          "UGX": {
+            "displayName": "Chelín ugandés",
+            "symbol": "UGX"
+          },
+          "USD": {
+            "displayName": "Dólar estadounidense",
+            "displayName-count-one": "dólar estadounidense",
+            "displayName-count-other": "dólares estadounidenses",
+            "symbol": "$",
+            "symbol-alt-narrow": "$"
+          },
+          "USN": {
+            "displayName": "USN",
+            "symbol": "USN"
+          },
+          "USS": {
+            "displayName": "USS",
+            "symbol": "USS"
+          },
+          "UYI": {
+            "displayName": "Peso en unidades indexadas uruguaio",
+            "symbol": "UYI"
+          },
+          "UYP": {
+            "displayName": "Peso uruguaio (1975–1993)",
+            "symbol": "UYP"
+          },
+          "UYU": {
+            "displayName": "Peso uruguaio",
+            "displayName-count-one": "peso uruguaio",
+            "displayName-count-other": "pesos uruguaios",
+            "symbol": "UYU",
+            "symbol-alt-narrow": "$"
+          },
+          "UZS": {
+            "displayName": "Som usbeco",
+            "symbol": "UZS"
+          },
+          "VEB": {
+            "displayName": "Bolívar venezolano (1871–2008)",
+            "displayName-count-one": "bolívar venezolano (1871–2008)",
+            "displayName-count-other": "bolívares venezolanos (1871–2008)",
+            "symbol": "VEB"
+          },
+          "VEF": {
+            "displayName": "Bolívar venezolano",
+            "displayName-count-one": "bolívar venezolano",
+            "displayName-count-other": "bolívares venezolanos",
+            "symbol": "VEF"
+          },
+          "VND": {
+            "displayName": "Dong vietnamita",
+            "symbol": "₫",
+            "symbol-alt-narrow": "₫"
+          },
+          "VNN": {
+            "displayName": "VNN",
+            "symbol": "VNN"
+          },
+          "VUV": {
+            "displayName": "Vatu vanuatense",
+            "symbol": "VUV"
+          },
+          "WST": {
+            "displayName": "Tala samoano",
+            "symbol": "WST"
+          },
+          "XAF": {
+            "displayName": "Franco CFA BEAC",
+            "symbol": "FCFA"
+          },
+          "XAG": {
+            "displayName": "Prata",
+            "symbol": "XAG"
+          },
+          "XAU": {
+            "displayName": "Ouro",
+            "symbol": "XAU"
+          },
+          "XBA": {
+            "displayName": "XBA",
+            "symbol": "XBA"
+          },
+          "XBB": {
+            "displayName": "XBB",
+            "symbol": "XBB"
+          },
+          "XBC": {
+            "displayName": "XBC",
+            "symbol": "XBC"
+          },
+          "XBD": {
+            "displayName": "XBD",
+            "symbol": "XBD"
+          },
+          "XCD": {
+            "displayName": "Dólar Caribe-Leste",
+            "symbol": "EC$"
+          },
+          "XDR": {
+            "displayName": "XDR",
+            "symbol": "XDR"
+          },
+          "XEU": {
+            "displayName": "XEU",
+            "symbol": "XEU"
+          },
+          "XFO": {
+            "displayName": "XFO",
+            "symbol": "XFO"
+          },
+          "XFU": {
+            "displayName": "XFU",
+            "symbol": "XFU"
+          },
+          "XOF": {
+            "displayName": "Franco CFA BCEAO",
+            "symbol": "CFA"
+          },
+          "XPD": {
+            "displayName": "Paladio",
+            "symbol": "XPD"
+          },
+          "XPF": {
+            "displayName": "Franco CFP",
+            "symbol": "CFPF"
+          },
+          "XPT": {
+            "displayName": "Platino",
+            "symbol": "XPT"
+          },
+          "XRE": {
+            "displayName": "XRE",
+            "symbol": "XRE"
+          },
+          "XSU": {
+            "displayName": "XSU",
+            "symbol": "XSU"
+          },
+          "XTS": {
+            "displayName": "XTS",
+            "symbol": "XTS"
+          },
+          "XUA": {
+            "displayName": "XUA",
+            "symbol": "XUA"
+          },
+          "XXX": {
+            "displayName": "Unidade monetaria descoñecida ou non válida",
+            "displayName-count-one": "unidade monetaria descoñecida ou non válida",
+            "displayName-count-other": "unidades monetarias descoñecidas ou non válidas",
+            "symbol": "XXX"
+          },
+          "YDD": {
+            "displayName": "YDD",
+            "symbol": "YDD"
+          },
+          "YER": {
+            "displayName": "Rial iemení",
+            "symbol": "YER"
+          },
+          "YUD": {
+            "displayName": "YUD",
+            "symbol": "YUD"
+          },
+          "YUM": {
+            "displayName": "YUM",
+            "symbol": "YUM"
+          },
+          "YUN": {
+            "displayName": "YUN",
+            "symbol": "YUN"
+          },
+          "YUR": {
+            "displayName": "YUR",
+            "symbol": "YUR"
+          },
+          "ZAL": {
+            "displayName": "ZAL",
+            "symbol": "ZAL"
+          },
+          "ZAR": {
+            "displayName": "Rand sudafricano",
+            "displayName-count-one": "rand sudafricano",
+            "displayName-count-other": "rands sudafricanos",
+            "symbol": "ZAR"
+          },
+          "ZMK": {
+            "displayName": "Kwacha zambiano (1968–2012)",
+            "symbol": "ZMK"
+          },
+          "ZMW": {
+            "displayName": "Kwacha zambiano",
+            "symbol": "ZMW"
+          },
+          "ZRN": {
+            "displayName": "ZRN",
+            "symbol": "ZRN"
+          },
+          "ZRZ": {
+            "displayName": "ZRZ",
+            "symbol": "ZRZ"
+          },
+          "ZWD": {
+            "displayName": "ZWD",
+            "symbol": "ZWD"
+          },
+          "ZWL": {
+            "displayName": "ZWL",
+            "symbol": "ZWL"
+          },
+          "ZWR": {
+            "displayName": "ZWR",
+            "symbol": "ZWR"
+          }
+        }
+      }
+    }
+  }
+}

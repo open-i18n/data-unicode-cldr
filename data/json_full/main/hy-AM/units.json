@@ -1,0 +1,595 @@
+{
+  "main": {
+    "hy-AM": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "25",
+          "_number": "$Revision: 91 $"
+        },
+        "generation": {
+          "_date": "$Date: 2014-03-13 22:27:12 -0500 (Thu, 13 Mar 2014) $"
+        },
+        "language": "hy",
+        "territory": "AM"
+      },
+      "units": {
+        "long": {
+          "per": {
+            "compoundUnitPattern": "{0}/{1}"
+          },
+          "acceleration-g-force": {
+            "unitPattern-count-one": "{0} ձգողության ուժի արագացում",
+            "unitPattern-count-other": "{0} ձգողության ուժի արագացում"
+          },
+          "angle-arc-minute": {
+            "unitPattern-count-one": "{0} րոպե",
+            "unitPattern-count-other": "{0} րոպե"
+          },
+          "angle-arc-second": {
+            "unitPattern-count-one": "{0} վայրկյան",
+            "unitPattern-count-other": "{0} վայրկյան"
+          },
+          "angle-degree": {
+            "unitPattern-count-one": "{0} աստիճան",
+            "unitPattern-count-other": "{0} աստիճան"
+          },
+          "area-acre": {
+            "unitPattern-count-one": "{0} ակր",
+            "unitPattern-count-other": "{0} ակր"
+          },
+          "area-hectare": {
+            "unitPattern-count-one": "{0} հեկտար",
+            "unitPattern-count-other": "{0} հեկտար"
+          },
+          "area-square-foot": {
+            "unitPattern-count-one": "{0} քառակուսի ֆուտ",
+            "unitPattern-count-other": "{0} քառակուսի ֆուտ"
+          },
+          "area-square-kilometer": {
+            "unitPattern-count-one": "{0} քառակուսի կիլոմետր",
+            "unitPattern-count-other": "{0} քառակուսի կիլոմետր"
+          },
+          "area-square-meter": {
+            "unitPattern-count-one": "{0} քառակուսի մետր",
+            "unitPattern-count-other": "{0} քառակուսի մետր"
+          },
+          "area-square-mile": {
+            "unitPattern-count-one": "{0} քառակուսի մղոն",
+            "unitPattern-count-other": "{0} քառակուսի մղոն"
+          },
+          "duration-day": {
+            "unitPattern-count-one": "{0} օր",
+            "unitPattern-count-other": "{0} օր"
+          },
+          "duration-hour": {
+            "unitPattern-count-one": "{0} ժամ",
+            "unitPattern-count-other": "{0} ժամ"
+          },
+          "duration-millisecond": {
+            "unitPattern-count-one": "{0} միլիվայրկյան",
+            "unitPattern-count-other": "{0} միլիվայրկյան"
+          },
+          "duration-minute": {
+            "unitPattern-count-one": "{0} րոպե",
+            "unitPattern-count-other": "{0} րոպե"
+          },
+          "duration-month": {
+            "unitPattern-count-one": "{0} ամիս",
+            "unitPattern-count-other": "{0} ամիս"
+          },
+          "duration-second": {
+            "unitPattern-count-one": "{0} վայրկյան",
+            "unitPattern-count-other": "{0} վայրկյան"
+          },
+          "duration-week": {
+            "unitPattern-count-one": "{0} շաբաթ",
+            "unitPattern-count-other": "{0} շաբաթ"
+          },
+          "duration-year": {
+            "unitPattern-count-one": "{0} տարի",
+            "unitPattern-count-other": "{0} տարի"
+          },
+          "length-centimeter": {
+            "unitPattern-count-one": "{0} սանտիմետր",
+            "unitPattern-count-other": "{0} սանտիմետր"
+          },
+          "length-foot": {
+            "unitPattern-count-one": "{0} ֆուտ",
+            "unitPattern-count-other": "{0} ֆուտ"
+          },
+          "length-inch": {
+            "unitPattern-count-one": "{0} դյույմ",
+            "unitPattern-count-other": "{0} դյույմ"
+          },
+          "length-kilometer": {
+            "unitPattern-count-one": "{0} կիլոմետր",
+            "unitPattern-count-other": "{0} կիլոմետր"
+          },
+          "length-light-year": {
+            "unitPattern-count-one": "{0} լուսային տարի",
+            "unitPattern-count-other": "{0} լուսային տարի"
+          },
+          "length-meter": {
+            "unitPattern-count-one": "{0} մետր",
+            "unitPattern-count-other": "{0} մետր"
+          },
+          "length-mile": {
+            "unitPattern-count-one": "{0} մղոն",
+            "unitPattern-count-other": "{0} մղոն"
+          },
+          "length-millimeter": {
+            "unitPattern-count-one": "{0} միլիմետր",
+            "unitPattern-count-other": "{0} միլիմետր"
+          },
+          "length-picometer": {
+            "unitPattern-count-one": "{0} պիկոմետր",
+            "unitPattern-count-other": "{0} պիկոմետր"
+          },
+          "length-yard": {
+            "unitPattern-count-one": "{0} յարդ",
+            "unitPattern-count-other": "{0} յարդ"
+          },
+          "mass-gram": {
+            "unitPattern-count-one": "{0} գրամ",
+            "unitPattern-count-other": "{0} գրամ"
+          },
+          "mass-kilogram": {
+            "unitPattern-count-one": "{0} կիլոգրամ",
+            "unitPattern-count-other": "{0} կիլոգրամ"
+          },
+          "mass-ounce": {
+            "unitPattern-count-one": "{0} ունցիա",
+            "unitPattern-count-other": "{0} ունցիա"
+          },
+          "mass-pound": {
+            "unitPattern-count-one": "{0} ֆունտ",
+            "unitPattern-count-other": "{0} ֆունտ"
+          },
+          "power-horsepower": {
+            "unitPattern-count-one": "{0} ձիաուժ",
+            "unitPattern-count-other": "{0} ձիաուժ"
+          },
+          "power-kilowatt": {
+            "unitPattern-count-one": "{0} կիլովատ",
+            "unitPattern-count-other": "{0} կիլովատ"
+          },
+          "power-watt": {
+            "unitPattern-count-one": "{0} վատ",
+            "unitPattern-count-other": "{0} վատ"
+          },
+          "pressure-hectopascal": {
+            "unitPattern-count-one": "{0} հեկտապասկալ",
+            "unitPattern-count-other": "{0} հեկտապասկալ"
+          },
+          "pressure-inch-hg": {
+            "unitPattern-count-one": "{0} դյույմ սնդիկի սյուն",
+            "unitPattern-count-other": "{0} դյույմ սնդիկի սյուն"
+          },
+          "pressure-millibar": {
+            "unitPattern-count-one": "{0} միլիբար",
+            "unitPattern-count-other": "{0} միլիբար"
+          },
+          "speed-kilometer-per-hour": {
+            "unitPattern-count-one": "{0} կիլոմետր / ժամ",
+            "unitPattern-count-other": "{0} կիլոմետր / ժամ"
+          },
+          "speed-meter-per-second": {
+            "unitPattern-count-one": "{0} մետր / վայրկյան",
+            "unitPattern-count-other": "{0} մետր / վայրկյան"
+          },
+          "speed-mile-per-hour": {
+            "unitPattern-count-one": "{0} մղոն / ժամ",
+            "unitPattern-count-other": "{0} մղոն / ժամ"
+          },
+          "temperature-celsius": {
+            "unitPattern-count-one": "{0} աստիճան ըստ Ցելսիուսի",
+            "unitPattern-count-other": "{0} աստիճան ըստ Ցելսիուսի"
+          },
+          "temperature-fahrenheit": {
+            "unitPattern-count-one": "{0} աստիճան ըստ Ֆարենհայթի",
+            "unitPattern-count-other": "{0} աստիճան ըստ Ֆարենհայթի"
+          },
+          "volume-cubic-kilometer": {
+            "unitPattern-count-one": "{0} խորանարդ կիլոմետր",
+            "unitPattern-count-other": "{0} խորանարդ կիլոմետր"
+          },
+          "volume-cubic-mile": {
+            "unitPattern-count-one": "{0} խորանարդ մղոն",
+            "unitPattern-count-other": "{0} խորանարդ մղոն"
+          },
+          "volume-liter": {
+            "unitPattern-count-one": "{0} լիտր",
+            "unitPattern-count-other": "{0} լիտր"
+          }
+        },
+        "short": {
+          "per": {
+            "compoundUnitPattern": "{0}/{1}"
+          },
+          "acceleration-g-force": {
+            "unitPattern-count-one": "{0} G",
+            "unitPattern-count-other": "{0} G"
+          },
+          "angle-arc-minute": {
+            "unitPattern-count-one": "{0} րոպ",
+            "unitPattern-count-other": "{0} րոպ"
+          },
+          "angle-arc-second": {
+            "unitPattern-count-one": "{0} վրկ",
+            "unitPattern-count-other": "{0} վրկ"
+          },
+          "angle-degree": {
+            "unitPattern-count-one": "{0} աստճ.",
+            "unitPattern-count-other": "{0} աստճ."
+          },
+          "area-acre": {
+            "unitPattern-count-one": "{0} ակր",
+            "unitPattern-count-other": "{0} ակր"
+          },
+          "area-hectare": {
+            "unitPattern-count-one": "{0} հա",
+            "unitPattern-count-other": "{0} հա"
+          },
+          "area-square-foot": {
+            "unitPattern-count-one": "{0} քռ. ֆտ.",
+            "unitPattern-count-other": "{0} քռ. ֆտ."
+          },
+          "area-square-kilometer": {
+            "unitPattern-count-one": "{0} կմ²",
+            "unitPattern-count-other": "{0} կմ²"
+          },
+          "area-square-meter": {
+            "unitPattern-count-one": "{0} մ²",
+            "unitPattern-count-other": "{0} մ²"
+          },
+          "area-square-mile": {
+            "unitPattern-count-one": "{0} քռ. մղ.",
+            "unitPattern-count-other": "{0} քռ. մղ."
+          },
+          "duration-day": {
+            "unitPattern-count-one": "{0} օր",
+            "unitPattern-count-other": "{0} օր"
+          },
+          "duration-hour": {
+            "unitPattern-count-one": "{0} ժ.",
+            "unitPattern-count-other": "{0} ժ."
+          },
+          "duration-millisecond": {
+            "unitPattern-count-one": "{0} մվ",
+            "unitPattern-count-other": "{0}մվ"
+          },
+          "duration-minute": {
+            "unitPattern-count-one": "{0} րպ.",
+            "unitPattern-count-other": "{0} րպ."
+          },
+          "duration-month": {
+            "unitPattern-count-one": "{0} ամս",
+            "unitPattern-count-other": "{0} ամս"
+          },
+          "duration-second": {
+            "unitPattern-count-one": "{0} վրկ",
+            "unitPattern-count-other": "{0} վրկ"
+          },
+          "duration-week": {
+            "unitPattern-count-one": "{0} շբթ.",
+            "unitPattern-count-other": "{0} շբթ."
+          },
+          "duration-year": {
+            "unitPattern-count-one": "{0} տր.",
+            "unitPattern-count-other": "{0} տր."
+          },
+          "length-centimeter": {
+            "unitPattern-count-one": "{0} սմ",
+            "unitPattern-count-other": "{0} սմ"
+          },
+          "length-foot": {
+            "unitPattern-count-one": "{0} ֆտ.",
+            "unitPattern-count-other": "{0} ֆտ."
+          },
+          "length-inch": {
+            "unitPattern-count-one": "{0} դմ.",
+            "unitPattern-count-other": "{0} դմ."
+          },
+          "length-kilometer": {
+            "unitPattern-count-one": "{0} կմ",
+            "unitPattern-count-other": "{0} կմ"
+          },
+          "length-light-year": {
+            "unitPattern-count-one": "{0} լ. տ.",
+            "unitPattern-count-other": "{0} լ. տ."
+          },
+          "length-meter": {
+            "unitPattern-count-one": "{0} մ",
+            "unitPattern-count-other": "{0} մ"
+          },
+          "length-mile": {
+            "unitPattern-count-one": "{0} մղ",
+            "unitPattern-count-other": "{0} մղ"
+          },
+          "length-millimeter": {
+            "unitPattern-count-one": "{0} մմ",
+            "unitPattern-count-other": "{0} մմ"
+          },
+          "length-picometer": {
+            "unitPattern-count-one": "{0} պմ",
+            "unitPattern-count-other": "{0} պմ"
+          },
+          "length-yard": {
+            "unitPattern-count-one": "{0} յդ.",
+            "unitPattern-count-other": "{0} յդ."
+          },
+          "mass-gram": {
+            "unitPattern-count-one": "{0} գր",
+            "unitPattern-count-other": "{0} գր"
+          },
+          "mass-kilogram": {
+            "unitPattern-count-one": "{0} կգ",
+            "unitPattern-count-other": "{0} կգ"
+          },
+          "mass-ounce": {
+            "unitPattern-count-one": "{0} ունց",
+            "unitPattern-count-other": "{0} ունց"
+          },
+          "mass-pound": {
+            "unitPattern-count-one": "{0} ֆն.",
+            "unitPattern-count-other": "{0} ֆն."
+          },
+          "power-horsepower": {
+            "unitPattern-count-one": "{0} ձ/ու",
+            "unitPattern-count-other": "{0} ձ/ու"
+          },
+          "power-kilowatt": {
+            "unitPattern-count-one": "{0} կՎ",
+            "unitPattern-count-other": "{0} կՎ"
+          },
+          "power-watt": {
+            "unitPattern-count-one": "{0} Վ",
+            "unitPattern-count-other": "{0} Վ"
+          },
+          "pressure-hectopascal": {
+            "unitPattern-count-one": "{0} հՊա",
+            "unitPattern-count-other": "{0} հՊա"
+          },
+          "pressure-inch-hg": {
+            "unitPattern-count-one": "{0} դյույմ ս. ս.",
+            "unitPattern-count-other": "{0} դյույմ ս. ս."
+          },
+          "pressure-millibar": {
+            "unitPattern-count-one": "{0} մբ",
+            "unitPattern-count-other": "{0} մբ"
+          },
+          "speed-kilometer-per-hour": {
+            "unitPattern-count-one": "{0} կմ/ժ",
+            "unitPattern-count-other": "{0} կմ/ժ"
+          },
+          "speed-meter-per-second": {
+            "unitPattern-count-one": "{0} մ/վ",
+            "unitPattern-count-other": "{0} մ/վ"
+          },
+          "speed-mile-per-hour": {
+            "unitPattern-count-one": "{0} մղ/ժ",
+            "unitPattern-count-other": "{0} մղ/ժ"
+          },
+          "temperature-celsius": {
+            "unitPattern-count-one": "{0}°C",
+            "unitPattern-count-other": "{0}°C"
+          },
+          "temperature-fahrenheit": {
+            "unitPattern-count-one": "{0}°F",
+            "unitPattern-count-other": "{0}°F"
+          },
+          "volume-cubic-kilometer": {
+            "unitPattern-count-one": "{0} կմ³",
+            "unitPattern-count-other": "{0} կմ³"
+          },
+          "volume-cubic-mile": {
+            "unitPattern-count-one": "{0} մղ³",
+            "unitPattern-count-other": "{0} մղ³"
+          },
+          "volume-liter": {
+            "unitPattern-count-one": "{0} լ.",
+            "unitPattern-count-other": "{0} լ."
+          }
+        },
+        "narrow": {
+          "per": {
+            "compoundUnitPattern": "{0}/{1}"
+          },
+          "acceleration-g-force": {
+            "unitPattern-count-one": "{0}G",
+            "unitPattern-count-other": "{0}G"
+          },
+          "angle-arc-minute": {
+            "unitPattern-count-one": "{0}′",
+            "unitPattern-count-other": "{0}′"
+          },
+          "angle-arc-second": {
+            "unitPattern-count-one": "{0}″",
+            "unitPattern-count-other": "{0}″"
+          },
+          "angle-degree": {
+            "unitPattern-count-one": "{0}°",
+            "unitPattern-count-other": "{0}°"
+          },
+          "area-acre": {
+            "unitPattern-count-one": "{0}ակր",
+            "unitPattern-count-other": "{0}ակր"
+          },
+          "area-hectare": {
+            "unitPattern-count-one": "{0}հա",
+            "unitPattern-count-other": "{0}հա"
+          },
+          "area-square-foot": {
+            "unitPattern-count-one": "{0}ֆտ²",
+            "unitPattern-count-other": "{0}ֆտ²"
+          },
+          "area-square-kilometer": {
+            "unitPattern-count-one": "{0} կմ²",
+            "unitPattern-count-other": "{0} կմ²"
+          },
+          "area-square-meter": {
+            "unitPattern-count-one": "{0} մ²",
+            "unitPattern-count-other": "{0} մ²"
+          },
+          "area-square-mile": {
+            "unitPattern-count-one": "{0}մղ²",
+            "unitPattern-count-other": "{0}մղ²"
+          },
+          "duration-day": {
+            "unitPattern-count-one": "{0}օ.",
+            "unitPattern-count-other": "{0}օ."
+          },
+          "duration-hour": {
+            "unitPattern-count-one": "{0} ժ.",
+            "unitPattern-count-other": "{0} ժ."
+          },
+          "duration-millisecond": {
+            "unitPattern-count-one": "{0}մվ",
+            "unitPattern-count-other": "{0}մվ"
+          },
+          "duration-minute": {
+            "unitPattern-count-one": "{0} ր.",
+            "unitPattern-count-other": "{0} ր."
+          },
+          "duration-month": {
+            "unitPattern-count-one": "{0} ա.",
+            "unitPattern-count-other": "{0} ա."
+          },
+          "duration-second": {
+            "unitPattern-count-one": "{0} վ.",
+            "unitPattern-count-other": "{0} վ."
+          },
+          "duration-week": {
+            "unitPattern-count-one": "{0} շ.",
+            "unitPattern-count-other": "{0} շ."
+          },
+          "duration-year": {
+            "unitPattern-count-one": "{0}տ.",
+            "unitPattern-count-other": "{0}տ."
+          },
+          "length-centimeter": {
+            "unitPattern-count-one": "{0} սմ",
+            "unitPattern-count-other": "{0} սմ"
+          },
+          "length-foot": {
+            "unitPattern-count-one": "{0}′",
+            "unitPattern-count-other": "{0}′"
+          },
+          "length-inch": {
+            "unitPattern-count-one": "{0}″",
+            "unitPattern-count-other": "{0}″"
+          },
+          "length-kilometer": {
+            "unitPattern-count-one": "{0} կմ",
+            "unitPattern-count-other": "{0} կմ"
+          },
+          "length-light-year": {
+            "unitPattern-count-one": "{0} լ. տ.",
+            "unitPattern-count-other": "{0} լ. տ."
+          },
+          "length-meter": {
+            "unitPattern-count-one": "{0} մ",
+            "unitPattern-count-other": "{0} մ"
+          },
+          "length-mile": {
+            "unitPattern-count-one": "{0} մղ",
+            "unitPattern-count-other": "{0} մղ"
+          },
+          "length-millimeter": {
+            "unitPattern-count-one": "{0} մմ",
+            "unitPattern-count-other": "{0} մմ"
+          },
+          "length-picometer": {
+            "unitPattern-count-one": "{0} պմ",
+            "unitPattern-count-other": "{0} պմ"
+          },
+          "length-yard": {
+            "unitPattern-count-one": "{0} յդ.",
+            "unitPattern-count-other": "{0} յդ."
+          },
+          "mass-gram": {
+            "unitPattern-count-one": "{0} գր",
+            "unitPattern-count-other": "{0} գր"
+          },
+          "mass-kilogram": {
+            "unitPattern-count-one": "{0} կգ",
+            "unitPattern-count-other": "{0} կգ"
+          },
+          "mass-ounce": {
+            "unitPattern-count-one": "{0} ունց",
+            "unitPattern-count-other": "{0} ունց"
+          },
+          "mass-pound": {
+            "unitPattern-count-one": "{0}#",
+            "unitPattern-count-other": "{0}#"
+          },
+          "power-horsepower": {
+            "unitPattern-count-one": "{0}ձ/ու",
+            "unitPattern-count-other": "{0}ձ/ու"
+          },
+          "power-kilowatt": {
+            "unitPattern-count-one": "{0}կՎ",
+            "unitPattern-count-other": "{0}կՎ"
+          },
+          "power-watt": {
+            "unitPattern-count-one": "{0}Վ",
+            "unitPattern-count-other": "{0}Վ"
+          },
+          "pressure-hectopascal": {
+            "unitPattern-count-one": "{0} հՊա",
+            "unitPattern-count-other": "{0} հՊա"
+          },
+          "pressure-inch-hg": {
+            "unitPattern-count-one": "{0}\" ս. ս.",
+            "unitPattern-count-other": "{0}\" ս. ս"
+          },
+          "pressure-millibar": {
+            "unitPattern-count-one": "{0} մբ",
+            "unitPattern-count-other": "{0} մբ"
+          },
+          "speed-kilometer-per-hour": {
+            "unitPattern-count-one": "{0}կմ/ժ",
+            "unitPattern-count-other": "{0}կմ/ժ"
+          },
+          "speed-meter-per-second": {
+            "unitPattern-count-one": "{0}մ/վ",
+            "unitPattern-count-other": "{0}մ/վ"
+          },
+          "speed-mile-per-hour": {
+            "unitPattern-count-one": "{0}մղ/ժ",
+            "unitPattern-count-other": "{0}մղ/ժ"
+          },
+          "temperature-celsius": {
+            "unitPattern-count-one": "{0}°",
+            "unitPattern-count-other": "{0}°"
+          },
+          "temperature-fahrenheit": {
+            "unitPattern-count-one": "{0}°F",
+            "unitPattern-count-other": "{0}°F"
+          },
+          "volume-cubic-kilometer": {
+            "unitPattern-count-one": "{0}կմ³",
+            "unitPattern-count-other": "{0}կմ³"
+          },
+          "volume-cubic-mile": {
+            "unitPattern-count-one": "{0}մղ³",
+            "unitPattern-count-other": "{0}մղ³"
+          },
+          "volume-liter": {
+            "unitPattern-count-one": "{0}լ.",
+            "unitPattern-count-other": "{0}լ."
+          }
+        },
+        "durationUnit-type-hm": {
+          "durationUnitPattern": "h:mm"
+        },
+        "durationUnit-type-hms": {
+          "durationUnitPattern": "h:mm:ss"
+        },
+        "durationUnit-type-ms": {
+          "durationUnitPattern": "m:ss"
+        }
+      }
+    }
+  }
+}

@@ -2,6 +2,7 @@ package org.unicode.cldr.tool;
 
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -18,7 +19,7 @@ import java.util.regex.Pattern;
 import org.unicode.cldr.tool.GeneratedPluralSamples.Info.Type;
 import org.unicode.cldr.tool.Option.Options;
 import org.unicode.cldr.unittest.TestAll.TestInfo;
-import org.unicode.cldr.util.CldrUtility;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo.Count;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralType;
@@ -29,6 +30,12 @@ import com.ibm.icu.dev.util.Relation;
 import com.ibm.icu.text.PluralRules;
 import com.ibm.icu.text.PluralRules.FixedDecimal;
 
+/**
+ * Regenerate the plural files. Related classes are:
+ * ShowPlurals.printPlurals(english, null, pw); // for doing the charts
+ * PluralRulesFactory.getSamplePatterns(locale2); for the samples (to be moved into data)
+ * When you change the plural rules, be sure to look at the minimal pairs in PluralRulesFactory.
+ */
 public class GeneratedPluralSamples {
     private static final double VALUE_TO_CHECK = 7.1;
     static TestInfo testInfo = TestInfo.getInstance();
@@ -145,6 +152,7 @@ public class GeneratedPluralSamples {
      * Add-only set of ranges.
      */
     static class Ranges {
+        @SuppressWarnings("unchecked")
         Set<Range>[] data = new Set[5];
         int size = 0;
         {
@@ -204,7 +212,7 @@ public class GeneratedPluralSamples {
                 if (sampleLimit < 2) {
                     sampleLimit = 2;
                 }
-                for (Iterator it = data[i].iterator(); it.hasNext();) {
+                for (Iterator<Range> it = data[i].iterator(); it.hasNext();) {
                     it.next();
                     --sampleLimit;
                     if (sampleLimit < 0) {
@@ -221,7 +229,7 @@ public class GeneratedPluralSamples {
             Warning, Error
         }
 
-        Set<String> bounds = new TreeSet();
+        Set<String> bounds = new TreeSet<String>();
 
         public void add(Type type, String string) {
             if (string != null && !string.isEmpty()) {
@@ -431,7 +439,7 @@ public class GeneratedPluralSamples {
         return result;
     }
 
-    private final TreeMap<String, DataSamples> keywordToData = new TreeMap();
+    private final TreeMap<String, DataSamples> keywordToData = new TreeMap<String, DataSamples>();
     private final PluralType type;
 
     GeneratedPluralSamples(PluralInfo pluralInfo, PluralType type) {
@@ -497,7 +505,7 @@ public class GeneratedPluralSamples {
 
     public static String checkForDuplicates(PluralRules pluralRules, FixedDecimal ni) {
         // add test that there are no duplicates
-        Set<String> keywords = new LinkedHashSet();
+        Set<String> keywords = new LinkedHashSet<String>();
         for (String keywordCheck : pluralRules.getKeywords()) {
             if (pluralRules.matches(ni, keywordCheck)) {
                 keywords.add(keywordCheck);
@@ -531,7 +539,7 @@ public class GeneratedPluralSamples {
     private static boolean CHECK_VALUE = false;
 
     enum MyOptions {
-        output(".*", CldrUtility.GEN_DIRECTORY + "picker/", "output data directory"),
+        output(".*", CLDRPaths.GEN_DIRECTORY + "picker/", "output data directory"),
         filter(".*", null, "filter locales"),
         xml(null, null, "xml file format"),
         multiline(null, null, "multiple lines in file"),
@@ -563,19 +571,19 @@ public class GeneratedPluralSamples {
 
         for (PluralType type : PluralType.values()) {
             if (fileFormat) {
-                out = BagFormatter.openUTF8Writer(CldrUtility.GEN_DIRECTORY + "/plurals/",
+                out = BagFormatter.openUTF8Writer(CLDRPaths.GEN_DIRECTORY + "/plurals/",
                     (type == PluralType.cardinal ? "plurals.xml" : "ordinals.xml"));
-                out.println(WritePluralRules.formatPluralHeader(type, "GeneratedPluralSamples"));
+                out.print(WritePluralRules.formatPluralHeader(type, "GeneratedPluralSamples"));
             }
             System.out.println("\n");
             Set<String> locales = testInfo.getSupplementalDataInfo().getPluralLocales(type);
-            Relation<PluralInfo, String> seenAlready = Relation.of(new TreeMap(), TreeSet.class);
+            Relation<PluralInfo, String> seenAlready = Relation.of(new TreeMap<PluralInfo, Set<String>>(), TreeSet.class);
 
             //System.out.println(type + ": " + locales);
             for (String locale : locales) {
-                if (locale.equals("root")) {
-                    continue;
-                }
+//                if (locale.equals("root")) {
+//                    continue;
+//                }
                 if (localeMatcher != null && !localeMatcher.reset(locale).find()) {
                     continue;
                 }
@@ -584,30 +592,37 @@ public class GeneratedPluralSamples {
             }
 
             // sort if necessary
-            Set<Entry<PluralInfo, Set<String>>> sorted = sortNew ? new LinkedHashSet()
-                : new TreeSet(new HackComparator(type == PluralType.cardinal
+            Set<Entry<PluralInfo, Set<String>>> sorted = sortNew ? new LinkedHashSet<Entry<PluralInfo, Set<String>>>()
+                : new TreeSet<Entry<PluralInfo, Set<String>>>(new HackComparator(type == PluralType.cardinal
                     ? WritePluralRules.HACK_ORDER_PLURALS : WritePluralRules.HACK_ORDER_ORDINALS));
             for (Entry<PluralInfo, Set<String>> entry : seenAlready.keyValuesSet()) {
                 sorted.add(entry);
             }
-
-            Relation<GeneratedPluralSamples, PluralInfo> samplesToPlurals = Relation.of(new LinkedHashMap(), LinkedHashSet.class);
+            Set<String> oldKeywords = Collections.EMPTY_SET;
+            Relation<GeneratedPluralSamples, PluralInfo> samplesToPlurals = Relation.of(new LinkedHashMap<GeneratedPluralSamples, Set<PluralInfo>>(),
+                LinkedHashSet.class);
             for (Entry<PluralInfo, Set<String>> entry : sorted) {
                 PluralInfo pluralInfo = entry.getKey();
                 Set<String> equivalentLocales = entry.getValue();
-                
+
                 CHECK_VALUE = equivalentLocales.contains("pt"); // for debugging
-                
+
                 String representative = equivalentLocales.iterator().next();
 
+                PluralRules pluralRules = pluralInfo.getPluralRules();
+                Set<String> keywords = pluralRules.getKeywords();
+
                 if (fileFormat) {
+                    if (!keywords.equals(oldKeywords)) {
+                        out.println("\n        <!-- " + keywords.size() + ": " + CollectionUtilities.join(keywords, ",") + " -->\n");
+                        oldKeywords = keywords;
+                    }
                     out.println(WritePluralRules.formatPluralRuleHeader(equivalentLocales));
                     System.out.println(type + "\t" + equivalentLocales);
                 }
-                PluralRules pluralRules = pluralInfo.getPluralRules();
                 GeneratedPluralSamples samples = new GeneratedPluralSamples(pluralInfo, type);
                 samplesToPlurals.put(samples, pluralInfo);
-                for (String keyword : pluralRules.getKeywords()) {
+                for (String keyword : keywords) {
                     Count count = Count.valueOf(keyword);
                     String rule = pluralInfo.getRule(count);
                     if (rule != null) {
@@ -649,7 +664,7 @@ public class GeneratedPluralSamples {
                     if (entry.getValue().size() == 1) {
                         continue;
                     }
-                    Set<String> remainder = new LinkedHashSet(entry.getValue());
+                    Set<String> remainder = new LinkedHashSet<String>(entry.getValue());
                     String first = remainder.iterator().next();
                     remainder.remove(first);
                     System.err.println(type + "\tEQUIV:\t\t" + first + "\t≣\t" + CollectionUtilities.join(remainder, ", "));

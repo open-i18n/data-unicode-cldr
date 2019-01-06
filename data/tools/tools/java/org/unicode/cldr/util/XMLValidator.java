@@ -1,6 +1,6 @@
 /*
  ******************************************************************************
- * Copyright (C) 2003-2008, International Business Machines Corporation and   *
+ * Copyright (C) 2003-2014, International Business Machines Corporation and   *
  * others. All Rights Reserved.                                               *
  ******************************************************************************
  */
@@ -13,6 +13,7 @@ package org.unicode.cldr.util;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -28,13 +29,14 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+@CLDRTool(alias = "validate", description = "Check XML files for validity", url = "http://cldr.unicode.org/development/adding-locales")
 public class XMLValidator {
     public static boolean quiet = false;
     public static boolean parseonly = false;
 
     public static void main(String[] args) throws IOException {
         if (args.length == 0) {
-            System.out.println("No files specified. Validation failed");
+            System.out.println("No files specified. Validation failed. Use --help for help.");
             return;
         }
         for (int i = 0; i < args.length; i++) {
@@ -52,7 +54,7 @@ public class XMLValidator {
                     parseDirectory(f);
                 } else {
                     if (!quiet) System.out.println("Processing file " + args[i]);
-                    /* Document doc = */parse(args[i]);
+                    new fileParserThread(args[i]).run();
                 }
             }
         }
@@ -88,7 +90,7 @@ public class XMLValidator {
             }
         })) {
             if (!quiet) System.out.println("Processing file " + s.getPath());
-            /* Document doc = */parse(s.getCanonicalPath());
+            new fileParserThread(s.getCanonicalPath()).run();
         }
     }
 
@@ -157,14 +159,42 @@ public class XMLValidator {
 
     }
 
-    static Document parse(String filename) {
-        // Force filerefs to be URI's if needed: note this is independent of any
-        // other files
-        String docURI = filenameToURL(filename);
-        return parse(new InputSource(docURI), filename);
+    public static class fileParserThread extends Thread {
+        String filename;
+
+        fileParserThread(String _filename) {
+            filename = _filename;
+        }
+
+        public void run() {
+            // Force filerefs to be URI's if needed: note this is independent of any
+            // other files
+            String docURI = filenameToURL(filename);
+            parse(new InputSource(docURI), filename);
+        }
     }
 
     static Document parse(InputSource docSrc, String filename) {
+
+        // Check for BOM.
+        try {
+            FileInputStream fis = null;
+            try {
+                fis = new FileInputStream(filename);
+                byte bytes[] = new byte[3];
+                if (fis.read(bytes) == 3 &&
+                    bytes[0] == (byte) 0xef &&
+                    bytes[1] == (byte) 0xbb &&
+                    bytes[2] == (byte) 0xbf) {
+                    System.err.println(filename + ": ERROR: contains UTF-8 BOM (shouldn't happen in CLDR XML files)");
+                }
+            } finally {
+                if (fis != null) {
+                    fis.close();
+                }
+            }
+        } catch (IOException ioe) { /* ignored- other branches will report an error. */
+        }
 
         DocumentBuilderFactory dfactory = DocumentBuilderFactory.newInstance();
         // Always set namespaces on

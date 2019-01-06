@@ -62,6 +62,9 @@ public class XMLFileReader {
         };
 
         public void handleEndDtd() {
+        }
+
+        public void handleStartDtd(String name, String publicId, String systemId) {
         };
     }
 
@@ -129,7 +132,7 @@ public class XMLFileReader {
     private class MyContentHandler implements ContentHandler, LexicalHandler, DeclHandler, ErrorHandler {
         StringBuffer chars = new StringBuffer();
         StringBuffer commentChars = new StringBuffer();
-        Stack startElements = new Stack();
+        Stack<String> startElements = new Stack<String>();
         StringBuffer tempPath = new StringBuffer();
         boolean lastIsStart = false;
 
@@ -171,6 +174,7 @@ public class XMLFileReader {
                 + ", publicId: " + publicId
                 + ", systemId: " + systemId
                 );
+            simpleHandler.handleStartDtd(name, publicId, systemId);
         }
 
         public void endDTD() throws SAXException {
@@ -384,7 +388,7 @@ public class XMLFileReader {
     }
 
     static final class PathValueListHandler extends SimpleHandler {
-        List<Pair<String, String>> data = new ArrayList();
+        List<Pair<String, String>> data = new ArrayList<Pair<String, String>>();
 
         public PathValueListHandler(List<Pair<String, String>> data) {
             super();

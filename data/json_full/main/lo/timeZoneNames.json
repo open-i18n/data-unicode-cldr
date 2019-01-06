@@ -1,0 +1,2306 @@
+{
+  "main": {
+    "lo": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "25",
+          "_number": "$Revision: 91 $"
+        },
+        "generation": {
+          "_date": "$Date: 2014-03-13 22:27:12 -0500 (Thu, 13 Mar 2014) $"
+        },
+        "language": "lo"
+      },
+      "dates": {
+        "timeZoneNames": {
+          "hourFormat": "+HH:mm;-HH:mm",
+          "gmtFormat": "GMT{0}",
+          "gmtZeroFormat": "GMT",
+          "regionFormat": "ເວລາ {0}",
+          "regionFormat-type-standard": "{0} (+0)",
+          "regionFormat-type-daylight": "{0} (+1)",
+          "fallbackFormat": "{1} ({0})",
+          "zone": {
+            "America": {
+              "Adak": {
+                "exemplarCity": "ອາແດກ"
+              },
+              "Anchorage": {
+                "exemplarCity": "ແອນເຄີເຣກ"
+              },
+              "Anguilla": {
+                "exemplarCity": "ແອນກິນລາ"
+              },
+              "Antigua": {
+                "exemplarCity": "ແອນຕີກາ"
+              },
+              "Araguaina": {
+                "exemplarCity": "ອາລາກົວນາ"
+              },
+              "Argentina": {
+                "La_Rioja": {
+                  "exemplarCity": "ເລ ຣີໂອຈາ"
+                },
+                "Rio_Gallegos": {
+                  "exemplarCity": "ຣີໂອ ການເລກອດ"
+                },
+                "Salta": {
+                  "exemplarCity": "ຊານຕາ"
+                },
+                "San_Juan": {
+                  "exemplarCity": "ແຊນຈືນ"
+                },
+                "San_Luis": {
+                  "exemplarCity": "ແຊນລຸຍ"
+                },
+                "Tucuman": {
+                  "exemplarCity": "ຕູຄູແມນ"
+                },
+                "Ushuaia": {
+                  "exemplarCity": "ອູຊູເອຍ"
+                }
+              },
+              "Aruba": {
+                "exemplarCity": "ອາຣູບາ"
+              },
+              "Asuncion": {
+                "exemplarCity": "ອາຊຸນຊີອອນ"
+              },
+              "Bahia": {
+                "exemplarCity": "ບີເຍຍ"
+              },
+              "Bahia_Banderas": {
+                "exemplarCity": "ບາເຮຍ ແບນເດີຣາສ"
+              },
+              "Barbados": {
+                "exemplarCity": "ບາເບດອສ"
+              },
+              "Belem": {
+                "exemplarCity": "ບີແລນ"
+              },
+              "Belize": {
+                "exemplarCity": "ເບຊິນ"
+              },
+              "Blanc-Sablon": {
+                "exemplarCity": "ບລານ-ຊາບລອນ"
+              },
+              "Boa_Vista": {
+                "exemplarCity": "ບົວວີສຕາ"
+              },
+              "Bogota": {
+                "exemplarCity": "ໂບໂກຕ້າ"
+              },
+              "Boise": {
+                "exemplarCity": "ບອຍຊີ"
+              },
+              "Buenos_Aires": {
+                "exemplarCity": "ເບີນອດແອ"
+              },
+              "Cambridge_Bay": {
+                "exemplarCity": "ອ່າວແຄມບຣິດ"
+              },
+              "Campo_Grande": {
+                "exemplarCity": "ກຳໂປກັນດີ"
+              },
+              "Cancun": {
+                "exemplarCity": "ແຄນກຸນ"
+              },
+              "Caracas": {
+                "exemplarCity": "ກາລາກາດສ"
+              },
+              "Catamarca": {
+                "exemplarCity": "ກາຕາມາກາ"
+              },
+              "Cayenne": {
+                "exemplarCity": "ກາເຢນ"
+              },
+              "Cayman": {
+                "exemplarCity": "ຄາຍແມນ"
+              },
+              "Chicago": {
+                "exemplarCity": "ຊີຄາໂກ"
+              },
+              "Chihuahua": {
+                "exemplarCity": "ຊີຫົວຫົວ"
+              },
+              "Coral_Harbour": {
+                "exemplarCity": "ອາທິໂຄຄານ"
+              },
+              "Cordoba": {
+                "exemplarCity": "ຄໍໂດບາ"
+              },
+              "Costa_Rica": {
+                "exemplarCity": "ຄອສຕາຣິກາ"
+              },
+              "Creston": {
+                "exemplarCity": "ເຄຣສຕັນ"
+              },
+              "Cuiaba": {
+                "exemplarCity": "ກຸຍບາ"
+              },
+              "Curacao": {
+                "exemplarCity": "ເຄີລາຄາວ"
+              },
+              "Danmarkshavn": {
+                "exemplarCity": "ດານນາຊາວ"
+              },
+              "Dawson": {
+                "exemplarCity": "ດໍສັນ"
+              },
+              "Dawson_Creek": {
+                "exemplarCity": "ດໍສັນ ຄຣີກ"
+              },
+              "Denver": {
+                "exemplarCity": "ເດັນເວີ"
+              },
+              "Detroit": {
+                "exemplarCity": "ດີທຣອຍ"
+              },
+              "Dominica": {
+                "exemplarCity": "ໂດມິນິກາ"
+              },
+              "Edmonton": {
+                "exemplarCity": "ເອດມັນຕັນ"
+              },
+              "Eirunepe": {
+                "exemplarCity": "ເອລູເນປີ"
+              },
+              "El_Salvador": {
+                "exemplarCity": "ເອວຊັນວາເດີ"
+              },
+              "Fortaleza": {
+                "exemplarCity": "ຟໍຕາເລຊາ"
+              },
+              "Glace_Bay": {
+                "exemplarCity": "ເກລັກເບ"
+              },
+              "Godthab": {
+                "exemplarCity": "ກອດແທບ"
+              },
+              "Goose_Bay": {
+                "exemplarCity": "ກູສເບ"
+              },
+              "Grand_Turk": {
+                "exemplarCity": "ແກຣນທັກ"
+              },
+              "Grenada": {
+                "exemplarCity": "ເກຣນາດາ"
+              },
+              "Guadeloupe": {
+                "exemplarCity": "ກາວເດລູບ"
+              },
+              "Guatemala": {
+                "exemplarCity": "ກົວເຕມາລາ"
+              },
+              "Guayaquil": {
+                "exemplarCity": "ກົວຢາກິ"
+              },
+              "Guyana": {
+                "exemplarCity": "ກູຢານາ"
+              },
+              "Halifax": {
+                "exemplarCity": "ຫາລີແຟັກ"
+              },
+              "Havana": {
+                "exemplarCity": "ຮາວານາ"
+              },
+              "Hermosillo": {
+                "exemplarCity": "ຮີໂມຊິນໂລ"
+              },
+              "Indiana": {
+                "Knox": {
+                  "exemplarCity": "ນ໋ອກ, ອິນດີແອນາ"
+                },
+                "Marengo": {
+                  "exemplarCity": "ມາເຣນໂກ, ອິນດີເອນາ"
+                },
+                "Petersburg": {
+                  "exemplarCity": "ປີເຕີເບີກ, ອິນດີເອນາ"
+                },
+                "Tell_City": {
+                  "exemplarCity": "ເທວຊິຕີ, ອິນດີເອນາ"
+                },
+                "Vevay": {
+                  "exemplarCity": "ວີເວ, ອິນດີເອນາ"
+                },
+                "Vincennes": {
+                  "exemplarCity": "ວິນເຊນເນັດ, ອິນດີເອນາ"
+                },
+                "Winamac": {
+                  "exemplarCity": "ວິນນາແມັກ, ອິນດີເອນາ"
+                }
+              },
+              "Indianapolis": {
+                "exemplarCity": "ອິນດີເອນາໂພລິສ"
+              },
+              "Inuvik": {
+                "exemplarCity": "ອີນູວິກ"
+              },
+              "Iqaluit": {
+                "exemplarCity": "ອີກົວລິດ"
+              },
+              "Jamaica": {
+                "exemplarCity": "ຈາໄມກາ"
+              },
+              "Jujuy": {
+                "exemplarCity": "ຈູຈຸຍ"
+              },
+              "Juneau": {
+                "exemplarCity": "ຈູໂນ"
+              },
+              "Kentucky": {
+                "Monticello": {
+                  "exemplarCity": "ມອນຕີເຊວໂລ, ເຄນທັກກີ"
+                }
+              },
+              "Kralendijk": {
+                "exemplarCity": "ຄຣາເລນດິກ"
+              },
+              "La_Paz": {
+                "exemplarCity": "ລາປາສ"
+              },
+              "Lima": {
+                "exemplarCity": "ລີມາ"
+              },
+              "Los_Angeles": {
+                "exemplarCity": "ລອສແອນເຈີລິດ"
+              },
+              "Louisville": {
+                "exemplarCity": "ລຸຍວິນເລ"
+              },
+              "Lower_Princes": {
+                "exemplarCity": "ໂລເວີແປຣນໂກຕາ"
+              },
+              "Maceio": {
+                "exemplarCity": "ມາເຊໂອ"
+              },
+              "Managua": {
+                "exemplarCity": "ມານາກົວ"
+              },
+              "Manaus": {
+                "exemplarCity": "ມານົວ"
+              },
+              "Marigot": {
+                "exemplarCity": "ມາຣີໂກດ"
+              },
+              "Martinique": {
+                "exemplarCity": "ມາທີນິກ"
+              },
+              "Matamoros": {
+                "exemplarCity": "ມາຕາໂມຣອສ"
+              },
+              "Mazatlan": {
+                "exemplarCity": "ມາຊາດລານ"
+              },
+              "Mendoza": {
+                "exemplarCity": "ເມັນໂດຊ່າ"
+              },
+              "Menominee": {
+                "exemplarCity": "ມີໂນມີນີ"
+              },
+              "Merida": {
+                "exemplarCity": "ມີຣິດາ"
+              },
+              "Metlakatla": {
+                "exemplarCity": "ເມັດລາກັດລາ"
+              },
+              "Mexico_City": {
+                "exemplarCity": "ແມັກຊິໂກ ຊີຕີ"
+              },
+              "Miquelon": {
+                "exemplarCity": "ມີກົວລອນ"
+              },
+              "Moncton": {
+                "exemplarCity": "ມອນຕັນ"
+              },
+              "Monterrey": {
+                "exemplarCity": "ມອນເຕີເຣຍ"
+              },
+              "Montevideo": {
+                "exemplarCity": "ມອນເຕດີເວໂອ"
+              },
+              "Montserrat": {
+                "exemplarCity": "ມອນເຊີຣັດ"
+              },
+              "Nassau": {
+                "exemplarCity": "ແນສຊໍ"
+              },
+              "New_York": {
+                "exemplarCity": "ນິວຢອກ"
+              },
+              "Nipigon": {
+                "exemplarCity": "ນີປີກອນ"
+              },
+              "Nome": {
+                "exemplarCity": "ນອມ"
+              },
+              "Noronha": {
+                "exemplarCity": "ນໍລອນຮາ"
+              },
+              "North_Dakota": {
+                "Beulah": {
+                  "exemplarCity": "ເບີລາ, ດາໂກຕາເໜືອ"
+                },
+                "Center": {
+                  "exemplarCity": "ສູນກາງ, ດາໂກດາເໝືອ"
+                },
+                "New_Salem": {
+                  "exemplarCity": "ນີວສາເລັມ, ດາໂກຕາເໜືອ"
+                }
+              },
+              "Ojinaga": {
+                "exemplarCity": "ໂອຈິນາກາ"
+              },
+              "Panama": {
+                "exemplarCity": "ປານາມາ"
+              },
+              "Pangnirtung": {
+                "exemplarCity": "ພາງນີທັງ"
+              },
+              "Paramaribo": {
+                "exemplarCity": "ປາລາມາລີໂບ"
+              },
+              "Phoenix": {
+                "exemplarCity": "ໂພນິກ"
+              },
+              "Port-au-Prince": {
+                "exemplarCity": "ພອດອັນແປຣນ"
+              },
+              "Port_of_Spain": {
+                "exemplarCity": "ພອດຂອງສະເປນ"
+              },
+              "Porto_Velho": {
+                "exemplarCity": "ປໍໂຕເວໂຢ"
+              },
+              "Puerto_Rico": {
+                "exemplarCity": "ເປີໂທຣິໂກ"
+              },
+              "Rainy_River": {
+                "exemplarCity": "ເຣນນີ ຣີເວີ"
+              },
+              "Rankin_Inlet": {
+                "exemplarCity": "ແຣນກິນອິນເລັດ"
+              },
+              "Recife": {
+                "exemplarCity": "ເລຊີເຟ"
+              },
+              "Regina": {
+                "exemplarCity": "ຣີຈີນາ"
+              },
+              "Resolute": {
+                "exemplarCity": "ເຣໂຊລຸດ"
+              },
+              "Rio_Branco": {
+                "exemplarCity": "ລີໂອບັງໂກ"
+              },
+              "Santa_Isabel": {
+                "exemplarCity": "ຊານຕາ ອິດຊາເບວ"
+              },
+              "Santarem": {
+                "exemplarCity": "ຊັນຕາເລມ"
+              },
+              "Santiago": {
+                "exemplarCity": "ຊັນຕີອາໂກ"
+              },
+              "Santo_Domingo": {
+                "exemplarCity": "ຊານໂຕໂດມິນໂກ"
+              },
+              "Sao_Paulo": {
+                "exemplarCity": "ຊາວໂປໂລ"
+              },
+              "Scoresbysund": {
+                "exemplarCity": "ສະກໍເຣນໄບຊັນ"
+              },
+              "Sitka": {
+                "exemplarCity": "ຊິດກາ"
+              },
+              "St_Barthelemy": {
+                "exemplarCity": "ຊຽນບາທີລີມີ"
+              },
+              "St_Johns": {
+                "exemplarCity": "ເຊນຈອນ"
+              },
+              "St_Kitts": {
+                "exemplarCity": "ຊຽນຄີສ"
+              },
+              "St_Lucia": {
+                "exemplarCity": "ຊຽນລູເຊຍ"
+              },
+              "St_Thomas": {
+                "exemplarCity": "ຊຽນໂທມັສ"
+              },
+              "St_Vincent": {
+                "exemplarCity": "ຊຽນວິນເຊນ"
+              },
+              "Swift_Current": {
+                "exemplarCity": "ສະວິດເຄີເຣນ"
+              },
+              "Tegucigalpa": {
+                "exemplarCity": "ເຕກູຊີການປາ"
+              },
+              "Thule": {
+                "exemplarCity": "ທູເລ"
+              },
+              "Thunder_Bay": {
+                "exemplarCity": "ທັນເດີເບ"
+              },
+              "Tijuana": {
+                "exemplarCity": "ທີຈົວນາ"
+              },
+              "Toronto": {
+                "exemplarCity": "ໂທຣອນໂຕ"
+              },
+              "Tortola": {
+                "exemplarCity": "ທໍໂຕລາ"
+              },
+              "Vancouver": {
+                "exemplarCity": "ແວນຄູເວີ"
+              },
+              "Whitehorse": {
+                "exemplarCity": "ໄວຫອກສ"
+              },
+              "Winnipeg": {
+                "exemplarCity": "ວິນນີເພກ"
+              },
+              "Yakutat": {
+                "exemplarCity": "ຢາຄູຕັດ"
+              },
+              "Yellowknife": {
+                "exemplarCity": "ເຢນໂລໄນ"
+              }
+            },
+            "Atlantic": {
+              "Azores": {
+                "exemplarCity": "ອາຊໍເຣດ"
+              },
+              "Bermuda": {
+                "exemplarCity": "ເບີມູດາ"
+              },
+              "Canary": {
+                "exemplarCity": "ຄານາຣີ"
+              },
+              "Cape_Verde": {
+                "exemplarCity": "ເຄບເວີດ"
+              },
+              "Faeroe": {
+                "exemplarCity": "ເຟໂລ"
+              },
+              "Madeira": {
+                "exemplarCity": "ມາເດຣາ"
+              },
+              "Reykjavik": {
+                "exemplarCity": "ເລດຢາວິກ"
+              },
+              "South_Georgia": {
+                "exemplarCity": "ເຊົາຈໍເຈຍ"
+              },
+              "St_Helena": {
+                "exemplarCity": "ເຊນເຮລີນ່າ"
+              },
+              "Stanley": {
+                "exemplarCity": "ສະແຕນລີ"
+              }
+            },
+            "Europe": {
+              "Amsterdam": {
+                "exemplarCity": "ອຳເຕີດຳ"
+              },
+              "Andorra": {
+                "exemplarCity": "ອັນໂດລາ"
+              },
+              "Athens": {
+                "exemplarCity": "ເອເທນ"
+              },
+              "Belgrade": {
+                "exemplarCity": "ເບວເກຣດ"
+              },
+              "Berlin": {
+                "exemplarCity": "ເບີລີນ"
+              },
+              "Bratislava": {
+                "exemplarCity": "ບຮາຕີສລາວາ"
+              },
+              "Brussels": {
+                "exemplarCity": "ບາສເຊວ"
+              },
+              "Bucharest": {
+                "exemplarCity": "ບູຊາເລດສ"
+              },
+              "Budapest": {
+                "exemplarCity": "ບູດາເປດສ"
+              },
+              "Busingen": {
+                "exemplarCity": "ບັດຊິນເກນ"
+              },
+              "Chisinau": {
+                "exemplarCity": "ຄີຊີເນົາ"
+              },
+              "Copenhagen": {
+                "exemplarCity": "ໂກເປນຮາເກັນ"
+              },
+              "Dublin": {
+                "long": {
+                  "daylight": "ເວລາລະດູຮ້ອນໄອແລນ"
+                },
+                "exemplarCity": "ດັບລິນ"
+              },
+              "Gibraltar": {
+                "exemplarCity": "ຢີບຣໍຕາຣ"
+              },
+              "Guernsey": {
+                "exemplarCity": "ເກີນຊີ"
+              },
+              "Helsinki": {
+                "exemplarCity": "ຮໍຊິນກິ"
+              },
+              "Isle_of_Man": {
+                "exemplarCity": "ເກາະແມນ"
+              },
+              "Istanbul": {
+                "exemplarCity": "ອິດຕານບູ"
+              },
+              "Jersey": {
+                "exemplarCity": "ເຈີຊີ"
+              },
+              "Kaliningrad": {
+                "exemplarCity": "ກາລີນິງກາດສ"
+              },
+              "Kiev": {
+                "exemplarCity": "ເຄຍ"
+              },
+              "Lisbon": {
+                "exemplarCity": "ຣິດບອນ"
+              },
+              "Ljubljana": {
+                "exemplarCity": "ລູບລີຍານາ"
+              },
+              "London": {
+                "long": {
+                  "daylight": "ເວລາລະດູຮ້ອນອັງກິດ"
+                },
+                "exemplarCity": "ລອນດອນ"
+              },
+              "Luxembourg": {
+                "exemplarCity": "ລັກແຊມເບີກ"
+              },
+              "Madrid": {
+                "exemplarCity": "ມາດຣິດ"
+              },
+              "Malta": {
+                "exemplarCity": "ມໍຕາ"
+              },
+              "Mariehamn": {
+                "exemplarCity": "ມາລີຮາມ"
+              },
+              "Minsk": {
+                "exemplarCity": "ມີນາດສ"
+              },
+              "Monaco": {
+                "exemplarCity": "ໂມນາໂຄ"
+              },
+              "Moscow": {
+                "exemplarCity": "ມອດສໂກ"
+              },
+              "Oslo": {
+                "exemplarCity": "ອໍໂລ"
+              },
+              "Paris": {
+                "exemplarCity": "ປາຮີດ"
+              },
+              "Podgorica": {
+                "exemplarCity": "ພອດກໍຣີກາ"
+              },
+              "Prague": {
+                "exemplarCity": "ປາກີ"
+              },
+              "Riga": {
+                "exemplarCity": "ລີກາ"
+              },
+              "Rome": {
+                "exemplarCity": "ໂຣມ"
+              },
+              "Samara": {
+                "exemplarCity": "ຊາມາລາ"
+              },
+              "San_Marino": {
+                "exemplarCity": "ຊານມາຣີໂນ"
+              },
+              "Sarajevo": {
+                "exemplarCity": "ສາຣາເຍໂວ"
+              },
+              "Simferopol": {
+                "exemplarCity": "ຊີມເຟໂລໂປ"
+              },
+              "Skopje": {
+                "exemplarCity": "ສະໂກເປຍ"
+              },
+              "Sofia": {
+                "exemplarCity": "ໂຊເຟຍ"
+              },
+              "Stockholm": {
+                "exemplarCity": "ສະຕອກໂຮມ"
+              },
+              "Tallinn": {
+                "exemplarCity": "ທໍລິນ"
+              },
+              "Tirane": {
+                "exemplarCity": "ຕີລານີ"
+              },
+              "Uzhgorod": {
+                "exemplarCity": "ອາສໂກລອດດ"
+              },
+              "Vaduz": {
+                "exemplarCity": "ວາດາຊ"
+              },
+              "Vatican": {
+                "exemplarCity": "ວາຕິກັນ"
+              },
+              "Vienna": {
+                "exemplarCity": "ວຽນນາ"
+              },
+              "Vilnius": {
+                "exemplarCity": "ວີນີອຸດ"
+              },
+              "Volgograd": {
+                "exemplarCity": "ວໍໂກກາດສ"
+              },
+              "Warsaw": {
+                "exemplarCity": "ວອດຊາວ"
+              },
+              "Zagreb": {
+                "exemplarCity": "ຊາແກັບ"
+              },
+              "Zaporozhye": {
+                "exemplarCity": "ຊາໂປໂລຊີ"
+              },
+              "Zurich": {
+                "exemplarCity": "ຊູຣິກ"
+              }
+            },
+            "Africa": {
+              "Abidjan": {
+                "exemplarCity": "ອາບິດແຈນ"
+              },
+              "Accra": {
+                "exemplarCity": "ອັກກາ"
+              },
+              "Addis_Ababa": {
+                "exemplarCity": "ແອດດິດອາບາບາ"
+              },
+              "Algiers": {
+                "exemplarCity": "ແອເຈຍ"
+              },
+              "Asmera": {
+                "exemplarCity": "ອາສມາລາ"
+              },
+              "Bamako": {
+                "exemplarCity": "ບາມາໂກ"
+              },
+              "Bangui": {
+                "exemplarCity": "ບັງກີ"
+              },
+              "Banjul": {
+                "exemplarCity": "ບານຈູ"
+              },
+              "Bissau": {
+                "exemplarCity": "ບິດເຊົາ"
+              },
+              "Blantyre": {
+                "exemplarCity": "ແບນໄທສ"
+              },
+              "Brazzaville": {
+                "exemplarCity": "ບາຊາວິດ"
+              },
+              "Bujumbura": {
+                "exemplarCity": "ບູຈູມບູລາ"
+              },
+              "Cairo": {
+                "exemplarCity": "ໄຄໂລ"
+              },
+              "Casablanca": {
+                "exemplarCity": "ຄາຊາບລັງກາ"
+              },
+              "Ceuta": {
+                "exemplarCity": "ຊີວຕາ"
+              },
+              "Conakry": {
+                "exemplarCity": "ໂກນາກີ"
+              },
+              "Dakar": {
+                "exemplarCity": "ດາກາສ"
+              },
+              "Dar_es_Salaam": {
+                "exemplarCity": "ດາເອສສະລາມ"
+              },
+              "Djibouti": {
+                "exemplarCity": "ຈີບູຕິ"
+              },
+              "Douala": {
+                "exemplarCity": "ດູອາລາ"
+              },
+              "El_Aaiun": {
+                "exemplarCity": "ເອວອີອຸງ"
+              },
+              "Freetown": {
+                "exemplarCity": "ຟີທາວ"
+              },
+              "Gaborone": {
+                "exemplarCity": "ກາໂບລອນ"
+              },
+              "Harare": {
+                "exemplarCity": "ຮາລາເລ້"
+              },
+              "Johannesburg": {
+                "exemplarCity": "ໂຈຮັນເນດສເບີກ"
+              },
+              "Juba": {
+                "exemplarCity": "ຈູບາ"
+              },
+              "Kampala": {
+                "exemplarCity": "ຄຳປາລາ"
+              },
+              "Khartoum": {
+                "exemplarCity": "ຄາທູມ"
+              },
+              "Kigali": {
+                "exemplarCity": "ຄີກາລີ"
+              },
+              "Kinshasa": {
+                "exemplarCity": "ກິນຊາຊາ"
+              },
+              "Lagos": {
+                "exemplarCity": "ລາໂກດສ"
+              },
+              "Libreville": {
+                "exemplarCity": "ລີເບີເລີວີວ"
+              },
+              "Lome": {
+                "exemplarCity": "ລຳ"
+              },
+              "Luanda": {
+                "exemplarCity": "ແລມດາ"
+              },
+              "Lubumbashi": {
+                "exemplarCity": "ລູບຳບາຊິ"
+              },
+              "Lusaka": {
+                "exemplarCity": "ລູຊາກ້າ"
+              },
+              "Malabo": {
+                "exemplarCity": "ມາລາໂບ"
+              },
+              "Maputo": {
+                "exemplarCity": "ມາປູໂຕ"
+              },
+              "Maseru": {
+                "exemplarCity": "ມາເຊໂລ"
+              },
+              "Mbabane": {
+                "exemplarCity": "ອຳບາບາເນ"
+              },
+              "Mogadishu": {
+                "exemplarCity": "ໂມກາດີຊູ"
+              },
+              "Monrovia": {
+                "exemplarCity": "ມອນໂລເວຍ"
+              },
+              "Nairobi": {
+                "exemplarCity": "ໄນໂລບີ"
+              },
+              "Ndjamena": {
+                "exemplarCity": "ເອນຈາເມນ່າ"
+              },
+              "Niamey": {
+                "exemplarCity": "ນີອາມີ້"
+              },
+              "Nouakchott": {
+                "exemplarCity": "ນູແອກຊອດ"
+              },
+              "Ouagadougou": {
+                "exemplarCity": "ອູກາດູກູ"
+              },
+              "Porto-Novo": {
+                "exemplarCity": "ປໍໂຕ-ໂນໂວ"
+              },
+              "Sao_Tome": {
+                "exemplarCity": "ຊາວໂຕເມ"
+              },
+              "Tripoli": {
+                "exemplarCity": "ຕີໂປລີ"
+              },
+              "Tunis": {
+                "exemplarCity": "ຕູນິດ"
+              },
+              "Windhoek": {
+                "exemplarCity": "ວີນຮູດ"
+              }
+            },
+            "Asia": {
+              "Aden": {
+                "exemplarCity": "ເອເດັນ"
+              },
+              "Almaty": {
+                "exemplarCity": "ອໍມາຕີ"
+              },
+              "Amman": {
+                "exemplarCity": "ອຳມານ"
+              },
+              "Anadyr": {
+                "exemplarCity": "ອານາດີ"
+              },
+              "Aqtau": {
+                "exemplarCity": "ອັດຕາອູ"
+              },
+              "Aqtobe": {
+                "exemplarCity": "ອັດໂທບີ"
+              },
+              "Ashgabat": {
+                "exemplarCity": "ອາດກາບັດ"
+              },
+              "Baghdad": {
+                "exemplarCity": "ແບກແດດ"
+              },
+              "Bahrain": {
+                "exemplarCity": "ບາເຫເຣນ"
+              },
+              "Baku": {
+                "exemplarCity": "ບາກູ"
+              },
+              "Bangkok": {
+                "exemplarCity": "ບາງກອກ"
+              },
+              "Beirut": {
+                "exemplarCity": "ເບຣຸດ"
+              },
+              "Bishkek": {
+                "exemplarCity": "ບິດເຄກ"
+              },
+              "Brunei": {
+                "exemplarCity": "ບຣູໄນ"
+              },
+              "Calcutta": {
+                "exemplarCity": "ໂກຣກາຕາ"
+              },
+              "Choibalsan": {
+                "exemplarCity": "ຊອຍບາຣຊານ"
+              },
+              "Chongqing": {
+                "exemplarCity": "ຈົງຊິ່ງ"
+              },
+              "Colombo": {
+                "exemplarCity": "ໂຄລຳໂບ"
+              },
+              "Damascus": {
+                "exemplarCity": "ດາມັດກັດ"
+              },
+              "Dhaka": {
+                "exemplarCity": "ດາກາ"
+              },
+              "Dili": {
+                "exemplarCity": "ດີລີ"
+              },
+              "Dubai": {
+                "exemplarCity": "ດູໃບ"
+              },
+              "Dushanbe": {
+                "exemplarCity": "ດູຊານເບ"
+              },
+              "Gaza": {
+                "exemplarCity": "ກາຊາ"
+              },
+              "Harbin": {
+                "exemplarCity": "ຮາຣ໌ບິນ"
+              },
+              "Hebron": {
+                "exemplarCity": "ເຮບຣອນ"
+              },
+              "Hong_Kong": {
+                "exemplarCity": "ຮ່ອງກົງ"
+              },
+              "Hovd": {
+                "exemplarCity": "ຮອບ"
+              },
+              "Irkutsk": {
+                "exemplarCity": "ອີຄຸດສ"
+              },
+              "Jakarta": {
+                "exemplarCity": "ຈາກາຣ໌ຕາ"
+              },
+              "Jayapura": {
+                "exemplarCity": "ຈາຍາປູຣະ"
+              },
+              "Jerusalem": {
+                "exemplarCity": "ເຍຣູສະແລັມ"
+              },
+              "Kabul": {
+                "exemplarCity": "ກາບູຣ"
+              },
+              "Kamchatka": {
+                "exemplarCity": "ຄາມຊາດກາ"
+              },
+              "Karachi": {
+                "exemplarCity": "ກາຣາຈີ"
+              },
+              "Kashgar": {
+                "exemplarCity": "ຄາດຣ໌ກາ"
+              },
+              "Katmandu": {
+                "exemplarCity": "ກາດສ໌ມັນດູ"
+              },
+              "Khandyga": {
+                "exemplarCity": "ແຄນດີກາ"
+              },
+              "Krasnoyarsk": {
+                "exemplarCity": "ຄາດສນໍຢາດສ"
+              },
+              "Kuala_Lumpur": {
+                "exemplarCity": "ກູລາລຳເປີ"
+              },
+              "Kuching": {
+                "exemplarCity": "ກູຊີງ"
+              },
+              "Kuwait": {
+                "exemplarCity": "ຄູເວດ"
+              },
+              "Macau": {
+                "exemplarCity": "ມາເກົາ"
+              },
+              "Magadan": {
+                "exemplarCity": "ມາກາແດນ"
+              },
+              "Makassar": {
+                "exemplarCity": "ມາກາດຣ໌ຊາ"
+              },
+              "Manila": {
+                "exemplarCity": "ມານີລາ"
+              },
+              "Muscat": {
+                "exemplarCity": "ມາດກັດ"
+              },
+              "Nicosia": {
+                "exemplarCity": "ນິໂຄເຊຍ"
+              },
+              "Novokuznetsk": {
+                "exemplarCity": "ໂນໂວຄຸສເນັດ"
+              },
+              "Novosibirsk": {
+                "exemplarCity": "ໂນໂວຊີບີລາດສ"
+              },
+              "Omsk": {
+                "exemplarCity": "ໂອມາດສ"
+              },
+              "Oral": {
+                "exemplarCity": "ອໍຣໍ"
+              },
+              "Phnom_Penh": {
+                "exemplarCity": "ພະນົມເປັນ"
+              },
+              "Pontianak": {
+                "exemplarCity": "ພອນເທຍນັກ"
+              },
+              "Pyongyang": {
+                "exemplarCity": "ປຽງຢາງ"
+              },
+              "Qatar": {
+                "exemplarCity": "ກາຕາຣ"
+              },
+              "Qyzylorda": {
+                "exemplarCity": "ໄຄຊີລໍດາ"
+              },
+              "Rangoon": {
+                "exemplarCity": "ຍາງກຸ້ງ"
+              },
+              "Riyadh": {
+                "exemplarCity": "ຣີຢາດ"
+              },
+              "Saigon": {
+                "exemplarCity": "ໂຮ່ຈີມິງ"
+              },
+              "Sakhalin": {
+                "exemplarCity": "ຊາຄາລິນ"
+              },
+              "Samarkand": {
+                "exemplarCity": "ສາມາກກາດ"
+              },
+              "Seoul": {
+                "exemplarCity": "ໂຊຣ"
+              },
+              "Shanghai": {
+                "exemplarCity": "ຊ່ຽງໄຮ້"
+              },
+              "Singapore": {
+                "exemplarCity": "ສິງກະໂປ"
+              },
+              "Taipei": {
+                "exemplarCity": "ໄທເປ"
+              },
+              "Tashkent": {
+                "exemplarCity": "ທາດສ໌ເຄນ"
+              },
+              "Tbilisi": {
+                "exemplarCity": "ທີບີລີຊີ"
+              },
+              "Tehran": {
+                "exemplarCity": "ເຕຫະຣານ"
+              },
+              "Thimphu": {
+                "exemplarCity": "ທິມພູ"
+              },
+              "Tokyo": {
+                "exemplarCity": "ໂຕກຽວ"
+              },
+              "Ulaanbaatar": {
+                "exemplarCity": "ອູລານບາຕາຣ໌"
+              },
+              "Urumqi": {
+                "exemplarCity": "ອູຣຸມຊີ"
+              },
+              "Ust-Nera": {
+                "exemplarCity": "ອຸສ ເນຣາ"
+              },
+              "Vientiane": {
+                "exemplarCity": "ວຽງຈັນ"
+              },
+              "Vladivostok": {
+                "exemplarCity": "ວາດີໂວຕອກ"
+              },
+              "Yakutsk": {
+                "exemplarCity": "ຢາຄູທາດສ"
+              },
+              "Yekaterinburg": {
+                "exemplarCity": "ຢີຄາເຕີລີນແບກ"
+              },
+              "Yerevan": {
+                "exemplarCity": "ເຍເຣວານ"
+              }
+            },
+            "Indian": {
+              "Antananarivo": {
+                "exemplarCity": "ອັນຕານານາລີໂວ"
+              },
+              "Chagos": {
+                "exemplarCity": "ຊາກັດ"
+              },
+              "Christmas": {
+                "exemplarCity": "ຄຣິດສະມາດ"
+              },
+              "Cocos": {
+                "exemplarCity": "ໂຄໂຄດ"
+              },
+              "Comoro": {
+                "exemplarCity": "ໂຄໂມໂລ້"
+              },
+              "Kerguelen": {
+                "exemplarCity": "ແກເກີເລນ"
+              },
+              "Mahe": {
+                "exemplarCity": "ມາເຮ"
+              },
+              "Maldives": {
+                "exemplarCity": "ມໍດີເວດສ໌"
+              },
+              "Mauritius": {
+                "exemplarCity": "ມູເລຕຽດ"
+              },
+              "Mayotte": {
+                "exemplarCity": "ມາໂຢເຕ"
+              },
+              "Reunion": {
+                "exemplarCity": "ລຸຍນີອອນ"
+              }
+            },
+            "Australia": {
+              "Adelaide": {
+                "exemplarCity": "ເອດີແລດ"
+              },
+              "Brisbane": {
+                "exemplarCity": "ບຣິດເບນ"
+              },
+              "Broken_Hill": {
+                "exemplarCity": "ໂບເຄນຮີວ"
+              },
+              "Currie": {
+                "exemplarCity": "ກູຣີ"
+              },
+              "Darwin": {
+                "exemplarCity": "ດາຣວິນ"
+              },
+              "Eucla": {
+                "exemplarCity": "ຍູລາ"
+              },
+              "Hobart": {
+                "exemplarCity": "ໂຮບາດ"
+              },
+              "Lindeman": {
+                "exemplarCity": "ລິນດີແມນ"
+              },
+              "Lord_Howe": {
+                "exemplarCity": "ໂລດໂຮວີ"
+              },
+              "Melbourne": {
+                "exemplarCity": "ເມວເບິຣນ"
+              },
+              "Perth": {
+                "exemplarCity": "ເພີດ"
+              },
+              "Sydney": {
+                "exemplarCity": "ຊິດນີ"
+              }
+            },
+            "Pacific": {
+              "Apia": {
+                "exemplarCity": "ເອປີອາ"
+              },
+              "Auckland": {
+                "exemplarCity": "ອັກແລນ"
+              },
+              "Chatham": {
+                "exemplarCity": "ແຊແທມ"
+              },
+              "Easter": {
+                "exemplarCity": "ເອສເຕີ"
+              },
+              "Efate": {
+                "exemplarCity": "ເອຟາເຕ"
+              },
+              "Enderbury": {
+                "exemplarCity": "ເອັນເດີເບີລີ"
+              },
+              "Fakaofo": {
+                "exemplarCity": "ຟາກາວໂຟ"
+              },
+              "Fiji": {
+                "exemplarCity": "ຟູຈິ"
+              },
+              "Funafuti": {
+                "exemplarCity": "ຟູນະຟູຕິ"
+              },
+              "Galapagos": {
+                "exemplarCity": "ກາລາປາໂກດສ"
+              },
+              "Gambier": {
+                "exemplarCity": "ແກມເບຍ"
+              },
+              "Guadalcanal": {
+                "exemplarCity": "ກົວດັດຄານັດ"
+              },
+              "Guam": {
+                "exemplarCity": "ກຣວມ"
+              },
+              "Honolulu": {
+                "exemplarCity": "ໂຫໂນລູລູ"
+              },
+              "Johnston": {
+                "exemplarCity": "ຈອນສະໂຕນ"
+              },
+              "Kiritimati": {
+                "exemplarCity": "ຄີຣິທີມາຕີ"
+              },
+              "Kosrae": {
+                "exemplarCity": "ຄໍສແຣ"
+              },
+              "Kwajalein": {
+                "exemplarCity": "ຄວາຈາເລນ"
+              },
+              "Majuro": {
+                "exemplarCity": "ມາຈູໂຣ"
+              },
+              "Marquesas": {
+                "exemplarCity": "ມາຄິວຊັດ"
+              },
+              "Midway": {
+                "exemplarCity": "ມິດເວ"
+              },
+              "Nauru": {
+                "exemplarCity": "ນາອູຣູ"
+              },
+              "Niue": {
+                "exemplarCity": "ນີອູເອ"
+              },
+              "Norfolk": {
+                "exemplarCity": "ນໍຟຣອກ"
+              },
+              "Noumea": {
+                "exemplarCity": "ນູເມອາ"
+              },
+              "Pago_Pago": {
+                "exemplarCity": "ປາໂກປາໂກ"
+              },
+              "Palau": {
+                "exemplarCity": "ປາເລົາ"
+              },
+              "Pitcairn": {
+                "exemplarCity": "ພິດເຄຣນ"
+              },
+              "Ponape": {
+                "exemplarCity": "ໂປນາເປ"
+              },
+              "Port_Moresby": {
+                "exemplarCity": "ພອດມໍສບີ"
+              },
+              "Rarotonga": {
+                "exemplarCity": "ຣາໂຣຕອງກາ"
+              },
+              "Saipan": {
+                "exemplarCity": "ໄຊປານ"
+              },
+              "Tahiti": {
+                "exemplarCity": "ທາຮີຕິ"
+              },
+              "Tarawa": {
+                "exemplarCity": "ຕາຣາວາ"
+              },
+              "Tongatapu": {
+                "exemplarCity": "ຕອງກາຕາປູ"
+              },
+              "Truk": {
+                "exemplarCity": "ຈັກ"
+              },
+              "Wake": {
+                "exemplarCity": "ເວກ"
+              },
+              "Wallis": {
+                "exemplarCity": "ວາລິດ"
+              }
+            },
+            "Arctic": {
+              "Longyearbyen": {
+                "exemplarCity": "ລອງເຢຍບຽນ"
+              }
+            },
+            "Antarctica": {
+              "Casey": {
+                "exemplarCity": "ເຄຊີ"
+              },
+              "Davis": {
+                "exemplarCity": "ດາວີສ"
+              },
+              "DumontDUrville": {
+                "exemplarCity": "ດູມອນດີຍູວີວສ໌"
+              },
+              "Macquarie": {
+                "exemplarCity": "ແມັກຄົວຣີ"
+              },
+              "Mawson": {
+                "exemplarCity": "ເມົາຊັນ"
+              },
+              "McMurdo": {
+                "exemplarCity": "ແມັກມົວໂດ"
+              },
+              "Palmer": {
+                "exemplarCity": "ພາມເມີ"
+              },
+              "Rothera": {
+                "exemplarCity": "ໂຣເທຣາ"
+              },
+              "Syowa": {
+                "exemplarCity": "ເຊຍວາ"
+              },
+              "Vostok": {
+                "exemplarCity": "ວໍສະຕອກ"
+              }
+            },
+            "Etc": {
+              "GMT": {
+                "exemplarCity": "GMT"
+              },
+              "GMT1": {
+                "exemplarCity": "GMT+1"
+              },
+              "GMT10": {
+                "exemplarCity": "GMT+10"
+              },
+              "GMT11": {
+                "exemplarCity": "GMT+11"
+              },
+              "GMT12": {
+                "exemplarCity": "GMT+12"
+              },
+              "GMT2": {
+                "exemplarCity": "GMT+2"
+              },
+              "GMT3": {
+                "exemplarCity": "GMT+3"
+              },
+              "GMT4": {
+                "exemplarCity": "GMT+4"
+              },
+              "GMT5": {
+                "exemplarCity": "GMT+5"
+              },
+              "GMT6": {
+                "exemplarCity": "GMT+6"
+              },
+              "GMT7": {
+                "exemplarCity": "GMT+7"
+              },
+              "GMT8": {
+                "exemplarCity": "GMT+8"
+              },
+              "GMT9": {
+                "exemplarCity": "GMT+9"
+              },
+              "GMT-1": {
+                "exemplarCity": "GMT-1"
+              },
+              "GMT-10": {
+                "exemplarCity": "GMT-10"
+              },
+              "GMT-11": {
+                "exemplarCity": "GMT-11"
+              },
+              "GMT-12": {
+                "exemplarCity": "GMT-12"
+              },
+              "GMT-13": {
+                "exemplarCity": "GMT-13"
+              },
+              "GMT-14": {
+                "exemplarCity": "GMT-14"
+              },
+              "GMT-2": {
+                "exemplarCity": "GMT-2"
+              },
+              "GMT-3": {
+                "exemplarCity": "GMT-3"
+              },
+              "GMT-4": {
+                "exemplarCity": "GMT-4"
+              },
+              "GMT-5": {
+                "exemplarCity": "GMT-5"
+              },
+              "GMT-6": {
+                "exemplarCity": "GMT-6"
+              },
+              "GMT-7": {
+                "exemplarCity": "GMT-7"
+              },
+              "GMT-8": {
+                "exemplarCity": "GMT-8"
+              },
+              "GMT-9": {
+                "exemplarCity": "GMT-9"
+              },
+              "Unknown": {
+                "exemplarCity": "ບໍ່ຮູ້ຈັກ"
+              }
+            }
+          },
+          "metazone": {
+            "Acre": {
+              "long": {
+                "generic": "ເວລາຂອງອາເກຣ",
+                "standard": "ເວລາມາດຕະຖານຂອງອາເກຣ",
+                "daylight": "ເວລາລະດູຮ້ອນຂອງອາເກຣ"
+              }
+            },
+            "Afghanistan": {
+              "long": {
+                "standard": "ເວລາ ອັຟການິສຖານ"
+              }
+            },
+            "Africa_Central": {
+              "long": {
+                "standard": "ເວລາອາຟຣິລິກາກາງ"
+              }
+            },
+            "Africa_Eastern": {
+              "long": {
+                "standard": "ເວລາອາຟຣິລິກາຕາເວັນອອກ"
+              }
+            },
+            "Africa_Southern": {
+              "long": {
+                "standard": "ເວລາອາຟຣິລິກາໃຕ້"
+              }
+            },
+            "Africa_Western": {
+              "long": {
+                "generic": "ເວລາອາຟຣິລິກາຕາເວັນຕົກ",
+                "standard": "ເວລາມາດຕະຖານອາຟຣິລິກາຕາເວັນຕົກ",
+                "daylight": "ເວລາລະດູຮ້ອນອາຟຣິລິກາຕາເວັນຕົກ"
+              }
+            },
+            "Alaska": {
+              "long": {
+                "generic": "ເວລາອະແລສກາ",
+                "standard": "ເວລາມາດຕະຖານອະແລສກາ",
+                "daylight": "ເວລາຕອນທ່ຽງຂອງອະແລສກາ"
+              }
+            },
+            "Almaty": {
+              "long": {
+                "generic": "ເວລາອໍມາຕີ",
+                "standard": "ເວລາມາດຕະຖານອໍມາຕີ",
+                "daylight": "ເວລາລະດູຮ້ອນອໍມາຕີ"
+              }
+            },
+            "Amazon": {
+              "long": {
+                "generic": "ເວລາອາມາໂຊນ",
+                "standard": "ເວລາມາດຕະຖານອາມາໂຊນ",
+                "daylight": "ເວລາລະດູຮ້ອນອາມາໂຊນ"
+              }
+            },
+            "America_Central": {
+              "long": {
+                "generic": "ເວລາຕອນທ່ຽງ",
+                "standard": "ເວລາມາດຕະຖານ",
+                "daylight": "ເວລາຕອນທ່ຽງຂອງອາເມລິກາເໝືອ"
+              }
+            },
+            "America_Eastern": {
+              "long": {
+                "generic": "ເວລາຕາເວັນອອກ",
+                "standard": "ເວລາມາດຕະຖານຕາເວັນອອກ",
+                "daylight": "ເວລາຕອນທ່ຽງທາງຕາເວັນອອກ"
+              }
+            },
+            "America_Mountain": {
+              "long": {
+                "generic": "ເວລາແຖບພູເຂົາ",
+                "standard": "ເວລາມາດຕະຖານແຖບພູເຂົົາ",
+                "daylight": "ເວລາຕອນທ່ຽງແຖວພູເຂົາ"
+              }
+            },
+            "America_Pacific": {
+              "long": {
+                "generic": "ເວລາປາຊີຟິກ",
+                "standard": "ເວລາມາດຕະຖານຂອງປາຊີຟິກ",
+                "daylight": "ເວລາຕອນທ່ຽງຂອງປາຊີຟິກ"
+              }
+            },
+            "Aqtau": {
+              "long": {
+                "generic": "ເວລາອັດຕາອູ",
+                "standard": "ເວລາມາດຕະຖານອັດຕາອູ",
+                "daylight": "ເວລາລະດູຮ້ອນອັດຕາອູ"
+              }
+            },
+            "Aqtobe": {
+              "long": {
+                "generic": "ເວລາອັດໂຕເບ",
+                "standard": "ເວລາມາດຕະຖານອັດໂຕເບ",
+                "daylight": "ເວລາລະດູຮ້ອນອັດໂຕເບ"
+              }
+            },
+            "Arabian": {
+              "long": {
+                "generic": "ເວລາອາລາບຽນ",
+                "standard": "ເວລາມາດຕະຖານອາລາບຽນ",
+                "daylight": "ເວລາກາງເວັນອາລາບຽນ"
+              }
+            },
+            "Argentina": {
+              "long": {
+                "generic": "ເວລາອາເຈນຕີນາ",
+                "standard": "ເວລາມາດຕະຖານອາເຈນຕີນາ",
+                "daylight": "ເວລາລະດູຮ້ອນອາເຈນຕີນາ"
+              }
+            },
+            "Argentina_Western": {
+              "long": {
+                "generic": "ເວລາຕາເວັນຕົກຂອງອາເຈນຕີນາ",
+                "standard": "ເວລາມາດຕະຖານຕາເວັນຕົກຂອງອາເຈນຕີນາ",
+                "daylight": "ເວລາລະດູຮ້ອນທາງຕາເວັນຕົກຂອງອາເຈນຕີນາ"
+              }
+            },
+            "Armenia": {
+              "long": {
+                "generic": "ເວລາອາເມເນຍ",
+                "standard": "ເວລາມາດຕະຖານອາເມເນຍ",
+                "daylight": "ເວລາລະດູຮ້ອນອາເມເນຍ"
+              }
+            },
+            "Atlantic": {
+              "long": {
+                "generic": "ເວລາຂອງອາແລນຕິກ",
+                "standard": "ເວລາມາດຕະຖານຂອງອາແລນຕິກ",
+                "daylight": "ເວລາຕອນທ່ຽງຂອງອາແລນຕິກ"
+              }
+            },
+            "Australia_Central": {
+              "long": {
+                "generic": "ເວລາ ອົດສະຕາລີກາງ",
+                "standard": "ເວລາມາດຕະຖານ ອົດສະຕາລີກາງ",
+                "daylight": "ເວລາກາງເວັນ ອົດສະຕາລີກາງ"
+              }
+            },
+            "Australia_CentralWestern": {
+              "long": {
+                "generic": "ເວລາ ຕາເວັນຕົກຕອນກາງຂອງອົດສະຕາລີ",
+                "standard": "ເວລາມາດຕະຖານ ຕາເວັນຕົກຕອນກາງຂອງອົດສະຕາລີ",
+                "daylight": "ເວລາກາງເວັນ ຕາເວັນຕົກຕອນກາງຂອງອົດສະຕາລີ"
+              }
+            },
+            "Australia_Eastern": {
+              "long": {
+                "generic": "ເວລາອົດສະຕາລີຕາເວັນອອກ",
+                "standard": "ເວລາມາດຕະຖານອົດສະຕາລີຕາເວັນອອກ",
+                "daylight": "ເວລາກາງເວັນ ອົດສະຕາລີຕາເວັນອອກ"
+              }
+            },
+            "Australia_Western": {
+              "long": {
+                "generic": "ເວລາອົດສະຕາລີຕາເວັນຕົກ",
+                "standard": "ເວລາມາດຕະຖານ ອົດສະຕາລີຕາເວັນຕົກ",
+                "daylight": "ເວລາກາງເວັນອົດສະຕາລີຕາເວັນຕົກ"
+              }
+            },
+            "Azerbaijan": {
+              "long": {
+                "generic": "ເວລາອັສເຊີໄບຈັນ",
+                "standard": "ເວລາມາດຕະຖານອັສເຊີໄບຈັນ",
+                "daylight": "ເວລາລະດູຮ້ອນອັສເຊີໄບຈັນ"
+              }
+            },
+            "Azores": {
+              "long": {
+                "generic": "ເວລາອາໂຊເລສ",
+                "standard": "ເວລາມາດຕະຖານອາໂຊເລສ",
+                "daylight": "ເວລາລະດູຮ້ອນອາໂຊເລສ"
+              }
+            },
+            "Bangladesh": {
+              "long": {
+                "generic": "ເວລາ ບັງກະລາເທດ",
+                "standard": "ເວລາມາດຕະຖານ ບັງກະລາເທດ",
+                "daylight": "ເວລາ ລະດູຮ້ອນ ບັງກະລາເທດ"
+              }
+            },
+            "Bhutan": {
+              "long": {
+                "standard": "ເວລາ ບູຖານ"
+              }
+            },
+            "Bolivia": {
+              "long": {
+                "standard": "ເວລາໂບລີເວີຍ"
+              }
+            },
+            "Brasilia": {
+              "long": {
+                "generic": "ເວລາເບຣຊີເລຍ",
+                "standard": "ເວລາມາດຕາຖານເບຣຊີເລຍ",
+                "daylight": "ເວລາລະດູຮ້ອນເບຣຊີເລຍ"
+              }
+            },
+            "Brunei": {
+              "long": {
+                "standard": "ເວລາບຼູນາຍດາລູຊາແລັມ"
+              }
+            },
+            "Cape_Verde": {
+              "long": {
+                "generic": "ເວລາເຄບເວິຣດ",
+                "standard": "ເວລາມາດຕະຖານເຄບເວິຣດ",
+                "daylight": "ເວລາລະດູຮ້ອນຂອງເຄບເວິຣດ"
+              }
+            },
+            "Casey": {
+              "long": {
+                "standard": "ເວລາເຄຊີ"
+              }
+            },
+            "Chamorro": {
+              "long": {
+                "standard": "ເວລາຊາມໍໂລ"
+              }
+            },
+            "Chatham": {
+              "long": {
+                "generic": "ເວລາ ຊາທາມ",
+                "standard": "ເວລາມາດຕະຖານ ຊາທາມ",
+                "daylight": "ເວລາກາງເວັນ ຊາທາມ"
+              }
+            },
+            "Chile": {
+              "long": {
+                "generic": "ເວລາຊີລີ",
+                "standard": "ເວລາມາດຕາຖານຊີລີ",
+                "daylight": "ເວລາລະດູຮ້ອນຊີລີ"
+              }
+            },
+            "China": {
+              "long": {
+                "generic": "ເວລາຂອງຈີນ",
+                "standard": "ເວລາມາດຕະຖານຈີນ",
+                "daylight": "ເວລາກາງເວັນ ຈີນ"
+              }
+            },
+            "Choibalsan": {
+              "long": {
+                "generic": "ເວລາ ໂຊຍບາຊັນ",
+                "standard": "ເວລາມາດຕະຖານໂຊຍບາຊັນ",
+                "daylight": "ເວລາລະດູຮ້ອນ ໂຊຍບາຊັນ"
+              }
+            },
+            "Christmas": {
+              "long": {
+                "standard": "ເວລາເກາະຄຣິສມາດ"
+              }
+            },
+            "Cocos": {
+              "long": {
+                "standard": "ເວລາຫມູ່ເກາະໂກໂກສ"
+              }
+            },
+            "Colombia": {
+              "long": {
+                "generic": "ເວລາໂຄລໍາເບຍ",
+                "standard": "ເວລາມາດຕະຖານໂຄລຳເບຍ",
+                "daylight": "ເວລາລະດູຮ້ອນໂຄລໍາເບຍ"
+              }
+            },
+            "Cook": {
+              "long": {
+                "generic": "ເວລາຫມູ່ເກາະຄຸກ",
+                "standard": "ເວລາມາດຕະຖານຫມູ່ເກາະຄຸກ",
+                "daylight": "ເວລາເຄີ່ງລະດູຮ້ອນຫມູ່ເກາະຄຸກ"
+              }
+            },
+            "Cuba": {
+              "long": {
+                "generic": "ເວລາຄິວບາ",
+                "standard": "ເວລາມາດຕະຖານຂອງຄິວບາ",
+                "daylight": "ເວລາຕອນທ່ຽງຂອງຄິວບາ"
+              }
+            },
+            "Davis": {
+              "long": {
+                "standard": "ເວລາເດວິດ"
+              }
+            },
+            "DumontDUrville": {
+              "long": {
+                "standard": "ເວລາດູມອງດູວິລ"
+              }
+            },
+            "East_Timor": {
+              "long": {
+                "standard": "ເວລາຕີມໍຕາເວັນອອກ"
+              }
+            },
+            "Easter": {
+              "long": {
+                "generic": "ເວລາເກາະອີແລນ",
+                "standard": "ເວລາມາດຕະຖານເກາະອີແລນ",
+                "daylight": "ເວລາລະດູຮ້ອນຂອງເກາະອີແລນ"
+              }
+            },
+            "Ecuador": {
+              "long": {
+                "standard": "ເວລາເອວາດໍ"
+              }
+            },
+            "Europe_Central": {
+              "long": {
+                "generic": "ເວລາເອີຣົບກາງ",
+                "standard": "ເວລາມາດຕະຖານເອີຮົບກາງ",
+                "daylight": "ເວລາລະດູຮ້ອນເອີຣົບກາງ"
+              }
+            },
+            "Europe_Eastern": {
+              "long": {
+                "generic": "ເວລາເອີຣົບຕາເວັນອອກ",
+                "standard": "ເວລາມາດຕະຖານເອີຣົບຕາເວັນອອກ",
+                "daylight": "ເວລາລະດູຮ້ອນເອີຣົບຕາເວັນອອກ"
+              }
+            },
+            "Europe_Western": {
+              "long": {
+                "generic": "ເວລາເອີຣົບຕາເວັນຕົກ",
+                "standard": "ເວລາມາດຕະຖານເອີຣົບຕາເວັນຕົກ",
+                "daylight": "ເວລາລະດູຮ້ອນເອີຣົບຕາເວັນຕົກ"
+              }
+            },
+            "Falkland": {
+              "long": {
+                "generic": "ເວລາຟອກແລນ",
+                "standard": "ເວລາມາດຕະຖານຟອກແລນ",
+                "daylight": "ເວລາລະດູຮ້ອນຟອກແລນ"
+              }
+            },
+            "Fiji": {
+              "long": {
+                "generic": "ເວລາຟິຈິ",
+                "standard": "ເວລາມາດຕະຖານຟິຈິ",
+                "daylight": "ເວລາລະດູຮ້ອນຟິຈິ"
+              }
+            },
+            "French_Guiana": {
+              "long": {
+                "standard": "ເວລາກີອານາຝຮັ່ງ"
+              }
+            },
+            "French_Southern": {
+              "long": {
+                "standard": "ເວລາຝຣັ່ງຕອນໃຕ້ແລະແອນຕາກຕິກ"
+              }
+            },
+            "GMT": {
+              "long": {
+                "standard": "ເວລາກຣີນີສ"
+              }
+            },
+            "Galapagos": {
+              "long": {
+                "standard": "ເວລາກາລາປາໂກ"
+              }
+            },
+            "Gambier": {
+              "long": {
+                "standard": "ເວລາແກມເບຍ"
+              }
+            },
+            "Georgia": {
+              "long": {
+                "generic": "ເວລາຈໍເຈຍ",
+                "standard": "ເວລາມາດຕະຖານຈໍເຈຍ",
+                "daylight": "ເວລາລະດູຮ້ອນຈໍເຈຍ"
+              }
+            },
+            "Gilbert_Islands": {
+              "long": {
+                "standard": "ເວລາຫມູ່ເກາະກິລເບີດ"
+              }
+            },
+            "Greenland_Eastern": {
+              "long": {
+                "generic": "ເວລາຕາເວັນອອກຂອງກຮີນແລນ",
+                "standard": "ເວລາມາດຕະຖານຕາເວັນອອກກຮີນແລນ",
+                "daylight": "ເວລາລະດູຮ້ອນກຮີນແລນຕາເວັນອອກ"
+              }
+            },
+            "Greenland_Western": {
+              "long": {
+                "generic": "ເວລາກຮີນແລນຕາເວັນຕົກ",
+                "standard": "ເວລາມາດຕະຖານກຮີນແລນຕາເວັນຕົກ",
+                "daylight": "ເວລາຕອນທ່ຽງກຮີນແລນຕາເວັນຕົກ"
+              }
+            },
+            "Guam": {
+              "long": {
+                "standard": "ເວລາກວມ"
+              }
+            },
+            "Gulf": {
+              "long": {
+                "standard": "ເວລາກຣູ"
+              }
+            },
+            "Guyana": {
+              "long": {
+                "standard": "ເວລາກາຍອານາ"
+              }
+            },
+            "Hawaii_Aleutian": {
+              "long": {
+                "generic": "ເວລາຮາວາຍ-ເອລູທຽນ",
+                "standard": "ເວລາມາດຕະຖານຮາວາຍ-ເອລູທຽນ",
+                "daylight": "ເວລາຕອນທ່ຽງຮາວາຍ-ເອລູທຽນ"
+              }
+            },
+            "Hong_Kong": {
+              "long": {
+                "generic": "ເວລາ ຮົງກົງ",
+                "standard": "ເວລາມາດຕະຖານຮົງກົງ",
+                "daylight": "ເວລາລະດູຮ້ອນ ຮົງກົງ"
+              }
+            },
+            "Hovd": {
+              "long": {
+                "generic": "ເວລາ ຮອຟ",
+                "standard": "ເວລາມາດຕະຖານ ຮອຟ",
+                "daylight": "ເວລາລະດູຮ້ອນ ຮອຟ"
+              }
+            },
+            "India": {
+              "long": {
+                "standard": "ເວລາ ອິນເດຍ"
+              }
+            },
+            "Indian_Ocean": {
+              "long": {
+                "standard": "ເວລາຫມະຫາສະຫມຸດອິນເດຍ"
+              }
+            },
+            "Indochina": {
+              "long": {
+                "standard": "ເວລາອິນດູຈີນ"
+              }
+            },
+            "Indonesia_Central": {
+              "long": {
+                "standard": "ເວລາອິນໂດເນເຊັຍກາງ"
+              }
+            },
+            "Indonesia_Eastern": {
+              "long": {
+                "standard": "ເວລາອິນໂດເນເຊັຍຕາເວັນອອກ"
+              }
+            },
+            "Indonesia_Western": {
+              "long": {
+                "standard": "ເວລາອິນໂດເນເຊັຍຕາເວັນຕົກ"
+              }
+            },
+            "Iran": {
+              "long": {
+                "generic": "ເວລາ ອີຣານ",
+                "standard": "ເວລາມາດຕະຖານ ອີີຣານ",
+                "daylight": "ເວລາກາງເວັນ ອີຣານ"
+              }
+            },
+            "Irkutsk": {
+              "long": {
+                "generic": "ເວລາອີຣກຣູດ",
+                "standard": "ເວລາມາດຕະຖານອີຣກຣູດ",
+                "daylight": "ເວລາລະດູຮ້ອນອີຣກຣູດ"
+              }
+            },
+            "Israel": {
+              "long": {
+                "generic": "ເວລາອິດສະລາແອນ",
+                "standard": "ເວລາມາດຕະຖານອິດສະລາແອນ",
+                "daylight": "ເວລາກາງເວັນອິດສະລາແອນ"
+              }
+            },
+            "Japan": {
+              "long": {
+                "generic": "ເວລາ ຍີ່ປຸ່ນ",
+                "standard": "ເວລາມາດຕະຖານຂອງຍີ່ປຸ່ນ",
+                "daylight": "ເວລາກາງເວັນ ຍີ່ປູ່ນ"
+              }
+            },
+            "Kazakhstan_Eastern": {
+              "long": {
+                "standard": "ເວລາກາຊັກສະຖານຕາເວັນອອກ"
+              }
+            },
+            "Kazakhstan_Western": {
+              "long": {
+                "standard": "ເວລາກາຊັກສະຖານຕາເວັນຕົກ"
+              }
+            },
+            "Korea": {
+              "long": {
+                "generic": "ເວລາເກົາຫຼີ",
+                "standard": "ເວລາ ມາດຕະຖານ ເກົາຫຼີ",
+                "daylight": "ເວລາກາງເວັນ ເກົາຫຼີ"
+              }
+            },
+            "Kosrae": {
+              "long": {
+                "standard": "ເວລາຄອສແຣ"
+              }
+            },
+            "Krasnoyarsk": {
+              "long": {
+                "generic": "ເວລາຄຣາສໂນຢາດສ",
+                "standard": "ເວລາມາດຕະຖານຄຣາສໂນຢາດສ",
+                "daylight": "ເວລາລະດູຮ້ອນຄຣາສໂນຢາດສ"
+              }
+            },
+            "Kyrgystan": {
+              "long": {
+                "standard": "ເວລາຄຣີກິສຖານ"
+              }
+            },
+            "Lanka": {
+              "long": {
+                "standard": "ເວລາລັງກາ"
+              }
+            },
+            "Line_Islands": {
+              "long": {
+                "standard": "ເວລາຫມູ່ເກາະໄລນ໌"
+              }
+            },
+            "Lord_Howe": {
+              "long": {
+                "generic": "ເວລາ ລອດໂຮ",
+                "standard": "ເວລາ ມາດຕະຖານລອດໂຮ",
+                "daylight": "ເວລາກາງເວັນ ລອດໂຮ"
+              }
+            },
+            "Macau": {
+              "long": {
+                "generic": "ເວລາມາເກົາ",
+                "standard": "ເວລາມາດຕະຖານມາເກົາ",
+                "daylight": "ເວລາລະດູຮ້ອນມາເກົາ"
+              }
+            },
+            "Macquarie": {
+              "long": {
+                "standard": "ເວລາແມັກຄໍຣີ"
+              }
+            },
+            "Magadan": {
+              "long": {
+                "generic": "ເວລາເມັກກາເດນ",
+                "standard": "ເວລາມາດຕະຖານເມັກກາເດນ",
+                "daylight": "ເວລາລະດູຮ້ອນເມັກກາເດນ"
+              }
+            },
+            "Malaysia": {
+              "long": {
+                "standard": "ເວລາມາເລເຊັຍ"
+              }
+            },
+            "Maldives": {
+              "long": {
+                "standard": "ເວລາມັນດີຟ"
+              }
+            },
+            "Marquesas": {
+              "long": {
+                "standard": "ເວລາມາເຄີຊັສ"
+              }
+            },
+            "Marshall_Islands": {
+              "long": {
+                "standard": "ເວລາຫມູ່ເກາະມາແຊລ໌"
+              }
+            },
+            "Mauritius": {
+              "long": {
+                "generic": "ເວລາມໍຣິເຊຍ",
+                "standard": "ເວລາມາດຕະຖານມໍຣິເຊຍ",
+                "daylight": "ເວລາລະດູຮ້ອນຂອງມໍຣິເຊຍ"
+              }
+            },
+            "Mawson": {
+              "long": {
+                "standard": "ເວລາມໍສັນ"
+              }
+            },
+            "Mongolia": {
+              "long": {
+                "generic": "ເວລາ ອູລານບາເຕີ",
+                "standard": "ເວລາມາດຕະຖານ ອູລານບາເຕີ",
+                "daylight": "ເວລາລະດູຮ້ອນອູລານບາເຕີ"
+              }
+            },
+            "Moscow": {
+              "long": {
+                "generic": "ເວລາໂມ້ສໂກ",
+                "standard": "ເວລາມາດຕະຖານໂມ້ສໂກ",
+                "daylight": "ເວລາລະດູຮ້ອນໂມ້ສໂກ"
+              }
+            },
+            "Myanmar": {
+              "long": {
+                "standard": "ເວລາມຽນມາ"
+              }
+            },
+            "Nauru": {
+              "long": {
+                "standard": "ເວລານາອຸລຸ"
+              }
+            },
+            "Nepal": {
+              "long": {
+                "standard": "ເວລາ ເນປານ"
+              }
+            },
+            "New_Caledonia": {
+              "long": {
+                "generic": "ເວລານິວແຄລິໂດເນຍ",
+                "standard": "ເວລາມາດຕະຖານນິວແຄລິໂດເນຍ",
+                "daylight": "ເວລາລະດູຮ້ອນນິວແຄລິໂດເນຍ"
+              }
+            },
+            "New_Zealand": {
+              "long": {
+                "generic": "ເວລາ ນິວຊີແລນ",
+                "standard": "ເວລາມາດຕະຖານ ນິວຊີແລນ",
+                "daylight": "ເວລາກາງເວັນ ນິວຊີແລນ"
+              }
+            },
+            "Newfoundland": {
+              "long": {
+                "generic": "ເວລານິວຟັນແລນ",
+                "standard": "ເວລາມາດຕະຖານນິວຟັນແລນ",
+                "daylight": "ເວລາຕອນທ່ຽງນິວຟັນແລນ"
+              }
+            },
+            "Niue": {
+              "long": {
+                "standard": "ເວລານິອູເອ"
+              }
+            },
+            "Norfolk": {
+              "long": {
+                "standard": "ເວລາ ເກາະ ນອກຟອກ"
+              }
+            },
+            "Noronha": {
+              "long": {
+                "generic": "ເວລາເຟນັນໂດເດໂນຮອນຮາ",
+                "standard": "ເວລາມາດຕະຖານເຟນັນໂດເດໂນຮອນຮາ",
+                "daylight": "ເວລາລະດູຮ້ອນເຟນັນໂດເດໂນຮອນຮາ"
+              }
+            },
+            "North_Mariana": {
+              "long": {
+                "standard": "ເວລາຫມູ່ເກາະມາເຣຍນາເຫນືອ"
+              }
+            },
+            "Novosibirsk": {
+              "long": {
+                "generic": "ເວລາໂນໂວຊີບຣິສ",
+                "standard": "ເວລາມາດຕະຖານໂນໂວຊີບຣິສ",
+                "daylight": "ເວລາລະດູຮ້ອນໂນໂວຊີບຣິສ"
+              }
+            },
+            "Omsk": {
+              "long": {
+                "generic": "ເວລາໂອ້ມສ",
+                "standard": "ເວລາມາດຕະຖານໂອ້ມສ",
+                "daylight": "ເວລາລະດູຮ້ອນໂອ້ມສ"
+              }
+            },
+            "Pakistan": {
+              "long": {
+                "generic": "ເວລາປາກິສຖານ",
+                "standard": "ເວລາມາດຕະຖານປາກິສຖານ",
+                "daylight": "ເວລາລະດູຮ້ອນ ປາກິສຖານ"
+              }
+            },
+            "Palau": {
+              "long": {
+                "standard": "ເວລາປາເລົາ"
+              }
+            },
+            "Papua_New_Guinea": {
+              "long": {
+                "standard": "ເວລາປາປົວກິນີ"
+              }
+            },
+            "Paraguay": {
+              "long": {
+                "generic": "ເວລາປາຮາກວາຍ",
+                "standard": "ເວລາມາດຕະຖານປາຮາກວາຍ",
+                "daylight": "ເວລາລະດູຮ້ອນປາຮາກວາຍ"
+              }
+            },
+            "Peru": {
+              "long": {
+                "generic": "ເວລາເປຮູ",
+                "standard": "ເວລາມາດຕະຖານເປຮູ",
+                "daylight": "ເວລາລະດູຮ້ອນຂອງເປຮູ"
+              }
+            },
+            "Philippines": {
+              "long": {
+                "generic": "ເວລາຟີລີປິນ",
+                "standard": "ເວລາມາດຕະຖານຟີລີປີນ",
+                "daylight": "ເວລາຟີລີປີນຍາມຮ້ອນ"
+              }
+            },
+            "Phoenix_Islands": {
+              "long": {
+                "standard": "ເວລາຫມູ່ເກາະຟີນິກ"
+              }
+            },
+            "Pierre_Miquelon": {
+              "long": {
+                "generic": "ເວລາປີແຍຮແລະມີເກີລົງ",
+                "standard": "ເວລາມາດຕະຖານປີແຍຮແລະມີເກີລົງ",
+                "daylight": "ເວລາຕອນທ່ຽງປີແຍຮແລະມີເກີລົງ"
+              }
+            },
+            "Pitcairn": {
+              "long": {
+                "standard": "ເວລາພິດແຄຣ໌ນ"
+              }
+            },
+            "Ponape": {
+              "long": {
+                "standard": "ເວລາໂປເນບ"
+              }
+            },
+            "Qyzylorda": {
+              "long": {
+                "generic": "ເວລາຄີວລໍດາ",
+                "standard": "ເວລາມາດຕະຖານຄີວລໍດາ",
+                "daylight": "ເວລາລະດູຮ້ອນຄີວລໍດາ"
+              }
+            },
+            "Reunion": {
+              "long": {
+                "standard": "ເວລາເຮອູເນຍ"
+              }
+            },
+            "Rothera": {
+              "long": {
+                "standard": "ເວລາ ໂຣທີຕາ"
+              }
+            },
+            "Sakhalin": {
+              "long": {
+                "generic": "ເວລາສາຄາລິງ",
+                "standard": "ເວລາມາດຕະຖານສາຄາລິງ",
+                "daylight": "ເວລາລະດູຮ້ອນສາຄາລິງ"
+              }
+            },
+            "Samoa": {
+              "long": {
+                "generic": "ເວລາຊາມົວ",
+                "standard": "ເວລາມາດຕະຖານຊາມົວ",
+                "daylight": "ເວລາລະດູຮ້ອນຊາມົວ"
+              }
+            },
+            "Seychelles": {
+              "long": {
+                "standard": "ເວລາເຊເຊວ"
+              }
+            },
+            "Singapore": {
+              "long": {
+                "standard": "ເວລາສີງກະໂປ"
+              }
+            },
+            "Solomon": {
+              "long": {
+                "standard": "ເວລາຫມູ່ເກາະໂຊໂລມອນ"
+              }
+            },
+            "South_Georgia": {
+              "long": {
+                "standard": "ເວລາຈໍເຈຍໃຕ້"
+              }
+            },
+            "Suriname": {
+              "long": {
+                "standard": "ເວລາຊູຮິນາເມ"
+              }
+            },
+            "Syowa": {
+              "long": {
+                "standard": "ເວລາ ໂຊວາ"
+              }
+            },
+            "Tahiti": {
+              "long": {
+                "standard": "ເວລາທາຮິຕິ"
+              }
+            },
+            "Taipei": {
+              "long": {
+                "generic": "ເວລາ ໄທເປ",
+                "standard": "ເວລາມາດຕະຖານ ໄທເປ",
+                "daylight": "ເວລາກາງເວັນ ໄທເປ"
+              }
+            },
+            "Tajikistan": {
+              "long": {
+                "standard": "ເວລາທາຈິກິສຖານ"
+              }
+            },
+            "Tokelau": {
+              "long": {
+                "standard": "ເວລາໂຕເກເລົາ"
+              }
+            },
+            "Tonga": {
+              "long": {
+                "generic": "ເວລາຕອງກາ",
+                "standard": "ເວລາມາດຕະຖານຕອງກາ",
+                "daylight": "ເວລາລະດູຮ້ອນຕອງກາ"
+              }
+            },
+            "Truk": {
+              "long": {
+                "standard": "ເວລາຊຸກ"
+              }
+            },
+            "Turkmenistan": {
+              "long": {
+                "generic": "ເວລາຕວກເມນິສຖານ",
+                "standard": "ເວລາມາດຕະຖານຕວກເມນິສຖານ",
+                "daylight": "ເວລາລະດູຮ້ອນ ຕວກເມນິສຖານ"
+              }
+            },
+            "Tuvalu": {
+              "long": {
+                "standard": "ເວລາຕູວາລູ"
+              }
+            },
+            "Uruguay": {
+              "long": {
+                "generic": "ເວລາອຸກູໄວ",
+                "standard": "ເວລາມາດຕະຖານອຸກູໄວ",
+                "daylight": "ເວລາລະດູຮ້ອນອຸກູໄວ"
+              }
+            },
+            "Uzbekistan": {
+              "long": {
+                "generic": "ເວລາອຸສເບກິດສະຖານ",
+                "standard": "ເວລາມາດຕະຖານອຸສເບກິດສະຖານ",
+                "daylight": "ເວລາລະດູຮ້ອນອຸສເບກິດສະຖານ"
+              }
+            },
+            "Vanuatu": {
+              "long": {
+                "generic": "ເວລາວານູອາຕູ",
+                "standard": "ເວລາມາດຕະຖານວານູອາຕູ",
+                "daylight": "ເວລາລະດູຮ້ອນວານູອາຕູ"
+              }
+            },
+            "Venezuela": {
+              "long": {
+                "standard": "ເວລາເວເນຊູລາ"
+              }
+            },
+            "Vladivostok": {
+              "long": {
+                "generic": "ເວລາລາດີໂວສຕົກ",
+                "standard": "ເວລາມາດຕະຖານລາດີໂວສຕົກ",
+                "daylight": "ເວລາລະດູຮ້ອນລາດີໂວສຕົກ"
+              }
+            },
+            "Volgograd": {
+              "long": {
+                "generic": "ເວລາໂວໂກກຣາດ",
+                "standard": "ເວລາມາດຕະຖານໂວໂກກຣາດ",
+                "daylight": "ເວລາລະດູຮ້ອນໂວໂກກຣາດ"
+              }
+            },
+            "Vostok": {
+              "long": {
+                "standard": "ເວລາ ວອສໂຕກ"
+              }
+            },
+            "Wake": {
+              "long": {
+                "standard": "ເວລາເກາະເວກ"
+              }
+            },
+            "Wallis": {
+              "long": {
+                "standard": "ເວລາວາລລີສແລະຟຸຕູນາ"
+              }
+            },
+            "Yakutsk": {
+              "long": {
+                "generic": "ເວລາຢາກູດສ",
+                "standard": "ເວລາມາດຕະຖານຢາກູດສ",
+                "daylight": "ເວລາລະດູຮ້ອນຢາກູດສ"
+              }
+            },
+            "Yekaterinburg": {
+              "long": {
+                "generic": "ເວລາເຢກາເຕລິນເບີກ",
+                "standard": "ເວລາມາດຕະຖານເຢກາເຕລິນເບີກ",
+                "daylight": "ເວລາລະດູຮ້ອນເຢກາເຕລິນເບີກ"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

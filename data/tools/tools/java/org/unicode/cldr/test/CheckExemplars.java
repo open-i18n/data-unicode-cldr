@@ -2,7 +2,6 @@ package org.unicode.cldr.test;
 
 import java.util.BitSet;
 import java.util.List;
-import java.util.Map;
 
 import org.unicode.cldr.test.CheckCLDR.CheckStatus.Subtype;
 import org.unicode.cldr.util.CLDRFile;
@@ -99,14 +98,15 @@ public class CheckExemplars extends FactoryCheckCLDR {
 
     // Allowed[:script=common:][:script=inherited:][:alphabetic=false:]
 
-    public CheckCLDR setCldrFileToCheck(CLDRFile cldrFileToCheck, Map<String, String> options,
+    @Override
+    public CheckCLDR setCldrFileToCheck(CLDRFile cldrFileToCheck, Options options,
         List<CheckStatus> possibleErrors) {
         if (cldrFileToCheck == null) return this;
         super.setCldrFileToCheck(cldrFileToCheck, options, possibleErrors);
         String locale = cldrFileToCheck.getLocaleID();
         col = Collator.getInstance(new ULocale(locale));
         spaceCol = Collator.getInstance(new ULocale(locale));
-        spaceCol.setStrength(col.PRIMARY);
+        spaceCol.setStrength(Collator.PRIMARY);
         isRoot = cldrFileToCheck.getLocaleID().equals("root");
         prettyPrinter = new PrettyPrinter()
             .setOrdering(col != null ? col : Collator.getInstance(ULocale.ROOT))
@@ -130,7 +130,7 @@ public class CheckExemplars extends FactoryCheckCLDR {
         return this;
     }
 
-    public CheckCLDR handleCheck(String path, String fullPath, String value, Map<String, String> options,
+    public CheckCLDR handleCheck(String path, String fullPath, String value, Options options,
         List<CheckStatus> result) {
         if (fullPath == null) return this; // skip paths that we don't have
         if (path.indexOf("/exemplarCharacters") < 0) return this;

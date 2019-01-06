@@ -92,11 +92,12 @@
 //ldml/numbers/%EFormats[@numberSystem="%A"]/%EFormatLength[@type="(long)"]/%EFormat[@type="%A"]/pattern[@type="%A"][@count="%A"]  ; Numbers ; Compact Decimal Formatting ; Long Formats when using &numberingSystem($2) ; &count2($7-digits-$4-$8)
 //ldml/numbers/%EFormats[@numberSystem="%A"]/%EFormatLength[@type="(short)"]/%EFormat[@type="%A"]/pattern[@type="%A"][@count="%A"] ; Numbers ; Compact Decimal Formatting ; Short Formats when using &numberingSystem($2) ; &count2($7-digits-$4-$8)
 
+### Currencies
 
-//ldml/numbers/currencies/currency[@type="%A"]/displayName$                 ; Numbers ; Currencies ; &categoryFromCurrency($1) ; &count($1-name)
-//ldml/numbers/currencies/currency[@type="%A"]/displayName[@count="%A"]     ; Numbers ; Currencies ; &categoryFromCurrency($1) ; &count($1-name-$2)
-//ldml/numbers/currencies/currency[@type="%A"]/symbol[@alt="narrow"]        ; Numbers ; Currencies ; &categoryFromCurrency($1) ; &count($1-symbol)-narrow; READ_ONLY
-//ldml/numbers/currencies/currency[@type="%A"]/symbol                       ; Numbers ; Currencies ; &categoryFromCurrency($1) ; &count($1-symbol)
+//ldml/numbers/currencies/currency[@type="%A"]/displayName$                 ; Currencies ; &continentFromCurrency($1) ; &categoryFromCurrency($1) ; &count($1-name)
+//ldml/numbers/currencies/currency[@type="%A"]/displayName[@count="%A"]     ; Currencies ; &continentFromCurrency($1) ; &categoryFromCurrency($1) ; &count($1-name-$2)
+//ldml/numbers/currencies/currency[@type="%A"]/symbol[@alt="narrow"]        ; Currencies ; &continentFromCurrency($1) ; &categoryFromCurrency($1) ; &count($1-symbol)-narrow; READ_ONLY
+//ldml/numbers/currencies/currency[@type="%A"]/symbol                       ; Currencies ; &continentFromCurrency($1) ; &categoryFromCurrency($1) ; &count($1-symbol)
 
 ### Units
 
@@ -129,8 +130,9 @@
 # HIDE OTHERS
 //ldml/layout/orientation/(%E)                              ; Special ; Alphabetic Information ; Layout ; $1 ; HIDE
 
-
 //ldml/dates/calendars/calendar[@type="%A"]/dateTimeFormats/appendItems/appendItem[@request="%A"]    ; Special ; Suppress ; Append-Fallback-$1 ; $2 ; HIDE
+
+//ldml/contextTransforms/contextTransformUsage[@type="%E"]/contextTransform[@type="%E"]              ; Special ; Suppress ; Usage-$1 ; $2 ; HIDE
 
 
 //ldml/fallback                             ; Special ; Deprecated ; null ; fallback ; DEPRECATED

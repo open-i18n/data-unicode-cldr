@@ -1,0 +1,595 @@
+{
+  "main": {
+    "am-ET": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "25",
+          "_number": "$Revision: 91 $"
+        },
+        "generation": {
+          "_date": "$Date: 2014-03-13 22:27:12 -0500 (Thu, 13 Mar 2014) $"
+        },
+        "language": "am",
+        "territory": "ET"
+      },
+      "units": {
+        "long": {
+          "per": {
+            "compoundUnitPattern": "{0} በ{1}"
+          },
+          "acceleration-g-force": {
+            "unitPattern-count-one": "{0} ጂ-ኃይል",
+            "unitPattern-count-other": "{0} ጂ-ኃይል"
+          },
+          "angle-arc-minute": {
+            "unitPattern-count-one": "{0} ደቂቃ",
+            "unitPattern-count-other": "{0} ደቂቃ"
+          },
+          "angle-arc-second": {
+            "unitPattern-count-one": "{0} ሰከንድ",
+            "unitPattern-count-other": "{0} ሰከንድ"
+          },
+          "angle-degree": {
+            "unitPattern-count-one": "{0} ዲግሪ",
+            "unitPattern-count-other": "{0} ዲግሪ"
+          },
+          "area-acre": {
+            "unitPattern-count-one": "{0} ኤክር",
+            "unitPattern-count-other": "{0} ኤክር"
+          },
+          "area-hectare": {
+            "unitPattern-count-one": "{0} ሄክታር",
+            "unitPattern-count-other": "{0} ሄክታር"
+          },
+          "area-square-foot": {
+            "unitPattern-count-one": "{0} ካሬ ጫማ",
+            "unitPattern-count-other": "{0} ካሬ ጫማ"
+          },
+          "area-square-kilometer": {
+            "unitPattern-count-one": "{0} ካሬ ኪሎሜትር",
+            "unitPattern-count-other": "{0} ካሬ ኪሎሜትር"
+          },
+          "area-square-meter": {
+            "unitPattern-count-one": "{0} ካሬ ሜትር",
+            "unitPattern-count-other": "{0} ካሬ ሜትር"
+          },
+          "area-square-mile": {
+            "unitPattern-count-one": "{0} ካሬ ማይል",
+            "unitPattern-count-other": "{0} ካሬ ማይል"
+          },
+          "duration-day": {
+            "unitPattern-count-one": "{0} ቀናት",
+            "unitPattern-count-other": "{0} ቀናት"
+          },
+          "duration-hour": {
+            "unitPattern-count-one": "{0} ሰዓት",
+            "unitPattern-count-other": "{0} ሰዓቶች"
+          },
+          "duration-millisecond": {
+            "unitPattern-count-one": "{0} ሚሊሰከንድ",
+            "unitPattern-count-other": "{0} ሚሊሰከንድ"
+          },
+          "duration-minute": {
+            "unitPattern-count-one": "{0} ደቂቃ",
+            "unitPattern-count-other": "{0} ደቂቃዎች"
+          },
+          "duration-month": {
+            "unitPattern-count-one": "{0} ወር",
+            "unitPattern-count-other": "{0} ወራት"
+          },
+          "duration-second": {
+            "unitPattern-count-one": "{0} ሰከንድ",
+            "unitPattern-count-other": "{0} ሰከንዶች"
+          },
+          "duration-week": {
+            "unitPattern-count-one": "{0} ሳምንት",
+            "unitPattern-count-other": "{0} ሳምንታት"
+          },
+          "duration-year": {
+            "unitPattern-count-one": "{0} ዓመታት",
+            "unitPattern-count-other": "{0} ዓመታት"
+          },
+          "length-centimeter": {
+            "unitPattern-count-one": "{0} ሴንቲሜትር",
+            "unitPattern-count-other": "{0} ሴንቲሜትር"
+          },
+          "length-foot": {
+            "unitPattern-count-one": "{0} ጫማ",
+            "unitPattern-count-other": "{0} ጫማ"
+          },
+          "length-inch": {
+            "unitPattern-count-one": "{0} ኢንች",
+            "unitPattern-count-other": "{0} ኢንች"
+          },
+          "length-kilometer": {
+            "unitPattern-count-one": "{0} ኪሎሜትር",
+            "unitPattern-count-other": "{0} ኪሎሜትር"
+          },
+          "length-light-year": {
+            "unitPattern-count-one": "{0} የብርሃን ዓመት",
+            "unitPattern-count-other": "{0} የብርሃን ዓመት"
+          },
+          "length-meter": {
+            "unitPattern-count-one": "{0} ሜትር",
+            "unitPattern-count-other": "{0} ሜትር"
+          },
+          "length-mile": {
+            "unitPattern-count-one": "{0} ማይል",
+            "unitPattern-count-other": "{0} ማይል"
+          },
+          "length-millimeter": {
+            "unitPattern-count-one": "{0} ሚሊሜትር",
+            "unitPattern-count-other": "{0} ሚሊሜትር"
+          },
+          "length-picometer": {
+            "unitPattern-count-one": "{0} ፒኮሜትር",
+            "unitPattern-count-other": "{0} ፒኮሜትር"
+          },
+          "length-yard": {
+            "unitPattern-count-one": "{0} ያርድ",
+            "unitPattern-count-other": "{0} ያርድ"
+          },
+          "mass-gram": {
+            "unitPattern-count-one": "{0} ግራም",
+            "unitPattern-count-other": "{0} ግራም"
+          },
+          "mass-kilogram": {
+            "unitPattern-count-one": "{0} ኪሎግራም",
+            "unitPattern-count-other": "{0} ኪሎግራም"
+          },
+          "mass-ounce": {
+            "unitPattern-count-one": "{0} አውንስ",
+            "unitPattern-count-other": "{0} አውንስ"
+          },
+          "mass-pound": {
+            "unitPattern-count-one": "{0} ፓውንድ",
+            "unitPattern-count-other": "{0} ፓውንድ"
+          },
+          "power-horsepower": {
+            "unitPattern-count-one": "{0} የፈረስ ኃይል",
+            "unitPattern-count-other": "{0} የፈረስ ኃይል"
+          },
+          "power-kilowatt": {
+            "unitPattern-count-one": "{0} ኪሎዋት",
+            "unitPattern-count-other": "{0} ኪሎዋት"
+          },
+          "power-watt": {
+            "unitPattern-count-one": "{0} ዋት",
+            "unitPattern-count-other": "{0} ዋት"
+          },
+          "pressure-hectopascal": {
+            "unitPattern-count-one": "{0} ሄክቶፓስካል",
+            "unitPattern-count-other": "{0} ሄክቶፓስካል"
+          },
+          "pressure-inch-hg": {
+            "unitPattern-count-one": "{0} ኢንች ሜርኩሪ",
+            "unitPattern-count-other": "{0} ኢንች ሜርኩሪ"
+          },
+          "pressure-millibar": {
+            "unitPattern-count-one": "{0} ሚሊባር",
+            "unitPattern-count-other": "{0} ሚሊባር"
+          },
+          "speed-kilometer-per-hour": {
+            "unitPattern-count-one": "{0} ኪሎሜትር በሰዓት",
+            "unitPattern-count-other": "{0} ኪሎሜትር በሰዓት"
+          },
+          "speed-meter-per-second": {
+            "unitPattern-count-one": "{0} ሜትር በሰከንድ",
+            "unitPattern-count-other": "{0} ሜትር በሰከንድ"
+          },
+          "speed-mile-per-hour": {
+            "unitPattern-count-one": "{0} ማይል በሰዓት",
+            "unitPattern-count-other": "{0} ማይል በሰዓት"
+          },
+          "temperature-celsius": {
+            "unitPattern-count-one": "{0} ዲግሪ ሴልሺየስ",
+            "unitPattern-count-other": "{0} ዲግሪ ሴልሺየስ"
+          },
+          "temperature-fahrenheit": {
+            "unitPattern-count-one": "{0} ዲግሪ ፋራንሃይት",
+            "unitPattern-count-other": "{0} ዲግሪ ፋራንሃይት"
+          },
+          "volume-cubic-kilometer": {
+            "unitPattern-count-one": "{0} ኩቢክ ኪሎሜትር",
+            "unitPattern-count-other": "{0} ኩቢክ ኪሎሜትር"
+          },
+          "volume-cubic-mile": {
+            "unitPattern-count-one": "{0} ኩቢክ ማይል",
+            "unitPattern-count-other": "{0} ኩቢክ ማይል"
+          },
+          "volume-liter": {
+            "unitPattern-count-one": "{0} ሊትር",
+            "unitPattern-count-other": "{0} ሊትር"
+          }
+        },
+        "short": {
+          "per": {
+            "compoundUnitPattern": "{0}/{1}"
+          },
+          "acceleration-g-force": {
+            "unitPattern-count-one": "{0} ጂ",
+            "unitPattern-count-other": "{0} ጂ"
+          },
+          "angle-arc-minute": {
+            "unitPattern-count-one": "{0} ደቂቃ",
+            "unitPattern-count-other": "{0} ደቂቃ"
+          },
+          "angle-arc-second": {
+            "unitPattern-count-one": "{0} ሰከንድ",
+            "unitPattern-count-other": "{0} ሰከንድ"
+          },
+          "angle-degree": {
+            "unitPattern-count-one": "{0}°ዲግሪ",
+            "unitPattern-count-other": "{0}°ዲግሪ"
+          },
+          "area-acre": {
+            "unitPattern-count-one": "{0} ኤክር",
+            "unitPattern-count-other": "{0} ኤክር"
+          },
+          "area-hectare": {
+            "unitPattern-count-one": "{0} ሄክታር",
+            "unitPattern-count-other": "{0} ሄክታር"
+          },
+          "area-square-foot": {
+            "unitPattern-count-one": "{0} ካሬ ጫማ",
+            "unitPattern-count-other": "{0} ካሬ ጫማ"
+          },
+          "area-square-kilometer": {
+            "unitPattern-count-one": "{0} ኪሜ²",
+            "unitPattern-count-other": "{0} ኪሜ²"
+          },
+          "area-square-meter": {
+            "unitPattern-count-one": "{0} ሜ²",
+            "unitPattern-count-other": "{0} ሜ²"
+          },
+          "area-square-mile": {
+            "unitPattern-count-one": "{0} ካሬ ማይል",
+            "unitPattern-count-other": "{0} ካሬ ማይል"
+          },
+          "duration-day": {
+            "unitPattern-count-one": "{0} ቀናት",
+            "unitPattern-count-other": "{0} ቀናት"
+          },
+          "duration-hour": {
+            "unitPattern-count-one": "{0} ሰዓ",
+            "unitPattern-count-other": "{0} ሰዓ"
+          },
+          "duration-millisecond": {
+            "unitPattern-count-one": "{0} ሚሴ",
+            "unitPattern-count-other": "{0} ሚሴ"
+          },
+          "duration-minute": {
+            "unitPattern-count-one": "{0} ደቂ",
+            "unitPattern-count-other": "{0} ደቂቃ"
+          },
+          "duration-month": {
+            "unitPattern-count-one": "{0} ወራት",
+            "unitPattern-count-other": "{0} ወራት"
+          },
+          "duration-second": {
+            "unitPattern-count-one": "{0} ሰከ",
+            "unitPattern-count-other": "{0} ሰከ"
+          },
+          "duration-week": {
+            "unitPattern-count-one": "{0} ሳምንት",
+            "unitPattern-count-other": "{0} ሳምንታት"
+          },
+          "duration-year": {
+            "unitPattern-count-one": "{0} ዓመት",
+            "unitPattern-count-other": "{0} ዓመታት"
+          },
+          "length-centimeter": {
+            "unitPattern-count-one": "{0} ሴሜ",
+            "unitPattern-count-other": "{0} ሴሜ"
+          },
+          "length-foot": {
+            "unitPattern-count-one": "{0} ጫማ",
+            "unitPattern-count-other": "{0} ጫማ"
+          },
+          "length-inch": {
+            "unitPattern-count-one": "{0} ኢንች",
+            "unitPattern-count-other": "{0} ኢንች"
+          },
+          "length-kilometer": {
+            "unitPattern-count-one": "{0} ኪሜ",
+            "unitPattern-count-other": "{0} ኪሜ"
+          },
+          "length-light-year": {
+            "unitPattern-count-one": "{0} ly",
+            "unitPattern-count-other": "{0} ly"
+          },
+          "length-meter": {
+            "unitPattern-count-one": "{0} ሜ",
+            "unitPattern-count-other": "{0} ሜ"
+          },
+          "length-mile": {
+            "unitPattern-count-one": "{0} ማይል",
+            "unitPattern-count-other": "{0} ማይል"
+          },
+          "length-millimeter": {
+            "unitPattern-count-one": "{0} ሚሜ",
+            "unitPattern-count-other": "{0} ሚሜ"
+          },
+          "length-picometer": {
+            "unitPattern-count-one": "{0} ፒሜ",
+            "unitPattern-count-other": "{0} ፒሜ"
+          },
+          "length-yard": {
+            "unitPattern-count-one": "{0} ያርድ",
+            "unitPattern-count-other": "{0} ያርድ"
+          },
+          "mass-gram": {
+            "unitPattern-count-one": "{0} ግ",
+            "unitPattern-count-other": "{0} ግ"
+          },
+          "mass-kilogram": {
+            "unitPattern-count-one": "{0} ኪግ",
+            "unitPattern-count-other": "{0} ኪግ"
+          },
+          "mass-ounce": {
+            "unitPattern-count-one": "{0} አውንስ",
+            "unitPattern-count-other": "{0} አውንስ"
+          },
+          "mass-pound": {
+            "unitPattern-count-one": "{0} ፓውንድ",
+            "unitPattern-count-other": "{0} ፓውንድ"
+          },
+          "power-horsepower": {
+            "unitPattern-count-one": "{0} የፈረስ ኃይል",
+            "unitPattern-count-other": "{0} የፈረስ ኃይል"
+          },
+          "power-kilowatt": {
+            "unitPattern-count-one": "{0} ኪዋ",
+            "unitPattern-count-other": "{0} ኪዋ"
+          },
+          "power-watt": {
+            "unitPattern-count-one": "{0} ዋ",
+            "unitPattern-count-other": "{0} ዋ"
+          },
+          "pressure-hectopascal": {
+            "unitPattern-count-one": "{0} ሄክቶፓስካል",
+            "unitPattern-count-other": "{0} ሄክቶፓስካል"
+          },
+          "pressure-inch-hg": {
+            "unitPattern-count-one": "{0} ኢንች ሜርኩሪ",
+            "unitPattern-count-other": "{0} ኢንች ሜርኩሪ"
+          },
+          "pressure-millibar": {
+            "unitPattern-count-one": "{0} ሚባ",
+            "unitPattern-count-other": "{0} ሚባ"
+          },
+          "speed-kilometer-per-hour": {
+            "unitPattern-count-one": "{0} ኪሜ/ሰ",
+            "unitPattern-count-other": "{0} ኪሜ/ሰ"
+          },
+          "speed-meter-per-second": {
+            "unitPattern-count-one": "{0} ሜ/ሴ",
+            "unitPattern-count-other": "{0} ሜ/ሴ"
+          },
+          "speed-mile-per-hour": {
+            "unitPattern-count-one": "{0} ማይል/ሰ",
+            "unitPattern-count-other": "{0} ማይል/ሰ"
+          },
+          "temperature-celsius": {
+            "unitPattern-count-one": "{0}°ሴ",
+            "unitPattern-count-other": "{0}°ሴ"
+          },
+          "temperature-fahrenheit": {
+            "unitPattern-count-one": "{0}°ፋ",
+            "unitPattern-count-other": "{0}°ፋ"
+          },
+          "volume-cubic-kilometer": {
+            "unitPattern-count-one": "{0} ኪሜ³",
+            "unitPattern-count-other": "{0} ኪሜ³"
+          },
+          "volume-cubic-mile": {
+            "unitPattern-count-one": "{0} ማይል³",
+            "unitPattern-count-other": "{0} ማይል³"
+          },
+          "volume-liter": {
+            "unitPattern-count-one": "{0} ሊ",
+            "unitPattern-count-other": "{0} ሊ"
+          }
+        },
+        "narrow": {
+          "per": {
+            "compoundUnitPattern": "{0}/{1}"
+          },
+          "acceleration-g-force": {
+            "unitPattern-count-one": "{0} ጂ",
+            "unitPattern-count-other": "{0} ጂ"
+          },
+          "angle-arc-minute": {
+            "unitPattern-count-one": "{0}′",
+            "unitPattern-count-other": "{0}′"
+          },
+          "angle-arc-second": {
+            "unitPattern-count-one": "{0}″",
+            "unitPattern-count-other": "{0}″"
+          },
+          "angle-degree": {
+            "unitPattern-count-one": "{0}°",
+            "unitPattern-count-other": "{0}°"
+          },
+          "area-acre": {
+            "unitPattern-count-one": "{0} ኤክር",
+            "unitPattern-count-other": "{0} ኤክር"
+          },
+          "area-hectare": {
+            "unitPattern-count-one": "{0} ሄክታር",
+            "unitPattern-count-other": "{0} ሄክታር"
+          },
+          "area-square-foot": {
+            "unitPattern-count-one": "{0} ጫማ²",
+            "unitPattern-count-other": "{0} ጫማ²"
+          },
+          "area-square-kilometer": {
+            "unitPattern-count-one": "{0} ኪሜ²",
+            "unitPattern-count-other": "{0} ኪሜ²"
+          },
+          "area-square-meter": {
+            "unitPattern-count-one": "{0} ሜ²",
+            "unitPattern-count-other": "{0} ሜ²"
+          },
+          "area-square-mile": {
+            "unitPattern-count-one": "{0} ማይል²",
+            "unitPattern-count-other": "{0} ማይል²"
+          },
+          "duration-day": {
+            "unitPattern-count-one": "{0} ቀ",
+            "unitPattern-count-other": "{0} ቀ"
+          },
+          "duration-hour": {
+            "unitPattern-count-one": "{0} ሰ",
+            "unitPattern-count-other": "{0} ሰ"
+          },
+          "duration-millisecond": {
+            "unitPattern-count-one": "{0} ሚሴ",
+            "unitPattern-count-other": "{0} ሚሴ"
+          },
+          "duration-minute": {
+            "unitPattern-count-one": "{0} ደ",
+            "unitPattern-count-other": "{0} ደ"
+          },
+          "duration-month": {
+            "unitPattern-count-one": "{0} ወር",
+            "unitPattern-count-other": "{0} ወር"
+          },
+          "duration-second": {
+            "unitPattern-count-one": "{0} ሴ",
+            "unitPattern-count-other": "{0} ሴ"
+          },
+          "duration-week": {
+            "unitPattern-count-one": "{0} ሳምንት",
+            "unitPattern-count-other": "{0} ሳምንት"
+          },
+          "duration-year": {
+            "unitPattern-count-one": "{0} ዓመት",
+            "unitPattern-count-other": "{0} y"
+          },
+          "length-centimeter": {
+            "unitPattern-count-one": "{0} ሴሜ",
+            "unitPattern-count-other": "{0} ሴሜ"
+          },
+          "length-foot": {
+            "unitPattern-count-one": "{0} ጫማ",
+            "unitPattern-count-other": "{0} ጫማ"
+          },
+          "length-inch": {
+            "unitPattern-count-one": "{0} ኢንች",
+            "unitPattern-count-other": "{0} ኢንች"
+          },
+          "length-kilometer": {
+            "unitPattern-count-one": "{0} ኪሜ",
+            "unitPattern-count-other": "{0} ኪሜ"
+          },
+          "length-light-year": {
+            "unitPattern-count-one": "{0} ly",
+            "unitPattern-count-other": "{0} ly"
+          },
+          "length-meter": {
+            "unitPattern-count-one": "{0} ሜ",
+            "unitPattern-count-other": "{0} ሜ"
+          },
+          "length-mile": {
+            "unitPattern-count-one": "{0} ማይል",
+            "unitPattern-count-other": "{0} ማይል"
+          },
+          "length-millimeter": {
+            "unitPattern-count-one": "{0} ሚሜ",
+            "unitPattern-count-other": "{0} ሚሜ"
+          },
+          "length-picometer": {
+            "unitPattern-count-one": "{0} ፒሜ",
+            "unitPattern-count-other": "{0} ፒሜ"
+          },
+          "length-yard": {
+            "unitPattern-count-one": "{0} ያርድ",
+            "unitPattern-count-other": "{0} ያርድ"
+          },
+          "mass-gram": {
+            "unitPattern-count-one": "{0} ግ",
+            "unitPattern-count-other": "{0} ግ"
+          },
+          "mass-kilogram": {
+            "unitPattern-count-one": "{0} ኪግ",
+            "unitPattern-count-other": "{0} ኪግ"
+          },
+          "mass-ounce": {
+            "unitPattern-count-one": "{0} አውንስ",
+            "unitPattern-count-other": "{0} አውንስ"
+          },
+          "mass-pound": {
+            "unitPattern-count-one": "{0} ፓውንድ",
+            "unitPattern-count-other": "{0} ፓውንድ"
+          },
+          "power-horsepower": {
+            "unitPattern-count-one": "{0} የፈረስ ኃይል",
+            "unitPattern-count-other": "{0} የፈረስ ኃይል"
+          },
+          "power-kilowatt": {
+            "unitPattern-count-one": "{0} ኪዋ",
+            "unitPattern-count-other": "{0} ኪዋ"
+          },
+          "power-watt": {
+            "unitPattern-count-one": "{0} ዋ",
+            "unitPattern-count-other": "{0} ዋ"
+          },
+          "pressure-hectopascal": {
+            "unitPattern-count-one": "{0} hPa",
+            "unitPattern-count-other": "{0} hPa"
+          },
+          "pressure-inch-hg": {
+            "unitPattern-count-one": "{0} inHg",
+            "unitPattern-count-other": "{0} inHg"
+          },
+          "pressure-millibar": {
+            "unitPattern-count-one": "{0} ሚባ",
+            "unitPattern-count-other": "{0} ሚባ"
+          },
+          "speed-kilometer-per-hour": {
+            "unitPattern-count-one": "{0} ኪሜ/ሰ",
+            "unitPattern-count-other": "{0} ኪሜ/ሰ"
+          },
+          "speed-meter-per-second": {
+            "unitPattern-count-one": "{0} ሜ/ሴ",
+            "unitPattern-count-other": "{0} ሜ/ሴ"
+          },
+          "speed-mile-per-hour": {
+            "unitPattern-count-one": "{0} ማይል/ሰ",
+            "unitPattern-count-other": "{0} ማይል/ሰ"
+          },
+          "temperature-celsius": {
+            "unitPattern-count-one": "{0}°",
+            "unitPattern-count-other": "{0}°"
+          },
+          "temperature-fahrenheit": {
+            "unitPattern-count-one": "{0}°ፋ",
+            "unitPattern-count-other": "{0}°ፋ"
+          },
+          "volume-cubic-kilometer": {
+            "unitPattern-count-one": "{0} ኪሜ³",
+            "unitPattern-count-other": "{0} ኪሜ³"
+          },
+          "volume-cubic-mile": {
+            "unitPattern-count-one": "{0} ማይል³",
+            "unitPattern-count-other": "{0} ማይል³"
+          },
+          "volume-liter": {
+            "unitPattern-count-one": "{0} ሊ",
+            "unitPattern-count-other": "{0} ሊ"
+          }
+        },
+        "durationUnit-type-hm": {
+          "durationUnitPattern": "h:mm"
+        },
+        "durationUnit-type-hms": {
+          "durationUnitPattern": "h:mm:ss"
+        },
+        "durationUnit-type-ms": {
+          "durationUnitPattern": "m:ss"
+        }
+      }
+    }
+  }
+}

@@ -21,7 +21,7 @@ import org.unicode.cldr.tool.Option.Options;
 import org.unicode.cldr.util.Builder;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.DtdType;
-import org.unicode.cldr.util.CldrUtility;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.Counter;
 import org.unicode.cldr.util.PathStarrer;
 import org.unicode.cldr.util.RegexUtilities;
@@ -37,23 +37,22 @@ import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.dev.util.Relation;
 import com.ibm.icu.impl.Row;
 import com.ibm.icu.impl.Row.R4;
-import com.ibm.icu.util.ULocale;
 import com.ibm.icu.util.VersionInfo;
 
 public class GenerateItemCounts {
     private static final boolean SKIP_ORDERING = true;
-    private static final String OUT_DIRECTORY = CldrUtility.GEN_DIRECTORY + "/itemcount/"; // CldrUtility.MAIN_DIRECTORY;
+    private static final String OUT_DIRECTORY = CLDRPaths.GEN_DIRECTORY + "/itemcount/"; // CldrUtility.MAIN_DIRECTORY;
     private Map<String, List<StackTraceElement>> cantRead = new TreeMap<String, List<StackTraceElement>>();
 
     private static String[] DIRECTORIES = {
         // MUST be oldest first!
         // "cldr-archive/cldr-21.0",
-        "cldr-archive/cldr-22.1",
-        "cldr-archive/cldr-23.0",
+        "cldr-23.0",
+        "cldr-24.0",
     };
 
     static boolean doChanges = true;
-    static Relation<String, String> path2value = new Relation(new TreeMap<String, String>(), TreeSet.class);
+    static Relation<String, String> path2value = Relation.of(new TreeMap<String, Set<String>>(), TreeSet.class);
     static final AttributeTypes ATTRIBUTE_TYPES = new AttributeTypes();
 
     final static Options myOptions = new Options();
@@ -97,7 +96,7 @@ public class GenerateItemCounts {
             Relation<String, String> oldPath2value = null;
             for (String dir : DIRECTORIES) {
                 // if (dirPattern != null && !dirPattern.matcher(dir).find()) continue;
-                String fulldir = new File(CldrUtility.ARCHIVE_DIRECTORY + "/" + dir).getCanonicalPath();
+                String fulldir = new File(CLDRPaths.ARCHIVE_DIRECTORY + "/" + dir).getCanonicalPath();
                 String prefix = (MyOptions.rawfilter.option.doesOccur() ? "filtered_" : "");
                 String fileKey = dir.replace("/", "_");
                 PrintWriter summary = BagFormatter.openUTF8Writer(OUT_DIRECTORY, prefix + "count_" + fileKey + ".txt");
@@ -109,7 +108,7 @@ public class GenerateItemCounts {
                         compare(summary, changes, oldPath2value, path2value);
                     }
                     oldPath2value = path2value;
-                    path2value = new Relation(new TreeMap<String, String>(), TreeSet.class);
+                    path2value = Relation.of(new TreeMap<String, Set<String>>(), TreeSet.class);
                 }
                 summary.close();
                 changes.close();
@@ -137,7 +136,7 @@ public class GenerateItemCounts {
         public void add(String path) {
             parts.set(path);
             elementPath.setLength(0);
-            DtdType type = CLDRFile.DtdType.valueOf(parts.getElement(0));
+            //DtdType type = CLDRFile.DtdType.valueOf(parts.getElement(0));
             for (int i = 0; i < parts.size(); ++i) {
                 String element = parts.getElement(i);
                 elementPath.append('/').append(element);
@@ -177,7 +176,6 @@ public class GenerateItemCounts {
         Relation<String, String> path2value2) {
         Set<String> union = Builder.with(new TreeSet<String>()).addAll(oldPath2value.keySet())
             .addAll(path2value2.keySet()).get();
-        long changes = 0;
         long total = 0;
         Matcher prefixMatcher = prefix.matcher("");
         Counter<String> newCount = new Counter<String>();
@@ -195,17 +193,13 @@ public class GenerateItemCounts {
             }
             if (set1 == null) {
                 changes2.println(prefix + "\tNew:\t" + "\t" + set2 + "\t" + localPath);
-                changes += set2.size();
                 newCount.add(prefix, set2.size());
             } else if (set2 == null) {
                 changes2.println(prefix + "\tDeleted:\t" + set1 + "\t\t" + localPath);
-                changes += set1.size();
                 deletedCount.add(prefix, set1.size());
             } else if (!set1.equals(set2)) {
                 TreeSet<String> set1minus2 = Builder.with(new TreeSet<String>()).addAll(set1).removeAll(set2).get();
                 TreeSet<String> set2minus1 = Builder.with(new TreeSet<String>()).addAll(set2).removeAll(set1).get();
-                int diffCount = set1minus2.size() + set2minus1.size();
-                changes += diffCount;
                 newCount.add(prefix, set2minus1.size());
                 deletedCount.add(prefix, set1minus2.size());
                 changes2.println(prefix + "\tChanged:\t" + set1minus2
@@ -226,15 +220,15 @@ public class GenerateItemCounts {
         "([a-z]{2,3})(?:[_-]([A-Z][a-z]{3}))?(?:[_-]([a-zA-Z0-9]{2,3}))?([_-][a-zA-Z0-9]{1,8})*");
 
     public static void doSummary() throws IOException {
-        Map<String, R4<Counter<String>, Counter<String>, Counter<String>, Counter<String>>> key_release_count = new TreeMap();
+        Map<String, R4<Counter<String>, Counter<String>, Counter<String>, Counter<String>>> key_release_count = new TreeMap<String, R4<Counter<String>, Counter<String>, Counter<String>, Counter<String>>>();
         Matcher countryLocale = LOCALE_PATTERN.matcher("");
         List<String> releases = new ArrayList<String>();
         Pattern releaseNumber = Pattern.compile("count_.*-(\\d+(\\.\\d+)*)\\.txt");
         // int releaseCount = 1;
         Relation<String, String> release_keys = Relation.of(new TreeMap<String, Set<String>>(), TreeSet.class);
         Relation<String, String> localesToPaths = Relation.of(new TreeMap<String, Set<String>>(), TreeSet.class);
-        Set<String> writtenLanguages = new TreeSet();
-        Set<String> countries = new TreeSet();
+        Set<String> writtenLanguages = new TreeSet<String>();
+        Set<String> countries = new TreeSet<String>();
 
         File[] listFiles = new File(OUT_DIRECTORY).listFiles();
         // find the most recent version
@@ -293,6 +287,7 @@ public class GenerateItemCounts {
                     long attrCount = Long.parseLong(parts[3]);
                     long attrLen = Long.parseLong(parts[4]);
                     int lastSlash = file.lastIndexOf("/");
+                    String key2 = file;
                     String path = file.substring(0, lastSlash);
                     String key = file.substring(lastSlash + 1);
                     if (countryLocale.reset(key).matches()) {
@@ -309,16 +304,16 @@ public class GenerateItemCounts {
                             }
                         }
                         // System.out.println(key + " => " + newKey);
-                        key = writtenLang + "—" + ULocale.getDisplayName(writtenLang, "en");
+                        //key = writtenLang + "—" + ULocale.getDisplayName(writtenLang, "en");
                     }
                     if (valueCount + attrCount == 0) continue;
-                    release_keys.put(releaseNum, key);
+                    release_keys.put(releaseNum, key2);
                     R4<Counter<String>, Counter<String>, Counter<String>, Counter<String>> release_count = key_release_count
-                        .get(key);
+                        .get(key2);
                     if (release_count == null) {
                         release_count = Row.of(new Counter<String>(), new Counter<String>(), new Counter<String>(),
                             new Counter<String>());
-                        key_release_count.put(key, release_count);
+                        key_release_count.put(key2, release_count);
                     }
                     release_count.get0().add(releaseNum, valueCount);
                     release_count.get1().add(releaseNum, valueLen);

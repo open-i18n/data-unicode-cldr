@@ -17,7 +17,10 @@ import java.util.regex.Pattern;
 import org.unicode.cldr.unittest.TestAll.TestInfo;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.DraftStatus;
+import org.unicode.cldr.util.CLDRFile.DtdType;
 import org.unicode.cldr.util.CLDRFile.Status;
+import org.unicode.cldr.util.CLDRLocale;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.Level;
@@ -44,13 +47,13 @@ public class TestCLDRFile extends TestFmwk {
     }
 
     public static Factory getAllFactory() {
-        File mainDir = new File(CldrUtility.MAIN_DIRECTORY);
+        File mainDir = new File(CLDRPaths.MAIN_DIRECTORY);
         if (!mainDir.isDirectory()) {
-            throw new IllegalArgumentException("MAIN_DIRECTORY is not a directory: " + CldrUtility.MAIN_DIRECTORY);
+            throw new IllegalArgumentException("MAIN_DIRECTORY is not a directory: " + CLDRPaths.MAIN_DIRECTORY);
         }
-        File seedDir = new File(CldrUtility.SEED_DIRECTORY);
+        File seedDir = new File(CLDRPaths.SEED_DIRECTORY);
         if (!seedDir.isDirectory()) {
-            throw new IllegalArgumentException("SEED_DIRECTORY is not a directory: " + CldrUtility.SEED_DIRECTORY);
+            throw new IllegalArgumentException("SEED_DIRECTORY is not a directory: " + CLDRPaths.SEED_DIRECTORY);
         }
         File dirs[] = { mainDir, seedDir };
         return SimpleFactory.make(dirs, ".*", DraftStatus.approved);
@@ -68,7 +71,8 @@ public class TestCLDRFile extends TestFmwk {
     private void checkPlurals(String locale) {
         CLDRFile cldrFile = cldrFactory.make(locale, true);
         Matcher m = COUNT_MATCHER.matcher("");
-        Relation<String, String> skeletonToKeywords = Relation.of(new TreeMap<String, Set<String>>(CLDRFile.ldmlComparator), TreeSet.class);
+        Relation<String, String> skeletonToKeywords = Relation.of(
+            new TreeMap<String, Set<String>>(cldrFile.getComparator()), TreeSet.class);
         PluralInfo plurals = sdi.getPlurals(PluralType.cardinal, locale);
         Set<String> normalKeywords = plurals.getCanonicalKeywords();
         for (String path : cldrFile.fullIterable()) {
@@ -86,7 +90,7 @@ public class TestCLDRFile extends TestFmwk {
         }
     }
 
-    static Factory cldrFactory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
+    static Factory cldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
 
     static class LocaleInfo {
         final String locale;
@@ -111,8 +115,8 @@ public class TestCLDRFile extends TestFmwk {
 
     public void testExtraPaths() {
         Map<String, LocaleInfo> localeInfos = new LinkedHashMap<String, LocaleInfo>();
-        Relation<String, String> missingPathsToLocales = Relation.of(new TreeMap<String, Set<String>>(CLDRFile.ldmlComparator), TreeSet.class);
-        Relation<String, String> extraPathsToLocales = Relation.of(new TreeMap<String, Set<String>>(CLDRFile.ldmlComparator), TreeSet.class);
+        Relation<String, String> missingPathsToLocales = Relation.of(new TreeMap<String, Set<String>>(CLDRFile.getComparator(DtdType.ldml)), TreeSet.class);
+        Relation<String, String> extraPathsToLocales = Relation.of(new TreeMap<String, Set<String>>(CLDRFile.getComparator(DtdType.ldml)), TreeSet.class);
 
         for (String locale : new String[] { "en", "root", "fr", "ar", "ja" }) {
             localeInfos.put(locale, new LocaleInfo(locale));
@@ -253,7 +257,7 @@ public class TestCLDRFile extends TestFmwk {
 
     public void testSimple() {
         double deltaTime = System.currentTimeMillis();
-        Factory cldrFactory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
+        Factory cldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
         CLDRFile english = cldrFactory.make("en", true);
         deltaTime = System.currentTimeMillis() - deltaTime;
         logln("Creation: Elapsed: " + deltaTime / 1000.0 + " seconds");
@@ -309,7 +313,7 @@ public class TestCLDRFile extends TestFmwk {
     }
 
     public void testResolution() {
-        Factory cldrFactory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
+        Factory cldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
         CLDRFile german = cldrFactory.make("de", true);
         // Test direct lookup.
         String xpath = "//ldml/localeDisplayNames/localeDisplayPattern/localeSeparator";
@@ -351,7 +355,7 @@ public class TestCLDRFile extends TestFmwk {
     }
 
     public void testGeorgeBailey() {
-        Factory cldrFactory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
+        Factory cldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
         PathHeader.Factory phf = PathHeader.getFactory(cldrFactory.make("en", true));
         for (String locale : Arrays.asList("de", "de_AT", "en", "nl")) {
             CLDRFile cldrFile = cldrFactory.make(locale, true);
@@ -362,7 +366,7 @@ public class TestCLDRFile extends TestFmwk {
             Output<String> localeWhereFound = new Output<String>();
             Output<String> pathWhereFound = new Output<String>();
 
-            Map<String, String> diff = new TreeMap<String, String>(CLDRFile.ldmlComparator);
+            Map<String, String> diff = new TreeMap<String, String>(CLDRFile.getComparator(DtdType.ldml));
 
             Size countSuperfluous = new Size();
             Size countExtraLevel = new Size();
@@ -422,5 +426,34 @@ public class TestCLDRFile extends TestFmwk {
         assertEquals("contructed bailey", "es", display);
         display = eng.getConstructedBaileyValue(prefix + "missing" + "\"]", null, null);
         assertEquals("contructed bailey", null, display);
+    }
+
+    public void TestFileLocations() {
+        File mainDir = new File(CLDRPaths.MAIN_DIRECTORY);
+        if (!mainDir.isDirectory()) {
+            throw new IllegalArgumentException("MAIN_DIRECTORY is not a directory: " + CLDRPaths.MAIN_DIRECTORY);
+        }
+        File mainCollationDir = new File(CLDRPaths.COLLATION_DIRECTORY);
+        if (!mainCollationDir.isDirectory()) {
+            throw new IllegalArgumentException("COLLATION_DIRECTORY is not a directory: " + CLDRPaths.COLLATION_DIRECTORY);
+        }
+        File seedDir = new File(CLDRPaths.SEED_DIRECTORY);
+        if (!seedDir.isDirectory()) {
+            throw new IllegalArgumentException("SEED_DIRECTORY is not a directory: " + CLDRPaths.SEED_DIRECTORY);
+        }
+        File seedCollationDir = new File(CLDRPaths.SEED_COLLATION_DIRECTORY);
+        if (!seedCollationDir.isDirectory()) {
+            throw new IllegalArgumentException("SEED_COLLATION_DIRECTORY is not a directory: " + CLDRPaths.SEED_COLLATION_DIRECTORY);
+        }
+        File[] md = { mainDir, mainCollationDir };
+        File[] sd = { seedDir, seedCollationDir };
+        Factory mf = SimpleFactory.make(md, ".*", DraftStatus.unconfirmed);
+        Factory sf = SimpleFactory.make(sd, ".*", DraftStatus.unconfirmed);
+        Set<CLDRLocale> mainLocales = mf.getAvailableCLDRLocales();
+        Set<CLDRLocale> seedLocales = sf.getAvailableCLDRLocales();
+        mainLocales.retainAll(seedLocales);
+        if (!mainLocales.isEmpty()) {
+            errln("CLDR locale files located in both common and seed ==> " + mainLocales.toString());
+        }
     }
 }

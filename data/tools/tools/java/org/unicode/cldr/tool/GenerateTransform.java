@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Pair;
 import org.unicode.cldr.util.XMLFileReader;
@@ -30,7 +31,7 @@ import com.ibm.icu.util.ULocale;
  */
 // TODO handle casing
 public class GenerateTransform {
-    private static final String TRANSFORM_DIRECTORY = CldrUtility.COMMON_DIRECTORY
+    private static final String TRANSFORM_DIRECTORY = CLDRPaths.COMMON_DIRECTORY
         + "transforms"
         + File.separator;
 
@@ -213,7 +214,7 @@ public class GenerateTransform {
 
         public MyComparator(ULocale locale) {
             collator = Collator.getInstance(locale);
-            collator.setStrength(collator.IDENTICAL);
+            collator.setStrength(Collator.IDENTICAL);
         }
 
         public int compare(Pair<String, String> arg0, Pair<String, String> arg1) {
@@ -233,7 +234,7 @@ public class GenerateTransform {
     }
 
     static class UnicodeContext {
-        Map<String, UnicodeSet> first_second = new LinkedHashMap();
+        Map<String, UnicodeSet> first_second = new LinkedHashMap<String, UnicodeSet>();
 
         void add(String a, String b) {
             UnicodeSet second = first_second.get(a);
@@ -244,7 +245,7 @@ public class GenerateTransform {
         }
 
         Set<UnicodeSet[]> get() {
-            Map<UnicodeSet, UnicodeSet> second_first = new LinkedHashMap();
+            Map<UnicodeSet, UnicodeSet> second_first = new LinkedHashMap<UnicodeSet, UnicodeSet>();
             for (String first : first_second.keySet()) {
                 UnicodeSet second = first_second.get(first);
                 UnicodeSet firstSet = second_first.get(second);
@@ -253,7 +254,7 @@ public class GenerateTransform {
                 }
                 firstSet.add(first);
             }
-            Set<UnicodeSet[]> result = new LinkedHashSet();
+            Set<UnicodeSet[]> result = new LinkedHashSet<UnicodeSet[]>();
             for (UnicodeSet second : second_first.keySet()) {
                 UnicodeSet first = second_first.get(second);
                 result.add(new UnicodeSet[] { first, second });
@@ -317,6 +318,8 @@ public class GenerateTransform {
                 // "<>");
                 value = fixup.transliterate(value);
                 output.append(value).append(CldrUtility.LINE_SEPARATOR);
+            } else if (path.indexOf("/version") >= 0 || path.indexOf("/generation") >= 0) {
+                // Ignore identity info
             } else {
                 throw new IllegalArgumentException("Unknown element: " + path + "\t " + value);
             }

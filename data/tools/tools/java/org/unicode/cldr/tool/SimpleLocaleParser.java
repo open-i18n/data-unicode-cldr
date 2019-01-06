@@ -105,12 +105,12 @@ class SimpleLocaleParser {
         }
         final String variantList = root.group(4);
         if (variantList == null) {
-            variants = (List<String>) Collections.EMPTY_LIST;
+            variants = Collections.emptyList();
         } else {
             // make uppercase for compatibility with CLDR.
             variants = Arrays.asList(variantSeparatorPattern.split(variantList.toUpperCase(Locale.ENGLISH)));
             // check for duplicate variants
-            if (new HashSet(variants).size() != variants.size()) {
+            if (new HashSet<String>(variants).size() != variants.size()) {
                 throw new IllegalArgumentException("Duplicate variants");
             }
         }

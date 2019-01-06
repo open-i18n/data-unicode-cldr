@@ -3,13 +3,13 @@ package org.unicode.cldr.tool;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.unicode.cldr.util.CLDRFile;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.LocaleIDParser;
@@ -26,7 +26,7 @@ public class DiffWithParent {
         try {
             fileMatcher = Pattern.compile(CldrUtility.getProperty("FILE", ".*")).matcher(
                 "");
-            Factory cldrFactory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
+            Factory cldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
             CLDRFile english = cldrFactory.make("en", true);
             TablePrinter table = new TablePrinter().addColumn("Path").setSpanRows(
                 true).addColumn("Locale").addColumn("Value").addColumn("FullPath");
@@ -61,7 +61,7 @@ public class DiffWithParent {
                                 pvalue).addCell(pfullPath).finishRow();
                         }
                     }
-                    PrintWriter out = BagFormatter.openUTF8Writer(CldrUtility.GEN_DIRECTORY,
+                    PrintWriter out = BagFormatter.openUTF8Writer(CLDRPaths.GEN_DIRECTORY,
                         locale + "_diff.html");
                     String title = locale + " " + english.getName(locale)
                         + " Diff with Parent";
@@ -91,15 +91,13 @@ public class DiffWithParent {
         fullParts.set(fullPath);
         String path = CLDRFile.getDistinguishingXPath(fullPath, null, false);
         parts.set(path);
-        Set s = new TreeSet();
+        Set<Pair<String, String>> s = new TreeSet<Pair<String, String>>();
         for (int i = 0; i < fullParts.size(); ++i) {
-            Map fullAttributes = fullParts.getAttributes(i);
-            Map attributes = parts.getAttributes(i);
             for (String key : fullParts.getAttributeKeys(i)) {
-                s.add(new Pair(key, fullParts.getAttributeValue(i, key)));
+                s.add(new Pair<String, String>(key, fullParts.getAttributeValue(i, key)));
             }
             for (String key : parts.getAttributeKeys(i)) {
-                s.remove(new Pair(key, parts.getAttributeValue(i, key)));
+                s.remove(new Pair<String, String>(key, parts.getAttributeValue(i, key)));
             }
         }
         return s.toString();

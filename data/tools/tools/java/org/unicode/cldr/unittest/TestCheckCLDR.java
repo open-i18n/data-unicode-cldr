@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 import org.unicode.cldr.test.CheckCLDR;
 import org.unicode.cldr.test.CheckCLDR.CheckStatus;
 import org.unicode.cldr.test.CheckCLDR.CheckStatus.Subtype;
+import org.unicode.cldr.test.CheckCLDR.Options;
 import org.unicode.cldr.test.CheckConsistentCasing;
 import org.unicode.cldr.test.CheckForExemplars;
 import org.unicode.cldr.test.CheckNames;
@@ -44,14 +45,14 @@ public class TestCheckCLDR extends TestFmwk {
             try {
                 throw new IllegalArgumentException("hi");
             } catch (Exception e) {
-                return new CheckStatus().setMainType(CheckStatus.warningType)
+                return new CheckStatus().setCause(this).setMainType(CheckStatus.warningType)
                     .setSubtype(Subtype.abbreviatedDateFieldTooWide)
                     .setMessage("An exception {0}, and a number {1}", e, 1.5);
             }
         }
 
         @Override
-        public CheckCLDR handleCheck(String path, String fullPath, String value, Map<String, String> options,
+        public CheckCLDR handleCheck(String path, String fullPath, String value, Options options,
             List<CheckStatus> result) {
             return null;
         }
@@ -96,7 +97,7 @@ public class TestCheckCLDR extends TestFmwk {
 
         CheckCLDR test = CheckCLDR.getCheckAll(factory, ".*");
         List<CheckStatus> possibleErrors = new ArrayList<CheckStatus>();
-        Map<String, String> options = new HashMap<String, String>();
+        Options options = new Options();
         test.setCldrFileToCheck(english, options, possibleErrors);
         List<CheckStatus> result = new ArrayList<CheckStatus>();
 
@@ -208,7 +209,7 @@ public class TestCheckCLDR extends TestFmwk {
     public void checkLocale(CheckCLDR test, CLDRFile nativeFile, String dummyValue, Set<String> unique) {
         String localeID = nativeFile.getLocaleID();
         List<CheckStatus> possibleErrors = new ArrayList<CheckStatus>();
-        Map<String, String> options = new HashMap<String, String>();
+        CheckCLDR.Options options = new CheckCLDR.Options();
         test.setCldrFileToCheck(nativeFile, options, possibleErrors);
         List<CheckStatus> result = new ArrayList<CheckStatus>();
 
@@ -295,11 +296,10 @@ public class TestCheckCLDR extends TestFmwk {
     public void TestCheckNew() {
         String path = "//ldml/localeDisplayNames/territories/territory[@type=\"AX\"]";
         CheckCLDR c = new CheckNew(testInfo.getCldrFactory());
-        List<CheckStatus> result = new ArrayList();
-        Map<String, String> options = new HashMap();
+        List<CheckStatus> result = new ArrayList<CheckStatus>();
+        Map<String, String> options = new HashMap<String, String>();
         c.setCldrFileToCheck(testInfo.getCldrFactory().make("fr", true), options, result);
         c.check(path, path, "foobar", options, result);
-        boolean ok = false;
         for (CheckStatus status : result) {
             if (status.getSubtype() != Subtype.modifiedEnglishValue) {
                 continue;

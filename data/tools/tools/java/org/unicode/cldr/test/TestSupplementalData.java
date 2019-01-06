@@ -15,6 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.unicode.cldr.util.CLDRFile;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.Pair;
@@ -36,10 +37,10 @@ public class TestSupplementalData {
     public static void main(String[] args) throws IOException {
         // genData();
         // if (true) return;
-        Factory cldrFactory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
+        Factory cldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
         english = cldrFactory.make("en", true);
         root = cldrFactory.make("root", true);
-        supplementalData = SupplementalDataInfo.getInstance(CldrUtility.SUPPLEMENTAL_DIRECTORY);
+        supplementalData = SupplementalDataInfo.getInstance(CLDRPaths.SUPPLEMENTAL_DIRECTORY);
         sc = StandardCodes.make();
 
         showMultiZones();
@@ -54,7 +55,7 @@ public class TestSupplementalData {
 
     private static void showMultiZones() {
         // reverse the list
-        Relation<String, String> territoryToZones = new Relation(new TreeMap<String, String>(), TreeSet.class);
+        Relation<String, String> territoryToZones = Relation.<String, String> of(new TreeMap<String, Set<String>>(), TreeSet.class);
         for (String zone : supplementalData.getCanonicalZones()) {
             territoryToZones.put(supplementalData.getZone_territory(zone), zone);
         }
@@ -93,7 +94,7 @@ public class TestSupplementalData {
     }
 
     private static void checkPlurals() {
-        Relation<PluralInfo, String> pluralsToLocale = new Relation(new HashMap(), TreeSet.class);
+        Relation<PluralInfo, String> pluralsToLocale = Relation.<PluralInfo, String> of(new HashMap<PluralInfo, Set<String>>(), TreeSet.class);
         for (String locale : new TreeSet<String>(supplementalData.getPluralLocales())) {
             PluralInfo pluralInfo = supplementalData.getPlurals(locale);
             System.out.println(locale + ":\t" + pluralInfo);
@@ -130,7 +131,7 @@ public class TestSupplementalData {
 
     private static void checkTerritoryMapping() {
         Relation<String, String> alpha3 = supplementalData.getAlpha3TerritoryMapping();
-        Set<String> temp = new TreeSet(sc.getAvailableCodes("territory"));
+        Set<String> temp = new TreeSet<String>(sc.getAvailableCodes("territory"));
         for (Iterator<String> it = temp.iterator(); it.hasNext();) {
             String code = it.next();
             if (numericTerritory.reset(code).matches()) {
@@ -160,22 +161,22 @@ public class TestSupplementalData {
     }
 
     private static Set<String> getFirstMinusSecond(Set<String> name, Set<String> availableCodes) {
-        Set<String> temp = new TreeSet(name);
+        Set<String> temp = new TreeSet<String>(name);
         temp.removeAll(availableCodes);
         return temp;
     }
 
     static void checkAgainstLanguageScript() {
-        Relation<String, String> otherTerritoryToLanguages = new Relation(new TreeMap(), TreeSet.class, null);
+        Relation<String, String> otherTerritoryToLanguages = Relation.<String, String> of(new TreeMap<String, Set<String>>(), TreeSet.class, null);
         // get other language data
         for (String language : sc.getGoodAvailableCodes("language")) {
             Set<BasicLanguageData> newLanguageData = supplementalData.getBasicLanguageData(language);
             if (newLanguageData != null) {
                 for (BasicLanguageData languageData : newLanguageData) {
-                    Set<String> territories = new TreeSet(languageData.getTerritories());
+                    Set<String> territories = new TreeSet<String>(languageData.getTerritories());
                     territories.addAll(languageData.getTerritories());
                     if (territories != null) {
-                        Set<String> scripts = new TreeSet(languageData.getScripts());
+                        Set<String> scripts = new TreeSet<String>(languageData.getScripts());
                         scripts.addAll(languageData.getScripts());
                         if (scripts == null || scripts.size() < 2) {
                             otherTerritoryToLanguages.putAll(territories, language);
@@ -192,7 +193,7 @@ public class TestSupplementalData {
         for (String territory : sc.getGoodAvailableCodes("territory")) {
             Set<String> languages = supplementalData.getTerritoryToLanguages(territory);
             Set<String> otherLanguages = otherTerritoryToLanguages.getAll(territory);
-            if (otherLanguages == null) otherLanguages = Collections.EMPTY_SET;
+            if (otherLanguages == null) otherLanguages = Collections.emptySet();
             if (!Utility.objectEquals(languages, otherLanguages)) {
                 Set<String> languagesLeftover = new TreeSet<String>(languages);
                 languagesLeftover.removeAll(otherLanguages);
@@ -216,7 +217,7 @@ public class TestSupplementalData {
      */
     public static void genData() throws IOException {
         BufferedReader codes = CldrUtility.getUTF8Data("territory_codes.txt");
-        Set<Pair> sorted = new TreeSet();
+        Set<Pair> sorted = new TreeSet<Pair>();
         while (true) {
             String line = codes.readLine();
             if (line == null)

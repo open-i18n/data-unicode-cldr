@@ -2,7 +2,6 @@ package org.unicode.cldr.test;
 
 import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,8 +12,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.unicode.cldr.util.CLDRFile;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Factory;
+import org.unicode.cldr.util.InputStreamFactory;
 import org.unicode.cldr.util.PathHeader;
 import org.unicode.cldr.util.RegexLookup;
 import org.unicode.cldr.util.StringId;
@@ -63,9 +64,9 @@ public class OutdatedPaths {
     public OutdatedPaths(String directory) {
         try {
             DataInputStream dataIn = openDataInput(directory, OUTDATED_DATA);
-            Map<Long, PathHeader> id2header = new HashMap();
+            Map<Long, PathHeader> id2header = new HashMap<Long, PathHeader>();
             if (DEBUG) {
-                Factory factory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
+                Factory factory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
                 id2header = getIdToPath(factory);
             }
             while (true) {
@@ -131,9 +132,9 @@ public class OutdatedPaths {
     private DataInputStream openDataInput(String directory, String filename) throws FileNotFoundException {
         String dataFileName = filename;
         InputStream fileInputStream = directory == null
-            ? CldrUtility.getInputStream(OUTDATED_DIR + dataFileName)
-            : new FileInputStream(new File(directory, dataFileName));
-
+            ? CldrUtility.getInputStream(OUTDATED_DIR + dataFileName) :
+            //: new FileInputStream(new File(directory, dataFileName));
+            InputStreamFactory.createInputStream(new File(directory, dataFileName));
         DataInputStream dataIn = new DataInputStream(fileInputStream);
         return dataIn;
     }

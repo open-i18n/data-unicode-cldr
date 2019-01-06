@@ -1,0 +1,161 @@
+{
+  "main": {
+    "ast-ES": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "25",
+          "_number": "$Revision: 91 $"
+        },
+        "generation": {
+          "_date": "$Date: 2014-03-13 22:27:12 -0500 (Thu, 13 Mar 2014) $"
+        },
+        "language": "ast",
+        "territory": "ES"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "era"
+          },
+          "year": {
+            "displayName": "añu",
+            "relative-type--1": "last year",
+            "relative-type-0": "this year",
+            "relative-type-1": "next year",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "En {0} añu",
+              "relativeTimePattern-count-other": "En {0} años"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "Hai {0} añu",
+              "relativeTimePattern-count-other": "Hai {0} años"
+            }
+          },
+          "month": {
+            "displayName": "mes",
+            "relative-type--1": "last month",
+            "relative-type-0": "this month",
+            "relative-type-1": "next month",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "En {0} mes",
+              "relativeTimePattern-count-other": "En {0} meses"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "Hai {0} mes",
+              "relativeTimePattern-count-other": "Hai {0} meses"
+            }
+          },
+          "week": {
+            "displayName": "selmana",
+            "relative-type--1": "last week",
+            "relative-type-0": "this week",
+            "relative-type-1": "next week",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "En {0} selmana",
+              "relativeTimePattern-count-other": "En {0} selmanes"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "Hai {0} selmana",
+              "relativeTimePattern-count-other": "Hai {0} selmanes"
+            }
+          },
+          "day": {
+            "displayName": "día",
+            "relative-type--1": "ayeri",
+            "relative-type--2": "antayeri",
+            "relative-type--3": "antantayeri",
+            "relative-type-0": "güei",
+            "relative-type-1": "mañana",
+            "relative-type-2": "pasao mañana",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "En {0} dia",
+              "relativeTimePattern-count-other": "En {0} díes"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "Hai {0} dia",
+              "relativeTimePattern-count-other": "Hai {0} díes"
+            }
+          },
+          "weekday": {
+            "displayName": "día de la selmana"
+          },
+          "sun": {
+            "relative-type--1": "last Sunday",
+            "relative-type-0": "this Sunday",
+            "relative-type-1": "next Sunday"
+          },
+          "mon": {
+            "relative-type--1": "last Monday",
+            "relative-type-0": "this Monday",
+            "relative-type-1": "next Monday"
+          },
+          "tue": {
+            "relative-type--1": "last Tuesday",
+            "relative-type-0": "this Tuesday",
+            "relative-type-1": "next Tuesday"
+          },
+          "wed": {
+            "relative-type--1": "last Wednesday",
+            "relative-type-0": "this Wednesday",
+            "relative-type-1": "next Wednesday"
+          },
+          "thu": {
+            "relative-type--1": "last Thursday",
+            "relative-type-0": "this Thursday",
+            "relative-type-1": "next Thursday"
+          },
+          "fri": {
+            "relative-type--1": "last Friday",
+            "relative-type-0": "this Friday",
+            "relative-type-1": "next Friday"
+          },
+          "sat": {
+            "relative-type--1": "last Saturday",
+            "relative-type-0": "this Saturday",
+            "relative-type-1": "next Saturday"
+          },
+          "dayperiod": {
+            "displayName": "periodu del día"
+          },
+          "hour": {
+            "displayName": "hora",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "En {0} hora",
+              "relativeTimePattern-count-other": "En {0} hores"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "Hai {0} hora",
+              "relativeTimePattern-count-other": "Hai {0} hores"
+            }
+          },
+          "minute": {
+            "displayName": "minutu",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "En {0} minutu",
+              "relativeTimePattern-count-other": "En {0} minutos"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "Hai {0} minutu",
+              "relativeTimePattern-count-other": "Hai {0} minutos"
+            }
+          },
+          "second": {
+            "displayName": "segundu",
+            "relative-type-0": "now",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "En {0} segundu",
+              "relativeTimePattern-count-other": "En {0} segundos"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "Hai {0} segundu",
+              "relativeTimePattern-count-other": "Hai {0} segundos"
+            }
+          },
+          "zone": {
+            "displayName": "zona horaria"
+          }
+        }
+      }
+    }
+  }
+}

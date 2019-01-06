@@ -1,0 +1,159 @@
+{
+  "main": {
+    "gu": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "25",
+          "_number": "$Revision: 91 $"
+        },
+        "generation": {
+          "_date": "$Date: 2014-03-13 22:27:12 -0500 (Thu, 13 Mar 2014) $"
+        },
+        "language": "gu"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "યુગ"
+          },
+          "year": {
+            "displayName": "વર્ષ",
+            "relative-type--1": "ગયા વર્ષે",
+            "relative-type-0": "આ વર્ષે",
+            "relative-type-1": "આવતા વર્ષે",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} વર્ષમાં",
+              "relativeTimePattern-count-other": "{0} વર્ષમાં"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} વર્ષ પહેલા",
+              "relativeTimePattern-count-other": "{0} વર્ષ પહેલા"
+            }
+          },
+          "month": {
+            "displayName": "મહિનો",
+            "relative-type--1": "ગયા મહિને",
+            "relative-type-0": "આ મહિને",
+            "relative-type-1": "આવતા મહિને",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} મહિનામાં",
+              "relativeTimePattern-count-other": "{0} મહિનામાં"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} મહિના પહેલા",
+              "relativeTimePattern-count-other": "{0} મહિના પહેલા"
+            }
+          },
+          "week": {
+            "displayName": "અઠવાડિયું",
+            "relative-type--1": "ગયા અઠવાડિયે",
+            "relative-type-0": "આ અઠવાડિયે",
+            "relative-type-1": "આવતા અઠવાડિયે",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} અઠવાડિયામાં",
+              "relativeTimePattern-count-other": "{0} અઠવાડિયામાં"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} અઠવાડિયા પહેલા",
+              "relativeTimePattern-count-other": "{0} અઠવાડિયા પહેલા"
+            }
+          },
+          "day": {
+            "displayName": "દિવસ",
+            "relative-type--1": "ગઈકાલે",
+            "relative-type--2": "ગયા પરમદિવસે",
+            "relative-type-0": "આજે",
+            "relative-type-1": "આવતીકાલે",
+            "relative-type-2": "પરમદિવસે",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} દિવસમાં",
+              "relativeTimePattern-count-other": "{0} દિવસમાં"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} દિવસ પહેલા",
+              "relativeTimePattern-count-other": "{0} દિવસ પહેલા"
+            }
+          },
+          "weekday": {
+            "displayName": "અઠવાડિયાનો દિવસ"
+          },
+          "sun": {
+            "relative-type--1": "ગયા રવિવારે",
+            "relative-type-0": "આ રવિવારે",
+            "relative-type-1": "આવતા રવિવારે"
+          },
+          "mon": {
+            "relative-type--1": "ગયા સોમવારે",
+            "relative-type-0": "આ સોમવારે",
+            "relative-type-1": "આવતા સોમવારે"
+          },
+          "tue": {
+            "relative-type--1": "ગયા મંગળવારે",
+            "relative-type-0": "આ મંગળવારે",
+            "relative-type-1": "આવતા મંગળવારે"
+          },
+          "wed": {
+            "relative-type--1": "ગયા બુધવારે",
+            "relative-type-0": "આ બુધવારે",
+            "relative-type-1": "આવતા બુધવારે"
+          },
+          "thu": {
+            "relative-type--1": "ગયા ગુરુવારે",
+            "relative-type-0": "આ ગુરુવારે",
+            "relative-type-1": "આવતા ગુરુવારે"
+          },
+          "fri": {
+            "relative-type--1": "ગયા શુક્રવારે",
+            "relative-type-0": "આ શુક્રવારે",
+            "relative-type-1": "આવતા શુક્રવારે"
+          },
+          "sat": {
+            "relative-type--1": "ગયા શનિવારે",
+            "relative-type-0": "આ શનિવારે",
+            "relative-type-1": "આવતા શનિવારે"
+          },
+          "dayperiod": {
+            "displayName": "AM/PM"
+          },
+          "hour": {
+            "displayName": "કલાક",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} કલાકમાં",
+              "relativeTimePattern-count-other": "{0} કલાકમાં"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} કલાક પહેલા",
+              "relativeTimePattern-count-other": "{0} કલાક પહેલા"
+            }
+          },
+          "minute": {
+            "displayName": "મિનિટ",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} મિનિટમાં",
+              "relativeTimePattern-count-other": "{0} મિનિટમાં"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} મિનિટ પહેલા",
+              "relativeTimePattern-count-other": "{0} મિનિટ પહેલા"
+            }
+          },
+          "second": {
+            "displayName": "સેકન્ડ",
+            "relative-type-0": "હમણાં",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-one": "{0} સેકંડમાં",
+              "relativeTimePattern-count-other": "{0} સેકંડમાં"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-one": "{0} સેકંડ પહેલા",
+              "relativeTimePattern-count-other": "{0} સેકંડ પહેલા"
+            }
+          },
+          "zone": {
+            "displayName": "સમય ઝોન"
+          }
+        }
+      }
+    }
+  }
+}

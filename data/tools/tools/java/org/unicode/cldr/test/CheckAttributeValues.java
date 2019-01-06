@@ -2,6 +2,7 @@ package org.unicode.cldr.test;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -53,7 +54,7 @@ public class CheckAttributeValues extends FactoryCheckCLDR {
         super(factory);
     }
 
-    public CheckCLDR handleCheck(String path, String fullPath, String value, Map<String, String> options,
+    public CheckCLDR handleCheck(String path, String fullPath, String value, Options options,
         List<CheckStatus> result) {
         if (fullPath == null) return this; // skip paths that we don't have
         if (fullPath.indexOf('[') < 0) return this; // skip paths with no attributes
@@ -176,7 +177,8 @@ public class CheckAttributeValues extends FactoryCheckCLDR {
 
     LocaleIDParser localeIDParser = new LocaleIDParser();
 
-    public CheckCLDR setCldrFileToCheck(CLDRFile cldrFileToCheck, Map<String, String> options,
+    @Override
+    public CheckCLDR setCldrFileToCheck(CLDRFile cldrFileToCheck, Options options,
         List<CheckStatus> possibleErrors) {
         if (cldrFileToCheck == null) return this;
         if (Phase.FINAL_TESTING == getPhase() || Phase.BUILD == getPhase()) {
@@ -210,7 +212,14 @@ public class CheckAttributeValues extends FactoryCheckCLDR {
 
     private void getMetadata(CLDRFile metadata, SupplementalDataInfo sdi) {
         // sorting is expensive, but we need it here.
-        for (Iterator<String> it = metadata.iterator(null, CLDRFile.ldmlComparator); it.hasNext();) {
+
+        Comparator<String> ldmlComparator = metadata.getComparator();
+        String path2 = metadata.iterator().next();
+        if (!path2.startsWith("//ldml")) {
+            ldmlComparator = null;
+        }
+
+        for (Iterator<String> it = metadata.iterator(null, ldmlComparator); it.hasNext();) {
             String path = it.next();
             String value = metadata.getStringValue(path);
             path = metadata.getFullXPath(path);

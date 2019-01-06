@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -81,8 +80,8 @@ public class CheckForExemplars extends FactoryCheckCLDR {
 
     private UnicodeSet exemplars;
     private UnicodeSet exemplarsPlusAscii;
-    private static final UnicodeSet DISALLOWED_IN_scriptRegionExemplars = new UnicodeSet("[()（）;,；，]").freeze();
-    private static final UnicodeSet DISALLOWED_IN_scriptRegionExemplarsWithParens = new UnicodeSet("[;,；，]").freeze();
+    //private static final UnicodeSet DISALLOWED_IN_scriptRegionExemplars = new UnicodeSet("[()（）;,；，]").freeze();
+    //private static final UnicodeSet DISALLOWED_IN_scriptRegionExemplarsWithParens = new UnicodeSet("[;,；，]").freeze();
 
     // Hack until cldrbug 6566 is fixed. TODO
     private static final Pattern IGNORE_PLACEHOLDER_PARENTHESES = Pattern.compile("\\p{Ps}#\\p{Pe}");
@@ -157,7 +156,8 @@ public class CheckForExemplars extends FactoryCheckCLDR {
         }
     }
 
-    public CheckCLDR setCldrFileToCheck(CLDRFile cldrFile, Map<String, String> options, List<CheckStatus> possibleErrors) {
+    @Override
+    public CheckCLDR setCldrFileToCheck(CLDRFile cldrFile, Options options, List<CheckStatus> possibleErrors) {
         if (cldrFile == null) return this;
         skip = true;
         super.setCldrFileToCheck(cldrFile, options, possibleErrors);
@@ -214,7 +214,7 @@ public class CheckForExemplars extends FactoryCheckCLDR {
     }
 
     public CheckCLDR handleCheck(String path, String fullPath, String value,
-        Map<String, String> options, List<CheckStatus> result) {
+        Options options, List<CheckStatus> result) {
         if (fullPath == null) return this; // skip paths that we don't have
         if (value == null) return this; // skip values that we don't have ?
         if (skip) return this;

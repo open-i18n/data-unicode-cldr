@@ -21,12 +21,16 @@
 //ldml/dates/calendars/calendar[@type="(%A)"]/alias[@source="locale"][@path="../calendar[@type='(%A)']"]   ; /calendar/$1lo ; values=/LOCALE/calendar/$2
 
 //ldml/dates/calendars/calendar[@type="(%A)"]/dayPeriods/alias[@source="locale"][@path="../../calendar[@type='(%A)']/dayPeriods"] ; /calendar/$1/AmPmMarkers:alias ; values=/LOCALE/calendar/$2/AmPmMarkers
+     ; /calendar/$1/AmPmMarkersNarrow:alias ; values=/LOCALE/calendar/$2/AmPmMarkersNarrow
+     ; /calendar/$1/NoonMarker:alias ; values=/LOCALE/calendar/$2/NoonMarker
+     ; /calendar/$1/NoonMarkerNarrow:alias ; values=/LOCALE/calendar/$2/NoonMarkerNarrow
 //ldml/dates/calendars/calendar[@type="(%A)"]/(eras|quarters|cyclicNameSets|monthPatterns)/alias[@source="locale"][@path="../../%W[@type='(%A)']/%W"] ; /calendar/$1/$2:alias ; values=/LOCALE/calendar/$3/$2
 
 //ldml/dates/calendars/calendar[@type="(%A)"]/eras/eraNarrow/alias[@source="locale"][@path="../eraAbbr"] ; /calendar/$1/eras/narrow:alias ; values=/LOCALE/calendar/$1/eras/abbreviated
 //ldml/dates/calendars/calendar[@type="(%A)"]/eras/eraNames/alias[@source="locale"][@path="../eraAbbr"] ; /calendar/$1/eras/wide:alias ; values=/LOCALE/calendar/$1/eras/abbreviated
 
 //ldml/dates/calendars/calendar[@type="(%A)"]/(cyclicNameSet)s/\2[@type="(%W)"]/alias[@source="locale"][@path="../\2[@type='(%A)']"]   ; /calendar/$1/$2s/$3:alias ; values=/LOCALE/calendar/$1/$2s/$4
+//ldml/dates/calendars/calendar[@type="(%A)"]/(cyclicNameSet)s/\2[@type="(%W)"]/(cyclicName)Context[@type="(%W)"]/\4Width[@type="(%W)"]/alias[@source="locale"][@path="../../../\4Set[@type='(%A)']/\4Context[@type='(%A)']/\4Width[@type='(%A)']"]   ; /calendar/$1/$2s/$3/$5/$6:alias ; values=/LOCALE/calendar/$1/$2s/$7/$8/$9
 //ldml/dates/calendars/calendar[@type="(%A)"]/(cyclicNameSet)s/\2[@type="(%W)"]/(cyclicName)Context[@type="(%W)"]/\4Width[@type="(%W)"]/alias[@source="locale"][@path="../\4Width[@type='(%A)']"]   ; /calendar/$1/$2s/$3/$5/$6:alias ; values=/LOCALE/calendar/$1/$2s/$3/$5/$7
 //ldml/dates/calendars/calendar[@type="(%A)"]/(cyclicNameSet|monthPattern|quarter)s/\2Context[@type="(%W)"]/\2Width[@type="(%W)"]/alias[@source="locale"][@path="../../\2Context[@type='(%W)']/\2Width[@type='(%A)']"]   ; /calendar/$1/$2s/$3/$4:alias ; values=/LOCALE/calendar/$1/$2s/$5/$6
 
@@ -56,6 +60,8 @@
      ; /listPattern/$1/end:alias ; values=/LOCALE/listPattern/$2/end
      ; /listPattern/$1/2:alias ; values=/LOCALE/listPattern/$2/2
 
+//ldml/numbers/currencyFormats[@numberSystem="(%A)"]/currencyFormatLength/currencyFormat[@type="accounting"]/alias[@source="locale"][@path="../(%W)[@type='standard']"] ; /NumberElements/$1/patterns/accountingFormat:alias ; values=/LOCALE/NumberElements/$1/patterns/$2
+
 # Characters
 
 //ldml/characters/exemplarCharacters[@type="auxiliary"] ; /AuxExemplarCharacters
@@ -80,9 +86,9 @@
 # array, which is treated like just another value in /DateTimePatterns.
 # The group keyword is used here to specify that values from the same xpath
 # should be grouped into their own separate array.
-# So far (June 2012), this only happens in the Chinese calendar for zh_Hant
-# and the Hebrew calendar for he.
-//ldml/dates/calendars/calendar[@type="(%A)"]/dateFormats/dateFormatLength[@type="(%A)"]/dateFormat[@type="%A"]/pattern[@type="%A"][@numbers="(%W)"] ; /calendar/$1/DateTimePatterns ;  values="{value}" $3 ; group=$2
+# So far (Jan 2014), this only happens in the Chinese calendar for ja/zh/zh_Hant
+# and the Hebrew calendar for he, and all calendars for haw (which has numbers="M=romanlow").
+//ldml/dates/calendars/calendar[@type="(%A)"]/dateFormats/dateFormatLength[@type="(%A)"]/dateFormat[@type="%A"]/pattern[@type="%A"][@numbers="(%A)"] ; /calendar/$1/DateTimePatterns ;  values="{value}" $3 ; group=$2
 
 //ldml/dates/calendars/calendar[@type="(%A)"]/((date|time|dateTime)Format)s/\2Length[@type="(%A)"]/\2[@type="%A"]/pattern[@type="%A"] ; /calendar/$1/DateTimePatterns
 
@@ -95,6 +101,8 @@
 
 //ldml/dates/calendars/calendar[@type="(%A)"]/dayPeriods/dayPeriodContext[@type="format"]/dayPeriodWidth[@type="wide"]/dayPeriod[@type="(am|pm)"] ; /calendar/$1/AmPmMarkers
 //ldml/dates/calendars/calendar[@type="(%A)"]/dayPeriods/dayPeriodContext[@type="format"]/dayPeriodWidth[@type="narrow"]/dayPeriod[@type="(am|pm)"] ; /calendar/$1/AmPmMarkersNarrow
+//ldml/dates/calendars/calendar[@type="(%A)"]/dayPeriods/dayPeriodContext[@type="format"]/dayPeriodWidth[@type="wide"]/dayPeriod[@type="noon"] ; /calendar/$1/NoonMarker
+//ldml/dates/calendars/calendar[@type="(%A)"]/dayPeriods/dayPeriodContext[@type="format"]/dayPeriodWidth[@type="narrow"]/dayPeriod[@type="noon"] ; /calendar/$1/NoonMarkerNarrow
 
 //ldml/dates/calendars/calendar[@type="(%A)"]/eras/eraNarrow/era[@type="(%A)"] ; /calendar/$1/eras/narrow
 //ldml/dates/calendars/calendar[@type="(%A)"]/eras/eraAbbr/era[@type="(%A)"] ; /calendar/$1/eras/abbreviated

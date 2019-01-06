@@ -1,0 +1,32 @@
+{
+  "main": {
+    "tg-Cyrl": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "25",
+          "_number": "$Revision: 91 $"
+        },
+        "generation": {
+          "_date": "$Date: 2014-03-13 22:27:12 -0500 (Thu, 13 Mar 2014) $"
+        },
+        "language": "root",
+        "script": "Cyrl"
+      },
+      "characters": {
+        "exemplarCharacters": "[а б в г ғ д е ё ж з и ӣ й к қ л м н о п р с т у ӯ ф х ҳ ч ҷ ш ъ э ю я]",
+        "auxiliary": "[ц щ ы ь]",
+        "punctuation": "[\\- , ; \\: ! ? . ( ) \\[ \\] \\{ \\}]",
+        "index": "[А Б В Г Ғ Д Е Ж З И Й К Қ Л М Н О П Р С Т У Ф Х Ҳ Ч Ҷ Ш Ъ Э Ю Я]",
+        "ellipsis": {
+          "initial": "…{0}",
+          "medial": "{0}…{1}",
+          "final": "{0}…",
+          "word-initial": "… {0}",
+          "word-medial": "{0} … {1}",
+          "word-final": "{0} …"
+        },
+        "moreInformation": "?"
+      }
+    }
+  }
+}

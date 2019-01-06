@@ -1,7 +1,6 @@
 package org.unicode.cldr.test;
 
 import java.util.List;
-import java.util.Map;
 
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.Factory;
@@ -28,7 +27,7 @@ abstract class FactoryCheckCLDR extends CheckCLDR {
     }
 
     @Override
-    public CheckCLDR setCldrFileToCheck(CLDRFile cldrFileToCheck, Map<String, String> options,
+    public CheckCLDR setCldrFileToCheck(CLDRFile cldrFileToCheck, Options options,
         List<CheckStatus> possibleErrors) {
         super.setCldrFileToCheck(cldrFileToCheck, options, possibleErrors);
         resolvedCldrFileToCheck = null;

@@ -13,6 +13,7 @@ import org.unicode.cldr.unittest.TestAll.TestInfo;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.Counter2;
 import org.unicode.cldr.util.LanguageTagParser;
+import org.unicode.cldr.util.StandardCodes;
 import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.BasicLanguageData;
 import org.unicode.cldr.util.SupplementalDataInfo.BasicLanguageData.Type;
@@ -88,7 +89,7 @@ public class LanguageTest extends TestFmwk {
         new LanguageTest().run(args);
     }
 
-    public void TestThatScriptsHaveLanguage() {
+    public void TestThatLanguagesHaveScript() {
         Set<String> needTransfer = new LinkedHashSet<String>();
         LanguageTagParser parser = new LanguageTagParser();
         Map<String, Counter2<String>> scriptToLanguageCounter = new TreeMap<String, Counter2<String>>();
@@ -132,7 +133,7 @@ public class LanguageTest extends TestFmwk {
     }
 
     public void TestScriptsWithoutLanguage() {
-        if (true) throw new IllegalArgumentException("    Remove Kana => Ainu, Bopo, Latn => Afar");
+        if (false) throw new IllegalArgumentException("    Remove Kana => Ainu, Bopo, Latn => Afar");
         Set<String> needTransfer = new LinkedHashSet<String>();
         Set<String> unicodeScripts = getUnicodeScripts();
         for (String script : unicodeScripts) {
@@ -176,7 +177,7 @@ public class LanguageTest extends TestFmwk {
      * <likelySubtag from="aa" to="aa_Latn_ET"/> <!--{ Afar; ?; ? } => { Afar; Latin; Ethiopia }-->
      */
     public void addLine(String input, final String result) {
-        errln("Add?:\t<likelySubtag from=\"" + input +
+        logln("Add?:\t<likelySubtag from=\"" + input +
             "\" to=\"" + result +
             "\"/> <!--{ " + getLocaleName(input) +
             " } => { " + getLocaleName(result) +
@@ -219,7 +220,8 @@ public class LanguageTest extends TestFmwk {
 
     public String getDescription(String type, String token) {
         try {
-            String name = testInfo.getStandardCodes().getLStreg().get(type).get(token).get("Description");
+            testInfo.getStandardCodes();
+            String name = StandardCodes.getLStreg().get(type).get(token).get("Description");
             int pos = name.indexOf('▪');
             return pos < 0 ? name : name.substring(0, pos);
         } catch (Exception e) {

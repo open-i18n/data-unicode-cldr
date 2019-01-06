@@ -14,6 +14,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.unicode.cldr.unittest.TestAll.TestInfo;
+import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo.Count;
 
@@ -81,7 +83,7 @@ public abstract class PluralRulesFactory extends PluralRules.Factory {
             return PluralRules.getAvailableULocales(); // TODO fix if we add more locales
         }
 
-        static final Map<String, ULocale> rulesToULocale = new HashMap();
+        static final Map<String, ULocale> rulesToULocale = new HashMap<String, ULocale>();
 
         @Override
         public ULocale getFunctionalEquivalent(ULocale locale, boolean[] isAvailable) {
@@ -101,20 +103,26 @@ public abstract class PluralRulesFactory extends PluralRules.Factory {
     };
 
     public static class SamplePatterns {
-        final Map<PluralInfo.Count, String> keywordToPattern = new EnumMap(PluralInfo.Count.class);
-        final Map<PluralInfo.Count, String> keywordToErrors = new EnumMap(PluralInfo.Count.class);
+        final Map<PluralInfo.Count, String> keywordToPattern = new EnumMap<PluralInfo.Count, String>(PluralInfo.Count.class);
+        final Map<PluralInfo.Count, String> keywordToErrors = new EnumMap<PluralInfo.Count, String>(PluralInfo.Count.class);
+        final Map<PluralInfo.Count, String> ordinalKeywordToPattern = new EnumMap<PluralInfo.Count, String>(PluralInfo.Count.class);
 
-        public void put(ULocale locale, String keyword1, String sample) {
-            Count count = Count.valueOf(keyword1);
-            if (keywordToPattern.containsKey(count)) {
+        public void put(ULocale locale, PluralType type, Count count, String sample) {
+            Map<Count, String> map = type == PluralType.CARDINAL ? keywordToPattern : ordinalKeywordToPattern;
+            if (map.containsKey(count)) {
                 throw new IllegalArgumentException("Duplicate keyword <" + count + "> for " + locale);
             } else {
-                keywordToPattern.put(count, sample.replace(" ", "\u00A0"));
+                map.put(count, sample.replace(" ", "\u00A0"));
             }
         }
 
+        public String get(PluralType type, Count count) {
+            Map<Count, String> map = type == PluralType.CARDINAL ? keywordToPattern : ordinalKeywordToPattern;
+            return map.get(count);
+        }
+
         public void checkErrors(Set<String> set) {
-            final Map<String, PluralInfo.Count> skeletonToKeyword = new HashMap();
+            final Map<String, PluralInfo.Count> skeletonToKeyword = new HashMap<String, PluralInfo.Count>();
             for (String keyword1 : set) {
                 Count count = Count.valueOf(keyword1);
                 String error = "";
@@ -136,13 +144,51 @@ public abstract class PluralRulesFactory extends PluralRules.Factory {
                 }
             }
         }
+
+        public Set<Count> getCounts(PluralType type) {
+            Map<Count, String> map = type == PluralType.CARDINAL ? keywordToPattern : ordinalKeywordToPattern;
+            return Collections.unmodifiableSet(map.keySet());
+        }
     }
 
-    public static Map<ULocale, SamplePatterns> getLocaleToSamplePatterns() {
+    private static Map<ULocale, SamplePatterns> getLocaleToSamplePatterns() {
         if (LOCALE_TO_SAMPLE_PATTERNS == null) {
             loadData();
         }
         return LOCALE_TO_SAMPLE_PATTERNS;
+    }
+
+    public static SamplePatterns getSamplePatterns(ULocale uLocale) {
+        SamplePatterns samplePatterns = getLocaleToSamplePatterns().get(uLocale);
+        if (samplePatterns == null) {
+            uLocale = new ULocale(uLocale.getLanguage());
+            samplePatterns = getLocaleToSamplePatterns().get(uLocale);
+            if (samplePatterns == null) {
+                return null;
+            }
+        }
+        return samplePatterns;
+    }
+
+    public static Set<ULocale> getLocales() {
+        // TODO Auto-generated method stub
+        return getLocaleToSamplePatterns().keySet();
+    }
+
+    public static Set<Count> getSampleCounts(ULocale uLocale, PluralType type) {
+        SamplePatterns samplePatterns = getSamplePatterns(uLocale);
+        return samplePatterns == null ? null : samplePatterns.getCounts(type);
+    }
+
+    public static String getSamplePattern(ULocale uLocale, PluralType type, Count count) {
+        SamplePatterns samplePatterns = getSamplePatterns(uLocale);
+        if (samplePatterns != null) {
+            String result = samplePatterns.get(type, count);
+            if (result != null) {
+                return result;
+            }
+        }
+        return "{0} {no pattern available}";
     }
 
     public static Map<ULocale, PluralRules> getPluralOverrides() {
@@ -176,8 +222,39 @@ public abstract class PluralRulesFactory extends PluralRules.Factory {
                 temp.put(locale, samplePatterns = new SamplePatterns());
             }
             //System.out.println("*Adding sample:\t" + locale + "\t" + keyword + "\t" + sample);
-            samplePatterns.put(locale, keyword, sample);
+            samplePatterns.put(locale, PluralType.CARDINAL, Count.valueOf(keyword), sample);
         }
+        for (String[] row : ORDINAL_SAMPLES) {
+            ULocale locale = new ULocale(row[0]);
+            PluralInfo pluralInfo = TestInfo.getInstance()
+                .getSupplementalDataInfo()
+                .getPlurals(SupplementalDataInfo.PluralType.ordinal, row[0]);
+            if (pluralInfo == null) {
+                throw new IllegalArgumentException("Can't get plural info for " + row[0]);
+            }
+            Count count;
+            try {
+                int integerValue = Integer.parseInt(row[2]);
+                count = pluralInfo.getCount(integerValue);
+            } catch (NumberFormatException e) {
+                count = Count.valueOf(row[2]);
+            }
+
+            String sample = row[1];
+            SamplePatterns samplePatterns = temp.get(locale);
+            if (samplePatterns == null) {
+                temp.put(locale, samplePatterns = new SamplePatterns());
+            }
+            // { "af", "one", "{0} dag" },
+            samplePatterns.put(locale, PluralType.ORDINAL, count, sample);
+            //System.out.println("*Adding ordinal sample:\t" + locale + "\t" + count + "\t" + sample + "\t" + integerValue);
+//            try {
+//                samplePatterns.put(locale, PluralType.ORDINAL, count, sample);
+//            } catch (Exception e) {
+//                System.out.println("***" + e.getMessage());
+//            }
+        }
+
         for (String[] pair : overrides) {
             for (String locale : pair[0].split("\\s*,\\s*")) {
                 ULocale uLocale = new ULocale(locale);
@@ -294,18 +371,20 @@ public abstract class PluralRulesFactory extends PluralRules.Factory {
         { "af", "other", "{0} dae" },
         { "am", "one", "{0} ቀን" },
         { "am", "other", "{0} ቀናት" }, // fixed to 'other'
-        { "ar", "few", "{0} ساعات" },
-        { "ar", "many", "{0} ساعة" },
-        { "ar", "one", "ساعة" },
-        { "ar", "other", "{0} ساعة" },
-        { "ar", "two", "ساعتان" },
-        { "ar", "zero", "{0} ساعة" },
-        { "az", "one", "Sizin alış-veriş katınızda {0} X var. Onu almaq istəyirsiniz mi?" },
-        { "az", "other", "Sizin alış-veriş kartınızda {0} X var. Onları almaq istəyirsiniz mi?" },
+        { "ar", "few", "{0} كتب" },
+        { "ar", "many", "{0} كتابًا" },
+        { "ar", "one", "كتاب" },
+        { "ar", "other", "{0} كتاب" },
+        { "ar", "two", "كتابان" },
+        { "ar", "zero", "{0} كتاب" },
+        { "az", "one", "Alış-veriş katınızda {0} X var. Almaq istəyirsiniz?" },
+        { "az", "other", "Alış-veriş kartınızda {0} X var. Almaq istəyirsiniz?" },
+        { "ast", "one", "{0} día" },
+        { "ast", "other", "{0} díes" },
         { "bg", "one", "{0} ден" },
         { "bg", "other", "{0} дена" },
-        { "bn", "one", "সসে {0}টি আপেল নিয়ে সেটা খেল" },
-        { "bn", "other", "সসে {0}টি আপেল নিয়ে সেগুলি খেল" },
+        { "bn", "one", "সসে {0}টি আপেল খেল" },
+        { "bn", "other", "সসে {0}টি আপেল খেল" },
         { "br", "few", "{0} deiz" },
         { "br", "many", "{0} a zeizioù" },
         { "br", "one", "{0} deiz" },
@@ -340,8 +419,8 @@ public abstract class PluralRulesFactory extends PluralRules.Factory {
         { "fa", "other", "او {0} فیلم در هفته می‌بیند که کمدی هستند." },
         { "fi", "one", "{0} päivä" },
         { "fi", "other", "{0} päivää" },
-        { "fil", "one", "sa {0} araw" },
-        { "fil", "other", "sa {0} (na) araw" },
+        { "fil", "one", "{0} mansanas" },
+        { "fil", "other", "{0} na mansanas" },
         { "fr", "one", "{0} jour" },
         { "fr", "other", "{0} jours" },
         { "gl", "one", "{0} día" },
@@ -351,6 +430,7 @@ public abstract class PluralRulesFactory extends PluralRules.Factory {
         { "gv", "one", "{0} thunnag/vuc/ooyl" },
         { "gv", "two", "{0} hunnag/vuc/ooyl" },
         { "gv", "few", "{0} thunnag/muc/ooyl" },
+        { "gv", "many", "{0} dy hunnagyn/dy vucyn/dy ooylyn" },
         { "gv", "other", "{0} thunnagyn/mucyn/ooylyn" },
         { "he", "many", "{0} שנה" },
         { "he", "one", "שנה" },
@@ -362,8 +442,8 @@ public abstract class PluralRulesFactory extends PluralRules.Factory {
         { "hr", "many", "za {0} mjeseci" },
         { "hr", "one", "za {0} mjesec" },
         { "hr", "other", "za {0} mjeseci" },
-        { "hu", "one", "A kosárban van {0} X. Meg akarja venni?" },
-        { "hu", "other", "A kosárban van {0} X. Meg akarja venni őket?" },
+        { "hu", "one", "A kosár tartalma: {0} X. Megveszi?" },
+        { "hu", "other", "A kosár tartalma: {0} X. Megveszi őket?" },
         { "hy", "one", "այդ {0} ժամը" },
         { "hy", "other", "այդ {0} ժամերը" },
         { "id", "other", "{0} hari" },
@@ -372,16 +452,18 @@ public abstract class PluralRulesFactory extends PluralRules.Factory {
         { "it", "one", "{0} giorno" },
         { "it", "other", "{0} giorni" },
         { "ja", "other", "{0}日" },
-        { "ka", "one", "თქვენი კალათა შეიცავს {0} X-ს. გსურთ მისი შეძენა?" }, // 
-        { "ka", "other", "თქვენი კალათა შეიცავს {0} X-ს. გსურთ მათი შეძენა?" }, // 
-        { "kk", "one", "Кәрзеңкеде {0} X бар. Оны сатып алғыңыз келе ме?" }, // 
-        { "kk", "other", "Кәрзеңкеде {0} X бар. Оларды сатып алғыңыз келе ме?" }, // 
+        { "ka", "one", "კალათში {0} X-ია. შეიძენთ მას?" }, // 
+        { "ka", "other", "კალათში {0} X-ია. შეიძენთ მათ?" }, // 
+        { "kk", "one", "Cебетте {0} Х бар. Ол сіздікі ме?" }, // 
+        { "kk", "other", "Себетте {0} Х бар. Олар сіздікі ме?" }, // 
+        { "kl", "one", "{0} Ulloq" },
+        { "kl", "other", "{0} Ullut" },
         { "km", "other", "{0} ថ្ងៃ" },
         { "kn", "one", "{0} ದಿನ" },
         { "kn", "other", "{0} ದಿನಗಳು" },
         { "ko", "other", "{0}일" },
-        { "ky", "one", "Сиздин дүкөнчүлөө картыңызда {0} X бар. Аны сатып алайын дейсизби?" },
-        { "ky", "other", "Сиздин дүкөнчүлөө картыңызда {0} X бар. Аларды сатып алайын дейсизби?" },
+        { "ky", "one", "Себетте {0} Х бар. Аны аласызбы?" },
+        { "ky", "other", "Себетте {0} Х бар. Аларды аласызбы?" },
         { "lo", "other", "{0} ມື້" },
         { "lt", "one", "{0} obuolys" },
         { "lt", "few", "{0} obuoliai" },
@@ -402,8 +484,8 @@ public abstract class PluralRulesFactory extends PluralRules.Factory {
         { "my", "other", "{0}ရက္" },
         { "nb", "one", "{0} dag" },
         { "nb", "other", "{0} dager" },
-        { "ne", "one", "तपाईंसँग {0} निमन्त्रणा छ" },
-        { "ne", "other", "तपाईँसँग {0} निमन्त्रणाहरू छन्" },
+        { "ne", "one", "तपाईँसँग {0} निम्तो छ" },
+        { "ne", "other", "तपाईँसँग {0} निम्ता छन््" },
         //        {"ne", "", "{0} दिन बाँकी छ ।"},
         //        {"ne", "", "{0} दिन बाँकी छ ।"},
         //        {"ne", "", "{0} दिन बाँकी छ ।"},
@@ -423,12 +505,12 @@ public abstract class PluralRulesFactory extends PluralRules.Factory {
         { "ro", "few", "{0} zile" },
         { "ro", "one", "{0} zi" },
         { "ro", "other", "{0} de zile" },
-        { "ru", "few", "{0} года" },
-        { "ru", "many", "{0} лет" },
-        { "ru", "one", "{0} год" },
-        { "ru", "other", "{0} года" },
-        { "si", "one", "මට පොත් {0}ක් තිබේ. මම එය කියවීමි.්" },
-        { "si", "other", "මට පොත් {0}ක් තිබේ. මම ඒවා කියවීමි." },
+        { "ru", "few", "из {0} книг за {0} дня" },
+        { "ru", "many", "из {0} книг за {0} дней" },
+        { "ru", "one", "из {0} книги за {0} день" },
+        { "ru", "other", "из {0} книги за {0} дня" },
+        { "si", "one", "{0} පොතක් ඇත. එය කියවීමි." },
+        { "si", "other", "පොත් {0}ක් ඇත. ඒවා කියවීමි." },
         { "sk", "few", "{0} dni" },
         { "sk", "one", "{0} deň" },
         { "sk", "other", "{0} dní" },
@@ -452,16 +534,18 @@ public abstract class PluralRulesFactory extends PluralRules.Factory {
         { "te", "one", "{0} రోజు" },
         { "te", "other", "{0} రోజులు" },
         { "th", "other", "{0} วัน" },
-        { "tr", "one", "Sizin alış-veriş kartınızda {0} X var. Onu almak istiyor musunuz?" },
-        { "tr", "other", "Sizin alış-veriş kartınızda {0} X var. Onları almak istiyor musunuz?" },
+        { "tr", "one", "Sepetinizde {0} X var. Bunu almak istiyor musunuz?" },
+        { "tr", "other", "Sepetinizde {0} X var. Bunları almak istiyor musunuz?" },
+        { "ug", "one", "{0}  كىتاب" },
+        { "ug", "other", "{0} بېلىق كۆردۈم ۋە ئۇنى يەۋەتتىم." },
         { "uk", "few", "{0} дні" },
         { "uk", "many", "{0} днів" },
         { "uk", "one", "{0} день" },
         { "uk", "other", "{0} дня" },
         { "ur", "one", "{0} گھنٹہ" },
         { "ur", "other", "{0} گھنٹے" },
-        { "uz", "one", "Xarid savatingizda {0} X bor. Uni sotib olishni xohlaysizmi?" },
-        { "uz", "other", "Xaridingiz savatida {0} X bor. Ularni sotib olishni xohlaysizmi?" },
+        { "uz", "one", "Savatingizda {0}X bor. Uni sotib olasizmi?" },
+        { "uz", "other", "Savatingizda {0}X bor. Ularni sotib olasizmi?" },
         { "vi", "other", "{0} ngày" },
         { "zh", "other", "{0} 天" },
         { "zh_Hant", "other", "{0} 日" },
@@ -508,7 +592,8 @@ public abstract class PluralRulesFactory extends PluralRules.Factory {
         //                            "one: n mod 10 is 1 and n mod 100 is not 11" +
         //                            " or v in 1..6 and f mod 10 is 1 and f mod 100 is not 11" +
         //                            " or v not in 0..6 and f mod 10 is 1"},
-        { "pl",
+        {
+            "pl",
             "one: j is 1;  few: j mod 10 in 2..4 and j mod 100 not in 12..14;  many: j is not 1 and j mod 10 in 0..1 or j mod 10 in 5..9 or j mod 100 in 12..14" },
         { "sl", "one: j mod 100 is 1;  two: j mod 100 is 2;  few: j mod 100 in 3..4 or v is not 0" },
         //                    {"sr", "one: j mod 10 is 1 and j mod 100 is not 11" +
@@ -546,5 +631,123 @@ public abstract class PluralRulesFactory extends PluralRules.Factory {
             "few: n mod 10 in 2..9 and n mod 100 not in 11..19; " +
             "many: f is not 0" },
     };
-
+    static String[][] ORDINAL_SAMPLES = {
+        { "af", "Neem die {0}e afdraai na regs.", "1" },
+        { "am", "በቀኝ በኩል ባለው በ{0}ኛው መታጠፊያ ግባ።", "1" },
+        { "ar", "اتجه إلى المنعطف الـ {0} يمينًا.", "1" },
+        { "az", "{0}-ci sağ döngəni seçin.", "one" },
+        { "az", "{0}-cı sağ döngəni seçin.", "many" },
+        { "az", "{0}-cü sağ döngəni seçin.", "few" },
+        { "az", "{0}-cu sağ döngəni seçin.", "other" },
+        { "bg", "Завийте надясно по {0}-ата пресечка.", "1" },
+        { "bn", "ডান দিকে {0}ম বাঁকটি নিন।", "1" },
+        { "bn", "ডান দিকে {0}য় বাঁকটি নিন।", "2" },
+        { "bn", "ডান দিকে {0}র্থ বাঁকটি নিন।", "4" },
+        { "bn", "ডান দিকে {0}ষ্ঠ বাঁকটি নিন।", "6" },
+        { "bn", "ডান দিকে {0}তম বাঁকটি নিন।", "11" },
+        { "ca", "Agafa el {0}r a la dreta.", "1" },
+        { "ca", "Agafa el {0}n a la dreta.", "2" },
+        { "ca", "Agafa el {0}rt a la dreta.", "4" },
+        { "ca", "Agafa el {0}è a la dreta.", "5" },
+        { "cs", "Na {0}. křižovatce odbočte vpravo.", "1" },
+        { "da", "Tag den {0}. vej til højre.", "1" },
+        { "de", "{0}. Abzweigung nach rechts nehmen", "1" },
+        { "en", "Take the {0}st right.", "1" },
+        { "en", "Take the {0}nd right.", "2" },
+        { "en", "Take the {0}rd right.", "3" },
+        { "en", "Take the {0}th right.", "4" },
+        { "el", "Στρίψτε στην {0}η γωνία δεξιά.", "1" },
+        { "es", "Toma la {0}.ª a la derecha.", "1" },
+        { "et", "Tehke {0}. parempööre.", "1" },
+        { "eu", "{0}. bira eskuinetara", "other" },
+        { "fa", "در پیچ {0}ام سمت راست بپیچید.", "1" },
+        { "fi", "Käänny {0}. risteyksestä oikealle.", "1" },
+        { "fil", "Lumiko sa unang kanan.", "1" },
+        { "fil", "Lumiko sa ika-{0} kanan.", "2" },
+        { "fr", "Prenez la {0}re à droite.", "1" },
+        { "fr", "Prenez la {0}e à droite.", "2" },
+        { "gl", "Colle a {0}.ª curva á dereita.", "1" },
+        { "gu", "જમણી બાજુએ {0}લો વળાંક લો.", "1" },
+        { "gu", "જમણી બાજુએ {0}જો વળાંક લો.", "2" },
+        { "gu", "જમણી બાજુએ {0}થો વળાંક લો.", "4" },
+        { "gu", "જમણી બાજુએ {0}મો વળાંક લો.", "5" },
+        { "gu", "જમણી બાજુએ {0}ઠો વળાંક લો.", "6" },
+        { "hi", "{0}ला दाहिना मोड़ लें.", "1" },
+        { "hi", "{0}रा दाहिना मोड़ लें.", "2" },
+        { "hi", "{0}था दाहिना मोड़ लें.", "4" },
+        { "hi", "{0}वां दाहिना मोड़ लें.", "5" },
+        { "hi", "{0}ठा दाहिना मोड़ लें.", "6" },
+        { "hr", "Skrenite na {0}. križanju desno.", "1" },
+        { "hu", "Az {0}. lehetőségnél forduljon jobbra.", "1" },
+        { "hu", "A {0}. lehetőségnél forduljon jobbra.", "2" },
+        { "hy", "Թեքվեք աջ {0}-ին խաչմերուկից:", "one" },
+        { "hy", "Թեքվեք աջ {0}-րդ խաչմերուկից:", "other" },
+        { "id", "Ambil belokan kanan ke-{0}.", "1" },
+        { "is", "Taktu {0}. beygju til hægri.", "1" },
+        { "it", "Prendi la {0}° a destra.", "1" },
+        { "it", "Prendi l'{0}° a destra.", "8" },
+        { "he", "פנה ימינה בפנייה ה-{0}", "1" },
+        { "ja", "{0} 番目の角を右折します。", "1" },
+        { "ka", "{0}-ლი", "one" },
+        { "ka", "მე-{0}", "many" },
+        { "ka", "{0}-ე", "other" },
+        { "kk", "{0}-ші бұрылыстан оңға бұрылыңыз.", "one" },
+        { "kk", "{0}-шы бұрылыстан оңға бұрылыңыз.", "other" },
+        { "km", "បត់​ស្តាំ​លើក​ទី​ {0}", "1" },
+        { "kn", "{0}ನೇ ಬಲತಿರುವನ್ನು ತೆಗೆದುಕೊಳ್ಳಿ.", "1" },
+        { "ko", "{0}번째 길목에서 우회전하세요.", "1" },
+        { "ky", "{0}-бурулуштан оңго бурулуңуз.", "other" },
+        { "lo", "ລ້ຽວຂວາທຳອິດ.", "1" },
+        { "lo", "ລ້ຽວຂວາທີ {0}.", "23" },
+        { "lt", "{0}-ame posūkyje sukite į dešinę.", "1" },
+        { "lv", "Dodieties {0}. pagriezienā pa labi.", "1" },
+        { "mk", "Сврти на {0}-вата улица десно.", "one" },
+        { "mk", "Сврти на {0}-рата улица десно.", "two" },
+        { "mk", "Сврти на {0}-мата улица десно.", "many" },
+        { "mk", "Сврти на {0}-тата улица десно.", "other" },
+        { "ml", "{0}-ാമത്തെ വലത്തേക്ക് തിരിയുക.", "1" },
+        { "mn", "{0}-р баруун эргэлтээр орно уу", "1" },
+        { "mr", "{0}ले उजवे वळण घ्या.", "1" },
+        { "mr", "{0}रे उजवे वळण घ्या.", "2" },
+        { "mr", "{0}थे उजवे वळण घ्या.", "4" },
+        { "mr", "{0}वे उजवे वळण घ्या.", "5" },
+        { "ms", "Ambil belokan kanan yang pertama.", "1" },
+        { "ms", "Ambil belokan kanan yang ke-{0}.", "2" },
+        { "ne", "{0} ओ दायाँ घुम्ति लिनुहोस्", "1" },
+        { "ne", "{0} औं दायाँ घुम्ति लिनुहोस्", "5" },
+        { "nl", "Neem de {0}e afslag rechts.", "1" },
+        { "nb", "Ta {0}. svingen til høyre.", "1" },
+        { "pa", "ਸਜੇ ਪਾਸੇ {0} ਮੋੜ ਲਵੋ", "1" },
+        { "pl", "Skręć w {0} w prawo.", "1" },
+        { "ro", "Faceţi virajul nr. {0} la dreapta.", "1" },
+        { "ro", "Faceţi virajul al {0}-lea la dreapta.", "2" },
+        { "ru", "Сверните направо на {0}-м перекрестке.", "1" },
+        { "si", "{0} වන හැරවුම දකුණට", "other" },
+        { "sk", "Na {0}. križovatke odbočte doprava.", "1" },
+        { "sl", "V {0}. križišču zavijte desno.", "1" },
+        { "sq", "Merrni kthesën e {0}-rë në të djathtë.", "1" },
+        { "sq", "Merrni kthesën e {0}-t në të djathtë.", "4" },
+        { "sq", "Merrni kthesën e {0}-të në të djathtë.", "2" },
+        { "sr", "Скрените у {0}. десно.", "1" },
+        { "sv", "Ta {0}:a svängen till höger", "1" },
+        { "sv", "Ta {0}:e svängen till höger", "3" },
+        { "sw", "Chukua mpinduko wa {0} kulia.", "1" },
+        { "ta", "{0}வது வலது திருப்பத்தை எடு.", "1" },
+        { "te", "{0}వ కుడి మలుపు తీసుకోండి.", "1" },
+        { "th", "เลี้ยวขวาที่ทางเลี้ยวที่ {0}", "1" },
+        { "tr", "{0}. sağdan dönün.", "2" },
+        { "uk", "Поверніть праворуч на {0}-му повороті.", "1" },
+        { "ur", "دایاں موڑ نمبر {0} مڑیں۔", "1" },
+        { "uz", "{0}chi chorraxada o'ngga buriling.", "1" },
+        { "vi", "Rẽ vào lối rẽ thứ {0} bên phải.", "1" },
+        { "vi", "Rẽ vào lối rẽ thứ {0} bên phải.", "2" },
+        { "zh_Hant", "在第 {0} 個路口右轉。", "1" },
+        { "zu", "Thatha indlela ejikela kwesokudla engu-{0}", "other" },
+        { "cy", "{0}fed ci", "7" },
+        { "cy", "ci {0}af", "1" },
+        { "cy", "{0}il gi", "2" },
+        { "cy", "{0}ydd ci", "3" },
+        { "cy", "{0}ed ci", "5" },
+        { "cy", "ci rhif {0}", "10" },
+    };
 }

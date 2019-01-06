@@ -17,6 +17,7 @@ import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -32,8 +33,9 @@ import java.util.regex.Pattern;
 import org.unicode.cldr.draft.ScriptMetadata;
 import org.unicode.cldr.draft.ScriptMetadata.IdUsage;
 import org.unicode.cldr.util.Iso639Data.Type;
+import org.unicode.cldr.util.ZoneParser.ZoneLine;
 
-import com.ibm.icu.dev.util.TransliteratorUtilities;
+import com.ibm.icu.dev.util.Relation;
 import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.util.Output;
@@ -167,7 +169,7 @@ public class StandardCodes {
     public String getReplacement(String type, String code) {
         if (type.equals("currency"))
             return null; // no replacement codes for currencies
-        List data = getFullData(type, code);
+        List<String> data = getFullData(type, code);
         if (data == null)
             return null;
         // if available, the replacement is a non-empty value other than --, in
@@ -330,6 +332,7 @@ public class StandardCodes {
     }
 
     private Map<String, Map<String, Level>> platform_locale_level = null;
+    private Map<String, Relation<Level, String>> platform_level_locale = null;
     private Map<String, Map<String, String>> platform_locale_levelString = null;
 
     /**
@@ -442,9 +445,28 @@ public class StandardCodes {
         return platform_locale_level.get(organization).keySet();
     }
 
+    public Relation<Level, String> getLevelsToLocalesFor(String organization) {
+        synchronized (StandardCodes.class) {
+            if (platform_level_locale == null) {
+                loadPlatformLocaleStatus();
+            }
+        }
+        return platform_level_locale.get(organization);
+    }
+
+    public Set<String> getLocaleCoverageLocales(String organization, Set<Level> choice) {
+        Set<String> result = new LinkedHashSet<String>();
+        for (String locale : getLocaleCoverageLocales(organization)) {
+            if (choice.contains(getLocaleCoverageLevel(organization, locale))) {
+                result.add(locale);
+            }
+        }
+        return result;
+    }
+
     private void loadPlatformLocaleStatus() {
         LocaleIDParser parser = new LocaleIDParser();
-        platform_locale_level = new TreeMap(caseless);
+        platform_locale_level = new TreeMap<String, Map<String, Level>>(caseless);
         SupplementalDataInfo sd = SupplementalDataInfo.getInstance();
         Set<String> defaultContentLocales = sd.getDefaultContentLocales();
         String line;
@@ -461,7 +483,7 @@ public class StandardCodes {
                 line = line.trim();
                 if (line.length() == 0)
                     continue;
-                List stuff = CldrUtility.splitList(line, ';', true);
+                List<String> stuff = CldrUtility.splitList(line, ';', true);
                 String organization = (String) stuff.get(0);
 
                 // verify that the organization is valid
@@ -491,9 +513,9 @@ public class StandardCodes {
                 if (status == Level.UNDETERMINED) {
                     System.out.println("Warning: Level unknown on: " + line);
                 }
-                Map locale_status = (Map) platform_locale_level.get(organization);
+                Map<String, Level> locale_status = platform_locale_level.get(organization);
                 if (locale_status == null) {
-                    platform_locale_level.put(organization, locale_status = new TreeMap());
+                    platform_locale_level.put(organization, locale_status = new TreeMap<String, Level>());
                 }
                 locale_status.put(locale, status);
                 if (!locale.equals("*")) {
@@ -534,15 +556,20 @@ public class StandardCodes {
             }
         }
         // backwards compat hack
-        platform_locale_levelString = new TreeMap(caseless);
+        platform_locale_levelString = new TreeMap<String, Map<String, String>>(caseless);
+        platform_level_locale = new TreeMap<>();
         for (String platform : platform_locale_level.keySet()) {
-            Map<String, String> locale_levelString = new TreeMap();
+            Map<String, String> locale_levelString = new TreeMap<String, String>();
             platform_locale_levelString.put(platform, locale_levelString);
             Map<String, Level> locale_level = platform_locale_level.get(platform);
             for (String locale : locale_level.keySet()) {
                 locale_levelString.put(locale, locale_level.get(locale).toString());
             }
+            Relation level_locale = Relation.of(new EnumMap(Level.class), HashSet.class);
+            level_locale.addAllInverted(locale_level).freeze();
+            platform_level_locale.put(platform, level_locale);
         }
+        CldrUtility.protectCollection(platform_level_locale);
         platform_locale_level = CldrUtility.protectCollection(platform_locale_level);
         platform_locale_levelString = CldrUtility.protectCollection(platform_locale_levelString);
     }
@@ -736,9 +763,9 @@ public class StandardCodes {
             }
         }
 
-        Map m = getZoneData();
-        for (Iterator it = m.keySet().iterator(); it.hasNext();) {
-            String code = (String) it.next();
+        Map<String, List<String>> m = getZoneData();
+        for (Iterator<String> it = m.keySet().iterator(); it.hasNext();) {
+            String code = it.next();
             add(CodeType.tzid, code, m.get(code).toString());
         }
     }
@@ -825,21 +852,21 @@ public class StandardCodes {
         codes.add(code);
     }
 
-    private List DELETED3166 = Collections.unmodifiableList(Arrays
+    private List<String> DELETED3166 = Collections.unmodifiableList(Arrays
         .asList(new String[] { "BQ", "BU", "CT", "DD", "DY", "FQ", "FX", "HV",
             "JT", "MI", "NH", "NQ", "NT", "PC", "PU", "PZ", "RH", "SU", "TP",
             "VD", "WK", "YD", "YU", "ZR" }));
 
-    public List getOld3166() {
+    public List<String> getOld3166() {
         return DELETED3166;
     }
 
-    private Map WorldBankInfo;
+    private Map<String, List<String>> WorldBankInfo;
 
     public Map<String, List<String>> getWorldBankInfo() {
         if (WorldBankInfo == null) {
             List<String> temp = fillFromCommaFile("WorldBankInfo.txt", false);
-            WorldBankInfo = new HashMap();
+            WorldBankInfo = new HashMap<String, List<String>>();
             for (String line : temp) {
                 List<String> row = CldrUtility.splitList(line, ';', true);
                 String key = row.get(0);
@@ -851,11 +878,11 @@ public class StandardCodes {
         return WorldBankInfo;
     }
 
-    Set moribundLanguages;
+    Set<String> moribundLanguages;
 
     public Set<String> getMoribundLanguages() {
         if (moribundLanguages == null) {
-            List temp = fillFromCommaFile("moribund_languages.txt", true);
+            List<String> temp = fillFromCommaFile("moribund_languages.txt", true);
             moribundLanguages = new TreeSet<String>();
             moribundLanguages.addAll(temp);
             moribundLanguages = CldrUtility.protectCollection(moribundLanguages);
@@ -1010,6 +1037,7 @@ public class StandardCodes {
             LstrField lastLabel = null;
             String lastRest = null;
             boolean inRealContent = false;
+//            Map<String, String> translitCache = new HashMap<String, String>();
             for (;; ++lineNumber) {
                 line = lstreg.readLine();
                 if (line == null)
@@ -1088,7 +1116,17 @@ public class StandardCodes {
                     // System.out.println("Odd Line: " + lastType + "\t" + lastTag + "\t" + line);
                 } else {
                     lastLabel = label;
-                    lastRest = TransliteratorUtilities.fromXML.transliterate(rest);
+                    // The following code was removed because in the standard tests (TestAll) both lastRest and rest were always equal.
+                    //                    if(!translitCache.containsKey(rest)) {
+                    //                        lastRest = TransliteratorUtilities.fromXML.transliterate(rest);
+                    //                        translitCache.put(rest, lastRest);
+                    //                        if (!lastRest.equals(rest)) {
+                    //                            System.out.println(System.currentTimeMillis()+" initLStr: LastRest: '"+lastRest+"' Rest: '"+rest+"'");
+                    //                        }
+                    //                    } else {
+                    //                        lastRest = translitCache.get(rest);
+                    //                    }
+                    lastRest = rest;
                     String oldValue = (String) CldrUtility.get(currentData, lastLabel);
                     if (oldValue != null) {
                         lastRest = oldValue + DESCRIPTION_SEPARATOR + lastRest;
@@ -1187,7 +1225,7 @@ public class StandardCodes {
     /**
      * @deprecated
      */
-    public Map getZone_rules() {
+    public Map<String, List<ZoneLine>> getZone_rules() {
         return zoneParser.getZone_rules();
     }
 
@@ -1208,35 +1246,35 @@ public class StandardCodes {
     /**
      * @deprecated
      */
-    public Map getCountryToZoneSet() {
+    public Map<String, Set<String>> getCountryToZoneSet() {
         return zoneParser.getCountryToZoneSet();
     }
 
     /**
      * @deprecated
      */
-    public List getDeprecatedZoneIDs() {
+    public List<String> getDeprecatedZoneIDs() {
         return zoneParser.getDeprecatedZoneIDs();
     }
 
     /**
      * @deprecated
      */
-    public Comparator getTZIDComparator() {
+    public Comparator<String> getTZIDComparator() {
         return zoneParser.getTZIDComparator();
     }
 
     /**
      * @deprecated
      */
-    public Map getZoneLinkNew_OldSet() {
+    public Map<String, Set<String>> getZoneLinkNew_OldSet() {
         return zoneParser.getZoneLinkNew_OldSet();
     }
 
     /**
      * @deprecated
      */
-    public Map getZoneLinkold_new() {
+    public Map<String, String> getZoneLinkold_new() {
         return zoneParser.getZoneLinkold_new();
     }
 
@@ -1250,7 +1288,7 @@ public class StandardCodes {
     /**
      * @deprecated
      */
-    public Map getZoneToCounty() {
+    public Map<String, String> getZoneToCounty() {
         return zoneParser.getZoneToCounty();
     }
 
@@ -1287,7 +1325,7 @@ public class StandardCodes {
             return false;
         }
         IdUsage idUsage = info.idUsage;
-        return idUsage != IdUsage.EXCLUSION && idUsage != idUsage.UNKNOWN;
+        return idUsage != IdUsage.EXCLUSION && idUsage != IdUsage.UNKNOWN;
     }
 
     static final Pattern whitespace = Pattern.compile("\\s+");

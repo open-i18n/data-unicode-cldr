@@ -1,6 +1,10 @@
 package org.unicode.cldr.util;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -16,12 +20,42 @@ import com.ibm.icu.text.RuleBasedCollator;
 
 public class CLDRConfig extends Properties {
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -2605254975303398336L;
     public static boolean DEBUG = false;
     private static CLDRConfig INSTANCE = null;
     public static final String SUBCLASS = CLDRConfig.class.getName() + "Impl";
+
+    /**
+     * Object to use for synchronization when interacting with Factory
+     */
+    private static final Object CLDR_FACTORY_SYNC = new Object();
+
+    /**
+     * Object used for synchronization when interacting with SupplementalData
+     */
+    private static final Object SUPPLEMENTAL_DATA_SYNC = new Object();
+
+    /**
+     * Object used for synchronization in getCollator()
+     */
+    private static final Object GET_COLLATOR_SYNC = new Object();
+
+    /**
+     * Object to use for Synchronization in getRoot()
+     */
+    private static final Object GET_ROOT_SYNC = new Object();
+
+    /**
+     * Object to use for synchronization in getEnglish()
+     */
+    private static final Object GET_ENGLISH_SYNC = new Object();
+
+    /**
+     * Object used for synchronization in getStandardCodes()
+     */
+    private static final Object GET_STANDARD_CODES_SYNC = new Object();
 
     public enum Environment {
         LOCAL, // < == unknown.
@@ -33,15 +67,33 @@ public class CLDRConfig extends Properties {
     public static CLDRConfig getInstance() {
         synchronized (CLDRConfig.class) {
             if (INSTANCE == null) {
-                try {
-                    // System.err.println("Attempting to new up a " + SUBCLASS);
-                    INSTANCE = (CLDRConfig) (Class.forName(SUBCLASS).newInstance());
-                    System.err.println("Using CLDRConfig: " + INSTANCE.toString() + " - "
-                        + INSTANCE.getClass().getName());
-                } catch (Throwable t) {
-                    // t.printStackTrace();
-                    // System.err.println("Could not use "+SUBCLASS + " - " + t.toString() +
-                    // " - falling back to parent");
+                final String env = System.getProperty("CLDR_ENVIRONMENT");
+                if (env != null && env.equals(Environment.UNITTEST.name())) {
+                    if (DEBUG) {
+                        System.err.println("-DCLDR_ENVIRONMENT=" + env + " - not loading " + SUBCLASS);
+                    }
+                } else {
+                    try {
+                        // System.err.println("Attempting to new up a " + SUBCLASS);
+                        INSTANCE = (CLDRConfig) (Class.forName(SUBCLASS).newInstance());
+
+                        if (INSTANCE != null) {
+                            System.err.println("Using CLDRConfig: " + INSTANCE.toString() + " - "
+                                + INSTANCE.getClass().getName());
+                        } else {
+                            if (DEBUG) {
+                                // Probably occurred because ( config.getEnvironment() == Environment.UNITTEST )
+                                // see CLDRConfigImpl
+                                System.err.println("Note: CLDRConfig Subclass " +
+                                    SUBCLASS + ".newInstance() returned NULL " +
+                                    "( this is OK if we aren't inside the SurveyTool's web server )");
+                            }
+                        }
+                    } catch (ClassNotFoundException e) {
+                        // Expected - when not under cldr-apps, this class doesn't exist.
+                    } catch (InstantiationException | IllegalAccessException e) {
+                        // TODO: log a useful message
+                    }
                 }
             }
             if (INSTANCE == null) {
@@ -53,7 +105,14 @@ public class CLDRConfig extends Properties {
         return INSTANCE;
     }
 
+    String initStack = null;
+
     protected CLDRConfig() {
+        initStack = StackTracker.currentStack();
+    }
+
+    public String getInitStack() {
+        return initStack;
     }
 
     private SupplementalDataInfo supplementalDataInfo;
@@ -89,16 +148,16 @@ public class CLDRConfig extends Properties {
     }
 
     public SupplementalDataInfo getSupplementalDataInfo() {
-        synchronized (this) {
+        synchronized (SUPPLEMENTAL_DATA_SYNC) {
             if (supplementalDataInfo == null) {
-                supplementalDataInfo = SupplementalDataInfo.getInstance(CldrUtility.DEFAULT_SUPPLEMENTAL_DIRECTORY);
+                supplementalDataInfo = SupplementalDataInfo.getInstance(CLDRPaths.DEFAULT_SUPPLEMENTAL_DIRECTORY);
             }
         }
         return supplementalDataInfo;
     }
 
     public StandardCodes getStandardCodes() {
-        synchronized (this) {
+        synchronized (GET_STANDARD_CODES_SYNC) {
             if (sc == null) {
                 sc = StandardCodes.make();
             }
@@ -107,25 +166,26 @@ public class CLDRConfig extends Properties {
     }
 
     public Factory getCldrFactory() {
-        synchronized (this) {
+        synchronized (CLDR_FACTORY_SYNC) {
             if (cldrFactory == null) {
-                cldrFactory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
+                cldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
             }
         }
         return cldrFactory;
     }
 
     public Factory getSupplementalFactory() {
-        synchronized (this) {
+        synchronized (CLDR_FACTORY_SYNC) {
             if (supplementalFactory == null) {
-                supplementalFactory = Factory.make(CldrUtility.DEFAULT_SUPPLEMENTAL_DIRECTORY, ".*");
+                supplementalFactory = Factory.make(CLDRPaths.DEFAULT_SUPPLEMENTAL_DIRECTORY, ".*");
             }
         }
         return supplementalFactory;
     }
 
     public CLDRFile getEnglish() {
-        synchronized (this) {
+        synchronized (GET_ENGLISH_SYNC) {
+
             if (english == null) {
                 english = getCldrFactory().make("en", true);
             }
@@ -134,7 +194,7 @@ public class CLDRConfig extends Properties {
     }
 
     public CLDRFile getRoot() {
-        synchronized (this) {
+        synchronized (GET_ROOT_SYNC) {
             if (root == null) {
                 root = getCldrFactory().make("root", true);
             }
@@ -143,7 +203,7 @@ public class CLDRConfig extends Properties {
     }
 
     public Collator getCollator() {
-        synchronized (this) {
+        synchronized (GET_COLLATOR_SYNC) {
             if (col == null) {
                 col = (RuleBasedCollator) Collator.getInstance();
                 col.setNumericCollation(true);
@@ -227,7 +287,7 @@ public class CLDRConfig extends Properties {
      * For test use only. Will throw an exception in non test environments.
      * @param k
      * @param v
-     * @return 
+     * @return
      */
     @Override
     public Object setProperty(String k, String v) {
@@ -280,4 +340,131 @@ public class CLDRConfig extends Properties {
             }
         }
     }
+
+    public File getCldrBaseDirectory() {
+        String dir = getProperty("CLDR_DIR", null);
+        if (dir != null) {
+            return new File(dir);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Get all CLDR XML files in the CLDR base directory.
+     * @return
+     */
+    public Set<File> getAllCLDRFilesEndingWith(final String suffix) {
+        FilenameFilter filter = new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                return name.endsWith(suffix) && !isJunkFile(name); // skip junk and backup files
+            }
+        };
+        final File dir = getCldrBaseDirectory();
+        Set<File> list;
+        list = getCLDRFilesMatching(filter, dir);
+        return list;
+    }
+
+    /**
+     * Return all CLDR data files matching this filter
+     * @param filter matching filter
+     * @param baseDir base directory, see {@link #getCldrBaseDirectory()}
+     * @return set of files
+     */
+    public Set<File> getCLDRFilesMatching(FilenameFilter filter, final File baseDir) {
+        Set<File> list;
+        list = new LinkedHashSet<File>();
+        for (String subdir : getCLDRDataDirectories()) {
+            getFilesRecursively(new File(baseDir, subdir), filter, list);
+        }
+        return list;
+    }
+
+    /**
+     * TODO: better place for these constants?
+     */
+    private static final String COMMON_DIR = "common";
+    /**
+     * TODO: better place for these constants?
+     */
+    private static final String EXEMPLARS_DIR = "exemplars";
+    /**
+     * TODO: better place for these constants?
+     */
+    private static final String SEED_DIR = "seed";
+    /**
+     * TODO: better place for these constants?
+     */
+    private static final String KEYBOARDS_DIR = "keyboards";
+    private static final String MAIN_DIR = "main";
+    /**
+     * TODO: better place for these constants?
+     */
+    private static final String CLDR_DATA_DIRECTORIES[] = { COMMON_DIR, SEED_DIR, KEYBOARDS_DIR, EXEMPLARS_DIR };
+
+    /**
+     * Get a list of CLDR directories containing actual data
+     * @return an iterable containing the names of all CLDR data subdirectories
+     */
+    public Iterable<String> getCLDRDataDirectories() {
+        return Arrays.asList(CLDR_DATA_DIRECTORIES);
+    }
+
+    /**
+     * given comma separated list "common" or "common,main" return a list of actual files
+     */
+    public File[] getCLDRDataDirectories(String list) {
+        final File dir = getCldrBaseDirectory();
+        String stubs[] = list.split(",");
+        File[] ret = new File[stubs.length];
+        for (int i = 0; i < stubs.length; i++) {
+            ret[i] = new File(dir, stubs[i]);
+        }
+        return ret;
+    }
+
+    /**
+     * map "common","seed" -> "common/main", "seed/main"
+     */
+    public File[] getMainDataDirectories(File base[]) {
+        File[] ret = new File[base.length];
+        for (int i = 0; i < base.length; i++) {
+            ret[i] = new File(base[i], MAIN_DIR);
+        }
+        return ret;
+    }
+
+    /**
+     * Utility function. Recursively add to a list of files. Skips ".svn" and junk directories.
+     * @param directory base directory
+     * @param filter filter to restrict files added
+     * @param toAddTo set to add to
+     * @return returns toAddTo.
+     */
+    public Set<File> getFilesRecursively(File directory, FilenameFilter filter, Set<File> toAddTo) {
+        File files[] = directory.listFiles();
+        if (files != null) {
+            for (File subfile : files) {
+                if (subfile.isDirectory()) {
+                    if (!isJunkFile(subfile.getName())) {
+                        getFilesRecursively(subfile, filter, toAddTo);
+                    }
+                } else if (filter.accept(directory, subfile.getName())) {
+                    toAddTo.add(subfile);
+                }
+            }
+        }
+        return toAddTo;
+    }
+
+    /**
+     * Is the filename junk?  (subversion, backup, etc)
+     * @param name
+     * @return
+     */
+    public static final boolean isJunkFile(String name) {
+        return name.startsWith(".") || (name.startsWith("#")); // Skip:  .svn, .BACKUP,  #backup# files.
+    }
+
 }

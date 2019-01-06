@@ -1,7 +1,7 @@
 package org.unicode.cldr.unittest;
 
 import java.util.Arrays;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -38,12 +38,17 @@ public class TestCanonicalIds extends TestFmwk {
     public void TestTimezones() {
         Set<String> bcp47Canonical = new LinkedHashSet<String>();
         Relation<R2<String, String>, String> data = testInfo.getSupplementalDataInfo().getBcp47Aliases();
+        Map<R2<String, String>, String> deprecatedData = testInfo.getSupplementalDataInfo().getBcp47Deprecated();
 
         // the first item in each set of aliases is the primary.
         for (Entry<R2<String, String>, Set<String>> entry : data.keyValuesSet()) {
             final R2<String, String> keyType = entry.getKey();
             if ("tz".equals(keyType.get0())) {
                 if (keyType.get1().isEmpty()) {
+                    continue;
+                }
+                String deprecated = deprecatedData.get(keyType);
+                if ("true".equals(deprecated)) {
                     continue;
                 }
                 Set<String> aliases = entry.getValue();
@@ -136,7 +141,7 @@ public class TestCanonicalIds extends TestFmwk {
         }
     }
 
-    static final long CURRENT_YEAR = new Date().getYear() + 1900;
+    static final long CURRENT_YEAR = Calendar.getInstance().get(Calendar.YEAR);
 
     private boolean isOk(Type type, String value) {
         if (type == Type.territory) {

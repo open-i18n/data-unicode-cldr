@@ -26,7 +26,6 @@ import org.unicode.cldr.util.With.SimpleIterator;
 import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.dev.util.Relation;
 import com.ibm.icu.impl.Row;
-import com.ibm.icu.impl.Row.R2;
 import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.text.Collator;
 import com.ibm.icu.text.RuleBasedCollator;
@@ -39,11 +38,15 @@ import com.ibm.icu.util.ULocale;
  * categories, eg for the Survey tool.
  */
 public class PathHeader implements Comparable<PathHeader> {
-    public static final String SECTION_LINK = "<a target='CLDR_ST-SECTION' href='";
+    /**
+     * Link to a section. Commenting out the page switch for now.
+     */
+    public static final String SECTION_LINK = "<a " + /* "target='CLDR_ST-SECTION' "+*/"href='";
     static boolean UNIFORM_CONTINENTS = true;
+    static Factory factorySingleton = null;
 
     /**
-     * What status the survey tool should use. Can be overriden in
+     * What status the survey tool should use. Can be overridden in
      * Phase.getAction()
      */
     public enum SurveyToolStatus {
@@ -79,6 +82,7 @@ public class PathHeader implements Comparable<PathHeader> {
         DateTime("Date & Time"),
         Timezones,
         Numbers,
+        Currencies,
         Units,
         Misc("Miscellaneous"),
         Special;
@@ -182,7 +186,6 @@ public class PathHeader implements Comparable<PathHeader> {
         Symbols(SectionId.Numbers),
         Number_Formatting_Patterns(SectionId.Numbers, "Number Formatting Patterns"),
         Compact_Decimal_Formatting(SectionId.Numbers, "Compact Decimal Formatting"),
-        Currencies(SectionId.Numbers),
         Measurement_Systems(SectionId.Units, "Measurement Systems"),
         Duration(SectionId.Units),
         Length(SectionId.Units),
@@ -197,7 +200,16 @@ public class PathHeader implements Comparable<PathHeader> {
         Version(SectionId.Special),
         Suppress(SectionId.Special),
         Deprecated(SectionId.Special),
-        Unknown(SectionId.Special), ;
+        Unknown(SectionId.Special),
+        C_NAmerica(SectionId.Currencies, "North America (C)"), //need to add (C) to differentiate from Timezone territories
+        C_SAmerica(SectionId.Currencies, "South America (C)"),
+        C_Europe(SectionId.Currencies, "Europe (C)"),
+        C_NWAfrica(SectionId.Currencies, "Northern/Western Africa (C)"),
+        C_SEAfrica(SectionId.Currencies, "Southern/Eastern Africa (C)"),
+        C_WCAsia(SectionId.Currencies, "Western/Central Asia (C)"),
+        C_SEAsia(SectionId.Currencies, "Eastern/Southern Asia (C)"),
+        C_Oceania(SectionId.Currencies, "Oceania (C)"),
+        C_Unknown(SectionId.Currencies, "Unknown Region (C)"), ;
 
         private final SectionId sectionId;
 
@@ -328,10 +340,13 @@ public class PathHeader implements Comparable<PathHeader> {
      * @param englishFile
      */
     public static Factory getFactory(CLDRFile englishFile) {
-        if (englishFile == null) {
-            throw new IllegalArgumentException("English CLDRFile must not be null");
+        if (factorySingleton == null) {
+            if (englishFile == null) {
+                throw new IllegalArgumentException("English CLDRFile must not be null");
+            }
+            factorySingleton = new Factory(englishFile);
         }
-        return new Factory(englishFile);
+        return factorySingleton;
     }
 
     /**
@@ -875,9 +890,9 @@ public class PathHeader implements Comparable<PathHeader> {
         public Counter<CounterData> getInternalCounter() {
             synchronized (lookup) {
                 Counter<CounterData> result = new Counter<CounterData>();
-                for (R2<Finder, RawData> foo : lookup) {
-                    Finder finder = foo.get0();
-                    RawData data = foo.get1();
+                for (Map.Entry<Finder, RawData> foo : lookup) {
+                    Finder finder = foo.getKey();
+                    RawData data = foo.getValue();
                     long count = counter.get(data);
                     result.add(new CounterData(finder.toString(), data, samples.get(data)), count);
                 }
@@ -1199,7 +1214,34 @@ public class PathHeader implements Comparable<PathHeader> {
                 { "ZRZ", "CD" },
             };
 
+            Object[][] sctc = {
+                { "Northern America", "North America (C)" },
+                { "Central America", "North America (C)" },
+                { "Caribbean", "North America (C)" },
+                { "South America", "South America (C)" },
+                { "Northern Africa", "Northern/Western Africa (C)" },
+                { "Western Africa", "Northern/Western Africa (C)" },
+                { "Middle Africa", "Northern/Western Africa (C)" },
+                { "Eastern Africa", "Southern/Eastern Africa (C)" },
+                { "Southern Africa", "Southern/Eastern Africa (C)" },
+                { "Europe", "Europe (C)" },
+                { "Northern Europe", "Europe (C)" },
+                { "Western Europe", "Europe (C)" },
+                { "Eastern Europe", "Europe (C)" },
+                { "Southern Europe", "Europe (C)" },
+                { "Western Asia", "Western/Central Asia (C)" },
+                { "Central Asia", "Western/Central Asia (C)" },
+                { "Eastern Asia", "Eastern/Southern Asia (C)" },
+                { "Southern Asia", "Eastern/Southern Asia (C)" },
+                { "South-Eastern Asia", "Eastern/Southern Asia (C)" },
+                { "Australasia", "Oceania (C)" },
+                { "Melanesia", "Oceania (C)" },
+                { "Polynesia", "Oceania (C)" },
+                { "Unknown Region", "Unknown Region (C)" },
+            };
+
             final Map<String, String> currencyToTerritoryOverrides = CldrUtility.asMap(ctto);
+            final Map<String, String> subContinentToContinent = CldrUtility.asMap(sctc);
             // TODO: Put this into supplementalDataInfo ?
 
             functionMap.put("categoryFromCurrency", new Transform<String, String>() {
@@ -1223,6 +1265,26 @@ public class PathHeader implements Comparable<PathHeader> {
                             + englishFile.getName(CLDRFile.TERRITORY_NAME, territory)
                             + tenderOrNot;
                     }
+                }
+            });
+            functionMap.put("continentFromCurrency", new Transform<String, String>() {
+                public String transform(String source0) {
+                    String subContinent;
+                    String territory = likelySubtags.getLikelyTerritoryFromCurrency(source0);
+                    if (currencyToTerritoryOverrides.keySet().contains(source0)) {
+                        territory = currencyToTerritoryOverrides.get(source0);
+                    } else if (territory == null) {
+                        territory = source0.substring(0, 2);
+                    }
+
+                    if (territory.equals("ZZ")) {
+                        order = 999;
+                        subContinent = englishFile.getName(CLDRFile.TERRITORY_NAME, territory);
+                    } else {
+                        subContinent = catFromTerritory.transform(territory);
+                    }
+
+                    return subContinentToContinent.get(subContinent); //the continent is the last word in the territory representation
                 }
             });
             functionMap.put("numberingSystem", new Transform<String, String>() {
@@ -1448,13 +1510,24 @@ public class PathHeader implements Comparable<PathHeader> {
         return getUrl(baseUrl, locale, getOriginalPath());
     }
 
+    /**
+     * Map http://st.unicode.org/smoketest/survey  to http://st.unicode.org/smoketest etc
+     * @param str
+     * @return
+     */
+    public static String trimLast(String str) {
+        int n = str.lastIndexOf('/');
+        if (n == -1) return "";
+        return str.substring(0, n + 1);
+    }
+
     public static String getUrl(String baseUrl, String locale, String path) {
-        return baseUrl + "?_=" + locale + "&strid=" + StringId.getHexId(path);
+        return trimLast(baseUrl) + "v#/" + locale + "//" + StringId.getHexId(path);
     }
 
     // eg http://st.unicode.org/cldr-apps/survey?_=fr&x=Locale%20Name%20Patterns
-    public static String getPageUrl(String baseUrl, String localeId, PageId subsection) {
-        return baseUrl + "?_=" + localeId + "&x=" + subsection;
+    public static String getPageUrl(String baseUrl, String locale, PageId subsection) {
+        return trimLast(baseUrl) + "v#/" + locale + "/" + subsection + "/";
     }
 
     public static String getLinkedView(String baseUrl, CLDRFile file, String path) {

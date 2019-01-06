@@ -1,27 +1,188 @@
 package org.unicode.cldr.unittest;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import javax.xml.xpath.XPathException;
 
 import org.unicode.cldr.test.CheckDates;
 import org.unicode.cldr.test.ExampleGenerator;
 import org.unicode.cldr.unittest.TestAll.TestInfo;
+import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
-import org.unicode.cldr.util.CldrUtility;
+import org.unicode.cldr.util.CLDRPaths;
+import org.unicode.cldr.util.Iso639Data;
+import org.unicode.cldr.util.Iso639Data.Scope;
+import org.unicode.cldr.util.Iso639Data.Type;
 import org.unicode.cldr.util.LanguageTagCanonicalizer;
 import org.unicode.cldr.util.LanguageTagParser;
 import org.unicode.cldr.util.SimpleXMLSource;
+import org.unicode.cldr.util.StandardCodes.CodeType;
 import org.unicode.cldr.util.SupplementalDataInfo;
+import org.unicode.cldr.util.XPathExpressionParser;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
-import com.ibm.icu.dev.test.TestFmwk;
 import com.ibm.icu.text.BreakIterator;
 import com.ibm.icu.util.ULocale;
 
-public class TestLocale extends TestFmwk {
+public class TestLocale extends TestFmwkPlus {
     static TestInfo testInfo = TestInfo.getInstance();
 
     public static void main(String[] args) {
         new TestLocale().run(args);
+    }
+
+    static Set<Type> ALLOWED_LANGUAGE_TYPES = EnumSet.of(Type.Ancient, Type.Living, Type.Constructed, Type.Historical, Type.Extinct);
+    static Set<Scope> ALLOWED_LANGUAGE_SCOPES = EnumSet.of(
+        Scope.Individual, Scope.Macrolanguage); // , Special, Collection, PrivateUse, Unknown
+    static Set<String> ALLOWED_SCRIPTS = testInfo.getStandardCodes().getGoodAvailableCodes(CodeType.script);
+    static Set<String> ALLOWED_REGIONS = testInfo.getStandardCodes().getGoodAvailableCodes(CodeType.territory);
+
+    /**
+     * XPath expression that will find all alias tags
+     */
+    static String XPATH_ALIAS_STRING = "//alias";
+
+    /**
+     * Determine whether the file should be checked for aliases; this is currently not done for
+     * Keyboard definitions or DTD's
+     * @param f the file to check
+     * @return
+     */
+    protected boolean shouldCheckForAliases(File f) {
+        if (!f.canRead()) {
+            return false;
+        }
+        String absPath = f.getAbsolutePath();
+        return absPath.endsWith("xml") && !absPath.contains("dtd") && !absPath.contains("keyboard") && !absPath.contains("Keyboard");
+    }
+
+    /**
+     * Check a single file for aliases, on a content level, the only check that is done is that the one for readability. 
+     * @param localeName - the localename
+     * @param file - the file to check
+     * @param localesWithAliases - a set of locale strings the files of which contain aliases
+     */
+    private void checkForAliases(final String localeName, File file, final Set<String> localesWithAliases) {
+        try {
+            if (file.canRead()) {
+                XPathExpressionParser parser = new XPathExpressionParser(file);
+                parser.iterateThroughNodeSet(XPATH_ALIAS_STRING, new XPathExpressionParser.NodeHandlingInterface() {
+
+                    //Handle gets called for every node of the node set
+                    @Override
+                    public void handle(Node result) {
+                        if (result instanceof Element) {
+                            Element el = (Element) result;
+                            // this node likely has an attribute source
+                            if (el.hasAttributes()) {
+                                String sourceAttr = el.getAttribute("source");
+                                if (sourceAttr != null && !sourceAttr.isEmpty()) {
+                                    localesWithAliases.add(localeName);
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (XPathException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Tests the validity of the file names and of the English localeDisplayName types. 
+     * Also tests for aliases outside root
+     */
+    public void TestLocalePartsValidity() {
+        LanguageTagParser ltp = new LanguageTagParser();
+        final Set<String> localesWithAliases = new HashSet<>();
+        for (File file : CLDRConfig.getInstance().getAllCLDRFilesEndingWith(".xml")) {
+            String parent = file.getParent();
+            if (parent.contains("transform") || parent.contains("bcp47") || parent.contains("supplemental")) {
+                continue;
+            }
+            String localeName = file.getName();
+            localeName = localeName.substring(0, localeName.length() - 4); // remove .xml
+            if (localeName.equals("root") || localeName.equals("_platform")) {
+                continue;
+            }
+            String fileString = file.toString();
+            checkLocale(fileString, localeName, ltp);
+            // check for aliases 
+            if (shouldCheckForAliases(file)) {
+                checkForAliases(localeName, file, localesWithAliases);
+            }
+        }
+        // we ran through all of them
+        if (!localesWithAliases.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("\r\n");
+            sb.append("The following locales have aliases, but must not: ");
+            Iterator<String> lIter = localesWithAliases.iterator();
+            while (lIter.hasNext()) {
+                sb.append(lIter.next());
+                sb.append(" ");
+            }
+            System.out.println(sb.toString());
+        }
+        // now check English-resolved
+        CLDRFile english = testInfo.getEnglish();
+        for (String xpath : english) {
+            if (!xpath.startsWith("//ldml/localeDisplayNames/")) {
+                continue;
+            }
+            switch (CLDRFile.getNameType(xpath)) {
+            case 0:
+                checkLocale("English xpath", CLDRFile.getCode(xpath), ltp);
+                break;
+            case 1:
+                checkScript("English xpath", CLDRFile.getCode(xpath));
+                break;
+            case 2:
+                checkRegion("English xpath", CLDRFile.getCode(xpath));
+                break;
+            }
+        }
+    }
+
+    public void checkLocale(String fileString, String localeName, LanguageTagParser ltp) {
+        ltp.set(localeName);
+        checkLanguage(fileString, ltp.getLanguage());
+        checkScript(fileString, ltp.getScript());
+        checkRegion(fileString, ltp.getRegion());
+    }
+
+    public void checkRegion(String file, String region) {
+        if (!region.isEmpty() && !region.equals("AN")) {
+            assertRelation("Region ok? " + region + " in " + file, true, ALLOWED_REGIONS, TestFmwkPlus.CONTAINS, region);
+        }
+    }
+
+    public void checkScript(String file, String script) {
+        if (!script.isEmpty()) {
+            assertRelation("Script ok? " + script + " in " + file, true, ALLOWED_SCRIPTS, TestFmwkPlus.CONTAINS, script);
+        }
+    }
+
+    public void checkLanguage(String file, String language) {
+        if (!language.equals("und") && !language.equals("root") && !language.equals("zxx") && !language.equals("mul")) {
+            Scope scope = Iso639Data.getScope(language);
+            if (assertRelation("Language ok? " + language + " in " + file, true, ALLOWED_LANGUAGE_SCOPES, TestFmwkPlus.CONTAINS, scope)) {
+                Type type = Iso639Data.getType(language);
+                assertRelation("Language ok? " + language + " in " + file, true, ALLOWED_LANGUAGE_TYPES, TestFmwkPlus.CONTAINS, type);
+            }
+        }
     }
 
     public void TestConsistency() {
@@ -78,6 +239,17 @@ public class TestLocale extends TestFmwk {
             { "no-YU", "nb_RS" },
             { "no", "nb" },
             { "eng-833", "en_IM" },
+            { "mo", "ro_MD" },
+            { "mo_Cyrl", "ro_Cyrl_MD" },
+            { "mo_US", "ro_US" },
+            { "mo_Cyrl_US", "ro_Cyrl_US" },
+            { "sh", "sr_Latn" },
+            { "sh_US", "sr_Latn_US" },
+            { "sh_Cyrl", "sr_Cyrl" },
+            { "sh_Cyrl_US", "sr_Cyrl_US" },
+            { "hy_SU", "hy_AM" },
+            { "en_SU", "en_RU" },
+            { "rO-cYrl-aQ", "ro_Cyrl_AQ" },
         };
         for (String[] pair : tests) {
             String actual = canonicalizer.transform(pair[0]);
@@ -116,7 +288,7 @@ public class TestLocale extends TestFmwk {
         root.putValueAtDPath("//ldml/localeDisplayNames/codePatterns/codePattern[@type=\"script\"]", "Scripte: {0}");
         root.putValueAtDPath("//ldml/localeDisplayNames/codePatterns/codePattern[@type=\"territory\"]", "Territorie: {0}");
         CLDRFile f = new CLDRFile(dxs, root);
-        ExampleGenerator eg = new ExampleGenerator(f, testInfo.getEnglish(), CldrUtility.DEFAULT_SUPPLEMENTAL_DIRECTORY);
+        ExampleGenerator eg = new ExampleGenerator(f, testInfo.getEnglish(), CLDRPaths.DEFAULT_SUPPLEMENTAL_DIRECTORY);
         for (String[] row : tests) {
             if (row[0] != null) {
                 int typeCode = CLDRFile.typeNameToCode(row[0]);

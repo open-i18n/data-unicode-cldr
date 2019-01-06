@@ -1,0 +1,1261 @@
+{
+  "main": {
+    "lo-LA": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "25",
+          "_number": "$Revision: 91 $"
+        },
+        "generation": {
+          "_date": "$Date: 2014-03-13 22:27:12 -0500 (Thu, 13 Mar 2014) $"
+        },
+        "language": "lo",
+        "territory": "LA"
+      },
+      "numbers": {
+        "currencies": {
+          "ADP": {
+            "displayName": "ເປເຊຕາ ອັນໂດລາ",
+            "symbol": "ADP"
+          },
+          "AED": {
+            "displayName": "ດີແຮມ ສະຫະລັດອາຣັບ ເອມີເຣດ",
+            "symbol": "AED"
+          },
+          "AFA": {
+            "displayName": "ອັບການິ ອັບການິສະຖານ (1927–2002)",
+            "symbol": "AFA"
+          },
+          "AFN": {
+            "displayName": "ອັບການິ ອັບກັນນິສະຖານ",
+            "symbol": "AFN"
+          },
+          "ALL": {
+            "displayName": "ແລັກ ອານບາເນຍ",
+            "symbol": "ALL"
+          },
+          "AMD": {
+            "displayName": "ດຣມອາເມເນຍ",
+            "symbol": "AMD"
+          },
+          "ANG": {
+            "displayName": "ຫຼຽນເງິນ ເນເທີແລນ",
+            "symbol": "ANG"
+          },
+          "AOA": {
+            "displayName": "ກວານຊາ ແອງໂກລາ",
+            "symbol": "AOA"
+          },
+          "AOK": {
+            "displayName": "ກວານຊາ ແອງໂກລາ (1977–1991)",
+            "symbol": "AOK"
+          },
+          "AON": {
+            "displayName": "ກວານຊາ ແອງໂກລາ ໃໝ່ (1995–1999)",
+            "symbol": "AON"
+          },
+          "AOR": {
+            "displayName": "ກວານຊາກທີ່ແກ້ໄຂໃໝ່ ແອງກູລາ (1995–1999)",
+            "symbol": "AOR"
+          },
+          "ARA": {
+            "displayName": "ອອສຕຣານ ອາກຊັງຕິນ",
+            "symbol": "ARA"
+          },
+          "ARL": {
+            "displayName": "ເປໂຊເລ ອາກຊັງຕິນ (1970–1983)",
+            "symbol": "ARL"
+          },
+          "ARM": {
+            "displayName": "ເປໂຊ ອາກຊັງຕິນ (1881–1970)",
+            "symbol": "ARM"
+          },
+          "ARP": {
+            "displayName": "ເປໂຊ ອາກຊັງຕິນ (1983–1985)",
+            "symbol": "ARP"
+          },
+          "ARS": {
+            "displayName": "ເປໂຊ ອາເຈນຕີນາ",
+            "symbol": "ARS",
+            "symbol-alt-narrow": "$"
+          },
+          "ATS": {
+            "displayName": "ຊິລລິງ ອົດສະຕາລີ",
+            "symbol": "ATS"
+          },
+          "AUD": {
+            "displayName": "ໂດລາ ອອດສະເຕເລຍ",
+            "symbol": "A$",
+            "symbol-alt-narrow": "$"
+          },
+          "AWG": {
+            "displayName": "ອະຣູແບນ ຟລໍຣິນ",
+            "displayName-count-other": "ຟລໍຣິນ",
+            "symbol": "AWG"
+          },
+          "AZM": {
+            "displayName": "ມານັດ ອາແຊກບາຍຊານ (1993–2006)",
+            "symbol": "AZM"
+          },
+          "AZN": {
+            "displayName": "ມານັດ ອາຊັກບາຍຊານ",
+            "symbol": "AZN"
+          },
+          "BAD": {
+            "displayName": "ດີນາ ບອສເນຍ ເຮີເຊໂບວາເນຍ (1992–1994)",
+            "symbol": "BAD"
+          },
+          "BAM": {
+            "displayName": "ມາກບອສເນຍ ເຮເຊໂກເວນາ",
+            "symbol": "BAM"
+          },
+          "BAN": {
+            "displayName": "ດີນາໃໝ່ ບອສເນຍ ເຮີເຊໂບວີນາ(1994–1997)",
+            "symbol": "BAN"
+          },
+          "BBD": {
+            "displayName": "ໂດລ່າ ບາບາດຽນ",
+            "displayName-count-other": "ດອນລາ ບາເບດຽນ",
+            "symbol": "BBD",
+            "symbol-alt-narrow": "$"
+          },
+          "BDT": {
+            "displayName": "ຕາກາ ບັງກາເດດ",
+            "symbol": "BDT",
+            "symbol-alt-narrow": "৳"
+          },
+          "BEC": {
+            "displayName": "ຟຣັງ ບູນກາລີ (ປ່ຽນແປງໄດ້)",
+            "symbol": "BEC"
+          },
+          "BEF": {
+            "displayName": "ຟຣັງ ບູນກາລີ",
+            "symbol": "BEF"
+          },
+          "BEL": {
+            "displayName": "ຟຣັງ ບູນກາລີ (ການເງິນ)",
+            "symbol": "BEL"
+          },
+          "BGL": {
+            "displayName": "ຮາດເລບ ບູນກາລີ",
+            "symbol": "BGL"
+          },
+          "BGM": {
+            "displayName": "ເລບ ສັງຄົມບູນກາລີ",
+            "symbol": "BGM"
+          },
+          "BGN": {
+            "displayName": "ເລບ ບັງແກເຣຍ",
+            "symbol": "BGN"
+          },
+          "BGO": {
+            "displayName": "ເລບ ບູນກາລີ (1879–1952)",
+            "symbol": "BGO"
+          },
+          "BHD": {
+            "displayName": "ດີນາ ບາເຣນ",
+            "symbol": "BHD"
+          },
+          "BIF": {
+            "displayName": "ຟຣັງ ບຸຣັນດີ",
+            "symbol": "BIF"
+          },
+          "BMD": {
+            "displayName": "ໂດລ່າເບີມູແດນ",
+            "displayName-count-other": "ໂດລ່າເບີມູແດນ",
+            "symbol": "BMD",
+            "symbol-alt-narrow": "$"
+          },
+          "BND": {
+            "displayName": "ໂດລາ ບຣູໄນ",
+            "symbol": "BND",
+            "symbol-alt-narrow": "$"
+          },
+          "BOB": {
+            "displayName": "ໂບລິເວຍໂນ ໂລລິເວຍ",
+            "symbol": "BOB"
+          },
+          "BOL": {
+            "displayName": "ໂລລິເວຍໂນ ໂລລິເວຍ (1863–1963)",
+            "symbol": "BOL"
+          },
+          "BOP": {
+            "displayName": "ເປໂຊໂລລິເວຍ",
+            "symbol": "BOP"
+          },
+          "BOV": {
+            "displayName": "ມະດອນ ໂລລິເວຍ",
+            "symbol": "BOV"
+          },
+          "BRB": {
+            "displayName": "ກຣູເຊໂດບາຊິ ໃໝ່ (1967–1986)",
+            "symbol": "BRB"
+          },
+          "BRC": {
+            "displayName": "ກຣູຊາໂດບາຊິວ (1986–1989)",
+            "symbol": "BRC"
+          },
+          "BRE": {
+            "displayName": "ກຣູເຊໂຣ ບາຊິ ກຣູໂຊ ບາຊິວ (1993–1994)",
+            "symbol": "BRE"
+          },
+          "BRL": {
+            "displayName": "ຣຽນ ບຣາຊິນ",
+            "symbol": "R$",
+            "symbol-alt-narrow": "R$"
+          },
+          "BRN": {
+            "displayName": "ກຣູຊາໂດ ບາຊິວ ໃໝ່ (1989–1990)",
+            "symbol": "BRN"
+          },
+          "BRR": {
+            "displayName": "ກຣູເຊໂຣ ບາຊິວ (1993–1994)",
+            "symbol": "BRR"
+          },
+          "BRZ": {
+            "displayName": "ກຣູເຊໂຣ ບາຊິວ (1942–1967)",
+            "symbol": "BRZ"
+          },
+          "BSD": {
+            "displayName": "ໂດລ່າ ບາຮາມຽນ",
+            "displayName-count-other": "ໂດລ່າ ບາຮາມຽນ",
+            "symbol": "BSD",
+            "symbol-alt-narrow": "$"
+          },
+          "BTN": {
+            "displayName": "ອັງກູຕຣາມ ບູຖານ",
+            "symbol": "BTN"
+          },
+          "BUK": {
+            "displayName": "ຈາດ ພະມ້າ",
+            "symbol": "BUK"
+          },
+          "BWP": {
+            "displayName": "ປູລາ ບອສວານາ",
+            "symbol": "BWP"
+          },
+          "BYB": {
+            "displayName": "ຣູໂບ ເບຣາຣຸສ ໃໝ່(1994–1999)",
+            "symbol": "BYB"
+          },
+          "BYR": {
+            "displayName": "ຣູໂບ ເບຣາຣູສ",
+            "symbol": "BYR",
+            "symbol-alt-narrow": "р."
+          },
+          "BZD": {
+            "displayName": "ໂດລ່າ ເບວລິຊ",
+            "displayName-count-other": "ໂດລ່າ ເບວລິຊ",
+            "symbol": "BZD",
+            "symbol-alt-narrow": "$"
+          },
+          "CAD": {
+            "displayName": "ໂດລ່າຄານາດາ",
+            "displayName-count-other": "ໂດລ່າຄານາດາ",
+            "symbol": "CA$",
+            "symbol-alt-narrow": "$"
+          },
+          "CDF": {
+            "displayName": "ຟຣັງ ຄອງໂກ",
+            "symbol": "CDF"
+          },
+          "CHE": {
+            "displayName": "ເອີໂຣ WIR",
+            "symbol": "CHE"
+          },
+          "CHF": {
+            "displayName": "ຟຣັງ ສະວິດເຊີແລນ",
+            "symbol": "CHF"
+          },
+          "CHW": {
+            "displayName": "ຟຣັງ WIR",
+            "symbol": "CHW"
+          },
+          "CLE": {
+            "displayName": "ເອສກູໂດ ຊິລີ",
+            "symbol": "CLE"
+          },
+          "CLF": {
+            "displayName": "ຫົວໜ່ວຍບັນຊີ (UF) ຊິລີ",
+            "symbol": "CLF"
+          },
+          "CLP": {
+            "displayName": "ເປໂຊ ຊິລີ",
+            "symbol": "CLP",
+            "symbol-alt-narrow": "$"
+          },
+          "CNY": {
+            "displayName": "ຢວນ ຈີນ",
+            "symbol": "CN¥",
+            "symbol-alt-narrow": "¥"
+          },
+          "COP": {
+            "displayName": "ເປໂຊໂຄລຳເບຍ",
+            "symbol": "COP",
+            "symbol-alt-narrow": "$"
+          },
+          "COU": {
+            "displayName": "ຫົວໜ່ວຍຄ່າຈິງ ໂຄລັມເບຍ",
+            "symbol": "COU"
+          },
+          "CRC": {
+            "displayName": "ໂຄສຕາ ຣິກັນ ໂຄລອນ",
+            "displayName-count-other": "ໂຄລອນ",
+            "symbol": "CRC",
+            "symbol-alt-narrow": "₡"
+          },
+          "CSD": {
+            "displayName": "ດີນາ ເຊີເບຍ (2002–2006)",
+            "symbol": "CSD"
+          },
+          "CSK": {
+            "displayName": "ຮາດໂກຣູນາ ເຊັກໂກສະໂລວັກ",
+            "symbol": "CSK"
+          },
+          "CUC": {
+            "displayName": "ຄິວແບນ ຄອນເວີດຕິໂບ ເປໂຊ",
+            "displayName-count-other": "ຄິວແບນ ຄອນເວີດຕິໂບ ເປໂຊ",
+            "symbol": "CUC"
+          },
+          "CUP": {
+            "displayName": "ຄິວແບນ ເປໂຊ",
+            "displayName-count-other": "ຄິວແບນ ເປໂຊ",
+            "symbol": "CUP",
+            "symbol-alt-narrow": "$"
+          },
+          "CVE": {
+            "displayName": "ເອສກູໂດ ເຄບເວີດ",
+            "symbol": "CVE"
+          },
+          "CYP": {
+            "displayName": "ປອນ ໄຊປຣັດ",
+            "symbol": "CYP"
+          },
+          "CZK": {
+            "displayName": "ໂຄຣູນາ ສາທາລະນະລັດເຊັກ",
+            "symbol": "CZK"
+          },
+          "DDM": {
+            "displayName": "ມາກ ເຢຍລະມັນ ຕາເວັນອອກ",
+            "symbol": "DDM"
+          },
+          "DEM": {
+            "displayName": "ມາກ ເຢຍລະມັນ",
+            "symbol": "DEM"
+          },
+          "DJF": {
+            "displayName": "ຟຣັງ ຈິບູຕິ",
+            "symbol": "DJF"
+          },
+          "DKK": {
+            "displayName": "ໂຄຣນ ເດັນມາກ",
+            "symbol": "DKK"
+          },
+          "DOP": {
+            "displayName": "ເປໂຊໂດມິນິການ",
+            "symbol": "DOP",
+            "symbol-alt-narrow": "$"
+          },
+          "DZD": {
+            "displayName": "ດີນາ ອາຍຈີເຣຍ",
+            "symbol": "DZD"
+          },
+          "ECS": {
+            "displayName": "ຊູເກ ເອກາວາດໍ",
+            "symbol": "ECS"
+          },
+          "ECV": {
+            "displayName": "ຫົວໜ່ວຍຄ່າຄົງທີ່ຂອງເອກາວາດໍ",
+            "symbol": "ECV"
+          },
+          "EEK": {
+            "displayName": "ຄຣູນເອສ ໂຕເນຍ",
+            "symbol": "EEK"
+          },
+          "EGP": {
+            "displayName": "ປອນ ອີຢິບ",
+            "symbol": "EGP"
+          },
+          "ERN": {
+            "displayName": "ແນກຟຣາ ອີຣິເທຣຍ",
+            "symbol": "ERN"
+          },
+          "ESA": {
+            "displayName": "ເປເຊຕາສະເປັນ (ບັນຊີ)",
+            "symbol": "ESA"
+          },
+          "ESB": {
+            "displayName": "ເປເຊຕາສະເປນ (ປ່ຽນແປງໄດ້)",
+            "symbol": "ESB"
+          },
+          "ESP": {
+            "displayName": "ເປເຊຕາ ສະເປນ",
+            "symbol": "ESP",
+            "symbol-alt-narrow": "₧"
+          },
+          "ETB": {
+            "displayName": "ເບີ ເອທີໂອເປຍ",
+            "symbol": "ETB"
+          },
+          "EUR": {
+            "displayName": "ເອີໂຣ",
+            "symbol": "€",
+            "symbol-alt-narrow": "€"
+          },
+          "FIM": {
+            "displayName": "ມາກກາ ຟິນແລນ",
+            "symbol": "FIM"
+          },
+          "FJD": {
+            "displayName": "ໂດລາ ຟິຈິ",
+            "symbol": "FJD",
+            "symbol-alt-narrow": "$"
+          },
+          "FKP": {
+            "displayName": "ປອນ ໝູ່ເກາະ ຟໍແລນ",
+            "symbol": "FKP"
+          },
+          "FRF": {
+            "displayName": "ຟຣັງ ຝຣັ່ງ",
+            "symbol": "FRF"
+          },
+          "GBP": {
+            "displayName": "ປອນສະເຕີຣິງ (ອັງກິດ)",
+            "symbol": "£",
+            "symbol-alt-narrow": "£"
+          },
+          "GEK": {
+            "displayName": "ກູປອນ ລາຣິທ ຈໍເຈຍ",
+            "symbol": "GEK"
+          },
+          "GEL": {
+            "displayName": "ລາຣິ ຈໍເຈຍ",
+            "symbol": "GEL"
+          },
+          "GHC": {
+            "displayName": "ເຊດີ ການາ (1979–2007)",
+            "symbol": "GHC"
+          },
+          "GHS": {
+            "displayName": "ເຊດີການາ",
+            "symbol": "GHS",
+            "symbol-alt-narrow": "₵"
+          },
+          "GIP": {
+            "displayName": "ປອນ ຍິບຣາຕາ",
+            "symbol": "GIP",
+            "symbol-alt-narrow": "£"
+          },
+          "GMD": {
+            "displayName": "ດາລາຊິ ແກມເບຍ",
+            "symbol": "GMD"
+          },
+          "GNF": {
+            "displayName": "ຟຣັງ ກິນີ",
+            "symbol": "GNF"
+          },
+          "GNS": {
+            "displayName": "ໄຊລິ ກີນີ",
+            "symbol": "GNS"
+          },
+          "GQE": {
+            "displayName": "ເອັກເວເລ ອີຄວາຕິຣຽວ ກິນີ",
+            "symbol": "GQE"
+          },
+          "GRD": {
+            "displayName": "ດາກຊະມາ ເກຣັກ",
+            "symbol": "GRD"
+          },
+          "GTQ": {
+            "displayName": "ກົວເຕມາລານ ເຄັດຊອນ",
+            "displayName-count-other": "ເຄັດຊອນ",
+            "symbol": "GTQ"
+          },
+          "GWE": {
+            "displayName": "ເອສກູໂດ ກີນີໂປຕູເກດ",
+            "symbol": "GWE"
+          },
+          "GWP": {
+            "displayName": "ເປໂຊກິນີ-ບິສເຊົາ",
+            "symbol": "GWP"
+          },
+          "GYD": {
+            "displayName": "ດອນລາ ກາຍອານາ",
+            "symbol": "GYD",
+            "symbol-alt-narrow": "$"
+          },
+          "HKD": {
+            "displayName": "ດອນລາ ຮົງກົງ",
+            "symbol": "HK$",
+            "symbol-alt-narrow": "$"
+          },
+          "HNL": {
+            "displayName": "ຮອນດູແຣນ ເລມພິຣາ",
+            "displayName-count-other": "ເລມພິຣາ",
+            "symbol": "HNL"
+          },
+          "HRD": {
+            "displayName": "ດີນາ ໂຄຣເອເຊຍ",
+            "symbol": "HRD"
+          },
+          "HRK": {
+            "displayName": "ຄູນາ ໂກຣເອເຊຍ",
+            "symbol": "HRK"
+          },
+          "HTG": {
+            "displayName": "ກູດເຮຕິ",
+            "symbol": "HTG"
+          },
+          "HUF": {
+            "displayName": "ຟໍຣິນ ຮົງກາຣີ",
+            "symbol": "HUF"
+          },
+          "IDR": {
+            "displayName": "ຣູປີ ອິນໂດເນເຊຍ",
+            "symbol": "IDR"
+          },
+          "IEP": {
+            "displayName": "ປອນ ໄອຣິຊ",
+            "symbol": "IEP"
+          },
+          "ILP": {
+            "displayName": "ປອນ ອີສະລາເອວ",
+            "symbol": "ILP"
+          },
+          "ILS": {
+            "displayName": "ນິວເຊເກນ ອີສະລາແອນ",
+            "symbol": "₪",
+            "symbol-alt-narrow": "₪"
+          },
+          "INR": {
+            "displayName": "ຣູປີ ອິນເດຍ",
+            "symbol": "₹",
+            "symbol-alt-narrow": "₹"
+          },
+          "IQD": {
+            "displayName": "ດີນາ ອີຣັກ",
+            "symbol": "IQD"
+          },
+          "IRR": {
+            "displayName": "ຣີວ ອີຣ່ານ",
+            "symbol": "IRR"
+          },
+          "ISK": {
+            "displayName": "ໂຄຣນາ ໄອສແລນ",
+            "symbol": "ISK"
+          },
+          "ITL": {
+            "displayName": "ລິຣາ ອີຕາລີ",
+            "symbol": "ITL"
+          },
+          "JMD": {
+            "displayName": "ດອນລາ ຈາເມກາ",
+            "symbol": "JMD",
+            "symbol-alt-narrow": "$"
+          },
+          "JOD": {
+            "displayName": "ດີນາ ຈໍແດນ",
+            "symbol": "JOD"
+          },
+          "JPY": {
+            "displayName": "ເຢນ ຍີ່ປຸ່ນ",
+            "symbol": "JP¥",
+            "symbol-alt-narrow": "¥"
+          },
+          "KES": {
+            "displayName": "ຊິລລິງ ເຄນຢາ",
+            "symbol": "KES"
+          },
+          "KGS": {
+            "displayName": "ໂຊມ ຄຣີກິສະຖານ",
+            "symbol": "KGS"
+          },
+          "KHR": {
+            "displayName": "ຫຼຽນກຳປູເຈ້ຍ",
+            "symbol": "KHR",
+            "symbol-alt-narrow": "៛"
+          },
+          "KMF": {
+            "displayName": "ຟຣັງ ໂກໂມໂຣສ",
+            "symbol": "KMF"
+          },
+          "KPW": {
+            "displayName": "ວອນ ເກົາຫຼີເໜືອ",
+            "symbol": "KPW"
+          },
+          "KRH": {
+            "displayName": "ຮາວານ ເກົາຫຼີເນື້",
+            "symbol": "KRH"
+          },
+          "KRO": {
+            "displayName": "ວອນ ເກົາຫຼີໃຕ້ (1945–1953)",
+            "symbol": "KRO"
+          },
+          "KRW": {
+            "displayName": "ວອນ ເກົາຫຼີໃຕ້",
+            "symbol": "₩",
+            "symbol-alt-narrow": "₩"
+          },
+          "KWD": {
+            "displayName": "ດີນາ ຄູເວດ",
+            "symbol": "KWD"
+          },
+          "KYD": {
+            "displayName": "ດອນລາໝູ່ເກາະເກແມນ",
+            "symbol": "KYD",
+            "symbol-alt-narrow": "$"
+          },
+          "KZT": {
+            "displayName": "ເຕັງເຈ ກາຊັກສະຖານ",
+            "symbol": "KZT",
+            "symbol-alt-narrow": "₸"
+          },
+          "LAK": {
+            "displayName": "ກີບ ລາວ",
+            "symbol": "₭",
+            "symbol-alt-narrow": "₭"
+          },
+          "LBP": {
+            "displayName": "ປອນ ເລບານອນ",
+            "symbol": "LBP"
+          },
+          "LKR": {
+            "displayName": "ຣູປີ ສີຣັງກາ",
+            "symbol": "LKR"
+          },
+          "LRD": {
+            "displayName": "ດອນລາ ໄລບິເລຍ",
+            "symbol": "LRD",
+            "symbol-alt-narrow": "$"
+          },
+          "LSL": {
+            "displayName": "ໂລຕິ ເລໂຊໂຕ",
+            "symbol": "LSL"
+          },
+          "LTL": {
+            "displayName": "ລິຕັສ ລິທົວເນຍ",
+            "symbol": "LTL"
+          },
+          "LTT": {
+            "displayName": "ທາໂລນັສ ລິທົວເນຍ",
+            "symbol": "LTT"
+          },
+          "LUC": {
+            "displayName": "ຟຣັງ ລຸກຊຳບວກ ທີ່ປ່ຽນແປງ",
+            "symbol": "LUC"
+          },
+          "LUF": {
+            "displayName": "ຟຣັງ ລຸກຊຳບວກ",
+            "symbol": "LUF"
+          },
+          "LUL": {
+            "displayName": "ຟຣັງ ລຸກຊຳບວກ ການເງິນ",
+            "symbol": "LUL"
+          },
+          "LVL": {
+            "displayName": "ລັສ ລັດເວຍ",
+            "symbol": "LVL"
+          },
+          "LVR": {
+            "displayName": "ຣູໂບ ລາວຽນ",
+            "symbol": "LVR"
+          },
+          "LYD": {
+            "displayName": "ດີນາ ລິເບຍ",
+            "symbol": "LYD"
+          },
+          "MAD": {
+            "displayName": "ດີຮາມ ໂມລອກໂກ",
+            "symbol": "MAD"
+          },
+          "MAF": {
+            "displayName": "ຟຣັງ ໂມຣອກໂກ",
+            "symbol": "MAF"
+          },
+          "MCF": {
+            "displayName": "ຟຣັງ ໂມດາໂກ",
+            "symbol": "MCF"
+          },
+          "MDC": {
+            "displayName": "ບັດປັນສ່ວນ ມອງໂດວາ",
+            "symbol": "MDC"
+          },
+          "MDL": {
+            "displayName": "ເລອູ ມອງໂດວາ",
+            "symbol": "MDL"
+          },
+          "MGA": {
+            "displayName": "ອາເຣຍຣີ ມາດາກາສກາ",
+            "symbol": "MGA"
+          },
+          "MGF": {
+            "displayName": "ຟຣັງ ມາດາກັດສະກາ",
+            "symbol": "MGF"
+          },
+          "MKD": {
+            "displayName": "ເດນາ ມາຊິໂດເນຍ",
+            "symbol": "MKD"
+          },
+          "MKN": {
+            "displayName": "ດີນາ ມາຊີໂດເນຍ (1992–1993)",
+            "symbol": "MKN"
+          },
+          "MLF": {
+            "displayName": "ຟຣັງ ມາລີ",
+            "symbol": "MLF"
+          },
+          "MMK": {
+            "displayName": "ຈາດ ມ່ຽນມາ",
+            "symbol": "MMK"
+          },
+          "MNT": {
+            "displayName": "ຕຸກຣີ ມົງໂກເລຍ",
+            "symbol": "MNT",
+            "symbol-alt-narrow": "₮"
+          },
+          "MOP": {
+            "displayName": "ປາຕາກາ ມາເກົາ",
+            "symbol": "MOP"
+          },
+          "MRO": {
+            "displayName": "ອໍກິວຢາ ມໍຣິເຕເນຍ",
+            "symbol": "MRO"
+          },
+          "MTL": {
+            "displayName": "ລິຣາ ມອນຕາ",
+            "symbol": "MTL"
+          },
+          "MTP": {
+            "displayName": "ປອນ ມອນຕາ",
+            "symbol": "MTP"
+          },
+          "MUR": {
+            "displayName": "ຣູປີ ມໍຣີເຊຍ",
+            "symbol": "MUR"
+          },
+          "MVR": {
+            "displayName": "ຣູຟີຢາ ມາດີເວຍ",
+            "symbol": "MVR"
+          },
+          "MWK": {
+            "displayName": "ຄວາຊາມາລາວີ",
+            "symbol": "MWK"
+          },
+          "MXN": {
+            "displayName": "ເມັກຊິກັນ ເປໂຊ",
+            "displayName-count-other": "ເປໂຊ",
+            "symbol": "MX$",
+            "symbol-alt-narrow": "$"
+          },
+          "MXP": {
+            "displayName": "ຫົວໜ່ວຍເງິນ ເປໂຊ ແມັກຊິໂກ(1861–1992)",
+            "symbol": "MXP"
+          },
+          "MXV": {
+            "displayName": "ຫົວໜ່ວຍການລົງທຶນ ແມັກຊິໂກ",
+            "symbol": "MXV"
+          },
+          "MYR": {
+            "displayName": "ຣິງກິດ ມາເລເຂຍ",
+            "symbol": "MYR"
+          },
+          "MZE": {
+            "displayName": "ເອສກູໂດ ໂມຊຳບິກ",
+            "symbol": "MZE"
+          },
+          "MZM": {
+            "displayName": "ເມຕິຄໍ ໂມຊຳບິກ (1980–2006)",
+            "symbol": "MZM"
+          },
+          "MZN": {
+            "displayName": "ເມຕິຄໍ ໂມຊັມບິກ",
+            "symbol": "MZN"
+          },
+          "NAD": {
+            "displayName": "ດອນລາ ນາມິເບຍ",
+            "symbol": "NAD",
+            "symbol-alt-narrow": "$"
+          },
+          "NGN": {
+            "displayName": "ໄນຣາ ໄນຈີເຣຍ",
+            "symbol": "NGN",
+            "symbol-alt-narrow": "₦"
+          },
+          "NIC": {
+            "displayName": "ຄໍໂດບາ ນິກາຣາກົວ (1988–1991)",
+            "symbol": "NIC"
+          },
+          "NIO": {
+            "displayName": "ນິກາຣາກວນ ໂຄໂດບາ",
+            "displayName-count-other": "ໂຄໂດບາ",
+            "symbol": "NIO"
+          },
+          "NLG": {
+            "displayName": "ກິລເດີ ເນເທີແລນ",
+            "symbol": "NLG"
+          },
+          "NOK": {
+            "displayName": "ໂຄຣນ ນອກເວ",
+            "symbol": "NOK"
+          },
+          "NPR": {
+            "displayName": "ຣູປີ ເນປານ",
+            "symbol": "NPR"
+          },
+          "NZD": {
+            "displayName": "ໂດລາ ນີວຊີແລນ",
+            "symbol": "NZ$",
+            "symbol-alt-narrow": "$"
+          },
+          "OMR": {
+            "displayName": "ຣຽວ ໂອມານ",
+            "symbol": "OMR"
+          },
+          "PAB": {
+            "displayName": "ພານາມານຽນ ບອນບົວ",
+            "displayName-count-other": "ບອນບົວ",
+            "symbol": "PAB"
+          },
+          "PEI": {
+            "displayName": "ອິນຕິ ເປຣູ",
+            "symbol": "PEI"
+          },
+          "PEN": {
+            "displayName": "ນູໂວຊໍ ເປຣູ",
+            "symbol": "PEN"
+          },
+          "PES": {
+            "displayName": "ໂຊນ ເປຣູ (1863–1965)",
+            "symbol": "PES"
+          },
+          "PGK": {
+            "displayName": "ກີນາ ປາປົວນີວກຸນນີນ",
+            "symbol": "PGK"
+          },
+          "PHP": {
+            "displayName": "ເປໂຊ ຟີລິປິນ",
+            "symbol": "PHP",
+            "symbol-alt-narrow": "₱"
+          },
+          "PKR": {
+            "displayName": "ຣູປີ ປາກີສະຖານ",
+            "symbol": "PKR"
+          },
+          "PLN": {
+            "displayName": "ຊລໍຕີ ໂປແລນ",
+            "symbol": "PLN"
+          },
+          "PLZ": {
+            "displayName": "ຊະລອສຕີ ໂປແລນ (1950–1995)",
+            "symbol": "PLZ"
+          },
+          "PTE": {
+            "displayName": "ເອສກູໂດ ໂປຕູເກສ",
+            "symbol": "PTE"
+          },
+          "PYG": {
+            "displayName": "ກວາຣານີ ປາຣາກວາຍ",
+            "symbol": "PYG",
+            "symbol-alt-narrow": "₲"
+          },
+          "QAR": {
+            "displayName": "ຣຽວ ກາຕາ",
+            "symbol": "QAR"
+          },
+          "RHD": {
+            "displayName": "ດອນລາ ໂຣດີເຊຍ",
+            "symbol": "RHD"
+          },
+          "ROL": {
+            "displayName": "ລິວ ໂຣມາເນຍເກົ່າ",
+            "symbol": "ROL"
+          },
+          "RON": {
+            "displayName": "ເລອູ ໂຣມາເນຍ",
+            "symbol": "RON"
+          },
+          "RSD": {
+            "displayName": "ດີນາ ເຊີເບຍ",
+            "symbol": "RSD"
+          },
+          "RUB": {
+            "displayName": "ຣູໂລ ຣັດເຊຍ",
+            "symbol": "RUB"
+          },
+          "RUR": {
+            "displayName": "ຣູໂບ ຣັດເຊຍ (1991–1998)",
+            "symbol": "RUR",
+            "symbol-alt-narrow": "р."
+          },
+          "RWF": {
+            "displayName": "ຟຣັງ ວັນດາ",
+            "symbol": "RWF"
+          },
+          "SAR": {
+            "displayName": "ຣີຢອນ ຊາອຸດິດອາຣາບີ",
+            "symbol": "SAR"
+          },
+          "SBD": {
+            "displayName": "ໂດລາ ໝູ່ເກາະໂຊໂລມອນ",
+            "symbol": "SBD",
+            "symbol-alt-narrow": "$"
+          },
+          "SCR": {
+            "displayName": "ຣູປີ ເຊເຊລ",
+            "symbol": "SCR"
+          },
+          "SDD": {
+            "displayName": "ດີນາ ຊູດານເກົ່າ",
+            "symbol": "SDD"
+          },
+          "SDG": {
+            "displayName": "ປອນ ຊູດານ",
+            "symbol": "SDG"
+          },
+          "SDP": {
+            "displayName": "ປອນ ຊູດານເກົ່າ",
+            "symbol": "SDP"
+          },
+          "SEK": {
+            "displayName": "ໂຄຣນາ ສະວີເດັນ",
+            "symbol": "SEK"
+          },
+          "SGD": {
+            "displayName": "ໂດລາ ສິງກະໂປ",
+            "symbol": "SGD",
+            "symbol-alt-narrow": "$"
+          },
+          "SHP": {
+            "displayName": "ປອນ ເຊັນເຮເຣນາ",
+            "symbol": "SHP"
+          },
+          "SIT": {
+            "displayName": "ໂຕລາ ສະໂລວິເນຍ",
+            "symbol": "SIT"
+          },
+          "SKK": {
+            "displayName": "ຄູໂຣນາ ສະໂລວັກ",
+            "symbol": "SKK"
+          },
+          "SLL": {
+            "displayName": "ເລໂອນ ຊີລາເລໂອນ",
+            "symbol": "SLL"
+          },
+          "SOS": {
+            "displayName": "ຊິລລິງ ໂຊມາເລຍ",
+            "symbol": "SOS"
+          },
+          "SRD": {
+            "displayName": "ດອນລາ ຊູຣິນາເມ",
+            "symbol": "SRD",
+            "symbol-alt-narrow": "$"
+          },
+          "SRG": {
+            "displayName": "ກິລເດີ ຊູຣິນາເມ",
+            "symbol": "SRG"
+          },
+          "SSP": {
+            "displayName": "ປອນ ຊູດານໃຕ້",
+            "symbol": "SSP",
+            "symbol-alt-narrow": "£"
+          },
+          "STD": {
+            "displayName": "ໂດບຣາ ຊາວຕົວເມ ແລະ ປຣິນຊິບປີ",
+            "symbol": "STD"
+          },
+          "SUR": {
+            "displayName": "ຣູໂບ ໂຊວຽດ",
+            "symbol": "SUR"
+          },
+          "SVC": {
+            "displayName": "ໂກລອງ ເອກາວາດໍ",
+            "symbol": "SVC"
+          },
+          "SYP": {
+            "displayName": "ປອນ ຊິເຣຍ",
+            "symbol": "SYP"
+          },
+          "SZL": {
+            "displayName": "ລິລັນກິນີ ສະວາຊິແລນ",
+            "symbol": "SZL"
+          },
+          "THB": {
+            "displayName": "ບາດ ໄທ",
+            "symbol": "฿",
+            "symbol-alt-narrow": "฿"
+          },
+          "TJR": {
+            "displayName": "ຣູໂບ ຕັຈີກິສຖານ",
+            "symbol": "TJR"
+          },
+          "TJS": {
+            "displayName": "ໂຊໂມນີ ທາຈິກິສຖານ",
+            "symbol": "TJS"
+          },
+          "TMM": {
+            "displayName": "ມານັດ ຕວກເມນິສຖານ (1966–1987)",
+            "symbol": "TMM"
+          },
+          "TMT": {
+            "displayName": "ເມນັດ ຕວກເມນິດສະຖານ",
+            "symbol": "TMT"
+          },
+          "TND": {
+            "displayName": "ດີນາ ຕູນີເຊຍ",
+            "symbol": "TND"
+          },
+          "TOP": {
+            "displayName": "ປາອັງກາ ຕອງກາ",
+            "symbol": "TOP"
+          },
+          "TPE": {
+            "displayName": "ເອສກູໂດ ຕີມໍ",
+            "symbol": "TPE"
+          },
+          "TRL": {
+            "displayName": "ລີຕາ ຕູຣາກີເກົ່າ",
+            "symbol": "TRL"
+          },
+          "TRY": {
+            "displayName": "ລິຣາ ເທີກີ",
+            "symbol": "TRY",
+            "symbol-alt-narrow": "₺",
+            "symbol-alt-variant": "TL"
+          },
+          "TTD": {
+            "displayName": "ດອນລາທຣິນິແດດ ແລະ ໂທເບໂກ",
+            "symbol": "TTD",
+            "symbol-alt-narrow": "$"
+          },
+          "TWD": {
+            "displayName": "ໂດລາ ໄຕຫວັນ",
+            "symbol": "NT$",
+            "symbol-alt-narrow": "NT$"
+          },
+          "TZS": {
+            "displayName": "ຊິລລິງ ຕາຊາເນຍ",
+            "symbol": "TZS"
+          },
+          "UAH": {
+            "displayName": "ຮາຣິບເນຍ ຢູເຄຣນ",
+            "symbol": "UAH",
+            "symbol-alt-narrow": "₴"
+          },
+          "UAK": {
+            "displayName": "ຄາໂບວາເນດ ອູແກຣນ",
+            "symbol": "UAK"
+          },
+          "UGS": {
+            "displayName": "ຊິນລິງ ອູກັນດາ (1966–1987)",
+            "symbol": "UGS"
+          },
+          "UGX": {
+            "displayName": "ຊິລລິງ ອູການດາ",
+            "symbol": "UGX"
+          },
+          "USD": {
+            "displayName": "ໂດລ່າ ສະຫະລັດຯ",
+            "displayName-count-other": "ໂດລ່າ ສະຫະລັດຯ",
+            "symbol": "US$",
+            "symbol-alt-narrow": "$"
+          },
+          "USN": {
+            "displayName": "ດອນລາສະຫະລັດ (ມື້ຖັດໄປ)",
+            "symbol": "USN"
+          },
+          "USS": {
+            "displayName": "ດອນລາສະຫະລັດ (ມື້ດຽວກັນ)",
+            "symbol": "USS"
+          },
+          "UYI": {
+            "displayName": "ເປໂຊອູຣຸກວຍ (ຫົວໜ່ວຍອິນເດັກ)",
+            "symbol": "UYI"
+          },
+          "UYP": {
+            "displayName": "ເປໂຊ ອູຣຸກວຍ (1975–1993)",
+            "symbol": "UYP"
+          },
+          "UYU": {
+            "displayName": "ເປໂຊ ອູຣູກວາຍ",
+            "symbol": "UYU",
+            "symbol-alt-narrow": "$"
+          },
+          "UZS": {
+            "displayName": "ໂຊມ ອຸສເບກິສຖາານ",
+            "symbol": "UZS"
+          },
+          "VEB": {
+            "displayName": "ໂບລີວາ ເວເນຊູເອລາ (1871–2008)",
+            "symbol": "VEB"
+          },
+          "VEF": {
+            "displayName": "ໂບລິວາ ເວເນຊູເອລາ",
+            "symbol": "VEF"
+          },
+          "VND": {
+            "displayName": "ດົງ ຫວຽດນາມ",
+            "symbol": "₫",
+            "symbol-alt-narrow": "₫"
+          },
+          "VNN": {
+            "displayName": "ດົງ ຫວຽດນາມ (1978–1985)",
+            "symbol": "VNN"
+          },
+          "VUV": {
+            "displayName": "ວາຕູ ວານົວຕູ",
+            "symbol": "VUV"
+          },
+          "WST": {
+            "displayName": "ຕາລາ ຊາມົວ",
+            "symbol": "WST"
+          },
+          "XAF": {
+            "displayName": "ຟຣັງ ເຊຟານ ທະນາຄານລັດອາຟຣິກາກາງ",
+            "symbol": "FCFA"
+          },
+          "XAG": {
+            "displayName": "ເງິນ",
+            "symbol": "XAG"
+          },
+          "XAU": {
+            "displayName": "ຄຳ",
+            "symbol": "XAU"
+          },
+          "XBA": {
+            "displayName": "ຫົວໜ່ວຍຄອມໂປຊິດ ເອີຣົບ",
+            "symbol": "XBA"
+          },
+          "XBB": {
+            "displayName": "ຫົວໜ່ວຍໂມນີແທຣີ ເອີຣົບ",
+            "symbol": "XBB"
+          },
+          "XBC": {
+            "displayName": "ຫົວໜ່ວຍບັນຊີເອີຣົບ (XBC)",
+            "symbol": "XBC"
+          },
+          "XBD": {
+            "displayName": "ຫົວໜ່ວຍບັນຊີເອີຣົບ (XBD)",
+            "symbol": "XBD"
+          },
+          "XCD": {
+            "displayName": "ດອນລາຄາຣີບຽນຕາເວັນອອກ",
+            "symbol": "EC$"
+          },
+          "XDR": {
+            "displayName": "ສິດທິຖອນເງິນພິເສດ",
+            "symbol": "XDR"
+          },
+          "XEU": {
+            "displayName": "ຫົວໜ່ວຍສະກຸນເງິນ ເອີຣົບ",
+            "symbol": "XEU"
+          },
+          "XFO": {
+            "displayName": "ຟຣັງ ຄຳຝຣັ່ງ",
+            "symbol": "XFO"
+          },
+          "XFU": {
+            "displayName": "ຟຣັງ ຢູໄອຊີ ຝຣັ່ງ",
+            "symbol": "XFU"
+          },
+          "XOF": {
+            "displayName": "ຟັງເຊຟານ ອາຟຣິກາຕາເວັນຕົກ",
+            "symbol": "CFA"
+          },
+          "XPD": {
+            "displayName": "ແພເລດຽມ",
+            "symbol": "XPD"
+          },
+          "XPF": {
+            "displayName": "ຊີເອັບພີ ຝຣັ່ງ",
+            "symbol": "CFPF"
+          },
+          "XPT": {
+            "displayName": "ແພລັດຕິນຳ",
+            "symbol": "XPT"
+          },
+          "XRE": {
+            "displayName": "ກອງທຶນໄຣເນັດ",
+            "symbol": "XRE"
+          },
+          "XSU": {
+            "displayName": "XSU",
+            "symbol": "XSU"
+          },
+          "XTS": {
+            "displayName": "ລະຫັດທົດສອບສະກຸນເງິນ",
+            "symbol": "XTS"
+          },
+          "XUA": {
+            "displayName": "XUA",
+            "symbol": "XUA"
+          },
+          "XXX": {
+            "displayName": "ສະກຸນເງິນທີ່ບໍ່ຮູ້ຈັກ",
+            "displayName-count-other": "ສະກຸນເງິນທີ່ບໍ່ຮູ້ຈັກ",
+            "symbol": "XXX"
+          },
+          "YDD": {
+            "displayName": "ດີນາ ເຢເມນ",
+            "symbol": "YDD"
+          },
+          "YER": {
+            "displayName": "ຣຽວ ເຢເມນ",
+            "symbol": "YER"
+          },
+          "YUD": {
+            "displayName": "ຮາດດີນາ ຢູໂກສະລາວີ",
+            "symbol": "YUD"
+          },
+          "YUM": {
+            "displayName": "ດີນາໃໝ່ ຢູໂກສະລາວີ (1994–2002)",
+            "symbol": "YUM"
+          },
+          "YUN": {
+            "displayName": "ດີນາ ທີ່ປ່ຽນສະພາບ ຢູໂກສະລາວີ (1990–1992)",
+            "symbol": "YUN"
+          },
+          "YUR": {
+            "displayName": "ດີນາ ປະຕິຮູບ ຢູໂກສະລາວີ (1992–1993)",
+            "symbol": "YUR"
+          },
+          "ZAL": {
+            "displayName": "ແຣນ ອາຟຣິກາໃຕ້ (ການເງິນ)",
+            "symbol": "ZAL"
+          },
+          "ZAR": {
+            "displayName": "ແຣນ ອາຟຣິກາໃຕ້",
+            "symbol": "ZAR"
+          },
+          "ZMK": {
+            "displayName": "ຄວາຊາ ຊັມເບຍ (1968–2012)",
+            "symbol": "ZMK"
+          },
+          "ZMW": {
+            "displayName": "ຄວາຊາ ຊັມເບຍ",
+            "symbol": "ZMW"
+          },
+          "ZRN": {
+            "displayName": "ແຊ ຄອງໂກໃໝ່",
+            "symbol": "ZRN"
+          },
+          "ZRZ": {
+            "displayName": "ແຊຄອງໂກ",
+            "symbol": "ZRZ"
+          },
+          "ZWD": {
+            "displayName": "ດອນລາ ຊິມບັບເວ (1980–2008)",
+            "symbol": "ZWD"
+          },
+          "ZWL": {
+            "displayName": "ດອນລາ ຊິມບັບເວ (2009)",
+            "symbol": "ZWL"
+          },
+          "ZWR": {
+            "displayName": "ດອນລາ ຊິມບັບເວ (2008)",
+            "symbol": "ZWR"
+          }
+        }
+      }
+    }
+  }
+}

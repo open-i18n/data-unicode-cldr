@@ -22,6 +22,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.unicode.cldr.util.CLDRFile;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.StandardCodes;
@@ -38,20 +39,20 @@ import com.ibm.icu.dev.util.TransliteratorUtilities;
 
 public class GenerateAttributeList {
     XPathParts parts = new XPathParts(null, null);
-    Map element_attribute_valueSet = new TreeMap();
-    Set allElements = new TreeSet();
-    Map defaults = new HashMap();
+    Map<String, Map<String, Set<String>[]>> element_attribute_valueSet = new TreeMap<String, Map<String, Set<String>[]>>();
+    Set<String> allElements = new TreeSet<String>();
+    Map<String, String> defaults = new HashMap<String, String>();
 
     public GenerateAttributeList(Factory cldrFactory) throws IOException {
         addFromStandardCodes();
-        addFromDTD(CldrUtility.COMMON_DIRECTORY + "main/en.xml");
-        addFromDTD(CldrUtility.COMMON_DIRECTORY + "supplemental/characters.xml");
-        addFromDirectory(CldrUtility.COMMON_DIRECTORY + "collation/");
-        addFromDirectory(CldrUtility.COMMON_DIRECTORY + "main/");
-        addFromDirectory(CldrUtility.COMMON_DIRECTORY + "rbnf/");
-        addFromDirectory(CldrUtility.COMMON_DIRECTORY + "segments/");
-        addFromDirectory(CldrUtility.COMMON_DIRECTORY + "supplemental/");
-        addFromDirectory(CldrUtility.COMMON_DIRECTORY + "transforms/");
+        addFromDTD(CLDRPaths.COMMON_DIRECTORY + "main/en.xml");
+        addFromDTD(CLDRPaths.COMMON_DIRECTORY + "supplemental/characters.xml");
+        addFromDirectory(CLDRPaths.COMMON_DIRECTORY + "collation/");
+        addFromDirectory(CLDRPaths.COMMON_DIRECTORY + "main/");
+        addFromDirectory(CLDRPaths.COMMON_DIRECTORY + "rbnf/");
+        addFromDirectory(CLDRPaths.COMMON_DIRECTORY + "segments/");
+        addFromDirectory(CLDRPaths.COMMON_DIRECTORY + "supplemental/");
+        addFromDirectory(CLDRPaths.COMMON_DIRECTORY + "transforms/");
         /*
          * Set seenAlready = new HashSet();
          * for (Iterator it = cldrFactory.getAvailable().iterator(); it.hasNext();) {
@@ -84,7 +85,6 @@ public class GenerateAttributeList {
     */
     private void addFromStandardCodes() {
         StandardCodes sc = StandardCodes.make();
-        String cat = "language";
         addFromStandardCodes(sc, "language");
         addFromStandardCodes(sc, "territory");
         addFromStandardCodes(sc, "script");
@@ -97,10 +97,10 @@ public class GenerateAttributeList {
     * 
     */
     private void addFromStandardCodes(StandardCodes sc, String cat) {
-        Collection c = sc.getGoodAvailableCodes(cat);
+        Collection<String> c = sc.getGoodAvailableCodes(cat);
         String target = cat.equals("tzid") ? "zone" : cat;
-        for (Iterator it = c.iterator(); it.hasNext();) {
-            String item = (String) it.next();
+        for (Iterator<String> it = c.iterator(); it.hasNext();) {
+            String item = it.next();
             add(target, "type", item, true);
         }
     }
@@ -149,7 +149,6 @@ public class GenerateAttributeList {
         FileInputStream fis = new FileInputStream(file);
         try {
             XMLReader xmlReader = CLDRFile.createXMLReader(true);
-            MyDeclHandler me = new MyDeclHandler();
             xmlReader.setContentHandler(new MyContentHandler());
             InputSource is = new InputSource(fis);
             is.setSystemId(file);
@@ -183,14 +182,14 @@ public class GenerateAttributeList {
             element = "[common]";
         }
         // now add
-        Map attribute_valueSet = (Map) element_attribute_valueSet.get(element);
-        if (attribute_valueSet == null) element_attribute_valueSet.put(element, attribute_valueSet = new TreeMap());
-        Set[] valueSets = (Set[]) attribute_valueSet.get(attribute);
+        Map<String, Set<String>[]> attribute_valueSet = element_attribute_valueSet.get(element);
+        if (attribute_valueSet == null) element_attribute_valueSet.put(element, attribute_valueSet = new TreeMap<String, Set<String>[]>());
+        Set<String>[] valueSets = attribute_valueSet.get(attribute);
         if (valueSets == null) {
-            Comparator c = CLDRFile.getAttributeValueComparator(element, attribute);
+            Comparator<String> c = CLDRFile.getAttributeValueComparator(element, attribute);
             valueSets = new Set[2];
-            valueSets[0] = new TreeSet(c);
-            valueSets[1] = new TreeSet();
+            valueSets[0] = new TreeSet<String>(c);
+            valueSets[1] = new TreeSet<String>();
             attribute_valueSet.put(attribute, valueSets);
         }
         try {
@@ -207,7 +206,7 @@ public class GenerateAttributeList {
         pw.println("</head><body>");
         pw.println("<p>Date: $" +
             "Date$</p>");
-        pw.println("<p>Version: " + CldrUtility.CHART_DISPLAY_VERSION + "</p>");
+        pw.println("<p>Version: " + ToolConstants.CHART_DISPLAY_VERSION + "</p>");
         pw.println("<table>");
         pw.println("<tr><th>Element</th><th>Attribute</th><th>Actual Attribute Values</th><th>Other DTD Attribute Values</th></tr>");
 
@@ -220,15 +219,15 @@ public class GenerateAttributeList {
          * pw.println("</td><td>{none}</td><td>{none}</td></tr>");
          */
 
-        for (Iterator it = element_attribute_valueSet.keySet().iterator(); it.hasNext();) {
-            String element = (String) it.next();
-            Map attribute_valueSet = (Map) element_attribute_valueSet.get(element);
+        for (Iterator<String> it = element_attribute_valueSet.keySet().iterator(); it.hasNext();) {
+            String element = it.next();
+            Map<String, Set<String>[]> attribute_valueSet = element_attribute_valueSet.get(element);
             int size = attribute_valueSet.size();
             if (size == 0) continue;
             boolean first = true;
-            for (Iterator it2 = attribute_valueSet.keySet().iterator(); it2.hasNext();) {
-                String attribute = (String) it2.next();
-                Set[] valueSets = (Set[]) attribute_valueSet.get(attribute);
+            for (Iterator<String> it2 = attribute_valueSet.keySet().iterator(); it2.hasNext();) {
+                String attribute = it2.next();
+                Set<String>[] valueSets = attribute_valueSet.get(attribute);
                 pw.print("<tr>");
                 if (first) {
                     first = false;
@@ -239,8 +238,8 @@ public class GenerateAttributeList {
                 String defaultKey = element + "|" + attribute;
                 pw.print(toString(valueSets[0], defaultKey));
                 pw.println("</td><td>");
-                Set toRemove = new TreeSet(valueSets[0]);
-                Set remainder = new TreeSet(valueSets[1]);
+                Set<String> toRemove = new TreeSet<String>(valueSets[0]);
+                Set<String> remainder = new TreeSet<String>(valueSets[1]);
                 remainder.removeAll(toRemove);
                 pw.print(toString(remainder, defaultKey));
                 pw.println("</td></tr>");
@@ -254,11 +253,11 @@ public class GenerateAttributeList {
     /**
     * 
     */
-    private String toString(Collection source, String defaultKey) {
+    private String toString(Collection<String> source, String defaultKey) {
         StringBuffer result = new StringBuffer();
         boolean first = true;
-        for (Iterator it = source.iterator(); it.hasNext();) {
-            String value = (String) it.next();
+        for (Iterator<String> it = source.iterator(); it.hasNext();) {
+            String value = it.next();
             if (first)
                 first = false;
             else
@@ -442,7 +441,7 @@ public class GenerateAttributeList {
         }
     }
 
-    public Map getElement_attribute_valueSet() {
+    public Map<String, Map<String, Set<String>[]>> getElement_attribute_valueSet() {
         return element_attribute_valueSet;
     }
 }

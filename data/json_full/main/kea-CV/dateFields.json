@@ -1,0 +1,144 @@
+{
+  "main": {
+    "kea-CV": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "25",
+          "_number": "$Revision: 91 $"
+        },
+        "generation": {
+          "_date": "$Date: 2014-03-13 22:27:12 -0500 (Thu, 13 Mar 2014) $"
+        },
+        "language": "kea",
+        "territory": "CV"
+      },
+      "dates": {
+        "fields": {
+          "era": {
+            "displayName": "Era"
+          },
+          "year": {
+            "displayName": "Anu",
+            "relative-type--1": "last year",
+            "relative-type-0": "this year",
+            "relative-type-1": "next year",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "di li {0} anu"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "a ten {0} anu"
+            }
+          },
+          "month": {
+            "displayName": "Mes",
+            "relative-type--1": "last month",
+            "relative-type-0": "this month",
+            "relative-type-1": "next month",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "di li {0} mes"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "a ten {0} mes"
+            }
+          },
+          "week": {
+            "displayName": "Simana",
+            "relative-type--1": "last week",
+            "relative-type-0": "this week",
+            "relative-type-1": "next week",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "di li {0} simana"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "a ten {0} simana"
+            }
+          },
+          "day": {
+            "displayName": "Dia",
+            "relative-type--1": "Onti",
+            "relative-type-0": "Oji",
+            "relative-type-1": "Manha",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "di li {0} dia"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "a ten {0} dia"
+            }
+          },
+          "weekday": {
+            "displayName": "Dia di simana"
+          },
+          "sun": {
+            "relative-type--1": "last Sunday",
+            "relative-type-0": "this Sunday",
+            "relative-type-1": "next Sunday"
+          },
+          "mon": {
+            "relative-type--1": "last Monday",
+            "relative-type-0": "this Monday",
+            "relative-type-1": "next Monday"
+          },
+          "tue": {
+            "relative-type--1": "last Tuesday",
+            "relative-type-0": "this Tuesday",
+            "relative-type-1": "next Tuesday"
+          },
+          "wed": {
+            "relative-type--1": "last Wednesday",
+            "relative-type-0": "this Wednesday",
+            "relative-type-1": "next Wednesday"
+          },
+          "thu": {
+            "relative-type--1": "last Thursday",
+            "relative-type-0": "this Thursday",
+            "relative-type-1": "next Thursday"
+          },
+          "fri": {
+            "relative-type--1": "last Friday",
+            "relative-type-0": "this Friday",
+            "relative-type-1": "next Friday"
+          },
+          "sat": {
+            "relative-type--1": "last Saturday",
+            "relative-type-0": "this Saturday",
+            "relative-type-1": "next Saturday"
+          },
+          "dayperiod": {
+            "displayName": "am/pm"
+          },
+          "hour": {
+            "displayName": "Ora",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "di li {0} ora"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "a ten {0} ora"
+            }
+          },
+          "minute": {
+            "displayName": "Minutu",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "di li {0} minutu"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "a ten {0} minutu"
+            }
+          },
+          "second": {
+            "displayName": "Sigundu",
+            "relative-type-0": "now",
+            "relativeTime-type-future": {
+              "relativeTimePattern-count-other": "di li {0} sigundu"
+            },
+            "relativeTime-type-past": {
+              "relativeTimePattern-count-other": "a ten {0} sigundu"
+            }
+          },
+          "zone": {
+            "displayName": "Ora lokal"
+          }
+        }
+      }
+    }
+  }
+}

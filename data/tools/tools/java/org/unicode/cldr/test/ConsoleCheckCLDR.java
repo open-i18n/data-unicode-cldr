@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,14 +23,19 @@ import org.unicode.cldr.test.CheckCLDR.CheckStatus;
 import org.unicode.cldr.test.CheckCLDR.CheckStatus.Subtype;
 import org.unicode.cldr.test.CheckCLDR.CompoundCheckCLDR;
 import org.unicode.cldr.test.CheckCLDR.FormatDemo;
+import org.unicode.cldr.test.CheckCLDR.Options;
 import org.unicode.cldr.test.CheckCLDR.Phase;
 import org.unicode.cldr.test.CheckCLDR.SimpleDemo;
 import org.unicode.cldr.test.ExampleGenerator.ExampleContext;
 import org.unicode.cldr.test.ExampleGenerator.ExampleType;
 import org.unicode.cldr.tool.ShowData;
 import org.unicode.cldr.tool.TablePrinter;
+import org.unicode.cldr.util.CLDRConfig;
+import org.unicode.cldr.util.CLDRConfig.Environment;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.Status;
+import org.unicode.cldr.util.CLDRPaths;
+import org.unicode.cldr.util.CLDRTool;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Counter;
 import org.unicode.cldr.util.Factory;
@@ -41,6 +45,7 @@ import org.unicode.cldr.util.LocaleIDParser;
 import org.unicode.cldr.util.Pair;
 import org.unicode.cldr.util.PathDescription;
 import org.unicode.cldr.util.PathHeader;
+import org.unicode.cldr.util.SimpleFactory;
 import org.unicode.cldr.util.StandardCodes;
 import org.unicode.cldr.util.StringId;
 import org.unicode.cldr.util.SupplementalDataInfo;
@@ -55,7 +60,6 @@ import com.ibm.icu.dev.util.BagFormatter;
 import com.ibm.icu.dev.util.ElapsedTimer;
 import com.ibm.icu.dev.util.PrettyPrinter;
 import com.ibm.icu.dev.util.Relation;
-import com.ibm.icu.dev.util.TransliteratorUtilities;
 import com.ibm.icu.impl.Row;
 import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.text.Collator;
@@ -76,6 +80,9 @@ import com.ibm.icu.util.ULocale;
  * @author markdavis
  * 
  */
+@CLDRTool(alias = "check",
+    description = "Run CheckCLDR against CLDR data",
+    url = "http://cldr.unicode.org/development/building-cldr-tools/running-consolecheckcldr")
 public class ConsoleCheckCLDR {
     public static boolean showStackTrace = false;
     public static boolean errorsOnly = false;
@@ -103,8 +110,9 @@ public class ConsoleCheckCLDR {
         GENERATE_HTML = 16,
         VOTE_RESOLVE = 17,
         ID_VIEW = 18,
-        SUBTYPE_FILTER = 19
-        // VOTE_RESOLVE2 = 18
+        SUBTYPE_FILTER = 19,
+        SOURCE_ALL = 20
+        // VOTE_RESOLVE2 = 21
         ;
 
     private static final UOption[] options = {
@@ -121,13 +129,14 @@ public class ConsoleCheckCLDR {
         UOption.create("errors_only", 'e', UOption.NO_ARG),
         UOption.create("check-on-submit", 'k', UOption.NO_ARG),
         UOption.create("noaliases", 'n', UOption.NO_ARG),
-        UOption.create("source_directory", 's', UOption.REQUIRES_ARG).setDefault(CldrUtility.MAIN_DIRECTORY),
+        UOption.create("source_directory", 's', UOption.REQUIRES_ARG).setDefault(CLDRPaths.MAIN_DIRECTORY),
         UOption.create("user", 'u', UOption.REQUIRES_ARG),
         UOption.create("phase", 'z', UOption.REQUIRES_ARG),
-        UOption.create("generate_html", 'g', UOption.OPTIONAL_ARG).setDefault(CldrUtility.CHART_DIRECTORY + "/errors/"),
+        UOption.create("generate_html", 'g', UOption.OPTIONAL_ARG).setDefault(CLDRPaths.CHART_DIRECTORY + "/errors/"),
         UOption.create("vote resolution", 'v', UOption.NO_ARG),
         UOption.create("id view", 'i', UOption.NO_ARG),
         UOption.create("subtype_filter", 'y', UOption.REQUIRES_ARG),
+        UOption.create("source_all", 'S', UOption.REQUIRES_ARG)
         // UOption.create("vote resolution2", 'w', UOption.OPTIONAL_ARG).setDefault(Utility.BASE_DIRECTORY +
         // "incoming/vetted/main/votes/"),
         // -v /Users/markdavis/Documents/workspace/cldr/src/incoming/vetted/main/usersa.xml
@@ -149,7 +158,8 @@ public class ConsoleCheckCLDR {
 
     private static String[] HelpMessage = {
         "-h \t This message",
-        "-s \t Source directory, default = " + CldrUtility.MAIN_DIRECTORY,
+        "-s \t Source directory, default = " + CLDRPaths.MAIN_DIRECTORY,
+        "-S common,seed\t Use common AND seed directories. ( Set CLDR_DIR, don't use this with -s. )\n",
         "-fxxx \t Pick the locales (files) to check: xxx is a regular expression, eg -f fr, or -f fr.*, or -f (fr|en-.*)",
         "-pxxx \t Pick the paths to check, eg -p(.*languages.*)",
         "-cxxx \t Set the coverage: eg -c comprehensive or -c modern or -c moderate or -c basic",
@@ -242,19 +252,57 @@ public class ConsoleCheckCLDR {
                     + organizations);
             }
         }
-
-        Phase phase = Phase.BUILD;
+        final CLDRConfig cldrConf = CLDRConfig.getInstance();
+        // set the envronment to UNITTEST as suggested
+        cldrConf.setEnvironment(Environment.UNITTEST);
+        // get the Phase from CLDRConfig object     
+        final Phase phase;
+        //   Phase phase = Phase.BUILD; 
         if (options[PHASE].doesOccur) {
+            String phaseVal = options[PHASE].value;
             try {
-                phase = Phase.forString(options[PHASE].value);
-            } catch (RuntimeException e) {
-                throw (IllegalArgumentException) new IllegalArgumentException(
-                    "Incorrect Phase value: should be one of " + Arrays.asList(Phase.values())).initCause(e);
+                // no null check for argument; if it is is null, Phase.forString would return the one from CLDRConfig
+                phase = Phase.forString(phaseVal);
+            } catch (IllegalArgumentException e) {
+                StringBuilder sb = new StringBuilder("Incorrect Phase value");
+                if (phaseVal != null && !phaseVal.isEmpty()) {
+                    sb.append(" '");
+                    sb.append(phaseVal);
+                    sb.append("'");
+                }
+                sb.append(": should be one of ");
+                for (Phase curPhase : Phase.values()) {
+                    // implicitly does a toString;
+                    sb.append(curPhase);
+                    sb.append(", ");
+                }
+                int lastIdx = sb.lastIndexOf(",");
+                // remove the last comma, if it occurs
+                if (lastIdx > -1) {
+                    String tmpBuf = sb.substring(0, lastIdx);
+                    sb.setLength(0);
+                    sb.append(tmpBuf);
+                }
+                sb.append(".");
+                // TODO: Reporting should be similar to an error (wrong parameter...), and not actually an Exception
+                throw new IllegalArgumentException(sb.toString(), e);
             }
+        } else {
+            phase = cldrConf.getPhase();
         }
 
-        String sourceDirectory = CldrUtility.checkValidDirectory(options[SOURCE_DIRECTORY].value,
-            "Fix with -s. Use -h for help.");
+        File sourceDirectories[] = null;
+
+        if (options[SOURCE_ALL].doesOccur) {
+            if (options[SOURCE_DIRECTORY].doesOccur) {
+                throw new IllegalArgumentException("Don't use -s and -S together.");
+            }
+            sourceDirectories = cldrConf.getMainDataDirectories(cldrConf.getCLDRDataDirectories(options[SOURCE_ALL].value));
+        } else {
+            sourceDirectories = new File[1];
+            sourceDirectories[0] = new File(CldrUtility.checkValidDirectory(options[SOURCE_DIRECTORY].value,
+                "Fix with -s. Use -h for help."));
+        }
 
         if (options[GENERATE_HTML].doesOccur) {
             coverageLevel = Level.MODERN; // reset
@@ -273,9 +321,9 @@ public class ConsoleCheckCLDR {
         idView = options[ID_VIEW].doesOccur;
 
         if (options[VOTE_RESOLVE].doesOccur) {
-            resolveVotesDirectory = CldrUtility.checkValidFile(CldrUtility.BASE_DIRECTORY + "incoming/vetted/votes/",
+            resolveVotesDirectory = CldrUtility.checkValidFile(CLDRPaths.BASE_DIRECTORY + "incoming/vetted/votes/",
                 true, null);
-            VoteResolver.setVoterToInfo(CldrUtility.checkValidFile(CldrUtility.BASE_DIRECTORY
+            VoteResolver.setVoterToInfo(CldrUtility.checkValidFile(CLDRPaths.BASE_DIRECTORY
                 + "incoming/vetted/usersa/usersa.xml", false, null));
             voteResolver = new VoteResolver<String>();
         }
@@ -287,8 +335,11 @@ public class ConsoleCheckCLDR {
 
         String user = options[USER].value;
 
-        System.out.println("source directory: " + sourceDirectory + "\t("
-            + new File(sourceDirectory).getCanonicalPath() + ")");
+        System.out.println("Source directories:\n");
+        for (File f : sourceDirectories) {
+            System.out.println("    " + f.getPath() + "\t("
+                + f.getCanonicalPath() + ")");
+        }
         System.out.println("factoryFilter: " + factoryFilter);
         System.out.println("test filter: " + checkFilter);
         System.out.println("organization: " + organization);
@@ -308,8 +359,8 @@ public class ConsoleCheckCLDR {
         System.out.println("subtype filter: " + subtypeFilter);
 
         // set up the test
-        Factory cldrFactory = Factory.make(sourceDirectory, factoryFilter)
-            .setSupplementalDirectory(new File(CldrUtility.SUPPLEMENTAL_DIRECTORY));
+        Factory cldrFactory = SimpleFactory.make(sourceDirectories, factoryFilter)
+            .setSupplementalDirectory(new File(CLDRPaths.SUPPLEMENTAL_DIRECTORY));
         CompoundCheckCLDR checkCldr = CheckCLDR.getCheckAll(cldrFactory, checkFilter);
         if (checkCldr.getFilteredTestList().size() == 0) {
             throw new IllegalArgumentException("The filter doesn't match any tests.");
@@ -318,12 +369,12 @@ public class ConsoleCheckCLDR {
         try {
             english = cldrFactory.make("en", true);
         } catch (Exception e1) {
-            Factory backCldrFactory = Factory.make(CldrUtility.MAIN_DIRECTORY, factoryFilter)
-                .setSupplementalDirectory(new File(CldrUtility.SUPPLEMENTAL_DIRECTORY));
+            Factory backCldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, factoryFilter)
+                .setSupplementalDirectory(new File(CLDRPaths.SUPPLEMENTAL_DIRECTORY));
             english = backCldrFactory.make("en", true);
         }
         checkCldr.setDisplayInformation(english);
-        setExampleGenerator(new ExampleGenerator(english, english, CldrUtility.SUPPLEMENTAL_DIRECTORY));
+        setExampleGenerator(new ExampleGenerator(english, english, CLDRPaths.SUPPLEMENTAL_DIRECTORY));
         PathShower pathShower = new PathShower();
 
         // call on the files
@@ -342,7 +393,7 @@ public class ConsoleCheckCLDR {
 
         showHeaderLine();
 
-        supplementalDataInfo = SupplementalDataInfo.getInstance(CldrUtility.SUPPLEMENTAL_DIRECTORY);
+        supplementalDataInfo = SupplementalDataInfo.getInstance(CLDRPaths.SUPPLEMENTAL_DIRECTORY);
 
         LocaleIDParser localeIDParser = new LocaleIDParser();
         String lastBaseLanguage = "";
@@ -378,13 +429,13 @@ public class ConsoleCheckCLDR {
                 if (level.compareTo(Level.BASIC) <= 0) continue;
             } else if (!isLanguageLocale) {
                 // otherwise, skip all language locales
-                options.put("CheckCoverage.skip", "true");
+                options.put(Options.Option.CheckCoverage_skip.getKey(), "true");
             }
 
             // if (coverageLevel != null) options.put("CoverageLevel.requiredLevel", coverageLevel.toString());
-            if (organization != null) options.put("CoverageLevel.localeType", organization);
-            options.put("phase", phase.toString());
-            // options.put("SHOW_TIMES", "true");
+            if (organization != null) options.put(Options.Option.CoverageLevel_localeType.getKey(), organization);
+            options.put(Options.Option.phase.getKey(), phase.toString());
+            //options.put(Options.Option.SHOW_TIMES.getKey(), "true");
 
             if (SHOW_LOCALE) System.out.println();
 
@@ -439,7 +490,7 @@ public class ConsoleCheckCLDR {
                 CheckStatus.Type statusType = status.getType();
 
                 if (errorsOnly) {
-                    if (!statusType.equals(status.errorType)) continue;
+                    if (!statusType.equals(CheckStatus.errorType)) continue;
                 }
 
                 if (subtypeFilter != null) {
@@ -476,7 +527,7 @@ public class ConsoleCheckCLDR {
             // initialize the first time in.
             if (englishPaths == null) {
                 englishPaths = new HashSet<String>();
-                final CLDRFile displayFile = checkCldr.getDisplayInformation();
+                final CLDRFile displayFile = CheckCLDR.getDisplayInformation();
                 addPrettyPaths(displayFile, pathFilter, pathHeaderFactory, noaliases, true, englishPaths);
                 addPrettyPaths(displayFile, displayFile.getExtraPaths(), pathFilter, pathHeaderFactory, noaliases,
                     true, englishPaths);
@@ -493,7 +544,7 @@ public class ConsoleCheckCLDR {
 
             // only create if we are going to use
             ExampleGenerator exampleGenerator = SHOW_EXAMPLES ? new ExampleGenerator(file, englishFile,
-                CldrUtility.DEFAULT_SUPPLEMENTAL_DIRECTORY) : null;
+                CLDRPaths.DEFAULT_SUPPLEMENTAL_DIRECTORY) : null;
             ExampleContext exampleContext = new ExampleContext();
 
             // Status pathStatus = new Status();
@@ -547,9 +598,9 @@ public class ConsoleCheckCLDR {
                 int limit = 1;
                 for (int jj = 0; jj < limit; ++jj) {
                     if (jj == 0) {
-                        checkCldr.check(path, fullPath, value, options, result);
+                        checkCldr.check(path, fullPath, value, new Options(options), result);
                     } else {
-                        checkCldr.getExamples(path, fullPath, value, options, result);
+                        checkCldr.getExamples(path, fullPath, value, new Options(options), result);
                     }
 
                     boolean showedOne = false;
@@ -1112,7 +1163,7 @@ public class ConsoleCheckCLDR {
 
         private static Relation<String, String> getOrgToLocales() {
             if (orgToLocales == null) {
-                orgToLocales = new Relation(new TreeMap(), TreeSet.class);
+                orgToLocales = Relation.of(new TreeMap<String, Set<String>>(), TreeSet.class);
                 StandardCodes sc = StandardCodes.make();
                 for (String org : sc.getLocaleCoverageOrganizations()) {
                     for (String locale : sc.getLocaleCoverageLocales(org)) {
@@ -1380,9 +1431,7 @@ public class ConsoleCheckCLDR {
 
     private static void showHeaderLine() {
         if (SHOW_LOCALE) {
-            String idViewString = "";
             if (idView) {
-                idViewString = "\tID\tDesc.";
                 System.out
                     .println("Locale\tID\tDesc.\t〈Eng.Value〉\t【Eng.Ex.】\t〈Loc.Value〉\t【Loc.Ex】\t⁅error/warning type⁆\t❮Error/Warning Msg❯");
             } else {
@@ -1499,10 +1548,6 @@ public class ConsoleCheckCLDR {
     private static boolean idView;
     private static SupplementalDataInfo supplementalDataInfo;
     private static CLDRFile english;
-
-    private static String safeForHtml(String value) {
-        return value == null ? "" : TransliteratorUtilities.toHTML.transliterate(value);
-    }
 
     public static class PathShower {
         String localeID;

@@ -1,0 +1,32 @@
+{
+  "main": {
+    "km-KH": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "25",
+          "_number": "$Revision: 91 $"
+        },
+        "generation": {
+          "_date": "$Date: 2014-03-13 22:27:12 -0500 (Thu, 13 Mar 2014) $"
+        },
+        "language": "km",
+        "territory": "KH"
+      },
+      "characters": {
+        "exemplarCharacters": "[\u17CC \u17CE \u17CF \u17D1 \u17D0 ៈ \u17CB \u17C9 \u17CA \u17CD ក ខ គ ឃ ង ច ឆ ជ ឈ ញ ដ ឋ ឌ ឍ ណ ត ថ ទ ធ ន ប ផ ព ភ ម យ រ ឫ ឬ ល ឭ ឮ វ ស ហ ឡ អ ឲ ឪ {អា} ឥ ឦ ឧ {ឧក} ឩ ឯ ឰ ឱ ឳ ា \u17B7 \u17B8 \u17B9 \u17BA \u17BB \u17BC \u17BD ើ ឿ ៀ េ ែ ៃ ោ ៅ \u17C6 ះ \u17D2]",
+        "auxiliary": "[\u17B4\u17B5\u200B ឝ ឞ]",
+        "punctuation": "[\\- , ៖ ! ? . ។ ៕ ‘ ’ \" “ ” ( ) \\[ \\] \\{ \\} ៙ ៚]",
+        "index": "[ក ខ គ ឃ ង ច ឆ ជ ឈ ញ ដ ឋ ឌ ឍ ណ ត ថ ទ ធ ន ប ផ ព ភ ម យ រ ឫ ឬ ល ឭ ឮ វ ស ហ ឡ អ ឪ ឥ ឦ ឧ ឩ ឯ ឰ ឱ ឳ]",
+        "ellipsis": {
+          "initial": "…{0}",
+          "medial": "{0}…{1}",
+          "final": "{0}…",
+          "word-initial": "… {0}",
+          "word-medial": "{0} … {1}",
+          "word-final": "{0} …"
+        },
+        "moreInformation": "?"
+      }
+    }
+  }
+}

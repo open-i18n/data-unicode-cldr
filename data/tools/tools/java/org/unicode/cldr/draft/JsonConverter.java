@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.BitSet;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -20,7 +19,7 @@ import java.util.TreeSet;
 
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.DtdType;
-import org.unicode.cldr.util.CldrUtility;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.ElementAttributeInfo;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.XPathParts;
@@ -34,9 +33,9 @@ import com.ibm.icu.impl.Utility;
 public class JsonConverter {
 
     private static final String FILES = "el.*";
-    private static final String MAIN_DIRECTORY = CldrUtility.MAIN_DIRECTORY;// CldrUtility.SUPPLEMENTAL_DIRECTORY;
-                                                                            // //CldrUtility.MAIN_DIRECTORY;
-    private static final String OUT_DIRECTORY = CldrUtility.GEN_DIRECTORY + "/jason/"; // CldrUtility.MAIN_DIRECTORY;
+    private static final String MAIN_DIRECTORY = CLDRPaths.MAIN_DIRECTORY;// CldrUtility.SUPPLEMENTAL_DIRECTORY;
+                                                                          // //CldrUtility.MAIN_DIRECTORY;
+    private static final String OUT_DIRECTORY = CLDRPaths.GEN_DIRECTORY + "/jason/"; // CldrUtility.MAIN_DIRECTORY;
     private static boolean COMPACT = false;
     static final Set<String> REPLACING_BASE = !COMPACT ? Collections.EMPTY_SET : new HashSet<String>(
         Arrays.asList("type id key count".split("\\s")));
@@ -54,15 +53,14 @@ public class JsonConverter {
         final XPathParts oldParts = new XPathParts();
         final XPathParts parts = new XPathParts();
         // ElementName elementName = new ElementName();
-        LinkedHashMap<String, String> nonDistinguishing = new LinkedHashMap<String, String>();
-        BitSet ordered = new BitSet();
+        // LinkedHashMap<String, String> nonDistinguishing = new LinkedHashMap<String, String>();
         for (String locale : locales) {
             System.out.println("Converting:\t" + locale);
             final CLDRFile file = (CLDRFile) cldrFactory.make(locale, false);
             Relation<String, String> element2Attributes = file.isNonInheriting() ? suppInfo : mainInfo;
             final Item main = new TableItem(null);
             DtdType dtdType = null;
-            for (Iterator<String> it = file.iterator("", CLDRFile.ldmlComparator); it.hasNext();) {
+            for (Iterator<String> it = file.iterator("", file.getComparator()); it.hasNext();) {
                 final String xpath = it.next();
                 final String fullXpath = file.getFullXPath(xpath);
                 String value = file.getStringValue(xpath);
@@ -99,7 +97,7 @@ public class JsonConverter {
         }
     }
 
-    static Relation<String, String> extraDistinguishing = new Relation(new TreeMap(), LinkedHashSet.class);
+    static Relation<String, String> extraDistinguishing = Relation.of(new TreeMap<String, Set<String>>(), LinkedHashSet.class);
     static {
         putAll(extraDistinguishing, "dayPeriodRule", "earlyMorning", "before", "from");
     }

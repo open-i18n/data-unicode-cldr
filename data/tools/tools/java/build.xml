@@ -1,3 +1,8 @@
+<!--
+    see readme.txt
+-->
+
+
 <project name="CLDR" default="util" basedir=".">
     <target name="init">
         <tstamp/>
@@ -8,12 +13,12 @@
         <property name="jarSrc.file" value="cldrsrc.jar"/>
         <property name="doc.dir" value="doc"/>
         <property name="doc.params" value=""/>
-        <!--  Load local definitions from an optional build.properties file, if available. 
+        <!--  Load local definitions from an optional build.properties file, if available.
               build.properties is NOT checked into CVS. -->
         <property file="build.properties" />
         <!-- Load environment variables -->
         <property environment="env"/>
-        
+
         <path id="build.classpath">
             <pathelement path="${build.dir}"/>
             <pathelement path="${libs.dir}"/>
@@ -21,25 +26,27 @@
 
         <property name="CLDR_DIR" value="${env.CLDR_DIR}"/>
         <property name="env.JVM_OPTIONS" value="-DCLDR_DIR=${CLDR_DIR} -DDEBUG=false -Dverbose=false"/>
-        <property name="jvm_options" value="${env.JVM_OPTIONS}"/>
+        <property name="env.JVM_EXTRA_OPTIONS" value=""/>
+        <property name="jvm_options" value="${env.JVM_OPTIONS} ${env.JVM_EXTRA_OPTIONS}"/>
 
-        
+        <property name="tooltmp.dir" value="tmp"/>
+
         <condition property="is.icu4j.classes.set" >
             <or>
                 <isset property="env.ICU4J_CLASSES" />
                 <isset property="env.ICU4J_JAR" />
             </or>
-        </condition > 
-        
+        </condition>
+
         <condition property="is.utilities.classes.set" >
             <or>
                 <isset property="env.ICU4J_CLASSES" />
                 <isset property="env.UTILITIES_JAR" />
             </or>
-        </condition > 
+        </condition>
 
         <mkdir dir="${build.dir}"/>
-        
+
         <path id="project.class.path">
             <pathelement path="${java.class.path}/"/>
             <pathelement path="${build.dir}"/>
@@ -91,7 +98,7 @@
         <!-- copy data files into classes.. -->
         <mkdir dir="${build.dir}/org/unicode/cldr/util/data"/>
         <copy todir="${build.dir}/org/unicode/cldr/util/data">
-            <fileset dir="${src.dir}/org/unicode/cldr/util/data" 
+            <fileset dir="${src.dir}/org/unicode/cldr/util/data"
                 excludes="**/CVS/**/*"/>
         </copy>
     </target>
@@ -108,7 +115,7 @@
         <!-- copy data files into classes.. -->
         <mkdir dir="${build.dir}/org/unicode/cldr/tool"/>
         <copy todir="${build.dir}/org/unicode/cldr/tool">
-            <fileset dir="${src.dir}/org/unicode/cldr/tool" 
+            <fileset dir="${src.dir}/org/unicode/cldr/tool"
                 excludes="**/CVS/**/* **/**/*.java"/>
         </copy>
     </target>
@@ -136,7 +143,7 @@
         <!-- copy data files into classes.. -->
         <mkdir dir="${build.dir}/org/unicode/cldr/icu"/>
         <copy todir="${build.dir}/org/unicode/cldr/icu">
-            <fileset dir="${src.dir}/org/unicode/cldr/icu" 
+            <fileset dir="${src.dir}/org/unicode/cldr/icu"
                 excludes="**/CVS/**/* **/**/*.java"/>
         </copy>
 	</target>
@@ -153,11 +160,11 @@
         <!-- copy data files into classes.. -->
         <mkdir dir="${build.dir}/org/unicode/cldr/json"/>
         <copy todir="${build.dir}/org/unicode/cldr/json">
-            <fileset dir="${src.dir}/org/unicode/cldr/json" 
+            <fileset dir="${src.dir}/org/unicode/cldr/json"
                 excludes="**/CVS/**/* **/**/*.java"/>
         </copy>
 	</target>
-    <target name="test" depends="init,util,tool" description="build tests">
+    <target name="test" depends="init,util,tool,icu" description="build tests">
         <javac includeantruntime="false" includes="org/unicode/cldr/test/**/*.java org/unicode/cldr/unittest/**/*.java"
             excludes="**/CVS/**/*"
             srcdir="${src.dir}"
@@ -170,13 +177,13 @@
         <!-- copy data files into classes.. -->
         <mkdir dir="${build.dir}/org/unicode/cldr/test"/>
         <copy todir="${build.dir}/org/unicode/cldr/test">
-            <fileset dir="${src.dir}/org/unicode/cldr/test" 
+            <fileset dir="${src.dir}/org/unicode/cldr/test"
                 excludes="**/CVS/**/* **/**/*.java"/>
         </copy>
         <!-- and unittest files -->
         <mkdir dir="${build.dir}/org/unicode/cldr/unittest"/>
         <copy todir="${build.dir}/org/unicode/cldr/unittest">
-            <fileset dir="${src.dir}/org/unicode/cldr/unittest" 
+            <fileset dir="${src.dir}/org/unicode/cldr/unittest"
                 excludes="**/CVS/**/* **/**/*.java"/>
         </copy>
     </target>
@@ -184,12 +191,27 @@
         <delete dir="${build.dir}"/>
         <delete file="${jar.file}"/>
     </target>
-    
+
     <target name="jar" depends="all" description="build full 'cldr.jar' jar file">
         <jar jarfile="${jar.file}"
             compress="true"
-            includes="org/unicode/cldr/draft/**/*,org/unicode/cldr/util/**/*,org/unicode/cldr/tool/**/*,org/unicode/cldr/test/**/*,org/unicode/cldr/posix/**/*,org/unicode/cldr/ant/**/*,org/unicode/cldr/json/**/*,org/unicode/cldr/icu/**/*"
-            basedir="${build.dir}"/>
+            includes="org/unicode/cldr/draft/**/*,
+        		org/unicode/cldr/util/**/*,
+        		org/unicode/cldr/tool/**/*,
+        		org/unicode/cldr/test/**/*,
+        		org/unicode/cldr/posix/**/*,
+        		org/unicode/cldr/ant/**/*,
+        		org/unicode/cldr/json/**/*,
+        		org/unicode/cldr/icu/**/*"
+            basedir="${build.dir}">
+          <manifest>
+            <attribute name="Built-By" value="${user.name}"/>
+            <attribute name="Main-Class"
+                       value="org.unicode.cldr.tool.Main"/>
+            <attribute name="Class-Path"
+                       value="./libs/icu4j.jar ./libs/utilities.jar ./libs/xercesImpl.jar ./libs/guava-16.0.1.jar icu4j.jar utilities.jar xercesImpl.jar"/>
+          </manifest>
+        </jar>
     </target>
   <!-- Docs stuff -->
     <!-- use excludefiles below when we move to ant 1.5 -->
@@ -220,12 +242,12 @@
   <!-- for testing and development -->
   <target name="icu4c" depends="init, ant-plugin, icu">
     <ant dir="${env.ICU4C_DIR}/source/data" antfile="build.xml" target="all" />
-  </target>   
+  </target>
 
 
     <target name="check" description="Run the standard CLDR test suite" depends="init">
         <antcall target="_runCheck">
-            <param name="runcheck.arg" value="-n -w"/>
+            <param name="runcheck.arg" value="-n -u"/>
             <param name="runcheck.jvmarg" value="${jvm_options}"/>
         </antcall>
     </target>
@@ -239,4 +261,61 @@
         </java>
    </target>
 
+
+   <target name="GenerateMaximalLocales" depends="init" description="Build likelySubtags.xml and supplementalMetadata.xml - see https://sites.google.com/site/cldr/development/updating-codes/likelysubtags">
+     <antcall target="_runTool">
+       <param name="runTool.class" value="org.unicode.cldr.tool.GenerateMaximalLocales"/>
+       <param name="runTool.arg" value=""/>
+       <param name="runTool.jvmarg" value="${jvm_options}"/>
+     </antcall>
+     <antcall target="_toolcopy"/>
+   </target>
+
+   <target name="AddPopulationData" depends="init" description="test population data - see https://sites.google.com/site/cldr/development/updating-codes/update-language-script-info ">
+     <antcall target="_runTool">
+       <param name="runTool.class" value="org.unicode.cldr.tool.AddPopulationData"/>
+       <param name="runTool.arg" value=""/>
+       <param name="runTool.jvmarg" value="${jvm_options} -DADD_POP=true"/>
+     </antcall>
+   </target>
+
+   <target name="ConvertLanguageData" depends="init" description="convert population data - updates supplementalData.xml -  see https://sites.google.com/site/cldr/development/updating-codes/update-language-script-info">
+     <antcall target="_runTool">
+       <param name="runTool.class" value="org.unicode.cldr.tool.ConvertLanguageData"/>
+       <param name="runTool.arg" value=""/>
+       <param name="runTool.jvmarg" value="${jvm_options} -DADD_POP=true"/>
+     </antcall>
+     <antcall target="_toolcopy"/>
+   </target>
+
+   <target name="GenerateAllCharts" depends="init" description="generate all html charts -  see http://cldr.unicode.org/development/cldr-big-red-switch/generating-charts">
+     <antcall target="_runTool">
+       <param name="runTool.class" value="org.unicode.cldr.tool.GenerateAllCharts"/>
+       <param name="runTool.arg" value=""/>
+       <param name="runTool.jvmarg" value="${jvm_options}"/>
+     </antcall>
+<!--     <antcall target="_toolcopy"/> -->
+   </target>
+
+   <target name="RunAllTools" depends="GenerateMaximalLocales,AddPopulationData,ConvertLanguageData"
+           description="Run several of the automated tools that are currently available to this build script.">
+   </target>
+
+   <target name="_runTool" depends="all">
+     <delete dir="${tooltmp.dir}"/>
+        <echo message="JVM argument:    ${runTool.jvmarg} -Djava.awt.headless=true"/>
+        <echo message="Tool class:      ${runTool.class}"/>
+        <echo message="Tool argument:   ${runTool.arg}"/>
+        <java classname="${runTool.class}" fork="yes" failonerror="true" classpathref="project.class.path">
+          <arg line="${runTool.arg}"/>
+          <jvmarg line="${runTool.jvmarg} -DCLDR_GEN_DIR=${tooltmp.dir} -DCLDR_DIR=${CLDR_DIR} -Djava.awt.headless=true"/>
+        </java>
+   </target>
+
+   <target name="_toolcopy">
+     <copy verbose="true" todir="${CLDR_DIR}/common/">
+       <fileset dir="${tooltmp.dir}"/>
+     </copy>
+     <delete dir="${tooltmp.dir}"/>
+   </target>
 </project>

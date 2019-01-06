@@ -17,11 +17,13 @@ import java.util.regex.Pattern;
 import org.unicode.cldr.tool.ConvertLanguageData.InverseComparator;
 import org.unicode.cldr.unittest.TestAll.TestInfo;
 import org.unicode.cldr.util.CLDRFile;
+import org.unicode.cldr.util.CLDRLocale;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Counter;
 import org.unicode.cldr.util.DelegatingIterator;
 import org.unicode.cldr.util.EscapingUtilities;
 import org.unicode.cldr.util.Factory;
+import org.unicode.cldr.util.PathHeader;
 import org.unicode.cldr.util.PluralSamples;
 import org.unicode.cldr.util.StringId;
 import org.unicode.cldr.util.SupplementalDataInfo;
@@ -515,6 +517,8 @@ public class TestUtilities extends TestFmwk {
             { 304, new VoterInfo(Organization.apple, Level.vetter, "appleV") },
             { 208, new VoterInfo(Organization.adobe, Level.expert, "adobeE") },
             { 101, new VoterInfo(Organization.ibm, Level.street, "ibmS") },
+            { 118, new VoterInfo(Organization.ibm, Level.expert, "ibmE") },
+            { 129, new VoterInfo(Organization.ibm, Level.tc, "ibmT") },
         });
 
     private int toVoterId(String s) {
@@ -529,7 +533,7 @@ public class TestUtilities extends TestFmwk {
     public void TestTrunkStatus() {
         VoteResolver.setVoterToInfo(testdata);
         VoteResolver<String> resolver = new VoteResolver<String>();
-        resolver.setEstablishedFromLocale("de");
+        resolver.setLocale("de");
 
         resolver.setLastRelease("old-item", Status.approved);
         resolver.setTrunk("new-item", Status.approved);
@@ -544,7 +548,7 @@ public class TestUtilities extends TestFmwk {
     public void TestVoteResolverNgombaTrunkStatus() {
         VoteResolver.setVoterToInfo(testdata);
         VoteResolver<String> resolver = new VoteResolver<String>();
-        resolver.setEstablishedFromLocale("jgo");
+        resolver.setLocale("jgo");
         final String jgo21 = "\uA78B"; // "[ɑ ɑ́ ɑ̂ ɑ̌ b c d ɛ {ɛ́} {ɛ̂} {ɛ̌} {ɛ̀} {ɛ̄} f ɡ h i í î ǐ j k l m ḿ {m̀} {m̄} n ń ǹ {n̄} ŋ {ŋ́} {ŋ̀} {ŋ̄} ɔ {ɔ́} {ɔ̂} {ɔ̌} p pf s sh t ts u ú û ǔ ʉ {ʉ́} {ʉ̂} {ʉ̌} {ʉ̈} v w ẅ y z Ꞌ]";
         final String jgo22trunk = "\uA78C"; // "[a á â ǎ b c d ɛ {ɛ́} {ɛ̂} {ɛ̌} {ɛ̀} {ɛ̄} f ɡ h i í î ǐ j k l m ḿ {m̀} {m̄} n ń ǹ {n̄} ŋ {ŋ́} {ŋ̀} {ŋ̄} ɔ {ɔ́} {ɔ̂} {ɔ̌} p {pf} s {sh} t {ts} u ú û ǔ ʉ {ʉ́} {ʉ̂} {ʉ̌} {ʉ̈} v w ẅ y z ꞌ]";
         Status oldStatus = Status.approved;
@@ -560,7 +564,7 @@ public class TestUtilities extends TestFmwk {
         VoteResolver.setVoterToInfo(testdata);
         VoteResolver<String> resolver = new VoteResolver<String>();
 
-        resolver.setEstablishedFromLocale("de");
+        resolver.setLocale("de");
         resolver.setLastRelease("foo", Status.approved);
         resolver.add("fii", toVoterId("adobeE"));
         resolver.add("fii", toVoterId("appleV"));
@@ -592,7 +596,7 @@ public class TestUtilities extends TestFmwk {
         VoteResolver.setVoterToInfo(testdata);
         VoteResolver<String> resolver = new VoteResolver<String>();
 
-        resolver.setEstablishedFromLocale("af");
+        resolver.setLocale("af");
         resolver.setLastRelease("BQ", Status.missing);
         VoteStatus status = resolver.getStatusForOrganization(Organization.openoffice_org);
         assertEquals("", VoteStatus.provisionalOrWorse, status);
@@ -621,7 +625,7 @@ public class TestUtilities extends TestFmwk {
 
         Status oldStatus = Status.unconfirmed;
 
-        resolver.setEstablishedFromLocale("de");
+        resolver.setLocale("de");
         resolver.setLastRelease("foo", oldStatus);
         resolver.add("zebra", toVoterId("googleV"));
         resolver.add("apple", toVoterId("appleV"));
@@ -633,7 +637,7 @@ public class TestUtilities extends TestFmwk {
         assertEquals("", Status.provisional, winningStatus);
 
         resolver.clear();
-        resolver.setEstablishedFromLocale("de");
+        resolver.setLocale("de");
         resolver.setLastRelease("foo", oldStatus);
         resolver.add("zebra", toVoterId("googleV"));
         resolver.add("zebra", toVoterId("googleS"));
@@ -646,13 +650,53 @@ public class TestUtilities extends TestFmwk {
         assertEquals("", Status.provisional, winningStatus);
     }
 
+    public void TestVoteDowngrade() {
+        VoteResolver.setVoterToInfo(testdata);
+        VoteResolver<String> resolver = new VoteResolver<String>();
+
+        Status oldStatus = Status.unconfirmed;
+
+        resolver.setLocale("mt");
+        resolver.setLastRelease("foo", oldStatus);
+        resolver.add("aardvark", toVoterId("adobeE"));
+        resolver.add("zebra", toVoterId("ibmT"));
+        assertEquals("", "zebra", resolver.getWinningValue()); // TC vote of 20 beats expert's 8
+        assertEquals("", Status.approved, resolver.getWinningStatus());
+
+        resolver.clear();
+        resolver.setLocale("mt");
+        resolver.setLastRelease("foo", oldStatus);
+        resolver.add("aardvark", toVoterId("adobeE"));
+        resolver.add("zebra", toVoterId("ibmT"));
+        resolver.add("aardvark", toVoterId("ibmE"));
+        assertEquals("", "zebra", resolver.getWinningValue()); // TC vote of 20 beats expert's 8 and its own expert's 8
+        assertEquals("", Status.approved, resolver.getWinningStatus());
+
+        resolver.clear();
+        resolver.setLocale("mt");
+        resolver.setLastRelease("foo", oldStatus);
+        resolver.add("aardvark", toVoterId("adobeE"));
+        resolver.add("zebra", toVoterId("ibmT"), Level.vetter.getVotes()); // NOTE: reduced votes: as vetter.
+        resolver.add("aardvark", toVoterId("ibmE"));
+        assertEquals("", "aardvark", resolver.getWinningValue()); // Now aardvark wins - experts win out.
+        assertEquals("", Status.approved, resolver.getWinningStatus());
+
+        resolver.clear();
+        resolver.setLocale("mt");
+        resolver.setLastRelease("foo", oldStatus);
+        resolver.add("aardvark", toVoterId("adobeE"));
+        resolver.add("zebra", toVoterId("ibmT"), Level.vetter.getVotes()); // NOTE: reduced votes: as vetter.
+        assertEquals("", "aardvark", resolver.getWinningValue()); // Now aardvark wins - experts win out.
+        assertEquals("", Status.approved, resolver.getWinningStatus());
+    }
+
     public void TestResolvedVoteCounts() {
         VoteResolver.setVoterToInfo(testdata);
         VoteResolver<String> resolver = new VoteResolver<String>();
 
         Status oldStatus = Status.unconfirmed;
 
-        resolver.setEstablishedFromLocale("de");
+        resolver.setLocale("de");
         resolver.setLastRelease("foo", oldStatus);
         resolver.add("zebra", toVoterId("googleV"));
         resolver.add("apple", toVoterId("appleV"));
@@ -663,7 +707,7 @@ public class TestUtilities extends TestFmwk {
         assertEquals("", "foo", new ArrayList<String>(counts.keySet()).get(2));
 
         resolver.clear();
-        resolver.setEstablishedFromLocale("de");
+        resolver.setLocale("de");
         resolver.setLastRelease("foo", Status.approved);
         resolver.add("zebra", toVoterId("googleV"));
         resolver.add("apple", toVoterId("appleV"));
@@ -672,12 +716,43 @@ public class TestUtilities extends TestFmwk {
         assertEquals("", "foo", new ArrayList<String>(counts.keySet()).get(0));
 
         resolver.clear();
-        resolver.setEstablishedFromLocale("de");
+        resolver.setLocale("de");
         resolver.setLastRelease("foo", Status.approved);
         resolver.add("zebra", toVoterId("googleS"));
         counts = resolver.getResolvedVoteCounts();
         logln(counts.toString());
         assertEquals("", "foo", new ArrayList<String>(counts.keySet()).get(0));
+    }
+
+    private void verifyRequiredVotes(VoteResolver resolver, String locale, String xpath, int required) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Locale: " + locale);
+        resolver.clear();
+        PathHeader ph = null;
+        if (xpath != null) {
+            sb.append(" XPath: " + xpath);
+            ph = PathHeader.getFactory(TestInfo.getInstance().getEnglish()).fromPath(xpath);
+        }
+        resolver.setLocale(CLDRLocale.getInstance(locale), ph);
+        assertEquals(ph.toString(), required, resolver.getRequiredVotes());
+    }
+
+    public void TestRequiredVotes() {
+        VoteResolver.setVoterToInfo(testdata);
+        VoteResolver<String> resolver = new VoteResolver<String>();
+
+        verifyRequiredVotes(resolver, "mt", "//ldml/localeDisplayNames/languages/language[@type=\"fr_CA\"]", 4);
+        verifyRequiredVotes(resolver, "fr", "//ldml/localeDisplayNames/languages/language[@type=\"fr_CA\"]", 8);
+
+        assertEquals("VoteResolver.HIGH_BAR", VoteResolver.HIGH_BAR, 20);
+        verifyRequiredVotes(resolver, "es", "//ldml/numbers/symbols[@numberSystem=\"latn\"]/group", VoteResolver.HIGH_BAR); // == 20
+        verifyRequiredVotes(resolver, "es", "//ldml/numbers/symbols[@numberSystem=\"latn\"]/decimal", VoteResolver.HIGH_BAR);
+        verifyRequiredVotes(resolver, "ast", "//ldml/numbers/symbols[@numberSystem=\"latn\"]/group", VoteResolver.HIGH_BAR);
+        verifyRequiredVotes(resolver, "es", "//ldml/numbers/symbols[@numberSystem=\"deva\"]/decimal", VoteResolver.HIGH_BAR);
+        verifyRequiredVotes(resolver, "es", "//ldml/numbers/symbols[@numberSystem=\"deva\"]/group", VoteResolver.HIGH_BAR);
+        verifyRequiredVotes(resolver, "es", "//ldml/numbers/symbols[@numberSystem=\"deva\"]/decimal", VoteResolver.HIGH_BAR);
+        verifyRequiredVotes(resolver, "ast", "//ldml/numbers/symbols[@numberSystem=\"deva\"]/group", VoteResolver.HIGH_BAR);
+        verifyRequiredVotes(resolver, "es", "//ldml/numbers/symbols[@numberSystem=\"deva\"]/decimal", VoteResolver.HIGH_BAR);
     }
 
     public void TestVoteResolver() {
@@ -843,7 +918,7 @@ public class TestUtilities extends TestFmwk {
             } else if (name.equalsIgnoreCase("check")) {
                 counter++;
                 // load the resolver
-                resolver.setEstablishedFromLocale(locale);
+                resolver.setLocale(locale);
                 resolver.setLastRelease(oldValue, oldStatus);
                 for (int voter : values.keySet()) {
                     resolver.add(values.get(voter), voter);

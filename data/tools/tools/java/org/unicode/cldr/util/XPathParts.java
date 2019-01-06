@@ -16,34 +16,53 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.unicode.cldr.util.CLDRFile.DtdType;
 
 import com.ibm.icu.dev.util.TransliteratorUtilities;
 import com.ibm.icu.impl.Utility;
+import com.ibm.icu.util.Freezable;
 
 /**
  * Parser for XPath
  */
-public class XPathParts {
+public final class XPathParts implements Freezable<XPathParts> {
     private static final boolean DEBUGGING = false;
-    private List<Element> elements = new ArrayList<Element>();
-    Comparator<String> attributeComparator;
-    Map<String, Map<String, String>> suppressionMap;
 
-    static Map<String, XPathParts> cache = new HashMap<String, XPathParts>();
+    private volatile boolean frozen = false;
+    private List<Element> elements = new ArrayList<Element>();
+
+    private DtdData dtdData;
+    private final Map<String, Map<String, String>> suppressionMap;
+
+    private static final Map<String, XPathParts> cache = new ConcurrentHashMap<String, XPathParts>();
+
+    //private static final Map<Element, Element> ELEMENT_CACHE = new ConcurrentHashMap<Element, Element>();
 
     public XPathParts() {
-        this(null, null);
+        this(null, null, null);
     }
 
     public XPathParts(Comparator<String> attributeComparator, Map<String, Map<String, String>> suppressionMap) {
-        if (attributeComparator == null) attributeComparator = CLDRFile.getAttributeComparator();
-        this.attributeComparator = attributeComparator;
-        this.suppressionMap = suppressionMap;
+        this(null, attributeComparator, suppressionMap);
     }
 
     // private static MapComparator AttributeComparator = new MapComparator().add("alt").add("draft").add("type");
+
+    public XPathParts(List<Element> elements, Comparator<String> attributeComparator, Map<String, Map<String, String>> suppressionMap) {
+        if (elements != null) {
+            for (Element e : elements) {
+                this.elements.add(e.cloneAsThawed());
+            }
+        }
+        if (attributeComparator == null) {
+            attributeComparator = CLDRFile.getAttributeOrdering();
+        }
+        this.suppressionMap = suppressionMap;
+    }
 
     /**
      * See if the xpath contains an element
@@ -60,6 +79,7 @@ public class XPathParts {
      */
     public XPathParts clear() {
         elements.clear();
+        dtdData = null;
         return this;
     }
 
@@ -318,11 +338,11 @@ public class XPathParts {
             if (!e1.equals(e2)) {
                 /* is the current element the last one */
                 if (i == min - 1) {
-                    String et1 = e1.getAttribute("type");
-                    String et2 = e2.getAttribute("type");
+                    String et1 = e1.getAttributeValue("type");
+                    String et2 = e2.getAttributeValue("type");
                     if (et1 == null && et2 == null) {
-                        et1 = e1.getAttribute("id");
-                        et2 = e2.getAttribute("id");
+                        et1 = e1.getAttributeValue("id");
+                        et2 = e2.getAttributeValue("id");
                     }
                     if (et1 != null && et2 != null && et1.equals(et2)) {
                         return true;
@@ -341,7 +361,7 @@ public class XPathParts {
     public boolean containsAttribute(String attribute) {
         for (int i = 0; i < elements.size(); ++i) {
             Element element = elements.get(i);
-            if (element.getAttribute(attribute) != null) {
+            if (element.getAttributeValue(attribute) != null) {
                 return true;
             }
         }
@@ -353,7 +373,7 @@ public class XPathParts {
      */
     public boolean containsAttributeValue(String attribute, String value) {
         for (int i = 0; i < elements.size(); ++i) {
-            String otherValue = elements.get(i).getAttribute(attribute);
+            String otherValue = elements.get(i).getAttributeValue(attribute);
             if (otherValue != null && value.equals(otherValue)) return true;
         }
         return false;
@@ -370,8 +390,11 @@ public class XPathParts {
      * Get the nth element. Negative values are from end
      */
     public String getElement(int elementIndex) {
-        if (elementIndex < 0) elementIndex += size();
-        return elements.get(elementIndex).getElement();
+        return elements.get(elementIndex >= 0 ? elementIndex : elementIndex + size()).getElement();
+    }
+
+    public int getAttributeCount(int elementIndex) {
+        return elements.get(elementIndex >= 0 ? elementIndex : elementIndex + size()).getAttributeCount();
     }
 
     /**
@@ -380,13 +403,7 @@ public class XPathParts {
      * PROBLEM: exposes internal map
      */
     public Map<String, String> getAttributes(int elementIndex) {
-        if (elementIndex < 0) elementIndex += size();
-        return elements.get(elementIndex).getAttributes();
-    }
-
-    public int getAttributeCount(int elementIndex) {
-        if (elementIndex < 0) elementIndex += size();
-        return elements.get(elementIndex).getAttributeCount();
+        return elements.get(elementIndex >= 0 ? elementIndex : elementIndex + size()).getAttributes();
     }
 
     /**
@@ -396,10 +413,7 @@ public class XPathParts {
      * @return
      */
     public Collection<String> getAttributeKeys(int elementIndex) {
-        if (elementIndex < 0) elementIndex += size();
-        Set<String> result = elements.get(elementIndex).getAttributeKeys();
-        if (result == Collections.EMPTY_SET) return result;
-        return Collections.unmodifiableSet(result);
+        return elements.get(elementIndex >= 0 ? elementIndex : elementIndex + size()).getAttributes().keySet();
     }
 
     /**
@@ -408,12 +422,11 @@ public class XPathParts {
      */
     public String getAttributeValue(int elementIndex, String attribute) {
         if (elementIndex < 0) elementIndex += size();
-        return elements.get(elementIndex).getAttribute(attribute);
+        return elements.get(elementIndex).getAttributeValue(attribute);
     }
 
     public void putAttributeValue(int elementIndex, String attribute, String value) {
-        if (elementIndex < 0) elementIndex += size();
-        elements.get(elementIndex).putAttribute(attribute, value);
+        elements.get(elementIndex >= 0 ? elementIndex : elementIndex + size()).putAttribute(attribute, value);
     }
 
     /**
@@ -439,6 +452,13 @@ public class XPathParts {
      * Add an element
      */
     public XPathParts addElement(String element) {
+        if (elements.size() == 0) {
+            try {
+                dtdData = DtdData.getInstance(DtdType.valueOf(element));
+            } catch (Exception e) {
+                dtdData = null;
+            }
+        }
         elements.add(new Element(element));
         return this;
     }
@@ -448,15 +468,25 @@ public class XPathParts {
      */
     public XPathParts addAttribute(String attribute, String value) {
         Element e = elements.get(elements.size() - 1);
-        attribute = attribute.intern();
-        // AttributeComparator.add(attribute);
         e.putAttribute(attribute, value);
         return this;
     }
 
     public XPathParts removeAttribute(String elementName, String attributeName) {
-        Map<String, String> m = findAttributes(elementName);
-        m.remove(attributeName);
+        return removeAttribute(findElement(elementName), attributeName);
+    }
+
+    public XPathParts removeAttribute(int elementIndex, String attributeName) {
+        elements.get(elementIndex >= 0 ? elementIndex : elementIndex + size()).putAttribute(attributeName, null);
+        return this;
+    }
+
+    public XPathParts removeAttributes(String elementName, Collection<String> attributeNames) {
+        return removeAttributes(findElement(elementName), attributeNames);
+    }
+
+    public XPathParts removeAttributes(int elementIndex, Collection<String> attributeNames) {
+        elements.get(elementIndex >= 0 ? elementIndex : elementIndex + size()).removeAttributes(attributeNames);
         return this;
     }
 
@@ -467,17 +497,18 @@ public class XPathParts {
      * @return
      */
     public XPathParts set(String xPath) {
-        if (true) {
-            return addInternal(xPath, true);
+        if (frozen) {
+            throw new UnsupportedOperationException("Can't modify frozen Element");
         }
+        return addInternal(xPath, true);
 
-        // try caching to see if that speeds things up
-        XPathParts cacheResult = cache.get(xPath);
-        if (cacheResult == null) {
-            cacheResult = new XPathParts(attributeComparator, suppressionMap).addInternal(xPath, true);
-            // cache.put(xPath,cacheResult);
-        }
-        return set(cacheResult); // does a deep copy, so ok.
+        //        // try caching to see if that speeds things up
+        //        XPathParts cacheResult = cache.get(xPath);
+        //        if (cacheResult == null) {
+        //            cacheResult = new XPathParts(attributeComparator, suppressionMap).addInternal(xPath, true);
+        //            // cache.put(xPath,cacheResult);
+        //        }
+        //        return set(cacheResult); // does a deep copy, so ok.
     }
 
     /**
@@ -487,7 +518,12 @@ public class XPathParts {
      * @return
      */
     public XPathParts initialize(String xPath) {
-        if (size() != 0) return this;
+        if (size() != 0) {
+            return this;
+        }
+        if (frozen) {
+            throw new UnsupportedOperationException("Can't modify frozen Element");
+        }
         return addInternal(xPath, true);
     }
 
@@ -496,7 +532,7 @@ public class XPathParts {
         // if (xPath.length() == 0) return this;
         String requiredPrefix = "/";
         if (initial) {
-            elements.clear();
+            clear();
             requiredPrefix = "//";
         }
         if (!xPath.startsWith(requiredPrefix)) return parseError(xPath, 0);
@@ -593,13 +629,18 @@ public class XPathParts {
      * boilerplate
      */
     public boolean equals(Object other) {
-        if (other == null || !getClass().equals(other.getClass())) return false;
-        XPathParts that = (XPathParts) other;
-        if (elements.size() != that.elements.size()) return false;
-        for (int i = 0; i < elements.size(); ++i) {
-            if (!elements.get(i).equals(that.elements.get(i))) return false;
+        try {
+            XPathParts that = (XPathParts) other;
+            if (elements.size() != that.elements.size()) return false;
+            for (int i = 0; i < elements.size(); ++i) {
+                if (!elements.get(i).equals(that.elements.get(i))) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (ClassCastException e) {
+            return false;
         }
-        return true;
     }
 
     /**
@@ -622,31 +663,67 @@ public class XPathParts {
     public static final int XPATH_STYLE = 0, XML_OPEN = 1, XML_CLOSE = 2, XML_NO_VALUE = 3;
     public static final String NEWLINE = "\n";
 
-    private class Element implements Cloneable {
-        private String element;
-        private TreeMap<String, String> attributes; // = new TreeMap(AttributeComparator);
+    private final class Element implements Cloneable, Freezable<Element> {
+        private volatile boolean frozen;
+        private final String element;
+        private Map<String, String> attributes; // = new TreeMap(AttributeComparator);
 
         public Element(String element) {
-            // if we don't intern elements, we'd have to change equals.
+            this(element, null);
+        }
+
+        public Element(Element other, String element) {
+            this(element, other.attributes);
+        }
+
+        public Element(String element, Map<String, String> attributes) {
+            this.frozen = false;
             this.element = element.intern();
-            this.attributes = null;
+            if (attributes == null) {
+                this.attributes = null;
+            } else {
+                this.attributes = new TreeMap<String, String>(getAttributeComparator(element));
+                this.attributes.putAll(attributes);
+            }
         }
 
         @Override
         protected Object clone() throws CloneNotSupportedException {
-            Element result = (Element) super.clone();
-            if (attributes != null) {
-                attributes = (TreeMap<String, String>) attributes.clone();
-            }
-            return result;
+            return frozen ? this
+                : new Element(element, attributes);
         }
 
         public void putAttribute(String attribute, String value) {
-            final Map<String, String> attributes2 = getAttributes();
+            if (frozen) {
+                throw new UnsupportedOperationException("Can't modify frozen object.");
+            }
             if (value == null) {
-                attributes2.remove(attribute);
+                if (attributes != null) {
+                    attributes.remove(attribute);
+                    if (attributes.size() == 0) {
+                        attributes = null;
+                    }
+                }
             } else {
-                attributes2.put(attribute, value);
+                if (attributes == null) {
+                    attributes = new TreeMap<String, String>(getAttributeComparator(element));
+                }
+                attributes.put(attribute, value);
+            }
+        }
+
+        public void removeAttributes(Collection<String> attributeNames) {
+            if (frozen) {
+                throw new UnsupportedOperationException("Can't modify frozen object.");
+            }
+            if (attributeNames == null) {
+                return;
+            }
+            for (String attribute : attributeNames) {
+                attributes.remove(attribute);
+            }
+            if (attributes.size() == 0) {
+                attributes = null;
             }
         }
 
@@ -660,12 +737,12 @@ public class XPathParts {
          * @return
          */
         public String toString(int style) {
-            StringBuffer result = new StringBuffer();
+            StringBuilder result = new StringBuilder();
             // Set keys;
             switch (style) {
             case XPathParts.XPATH_STYLE:
                 result.append('/').append(element);
-                writeAttributes(element, "[@", "\"]", false, result);
+                writeAttributes("[@", "\"]", false, result);
                 break;
             case XPathParts.XML_OPEN:
             case XPathParts.XML_NO_VALUE:
@@ -673,23 +750,7 @@ public class XPathParts {
                 if (false && element.equals("orientation")) {
                     System.out.println();
                 }
-                writeAttributes(element, " ", "\"", true, result);
-                /*
-                 * keys = attributes.keySet();
-                 * if (attributeComparator != null) {
-                 * Set temp = new TreeSet(attributeComparator);
-                 * temp.addAll(keys);
-                 * keys = temp;
-                 * }
-                 * for (Iterator it = keys.iterator(); it.hasNext();) {
-                 * String attribute = (String) it.next();
-                 * String value = (String) attributes.get(attribute);
-                 * if (attribute.equals("type") && value.equals("standard")) continue; // HACK
-                 * if (attribute.equals("version") && value.equals("1.2")) continue; // HACK
-                 * result.append(' ').append(attribute).append("=\"")
-                 * .append(value).append('\"');
-                 * }
-                 */
+                writeAttributes(" ", "\"", true, result);
                 if (style == XML_NO_VALUE) result.append('/');
                 if (CLDRFile.HACK_ORDER && element.equals("ldml")) result.append(' ');
                 result.append('>');
@@ -712,17 +773,14 @@ public class XPathParts {
          *            TODO
          * @param result
          */
-        private Element writeAttributes(String element, String prefix, String postfix,
-            boolean removeLDMLExtras, StringBuffer result) {
-            Set keys = getAttributeKeys();
-            // if (attributeComparator != null) {
-            // Set temp = new TreeSet(attributeComparator);
-            // temp.addAll(keys);
-            // keys = temp;
-            // }
-            for (Iterator it = keys.iterator(); it.hasNext();) {
-                String attribute = (String) it.next();
-                String value = getAttribute(attribute);
+        private Element writeAttributes(String prefix, String postfix,
+            boolean removeLDMLExtras, StringBuilder result) {
+            if (getAttributeCount() == 0) {
+                return this;
+            }
+            for (Entry<String, String> attributesAndValues : attributes.entrySet()) {
+                String attribute = attributesAndValues.getKey();
+                String value = attributesAndValues.getValue();
                 if (removeLDMLExtras && suppressionMap != null) {
                     if (skipAttribute(element, attribute, value)) continue;
                     if (skipAttribute("*", attribute, value)) continue;
@@ -752,14 +810,23 @@ public class XPathParts {
         }
 
         public boolean equals(Object other) {
-            if (other == null || !getClass().equals(other.getClass())) return false;
-            Element that = (Element) other;
-            // == check is ok since we intern elements
-            return element == that.element && getAttributes().equals(that.getAttributes());
+            if (other == null) {
+                return false;
+            }
+            try {
+                Element that = (Element) other;
+                // == check is ok since we intern elements
+                return element == that.element
+                    && (attributes == null ? that.attributes == null
+                        : that.attributes == null ? attributes == null
+                            : attributes.equals(that.attributes));
+            } catch (ClassCastException e) {
+                return false;
+            }
         }
 
         public int hashCode() {
-            return element.hashCode() * 37 + getAttributes().hashCode();
+            return element.hashCode() * 37 + (attributes == null ? 0 : attributes.hashCode());
         }
 
         public String getElement() {
@@ -770,13 +837,6 @@ public class XPathParts {
         // this.attributes = attributes;
         // }
 
-        private Map<String, String> getAttributes() {
-            if (attributes == null) {
-                attributes = new TreeMap<String, String>(attributeComparator);
-            }
-            return attributes;
-        }
-
         private int getAttributeCount() {
             if (attributes == null) {
                 return 0;
@@ -784,18 +844,57 @@ public class XPathParts {
             return attributes.size();
         }
 
-        private Set<String> getAttributeKeys() {
+        private Map<String, String> getAttributes() {
             if (attributes == null) {
-                return Collections.emptySet();
+                return Collections.emptyMap();
             }
-            return attributes.keySet();
+            return Collections.unmodifiableMap(attributes);
+//
+//            if (attributes == null) {
+//                attributes = new TreeMap<String, String>(attributeComparator);
+//            }
+//            verify();
+//            return attributes;
         }
 
-        private String getAttribute(String attribute) {
+        private String getAttributeValue(String attribute) {
             if (attributes == null) {
                 return null;
             }
             return attributes.get(attribute);
+        }
+
+        //        public Element freezeAndCache() {
+        //            if (frozen) {
+        //                return this;
+        //            }
+        //            Element result = ELEMENT_CACHE.get(this);
+        //            if (result != null) {
+        //                return result;
+        //            }
+        //            result = freeze();
+        //            ELEMENT_CACHE.put(result, result);
+        //            return result;
+        //        }
+
+        @Override
+        public boolean isFrozen() {
+            return frozen;
+        }
+
+        @Override
+        public Element freeze() {
+            if (!frozen) {
+                attributes = attributes == null ? null
+                    : Collections.unmodifiableMap(attributes);
+                frozen = true;
+            }
+            return this;
+        }
+
+        @Override
+        public Element cloneAsThawed() {
+            return new Element(element, attributes);
         }
     }
 
@@ -815,6 +914,12 @@ public class XPathParts {
         return -1;
     }
 
+    public MapComparator<String> getAttributeComparator(String currentElement) {
+        return dtdData == null ? null
+            : dtdData.dtdType == DtdType.ldml ? CLDRFile.getAttributeOrdering()
+                : dtdData.getAttributeComparator();
+    }
+
     /**
      * Determines if an elementName is contained in the path.
      * 
@@ -829,6 +934,9 @@ public class XPathParts {
      * add a relative path to this XPathParts.
      */
     public XPathParts addRelative(String path) {
+        if (frozen) {
+            throw new UnsupportedOperationException("Can't modify frozen Element");
+        }
         if (path.startsWith("//")) {
             elements.clear();
             path = path.substring(1); // strip one
@@ -843,8 +951,11 @@ public class XPathParts {
     }
 
     /**
-    */
+     */
     public XPathParts trimLast() {
+        if (frozen) {
+            throw new UnsupportedOperationException("Can't modify frozen Element");
+        }
         elements.remove(elements.size() - 1);
         return this;
     }
@@ -853,7 +964,11 @@ public class XPathParts {
      * @param parts
      */
     public XPathParts set(XPathParts parts) {
+        if (frozen) {
+            throw new UnsupportedOperationException("Can't modify frozen Element");
+        }
         try {
+            dtdData = parts.dtdData;
             elements.clear();
             for (Element element : parts.elements) {
                 elements.add((Element) element.clone());
@@ -871,6 +986,9 @@ public class XPathParts {
      * @param parts
      */
     public XPathParts replace(int i, XPathParts parts) {
+        if (frozen) {
+            throw new UnsupportedOperationException("Can't modify frozen Element");
+        }
         List<Element> temp = elements;
         elements = new ArrayList<Element>();
         set(parts);
@@ -901,8 +1019,8 @@ public class XPathParts {
             boolean first = true;
             int countEmptyLines = 0;
             // trim the line iff the indent != 0.
-            for (Iterator it = CldrUtility.splitList(comment, '\n', indent != 0, null).iterator(); it.hasNext();) {
-                String line = (String) it.next();
+            for (Iterator<String> it = CldrUtility.splitList(comment, '\n', indent != 0, null).iterator(); it.hasNext();) {
+                String line = it.next();
                 if (line.length() == 0) {
                     ++countEmptyLines;
                     continue;
@@ -968,28 +1086,32 @@ public class XPathParts {
      * Sets an attribute/value on the first matching element.
      */
     public XPathParts setAttribute(String elementName, String attributeName, String attributeValue) {
-        Map m = findAttributes(elementName);
-        m.put(attributeName, attributeValue);
+        int index = findElement(elementName);
+        elements.get(index).putAttribute(attributeName, attributeValue);
         return this;
     }
 
     public XPathParts removeProposed() {
         for (int i = 0; i < elements.size(); ++i) {
             Element element = elements.get(i);
-            if (element.attributes == null) continue;
-            for (Iterator it = element.attributes.keySet().iterator(); it.hasNext();) {
-                String attribute = (String) it.next();
-                if (!attribute.equals("alt")) continue;
-                String attributeValue = element.attributes.get(attribute);
+            if (element.getAttributeCount() == 0) {
+                continue;
+            }
+            for (Entry<String, String> attributesAndValues : element.getAttributes().entrySet()) {
+                String attribute = attributesAndValues.getKey();
+                if (!attribute.equals("alt")) {
+                    continue;
+                }
+                String attributeValue = attributesAndValues.getValue();
                 int pos = attributeValue.indexOf("proposed");
                 if (pos < 0) break;
                 if (pos > 0 && attributeValue.charAt(pos - 1) == '-') --pos; // backup for "...-proposed"
                 if (pos == 0) {
-                    element.attributes.remove(attribute);
+                    element.putAttribute(attribute, null);
                     break;
                 }
                 attributeValue = attributeValue.substring(0, pos); // strip it off
-                element.attributes.put(attribute, attributeValue);
+                element.putAttribute(attribute, attributeValue);
                 break; // there is only one alt!
             }
         }
@@ -997,15 +1119,16 @@ public class XPathParts {
     }
 
     public XPathParts setElement(int elementIndex, String newElement) {
-        if (elementIndex < 0) elementIndex += size();
+        if (elementIndex < 0) {
+            elementIndex += size();
+        }
         Element element = elements.get(elementIndex);
-        element.element = newElement;
+        elements.set(elementIndex, new Element(element, newElement));
         return this;
     }
 
     public XPathParts removeElement(int elementIndex) {
-        if (elementIndex < 0) elementIndex += size();
-        elements.remove(elementIndex);
+        elements.remove(elementIndex >= 0 ? elementIndex : elementIndex + size());
         return this;
     }
 
@@ -1020,12 +1143,47 @@ public class XPathParts {
     }
 
     public void setAttribute(int elementIndex, String attributeName, String attributeValue) {
-        if (elementIndex < 0) elementIndex += size();
-        Element element = elements.get(elementIndex);
-        if (attributeValue == null) {
-            element.getAttributes().remove(attributeName);
-        } else {
-            element.getAttributes().put(attributeName, attributeValue);
+        Element element = elements.get(elementIndex >= 0 ? elementIndex : elementIndex + size());
+        element.putAttribute(attributeName, attributeValue);
+    }
+
+    @Override
+    public boolean isFrozen() {
+        return frozen;
+    }
+
+    @Override
+    public XPathParts freeze() {
+        if (!frozen) {
+            // ensure that it can't be modified. Later we can fix all the call sites to check frozen.
+            List temp = new ArrayList(elements.size());
+            for (Element element : elements) {
+                temp.add(element.freeze());
+            }
+            elements = Collections.unmodifiableList(temp);
+            frozen = true;
         }
+        return this;
+    }
+
+    @Override
+    public XPathParts cloneAsThawed() {
+        return new XPathParts(elements, null, suppressionMap);
+    }
+
+    public static synchronized XPathParts getFrozenInstance(String path) {
+        XPathParts result = cache.get(path);
+        if (result == null) {
+            cache.put(path, result = new XPathParts().set(path).freeze());
+        }
+        return result;
+    }
+
+    public static XPathParts getInstance(String path) {
+        return getFrozenInstance(path).cloneAsThawed();
+    }
+
+    public DtdData getDtdData() {
+        return dtdData;
     }
 }

@@ -10,13 +10,13 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
+//import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.LanguageTagParser;
-import org.unicode.cldr.util.StandardCodes;
+//import org.unicode.cldr.util.StandardCodes;
 
 import com.ibm.icu.dev.util.BNF;
 import com.ibm.icu.dev.util.BagFormatter;
@@ -180,8 +180,8 @@ class CheckLangTagBNF {
         System.out.println("ulocale.getScript " + loc2.getScript());
         System.out.println("ulocale.getCountry " + loc2.getCountry());
         System.out.println("ulocale.getVariant " + loc2.getVariant());
-        for (Iterator it = loc2.getKeywords(); it.hasNext();) {
-            String keyword = (String) it.next();
+        for (Iterator<String> it = loc2.getKeywords(); it.hasNext();) {
+            String keyword = it.next();
             System.out.println("\tulocale.getKeywords " + keyword + " = " + loc2.getKeywordValue(keyword));
         }
 
@@ -217,8 +217,8 @@ class CheckLangTagBNF {
 
         // System.out.println(langTagPattern);
         // System.out.println(cleanedLangTagPattern);
-        StandardCodes sc = StandardCodes.make();
-        Set grandfathered = sc.getAvailableCodes("grandfathered");
+//        StandardCodes sc = StandardCodes.make();
+//        Set<String> grandfathered = sc.getAvailableCodes("grandfathered");
         // for (Iterator it = grandfathered.iterator(); it.hasNext();) {
         // System.out.print(it.next() + " | ");
         // }
@@ -230,7 +230,7 @@ class CheckLangTagBNF {
         int errorCount = 0;
         BufferedReader in = BagFormatter.openUTF8Reader("", LANGUAGE_TAG_TEST_FILE);
 
-        for (int i = 0;; ++i) {
+        while (true) {
             String test = in.readLine();
             if (test == null) break;
 
@@ -286,7 +286,7 @@ class CheckLangTagBNF {
                 checkStrings("script", ltp.getScript(), slp.getScript());
                 checkStrings("country", ltp.getRegion(), slp.getCountry());
                 checkStrings("variants", ltp.getVariants(), slp.getVariants());
-                Map<String, String> foo = new LinkedHashMap();
+                Map<String, String> foo = new LinkedHashMap<String, String>();
                 foo.putAll(ltp.getExtensions());
                 foo.putAll(ltp.getLocaleExtensions());
                 checkStrings("variants", foo, slp.getExtensions());

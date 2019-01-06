@@ -2,11 +2,15 @@ package org.unicode.cldr.util;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,8 +19,6 @@ import org.unicode.cldr.util.RegexFileParser.RegexLineParser;
 import org.unicode.cldr.util.RegexFileParser.VariableProcessor;
 import org.unicode.cldr.util.RegexLookup.Finder;
 
-import com.ibm.icu.impl.Row;
-import com.ibm.icu.impl.Row.R2;
 import com.ibm.icu.text.Transform;
 import com.ibm.icu.util.Output;
 
@@ -26,14 +28,62 @@ import com.ibm.icu.util.Output;
  * 
  * @param <T>
  */
-public class RegexLookup<T> implements Iterable<Row.R2<Finder, T>> {
+public class RegexLookup<T> implements Iterable<Map.Entry<Finder, T>> {
     private VariableReplacer variables = new VariableReplacer();
-    private static final boolean DEBUG = true;
-    private final Map<Finder, Row.R2<Finder, T>> entries = new LinkedHashMap<Finder, Row.R2<Finder, T>>();
+    private StarPatternMap<T> SPEntries;
+    private RegexTree<T> RTEntries;
+    private Map<Finder, T> MEntries;
     private Transform<String, ? extends Finder> patternTransform = RegexFinderTransform;
     private Transform<String, ? extends T> valueTransform;
     private Merger<T> valueMerger;
     private final boolean allowNull = false;
+    private static PathStarrer pathStarrer = new PathStarrer().setSubstitutionPattern("*");
+
+    public enum LookupType {
+        STAR_PATTERN_LOOKUP, OPTIMIZED_DIRECTORY_PATTERN_LOOKUP, STANDARD
+    };
+
+    private LookupType _lookupType;
+
+    /*
+     * STAR_PATTERN_LOOKUP
+     * 
+     * When true, RegexLookup can match regex's even faster than the OPTIMIZED_DIRECTORY_PATTERN_LOOKUP below.
+     * It requires some additional structure, such that the only regular expression constructs such as (a|b) occur
+     * in attributes, so that the star pattern for a given path can match the star pattern of a given regular expression,
+     * thus greatly reducing the number of actual regex matches that need to occur.
+     */
+
+    /*
+     * OPTIMIZED_DIRECTORY_PATTERN_LOOKUP
+     * 
+     * When true, RegexLookup can match regex's in O(log(n)) time, where n is the number of regex's stored. 
+     * This is provided that all regex patterns follow a directory based format and all directories are separated by a forward slash '/'
+     * for example: ^//ldml/dates/calendars/calendar[@type="([^"']++)"]/alias[@source="locale"][@path="../calendar[@type='([^"']++)']"]
+     * 
+     * When false, RegexLookup will match regex's in O(n) time, where n is the number of regex's stored.
+     * However regex's no longer need to follow any specific format (Slower but more versatile).
+     */
+
+    public RegexLookup(LookupType type) {
+        _lookupType = type;
+        switch (type) {
+        case STAR_PATTERN_LOOKUP:
+            SPEntries = new StarPatternMap<T>();
+            break;
+        case OPTIMIZED_DIRECTORY_PATTERN_LOOKUP:
+            RTEntries = new RegexTree<T>();
+            break;
+        default:
+            MEntries = new LinkedHashMap<Finder, T>();
+            break;
+        }
+    }
+
+    public RegexLookup() {
+        _lookupType = RegexLookup.LookupType.OPTIMIZED_DIRECTORY_PATTERN_LOOKUP;
+        RTEntries = new RegexTree<T>();
+    }
 
     public abstract static class Finder {
         abstract public String[] getInfo();
@@ -80,7 +130,11 @@ public class RegexLookup<T> implements Iterable<Row.R2<Finder, T>> {
 
         @Override
         public boolean equals(Object obj) {
-            return toString().equals(obj.toString());
+            if (obj == null) {
+                return false;
+            } else {
+                return toString().equals(obj.toString());
+            }
         }
 
         @Override
@@ -91,6 +145,380 @@ public class RegexLookup<T> implements Iterable<Row.R2<Finder, T>> {
         @Override
         public int getFailPoint(String source) {
             return RegexUtilities.findMismatch(matcher, source);
+        }
+    }
+
+    private static class RegexTree<T> {
+        private RTNode root;
+        private int _size;
+        private RTNodeRankComparator rankComparator = new RTNodeRankComparator();
+
+        public RegexTree() {
+            root = new RTNode("", null);
+            _size = 0;
+        }
+
+        public int size() {
+            return _size;
+        }
+
+        public void put(Finder pattern, T value) {
+            root.put(new RTNode(pattern, value, _size));
+            _size++;
+        }
+
+        public T get(Finder finder) {
+            return root.get(finder);
+        }
+
+        public List<T> getAll(String pattern, Object context, List<Finder> matcherList) {
+            List<RTNode> list = new ArrayList<RTNode>();
+            List<T> retList = new ArrayList<T>();
+
+            root.addToList(pattern, context, list);
+            Collections.sort(list, rankComparator);
+
+            for (RTNode n : list) {
+                retList.add(n._val);
+                if (matcherList != null) {
+                    matcherList.add(n._finder);
+                }
+            }
+
+            return retList;
+        }
+
+        public T get(String pattern, Object context, Output<String[]> arguments, Output<Finder> matcherFound) {
+            List<Finder> matcherList = new ArrayList<Finder>();
+            List<T> matches = getAll(pattern, context, matcherList); //need to get whole list because we want value that was entered first
+            if (arguments != null) {
+                arguments.value = (matcherList.size() > 0) ? matcherList.get(0).getInfo() : null;
+            }
+            if (matcherFound != null) {
+                matcherFound.value = (matcherList.size() > 0) ? matcherList.get(0) : null;
+            }
+            return (matches.size() > 0) ? matches.get(0) : null;
+        }
+
+        public Set<Entry<Finder, T>> entrySet() {
+            LinkedHashMap<Finder, T> ret = new LinkedHashMap<Finder, T>();
+            TreeSet<RTNode> s = new TreeSet<RTNode>(rankComparator);
+            root.addToEntrySet(s);
+
+            for (RTNode n : s) {
+                ret.put(n._finder, n._val);
+            }
+
+            return ret.entrySet();
+        }
+
+        public class RTNode {
+            Finder _finder;
+            T _val;
+            List<RTNode> _children = new ArrayList<RTNode>();
+            int _rank; //rank -1 means the node was not inserted, but only used for structural purposes
+
+            //constructor for regular nodes with a Finder
+            public RTNode(Finder finder, T val, int rank) {
+                _finder = finder;
+                _val = val;
+                _rank = rank;
+            }
+
+            //constructors for nodes without a Finder
+            public RTNode(String key, T val) {
+                _finder = new RegexFinder(key);
+                _val = val;
+                _rank = -1;
+            }
+
+            public void put(RTNode node) {
+                if (_children.size() == 0) {
+                    _children.add(node);
+                } else {
+                    String maxSimilarChars = ""; //most similar characters up to the last similar directory
+                    int insertIndex = 0;
+                    for (int i = 0; i < _children.size(); i++) {
+                        RTNode child = _children.get(i);
+                        String childFinderPattern = child._finder.toString();
+                        if (childFinderPattern.length() > 0 && childFinderPattern.charAt(childFinderPattern.length() - 1) == '$') {
+                            childFinderPattern = childFinderPattern.substring(0, childFinderPattern.length() - 1); //takes into account the added "$"
+                        }
+                        else if (child._rank == -1) {
+                            childFinderPattern = childFinderPattern.substring(0, childFinderPattern.length() - 2); //takes into account the added ".*"
+                        }
+
+                        //check if child has the same Finder as node to insert, then replace it
+                        if (node._finder.equals(child._finder)) {
+                            child._finder = node._finder;
+                            child._val = node._val;
+                            if (child._rank == -1) {
+                                child._rank = node._rank;
+                            } else {
+                                _size--;
+                            }
+                            return;
+                        }
+
+                        //check if child is the parent of node
+                        if (child._rank == -1 && node._finder.toString().startsWith(childFinderPattern)) {
+                            child.put(node);
+                            return;
+                        }
+
+                        //if not parent then check if candidate for most similar RTNode
+                        String gcp = greatestCommonPrefix(childFinderPattern, node._finder.toString());
+                        gcp = removeExtraChars(gcp);
+                        if (gcp.length() > maxSimilarChars.length()) {
+                            maxSimilarChars = gcp;
+                            insertIndex = i;
+                        }
+                    }
+
+                    String finderPattern = this._finder.toString();
+                    if (finderPattern.length() > 0 && finderPattern.charAt(finderPattern.length() - 1) == '$') {
+                        finderPattern = finderPattern.substring(0, finderPattern.length() - 1); //takes into account the added "$"
+                    }
+                    else if (!(finderPattern.equals("")) && this._rank == -1) {
+                        finderPattern = finderPattern.substring(0, finderPattern.length() - 2); //takes into account the added ".*"
+                    }
+
+                    if ((maxSimilarChars).equals(finderPattern)) { //add under this if no similar children
+                        _children.add(node);
+                    } else {
+                        //create the common parent of the chosen candidate above and node, then add to the insert index
+                        RTNode newParent = new RTNode(maxSimilarChars + ".*", null);
+                        newParent._children.add(this._children.get(insertIndex));
+                        newParent._children.add(node);
+                        this._children.remove(insertIndex);
+                        this._children.add(insertIndex, newParent);
+                    }
+                }
+            }
+
+            //takes a string in a directory regex form and removes all characters up to the last full directory
+            private String removeExtraChars(String input) {
+                String ret = input.substring(0, Math.max(0, input.lastIndexOf('/')));
+                while ((ret.lastIndexOf('(') != -1 && ret.lastIndexOf('(') > ret.lastIndexOf(')')) ||
+                    (ret.lastIndexOf('[') != -1 && ret.lastIndexOf('[') > ret.lastIndexOf(']')) ||
+                    (ret.lastIndexOf('{') != -1 && ret.lastIndexOf('{') > ret.lastIndexOf('}'))) {
+                    ret = ret.substring(0, Math.max(0, ret.lastIndexOf('/')));
+                }
+                return ret;
+            }
+
+            //traverse tree to get value
+            public T get(Finder finder) {
+                T ret = null; //return value
+
+                if (_children.size() == 0) {
+                    return null;
+                } else {
+                    for (RTNode child : _children) {
+
+                        //check if child is the node
+                        if (child._rank != -1 && finder.equals(child._finder)) {
+                            return child._val;
+                        }
+
+                        String childFinderPattern = child._finder.toString();
+
+                        if (childFinderPattern.length() > 0 && childFinderPattern.charAt(childFinderPattern.length() - 1) == '$') {
+                            childFinderPattern = childFinderPattern.substring(0, childFinderPattern.length() - 1); //takes into account the added "$"
+                        }
+                        else if (child._rank == -1) {
+                            childFinderPattern = childFinderPattern.substring(0, childFinderPattern.length() - 2); //takes into account the added ".*"
+                        }
+
+                        //check if child is the parent of node
+                        if (finder.toString().startsWith(childFinderPattern)) {
+                            ret = child.get(finder);
+                            if (ret != null) {
+                                break;
+                            }
+                        }
+                    }
+
+                    return ret;
+                }
+            }
+
+            //traverse tree to get an entry set
+            public void addToEntrySet(TreeSet<RTNode> s) {
+                if (_children.size() == 0) {
+                    return;
+                } else {
+                    for (RTNode child : _children) {
+                        if (child._rank != -1) {
+                            s.add(child);
+                        }
+                        child.addToEntrySet(s);
+                    }
+                }
+            }
+
+            //traverse tree to get list of all values who's key matcher matches pattern
+            public void addToList(String pattern, Object context, List<RTNode> list) {
+                if (_children.size() == 0) {
+                    return;
+                } else {
+                    for (RTNode child : _children) {
+
+                        boolean found;
+                        synchronized (child._finder) {
+                            found = child._finder.find(pattern, context);
+                        }
+
+                        //check if child matches pattern
+                        if (found) {
+                            if (child._rank != -1) {
+                                list.add(child);
+                            }
+
+                            //check if child is the parent of node then enter that node
+                            child.addToList(pattern, context, list);
+                        }
+                    }
+                }
+            }
+
+            public String toString() {
+                return this._finder.toString();
+            }
+
+            //greatest common prefix between two strings
+            public String greatestCommonPrefix(String a, String b) {
+                int minLength = Math.min(a.length(), b.length());
+                for (int i = 0; i < minLength; i++) {
+                    if (a.charAt(i) != b.charAt(i)) {
+                        return a.substring(0, i);
+                    }
+                }
+                return a.substring(0, minLength);
+            }
+        }
+
+        class RTNodeRankComparator implements Comparator<RTNode> {
+            public int compare(RTNode a, RTNode b) {
+                if (a == b) {
+                    return 0;
+                } else if (a == null) {
+                    return -1;
+                } else if (b == null) {
+                    return 1;
+                } else if (a._rank == b._rank) {
+                    return 0;
+                } else if (a._rank > b._rank) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        }
+    }
+
+    private static class StarPatternMap<T> {
+        private Map<String, List<SPNode>> _spmap;
+        private int _size;
+
+        public StarPatternMap() {
+            _spmap = new HashMap<String, List<SPNode>>();
+            _size = 0;
+        }
+
+        public int size() {
+            return _size;
+        }
+
+        public void put(Finder pattern, T value) {
+            //System.out.println("pattern.toString() is => "+pattern.toString());
+            String starPattern = pathStarrer.transform2(pattern.toString().replaceAll("\\(\\[\\^\"\\]\\*\\)", "*"));
+            //System.out.println("Putting => "+starPattern);
+            List<SPNode> candidates = _spmap.get(starPattern);
+            if (candidates == null) {
+                candidates = new ArrayList<SPNode>();
+            }
+            SPNode newNode = new SPNode(pattern, value);
+            candidates.add(newNode);
+            _spmap.put(starPattern, candidates);
+            _size++;
+        }
+
+        public T get(Finder finder) {
+            String starPattern = pathStarrer.transform2(finder.toString());
+            List<SPNode> candidates = _spmap.get(starPattern);
+            if (candidates == null) {
+                return null;
+            }
+            for (SPNode cand : candidates) {
+                if (cand._finder.equals(finder)) {
+                    return cand._val;
+                }
+            }
+            return null;
+        }
+
+        public List<T> getAll(String pattern, Object context, List<Finder> matcherList) {
+            List<SPNode> list = new ArrayList<SPNode>();
+            List<T> retList = new ArrayList<T>();
+
+            String starPattern = pathStarrer.transform2(pattern);
+            List<SPNode> candidates = _spmap.get(starPattern);
+            if (candidates == null) {
+                return retList;
+            }
+            for (SPNode cand : candidates) {
+                if (cand._finder.find(pattern, context)) {
+                    list.add(cand);
+                }
+            }
+
+            for (SPNode n : list) {
+                retList.add(n._val);
+                if (matcherList != null) {
+                    matcherList.add(n._finder);
+                }
+            }
+
+            return retList;
+        }
+
+        public T get(String pattern, Object context, Output<String[]> arguments, Output<Finder> matcherFound) {
+            List<Finder> matcherList = new ArrayList<Finder>();
+            List<T> matches = getAll(pattern, context, matcherList); //need to get whole list because we want value that was entered first
+            if (arguments != null) {
+                arguments.value = (matcherList.size() > 0) ? matcherList.get(0).getInfo() : null;
+            }
+            if (matcherFound != null) {
+                matcherFound.value = (matcherList.size() > 0) ? matcherList.get(0) : null;
+            }
+            return (matches.size() > 0) ? matches.get(0) : null;
+        }
+
+        public Set<Entry<Finder, T>> entrySet() {
+            LinkedHashMap<Finder, T> ret = new LinkedHashMap<Finder, T>();
+
+            for (Entry<String, List<SPNode>> entry : _spmap.entrySet()) {
+                List<SPNode> candidates = entry.getValue();
+                for (SPNode node : candidates) {
+                    ret.put(node._finder, node._val);
+                }
+            }
+            return ret.entrySet();
+        }
+
+        public class SPNode {
+            Finder _finder;
+            T _val;
+
+            public SPNode(Finder finder, T val) {
+                _finder = finder;
+                _val = val;
+            }
+
+            public String toString() {
+                return this._finder.toString();
+            }
         }
     }
 
@@ -150,30 +578,68 @@ public class RegexLookup<T> implements Iterable<Row.R2<Finder, T>> {
      * 
      * @param source
      * @param context
-     *            TODO
      * @return
      */
     public T get(String source, Object context, Output<String[]> arguments,
         Output<Finder> matcherFound, List<String> failures) {
-        for (R2<Finder, T> entry : entries.values()) {
-            Finder matcher = entry.get0();
-            synchronized (matcher) {
-                if (matcher.find(source, context)) {
-                    if (arguments != null) {
-                        arguments.value = matcher.getInfo();
+
+        if (_lookupType == RegexLookup.LookupType.STAR_PATTERN_LOOKUP) {
+            T ret = SPEntries.get(source, context, arguments, matcherFound);
+            if (ret != null) {
+                return ret;
+            }
+
+            if (failures != null) {
+                for (Map.Entry<Finder, T> entry : SPEntries.entrySet()) {
+                    Finder matcher = entry.getKey();
+                    synchronized (matcher) {
+                        int failPoint = matcher.getFailPoint(source);
+                        String show = source.substring(0, failPoint) + "☹" + source.substring(failPoint) + "\t"
+                            + matcher.toString();
+                        failures.add(show);
                     }
-                    if (matcherFound != null) {
-                        matcherFound.value = matcher;
+                }
+            }
+        } else if (_lookupType == RegexLookup.LookupType.OPTIMIZED_DIRECTORY_PATTERN_LOOKUP) {
+            T ret = RTEntries.get(source, context, arguments, matcherFound);
+            if (ret != null) {
+                return ret;
+            }
+
+            if (failures != null) {
+                for (Map.Entry<Finder, T> entry : RTEntries.entrySet()) {
+                    Finder matcher = entry.getKey();
+                    synchronized (matcher) {
+                        int failPoint = matcher.getFailPoint(source);
+                        String show = source.substring(0, failPoint) + "☹" + source.substring(failPoint) + "\t"
+                            + matcher.toString();
+                        failures.add(show);
                     }
-                    return entry.get1();
-                } else if (failures != null) {
-                    int failPoint = matcher.getFailPoint(source);
-                    String show = source.substring(0, failPoint) + "☹" + source.substring(failPoint) + "\t"
-                        + matcher.toString();
-                    failures.add(show);
+                }
+            }
+        } else {
+            //slow but versatile implementation
+            for (Map.Entry<Finder, T> entry : MEntries.entrySet()) {
+                Finder matcher = entry.getKey();
+                synchronized (matcher) {
+                    if (matcher.find(source, context)) {
+                        if (arguments != null) {
+                            arguments.value = matcher.getInfo();
+                        }
+                        if (matcherFound != null) {
+                            matcherFound.value = matcher;
+                        }
+                        return entry.getValue();
+                    } else if (failures != null) {
+                        int failPoint = matcher.getFailPoint(source);
+                        String show = source.substring(0, failPoint) + "☹" + source.substring(failPoint) + "\t"
+                            + matcher.toString();
+                        failures.add(show);
+                    }
                 }
             }
         }
+
         // not really necessary, but makes debugging easier.
         if (arguments != null) {
             arguments.value = null;
@@ -194,22 +660,61 @@ public class RegexLookup<T> implements Iterable<Row.R2<Finder, T>> {
      * @return
      */
     public List<T> getAll(String source, Object context, List<Finder> matcherList, List<String> failures) {
-        List<T> matches = new ArrayList<T>();
-        for (R2<Finder, T> entry : entries.values()) {
-            Finder matcher = entry.get0();
-            if (matcher.find(source, context)) {
-                if (matcherList != null) {
-                    matcherList.add(matcher);
-                }
-                matches.add(entry.get1());
-            } else if (failures != null) {
-                int failPoint = matcher.getFailPoint(source);
-                String show = source.substring(0, failPoint) + "☹" + source.substring(failPoint) + "\t"
-                    + matcher.toString();
-                failures.add(show);
+        if (_lookupType == RegexLookup.LookupType.STAR_PATTERN_LOOKUP) {
+            List<T> matches = SPEntries.getAll(source, context, matcherList);
+            if (matches != null) {
+                return matches;
             }
+
+            if (failures != null) {
+                for (Map.Entry<Finder, T> entry : SPEntries.entrySet()) {
+                    Finder matcher = entry.getKey();
+                    synchronized (matcher) {
+                        int failPoint = matcher.getFailPoint(source);
+                        String show = source.substring(0, failPoint) + "☹" + source.substring(failPoint) + "\t"
+                            + matcher.toString();
+                        failures.add(show);
+                    }
+                }
+            }
+            return null;
+        } else if (_lookupType == RegexLookup.LookupType.OPTIMIZED_DIRECTORY_PATTERN_LOOKUP) {
+            List<T> matches = RTEntries.getAll(source, context, matcherList);
+            if (matches != null) {
+                return matches;
+            }
+
+            if (failures != null) {
+                for (Map.Entry<Finder, T> entry : RTEntries.entrySet()) {
+                    Finder matcher = entry.getKey();
+                    synchronized (matcher) {
+                        int failPoint = matcher.getFailPoint(source);
+                        String show = source.substring(0, failPoint) + "☹" + source.substring(failPoint) + "\t"
+                            + matcher.toString();
+                        failures.add(show);
+                    }
+                }
+            }
+            return null;
+        } else {
+            //slow but versatile implementation
+            List<T> matches = new ArrayList<T>();
+            for (Map.Entry<Finder, T> entry : MEntries.entrySet()) {
+                Finder matcher = entry.getKey();
+                if (matcher.find(source, context)) {
+                    if (matcherList != null) {
+                        matcherList.add(matcher);
+                    }
+                    matches.add(entry.getValue());
+                } else if (failures != null) {
+                    int failPoint = matcher.getFailPoint(source);
+                    String show = source.substring(0, failPoint) + "☹" + source.substring(failPoint) + "\t"
+                        + matcher.toString();
+                    failures.add(show);
+                }
+            }
+            return matches;
         }
-        return matches;
     }
 
     /**
@@ -220,10 +725,24 @@ public class RegexLookup<T> implements Iterable<Row.R2<Finder, T>> {
      */
     public Map<String, T> getUnmatchedPatterns(Set<String> matched, Map<String, T> outputUnmatched) {
         outputUnmatched.clear();
-        for (R2<Finder, T> entry : entries.values()) {
-            String pattern = entry.get0().toString();
+
+        Set<Map.Entry<Finder, T>> entrySet;
+        switch (_lookupType) {
+        case STAR_PATTERN_LOOKUP:
+            entrySet = SPEntries.entrySet();
+            break;
+        case OPTIMIZED_DIRECTORY_PATTERN_LOOKUP:
+            entrySet = RTEntries.entrySet();
+            break;
+        default:
+            entrySet = MEntries.entrySet();
+            break;
+        }
+
+        for (Map.Entry<Finder, T> entry : entrySet) {
+            String pattern = entry.getKey().toString();
             if (!matched.contains(pattern)) {
-                outputUnmatched.put(pattern, entry.get1());
+                outputUnmatched.put(pattern, entry.getValue());
             }
         }
         return outputUnmatched;
@@ -343,11 +862,34 @@ public class RegexLookup<T> implements Iterable<Row.R2<Finder, T>> {
         if (!allowNull && target == null) {
             throw new NullPointerException("null disallowed, unless allowNull(true) is called.");
         }
-        R2<Finder, T> old = entries.get(pattern);
+
+        T old;
+        switch (_lookupType) {
+        case STAR_PATTERN_LOOKUP:
+            old = SPEntries.get(pattern);
+            break;
+        case OPTIMIZED_DIRECTORY_PATTERN_LOOKUP:
+            old = RTEntries.get(pattern);
+            break;
+        default:
+            old = MEntries.get(pattern);
+            break;
+        }
+
         if (old == null) {
-            entries.put(pattern, Row.of(pattern, target));
+            switch (_lookupType) {
+            case STAR_PATTERN_LOOKUP:
+                SPEntries.put(pattern, target);
+                break;
+            case OPTIMIZED_DIRECTORY_PATTERN_LOOKUP:
+                RTEntries.put(pattern, target);
+                break;
+            default:
+                MEntries.put(pattern, target);
+                break;
+            }
         } else if (valueMerger != null) {
-            valueMerger.merge(target, old.get1());
+            valueMerger.merge(target, old);
         } else {
             throw new IllegalArgumentException("Duplicate matcher without Merger defined " + pattern + "; old: " + old
                 + "; new: " + target);
@@ -356,8 +898,15 @@ public class RegexLookup<T> implements Iterable<Row.R2<Finder, T>> {
     }
 
     @Override
-    public Iterator<R2<Finder, T>> iterator() {
-        return Collections.unmodifiableCollection(entries.values()).iterator();
+    public Iterator<Map.Entry<Finder, T>> iterator() {
+        switch (_lookupType) {
+        case STAR_PATTERN_LOOKUP:
+            return Collections.unmodifiableCollection(SPEntries.entrySet()).iterator();
+        case OPTIMIZED_DIRECTORY_PATTERN_LOOKUP:
+            return Collections.unmodifiableCollection(RTEntries.entrySet()).iterator();
+        default:
+            return Collections.unmodifiableCollection(MEntries.entrySet()).iterator();
+        }
     }
 
     public static String replace(String lookup, String... arguments) {
@@ -386,6 +935,13 @@ public class RegexLookup<T> implements Iterable<Row.R2<Finder, T>> {
      * @return the number of entries
      */
     public int size() {
-        return entries.size();
+        switch (_lookupType) {
+        case STAR_PATTERN_LOOKUP:
+            return SPEntries.size();
+        case OPTIMIZED_DIRECTORY_PATTERN_LOOKUP:
+            return RTEntries.size();
+        default:
+            return MEntries.size();
+        }
     }
 }
