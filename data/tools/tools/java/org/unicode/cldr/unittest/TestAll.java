@@ -6,6 +6,7 @@ import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CldrUtility;
 
 import com.ibm.icu.dev.test.TestFmwk.TestGroup;
+import com.ibm.icu.util.VersionInfo;
 
 /**
  * Top level test used to run all other tests as a batch.
@@ -21,6 +22,7 @@ public class TestAll extends TestGroup {
             new String[] {
                 "org.unicode.cldr.unittest.TestCanonicalIds",
                 "org.unicode.cldr.unittest.TestDisplayAndInputProcessor",
+                "org.unicode.cldr.unittest.TestLocalCurrency",
                 "org.unicode.cldr.unittest.TestLocale",
                 "org.unicode.cldr.unittest.TestBasic",
                 "org.unicode.cldr.unittest.TestSupplementalInfo",
@@ -29,8 +31,10 @@ public class TestAll extends TestGroup {
                 "org.unicode.cldr.unittest.TestExternalCodeAPIs",
                 "org.unicode.cldr.unittest.TestMetadata",
                 "org.unicode.cldr.unittest.TestUtilities",
-                "org.unicode.cldr.unittest.NumeringSystemsTest",
+                "org.unicode.cldr.unittest.NumberingSystemsTest",
+                "org.unicode.cldr.unittest.StandardCodesTest",
                 "org.unicode.cldr.unittest.TestCheckCLDR",
+                "org.unicode.cldr.unittest.TestInheritance",
             },
             "All tests in CLDR");
     }
@@ -51,6 +55,16 @@ public class TestAll extends TestGroup {
             return INSTANCE;
         }
 
-    }
+        public static boolean isCldrVersionBefore(int... version) {
+            return TestInfo.getInstance().getEnglish().getDtdVersionInfo().compareTo(getVersion(version)) < 0;
+        }
 
+        public static VersionInfo getVersion(int... versionInput) {
+            int[] version = new int[4];
+            for (int i = 0; i < versionInput.length; ++i) {
+                version[i] = versionInput[i];
+            }
+            return VersionInfo.getInstance(version[0], version[1], version[2], version[3]);
+        }
+    }
 }

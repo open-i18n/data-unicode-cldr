@@ -101,9 +101,9 @@ class GeneratePickerData {
         UCA_BASE.setNumericCollation(true);
     }
 
-    public static final Comparator CODE_POINT_ORDER = new UTF16.StringComparator(true, false, 0);
+    public static final Comparator<String> CODE_POINT_ORDER = new UTF16.StringComparator(true, false, 0);
 
-    static Comparator UCA = new MultilevelComparator(UCA_BASE, CODE_POINT_ORDER);
+    static Comparator<String> UCA = new MultilevelComparator(UCA_BASE, CODE_POINT_ORDER);
 
     static Comparator<String> buttonComparator = new MultilevelComparator(
         // new UnicodeSetInclusionFirst(ScriptCategories.parseUnicodeSet("[:ascii:]")),
@@ -423,7 +423,7 @@ class GeneratePickerData {
     private static void writeMainFile(String directory, String categoryTable) throws IOException, FileNotFoundException {
         PrintWriter out = getFileWriter(directory, "CharData.java");
         out.println("package org.unicode.cldr.draft;");
-        out.println("// $Date: 2012-10-17 14:49:46 -0700 (Wed, 17 Oct 2012) $");
+        out.println("// $Date: 2012-11-08 09:09:27 -0800 (Thu, 08 Nov 2012) $");
         out.println("public class CharData {");
         out.println("static String[][] CHARACTERS_TO_NAME = {");
         out.println(buildNames());

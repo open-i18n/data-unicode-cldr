@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.ibm.icu.text.Collator;
 import com.ibm.icu.text.MessageFormat;
+import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.util.ULocale;
 
 public class TablePrinter {
@@ -21,7 +22,7 @@ public class TablePrinter {
             .addColumn("Territory").setHeaderAttributes("bgcolor='green'").setCellAttributes("align='right'")
             .setSpanRows(true)
             .setSortPriority(1).setSortAscending(false);
-        Comparable[][] data = {
+        Comparable<?>[][] data = {
             { "German", 1.3d, 3 },
             { "French", 1.3d, 2 },
             { "English", 1.3d, 2 },
@@ -38,11 +39,10 @@ public class TablePrinter {
         System.out.println(s);
     }
 
-    private List<Column> columns = new ArrayList();
+    private List<Column> columns = new ArrayList<Column>();
     private String tableAttributes;
     private transient Column[] columnsFlat;
-    private BitSet blockingRows = new BitSet();
-    private List<Comparable[]> rows = new ArrayList();
+    private List<Comparable<Object>[]> rows = new ArrayList<Comparable<Object>[]>();
     private String caption;
 
     public String getTableAttributes() {
@@ -101,16 +101,6 @@ public class TablePrinter {
             return this;
         }
 
-        public Column setCellPattern(MessageFormat cellPattern) {
-            this.cellPattern = cellPattern;
-            return this;
-        }
-
-        public Column setHeader(String header) {
-            this.header = header;
-            return this;
-        }
-
         public Column setHeaderAttributes(String headerAttributes) {
             this.headerAttributes = headerAttributes;
             return this;
@@ -152,14 +142,14 @@ public class TablePrinter {
         return this;
     }
 
-    public TablePrinter addRow(Comparable[] data) {
+    public TablePrinter addRow(Comparable<Object>[] data) {
         if (data.length != columns.size()) {
             throw new IllegalArgumentException(String.format("Data size (%d) != column count (%d)", data.length,
                 columns.size()));
         }
         // make sure we can compare; get exception early
         if (rows.size() > 0) {
-            Comparable[] data2 = rows.get(0);
+            Comparable<Object>[] data2 = rows.get(0);
             for (int i = 0; i < data.length; ++i) {
                 try {
                     data[i].compareTo(data2[i]);
@@ -172,13 +162,13 @@ public class TablePrinter {
         return this;
     }
 
-    Collection<Comparable> partialRow;
+    Collection<Comparable<Object>> partialRow;
 
     public TablePrinter addRow() {
         if (partialRow != null) {
             throw new IllegalArgumentException("Cannot add partial row before calling finishRow()");
         }
-        partialRow = new ArrayList();
+        partialRow = new ArrayList<Comparable<Object>>();
         return this;
     }
 
@@ -207,7 +197,7 @@ public class TablePrinter {
         return this;
     }
 
-    public TablePrinter addRow(Collection<Comparable> data) {
+    public TablePrinter addRow(Collection<Comparable<Object>> data) {
         addRow(data.toArray(new Comparable[data.size()]));
         return this;
     }
@@ -356,13 +346,13 @@ public class TablePrinter {
                     try {
                         patternArgs[0] = sortedFlat[i][j];
                         System.arraycopy(sortedFlat[i], 0, patternArgs, 1, sortedFlat[i].length);
-                        result.append(columnsFlat[j].cellPattern.format(patternArgs));
+                        result.append(format(columnsFlat[j].cellPattern.format(patternArgs)));
                     } catch (RuntimeException e) {
                         throw (RuntimeException) new IllegalArgumentException("cellPattern<" + i + ", " + j + "> = "
                             + sortedFlat[i][j]).initCause(e);
                     }
                 } else {
-                    result.append(sortedFlat[i][j]);
+                    result.append(format(sortedFlat[i][j]));
                 }
                 result.append(columnsFlat[j].isHeader ? "</th>" : "</td>");
             }
@@ -370,6 +360,18 @@ public class TablePrinter {
         }
         result.append("</table>");
         return result.toString();
+    }
+
+    static final UnicodeSet BIDI = new UnicodeSet("[[:bc=R:][:bc=AL:]]");
+    static final char RLE = '\u202B';
+    static final char PDF = '\u202C';
+
+    private String format(Comparable comparable) {
+        if (comparable == null) {
+            return null;
+        }
+        String s = comparable.toString();
+        return BIDI.containsNone(s) ? s : RLE + s + PDF;
     }
 
     private void showHeader(StringBuilder result) {

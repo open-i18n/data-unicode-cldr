@@ -1,5 +1,6 @@
 package org.unicode.cldr.unittest;
 
+import java.util.BitSet;
 import java.util.EnumMap;
 import java.util.LinkedHashSet;
 import java.util.Map.Entry;
@@ -27,6 +28,17 @@ public class TestScriptMetadata extends TestFmwk {
     public void TestLookup() {
         EnumLookup<IdUsage> temp = EnumLookup.of(IdUsage.class);
         assertEquals("", IdUsage.LIMITED_USE, temp.forString("limited Use"));
+    }
+
+    public void TestScriptOfSample() {
+        BitSet bitset = new BitSet();
+        for (String script : ScriptMetadata.getScripts()) {
+            Info info0 = ScriptMetadata.getInfo(script);
+            assertEquals("Sample must be single character", 1,
+                info0.sampleChar.codePointCount(0, info0.sampleChar.length()));
+            int scriptCode = UScript.getScriptExtensions(info0.sampleChar.codePointAt(0), bitset);
+            assertTrue("Must have single, valid script " + scriptCode, scriptCode >= 0);
+        }
     }
 
     public void TestBasic() {

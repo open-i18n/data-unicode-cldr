@@ -1,6 +1,6 @@
 /*
  **********************************************************************
- * Copyright (c) 2002-2004, International Business Machines
+ * Copyright (c) 2002-2012, International Business Machines
  * Corporation and others.  All Rights Reserved.
  **********************************************************************
  * Author: Mark Davis
@@ -9,6 +9,7 @@
 package org.unicode.cldr.util;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +25,7 @@ import com.ibm.icu.util.ULocale;
  * (at offset 0) to lowest. The ZoneInflections has no knowledge of the
  * internals of TimeZones -- public API is queried to get the information.
  */
-public class ZoneInflections implements Comparable {
+public class ZoneInflections implements Comparable<ZoneInflections> {
     static private final long SECOND = 1000;
 
     static private final long MINUTE = 60 * SECOND;
@@ -41,8 +42,7 @@ public class ZoneInflections implements Comparable {
 
     static private final long EPSILON = 15 * MINUTE; // smallest interval we test
                                                      // to
-
-    static private final int currentYear = new Date().getYear() + 1900;
+    static private final int currentYear = Calendar.getInstance().get(Calendar.YEAR);
 
     static private final long endDate = getDateLong(currentYear + 5, 1, 1);
 
@@ -101,7 +101,6 @@ public class ZoneInflections implements Comparable {
         // System.out.println("\tAdding: " + dtf.format(new Date(lastDate)));
         int lastOffset = zone.getOffset(endDate);
         inflectionPoints.add(new InflectionPoint(endDate, zone.getOffset(endDate)));
-        long lastInflection = endDate;
 
         // we do a gross search, then narrow in when we find a difference from the
         // last one
@@ -133,7 +132,6 @@ public class ZoneInflections implements Comparable {
 
                 // System.out.println("\tAdding*: " + dtf.format(new Date(low)));
                 inflectionPoints.add(new InflectionPoint(high, highOffset));
-                lastInflection = low;
             }
             lastOffset = currentOffset;
             lastDate = currentDate;
@@ -188,11 +186,11 @@ public class ZoneInflections implements Comparable {
 
     private transient OutputLong temp = new OutputLong(0);
 
-    public int compareTo(Object o) {
-        return compareTo((ZoneInflections) o, temp);
+    public int compareTo(ZoneInflections o) {
+        return compareTo(o, temp);
     }
 
-    public static class InflectionPoint implements Comparable {
+    public static class InflectionPoint implements Comparable<InflectionPoint> {
         static final long NONE = Long.MIN_VALUE;
 
         public long utcDateTime;
@@ -215,8 +213,7 @@ public class ZoneInflections implements Comparable {
          * offset != that.offset) { return Math.max(utcDateTime, that.utcDateTime); }
          * return NONE; }
          */
-        public int compareTo(Object o) {
-            InflectionPoint that = (InflectionPoint) o;
+        public int compareTo(InflectionPoint that) {
             if (utcDateTime < that.utcDateTime)
                 return -1;
             if (utcDateTime > that.utcDateTime)
@@ -230,7 +227,9 @@ public class ZoneInflections implements Comparable {
     }
 
     public static long getDateLong(int year, int month, int day) {
-        return new Date(year - 1900, month - 1, day).getTime();
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month - 1, day);
+        return cal.getTimeInMillis();
     }
 
     static private final NumberFormat nf = NumberFormat.getInstance(ULocale.US);
@@ -239,7 +238,7 @@ public class ZoneInflections implements Comparable {
         return nf.format(hours / ZoneInflections.DHOUR);
     }
 
-    public static class OutputLong implements Comparable {
+    public static class OutputLong implements Comparable<Object> {
         public long value;
 
         public OutputLong(long value) {

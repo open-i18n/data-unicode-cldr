@@ -120,16 +120,11 @@ public class CldrUtility {
     // if the main is different, use -Dcldrmain=<value>
 
     /**
-     * @deprecated Don't use this from any code that is run from the .JAR (SurveyTool, tests, etc)
+     * @deprecated Don't use this from any code that is run from the .JAR (SurveyTool, tests, etc).
+     *             If it must be used, add a comment next to the usage to explain why it is needed.
      */
-    public static final String UTIL_CODE_DIR = FileUtilities.getRelativeFileName(CldrUtility.class, ""); // getPath(BASE_DIRECTORY,
-                                                                                                         // "tools/java/org/unicode/cldr/");
-
-    /**
-     * @deprecated Don't use this from any code that is run from the .JAR (SurveyTool, tests, etc)
-     */
-    public static final String UTIL_DATA_DIR = getPath(UTIL_CODE_DIR, "data/"); // getPath(BASE_DIRECTORY,
-                                                                                // "tools/java/org/unicode/cldr/util/data/");
+    public static final String UTIL_DATA_DIR = FileUtilities.getRelativeFileName(
+        CldrUtility.class, "data/");
 
     public static final String BASE_DIRECTORY = getPath(CldrUtility.getProperty("CLDR_DIR", null)); // new
                                                                                                     // File(Utility.getProperty("CLDR_DIR",
@@ -140,6 +135,8 @@ public class CldrUtility {
     public static final String COLLATION_DIRECTORY = getPath(COMMON_DIRECTORY, "collation/");
     public static final String MAIN_DIRECTORY = CldrUtility.getProperty("CLDR_MAIN",
         getPath(CldrUtility.COMMON_DIRECTORY, "main"));
+    public static final String SEED_DIRECTORY = CldrUtility.getProperty("CLDR_SEED",
+        getPath(CldrUtility.COMMON_DIRECTORY, "../seed/main"));
     public static final String TMP_DIRECTORY = getPath(CldrUtility.getProperty("CLDR_TMP_DIR",
         getPath(BASE_DIRECTORY, "../cldr-tmp/")));
     public static final String AUX_DIRECTORY = getPath(CldrUtility.getProperty("CLDR_TMP_DIR",
@@ -148,9 +145,13 @@ public class CldrUtility {
         getPath(BASE_DIRECTORY, "../cldr-tmp2/")));
     // external data
     public static final String EXTERNAL_DIRECTORY = getPath(CldrUtility.getProperty("UCD_DIR", BASE_DIRECTORY) + "/../");
+    public static final String ARCHIVE_DIRECTORY = getPath(CldrUtility.getProperty("ARCHIVE", BASE_DIRECTORY));
     public static final String UCD_DIRECTORY = getPath(EXTERNAL_DIRECTORY, "data/UCD/6.2.0-Update");
     public static final String GEN_DIRECTORY = getPath(CldrUtility.getProperty("CLDR_GEN_DIR",
         getPath(EXTERNAL_DIRECTORY, "Generated/cldr/")));
+
+    public static final String ICU_DATA_DIR = CldrUtility.getPath(CldrUtility.getProperty("ICU_DATA_DIR", null)); // eg
+                                                                                                                  // "/Users/markdavis/workspace/icu4c/source/data/";
 
     /**
      * @deprecated please use XMLFile and CLDRFILE getSupplementalDirectory()
@@ -163,7 +164,7 @@ public class CldrUtility {
     public static final String DEFAULT_SUPPLEMENTAL_DIRECTORY = getPath(COMMON_DIRECTORY, "supplemental/");
 
     public static final boolean BETA = false;
-    public static final String CHART_DISPLAY_VERSION = "22.1";
+    public static final String CHART_DISPLAY_VERSION = "23";
     public static final String CHART_DIRECTORY = getPath(AUX_DIRECTORY + "charts/", CHART_DISPLAY_VERSION);
     public static final String LOG_DIRECTORY = getPath(TMP_DIRECTORY, "logs/");
 
@@ -253,8 +254,8 @@ public class CldrUtility {
         private String[] CVS_TAGS = { "Revision", "Date" };
 
         private String stripTags(String line) {
-            // $Revision: 7859 $
-            // $Date: 2012-10-17 14:49:46 -0700 (Wed, 17 Oct 2012) $
+            // $Revision: 8338 $
+            // $Date: 2013-03-15 06:28:27 -0700 (Fri, 15 Mar 2013) $
             int pos = line.indexOf('$');
             if (pos < 0) return line;
             pos++;
@@ -313,6 +314,8 @@ public class CldrUtility {
     }
 
     public static void registerExtraTransliterators() {
+        // NOTE: UTIL_DATA_DIR is required here only because TransliteratorUtilities
+        // requires a file path.
         String tzadir = UTIL_DATA_DIR + File.separatorChar; // work around bad pattern (dir+filename)
         // HACK around lack of Armenian, Ethiopic
         TransliteratorUtilities.registerTransliteratorFromFile(tzadir, "Latin-Armenian");
@@ -531,10 +534,10 @@ public class CldrUtility {
     /**
      * Appends two strings, inserting separator if either is empty. Modifies first map
      */
-    public static Map<Object, String> joinWithSeparation(Map<Object, String> a, String separator, Map b) {
-        for (Iterator<Object> it = b.keySet().iterator(); it.hasNext();) {
-            Object key = it.next();
-            String bvalue = (String) b.get(key);
+    public static Map<String, String> joinWithSeparation(Map<String, String> a, String separator, Map<String, String> b) {
+        for (Iterator<String> it = b.keySet().iterator(); it.hasNext();) {
+            String key = it.next();
+            String bvalue = b.get(key);
             String avalue = a.get(key);
             if (avalue != null) {
                 if (avalue.trim().equals(bvalue.trim())) continue;
@@ -576,7 +579,7 @@ public class CldrUtility {
     /**
      * Utility like Arrays.asList()
      */
-    public static Map asMap(Object[][] source, Map target, boolean reverse) {
+    public static <K, V> Map<K, V> asMap(Object[][] source, Map<K, V> target, boolean reverse) {
         int from = 0, to = 1;
         if (reverse) {
             from = 1;
@@ -587,24 +590,13 @@ public class CldrUtility {
                 throw new IllegalArgumentException("Source must be array of pairs of strings: "
                     + Arrays.asList(source[i]));
             }
-            target.put(source[i][from], source[i][to]);
+            target.put((K) source[i][from], (V) source[i][to]);
         }
         return target;
     }
 
-    public static Map asMap(Object[][] source) {
-        return asMap(source, new HashMap(), false);
-    }
-
-    /**
-     * Utility that ought to be on Map
-     */
-    public static Map removeAll(Map m, Collection itemsToRemove) {
-        for (Iterator it = itemsToRemove.iterator(); it.hasNext();) {
-            Object item = it.next();
-            m.remove(item);
-        }
-        return m;
+    public static <K, V> Map<K, V> asMap(Object[][] source) {
+        return asMap(source, new HashMap<K, V>(), false);
     }
 
     /**
@@ -921,14 +913,13 @@ public class CldrUtility {
      * @param name
      *            a name residing in the org/unicode/cldr/util/data/ directory, or loading from a jar will break.
      */
-    static public BufferedReader getUTF8Data(String name) {
-        /*
-         * if(name.startsWith(".")||name.startsWith("/")) {
-         * throw new IllegalArgumentException(
-         * "Path must be relative to org/unicode/cldr/util/data  such as 'file.txt' or 'casing/file.txt', but got '"
-         * +name+"'.");
-         * }
-         */
+    public static BufferedReader getUTF8Data(String name) {
+        if (new File(name).isAbsolute()) {
+            throw new IllegalArgumentException(
+                "Path must be relative to org/unicode/cldr/util/data  such as 'file.txt' or 'casing/file.txt', but got '"
+                    + name + "'.");
+        }
+
         return FileUtilities.openFile(CldrUtility.class, "data/" + name);
     }
 
@@ -938,15 +929,17 @@ public class CldrUtility {
      * @param name
      *            a name residing in the org/unicode/cldr/util/data/ directory, or loading from a jar will break.
      */
-    static public InputStream getInputStream(String name) {
-        /*
-         * if(name.startsWith(".")||name.startsWith("/")) {
-         * throw new IllegalArgumentException(
-         * "Path must be relative to org/unicode/cldr/util/data  such as 'file.txt' or 'casing/file.txt', but got '"
-         * +name+"'.");
-         * }
-         */
-        return CldrUtility.class.getResourceAsStream("data/" + name);
+    public static InputStream getInputStream(String name) {
+        if (new File(name).isAbsolute()) {
+            throw new IllegalArgumentException(
+                "Path must be relative to org/unicode/cldr/util/data  such as 'file.txt' or 'casing/file.txt', but got '"
+                    + name + "'.");
+        }
+        return getInputStream(CldrUtility.class, "data/" + name);
+    }
+
+    public static InputStream getInputStream(Class<?> callingClass, String relativePath) {
+        return callingClass.getResourceAsStream(relativePath);
     }
 
     /**
@@ -1043,7 +1036,7 @@ public class CldrUtility {
         }
     }
 
-    public static void callMethod(String methodNames, Class cls) {
+    public static void callMethod(String methodNames, Class<?> cls) {
         for (String methodName : methodNames.split(",")) {
             try {
                 Method method;
@@ -1064,7 +1057,7 @@ public class CldrUtility {
         }
     }
 
-    public static void showMethods(Class cls) throws ClassNotFoundException {
+    public static void showMethods(Class<?> cls) throws ClassNotFoundException {
         System.out.println("Possible methods of " + cls.getCanonicalName() + " are: ");
         Method[] methods = cls.getMethods();
         Set<String> names = new TreeSet<String>();
@@ -1212,8 +1205,13 @@ public class CldrUtility {
      * Copy up to matching line (not included). If output is null, then just skip until.
      * 
      * @param oldFile
+     *            file to copy
      * @param readUntilPattern
+     *            pattern to search for. If null, goes to end of file.
      * @param output
+     *            into to copy into. If null, just skips in the input.
+     * @param includeMatchingLine
+     *            inclde the matching line when copying.
      * @throws IOException
      */
     public static void copyUpTo(BufferedReader oldFile, final Pattern readUntilPattern,
@@ -1259,5 +1257,29 @@ public class CldrUtility {
         ConcurrentHashMap<K, V> result = newConcurrentHashMap();
         result.putAll(source);
         return result;
+    }
+
+    public static boolean equals(Object a, Object b) {
+        return a == b ? true
+            : a == null || b == null ? false
+                : a.equals(b);
+    }
+
+    public static String getDoubleLink(String code) {
+        final String anchorSafe = TransliteratorUtilities.toHTML.transliterate(code).replace(" ", "_");
+        return "<a name='" + anchorSafe + "' href='#" + anchorSafe + "'>";
+    }
+
+    public static String getDoubleLinkedText(String anchor, String anchorText) {
+        return getDoubleLink(anchor) + TransliteratorUtilities.toHTML.transliterate(anchorText).replace("_", " ")
+            + "</a>";
+    }
+
+    public static String getDoubleLinkedText(String anchor) {
+        return getDoubleLinkedText(anchor, anchor);
+    }
+
+    public static String getDoubleLinkMsg() {
+        return "<a name=''{0}'' href=''#{0}''>{0}</a>";
     }
 }

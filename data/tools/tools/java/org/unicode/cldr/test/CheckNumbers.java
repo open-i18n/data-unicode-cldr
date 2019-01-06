@@ -37,6 +37,7 @@ public class CheckNumbers extends FactoryCheckCLDR {
     private ICUServiceBuilder icuServiceBuilder = new ICUServiceBuilder();
 
     private Set<Count> pluralTypes;
+    private Set<String> validNumberingSystems;
     private PathHeader.Factory pathHeaderFactory;
     /**
      * A number formatter used to show the English format for comparison.
@@ -87,6 +88,7 @@ public class CheckNumbers extends FactoryCheckCLDR {
             getFactory().getSupplementalDirectory());
         PluralInfo pluralInfo = supplementalData.getPlurals(PluralType.cardinal, cldrFileToCheck.getLocaleID());
         pluralTypes = pluralInfo.getCountToExamplesMap().keySet();
+        validNumberingSystems = supplementalData.getNumberingSystems();
 
         return this;
     }
@@ -95,8 +97,10 @@ public class CheckNumbers extends FactoryCheckCLDR {
      * This is the method that does the check. Notice that for performance, you should try to
      * exit as fast as possible except where the path is one that you are testing.
      */
+    @Override
     public CheckCLDR handleCheck(String path, String fullPath, String value, Map<String, String> options,
         List<CheckStatus> result) {
+
         if (fullPath == null) return this; // skip paths that we don't have
         // Do a quick check on the currencyMatch, to make sure that it is a proper UnicodeSet
         if (path.indexOf("/currencyMatch") >= 0) {
@@ -116,7 +120,31 @@ public class CheckNumbers extends FactoryCheckCLDR {
         // Here is the main test. Notice that we pick up any exceptions, so that we can
         // give a reasonable error message.
         try {
+
+            if (path.indexOf("defaultNumberingSystem") >= 0 || path.indexOf("otherNumberingSystems") >= 0) {
+                if (!validNumberingSystems.contains(value)) {
+                    result.add(new CheckStatus()
+                        .setCause(this)
+                        .setMainType(CheckStatus.errorType)
+                        .setSubtype(Subtype.illegalNumberingSystem)
+                        .setMessage("Invalid numbering system: " + value));
+
+                }
+            }
+
             if (path.indexOf("/pattern") >= 0 && path.indexOf("/patternDigit") < 0) {
+
+                // This if is meant to detect if we are examining compact decimal format patterns.
+                // as far as I can tell, only compact decimal format patterns both
+                // use the count attribute and are in /numbers/decimalFormats.
+                if (path.indexOf("/numbers/decimalFormats") >= 0
+                    && path.indexOf("[@count=") >= 0
+                    && !isValidPattern(value)) {
+                    result.add(new CheckStatus().setCause(this)
+                        .setMainType(CheckStatus.errorType)
+                        .setSubtype(Subtype.illegalCharactersInNumberPattern)
+                        .setMessage("Bad pattern {0}", new Object[] { value }));
+                }
                 checkPattern(path, fullPath, value, result, false);
             }
             // if (path.indexOf("/currencies") >= 0 && path.endsWith("/symbol")) {
@@ -207,6 +235,20 @@ public class CheckNumbers extends FactoryCheckCLDR {
                     new Object[] { e.getClass().getName(), e }));
         }
         return this;
+    }
+
+    private static boolean isValidPattern(String value) {
+        int firstIdx = value.indexOf("0");
+        if (firstIdx == -1) {
+            return false;
+        }
+        int lastIdx = value.lastIndexOf("0");
+        for (int i = firstIdx + 1; i < lastIdx; i++) {
+            if (value.charAt(i) != '0') {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

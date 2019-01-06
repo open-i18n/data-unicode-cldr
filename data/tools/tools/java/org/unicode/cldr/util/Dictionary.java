@@ -98,7 +98,7 @@ public abstract class Dictionary<T> {
      * Interface for building a new simple StateDictionary. The Map must be sorted
      * according to Dictionary.CHAR_SEQUENCE_COMPARATOR. It must not contain the key "".
      * 
-     * @param source
+     * @param old
      * @return
      */
     public interface DictionaryBuilder<T> {
@@ -164,7 +164,7 @@ public abstract class Dictionary<T> {
          * @return
          */
         public Matcher<T> setText(CharSequence text) {
-            this.text = new CharUtilities.CharSourceWrapper(text);
+            this.text = new CharUtilities.CharSourceWrapper<CharSequence>(text);
             return setOffset(0);
         }
 

@@ -135,7 +135,7 @@ public class LDML2ICUConverter extends CLDRConverterTool {
     /**
      * Add comments on the item to indicate where fallbacks came from. Good for information, bad for diffs.
      */
-    private static final boolean verboseFallbackComments = false;
+    private static boolean verboseFallbackComments = false;
 
     private Document supplementalDoc;
     private SupplementalDataInfo supplementalDataInfo;
@@ -1044,27 +1044,6 @@ public class LDML2ICUConverter extends CLDRConverterTool {
         }
 
         return mainTable;
-    }
-
-    private static Resource findResource(Resource res, String type) {
-        Resource current = res;
-        Resource ret = null;
-        while (current != null) {
-            if (current.name != null && current.name.equals(type)) {
-                return current;
-            }
-
-            if (current.first != null) {
-                ret = findResource(current.first, type);
-            }
-            if (ret != null) {
-                break;
-            }
-
-            current = current.next;
-        }
-
-        return ret;
     }
 
     /**
@@ -3231,28 +3210,6 @@ public class LDML2ICUConverter extends CLDRConverterTool {
         return (hours * 60 + minutes) * 60 * 1000;
     }
 
-    private Node getVettedNode(Node ctx, String node, String attrb, String attrbVal, StringBuilder xpath) {
-
-        int savedLength = xpath.length();
-        NodeList list = LDMLUtilities.getNodeList(ctx, node, null, xpath.toString());
-        Node ret = null;
-        for (int i = 0; i < list.getLength(); i++) {
-            Node item = list.item(i);
-            String val = LDMLUtilities.getAttributeValue(item, attrb);
-            getXPath(item, xpath);
-            if (val.matches(".*\\b" + attrbVal + "\\b.*")) {
-                if (!isNodeNotConvertible(item, xpath)) {
-                    ret = item;
-                }
-                break;
-            }
-            xpath.setLength(savedLength);
-        }
-
-        xpath.setLength(savedLength);
-        return ret;
-    }
-
     private Resource parseEras(LDML2ICUInputLocale loc, String xpath) {
         ResourceTable table = new ResourceTable();
         Resource current = null;
@@ -4075,7 +4032,6 @@ public class LDML2ICUConverter extends CLDRConverterTool {
         ResourceString res[]) {
 
         String[] values = new String[xpaths.length];
-        XPathParts xpp = new XPathParts();
         boolean someNonDraft = false;
         boolean anyExtant = false;
         for (int i = 0; i < xpaths.length; i++) {
@@ -4511,27 +4467,21 @@ public class LDML2ICUConverter extends CLDRConverterTool {
             }
             if (choice != null && choice.equals("true") && !loc.isPathNotConvertible(xpath + "/symbol")) {
                 symbol.val = "=" + symbol.val.replace('\u2264', '#').replace("&lt;", "<");
-                if (true || verboseFallbackComments) {
-                    if (symbol.smallComment != null) {
-                        symbol.smallComment = symbol.smallComment + " - (choice)";
-                    } else {
-                        symbol.smallComment = "(choice)";
-                    }
+                if (symbol.smallComment != null) {
+                    symbol.smallComment = symbol.smallComment + " - (choice)";
+                } else {
+                    symbol.smallComment = "(choice)";
                 }
             }
         } else {
             symbol.val = type;
-            if (true || verboseFallbackComments) {
-                symbol.smallComment = "===";
-            }
+            symbol.smallComment = "===";
         }
 
         // 1 - disp
         if (displayName.val == null) {
             displayName.val = type;
-            if (true || verboseFallbackComments) {
-                symbol.smallComment = "===";
-            }
+            symbol.smallComment = "===";
         }
 
         arr.first = symbol;
@@ -4760,14 +4710,14 @@ public class LDML2ICUConverter extends CLDRConverterTool {
                 int index = rules.length();
                 rules.append("[suppressContractions ");
                 rules.append(LDMLUtilities.getNodeValue(node));
-                rules.append(" ]");
+                rules.append("]");
                 if (DEBUG) {
                     log.debug(rules.substring(index));
                 }
             } else if (name.equals(LDMLConstants.OPTIMIZE)) {
                 rules.append("[optimize ");
                 rules.append(LDMLUtilities.getNodeValue(node));
-                rules.append(" ]");
+                rules.append("]");
             } else if (name.equals(LDMLConstants.BASE)) {
                 // TODO Dont know what to do here
                 // if (DEBUG)printXPathWarning(node, xpath);
@@ -4858,14 +4808,14 @@ public class LDML2ICUConverter extends CLDRConverterTool {
         if (strength != null) {
             rules.append(" [strength ");
             rules.append(getStrength(strength));
-            rules.append(" ]");
+            rules.append("]");
         }
 
         String alternate = LDMLUtilities.getAttributeValue(node, LDMLConstants.ALTERNATE);
         if (alternate != null) {
             rules.append(" [alternate ");
             rules.append(alternate);
-            rules.append(" ]");
+            rules.append("]");
         }
 
         String backwards = LDMLUtilities.getAttributeValue(node, LDMLConstants.BACKWARDS);
@@ -4877,21 +4827,21 @@ public class LDML2ICUConverter extends CLDRConverterTool {
         if (normalization != null) {
             rules.append(" [normalization ");
             rules.append(normalization);
-            rules.append(" ]");
+            rules.append("]");
         }
 
         String caseLevel = LDMLUtilities.getAttributeValue(node, LDMLConstants.CASE_LEVEL);
         if (caseLevel != null) {
             rules.append(" [caseLevel ");
             rules.append(caseLevel);
-            rules.append(" ]");
+            rules.append("]");
         }
 
         String caseFirst = LDMLUtilities.getAttributeValue(node, LDMLConstants.CASE_FIRST);
         if (caseFirst != null) {
             rules.append(" [caseFirst ");
             rules.append(caseFirst);
-            rules.append(" ]");
+            rules.append("]");
         }
 
         String hiraganaQ = LDMLUtilities.getAttributeValue(node, LDMLConstants.HIRAGANA_Q);
@@ -4902,14 +4852,21 @@ public class LDML2ICUConverter extends CLDRConverterTool {
         if (hiraganaQ != null) {
             rules.append(" [hiraganaQ ");
             rules.append(hiraganaQ);
-            rules.append(" ]");
+            rules.append("]");
         }
 
         String numeric = LDMLUtilities.getAttributeValue(node, LDMLConstants.NUMERIC);
         if (numeric != null) {
             rules.append(" [numericOrdering ");
             rules.append(numeric);
-            rules.append(" ]");
+            rules.append("]");
+        }
+
+        String reorder = LDMLUtilities.getAttributeValue(node, LDMLConstants.REORDER);
+        if (reorder != null) {
+            rules.append(" [reorder ");
+            rules.append(reorder);
+            rules.append("]");
         }
 
         return rules;
@@ -5493,7 +5450,6 @@ public class LDML2ICUConverter extends CLDRConverterTool {
     private Resource parseSpecialElements(LDML2ICUInputLocale loc, String xpath) {
         Resource current = null;
         Resource first = null;
-        String origXpath = xpath;
 
         for (Iterator<String> iter = loc.getFile().iterator(xpath); iter.hasNext();) {
             xpath = iter.next();
@@ -5690,7 +5646,6 @@ public class LDML2ICUConverter extends CLDRConverterTool {
         ResourceTable table = new ResourceTable();
         table.name = "RBNFRules";
 
-        Resource current = null;
         Resource res = null;
         ResourceArray ruleset = new ResourceArray();
 

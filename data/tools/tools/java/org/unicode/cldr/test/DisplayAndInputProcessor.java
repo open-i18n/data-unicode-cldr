@@ -13,15 +13,19 @@ import org.unicode.cldr.util.Builder;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRLocale;
 import org.unicode.cldr.util.CldrUtility;
+import org.unicode.cldr.util.DateTimeCanonicalizer;
+import org.unicode.cldr.util.DateTimeCanonicalizer.DateTimePatternType;
 import org.unicode.cldr.util.With;
 import org.unicode.cldr.util.XPathParts;
 
 import com.ibm.icu.dev.util.PrettyPrinter;
 import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.text.Collator;
-import com.ibm.icu.text.DateTimePatternGenerator.FormatParser;
 import com.ibm.icu.text.DecimalFormat;
 import com.ibm.icu.text.Normalizer;
+import com.ibm.icu.text.Transform;
+import com.ibm.icu.text.Transliterator;
+import com.ibm.icu.text.UCharacterIterator;
 import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.text.UnicodeSetIterator;
 import com.ibm.icu.util.ULocale;
@@ -31,6 +35,8 @@ import com.ibm.icu.util.ULocale;
  * Survey Tool and other tools.
  */
 public class DisplayAndInputProcessor {
+
+    private static final boolean FIX_YEARS = true;
 
     public static final boolean DEBUG_DAIP = CldrUtility.getProperty("DEBUG_DAIP", false);
 
@@ -59,8 +65,6 @@ public class DisplayAndInputProcessor {
     private Collator col;
 
     private Collator spaceCol;
-
-    private FormatParser formatDateParser = new FormatParser();
 
     private PrettyPrinter pp;
 
@@ -150,6 +154,7 @@ public class DisplayAndInputProcessor {
     }
 
     static final UnicodeSet WHITESPACE = new UnicodeSet("[:whitespace:]").freeze();
+    static final DateTimeCanonicalizer dtc = new DateTimeCanonicalizer(FIX_YEARS);
 
     /**
      * Process the value for input. The result is a cleaned-up value. For example,
@@ -220,12 +225,9 @@ public class DisplayAndInputProcessor {
             }
 
             // fix date patterns
-            if (hasDatetimePattern(path)) {
-                formatDateParser.set(value);
-                String newValue = formatDateParser.toString();
-                if (!value.equals(newValue)) {
-                    value = newValue;
-                }
+            DateTimePatternType datetimePatternType = DateTimePatternType.fromPath(path);
+            if (DateTimePatternType.STOCK_AVAILABLE_INTERVAL_PATTERNS.contains(datetimePatternType)) {
+                value = dtc.getCanonicalDatePattern(path, value, datetimePatternType);
             }
 
             NumericType numericType = NumericType.getNumericType(path);
@@ -245,7 +247,6 @@ public class DisplayAndInputProcessor {
 
             // check specific cases
             if (path.contains("/exemplarCharacters")) {
-                final String iValue = value;
                 // clean up the user's input.
                 // first, fix up the '['
                 value = value.trim();
@@ -275,6 +276,14 @@ public class DisplayAndInputProcessor {
                     value = "";
                 }
             }
+
+            // Normalize ellipsis data.
+            if (path.startsWith("//ldml/characters/ellipsis")) {
+                value = value.replace("...", "…");
+            }
+
+            // Replace Arabic presentation forms with their nominal counterparts
+            value = replaceArabicPresentationForms(value);
             return value;
         } catch (RuntimeException e) {
             if (internalException != null) {
@@ -286,7 +295,7 @@ public class DisplayAndInputProcessor {
 
     private String replace(Pattern pattern, String value, String replacement) {
         String value2 = pattern.matcher(value).replaceAll(replacement);
-        if (!value.equals(value2)) {
+        if (DEBUG_DAIP && !value.equals(value2)) {
             System.out.println("\n" + value + " => " + value2);
         }
         return value2;
@@ -326,18 +335,26 @@ public class DisplayAndInputProcessor {
         return value;
     }
 
+    static final Transform<String,String> fixArabicPresentation = Transliterator.getInstance(
+        "[[:block=Arabic_Presentation_Forms_A:][:block=Arabic_Presentation_Forms_B:]] nfkc");
+
+    /**
+     * Normalizes the Arabic presentation forms characters in the specified input.
+     * 
+     * @param value
+     *            the input to be normalized
+     * @return
+     */
+    private String replaceArabicPresentationForms(String value) {
+        value = fixArabicPresentation.transform(value);
+        return value;
+    }
+
     static Pattern REMOVE_QUOTE1 = Pattern.compile("(\\s)(\\\\[-\\}\\]\\&])()");
     static Pattern REMOVE_QUOTE2 = Pattern.compile("(\\\\[\\-\\{\\[\\&])(\\s)"); // ([^\\])([\\-\\{\\[])(\\s)
 
     static Pattern NEEDS_QUOTE1 = Pattern.compile("(\\s|$)([-\\}\\]\\&])()");
     static Pattern NEEDS_QUOTE2 = Pattern.compile("([^\\\\])([\\-\\{\\[\\&])(\\s)"); // ([^\\])([\\-\\{\\[])(\\s)
-
-    public static boolean hasDatetimePattern(String path) {
-        return path.indexOf("/dates") >= 0
-            && ((path.indexOf("/pattern") >= 0 && path.indexOf("/dateTimeFormat") < 0)
-                || path.indexOf("/dateFormatItem") >= 0
-                || path.contains("/intervalFormatItem"));
-    }
 
     public static String getCleanedUnicodeSet(UnicodeSet exemplar, PrettyPrinter prettyPrinter,
         ExemplarType exemplarType) {

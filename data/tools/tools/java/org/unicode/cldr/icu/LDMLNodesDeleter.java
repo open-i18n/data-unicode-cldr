@@ -35,8 +35,7 @@ public class LDMLNodesDeleter {
         HELP2 = 1,
         SOURCEDIR = 2,
         DESTDIR = 3,
-        XPATH = 4,
-        UOPTION_LIMIT = 5;
+        XPATH = 4;
 
     private static final UOption[] options = new UOption[] {
         UOption.HELP_H(),
@@ -149,11 +148,11 @@ public class LDMLNodesDeleter {
         Node version = LDMLUtilities.getNode(doc, "//ldml/identity/version");
         NamedNodeMap al = version.getAttributes();
         Node number = al.getNamedItem(LDMLConstants.NUMBER);
-        number.setNodeValue("$Revision: 7859 $");
+        number.setNodeValue("$Revision: 7898 $");
         Node gen = LDMLUtilities.getNode(doc, "//ldml/identity/generation");
         al = gen.getAttributes();
         Node date = al.getNamedItem("date");
-        date.setNodeValue("$Date: 2012-10-17 14:49:46 -0700 (Wed, 17 Oct 2012) $");
+        date.setNodeValue("$Date: 2012-11-08 09:09:27 -0800 (Thu, 08 Nov 2012) $");
     }
 
     private void deleteNodes(Document doc, String xpath) {

@@ -2,6 +2,8 @@ package org.unicode.cldr.tool;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -23,6 +25,7 @@ import com.ibm.icu.impl.UnicodeRegex;
 import com.ibm.icu.util.ULocale;
 
 public class SearchXml {
+
     // TODO Use options
     private static Matcher fileMatcher;
 
@@ -32,7 +35,7 @@ public class SearchXml {
     private static Matcher levelMatcher;
 
     private static boolean showFiles;
-    private static boolean showValues = false;
+    private static boolean showValues = true;
     private static boolean replaceValues;
 
     private static int total = 0;
@@ -184,10 +187,8 @@ public class SearchXml {
             System.out.println("Locale" +
                 "\tFile" +
                 "\tBase" +
-                "\tSame" +
-                "\tDeletions" +
-                "\tAdditions" +
-                "\tChanges"
+                DiffInfo.DiffInfoHeader +
+                "\n#\tValue\tOtherValue\tPath"
                 );
         }
         for (File file : src.listFiles()) {
@@ -231,6 +232,9 @@ public class SearchXml {
             checkFiles(recursive ? file.getParent() : null, fileName, source, other);
             System.out.flush();
         }
+        System.out.println("\t" + DiffInfo.DiffInfoHeader);
+        DIFF_INFO.showValues("TOTAL");
+
         for (String error : ERRORS) {
             System.err.println(error);
         }
@@ -244,7 +248,11 @@ public class SearchXml {
             xfr.read(fileName2, XMLFileReader.CONTENT_HANDLER
                 | XMLFileReader.ERROR_HANDLER, false);
         } catch (Exception e) {
-            ERRORS.add("Can't read " + directory + "/" + fileName);
+            StringWriter stringWriter = new StringWriter();
+            PrintWriter arg0 = new PrintWriter(stringWriter);
+            e.printStackTrace(arg0);
+            arg0.flush();
+            ERRORS.add("Can't read " + directory + "/" + fileName + "\n" + stringWriter);
         }
         return listHandler.data;
     }
@@ -259,6 +267,34 @@ public class SearchXml {
     }
 
     // static MyHandler myHandler = new MyHandler();
+
+    static DiffInfo DIFF_INFO = new DiffInfo();
+
+    static class DiffInfo {
+        static final String DiffInfoHeader =
+            "\tSame" +
+                "\tDeletions" +
+                "\tAdditions" +
+                "\tChanges";
+
+        int additionCount = 0;
+        int deletionCount = 0;
+        int changed2Values = 0;
+        int sameCount = 0;
+
+        public void showValues(String title) {
+            System.out.println(title +
+                "\t" + sameCount +
+                "\t" + deletionCount +
+                "\t" + additionCount +
+                "\t" + (changed2Values / 2)
+                );
+            DIFF_INFO.additionCount += additionCount;
+            DIFF_INFO.deletionCount += deletionCount;
+            DIFF_INFO.changed2Values += changed2Values;
+            DIFF_INFO.sameCount += sameCount;
+        }
+    }
 
     /**
      * @author markdavis
@@ -276,10 +312,7 @@ public class SearchXml {
         firstMessage = "* " + canonicalFile;
         file = canonicalFile;
 
-        int additionCount = 0;
-        int deletionCount = 0;
-        int changed2Values = 0;
-        int sameCount = 0;
+        DiffInfo diffInfo = new DiffInfo();
 
         if (levelMatcher != null || countOnly) {
             try {
@@ -301,7 +334,9 @@ public class SearchXml {
             keys.addAll(other.keySet());
         }
         for (String path : keys) {
-
+            if (path.startsWith("//ldml/identity/")) {
+                continue;
+            }
             if (pathMatcher != null && pathExclude == pathMatcher.reset(path).find()) {
                 continue;
             }
@@ -326,17 +361,17 @@ public class SearchXml {
                 if (values != otherValues) {
                     boolean diff = true;
                     if (values == null) {
-                        additionCount += otherValues.size();
+                        diffInfo.additionCount += otherValues.size();
                     } else if (otherValues == null) {
-                        deletionCount += values.size();
+                        diffInfo.deletionCount += values.size();
                     } else if (!values.equals(otherValues)) {
-                        changed2Values += values.size() + otherValues.size();
+                        diffInfo.changed2Values += values.size() + otherValues.size();
                     } else {
                         diff = false;
-                        sameCount += values.size();
+                        diffInfo.sameCount += values.size();
                     }
                     if (diff && showValues) {
-                        System.out.println(values + "\t" + otherValues + "\t<=\t" + path);
+                        System.out.println("#\t" + values + "\t" + otherValues + "\t" + path);
                     }
                 }
             } else {
@@ -384,14 +419,10 @@ public class SearchXml {
         if (other != null) {
             ULocale locale = new ULocale(fileName.substring(0, fileName.length() - 4));
             String localeName = locale.getDisplayName(ULocale.ENGLISH);
-            System.out.println(localeName +
+            String title = localeName +
                 "\t" + fileName +
-                "\t" + getType(locale) +
-                "\t" + sameCount +
-                "\t" + deletionCount +
-                "\t" + additionCount +
-                "\t" + (changed2Values / 2)
-                );
+                "\t" + getType(locale);
+            diffInfo.showValues(title);
         }
     }
 

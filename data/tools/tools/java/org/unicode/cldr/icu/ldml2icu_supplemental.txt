@@ -9,20 +9,30 @@
 # Greedy word match
 %G=[\s\w\-]+
 # Number match
-%N=\d++
+%N=[\d\.]++
 
 # supplementalData.xml
-//supplementalData/currencyData/region[@iso3166="(%W)"]/currency[@iso4217="(%W)"]([@tender="false"])?
+//supplementalData/currencyData/region[@iso3166="(%W)"]/currency[@iso4217="(%W)"]
      ; /CurrencyMap/$1/<FIFO>/id ; values=$2
-     ; /CurrencyMap/$1/<FIFO>/from:intvector ; values=9999-12-31
+//supplementalData/currencyData/region[@iso3166="(%W)"]/currency[@iso4217="(%W)"][@tender="false"]
+     ; /CurrencyMap/$1/<FIFO>/id ; values=$2
+     ; /CurrencyMap/$1/<FIFO>/tender ; values=false
 //supplementalData/currencyData/region[@iso3166="(%W)"]/currency[@from="(%W)"][@iso4217="(%W)"]
      ; /CurrencyMap/$1/<FIFO>/id ; values=$3
-     ; /CurrencyMap/$1/<FIFO>/from:intvector ; values=$2
+     ; /CurrencyMap/$1/<FIFO>/from:intvector ; values=&date($2, from)
+//supplementalData/currencyData/region[@iso3166="(%W)"]/currency[@from="(%W)"][@iso4217="(%W)"][@tender="false"]
+     ; /CurrencyMap/$1/<FIFO>/id ; values=$3
+     ; /CurrencyMap/$1/<FIFO>/from:intvector ; values=&date($2, from)
+     ; /CurrencyMap/$1/<FIFO>/tender ; values=false
 //supplementalData/currencyData/region[@iso3166="(%W)"]/currency[@from="(%W)"][@to="(%W)"][@iso4217="(%W)"]
      ; /CurrencyMap/$1/<FIFO>/id ; values=$4
-     ; /CurrencyMap/$1/<FIFO>/from:intvector ; values=$2
-     ; /CurrencyMap/$1/<FIFO>/to:intvector ; values=$3
-
+     ; /CurrencyMap/$1/<FIFO>/from:intvector ; values=&date($2, from)
+     ; /CurrencyMap/$1/<FIFO>/to:intvector ; values=&date($3, to)
+//supplementalData/currencyData/region[@iso3166="(%W)"]/currency[@from="(%W)"][@to="(%W)"][@iso4217="(%W)"][@tender="false"]
+     ; /CurrencyMap/$1/<FIFO>/id ; values=$4
+     ; /CurrencyMap/$1/<FIFO>/from:intvector ; values=&date($2, from)
+     ; /CurrencyMap/$1/<FIFO>/to:intvector ; values=&date($3, to)
+     ; /CurrencyMap/$1/<FIFO>/tender ; values=false
 //supplementalData/currencyData/fractions/info[@iso4217="(%W)"][@digits="(%N)"][@rounding="(%N)"] ; /CurrencyMeta/$1:intvector ; values=$2 $3
 
 //supplementalData/calendarPreferenceData/calendarPreference[@territories="(%A)"][@ordering="(%A)"] ; /calendarPreferenceData/$1    ; values=$2
@@ -50,6 +60,34 @@
 //supplementalData/weekData/weekendStart[@day="(%W)"][@territories="(%W)"] ; /weekData/$2:intvector     ; values=$1 0 ; fallback=7 0
 //supplementalData/weekData/weekendEnd[@day="(%W)"][@territories="(%W)"] ; /weekData/$2:intvector     ; values=$1 86400000 ; fallback=1 86400000
 
+//supplementalData/timeData/hours[@allowed="(%W)"][@preferred="(%W)"][@regions="(%W)"]
+     ; /timeData/$3/allowed ; values=$1
+     ; /timeData/$3/preferred ; values=$2
+
+//supplementalData/territoryInfo/territory[@type="(%W)"][@gdp="(%N)"][@literacyPercent="(%N)"][@population="(%N)"]
+# GDP, literacy fraction, population
+    ; /territoryInfo/$1/territoryF:intvector ; values=&exp($2) &exp($3,-2) &exp($4) ; base_xpath=//supplementalData/territoryInfo/territory[@type="$1"]
+
+//supplementalData/territoryInfo/territory[@type="(%W)"][@gdp="(%N)"][@literacyPercent="(%N)"][@population="(%N)"]/languagePopulation[@type="(%W)"][@populationPercent="(%N)"]([@references="%W"])?
+    ; /territoryInfo/$1/territoryF:intvector ; values=&exp($2) &exp($3,-2) &exp($4) ; base_xpath=//supplementalData/territoryInfo/territory[@type="$1"]
+    ; /territoryInfo/$1/$5/populationShareF:int ; values=&exp($6,-2)
+
+//supplementalData/territoryInfo/territory[@type="(%W)"][@gdp="(%N)"][@literacyPercent="(%N)"][@population="(%N)"]/languagePopulation[@type="(%W)"][@writingPercent="(%N)"][@populationPercent="(%N)"]([@references="%W"])?
+    ; /territoryInfo/$1/territoryF:intvector ; values=&exp($2) &exp($3,-2) &exp($4) ; base_xpath=//supplementalData/territoryInfo/territory[@type="$1"]
+    ; /territoryInfo/$1/$5/writingShareF:int ; values=&exp($6,-2)
+    ; /territoryInfo/$1/$5/populationShareF:int ; values=&exp($7,-2)
+
+//supplementalData/territoryInfo/territory[@type="(%W)"][@gdp="(%N)"][@literacyPercent="(%N)"][@population="(%N)"]/languagePopulation[@type="(%W)"][@populationPercent="(%N)"][@officialStatus="(%W)"]([@references="%W"])?
+    ; /territoryInfo/$1/territoryF:intvector ; values=&exp($2) &exp($3,-2) &exp($4) ; base_xpath=//supplementalData/territoryInfo/territory[@type="$1"]
+    ; /territoryInfo/$1/$5/populationShareF:int ; values=&exp($6,-2)
+    ; /territoryInfo/$1/$5/officialStatus ; values=$7
+
+//supplementalData/territoryInfo/territory[@type="(%W)"][@gdp="(%N)"][@literacyPercent="(%N)"][@population="(%N)"]/languagePopulation[@type="(%W)"][@writingPercent="(%N)"][@populationPercent="(%N)"][@officialStatus="(%W)"]([@references="%W"])?
+    ; /territoryInfo/$1/territoryF:intvector ; values=&exp($2) &exp($3,-2) &exp($4) ; base_xpath=//supplementalData/territoryInfo/territory[@type="$1"]
+    ; /territoryInfo/$1/$5/writingShareF:int ; values=&exp($6,-2)
+    ; /territoryInfo/$1/$5/populationShareF:int ; values=&exp($7,-2)
+    ; /territoryInfo/$1/$5/officialStatus ; values=$8
+
 # telephoneCodeData.xml
 //supplementalData/telephoneCodeData/codesByTerritory[@territory="(%W)"]/telephoneCountryCode[@code="(%N)"] ; /telephoneCodeData/$1/<$2>/code ; values=$2
 //supplementalData/telephoneCodeData/codesByTerritory[@territory="(%W)"]/telephoneCountryCode[@code="(%N)"][@alt="(%W)"]
@@ -74,10 +112,12 @@
 //supplementalData/metaZones/metazoneInfo/timezone[@type="(%W)"]/usesMetazone[@from="(%A)"][@to="(%A)"][@mzone="(%W)"] ; /metazoneInfo/"$1"/<$2> ; values=$4 "$2" "$3"
 //supplementalData/metaZones/metazoneInfo/timezone[@type="(%W)"]/usesMetazone[@to="(%A)"][@mzone="(%W)"] ; /metazoneInfo/"$1"/<1970-01-01 00:00> ; values=$3 "1970-01-01 00:00" "$2"
 
+//supplementalData/primaryZones/primaryZone[@iso3166="(%W)"] ; /primaryZones/$1 ; values={value}
+
 # numberingSystems.txt
 //supplementalData/numberingSystems/numberingSystem[@type="algorithmic"][@id="(%W)"][@rules="(%A)"]
      ; /numberingSystems/$1/algorithmic:int ; values=1
-     ; /numberingSystems/$1/desc ; values=$2
+     ; /numberingSystems/$1/desc ; values=&algorithm($2)
      ; /numberingSystems/$1/radix:int ; values=10
 
 //supplementalData/numberingSystems/numberingSystem[@type="numeric"][@id="(%W)"][@digits="(%A)"]

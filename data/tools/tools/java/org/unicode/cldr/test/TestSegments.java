@@ -64,8 +64,8 @@ public class TestSegments {
         Log.println("<!DOCTYPE ldml SYSTEM \"../../common/dtd/ldml.dtd\">");
         Log.println("<ldml>");
         Log.println("\t<identity>");
-        Log.println("\t\t<version number=\"$Revision: 7859 $\"/>");
-        Log.println("\t\t<generation date=\"$Date: 2012-10-17 14:49:46 -0700 (Wed, 17 Oct 2012) $\"/>");
+        Log.println("\t\t<version number=\"$Revision: 7967 $\"/>");
+        Log.println("\t\t<generation date=\"$Date: 2012-12-11 20:05:56 -0800 (Tue, 11 Dec 2012) $\"/>");
         Log.println("\t\t<language type=\"root\"/>");
         Log.println("\t</identity>");
         Log.println("\t<segmentations>");
@@ -242,11 +242,11 @@ public class TestSegments {
             {
                 ".*" + new UnicodeSet("[\\p{Grapheme_Cluster_Break=LVT}]").complement().complement(),
                 "\u001E\uC237\u1123\n\uC91B"
-            }, {
-                "(?<=a)b", "ab"
-            }, {
-                "[$]\\p{Alpha}\\p{Alnum}*", "$Letter"
-            } };
+        }, {
+            "(?<=a)b", "ab"
+        }, {
+            "[$]\\p{Alpha}\\p{Alnum}*", "$Letter"
+        } };
         for (int i = 0; i < rtests.length; ++i) {
             Matcher m = Pattern.compile(rtests[i][0], Segmenter.REGEX_FLAGS).matcher("");
             m.reset(rtests[i][1]);
@@ -264,7 +264,7 @@ public class TestSegments {
             "0.5) a \u00D7",
             "test",
             "abcbdb"
-        },
+    },
         {
             "QuickCheck2",
             "$Letter=\\p{Alphabetic}",
@@ -273,13 +273,13 @@ public class TestSegments {
             "2) $Letter \u00D7 $Letter",
             "test",
             "The quick 100 brown foxes."
-        },
+    },
         {
             "GraphemeClusterBreak",
             "test",
             "The qui\u0300ck 100 brown foxes.",
             "compareGrapheme"
-        },
+    },
         {
             "LineBreak",
             "test",
@@ -288,17 +288,17 @@ public class TestSegments {
             "T\u0300he qui\u0300ck 100.1 brown" + CldrUtility.LINE_SEPARATOR
                 + "\u0300foxes. And the beginning. \"Hi?\" Nope! or not.",
             "compareLine"
-        },
+    },
         {
             "SentenceBreak",
             "test",
             "T\u0300he qui\u0300ck 100.1 brown" + CldrUtility.LINE_SEPARATOR
                 + "\u0300foxes. And the beginning. \"Hi?\" Nope! or not.",
             "compareSentence"
-        }, {
-            "WordBreak",
-            "test",
-            "T\u0300he qui\u0300ck 100.1 brown" + CldrUtility.LINE_SEPARATOR + "\u0300foxes.",
-            "compareWord"
-        } };
+    }, {
+        "WordBreak",
+        "test",
+        "T\u0300he qui\u0300ck 100.1 brown" + CldrUtility.LINE_SEPARATOR + "\u0300foxes.",
+        "compareWord"
+    } };
 }

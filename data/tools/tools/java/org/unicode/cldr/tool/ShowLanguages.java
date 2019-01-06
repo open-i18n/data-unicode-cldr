@@ -26,6 +26,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -46,8 +47,11 @@ import org.unicode.cldr.util.Log;
 import org.unicode.cldr.util.Pair;
 import org.unicode.cldr.util.PluralSnapshot;
 import org.unicode.cldr.util.StandardCodes;
+import org.unicode.cldr.util.StandardCodes.CodeType;
 import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.BasicLanguageData;
+import org.unicode.cldr.util.SupplementalDataInfo.CurrencyDateInfo;
+import org.unicode.cldr.util.SupplementalDataInfo.CurrencyNumberInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.OfficialStatus;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo.Count;
@@ -61,6 +65,7 @@ import com.ibm.icu.dev.util.FileUtilities;
 import com.ibm.icu.dev.util.Relation;
 import com.ibm.icu.dev.util.TransliteratorUtilities;
 import com.ibm.icu.impl.Row.R2;
+import com.ibm.icu.impl.Utility;
 import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.text.Collator;
 import com.ibm.icu.text.DecimalFormat;
@@ -76,8 +81,6 @@ public class ShowLanguages {
 
     private static final boolean SHOW_NATIVE = true;
 
-    static CLDRFile english;
-
     static Comparator col = new com.ibm.icu.impl.MultiComparator(
         Collator.getInstance(new ULocale("en")),
         new UTF16.StringComparator(true, false, 0)
@@ -85,11 +88,10 @@ public class ShowLanguages {
 
     static StandardCodes sc = StandardCodes.make();
 
-    static Factory cldrFactory;
+    static Factory cldrFactory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
+    static CLDRFile english = cldrFactory.make("en", true);
 
     public static void main(String[] args) throws IOException {
-        cldrFactory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
-        english = cldrFactory.make("en", true);
         org.unicode.cldr.draft.FileUtilities.copyFile(ShowLanguages.class, "index.css", CHART_TARGET_DIR);
         printLanguageData(cldrFactory, "index.html");
         // cldrFactory = Factory.make(Utility.COMMON_DIRECTORY + "../dropbox/extra2/", ".*");
@@ -182,7 +184,8 @@ public class ShowLanguages {
         TablePrinter tablePrinter = new TablePrinter()
             .addColumn("Language", "class='source'", null, "class='source'", true).setSpanRows(true).setSortPriority(0)
             .setBreakSpans(true)
-            .addColumn("Code", "class='source'", "<a name=\"{0}\">{0}</a>", "class='source'", true).setSpanRows(true)
+            .addColumn("Code", "class='source'", CldrUtility.getDoubleLinkMsg(), "class='source'", true)
+            .setSpanRows(true)
             .addColumn("ML", "class='target' title='modern language'", null, "class='target'", true).setSpanRows(true)
             .setSortPriority(1)
             .addColumn("P", "class='target' title='primary'", null, "class='target'", true).setSortPriority(3)
@@ -193,7 +196,8 @@ public class ShowLanguages {
         TablePrinter tablePrinter2 = new TablePrinter()
             .addColumn("Script", "class='source'", null, "class='source'", true).setSpanRows(true).setSortPriority(0)
             .setBreakSpans(true)
-            .addColumn("Code", "class='source'", "<a name=\"{0}\">{0}</a>", "class='source'", true).setSpanRows(true)
+            .addColumn("Code", "class='source'", CldrUtility.getDoubleLinkMsg(), "class='source'", true)
+            .setSpanRows(true)
             .addColumn("MS", "class='target' title='modern script'", null, "class='target'", true).setSpanRows(true)
             .setSortPriority(1)
             .addColumn("Language", "class='target'", null, "class='target'", true).setSortPriority(3)
@@ -331,7 +335,8 @@ public class ShowLanguages {
             .addColumn("Sample Char", "class='source'", null, "class='source sample'", true).setSpanRows(true)
             .addColumn("Script", "class='source'", null, "class='source'", true).setSpanRows(true).setSortPriority(0)
             .setBreakSpans(true)
-            .addColumn("Code", "class='source'", "<a name=\"{0}\">{0}</a>", "class='source'", true).setSpanRows(true)
+            .addColumn("Code", "class='source'", CldrUtility.getDoubleLinkMsg(), "class='source'", true)
+            .setSpanRows(true)
             .addColumn("T", "class='target'", null, "class='target'", true).setSortPriority(1)
             .addColumn("Language", "class='target'", null, "class='target'", true).setSortPriority(2)
             .addColumn("Native", "class='target'", null, "class='target'", true)
@@ -857,7 +862,7 @@ public class ShowLanguages {
                         display = "Last day of weekend";
                     } else if (element.equals("measurementSystem")) {
                         // <measurementSystem type="metric" territories="001"/>
-                        key = "choice";
+                        key = "type";
                         display = "Meas. system";
                     } else if (element.equals("paperSize")) {
                         key = "type";
@@ -1007,7 +1012,7 @@ public class ShowLanguages {
                 .setBreakSpans(true)
                 .addColumn("Target Script", "class='target'", null, "class='target'", true).setSortPriority(4)
                 .addColumn("Target Region", "class='target'", null, "class='target'", true).setSortPriority(5)
-                .addColumn("Source ID", "class='source'", "<a name=\"{0}\">{0}</a>", "class='source'", true)
+                .addColumn("Source ID", "class='source'", CldrUtility.getDoubleLinkMsg(), "class='source'", true)
                 .addColumn("Target ID", "class='target'", null, "class='target'", true);
             Map<String, String> subtags = supplementalDataInfo.getLikelySubtags();
             LanguageTagParser sourceParsed = new LanguageTagParser();
@@ -1256,7 +1261,7 @@ public class ShowLanguages {
                 .addColumn("Language", "class='source'", null, "class='source'", true)
                 .setSortPriority(0)
                 .setBreakSpans(true)
-                .addColumn("Code", "class='source'", "<a name=\"{0}\">{0}</a>", "class='source'", true)
+                .addColumn("Code", "class='source'", CldrUtility.getDoubleLinkMsg(), "class='source'", true)
                 // .addColumn("Report Bug", "class='target'", null, "class='target'", false)
                 .addColumn("Territory", "class='target'", null, "class='target'", true)
                 .addColumn("Code", "class='target'", "<a href=\"territory_language_information.html#{0}\">{0}</a>",
@@ -1373,7 +1378,6 @@ public class ShowLanguages {
                 // "For information on what these goals mean (comprehensive, modern, moderate,...), see the LDML specification "
                 // +
                 // "<a href='http://www.unicode.org/reports/tr35/#Coverage_Levels'>Appendix M: Coverage Levels</a>. " +
-                // "See also the coverageAdditions in <a href='http://www.unicode.org/cldr/data/common/supplemental/supplementalMetadata.xml'>supplemental metadata</a>."
                 // +
                 // "</p>"
                 , true
@@ -1522,7 +1526,7 @@ public class ShowLanguages {
                 .addColumn("Territory", "class='source'", null, "class='source'", true)
                 .setSortPriority(0)
                 .setBreakSpans(true)
-                .addColumn("Code", "class='source'", "<a name=\"{0}\" href='likely_subtags.html#und_{0}'>{0}</a>",
+                .addColumn("Code", "class='source'", CldrUtility.getDoubleLinkMsg(),
                     "class='source'", true)
                 .addColumn("Terr. Pop (M)", "class='target'", "{0,number,#,###.0}", "class='targetRight'", true)
                 .addColumn("Terr. Literacy", "class='target'", "{0,number,#.0}%", "class='targetRight'", true)
@@ -1697,7 +1701,7 @@ public class ShowLanguages {
             if (currencies == null || currencies.size() == 0) return "";
             StringBuilder buffer = new StringBuilder();
             for (String code : currencies) {
-                if (buffer.length() != 0) buffer.append("<br>");
+                if (buffer.length() != 0) buffer.append(",<br>");
                 buffer.append(getName(CLDRFile.CURRENCY_NAME, code, false));
             }
             return buffer.toString();
@@ -1875,58 +1879,148 @@ public class ShowLanguages {
                 // ".</p>"
                 , false
                 ));
+            String section1 = "Territory to Currency";
+            String section2 = "Decimal Digits and Rounding";
+            showContents(pw, "territory_currency", section1, "format_info", section2);
+
+            pw.println("<h2>" + CldrUtility.getDoubleLinkedText("territory_currency", "1. " + section1) + "</h2>");
+
             // doTitle(pw, "Territory \u2192 Currency");
             pw.println("<table>");
-            pw.println("<tr><th class='source'>Territory</th><th class='target'>From</th><th class='target'>To</th><th class='target'>Currency</th></tr>");
-            for (Iterator it = territory_currency.keySet().iterator(); it.hasNext();) {
-                String territory = (String) it.next();
-                Set info = (Set) territory_currency.get(territory);
-                pw.println("<tr><td class='source' rowSpan='" + info.size() + "'>" + territory + "</td>");
+            pw.println("<tr><th class='source'>Territory</th>" +
+                "<th class='source'>Code</th>" +
+                "<th class='target'>From</th>" +
+                "<th class='target'>To</th>" +
+                "<th class='target'>Currency</th>" +
+                "<th class='target'>Name</th>" +
+                "</tr>");
+
+            Relation<String, String> currencyToTerritory = Relation.of(new HashMap<String, Set<String>>(),
+                HashSet.class);
+            Relation<String, String> modernCurrencyToTerritory = Relation.of(new HashMap<String, Set<String>>(),
+                HashSet.class);
+
+            for (Entry<String, String> nameCode : NAME_TO_REGION.entrySet()) {
+                String name = nameCode.getKey();
+                String regionCode = nameCode.getValue();
+                if (!sc.isCountry(regionCode)) {
+                    continue;
+                }
+                if (sc.isLstregPrivateUse("region", regionCode)) {
+                    continue;
+                }
+                Set<CurrencyDateInfo> info = supplementalDataInfo.getCurrencyDateInfo(regionCode);
+
+                int infoSize = 1;
+                if (info != null) {
+                    infoSize = info.size();
+                }
+                pw.println("<tr>" +
+                    "<td class='source' rowSpan='" + infoSize + "'>" + name + "</td>" +
+                    "<td class='source' rowSpan='" + infoSize + "'>" + CldrUtility.getDoubleLinkedText(regionCode)
+                    + "</td>"
+                    );
+                if (info == null) {
+                    pw.println("<td class='target'>" + "<i>na</i>" + "</td>" +
+                        "<td class='target'>" + "<i>na</i>" + "</td>" +
+                        "<td class='target'>" + "<i>na</i>" + "</td>" +
+                        "<td class='target'>" + "<i>na</i>" + "</td>" +
+                        "</tr>");
+                    continue;
+                }
                 boolean first = true;
-                for (Iterator it2 = info.iterator(); it2.hasNext();) {
-                    String[] items = (String[]) it2.next();
+                for (CurrencyDateInfo infoItem : info) {
+                    Date endData = infoItem.getEnd();
+                    if (endData.equals(CurrencyDateInfo.END_OF_TIME)) {
+                        modernCurrencyToTerritory.put(infoItem.getCurrency(), getTerritoryName(regionCode));
+                    } else {
+                        currencyToTerritory.put(infoItem.getCurrency(), getTerritoryName(regionCode));
+                    }
                     if (first)
                         first = false;
                     else
                         pw.println("<tr>");
-                    pw.println("<td class='target'>" + items[0] + "</td><td class='target'>" + items[1]
-                        + "</td><td class='target'>" + items[2] + "</td></tr>");
+                    pw.println("<td class='target'>" + CurrencyDateInfo.formatDate(infoItem.getStart()) + "</td>" +
+                        "<td class='target'>" + CurrencyDateInfo.formatDate(endData) + "</td>" +
+                        "<td class='target'>" + infoItem.getCurrency() + "</td>" +
+                        "<td class='target'>" + english.getName("currency", infoItem.getCurrency()) + "</td>" +
+                        "</tr>");
                 }
             }
             // doFooter(pw);
             // pw.close();
             // pw = new PrintWriter(new FormattedFileWriter(index, "Currency Format Info", null));
-            pw.write("</table></div>");
-            pw.write("<h2><a name='format_info'>Decimal Digits and Rounding</a></h2>");
+            pw.write("</table>");
+
+            pw.println("<h2>" + CldrUtility.getDoubleLinkedText("format_info", "2. " + section2) + "</h2>");
+
             pw.write("<p>This table shows the digit rounding for the currency, plus the countries where it is or was in use. "
                 +
-                "Countries where the currency is not in current use are marked by italics. " +
-                "If the currency uses 'nickel rounding' in retail formatting, the digits are followed by '(5)'." +
+                "Countries where the currency is not in current use are marked by italics. "
+                +
+                "If the currency uses 'nickel rounding' in all transactions, the digits are followed by '(5)'. "
+                +
+                "If the currency uses 'nickel rounding' in cash retail transactions, the digits are followed by '[5]'."
+                +
                 "</p>");
             pw.write("<div align='center'><table>");
 
             // doTitle(pw, "Currency Format Info");
-            pw.println("<tr><th class='source'>Currency</th><th class='target'>Digits</th><th class='target'>Countries</th></tr>");
+
+            pw.println("<tr>" +
+                "<th class='source nowrap'>Name</th>" +
+                "<th class='source'>Currency</th>" +
+                "<th class='target'>Digits</th>" +
+                "<th class='target'>Countries</th>" +
+                "</tr>");
             Set currencyList = new TreeSet(col);
             currencyList.addAll(currency_fractions.keySet());
             currencyList.addAll(currency_territory.keySet());
 
-            for (Iterator it = currencyList.iterator(); it.hasNext();) {
-                String currency = (String) it.next();
-                String fractions = (String) currency_fractions.get(currency);
-                if (fractions == null)
-                    fractions = defaultDigits;
-                Set territories = (Set) currency_territory.get(currency);
-                pw.print("<tr><td class='source'>" + currency + "</td><td class='target'>" + fractions
-                    + "</td><td class='target'>");
-                if (territories != null) {
-                    boolean first = true;
-                    for (Iterator it2 = territories.iterator(); it2.hasNext();) {
+            for (Entry<String, String> nameCode : NAME_TO_CURRENCY.entrySet()) {
+                String name = nameCode.getKey();
+                String currency = nameCode.getValue();
+                CurrencyNumberInfo info = supplementalDataInfo.getCurrencyNumberInfo(currency);
+                Set<String> territories = currencyToTerritory.get(currency);
+                Set<String> modernTerritories = modernCurrencyToTerritory.get(currency);
+
+                // String fractions = (String) currency_fractions.get(currency);
+                // if (fractions == null)
+                // fractions = defaultDigits;
+                // Set territories = (Set) currency_territory.get(currency);
+                pw.print("<tr>" +
+                    "<td class='source nowrap'>"
+                    + TransliteratorUtilities.toHTML.transform(english.getName("currency", currency)) + "</td>" +
+                    "<td class='source'>" + CldrUtility.getDoubleLinkedText(currency) + "</td>" +
+                    "<td class='target'>" + info.getDigits()
+                    + (info.getRounding() == 0 ? "" : " (" + info.getRounding() + ")")
+                    + (info.cashRounding == 0 ? "" : " [" + info.cashRounding + "]")
+                    + "</td>" +
+                    "<td class='target'>");
+                boolean first = true;
+                boolean needBreak = false;
+                if (modernTerritories != null) {
+                    needBreak = true;
+                    for (String territory : modernTerritories) {
                         if (first)
                             first = false;
                         else
                             pw.print(", ");
-                        pw.print(it2.next());
+                        pw.print("<b>" + territory + "</b>");
+                    }
+                }
+                boolean haveBreak = true;
+                if (territories != null) {
+                    for (String territory : territories) {
+                        if (first)
+                            first = false;
+                        else if (!needBreak)
+                            pw.print(", ");
+                        else {
+                            pw.print(",<br>");
+                            needBreak = false;
+                        }
+                        pw.print(territory);
                     }
                 }
                 pw.println("</td></tr>");
@@ -1964,6 +2058,31 @@ public class ShowLanguages {
             // }
         }
 
+        private void showContents(PrintWriter pw, String... items) {
+            pw.println("</div>");
+            pw.println("<h3>Contents</h3>");
+            pw.println("<ol>");
+            for (int i = 0; i < items.length; i += 2) {
+                pw.println("<li><a href='#" + items[i] + "'>" + items[i + 1] + "</a></li>");
+            }
+            pw.println("</ol><hr>");
+
+            pw.println("<div align='center'>");
+        }
+
+        private String getTerritoryName(String territory) {
+            String name;
+            name = english.getName("territory", territory);
+            if (name == null) {
+                name = sc.getData("territory", territory);
+            }
+            if (name != null) {
+                return TransliteratorUtilities.toHTML.transform(name) + " (" + territory + ")";
+            } else {
+                return territory;
+            }
+        }
+
         /**
          * @throws IOException
          * 
@@ -1980,7 +2099,7 @@ public class ShowLanguages {
             for (Iterator it = aliases.iterator(); it.hasNext();) {
                 String[] items = (String[]) it.next();
                 pw.println("<tr><td class='source'>" + items[0] + "</td>" +
-                    "<td class='source'>" + items[1] + "</td>" +
+                    "<td class='source'>" + CldrUtility.getDoubleLinkedText(items[1]) + "</td>" +
                     "<td class='target'>" + items[3] + "</td>" +
                     "<td class='target'>" + items[2] + "</td></tr>");
             }
@@ -2095,10 +2214,16 @@ public class ShowLanguages {
 
             final PrintWriter pw = new PrintWriter(new FormattedFileWriter(index, title, null, false));
 
+            String section1 = "Rules";
+            String section2 = "Comparison";
+            showContents(pw, "rules", "Rules", "comparison", "Comparison");
+
+            pw.println("<h2>" + CldrUtility.getDoubleLinkedText("rules", "1. " + section1) + "</h2>");
+
             final TablePrinter tablePrinter = new TablePrinter()
                 .addColumn("Language Name", "class='source'", null, "class='source'", true).setSortPriority(0)
                 .setBreakSpans(true).setRepeatHeader(true)
-                .addColumn("Code", "class='source'", "<a name=\"{0}\">{0}</a>", "class='source'", true)
+                .addColumn("Code", "class='source'", CldrUtility.getDoubleLinkMsg(), "class='source'", true)
                 .addColumn("Category", "class='target'", null, "class='target'", true).setBreakSpans(true)
                 .addColumn("Examples", "class='target'", null, "class='target'", true)
                 .addColumn("Rules", "class='target'", null, "class='target'", true);
@@ -2122,12 +2247,14 @@ public class ShowLanguages {
                 }
             }
             pw.println(tablePrinter.toTable());
-            pw.println("<h2>Comparison</h2>");
+
+            pw.println("<h2>" + CldrUtility.getDoubleLinkedText("comparison", "2. " + section2) + "</h2>");
             pw.println("<p style='text-align:left'>The plural forms are abbreviated by first letter, with 'x' for 'other'. "
                 +
                 "If values are made redundant by explicit 0 and 1, they are underlined. " +
                 "The fractional and integral results are separated for clarity.</p>");
             PluralSnapshot.writeTables(english, pw);
+            pw.println(Utility.repeat("<br>", 100));
             pw.close();
         }
 
@@ -2223,7 +2350,7 @@ public class ShowLanguages {
                 pw.print(lead);
             int count = getTotalContainedItems(start, depth);
             pw.print("<td class='z" + depth + "' rowSpan='" + count + "'>" + name + "</td>"); // colSpan='" + (5 -
-                                                                                              // depth) + "'
+            // depth) + "'
             if (depth == 4)
                 pw.println("</tr>");
             Collection contains = getContainedCollection(start, depth);
@@ -2411,6 +2538,19 @@ public class ShowLanguages {
         }
         return territory_languages;
 
+    }
+
+    static final Map<String, String> NAME_TO_REGION = getNameToCode(CodeType.territory, "region");
+    static final Map<String, String> NAME_TO_CURRENCY = getNameToCode(CodeType.currency, "currency");
+
+    private static SortedMap<String, String> getNameToCode(CodeType codeType, String cldrCodeType) {
+        SortedMap<String, String> temp = new TreeMap<String, String>(col);
+        for (String territory : StandardCodes.make().getAvailableCodes(codeType)) {
+            String name = english.getName(cldrCodeType, territory);
+            temp.put(name == null ? territory : name, territory);
+        }
+        temp = Collections.unmodifiableSortedMap(temp);
+        return temp;
     }
 
     /**

@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,6 +28,7 @@ import org.unicode.cldr.util.XPathParts.Comments;
 
 import com.ibm.icu.impl.Utility;
 import com.ibm.icu.util.Freezable;
+import com.ibm.icu.util.VersionInfo;
 
 /**
  * Overall process is described in
@@ -49,6 +49,7 @@ public abstract class XMLSource implements Freezable, Iterable<String> {
     private LinkedHashMap<String, List<String>> reverseAliases;
     protected boolean locked;
     transient String[] fixedPath = new String[1];
+
     // Listeners are stored using weak references so that they can be garbage collected.
     private List<WeakReference<Listener>> listeners = new ArrayList<WeakReference<Listener>>();
 
@@ -1126,14 +1127,15 @@ public abstract class XMLSource implements Freezable, Iterable<String> {
             { "bali", "numbers" },
             { "beng", "numbers" },
             { "big5han", "collation" },
+            { "brah", "numbers" },
             { "buddhist", "calendar" },
+            { "cakm", "numbers" },
             { "cham", "numbers" },
             { "chinese", "calendar" },
             { "coptic", "calendar" },
             { "dangi", "calendar" },
             { "deva", "numbers" },
             { "dictionary", "collation" },
-            { "direct", "collation" },
             { "ducet", "collation" },
             { "ethi", "numbers" },
             { "ethiopic", "calendar" },
@@ -1156,6 +1158,7 @@ public abstract class XMLSource implements Freezable, Iterable<String> {
             { "indian", "calendar" },
             { "islamic", "calendar" },
             { "islamic-civil", "calendar" },
+            { "iso8601", "calendar" },
             { "japanese", "calendar" },
             { "java", "numbers" },
             { "jpan", "numbers" },
@@ -1177,6 +1180,7 @@ public abstract class XMLSource implements Freezable, Iterable<String> {
             { "nkoo", "numbers" },
             { "olck", "numbers" },
             { "orya", "numbers" },
+            { "osma", "numbers" },
             { "persian", "calendar" },
             { "phonebook", "collation" },
             { "pinyin", "collation" },
@@ -1187,8 +1191,12 @@ public abstract class XMLSource implements Freezable, Iterable<String> {
             { "saur", "numbers" },
             { "search", "collation" },
             { "searchjl", "collation" },
+            { "shrd", "numbers" },
+            { "sora", "numbers" },
+            { "standard", "collation" },
             { "stroke", "collation" },
             { "sund", "numbers" },
+            { "takr", "numbers" },
             { "talu", "numbers" },
             { "taml", "numbers" },
             { "tamldec", "numbers" },
@@ -1199,14 +1207,6 @@ public abstract class XMLSource implements Freezable, Iterable<String> {
             { "unihan", "collation" },
             { "vaii", "numbers" },
             { "zhuyin", "collation" } };
-        static Set<String> numberSystems = new LinkedHashSet<String>();
-        static {
-            for (String[] i : ResolvingSource.typeDisplayNames) {
-                if ("numbers".equals(i[1])) {
-                    numberSystems.add(i[0]);
-                }
-            }
-        }
 
         private static final boolean SKIP_SINGLEZONES = false;
         private static XMLSource constructedItems = new SimpleXMLSource(CODE_FALLBACK_ID);
@@ -1376,6 +1376,11 @@ public abstract class XMLSource implements Freezable, Iterable<String> {
             }
             return false;
         }
+
+        @Override
+        public VersionInfo getDtdVersionInfo() {
+            return currentSource.getDtdVersionInfo();
+        }
     }
 
     /**
@@ -1456,7 +1461,7 @@ public abstract class XMLSource implements Freezable, Iterable<String> {
      */
     public abstract void getPathsWithValue(String valueToMatch, String pathPrefix, Set<String> result);
 
-    static Set<String> getNumberSystems() {
-        return ResolvingSource.numberSystems;
+    public VersionInfo getDtdVersionInfo() {
+        return null;
     }
 }

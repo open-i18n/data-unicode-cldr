@@ -2,9 +2,9 @@ package org.unicode.cldr.icu;
 
 import java.io.File;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -20,11 +20,14 @@ import org.unicode.cldr.util.CLDRFile.DraftStatus;
 import org.unicode.cldr.util.CldrUtility.Output;
 import org.unicode.cldr.util.RegexLookup;
 import org.unicode.cldr.util.RegexLookup.Finder;
+import org.unicode.cldr.util.SimpleXMLSource;
 import org.unicode.cldr.util.XMLSource;
 import org.unicode.cldr.util.XPathParts.Comments;
 
 import com.ibm.icu.text.NumberFormat;
 import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.util.Calendar;
+import com.ibm.icu.util.GregorianCalendar;
 import com.ibm.icu.util.TimeZone;
 
 /**
@@ -35,8 +38,6 @@ public class SupplementalMapper extends LdmlMapper {
     private static final Map<String, String> enumMap = Builder.with(new HashMap<String, String>())
         .put("sun", "1").put("mon", "2").put("tues", "3").put("wed", "4")
         .put("thu", "5").put("fri", "6").put("sat", "7").get();
-    private static final Pattern DATE_PATH = Pattern.compile("/CurrencyMap/.*/(from|to):intvector");
-    private static final Pattern NUMBERING_SYSTEMS_DESC = Pattern.compile("/numberingSystems/\\w++/desc");
     private static final NumberFormat numberFormat = NumberFormat.getInstance();
     static {
         numberFormat.setMinimumIntegerDigits(4);
@@ -45,6 +46,10 @@ public class SupplementalMapper extends LdmlMapper {
     private int fifoCounter;
     private String inputDir;
     private String cldrVersion;
+
+    private enum DateFieldType {
+        from, to
+    };
 
     /**
      * Comparator for sorting LDML supplementalData xpaths.
@@ -96,10 +101,73 @@ public class SupplementalMapper extends LdmlMapper {
      *            the version of CLDR for output purposes. Only used
      *            in supplementalData conversion.
      */
-    public SupplementalMapper(String inputDir, String cldrVersion) {
+    private SupplementalMapper(String inputDir, String cldrVersion) {
         super("ldml2icu_supplemental.txt");
         this.inputDir = inputDir;
         this.cldrVersion = cldrVersion;
+    }
+
+    public static SupplementalMapper create(String inputDir, String cldrVersion) {
+        SupplementalMapper mapper = new SupplementalMapper(inputDir, cldrVersion);
+        // Handlers for functions in regex file.
+        mapper.addFunction("date", new Function(2) {
+            /**
+             * args[0] = value
+             * args[1] = type (i.e. from/to)
+             */
+            @Override
+            protected String run(String... args) {
+                DateFieldType dft = args[1].contains("from") ? DateFieldType.from : DateFieldType.to;
+                return getSeconds(args[0], dft);
+            }
+        });
+        mapper.addFunction("algorithm", new Function(1) {
+            @Override
+            protected String run(String... args) {
+                // Insert % into numberingSystems descriptions.
+                String value = args[0];
+                int percentPos = value.lastIndexOf('/') + 1;
+                return value.substring(0, percentPos) + '%' + value.substring(percentPos);
+            }
+        });
+        // Converts a number into a special integer that represents the number in
+        // normalized scientific notation for ICU's RB parser.
+        // Resultant integers are in the form -?xxyyyyyy, where xx is the exponent
+        // offset by 50 and yyyyyy is the coefficient to 5 decimal places, e.g.
+        // 14660000000000 -> 1.466E13 -> 63146600
+        // 0.0001 -> 1E-4 -> 46100000
+        // -123.456 -> -1.23456E-2 -> -48123456
+        // args[0] = number to be converted
+        // args[2] = an (optional) additional exponent offset,
+        // e.g. -2 for converting percentages into fractions.
+        mapper.addFunction("exp", new Function(2) {
+            @Override
+            protected String run(String... args) {
+                double value = Double.parseDouble(args[0]);
+                if (value == 0) {
+                    return "0";
+                }
+                int exponent = 50;
+                if (args.length == 2) {
+                    exponent += Integer.parseInt(args[1]);
+                }
+                String sign = value >= 0 ? "" : "-";
+                value = Math.abs(value);
+                while (value >= 10) {
+                    value /= 10;
+                    exponent++;
+                }
+                while (value < 1) {
+                    value *= 10;
+                    exponent--;
+                }
+                if (exponent < 0 || exponent > 99) {
+                    throw new IllegalArgumentException("Exponent out of bounds: " + exponent);
+                }
+                return sign + exponent + Math.round(value * 100000);
+            }
+        });
+        return mapper;
     }
 
     /**
@@ -158,6 +226,7 @@ public class SupplementalMapper extends LdmlMapper {
                 List<String> values = info.processValues(arguments, cldrFile, xpath);
                 // Check if there are any arguments that need splitting for the rbPath.
                 String groupKey = info.processGroupKey(arguments);
+                String baseXPath = info.processXPath(arguments, fullPath);
                 boolean splitNeeded = false;
                 int argIndex = info.getSplitRbPathArg();
                 if (argIndex != -1) {
@@ -168,7 +237,7 @@ public class SupplementalMapper extends LdmlMapper {
                         for (String splitArg : splitArgs) {
                             newArgs[argIndex] = splitArg;
                             String rbPath = info.processRbPath(newArgs);
-                            processValues(fullPath, rbPath, values, groupKey, pathValueMap);
+                            processValues(baseXPath, rbPath, values, groupKey, pathValueMap);
                         }
                         splitNeeded = true;
                     }
@@ -176,7 +245,7 @@ public class SupplementalMapper extends LdmlMapper {
                 // No splitting required, process as per normal.
                 if (!splitNeeded) {
                     String rbPath = info.processRbPath(arguments);
-                    processValues(fullPath, rbPath, values, groupKey, pathValueMap);
+                    processValues(baseXPath, rbPath, values, groupKey, pathValueMap);
                 }
             }
             fifoCounter++;
@@ -199,34 +268,12 @@ public class SupplementalMapper extends LdmlMapper {
      */
     private void processValues(String xpath, String rbPath, List<String> values,
         String groupKey, Map<String, CldrArray> pathValueMap) {
-        List<String> processedValues = new ArrayList<String>();
         // The fifo counter needs to be formatted with leading zeros for sorting.
         if (rbPath.contains("<FIFO>")) {
             rbPath = rbPath.replace("<FIFO>", '<' + numberFormat.format(fifoCounter) + '>');
         }
-        if (NUMBERING_SYSTEMS_DESC.matcher(rbPath).matches()
-            && xpath.contains("algorithmic")) {
-            // Hack to insert % into numberingSystems descriptions.
-            String value = values.get(0);
-            int percentPos = value.lastIndexOf('/') + 1;
-            value = value.substring(0, percentPos) + '%' + value.substring(percentPos);
-            processedValues.add(value);
-        } else if (isDatePath(rbPath)) {
-            String[] dateValues = getSeconds(values.get(0));
-            processedValues.add(dateValues[0]);
-            processedValues.add(dateValues[1]);
-        } else {
-            processedValues = values;
-        }
         CldrArray cldrArray = getCldrArray(rbPath, pathValueMap);
-        cldrArray.add(xpath, processedValues, groupKey);
-    }
-
-    /**
-     * Checks if the given path should be treated as a date path.
-     */
-    private static boolean isDatePath(String rbPath) {
-        return DATE_PATH.matcher(rbPath).matches();
+        cldrArray.put(xpath, values, groupKey);
     }
 
     /**
@@ -235,15 +282,16 @@ public class SupplementalMapper extends LdmlMapper {
      * @param dateStr
      * @return
      */
-    private String[] getSeconds(String dateStr) {
-        long millis = getMilliSeconds(dateStr);
-        if (millis == -1) {
-            return null;
+    private static String getSeconds(String dateStr, DateFieldType type) {
+        long millis;
+        try {
+            millis = getMilliSeconds(dateStr, type);
+        } catch (ParseException ex) {
+            throw new IllegalArgumentException("Could not parse date: " + dateStr, ex);
         }
 
         int top = (int) ((millis & 0xFFFFFFFF00000000L) >>> 32); // top
         int bottom = (int) ((millis & 0x00000000FFFFFFFFL)); // bottom
-        String[] result = { top + "", bottom + "" };
 
         if (NewLdml2IcuConverter.DEBUG) {
             long bot = 0xffffffffL & bottom;
@@ -255,28 +303,88 @@ public class SupplementalMapper extends LdmlMapper {
             }
         }
 
-        return result;
+        return top + " " + bottom;
     }
 
-    private long getMilliSeconds(String dateStr) {
-        try {
-            if (dateStr != null) {
-                int count = countHyphens(dateStr);
-                SimpleDateFormat format = new SimpleDateFormat();
-                format.setTimeZone(TimeZone.getTimeZone("GMT"));
-                if (count == 2) {
-                    format.applyPattern("yyyy-mm-dd");
-                } else if (count == 1) {
-                    format.applyPattern("yyyy-mm");
-                } else {
-                    format.applyPattern("yyyy");
-                }
-                return format.parse(dateStr).getTime();
-            }
-        } catch (ParseException ex) {
-            System.err.println("Could not parse date: " + dateStr);
+    /**
+     * Parses a string date and normalizes it depending on what type of date it
+     * is.
+     * 
+     * @param dateStr
+     * @param type
+     *            whether the date is a from or a to
+     * @return
+     * @throws ParseException
+     */
+    private static long getMilliSeconds(String dateStr, DateFieldType type)
+        throws ParseException {
+        int count = countHyphens(dateStr);
+        SimpleDateFormat format = new SimpleDateFormat();
+        if (count == 2) {
+            format.applyPattern("yyyy-MM-dd");
+        } else if (count == 1) {
+            format.applyPattern("yyyy-MM");
+        } else {
+            format.applyPattern("yyyy");
         }
-        return -1;
+        TimeZone timezone = TimeZone.getTimeZone("GMT");
+        format.setTimeZone(timezone);
+        Date date = format.parse(dateStr);
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTimeZone(timezone);
+        calendar.setTime(date);
+        // Fix dates with the month or day missing.
+        if (count < 2) {
+            if (count == 0) { // yyyy
+                setDateField(calendar, Calendar.MONTH, type);
+            }
+            setDateField(calendar, Calendar.DAY_OF_MONTH, type);
+        }
+        String finalPattern = "yyyy-MM-dd HH:mm:ss.SSS";
+        switch (type) {
+        case from: {
+            // Set the times for to fields to the beginning of the day.
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            break;
+        }
+        case to: {
+            // Set the times for to fields to the end of the day.
+            calendar.set(Calendar.HOUR_OF_DAY, 23);
+            calendar.set(Calendar.MINUTE, 59);
+            calendar.set(Calendar.SECOND, 59);
+            calendar.set(Calendar.MILLISECOND, 999);
+            break;
+        }
+        }
+        format.applyPattern(finalPattern);
+        return calendar.getTimeInMillis();
+    }
+
+    /**
+     * Sets a field in a calendar to either the first or last value of the field.
+     * 
+     * @param calendar
+     * @param field
+     *            the calendar field to be set
+     * @param type
+     *            from/to date field type
+     */
+    private static void setDateField(Calendar calendar, int field, DateFieldType type) {
+        int value;
+        switch (type) {
+        case to: {
+            value = calendar.getActualMaximum(field);
+            break;
+        }
+        default: {
+            value = calendar.getActualMinimum(field);
+            break;
+        }
+        }
+        calendar.set(field, value);
     }
 
     /**
@@ -298,12 +406,13 @@ public class SupplementalMapper extends LdmlMapper {
      * Iterating through this XMLSource will return the xpaths in the order
      * that they were parsed from the XML file.
      */
-    private class LinkedXMLSource extends XMLSource {
+    private class LinkedXMLSource extends SimpleXMLSource {
         private Map<String, String> xpath_value;
         private Map<String, String> xpath_fullXPath;
         private Comments comments;
 
         public LinkedXMLSource() {
+            super("");
             xpath_value = new LinkedHashMap<String, String>();
             xpath_fullXPath = new HashMap<String, String>();
             comments = new Comments();

@@ -33,7 +33,7 @@ Argentina	AR	"40,482,000"	97%	"523,700,000,000"	official	Spanish	es	100%
 Argentina	AR	"40,482,000"	97%	"523,700,000,000"		Welsh	cy	"26,500"			
 Armenia	AM	"2,968,586"	99%	"17,150,000,000"	official	Armenian	hy	98%			Also historically written with Syriac script.
 Armenia	AM	"2,968,586"	99%	"17,150,000,000"		Azerbaijani (Latin)	az_Latn	5.30%			
-Armenia	AM	"2,968,586"	99%	"17,150,000,000"		Kurdish	ku	3.30%			
+Armenia	AM	"2,968,586"	99%	"17,150,000,000"		Kurdish	ku_Latn	3.30%			
 Aruba	AW	"101,541"	97%	"2,258,000,000"	official	Dutch	nl	97%		https://www.cia.gov/cia/publications/factbook/geos/aa.html Dutch official	
 Aruba	AW	"101,541"	97%	"2,258,000,000"		English	en	"3,000"			
 Aruba	AW	"101,541"	97%	"2,258,000,000"		Papiamento	pap	61%			
@@ -47,7 +47,7 @@ Austria	AT	"8,205,533"	98%	"317,800,000,000"	official_regional	Hungarian	hu	"21,
 Austria	AT	"8,205,533"	98%	"317,800,000,000"	official_regional	Slovenian	sl	"30,500"			
 Azerbaijan	AZ	"8,177,717"	99%	"65,470,000,000"	official	Azerbaijani (Cyrillic)	az_Cyrl	9.90%		"http://www.nvtc.gov/lotw/months/march/Azerbaijani.html#writ Latin script official, used 98.8% of pop * 90% for the usage figure"	
 Azerbaijan	AZ	"8,177,717"	99%	"65,470,000,000"	official	Azerbaijani (Latin)	az_Latn	89%		"http://www.nvtc.gov/lotw/months/march/Azerbaijani.html#writ Latin script official, used 98.8% of pop * 10% for the usage figure"	
-Azerbaijan	AZ	"8,177,717"	99%	"65,470,000,000"		Kurdish	ku	"19,800"			
+Azerbaijan	AZ	"8,177,717"	99%	"65,470,000,000"		Kurdish	ku_Latn	"19,800"			
 Bahamas	BS	"307,451"	96%	"8,332,000,000"	official	English	en	100%			
 Bahrain	BH	"718,306"	87%	"24,500,000,000"	official	Arabic	ar	87%		"http://www.ethnologue.com/show_country.asp?name=Bahrain Arabic official, the figure is derived from literacy * lang pop"	
 Bahrain	BH	"718,306"	87%	"24,500,000,000"		Malayalam	ml	3.30%		http://www.ethnologue.com/show_country.asp?name=Bahrain	
@@ -82,7 +82,7 @@ Bolivia	BO	"9,247,816"	87%	"39,440,000,000"	official	Quechua	qu	32%		"http://lan
 Bolivia	BO	"9,247,816"	87%	"39,440,000,000"	official	Spanish	es	61%		"https://www.cia.gov/library/publications/the-world-factbook/geos/bl.html http://lanic.utexas.edu/project/tilan/reports/rtf359/bolivia1.html Spanish is the official language, only about 60-70% of the population speaks it at all ;"	
 "Bonaire, Sint Eustatius, and Saba"	BQ	"20,000"	99%	"409,900"	official	Dutch	nl	8%			
 "Bonaire, Sint Eustatius, and Saba"	BQ	"20,000"	99%	"409,900"	official	Papiamento	pap	81%			
-Bosnia and Herzegovina	BA	"4,590,310"	97%	"27,730,000,000"	official	Bosnian	bs	99%			
+Bosnia and Herzegovina	BA	"4,590,310"	97%	"27,730,000,000"	official	Bosnian	bs_Latn	99%			
 Bosnia and Herzegovina	BA	"4,590,310"	97%	"27,730,000,000"	official	Bosnian	bs_Cyrl	99%	5%	http://www.bhas.ba/index.php?option=com_content&view=article&id=52&itemid=80&lang=en&Itemid=  also: http://en.wikipedia.org/wiki/Bosnian_language	
 Bosnia and Herzegovina	BA	"4,590,310"	97%	"27,730,000,000"	official	Croatian	hr	12%			
 Bosnia and Herzegovina	BA	"4,590,310"	97%	"27,730,000,000"	official	Serbian (Cyrillic)	sr_Cyrl	10%			
@@ -103,7 +103,8 @@ British Indian Ocean Territory	IO	3500	0%	0	official	English	en	100%	100%	https:
 British Virgin Islands	VG	"24,041"	98%	"853,400,000"	de_facto_official	English	en	98%			
 Brunei	BN	"381,371"	93%	"19,640,000,000"		Chinese (Traditional Han)	zh_Hant	11%			
 Brunei	BN	"381,371"	93%	"19,640,000,000"		English	en	"8,000"			
-Brunei	BN	"381,371"	93%	"19,640,000,000"	official	Malay	ms	93%			
+Brunei	BN	"381,371"	93%	"19,640,000,000"	official	Malay	ms_Arab	5%		"http://en.wikipedia.org/wiki/Languages_of_Brunei Modern use of Arabic (Jawi) seems to be minimal, but is co-official with ms_Latn; set to 5% for now."	
+Brunei	BN	"381,371"	93%	"19,640,000,000"	official	Malay	ms_Latn	93%			
 Bulgaria	BG	"7,262,675"	98%	"86,320,000,000"	official	Bulgarian	bg	100%			
 Bulgaria	BG	"7,262,675"	98%	"86,320,000,000"		Turkish	tr	11%			
 Burkina Faso	BF	"15,264,735"	22%	"17,200,000,000"		Dyula	dyu	32%		http://www.ethnologue.com/show_language.asp?code=dyu	Low literacy; French official
@@ -141,6 +142,7 @@ Cameroon	CM	"18,467,692"	68%	"39,370,000,000"		Yangben	yav	"2,300"
 Cameroon	CM	"18,467,692"	68%	"39,370,000,000"		Yemba	ybb	"300,000"			
 Canada	CA	"33,212,696"	99%	"1,266,000,000,000"	recognized	Atikamekw	atj	"5,645"		"Canadian census shows 97,230 total population for all Cree languages"	
 Canada	CA	"33,212,696"	99%	"1,266,000,000,000"	recognized	Chipewyan	chp	770		"Canadian census shows 97,230 total population for all Cree languages"	
+Canada	CA	"33,212,696"	99%	"1,266,000,000,000"	recognized	Cree	cr	"36,400"		"Canadian census shows 97,230 total population for all Cree languages"	
 Canada	CA	"33,212,696"	99%	"1,266,000,000,000"	recognized	Dogrib	dgr	"2,640"		http://en.wikipedia.org/wiki/Tlicho_Yatii_language also called Dogrib	
 Canada	CA	"33,212,696"	99%	"1,266,000,000,000"	recognized	East Cree Coastal Northern	crl	"5,310"		"Canadian census shows 97,230 total population for all Cree languages"	
 Canada	CA	"33,212,696"	99%	"1,266,000,000,000"	recognized	East Cree Coastal Southern/Inland	crj	"7,310"		"Canadian census shows 97,230 total population for all Cree languages"	
@@ -149,17 +151,15 @@ Canada	CA	"33,212,696"	99%	"1,266,000,000,000"	official	French	fr	22%
 Canada	CA	"33,212,696"	99%	"1,266,000,000,000"		German	de	"622,650"			
 Canada	CA	"33,212,696"	99%	"1,266,000,000,000"	recognized	Gwich’in	gwi	570		http://en.wikipedia.org/wiki/Gwichin_language 300 speakers out of 1100 pop; 1998 census shows 770	
 Canada	CA	"33,212,696"	99%	"1,266,000,000,000"	recognized	Innu-Montagnais	moe	"11,000"		"Canadian census shows 97,230 total population for all Cree languages"	
-Canada	CA	"33,212,696"	99%	"1,266,000,000,000"	official_regional	Inuinnaqtun	iku	575		"http://www12.statcan.ca/census-recensement/2006/dp-pd/tbt/Rp-eng.cfm?LANG=E&APATH=3&DETAIL=0&DIM=0&FL=A&FREE=0&GC=0&GID=837928&GK=0&GRP=1&PID=89189&PRID=0&PTYPE=88971,97154&S=0&SHOWALL=0&SUB=0&Temporal=2006&THEME=70&VID=0&VNAMEE=&VNAMEF=  see also http://en.wikipedia.org/wiki/Innu-aimun_language"	
-Canada	CA	"33,212,696"	99%	"1,266,000,000,000"	official_regional	"Inuktitut, Eastern"	ike	"14,000"	30%	"http://www12.statcan.ca/census-recensement/2006/dp-pd/tbt/Rp-eng.cfm?LANG=E&APATH=3&DETAIL=0&DIM=0&FL=A&FREE=0&GC=0&GID=837928&GK=0&GRP=1&PID=89189&PRID=0&PTYPE=88971,97154&S=0&SHOWALL=0&SUB=0&Temporal=2006&THEME=70&VID=0&VNAMEE=&VNAMEF="	
+Canada	CA	"33,212,696"	99%	"1,266,000,000,000"	official_regional	"Inuktitut, Eastern"	iu	"14,000"	30%	"http://www12.statcan.ca/census-recensement/2006/dp-pd/tbt/Rp-eng.cfm?LANG=E&APATH=3&DETAIL=0&DIM=0&FL=A&FREE=0&GC=0&GID=837928&GK=0&GRP=1&PID=89189&PRID=0&PTYPE=88971,97154&S=0&SHOWALL=0&SUB=0&Temporal=2006&THEME=70&VID=0&VNAMEE=&VNAMEF="	
 Canada	CA	"33,212,696"	99%	"1,266,000,000,000"	official_regional	"Inuktitut, Western"	ikt	"4,000"	30%	"http://www12.statcan.ca/census-recensement/2006/dp-pd/tbt/Rp-eng.cfm?LANG=E&APATH=3&DETAIL=0&DIM=0&FL=A&FREE=0&GC=0&GID=837928&GK=0&GRP=1&PID=89189&PRID=0&PTYPE=88971,97154&S=0&SHOWALL=0&SUB=0&Temporal=2006&THEME=70&VID=0&VNAMEE=&VNAMEF="	
 Canada	CA	"33,212,696"	99%	"1,266,000,000,000"		Italian	it	"660,945"		"http://www12.statcan.ca/census-recensement/2006/dp-pd/tbt/Rp-eng.cfm?LANG=E&APATH=3&DETAIL=0&DIM=0&FL=A&FREE=0&GC=0&GID=837928&GK=0&GRP=1&PID=89189&PRID=0&PTYPE=88971,97154&S=0&SHOWALL=0&SUB=0&Temporal=2006&THEME=70&VID=0&VNAMEE=&VNAMEF="	
 Canada	CA	"33,212,696"	99%	"1,266,000,000,000"	recognized	Moose Cree	crm	"4,500"		"Canadian census shows 97,230 total population for all Cree languages"	
 Canada	CA	"33,212,696"	99%	"1,266,000,000,000"	recognized	Naskapi	nsk	"1,180"		"Canadian census shows 97,230 total population for all Cree languages"	
 Canada	CA	"33,212,696"	99%	"1,266,000,000,000"	recognized	North Slavey	scs	"1,235"		http://en.wikipedia.org/wiki/North_Slavey	
 Canada	CA	"33,212,696"	99%	"1,266,000,000,000"	recognized	Plains Cree	crk	"35,400"		"Canadian census shows 97,230 total population for all Cree languages"	
-Canada	CA	"33,212,696"	99%	"1,266,000,000,000"	recognized	South Slavey	xsl	"2,310"			
+Canada	CA	"33,212,696"	99%	"1,266,000,000,000"	recognized	Slavey	den	"2,310"			
 Canada	CA	"33,212,696"	99%	"1,266,000,000,000"	recognized	Swampy Cree	csw	"5,000"		"Canadian census shows 97,230 total population for all Cree languages"	
-Canada	CA	"33,212,696"	99%	"1,266,000,000,000"	recognized	Woods Cree	cwd	"36,400"		"Canadian census shows 97,230 total population for all Cree languages"	
 Canary Islands	IC	"2,098,593"	98%	"71,360,000,000"	official	Spanish	es	98%		http://en.wikipedia.org/wiki/Canary_islands	http://en.wikipedia.org/wiki/Cape_Verdean_Creole
 Cape Verde	CV	"426,998"	77%	"1,603,000,000"		Cape Verdean Creole	kea	92%		"http://www.ethnologue.com/show_country.asp?name=CV Official language, 37-77% literacy"	http://en.wikipedia.org/wiki/Cape_Verdean_Creole
 Cape Verde	CV	"426,998"	77%	"1,603,000,000"	official	Portuguese	pt	76.00%			
@@ -192,7 +192,7 @@ China	CN	"1,330,044,544"	91%	"6,991,000,000,000"	official_regional	Zhuang	za	"4,
 Christmas Island	CX	"1,402"	0%	0	de_facto_official	English	en	100%			
 Clipperton Island	CP	1	0%	32740	official	French	fr	100%		http://en.wikipedia.org/wiki/Clipperton_Island	
 Cocos Islands	CC	596	0%	0	de_facto_official	English	en	100			
-Cocos Islands	CC	596	0%	0		Malay	ms	496			
+Cocos Islands	CC	596	0%	0		Malay	ms_Arab	496			
 Colombia	CO	"45,013,672"	93%	"319,500,000,000"	official	Spanish	es	93%		https://www.cia.gov/cia/publications/factbook/geos/co.html Spanish official	
 Comoros	KM	"731,775"	56%	"1,262,000,000"	official	Arabic	ar	66%			
 Comoros	KM	"731,775"	56%	"1,262,000,000"	official	French	fr	56%			
@@ -300,7 +300,7 @@ Gambia	GM	"1,735,464"	40%	"2,106,000,000"		Mandinka	mnk	29.00%			"Gambia, num En
 Georgia	GE	"4,630,841"	100%	"20,500,000,000"	official_regional	Abkhazian	ab	"103,000"			
 Georgia	GE	"4,630,841"	100%	"20,500,000,000"		Armenian	hy	7%		https://www.cia.gov/cia/publications/factbook/fields/2098.html	
 Georgia	GE	"4,630,841"	100%	"20,500,000,000"	official	Georgian	ka	86%			
-Georgia	GE	"4,630,841"	100%	"20,500,000,000"		Kurdish	ku	"41,000"			
+Georgia	GE	"4,630,841"	100%	"20,500,000,000"		Kurdish	ku_Latn	"41,000"			
 Georgia	GE	"4,630,841"	100%	"20,500,000,000"	official_regional	Ossetic	os	"102,000"			Also called Osetin or Ossete.
 Georgia	GE	"4,630,841"	100%	"20,500,000,000"		Russian	ru	9%		https://www.cia.gov/cia/publications/factbook/fields/2098.html	
 Germany	DE	"82,369,552"	99%	"2,810,000,000,000"		Croatian	hr	"650,000"			
@@ -311,7 +311,7 @@ Germany	DE	"82,369,552"	99%	"2,810,000,000,000"	official	German	de	91%
 Germany	DE	"82,369,552"	99%	"2,810,000,000,000"		Greek	el	"313,000"			
 Germany	DE	"82,369,552"	99%	"2,810,000,000,000"		Italian	it	"546,000"			
 Germany	DE	"82,369,552"	99%	"2,810,000,000,000"		Kölsch	ksh	"250,000"		http://www.ethnologue.com/show_language.asp?code=ksh	
-Germany	DE	"82,369,552"	99%	"2,810,000,000,000"		Kurdish	ku	"546,000"			
+Germany	DE	"82,369,552"	99%	"2,810,000,000,000"		Kurdish	ku_Latn	"546,000"			
 Germany	DE	"82,369,552"	99%	"2,810,000,000,000"		Low German	nds	"10,000,000"	5%	"http://www.ethnologue.com/show_language.asp?code=nds understood by 10 million, perhaps. Figure is questionable writing pop artificially set to 5% see also: http://en.wikipedia.org/wiki/Low_German (understood by 10 million people, and native to about 3 million people all around northern Germany)"	
 Germany	DE	"82,369,552"	99%	"2,810,000,000,000"		Lower Sorbian	dsb	"7,000"	5%	http://www.ethnologue.com/show_language.asp?code=dsb pop 7k. Figure is questionable writing pop artificially set to 5% see also http://en.wikipedia.org/wiki/Lower_Sorbian	
 Germany	DE	"82,369,552"	99%	"2,810,000,000,000"		Polish	pl	"240,000"			
@@ -332,7 +332,6 @@ Greece	GR	"10,722,816"	96%	"324,600,000,000"	official	Greek	el	99%		https://www.
 Greece	GR	"10,722,816"	96%	"324,600,000,000"		Macedonian	mk	"174,000"			
 Greece	GR	"10,722,816"	96%	"324,600,000,000"		Turkish	tr	"124,000"			
 Greenland	GL	"57,564"	100%	"1,100,000,000"	official	Danish	da	"7,830"			
-Greenland	GL	"57,564"	100%	"1,100,000,000"		Inuktitut	iu	84%			
 Greenland	GL	"57,564"	100%	"1,100,000,000"	official	Kalaallisut	kl	84%			
 Grenada	GD	"90,343"	96%	"1,108,000,000"	official	English	en	96%		https://www.cia.gov/cia/publications/factbook/geos/gj.html English official; the figure is derived from literacy * lang pop	
 Guadeloupe	GP	"452,776"	90%	"3,513,000,000"	official	French	fr	90%		http://www.ethnologue.com/show_country.asp?name=GP French official; the figure is derived from literacy * lang pop	
@@ -340,10 +339,10 @@ Guam	GU	"175,877"	99%	"2,500,000,000"	official	Chamorro	ch	22%
 Guam	GU	"175,877"	99%	"2,500,000,000"	de_facto_official	English	en	38%			
 Guatemala	GT	"13,002,206"	69%	"62,530,000,000"	official	Spanish	es	93%		http://en.wikipedia.org/wiki/Guatemala#Language https://www.cia.gov/cia/publications/factbook/geos/gt.html Spanish official	
 Guernsey	GG	"65,726"	100%	"2,742,000,000"	de_facto_official	English	en	100%			
-Guinea	GN	"9,806,509"	29%	"10,690,000,000"		Eastern Maninkakan	emk	23%		http://www.ethnologue.com/show_language.asp?code=emk	
 Guinea	GN	"9,806,509"	29%	"10,690,000,000"	official	French	fr	29%		No figures found for use of French. Used literacy 29.5% times population to get the writing pop; French is the only official language.	
 Guinea	GN	"9,806,509"	29%	"10,690,000,000"		Fulah	ff	"2,550,000"			
 Guinea	GN	"9,806,509"	29%	"10,690,000,000"		Kpelle	kpe	3.80%			
+Guinea	GN	"9,806,509"	29%	"10,690,000,000"		Mandingo	man	23%			
 Guinea	GN	"9,806,509"	29%	"10,690,000,000"		Susu	sus	11%			
 Guinea-Bissau	GW	"1,503,182"	42%	"808,000,000"	official	Portuguese	pt	100%		https://www.cia.gov/cia/publications/factbook/geos/pu.html Many minor langs; Portuguese official	
 Guyana	GY	"770,794"	99%	"2,920,000,000"	official	English	en	100%			
@@ -378,7 +377,6 @@ India	IN	"1,147,995,904"	61%	"2,989,000,000,000"		Braj	bra	"46,800"
 India	IN	"1,147,995,904"	61%	"2,989,000,000,000"		Chakma	ccp	"319,000"			
 India	IN	"1,147,995,904"	61%	"2,989,000,000,000"		Chhattisgarhi	hne	"12,300,000"			
 India	IN	"1,147,995,904"	61%	"2,989,000,000,000"		Deccan	dcc	"11,400,000"			
-India	IN	"1,147,995,904"	61%	"2,989,000,000,000"		Dhundari	dhd	"9,570,000"	5%	mainly spoken; 5% writing pop estimated in absence of other data	
 India	IN	"1,147,995,904"	61%	"2,989,000,000,000"		Divehi	dv	"4,500"			
 India	IN	"1,147,995,904"	61%	"2,989,000,000,000"		Dogri	doi	"2,240,000"			
 India	IN	"1,147,995,904"	61%	"2,989,000,000,000"		Dzongkha	dz	"3,000"			
@@ -409,7 +407,6 @@ India	IN	"1,147,995,904"	61%	"2,989,000,000,000"		Limbu	lif	"29,800"
 India	IN	"1,147,995,904"	61%	"2,989,000,000,000"		Magahi	mag	"13,800,000"		http://www.ethnologue.com/show_language.asp?code=mag	
 India	IN	"1,147,995,904"	61%	"2,989,000,000,000"	official_regional	Maithili	mai	1.2%		https://www.cia.gov/library/publications/the-world-factbook/geos/in.html	
 India	IN	"1,147,995,904"	61%	"2,989,000,000,000"	official_regional	Malayalam	ml	3.20%		https://www.cia.gov/library/publications/the-world-factbook/geos/in.html	
-India	IN	"1,147,995,904"	61%	"2,989,000,000,000"		Malvi	mup	"1,170,000"			
 India	IN	"1,147,995,904"	61%	"2,989,000,000,000"		Manipuri	mni	"1,320,000"			
 India	IN	"1,147,995,904"	61%	"2,989,000,000,000"	official_regional	Marathi	mr	7.00%		https://www.cia.gov/library/publications/the-world-factbook/geos/in.html	
 India	IN	"1,147,995,904"	61%	"2,989,000,000,000"		Marwari	mwr	"13,800,000"		http://www.ethnologue.com/show_language.asp?code=rwr	
@@ -419,10 +416,10 @@ India	IN	"1,147,995,904"	61%	"2,989,000,000,000"		Munda	unx	"552,000"
 India	IN	"1,147,995,904"	61%	"2,989,000,000,000"		Mundari	unr	"1,090,000"			
 India	IN	"1,147,995,904"	61%	"2,989,000,000,000"	official_regional	Nepali	ne	"6,380,000"			
 India	IN	"1,147,995,904"	61%	"2,989,000,000,000"		Nimadi	noe	"1,440,000"			
-India	IN	"1,147,995,904"	61%	"2,989,000,000,000"		Northern Gondi	gno	"2,080,000"			
 India	IN	114799590400.0%	61.0%	298900000000000.0%	official_regional	Oriya	or	3.2%		https://www.cia.gov/library/publications/the-world-factbook/geos/in.html	
 India	IN	"1,147,995,904"	61%	"2,989,000,000,000"	official_regional	Punjabi (Gurmukhi)	pa_Guru	2.8%		https://www.cia.gov/library/publications/the-world-factbook/geos/in.html	"Punjabi in Pakistan is called Lahnda to distinguish, because large pops in both India & Pakistan, using different scripts."
 India	IN	"1,147,995,904"	61%	"2,989,000,000,000"		Rangpuri	rkt	"5,000,000"	20%	http://www.ethnologue.com/show_language.asp?code=rkt language also called Kamta in India	Not related to language of the same name in Myanmar.
+India	IN	"1,147,995,904"	61%	"2,989,000,000,000"		Rajasthani	raj	"1,170,000"			
 India	IN	"1,147,995,904"	61%	"2,989,000,000,000"		Riang (India)	ria	"148,000"			Not related to language of the same name in Myanmar.
 India	IN	"1,147,995,904"	61%	"2,989,000,000,000"		Sadri	sck	"2,090,000"			
 India	IN	"1,147,995,904"	61%	"2,989,000,000,000"	official_regional	Sanskrit	sa	"14,135"		http://en.wikipedia.org/wiki/Sanskrit - 14k reported as native. Taught as elective subject in grades 5-8; not widely spoken as primary communication.	
@@ -455,7 +452,7 @@ Indonesia	ID	"237,512,352"	90%	"837,800,000,000"		Komering	kge	"763,000"
 Indonesia	ID	"237,512,352"	90%	"837,800,000,000"		Lampung Api	ljp	"1,630,000"			
 Indonesia	ID	"237,512,352"	90%	"837,800,000,000"		Madurese	mad	6.30%			
 Indonesia	ID	"237,512,352"	90%	"837,800,000,000"		Makasar	mak	"1,740,000"			
-Indonesia	ID	"237,512,352"	90%	"837,800,000,000"		Malay	ms	4.60%			
+Indonesia	ID	"237,512,352"	90%	"837,800,000,000"		Malay	ms_Arab	4.60%			
 Indonesia	ID	"237,512,352"	90%	"837,800,000,000"		Mandar	mdr	"218,000"			
 Indonesia	ID	"237,512,352"	90%	"837,800,000,000"		Mbunga	mgy	"545,000"			
 Indonesia	ID	"237,512,352"	90%	"837,800,000,000"		Minangkabau	min	"7,080,000"			
@@ -478,7 +475,6 @@ Iran	IR	"65,875,224"	77%	"753,000,000,000"		Georgian	ka	"46,700"
 Iran	IR	"65,875,224"	77%	"753,000,000,000"		Gilaki	glk	4.60%			
 Iran	IR	"65,875,224"	77%	"753,000,000,000"		Kazakh (Arabic)	kk_Arab	"3,000"		"http://en.wikipedia.org/wiki/Kazakh_language - the script is an assumption, needs a reference"	
 Iran	IR	"65,875,224"	77%	"753,000,000,000"		Laki	lki	500000		www.amar.org.ir	
-Iran	IR	"65,875,224"	77%	"753,000,000,000"		Sorani Kurdish (Arabic)	ckb	600000		www.amar.org.ir	
 Iran	IR	"65,875,224"	77%	"753,000,000,000"		Northern Luri	lrc	"1,400,000"			
 Iran	IR	"65,875,224"	77%	"753,000,000,000"		Parsi-Dari	prd	"327,000"			
 Iran	IR	"65,875,224"	77%	"753,000,000,000"		Pashto	ps	"106,000"			
@@ -489,6 +485,7 @@ Iran	IR	"65,875,224"	77%	"753,000,000,000"		Turkmen	tk	"1,870,000"
 Iraq	IQ	"28,221,180"	74%	"102,300,000,000"	official	Arabic	ar	68%			
 Iraq	IQ	"28,221,180"	74%	"102,300,000,000"	official_regional	Sorani Kurdish (Arabic)	ckb	20%		"https://www.cia.gov/library/publications/the-world-factbook/geos/iz.html Lang pop est, CIA factbook 15-20% country pop"	
 Iraq	IQ	"28,221,180"	74%	"102,300,000,000"		Persian	fa	"246,000"			
+Iraq	IQ	"28,221,180"	74%	"102,300,000,000"		Syriac	syr	"140,000"		"http://www.ethnologue.com/show_language.asp?code=cld (""syr"" is a macrolang containing ""cld"" and ""aii"")"	
 Ireland	IE	"4,156,119"	99%	"186,200,000,000"	official	English	en	94%		http://ec.europa.eu/public_opinion/archives/ebs/ebs_243_en.pdf	
 Ireland	IE	"4,156,119"	99%	"186,200,000,000"	official	Irish	ga	11%		http://www.cso.ie/census/documents/Final%20Principal%20Demographic%20Results%202006.pdf	See also http://www.taoiseach.gov.ie/index.asp?locID=199&docID=3104 
 Isle of Man	IM	"76,220"	99%	"2,719,000,000"	de_facto_official	English	en	100%			
@@ -576,7 +573,7 @@ Liberia	LR	"3,334,587"	57%	"1,340,000,000"		Mende	men	"19,000"
 Liberia	LR	"3,334,587"	57%	"1,340,000,000"		Vai	vai	"86,500"			
 Libya	LY	"6,173,579"	83%	"74,750,000,000"	official	Arabic	ar	74%			
 Liechtenstein	LI	"34,498"	100%	"1,786,000,000"	official	German	de	100%		https://www.cia.gov/cia/publications/factbook/geos/ls.html German official	
-Liechtenstein	LI	"34,498"	100%	"1,786,000,000"		Swiss German	gsw	85%	5%		
+Liechtenstein	LI	"34,498"	100%	"1,786,000,000"	de_facto_official	Swiss German	gsw	85%	5%		
 Liechtenstein	LI	"34,498"	100%	"1,786,000,000"		Walser	wae	"1,300"			
 Lithuania	LT	"3,565,205"	100%	"59,640,000,000"	official	Lithuanian	lt	86%			
 Lithuania	LT	"3,565,205"	100%	"59,640,000,000"		Russian	ru	8%		https://www.cia.gov/cia/publications/factbook/fields/2098.html Russian 8%	
@@ -601,7 +598,7 @@ Malaysia	MY	"25,274,132"	89%	"357,400,000,000"		Buginese	bug	"20,100"		http://ww
 Malaysia	MY	"25,274,132"	89%	"357,400,000,000"		Chinese (Traditional Han)	zh_Hant	17%			
 Malaysia	MY	"25,274,132"	89%	"357,400,000,000"		English	en	29%			
 Malaysia	MY	"25,274,132"	89%	"357,400,000,000"		Javanese	jv	"301,000"			
-Malaysia	MY	"25,274,132"	89%	"357,400,000,000"	official	Malay	ms	75%			
+Malaysia	MY	"25,274,132"	89%	"357,400,000,000"	official	Malay	ms_Latn	75%			
 Malaysia	MY	"25,274,132"	89%	"357,400,000,000"		Malayalam	ml	"37,100"			
 Malaysia	MY	"25,274,132"	89%	"357,400,000,000"		Negeri Sembilan Malay	zmi	"301,000"			
 Malaysia	MY	"25,274,132"	89%	"357,400,000,000"		Tamil	ta	4.20%			
@@ -732,9 +729,6 @@ Netherlands	NL	"16,645,313"	99%	"639,500,000,000"		Tarifit	rif	"204,000"
 Netherlands	NL	"16,645,313"	99%	"639,500,000,000"		Turkish	tr	"196,000"			
 Netherlands	NL	"16,645,313"	99%	"639,500,000,000"	official_regional	Western Frisian	fy	4.30%			
 Netherlands	NL	"16,645,313"	99%	"639,500,000,000"		Zeeuws	zea	"225,000"			
-Netherlands Antilles	AN	"225,369"	97%	"2,800,000,000"	official	Dutch	nl	"4,000"			
-Netherlands Antilles	AN	"225,369"	97%	"2,800,000,000"		English	en	"1,800"			
-Netherlands Antilles	AN	"225,369"	97%	"2,800,000,000"	de_facto_official	Papiamento	pap	81%			
 New Caledonia	NC	"224,824"	96%	"3,158,000,000"	official	French	fr	96%			
 New Zealand	NZ	"4,173,460"	99%	"111,700,000,000"	de_facto_official	English	en	91.2%		https://www.cia.gov/library/publications/the-world-factbook/geos/nz.html	
 New Zealand	NZ	"4,173,460"	99%	"111,700,000,000"	official	Maori	mi	"103,000"		"http://www.ethnologue.com/show_language.asp?code=mri 70,000 in 1991, 100,000 who understand it, but do not speak it ; ethnic pop 530,000 in 2002"	
@@ -813,7 +807,7 @@ Peru	PE	"29,180,900"	88%	"219,000,000,000"	official	Spanish	es	73%
 Philippines	PH	"96,061,680"	93%	"299,600,000,000"		Albay Bicolano	bhk	"2,200,000"			
 Philippines	PH	"96,061,680"	93%	"299,600,000,000"		Buhid	bku	"8,000"			
 Philippines	PH	"96,061,680"	93%	"299,600,000,000"	official_regional	Cebuano	ceb	24%	13%	http://www.census.gov.ph/data/sectordata/sr05153tx.html	
-Philippines	PH	"96,061,680"	93%	"299,600,000,000"		Central Bicolano	bcl	3%			
+Philippines	PH	"96,061,680"	93%	"299,600,000,000"		Central Bicolano	bik	3%			
 Philippines	PH	"96,061,680"	93%	"299,600,000,000"		Chinese (Traditional Han)	zh_Hant	"697,000"			
 Philippines	PH	"96,061,680"	93%	"299,600,000,000"	official	English	en	64%		http://www.census.gov.ph/data/sectordata/sr05153tx.html	
 Philippines	PH	"96,061,680"	93%	"299,600,000,000"	official	Filipino	fil	60%		"http://www.seasite.niu.edu/tagalog/essays_on_philippine_languages.htm In this and other sources, such as Ethnologue, there is no estimate for number of users. http://en.wikipedia.org/wiki/Filipino_language http://www.ethnologue.com/show_language.asp?code=fil "	"Filipino appears to be a political fiction, identical to Tagalog. I have used 90% of the Tagalog figure for Filipino."
@@ -825,7 +819,6 @@ Philippines	PH	"96,061,680"	93%	"299,600,000,000"	official_regional	Maguindanao	
 Philippines	PH	"96,061,680"	93%	"299,600,000,000"		Pampanga	pam	"2,200,000"			
 Philippines	PH	"96,061,680"	93%	"299,600,000,000"	official_regional	Pangasinan	pag	"1,350,000"			
 Philippines	PH	"96,061,680"	93%	"299,600,000,000"	official	Spanish	es	31%			
-Philippines	PH	"96,061,680"	93%	"299,600,000,000"	official_regional	Tagalog	tl	96%		http://www.census.gov.ph/data/sectordata/sr05153tx.html	
 Philippines	PH	"96,061,680"	93%	"299,600,000,000"		Tagbanwa	tbw	"10,000"	36%	http://www.ethnologue.com/show_language.asp?code=tbw	
 Philippines	PH	"96,061,680"	93%	"299,600,000,000"	official_regional	Tausug	tsg	"1,040,000"			
 Philippines	PH	"96,061,680"	93%	"299,600,000,000"	official_regional	Waray	war	"2,820,000"			
@@ -856,10 +849,10 @@ Romania	RO	"22,246,862"	97%	"245,500,000,000"		Turkish	tr	"29,200"
 Russia	RU	"140,702,096"	99%	"2,088,000,000,000"	official_regional	Adyghe	ady	"123,000"			
 Russia	RU	"140,702,096"	99%	"2,088,000,000,000"	official_regional	Avaric	av	"547,000"			
 Russia	RU	"140,702,096"	99%	"2,088,000,000,000"	official_regional	Bashkir	ba	"1,770,000"			
+Russia	RU	"140,702,096"	99%	"2,088,000,000,000"		Buriat	bua	"313,000"			
 Russia	RU	"140,702,096"	99%	"2,088,000,000,000"	official_regional	Chechen	ce	"929,000"			
 Russia	RU	"140,702,096"	99%	"2,088,000,000,000"		Chuvash	cv	"1,770,000"		"http://en.wikipedia.org/wiki/Chuvash_language#Language_use Reported to be (regional) official in Chuvashia, central Russia: taught at schools. However: http://cv.wikipedia.org/ Chuvash Wikipedia on-line."	
 Russia	RU	"140,702,096"	99%	"2,088,000,000,000"		Dargwa	dar	"359,000"			
-Russia	RU	"140,702,096"	99%	"2,088,000,000,000"		Eastern Mari	mhr	"517,000"			
 Russia	RU	"140,702,096"	99%	"2,088,000,000,000"	official_regional	Erzya	myv	"433,000"			
 Russia	RU	"140,702,096"	99%	"2,088,000,000,000"		Finnish	fi	"16,800"			
 Russia	RU	"140,702,096"	99%	"2,088,000,000,000"	official_regional	Ingush	inh	"227,000"			
@@ -867,7 +860,7 @@ Russia	RU	"140,702,096"	99%	"2,088,000,000,000"	official_regional	Kabardian	kbd	
 Russia	RU	"140,702,096"	99%	"2,088,000,000,000"	official_regional	Karachay-Balkar	krc	"232,000"			
 Russia	RU	"140,702,096"	99%	"2,088,000,000,000"		Karelian	krl	"116,000"			
 Russia	RU	"140,702,096"	99%	"2,088,000,000,000"	official_regional	Komi-Permyak	koi	"114,000"			
-Russia	RU	"140,702,096"	99%	"2,088,000,000,000"	official_regional	Komi-Zyrian	kpv	"258,000"			
+Russia	RU	"140,702,096"	99%	"2,088,000,000,000"	official_regional	Komi	kv	"258,000"			
 Russia	RU	"140,702,096"	99%	"2,088,000,000,000"	official_regional	Kumyk	kum	"277,000"			
 Russia	RU	"140,702,096"	99%	"2,088,000,000,000"	official_regional	Lak	lbe	"110,000"			
 Russia	RU	"140,702,096"	99%	"2,088,000,000,000"	official_regional	Lezghian	lez	"253,000"			
@@ -875,7 +868,6 @@ Russia	RU	"140,702,096"	99%	"2,088,000,000,000"		Mari	chm	"517,000"		http://www.
 Russia	RU	"140,702,096"	99%	"2,088,000,000,000"	official_regional	Moksha	mdf	"292,000"			
 Russia	RU	"140,702,096"	99%	"2,088,000,000,000"		Mongolian (Cyrillic)	mn_Cyrl	"2,100"			
 Russia	RU	"140,702,096"	99%	"2,088,000,000,000"		Ossetic	os	"451,431"		http://www.gks.ru/free_doc/new_site/population/demo/per-itog/tab6.xls census data	
-Russia	RU	"140,702,096"	99%	"2,088,000,000,000"		Russia Buriat	bxr	"313,000"			
 Russia	RU	"140,702,096"	99%	"2,088,000,000,000"	official	Russian	ru	94%		http://en.wikipedia.org/wiki/Russian_language (94% of studends in Russia receive primarily Russian-language ed)	
 Russia	RU	"140,702,096"	99%	"2,088,000,000,000"		Serbian (Latin)	sr_Latn	"5,000"			
 Russia	RU	"140,702,096"	99%	"2,088,000,000,000"		Southern Altai	alt	"19,700"			
@@ -920,7 +912,7 @@ Sierra Leone	SL	"6,294,774"	35%	"3,971,000,000"		Mende	men	27%
 Sierra Leone	SL	"6,294,774"	35%	"3,971,000,000"		Timne	tem	26%	6%	"http://www.ethnologue.com/show_language.asp?code=tem 1.2mil 1st lang + 240k 2nd lang users, low literacy"	
 Singapore	SG	"4,608,167"	93%	"228,100,000,000"	official	Chinese (Simplified Han)	zh_Hans	77%			
 Singapore	SG	"4,608,167"	93%	"228,100,000,000"	official	English	en	93%		http://en.wikipedia.org/wiki/Singapore   English is the first language learned by half the children by the time they reach preschool age; using 92.6% of pop for the English figure	
-Singapore	SG	"4,608,167"	93%	"228,100,000,000"	official	Malay	ms	14%			
+Singapore	SG	"4,608,167"	93%	"228,100,000,000"	official	Malay	ms_Latn	14%			
 Singapore	SG	"4,608,167"	93%	"228,100,000,000"		Malayalam	ml	"10,000"			
 Singapore	SG	"4,608,167"	93%	"228,100,000,000"		Punjabi (Gurmukhi)	pa_Guru	"9,500"			
 Singapore	SG	"4,608,167"	93%	"228,100,000,000"	official	Tamil	ta	"95,700"			
@@ -991,12 +983,12 @@ Switzerland	CH	"7,581,520"	99%	"300,200,000,000"	official	Italian	it	4.3%
 Switzerland	CH	"7,581,520"	99%	"300,200,000,000"		Lombard	lmo	4.10%	5%	5% writing pop estimated in absence of other data	
 Switzerland	CH	"7,581,520"	99%	"300,200,000,000"	official_regional	Rhaeto-Romance	rm	0.5%		http://en.wikipedia.org/wiki/Romansh_language  http://www.bfs.admin.ch/bfs/portal/de/index/infothek/lexikon/bienvenue___login/blank/zugang_lexikon.Document.62669.xls	Rhaeto-Romance = Romansch
 Switzerland	CH	"7,581,520"	99%	"300,200,000,000"		Sinte Romani	rmo	"21,600"			
-Switzerland	CH	"7,581,520"	99%	"300,200,000,000"		Swiss German	gsw	12%	5%	"http://www.ethnologue.com/show_country.asp?name=CH http://en.wikipedia.org/wiki/Demographics_of_Switzerland Literacy rate for gsw is 5% of reported speaker population; literacy is mostly in standard German. For languages not customarily written, the writing population is artificially set to 5% in the absence of better information."	
+Switzerland	CH	"7,581,520"	99%	"300,200,000,000"	de_facto_official	Swiss German	gsw	12%	5%	"http://www.ethnologue.com/show_country.asp?name=CH http://en.wikipedia.org/wiki/Demographics_of_Switzerland Literacy rate for gsw is 5% of reported speaker population; literacy is mostly in standard German. For languages not customarily written, the writing population is artificially set to 5% in the absence of better information."	
 Switzerland	CH	"7,581,520"	99%	"300,200,000,000"		Walser	wae	"10,000"			
 Syria	SY	"19,747,586"	80%	"87,090,000,000"	official	Arabic	ar	80%			
 Syria	SY	"19,747,586"	80%	"87,090,000,000"		Armenian	hy	"355,000"			
 Syria	SY	"19,747,586"	80%	"87,090,000,000"	official	French	fr	5.90%		http://www.nationsonline.org/oneworld/syria.htm Crude estimate based on import partner data.	"http://en.wikipedia.org/wiki/Syria Arabic is the official and most widely spoken language. Many educated Syrians also speak English or French, but English is more widely understood. In http://en.wikipedia.org/wiki/List_of_official_languages_by_country French is reported as official but can't substantiate that, and that page disagrees with http://en.wikipedia.org/wiki/List_of_official_languages"
-Syria	SY	"19,747,586"	80%	"87,090,000,000"		Kurdish	ku	8%			
+Syria	SY	"19,747,586"	80%	"87,090,000,000"		Kurdish	ku_Latn	8%			
 Syria	SY	"19,747,586"	80%	"87,090,000,000"		Syriac	syr	"16,600"	5%	"For languages not customarily written, the writing population is artificially set to 5% in the absence of better information."	
 Taiwan	TW	"22,920,946"	96%	"695,400,000,000"	official	Chinese (Traditional Han)	zh_Hant	95%			
 Taiwan	TW	"22,920,946"	96%	"695,400,000,000"		Taroko	trv	"4,750"			
@@ -1048,17 +1040,17 @@ Turkey	TR	"71,892,808"	87%	"888,000,000,000"		Armenian	hy	"40,100"
 Turkey	TR	"71,892,808"	87%	"888,000,000,000"		Azerbaijani (Latin)	az_Latn	"531,000"			
 Turkey	TR	"71,892,808"	87%	"888,000,000,000"		Balkan Gagauz Turkish	bgx	"328,000"			
 Turkey	TR	"71,892,808"	87%	"888,000,000,000"		Bulgarian	bg	"301,000"			
-Turkey	TR	"71,892,808"	87%	"888,000,000,000"		Dimli	diq	"1,000,000"			
 Turkey	TR	"71,892,808"	87%	"888,000,000,000"		Georgian	ka	"40,100"			
 Turkey	TR	"71,892,808"	87%	"888,000,000,000"		Greek	el	"4,000"			
 Turkey	TR	"71,892,808"	87%	"888,000,000,000"		Kabardian	kbd	"551,000"			
 Turkey	TR	"71,892,808"	87%	"888,000,000,000"		Kazakh (Cyrillic)	kk_Cyrl	600		"http://en.wikipedia.org/wiki/Kazakh_language - the script is an assumption, needs a reference"	
 Turkey	TR	"71,892,808"	87%	"888,000,000,000"		Kirghiz (Latin)	ky_Latn	"1,140"			
-Turkey	TR	"71,892,808"	87%	"888,000,000,000"		Kurdish	ku	5.50%			
+Turkey	TR	"71,892,808"	87%	"888,000,000,000"		Kurdish	ku_Latn	5.50%			
 Turkey	TR	"71,892,808"	87%	"888,000,000,000"		Serbian (Latin)	sr_Latn	"20,100"	5%	"For languages not customarily written, the writing population is artificially set to 5% in the absence of better information."	
 Turkey	TR	"71,892,808"	87%	"888,000,000,000"	official	Turkish	tr	93%		"http://en.wikipedia.org/wiki/Turkish_language#Geographic_distribution http://ec.europa.eu/public_opinion/archives/ebs/ebs_243_en.pdf Europeans and their languages survey, page 7"	
 Turkey	TR	"71,892,808"	87%	"888,000,000,000"		Uzbek (Latin)	uz_Latn	"1,980"			
-Turkmenistan	TM	"5,179,571"	99%	"26,730,000,000"		Kurdish	ku	"21,000"			
+Turkey	TR	"71,892,808"	87%	"888,000,000,000"		"Zaza, Dimili, Dimli"	zza	"1,000,000"			
+Turkmenistan	TM	"5,179,571"	99%	"26,730,000,000"		Kurdish	ku_Latn	"21,000"			
 Turkmenistan	TM	"5,179,571"	99%	"26,730,000,000"		Russian	ru	12%			
 Turkmenistan	TM	"5,179,571"	99%	"26,730,000,000"	official	Turkmen	tk	70%			
 Turkmenistan	TM	"5,179,571"	99%	"26,730,000,000"		Uzbek (Latin)	uz_Latn	9%			
@@ -1108,7 +1100,7 @@ United Kingdom	GB	"60,943,912"	99%	"2,137,000,000,000"		Punjabi (Gurmukhi)	pa_Gu
 United Kingdom	GB	"60,943,912"	99%	"2,137,000,000,000"		Scots	sco	"1,640,000"	5%	"http://www.ethnologue.com/show_language.asp?code=sco 100k+ native, plus 1.5 mil 2nd lang speakers. For languages not customarily written, the writing population is artificially set to 5% in the absence of better information."	
 United Kingdom	GB	"60,943,912"	99%	"2,137,000,000,000"	official_regional	Scottish Gaelic	gd	"60,200"	5%	"For languages not customarily written, the writing population is artificially set to 5% in the absence of better information."	
 United Kingdom	GB	"60,943,912"	99%	"2,137,000,000,000"		Sylheti	syl	"308,000"			
-United Kingdom	GB	"60,943,912"	99%	"2,137,000,000,000"	official_regional	Welsh	cy	"598,000"			
+United Kingdom	GB	"60,943,912"	99%	"2,137,000,000,000"	official_regional	Welsh	cy	"468,863"			
 United States	US	"303,824,640"	99%	"13,840,000,000,000"		Cherokee	chr	"23,300"	5%	"For languages not customarily written, the writing population is artificially set to 5% in the absence of better information."	
 United States	US	"303,824,640"	99%	"13,840,000,000,000"		Chinese (Traditional Han)	zh_Hant	"2,090,000"			
 United States	US	"303,824,640"	99%	"13,840,000,000,000"	de_facto_official	English	en	96%			
@@ -1118,10 +1110,11 @@ United States	US	"303,824,640"	99%	"13,840,000,000,000"	official_regional	Hawaii
 United States	US	"303,824,640"	99%	"13,840,000,000,000"		Inupiaq	ik	"8,000"	5%	"For languages not customarily written, the writing population is artificially set to 5% in the absence of better information."	
 United States	US	"303,824,640"	99%	"13,840,000,000,000"		Italian	it	"1,040,000"			
 United States	US	"303,824,640"	99%	"13,840,000,000,000"		Korean	ko	"924,000"			
+United States	US	"303,824,640"	99%	"13,840,000,000,000"		Lakota	lkt	"8,300"		http://www.lakhota.org/html/status2.html (used lower figure)	
 United States	US	"303,824,640"	99%	"13,840,000,000,000"		Navajo	nv	"153,000"			
 United States	US	"303,824,640"	99%	"13,840,000,000,000"		Russian	ru	"730,000"			
 United States	US	"303,824,640"	99%	"13,840,000,000,000"	official_regional	Spanish	es	9.60%			
-United States	US	"303,824,640"	99%	"13,840,000,000,000"		Tagalog	tl	"1,270,000"			
+United States	US	"303,824,640"	99%	"13,840,000,000,000"		Filipino	fil	"1,270,000"			
 United States	US	"303,824,640"	99%	"13,840,000,000,000"		Vietnamese	vi	"1,040,000"			
 United States Minor Outlying Islands	UM	316	0%	0	de_facto_official	English	en	100%		"https://www.cia.gov/library/publications/the-world-factbook/geos/UM.html basically unihabited, officially ; http://www.census.gov/prod/cen2000/phc3-us-pt1.pdf"	
 Unknown or Invalid Region	ZZ	0	0%	0		Bihari	bh	0		Officially absorbed into Hindi	

@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.Status;
+import org.unicode.cldr.util.DateTimeCanonicalizer.DateTimePatternType;
 
 import com.ibm.icu.text.DateTimePatternGenerator;
 import com.ibm.icu.text.DateTimePatternGenerator.VariableField;
@@ -72,7 +73,7 @@ public class DateOrder implements Comparable<DateOrder> {
             int[] soFar = new int[50];
             int lenSoFar = 0;
             for (String path : resolved) {
-                if (DisplayAndInputProcessor.hasDatetimePattern(path)) {
+                if (DateTimePatternType.STOCK_AVAILABLE_INTERVAL_PATTERNS.contains(DateTimePatternType.fromPath(path))) {
                     if (path.contains("[@id=\"Ed\"]")) {
                         continue;
                     }

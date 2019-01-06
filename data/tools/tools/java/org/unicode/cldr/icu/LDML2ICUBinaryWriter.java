@@ -1,6 +1,6 @@
 /*
  *******************************************************************************
- * Copyright (C) 2003-2004, International Business Machines Corporation and    *
+ * Copyright (C) 2003-2012, International Business Machines Corporation and    *
  * others. All Rights Reserved.                                                *
  *******************************************************************************
  */
@@ -30,7 +30,7 @@ public class LDML2ICUBinaryWriter
      * This string is the copyright to be written into the file.
      * In the C version, can be found in <I>icu4c_root</I>/source/common/unicode/uversion.h
      */
-    private static final String COPYRIGHT = " Copyright (C) 2008, International Business Machines Corporation and others. All Rights Reserved. ";
+    private static final String COPYRIGHT = " Copyright (C) 2012, International Business Machines Corporation and others. All Rights Reserved. ";
 
     public static int written = 0;
 
@@ -40,7 +40,7 @@ public class LDML2ICUBinaryWriter
     private static final byte MAGIC1 = (byte) 0xda;
     private static final byte MAGIC2 = 0x27;
 
-    private static final boolean INCLUDE_COPYRIGHT = false;
+    private static boolean INCLUDE_COPYRIGHT = false;
     /**
      * The number of bytes it takes to write magic number 1.
      */
@@ -745,8 +745,7 @@ public class LDML2ICUBinaryWriter
          * copyright plus null terminator. Subject to change.
          */
         headSize += info.size + BYTES_TAKEN_BY_HEADER_SIZE + BYTES_TAKEN_BY_MAGIC1 + BYTES_TAKEN_BY_MAGIC2;
-        if (copyright != null && INCLUDE_COPYRIGHT)
-        {
+        if (copyright != null && INCLUDE_COPYRIGHT) {
             headSize += copyright.length() + 1;
         }
         if ((pad = pad16Bytes(headSize)) != 0)

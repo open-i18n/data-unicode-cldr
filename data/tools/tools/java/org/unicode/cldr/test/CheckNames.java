@@ -25,13 +25,13 @@ public class CheckNames extends CheckCLDR {
             // Allow years in currencies if enclosed by brackets.
             if (path.startsWith("//ldml/localeDisplayNames/currencies") &&
                 (isEnclosedByBraces(matcher, value, '(', ')') ||
-                 isEnclosedByBraces(matcher, value, '[', ']'))) {
+                isEnclosedByBraces(matcher, value, '[', ']'))) {
                 // no errors
             } else {
                 result.add(new CheckStatus().setCause(this)
-                    .setMainType(CheckStatus.warningType) // TODO (jchye): This should be an error.
+                    .setMainType(CheckStatus.errorType)
                     .setSubtype(Subtype.nameContainsYear)
-                    .setMessage("The name should not contain any years ({0})", matcher.group()));
+                    .setMessage("The name should not contain any years or region codes ({0})", matcher.group()));
             }
         }
         return this;

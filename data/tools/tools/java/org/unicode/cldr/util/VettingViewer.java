@@ -29,6 +29,7 @@ import org.unicode.cldr.test.CheckNew;
 import org.unicode.cldr.test.CoverageLevel2;
 import org.unicode.cldr.test.OutdatedPaths;
 import org.unicode.cldr.util.CLDRFile.Status;
+import org.unicode.cldr.util.CLDRFile.WinningChoice;
 import org.unicode.cldr.util.PathHeader.PageId;
 import org.unicode.cldr.util.PathHeader.SectionId;
 import org.unicode.cldr.util.VoteResolver.Organization;
@@ -63,9 +64,9 @@ public class VettingViewer<T> {
     private static final boolean SHOW_ALL = CldrUtility.getProperty("SHOW", true);
     private static final String LOCALE = CldrUtility.getProperty("LOCALE", "af");
     private static final String CURRENT_MAIN = CldrUtility.getProperty("MAIN",
-        "/Users/markdavis/Documents/workspace/cldr/common/main");
+        "/Users/markdavis/workspace/cldr/common/main");
 
-    private static final Pattern ALT_PROPOSED = Pattern.compile("\\[@alt=\"[^\"]*proposed");
+    public static final Pattern ALT_PROPOSED = Pattern.compile("\\[@alt=\"[^\"]*proposed");
 
     public static Set<CheckCLDR.CheckStatus.Subtype> OK_IF_VOTED = EnumSet.of(Subtype.sameAsEnglishOrCode,
         Subtype.sameAsEnglishOrCode);
@@ -378,7 +379,7 @@ public class VettingViewer<T> {
                 if (cause instanceof CheckCoverage || cause instanceof CheckNew) {
                     continue;
                 }
-                String statusType = checkStatus.getType();
+                CheckStatus.Type statusType = checkStatus.getType();
                 if (statusType.equals(CheckStatus.errorType)) {
                     // throw away any accumulated warning messages
                     if (result0 == Status.warning) {
@@ -757,12 +758,19 @@ public class VettingViewer<T> {
         EnumSet<Subtype> subtypes = EnumSet.noneOf(Subtype.class);
         Set<String> seenSoFar = new HashSet<String>();
 
+        boolean latin = VettingViewer.isLatinScriptLocale(sourceFile);
+
         for (String path : sourceFile.fullIterable()) {
             if (seenSoFar.contains(path)) {
                 continue;
             }
             seenSoFar.add(path);
             progressCallback.nudge(); // Let the user know we're moving along.
+
+            PathHeader pretty = pathTransform.fromPath(path);
+            if (pretty.getSurveyToolStatus() == PathHeader.SurveyToolStatus.HIDE) {
+                continue;
+            }
 
             // note that the value might be missing!
 
@@ -796,7 +804,7 @@ public class VettingViewer<T> {
 
             VoteStatus voteStatus = userVoteStatus.getStatusForUsersOrganization(sourceFile, path, user);
 
-            MissingStatus missingStatus = getMissingStatus(sourceFile, path, status);
+            MissingStatus missingStatus = getMissingStatus(sourceFile, path, status, latin);
             if (missingStatus == MissingStatus.ABSENT) {
                 problems.add(Choice.missingCoverage);
                 problemCounter.increment(Choice.missingCoverage);
@@ -850,7 +858,7 @@ public class VettingViewer<T> {
                 break;
             case provisionalOrWorse:
                 if (missingStatus == MissingStatus.PRESENT) {
-                    MissingStatus debug = getMissingStatus(sourceFile, path, status);
+                    MissingStatus debug = getMissingStatus(sourceFile, path, status, false);
                     problems.add(Choice.notApproved);
                     problemCounter.increment(Choice.notApproved);
                 }
@@ -870,7 +878,6 @@ public class VettingViewer<T> {
                     reasonsToPaths.clear();
                     // final String prettyPath = pathTransform.getPrettyPath(path);
 
-                    PathHeader pretty = pathTransform.fromPath(path);
                     // String[] pathParts = breaks.split(pretty);
                     // String sectionOutput = pathParts.length == 3 ? pathParts[0] : "Unknown";
                     // String subsectionOutput = pathParts.length == 3 ? pathParts[1] : "Unknown";
@@ -1041,11 +1048,28 @@ public class VettingViewer<T> {
             VettingViewer.class,
             "data/paths/missingOk.txt");
 
-    enum MissingStatus {
-        PRESENT, ALIASED, MISSING_OK, ABSENT
+    private static boolean isMissingOk(String path, boolean latin, boolean aliased) {
+        String value = missingOk.get(path);
+        if (value == null) {
+            return false;
+        }
+        if (value.equals("ok")) {
+            return true;
+        }
+        if (value.equals("latin")) {
+            return latin;
+        }
+        if (value.equals("alias")) {
+            return aliased;
+        }
+        throw new IllegalArgumentException();
     }
 
-    private MissingStatus getMissingStatus(CLDRFile sourceFile, String path, Status status) {
+    public enum MissingStatus {
+        PRESENT, ALIASED, MISSING_OK, ROOT_OK, ABSENT
+    }
+
+    public static MissingStatus getMissingStatus(CLDRFile sourceFile, String path, Status status, boolean latin) {
         if (sourceFile == null) {
             return MissingStatus.ABSENT;
         }
@@ -1058,8 +1082,10 @@ public class VettingViewer<T> {
         MissingStatus result;
 
         String value = sourceFile.getStringValue(path);
+        boolean isAliased = path.equals(status.pathWhereFound);
+
         if (value == null) {
-            result = MissingStatus.ABSENT;
+            result = isMissingOk(path, latin, isAliased) ? MissingStatus.MISSING_OK : MissingStatus.ABSENT;
         } else {
             String localeFound = sourceFile.getSourceLocaleID(path, status);
 
@@ -1069,22 +1095,27 @@ public class VettingViewer<T> {
                 || localeFound.equals(XMLSource.CODE_FALLBACK_ID)
             // || voteStatus == VoteStatus.provisionalOrWorse
             ) {
-                result = MissingStatus.ABSENT;
-            } else if (path.equals(status.pathWhereFound)) {
+                result = isMissingOk(path, latin, isAliased) ? MissingStatus.ROOT_OK : MissingStatus.ABSENT;
+            } else if (isAliased) {
                 result = MissingStatus.PRESENT;
-            } else if (path.contains("decimalFormatLength[@type=\"long\"]") && path.contains("pattern[@type=\"1")) { // aliased
-                // special case compact numbers
+                // } else if (path.contains("decimalFormatLength[@type=\"long\"]") &&
+                // path.contains("pattern[@type=\"1")) { // aliased
+                // // special case compact numbers
+                // //
                 // ldml/numbers/decimalFormats[@numberSystem="latn"]/decimalFormatLength[@type="long"]/decimalFormat[@type="standard"]/pattern[@type="10000000"]
-                result = MissingStatus.ABSENT;
+                // result = MissingStatus.ABSENT;
             } else {
-                result = MissingStatus.PRESENT;
+                result = MissingStatus.ALIASED;
             }
         }
-        // certain paths are ok to be missing.
-        if (result == MissingStatus.ABSENT && missingOk.get(path) != null) {
-            result = MissingStatus.MISSING_OK;
-        }
         return result;
+    }
+
+    public static final UnicodeSet LATIN = new UnicodeSet("[:sc=Latn:]").freeze();
+
+    public static boolean isLatinScriptLocale(CLDRFile sourceFile) {
+        UnicodeSet main = sourceFile.getExemplarSet("", WinningChoice.WINNING);
+        return LATIN.containsSome(main);
     }
 
     private static StringBuilder appendToMessage(CharSequence usersValue, StringBuilder testMessage) {
@@ -1195,6 +1226,7 @@ public class VettingViewer<T> {
         String localeID,
         boolean nonVettingPhase) {
         try {
+            boolean latin = VettingViewer.isLatinScriptLocale(sourceFile);
 
             Status status = new Status();
 
@@ -1324,7 +1356,7 @@ public class VettingViewer<T> {
                     }
                     // value for last version
                     final String oldStringValue = lastSourceFile == null ? null : lastSourceFile.getWinningValue(path);
-                    MissingStatus oldValueMissing = getMissingStatus(lastSourceFile, path, status);
+                    MissingStatus oldValueMissing = getMissingStatus(lastSourceFile, path, status, latin);
 
                     addCell(output, oldStringValue, null, oldValueMissing != MissingStatus.PRESENT ? "tv-miss"
                         : "tv-last", HTMLType.plain);
@@ -1415,7 +1447,7 @@ public class VettingViewer<T> {
         Timer timer = new Timer();
         timer.start();
         final String version = "2.0.1";
-        final String lastMain = "/Users/markdavis/Documents/workspace/cldr-archive/cldr-" +
+        final String lastMain = "/Users/markdavis/Google Drive/Backup-2012-10-09/Documents/indigo/cldr-archive/cldr-" +
             version +
             "/common/main";
 

@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -27,8 +28,11 @@ import org.unicode.cldr.test.CoverageLevel2;
 import org.unicode.cldr.util.Builder.CBuilder;
 import org.unicode.cldr.util.CldrUtility.VariableReplacer;
 import org.unicode.cldr.util.DayPeriodInfo.DayPeriod;
+import org.unicode.cldr.util.SupplementalDataInfo.BasicLanguageData.Type;
+import org.unicode.cldr.util.SupplementalDataInfo.NumberingSystemInfo.NumberingSystemType;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo.Count;
 
+import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.dev.util.Relation;
 import com.ibm.icu.impl.IterableComparator;
 import com.ibm.icu.impl.Row;
@@ -68,7 +72,7 @@ public class SupplementalDataInfo {
      * [calendarData/calendar,
      * characters/character-fallback,
      * measurementData/measurementSystem, measurementData/paperSize,
-     * metadata/attributeOrder, metadata/blocking, metadata/coverageAdditions, metadata/deprecated,
+     * metadata/attributeOrder, metadata/blocking, metadata/deprecated,
      * metadata/distinguishing, metadata/elementOrder, metadata/serialElements, metadata/skipDefaultLocale,
      * metadata/suppress, metadata/validity, metazoneInfo/timezone,
      * timezoneData/mapTimezones,
@@ -115,7 +119,7 @@ public class SupplementalDataInfo {
     /**
      * Population data for different languages.
      */
-    public static final class PopulationData implements Freezable<Object> {
+    public static final class PopulationData implements Freezable<PopulationData> {
         private double population = Double.NaN;
 
         private double literatePopulation = Double.NaN;
@@ -201,12 +205,12 @@ public class SupplementalDataInfo {
             return frozen;
         }
 
-        public Object freeze() {
+        public PopulationData freeze() {
             frozen = true;
             return this;
         }
 
-        public Object cloneAsThawed() {
+        public PopulationData cloneAsThawed() {
             throw new UnsupportedOperationException("not yet implemented");
         }
 
@@ -225,8 +229,8 @@ public class SupplementalDataInfo {
     /**
      * Simple language/script/region information
      */
-    public static class BasicLanguageData implements
-        Comparable<BasicLanguageData>, Freezable<Object> {
+    public static class BasicLanguageData implements Comparable<BasicLanguageData>,
+        com.ibm.icu.util.Freezable<BasicLanguageData> {
         public enum Type {
             primary, secondary
         };
@@ -310,6 +314,13 @@ public class SupplementalDataInfo {
                 + (type == Type.primary ? "" : " alt=\"" + type + "\"") + "/>";
         }
 
+        public String toString() {
+            return "[" + type
+                + (scripts.isEmpty() ? "" : "; scripts=" + CollectionUtilities.join(scripts, " "))
+                + (scripts.isEmpty() ? "" : "; territories=" + CollectionUtilities.join(territories, " "))
+                + "]";
+        }
+
         public int compareTo(BasicLanguageData o) {
             int result;
             if (0 != (result = type.compareTo(o.type)))
@@ -319,6 +330,16 @@ public class SupplementalDataInfo {
             if (0 != (result = IterableComparator.compareIterables(territories, o.territories)))
                 return result;
             return 0;
+        }
+
+        public boolean equals(Object input) {
+            return compareTo((BasicLanguageData) input) == 0;
+        }
+
+        @Override
+        public int hashCode() {
+            // TODO Auto-generated method stub
+            return ((type.ordinal() * 37 + scripts.hashCode()) * 37) + territories.hashCode();
         }
 
         public BasicLanguageData addScript(String script) {
@@ -351,7 +372,7 @@ public class SupplementalDataInfo {
             return frozen;
         }
 
-        public Object freeze() {
+        public BasicLanguageData freeze() {
             frozen = true;
             if (scripts != Collections.EMPTY_SET) {
                 scripts = Collections.unmodifiableSet(scripts);
@@ -362,7 +383,7 @@ public class SupplementalDataInfo {
             return this;
         }
 
-        public Object cloneAsThawed() {
+        public BasicLanguageData cloneAsThawed() {
             throw new UnsupportedOperationException();
         }
 
@@ -377,9 +398,11 @@ public class SupplementalDataInfo {
      * Information about currency digits and rounding.
      */
     public static class CurrencyNumberInfo {
-        int digits;
-        int rounding;
-        double roundingIncrement;
+        public final int digits;
+        public final int rounding;
+        public final double roundingIncrement;
+        public final int cashRounding;
+        public final double cashRoundingIncrement;
 
         public int getDigits() {
             return digits;
@@ -393,17 +416,32 @@ public class SupplementalDataInfo {
             return roundingIncrement;
         }
 
-        public CurrencyNumberInfo(int digits, int rounding) {
+        public CurrencyNumberInfo(int digits, int rounding, int cashRounding) {
             this.digits = digits;
             this.rounding = rounding;
             roundingIncrement = rounding * Math.pow(10.0, -digits);
+            this.cashRounding = cashRounding;
+            cashRoundingIncrement = cashRounding * Math.pow(10.0, -digits);
         }
     }
 
-    public static class NumberingSystemsInfo {
-        public Set<String> getAvailableNumberingSystems() {
-            return null;
+    public static class NumberingSystemInfo {
+        public enum NumberingSystemType {
+            algorithmic, numeric, unknown
+        };
+
+        public final String name;
+        public final NumberingSystemType type;
+        public final String digits;
+        public final String rules;
+
+        public NumberingSystemInfo(XPathParts parts) {
+            name = parts.getAttributeValue(-1, "id");
+            digits = parts.getAttributeValue(-1, "digits");
+            rules = parts.getAttributeValue(-1, "rules");
+            type = NumberingSystemType.valueOf(parts.getAttributeValue(-1, "type"));
         }
+
     }
 
     /**
@@ -746,8 +784,8 @@ public class SupplementalDataInfo {
     transient private Relation<String, Pair<Boolean, Pair<Double, String>>> languageToTerritories2 =
         Relation.of(new TreeMap<String, Set<Pair<Boolean, Pair<Double, String>>>>(), TreeSet.class);
 
-    private Relation<String, BasicLanguageData> languageToBasicLanguageData = Relation.of(
-        new TreeMap<String, Set<BasicLanguageData>>(), TreeSet.class);
+    private Map<String, Map<BasicLanguageData.Type, BasicLanguageData>> languageToBasicLanguageData =
+        new TreeMap<String, Map<BasicLanguageData.Type, BasicLanguageData>>();
 
     // private Map<String, BasicLanguageData> languageToBasicLanguageData2 = new
     // TreeMap();
@@ -816,6 +854,7 @@ public class SupplementalDataInfo {
     }
 
     Map<MeasurementType, Map<String, String>> measurementData = new HashMap<MeasurementType, Map<String, String>>();
+    Map<String, PreferredAndAllowedHour> timeData = new HashMap<String, PreferredAndAllowedHour>();
 
     public Relation<String, String> getAlpha3TerritoryMapping() {
         return alpha3TerritoryMapping;
@@ -832,6 +871,10 @@ public class SupplementalDataInfo {
      */
     public Map<String, Map<String, R2<List<String>, String>>> getLocaleAliasInfo() {
         return typeToTagToReplacement;
+    }
+
+    public R2<List<String>, String> getDeprecatedInfo(String type, String code) {
+        return typeToTagToReplacement.get(type).get(code);
     }
 
     public static SupplementalDataInfo getInstance(File supplementalDirectory) {
@@ -958,7 +1001,7 @@ public class SupplementalDataInfo {
         containmentCore.freeze();
         containmentNonDeprecated.freeze();
 
-        languageToBasicLanguageData.freeze();
+        CldrUtility.protectCollection(languageToBasicLanguageData);
         for (String language : languageToTerritories2.keySet()) {
             for (Pair<Boolean, Pair<Double, String>> pair : languageToTerritories2.getAll(language)) {
                 languageToTerritories.put(language, pair.getSecond().getSecond());
@@ -1007,6 +1050,7 @@ public class SupplementalDataInfo {
 
         deprecated = CldrUtility.protectCollection(deprecated);
         measurementData = CldrUtility.protectCollection(measurementData);
+        timeData = CldrUtility.protectCollection(timeData);
 
         validityInfo = CldrUtility.protectCollection(validityInfo);
     }
@@ -1129,6 +1173,10 @@ public class SupplementalDataInfo {
                     if (handleMeasurementData(level2)) {
                         return;
                     }
+                } else if (level1.equals("timeData")) {
+                    if (handleTimeData(level2)) {
+                        return;
+                    }
                 }
 
                 // capture elements we didn't look at, since we should cover everything.
@@ -1159,6 +1207,23 @@ public class SupplementalDataInfo {
             }
             for (String territory : territories.trim().split("\\s+")) {
                 data.put(territory, type);
+            }
+            return true;
+        }
+
+        private boolean handleTimeData(String level2) {
+            /**
+             * <hours preferred="H" allowed="H" regions="IL RU"/>
+             */
+            String preferred = parts.getAttributeValue(-1, "preferred");
+            // String[] allowed = parts.getAttributeValue(-1, "allowed").trim().split("\\s+");
+            PreferredAndAllowedHour preferredAndAllowedHour = new PreferredAndAllowedHour(preferred,
+                parts.getAttributeValue(-1, "allowed"));
+            for (String region : parts.getAttributeValue(-1, "regions").trim().split("\\s+")) {
+                PreferredAndAllowedHour oldValue = timeData.put(region, preferredAndAllowedHour);
+                if (oldValue != null) {
+                    throw new IllegalArgumentException("timeData/hours must not have duplicate regions: " + region);
+                }
             }
             return true;
         }
@@ -1237,9 +1302,11 @@ public class SupplementalDataInfo {
         }
 
         private void handleNumberingSystems() {
-            String name = parts.getAttributeValue(-1, "id");
-            String digits = parts.getAttributeValue(-1, "digits");
-            numberingSystems.put(name, digits);
+            NumberingSystemInfo ns = new NumberingSystemInfo(parts);
+            numberingSystems.put(ns.name, ns);
+            if (ns.type == NumberingSystemType.numeric) {
+                numericSystems.add(ns.name);
+            }
         }
 
         private void handleCoverageLevels() {
@@ -1359,6 +1426,7 @@ public class SupplementalDataInfo {
                 String defContent = parts.getAttributeValue(-1, "locales").trim();
                 String[] defLocales = defContent.split("\\s+");
                 defaultContentLocales = Collections.unmodifiableSet(new TreeSet<String>(Arrays.asList(defLocales)));
+
                 return true;
             }
             if (level2.equals("alias")) {
@@ -1436,6 +1504,24 @@ public class SupplementalDataInfo {
                                 attribute2Values.put(attribute, value0);
                             }
                         }
+                    }
+                }
+            } else if (level2.equals("distinguishing")) {
+                String level3 = parts.getElement(3);
+                if (level3.equals("distinguishingItems")) {
+                    Map<String, String> attributes = parts.getAttributes(-1);
+                    // <distinguishingItems
+                    // attributes="key request id _q registry alt iso4217 iso3166 mzone from to type numberSystem"/>
+                    // <distinguishingItems exclude="true"
+                    // elements="default measurementSystem mapping abbreviationFallback preferenceOrdering"
+                    // attributes="type"/>
+
+                    if (attributes.containsKey("exclude") && "true".equals(attributes.get("exclude"))) {
+                        return false; // don't handle the excludes -yet.
+                    } else {
+                        distinguishingAttributes = Collections.unmodifiableCollection(getSpaceDelimited(-1,
+                            "attributes", STAR_SET));
+                        return true;
                     }
                 }
             }
@@ -1539,10 +1625,13 @@ public class SupplementalDataInfo {
 
         private boolean handleCurrencyData(String level2) {
             if (level2.equals("fractions")) {
-                // <info iso4217="ADP" digits="0" rounding="0"/>
+                // <info iso4217="ADP" digits="0" rounding="0" cashRounding="5"/>
                 currencyToCurrencyNumberInfo.put(parts.getAttributeValue(3, "iso4217"),
-                    new CurrencyNumberInfo(Integer.parseInt(parts.getAttributeValue(3, "digits")),
-                        Integer.parseInt(parts.getAttributeValue(3, "rounding"))));
+                    new CurrencyNumberInfo(
+                        parseIntegerOrNull(parts.getAttributeValue(3, "digits")),
+                        parseIntegerOrNull(parts.getAttributeValue(3, "rounding")),
+                        parseIntegerOrNull(parts.getAttributeValue(3, "cashRounding")))
+                    );
                 return true;
             }
             /*
@@ -1608,7 +1697,15 @@ public class SupplementalDataInfo {
                     : BasicLanguageData.Type.secondary);
             languageData.setScripts(parts.getAttributeValue(2, "scripts"))
                 .setTerritories(parts.getAttributeValue(2, "territories"));
-            languageToBasicLanguageData.put(language, languageData);
+            Map<Type, BasicLanguageData> map = languageToBasicLanguageData.get(language);
+            if (map == null) {
+                languageToBasicLanguageData.put(language, map = new EnumMap<Type, BasicLanguageData>(
+                    BasicLanguageData.Type.class));
+            }
+            if (map.containsKey(languageData.type)) {
+                throw new IllegalArgumentException("Duplicate value:\t" + parts);
+            }
+            map.put(languageData.type, languageData);
         }
 
         private boolean failsRangeCheck(String path, double input, double min, double max) {
@@ -1653,6 +1750,10 @@ public class SupplementalDataInfo {
 
     }
 
+    public int parseIntegerOrNull(String attributeValue) {
+        return attributeValue == null ? 0 : Integer.parseInt(attributeValue);
+    }
+
     Set<String> skippedElements = new TreeSet<String>();
 
     private Map<String, Pair<String, String>> references = new TreeMap<String, Pair<String, String>>();
@@ -1663,8 +1764,11 @@ public class SupplementalDataInfo {
     private Map<String, List<String>> calendarPreferences = new HashMap<String, List<String>>();
     private Map<String, CoverageVariableInfo> localeSpecificVariables = new TreeMap<String, CoverageVariableInfo>();
     private VariableReplacer coverageVariables = new VariableReplacer();
-    private Map<String, String> numberingSystems = new HashMap<String, String>();
+    private Map<String, NumberingSystemInfo> numberingSystems = new HashMap<String, NumberingSystemInfo>();
+    private Set<String> numericSystems = new TreeSet<String>();
     private Set<String> defaultContentLocales;
+    public Map<CLDRLocale, CLDRLocale> baseToDefaultContent; // wo -> wo_Arab_SN
+    public Map<CLDRLocale, CLDRLocale> defaultContentToBase; // wo_Arab_SN -> wo
     private Set<String> CLDRLanguageCodes;
     private Set<String> CLDRScriptCodes;
 
@@ -1711,7 +1815,15 @@ public class SupplementalDataInfo {
     }
 
     public Set<BasicLanguageData> getBasicLanguageData(String language) {
-        return languageToBasicLanguageData.getAll(language);
+        Map<Type, BasicLanguageData> map = languageToBasicLanguageData.get(language);
+        if (map == null) {
+            throw new IllegalArgumentException("Bad language code: " + language);
+        }
+        return new LinkedHashSet<BasicLanguageData>(map.values());
+    }
+
+    public Map<Type, BasicLanguageData> getBasicLanguageDataMap(String language) {
+        return languageToBasicLanguageData.get(language);
     }
 
     public Set<String> getBasicLanguageDataLanguages() {
@@ -1798,15 +1910,46 @@ public class SupplementalDataInfo {
     }
 
     /**
-     * Return the canonicalized zone, or null if there is none.
+     * Return the list of default content locales.
      * 
-     * @param alias
      * @return
      */
     public Set<String> getDefaultContentLocales() {
         return defaultContentLocales;
     }
 
+    public static Map<String, String> makeLocaleToDefaultContents(Set<String> defaultContents,
+        Map<String, String> result, Set<String> errors) {
+        for (String s : defaultContents) {
+            String simpleParent = LanguageTagParser.getSimpleParent(s);
+            String oldValue = result.get(simpleParent);
+            if (oldValue != null) {
+                errors.add("*** Error: Default contents cannot contain two children for the same parent:\t"
+                    + oldValue + ", " + s + "; keeping " + oldValue);
+                continue;
+            }
+            result.put(simpleParent, s);
+        }
+        return result;
+    }
+
+    /**
+     * Return the list of default content locales.
+     * 
+     * @return
+     */
+    public Set<CLDRLocale> getDefaultContentCLDRLocales() {
+        initCLDRLocaleBasedData();
+        return defaultContentToBase.keySet();
+    }
+
+    /**
+     * Get the default content locale for a specified language
+     * 
+     * @param language
+     *            language to search
+     * @return default content, or null if none
+     */
     public String getDefaultContentLocale(String language) {
         for (String dc : defaultContentLocales) {
             if (dc.startsWith(language + "_")) {
@@ -1816,7 +1959,17 @@ public class SupplementalDataInfo {
         return null;
     }
 
+    /**
+     * Get the default content locale for a specified language and script.
+     * If script is null, delegates to {@link #getDefaultContentLocale(String)}
+     * 
+     * @param language
+     * @param script
+     *            if null, delegates to {@link #getDefaultContentLocale(String)}
+     * @return default content, or null if none
+     */
     public String getDefaultContentLocale(String language, String script) {
+        if (script == null) return getDefaultContentLocale(language);
         for (String dc : defaultContentLocales) {
             if (dc.startsWith(language + "_" + script + "_")) {
                 return dc;
@@ -1825,12 +1978,55 @@ public class SupplementalDataInfo {
         return null;
     }
 
+    /**
+     * Given a default locale (such as 'wo_Arab_SN') return the base locale (such as 'wo'), or null if the input wasn't
+     * a default conetnt locale.
+     * 
+     * @param baseLocale
+     * @return
+     */
+    public CLDRLocale getBaseFromDefaultContent(CLDRLocale dcLocale) {
+        initCLDRLocaleBasedData();
+        return defaultContentToBase.get(dcLocale);
+    }
+
+    /**
+     * Given a base locale (such as 'wo') return the default content locale (such as 'wo_Arab_SN'), or null.
+     * 
+     * @param baseLocale
+     * @return
+     */
+    public CLDRLocale getDefaultContentFromBase(CLDRLocale baseLocale) {
+        initCLDRLocaleBasedData();
+        return baseToDefaultContent.get(baseLocale);
+    }
+
+    /**
+     * Is this a default content locale?
+     * 
+     * @param dcLocale
+     * @return
+     */
+    public boolean isDefaultContent(CLDRLocale dcLocale) {
+        initCLDRLocaleBasedData();
+        if (dcLocale == null) throw new NullPointerException("null locale");
+        return (defaultContentToBase.get(dcLocale) != null);
+    }
+
     public Set<String> getNumberingSystems() {
         return numberingSystems.keySet();
     }
 
+    public Set<String> getNumericNumberingSystems() {
+        return numericSystems;
+    }
+
     public String getDigits(String numberingSystem) {
-        return numberingSystems.get(numberingSystem);
+        return numberingSystems.get(numberingSystem).digits;
+    }
+
+    public NumberingSystemType getNumberingSystemType(String numberingSystem) {
+        return numberingSystems.get(numberingSystem).type;
     }
 
     public SortedSet<CoverageLevelInfo> getCoverageLevelInfo() {
@@ -1867,7 +2063,7 @@ public class SupplementalDataInfo {
                 String pattern = ci.match.replace('\'', '"')
                     .replace("[@", "\\[@") // make sure that attributes are quoted
                     .replace("(", "(?:") // make sure that there are no capturing groups (beyond what we generate
-                                         // below).
+                // below).
                 ;
                 pattern = "^//ldml/" + pattern + "$"; // for now, force a complete match
                 String variableType = null;
@@ -1988,9 +2184,9 @@ public class SupplementalDataInfo {
     }
 
     private Set<String> getTargetScripts(String language) {
-        Set<BasicLanguageData> langData = getBasicLanguageData(language);
         Set<String> targetScripts = new HashSet<String>();
-        if (langData != null) {
+        try {
+            Set<BasicLanguageData> langData = getBasicLanguageData(language);
             Iterator<BasicLanguageData> ldi = langData.iterator();
             while (ldi.hasNext()) {
                 BasicLanguageData bl = ldi.next();
@@ -1999,7 +2195,10 @@ public class SupplementalDataInfo {
                     targetScripts.addAll(addScripts);
                 }
             }
+        } catch (Exception e) {
+            // fall through
         }
+
         if (targetScripts.size() == 0) {
             targetScripts.add("Zzzz"); // Unknown Script
         }
@@ -2007,9 +2206,9 @@ public class SupplementalDataInfo {
     }
 
     private Set<String> getTargetTerritories(String language) {
-        Set<BasicLanguageData> langData = getBasicLanguageData(language);
         Set<String> targetTerritories = new HashSet<String>();
-        if (langData != null) {
+        try {
+            Set<BasicLanguageData> langData = getBasicLanguageData(language);
             Iterator<BasicLanguageData> ldi = langData.iterator();
             while (ldi.hasNext()) {
                 BasicLanguageData bl = ldi.next();
@@ -2018,6 +2217,8 @@ public class SupplementalDataInfo {
                     targetTerritories.addAll(addTerritories);
                 }
             }
+        } catch (Exception e) {
+            // fall through
         }
         if (targetTerritories.size() == 0) {
             targetTerritories.add("ZZ");
@@ -2029,16 +2230,21 @@ public class SupplementalDataInfo {
         Set<String> targetCalendars = new HashSet<String>();
         Iterator<String> it = territories.iterator();
         while (it.hasNext()) {
-            List<String> addCalendars = calendarPreferences.get(it.next());
+            List<String> addCalendars = getCalendars(it.next());
             if (addCalendars == null) {
                 continue;
             }
-            Iterator<String> it2 = addCalendars.iterator();
-            while (it2.hasNext()) {
-                targetCalendars.add(it2.next());
-            }
+            targetCalendars.addAll(addCalendars);
         }
         return targetCalendars;
+    }
+
+    /**
+     * @param territory
+     * @return a list the calendars used in the specified territorys
+     */
+    public List<String> getCalendars(String territory) {
+        return calendarPreferences.get(territory);
     }
 
     private Set<String> getCurrentCurrencies(Set<String> territories) {
@@ -2221,8 +2427,8 @@ public class SupplementalDataInfo {
         // ldml/dates/calendars/calendar[@type="gregorian"]/dayPeriods/dayPeriodContext[@type="format"]/dayPeriodWidth[@type="wide"]/dayPeriod[@type="am"]
         /*
          * <supplementalData>
-         * <version number="$Revision: 7859 $"/>
-         * <generation date="$Date: 2012-10-17 14:49:46 -0700 (Wed, 17 Oct 2012) $"/>
+         * <version number="$Revision: 8278 $"/>
+         * <generation date="$Date: 2013-03-06 15:19:38 -0800 (Wed, 06 Mar 2013) $"/>
          * <dayPeriodRuleSet>
          * <dayPeriodRules locales = "en"> <!-- default for any locales not listed under other dayPeriods -->
          * <dayPeriodRule type = "am" from = "0:00" before="12:00"/>
@@ -2608,7 +2814,7 @@ public class SupplementalDataInfo {
         return localeToDayPeriodInfo.keySet();
     }
 
-    private static CurrencyNumberInfo DEFAULT_NUMBER_INFO = new CurrencyNumberInfo(2, 0);
+    private static CurrencyNumberInfo DEFAULT_NUMBER_INFO = new CurrencyNumberInfo(2, 0, 0);
 
     public CurrencyNumberInfo getCurrencyNumberInfo(String currency) {
         CurrencyNumberInfo result = currencyToCurrencyNumberInfo.get(currency);
@@ -2643,6 +2849,7 @@ public class SupplementalDataInfo {
     private List<String> attributeOrder;
     private List<String> elementOrder;
     private List<String> serialElements;
+    private Collection<String> distinguishingAttributes;
 
     public List<String> getAttributeOrder() {
         return attributeOrder;
@@ -2654,6 +2861,10 @@ public class SupplementalDataInfo {
 
     public List<String> getSerialElements() {
         return serialElements;
+    }
+
+    public Collection<String> getDistinguishingAttributes() {
+        return distinguishingAttributes;
     }
 
     public List<R4<String, String, Integer, Boolean>> getLanguageMatcherData(String string) {
@@ -2740,9 +2951,11 @@ public class SupplementalDataInfo {
      */
     public MetaZoneRange getMetaZoneRange(String zone, long date) {
         Set<MetaZoneRange> metazoneRanges = zoneToMetaZoneRanges.get(zone);
-        for (MetaZoneRange metazoneRange : metazoneRanges) {
-            if (metazoneRange.dateRange.getFrom() <= date && date < metazoneRange.dateRange.getTo()) {
-                return metazoneRange;
+        if (metazoneRanges != null) {
+            for (MetaZoneRange metazoneRange : metazoneRanges) {
+                if (metazoneRange.dateRange.getFrom() <= date && date < metazoneRange.dateRange.getTo()) {
+                    return metazoneRange;
+                }
             }
         }
         return null;
@@ -2835,5 +3048,64 @@ public class SupplementalDataInfo {
 
     public boolean isCLDRScriptCode(String code) {
         return CLDRScriptCodes.contains(code);
+    }
+
+    private synchronized void initCLDRLocaleBasedData() throws InternalError {
+        // This initialization depends on SDI being initialized.
+        if (defaultContentToBase == null) {
+            Map<CLDRLocale, CLDRLocale> p2c = new TreeMap<CLDRLocale, CLDRLocale>();
+            Map<CLDRLocale, CLDRLocale> c2p = new TreeMap<CLDRLocale, CLDRLocale>();
+            TreeSet<CLDRLocale> tmpAllLocales = new TreeSet<CLDRLocale>();
+            // copied from SupplementalData.java - CLDRLocale based
+            for (String l : defaultContentLocales) {
+                CLDRLocale child = CLDRLocale.getInstance(l);
+                tmpAllLocales.add(child);
+            }
+
+            for (CLDRLocale child : tmpAllLocales) {
+                // Find a parent of this locale which is NOT itself also a defaultContent
+                CLDRLocale nextParent = child.getParent();
+                // /System.err.println(">> considering " + child + " with parent " + nextParent);
+                while (nextParent != null) {
+                    if (!tmpAllLocales.contains(nextParent)) { // Did we find a parent that's also not itself a
+                        // defaultContent?
+                        // /System.err.println(">>>> Got 1? considering " + child + " with parent " + nextParent);
+                        break;
+                    }
+                    // /System.err.println(">>>>> considering " + child + " with parent " + nextParent);
+                    nextParent = nextParent.getParent();
+                }
+                // parent
+                if (nextParent == null) {
+                    throw new InternalError("SupplementalDataInfo.defaultContentToChild(): No valid parent for "
+                        + child);
+                } else if (nextParent == CLDRLocale.ROOT || nextParent == CLDRLocale.getInstance("root")) {
+                    throw new InternalError(
+                        "SupplementalDataInfo.defaultContentToChild(): Parent is root for default content locale "
+                            + child);
+                } else {
+                    c2p.put(child, nextParent); // wo_Arab_SN -> wo
+                    CLDRLocale oldChild = p2c.get(nextParent);
+                    if (oldChild != null) {
+                        CLDRLocale childParent = child.getParent();
+                        if (!childParent.equals(oldChild)) {
+                            throw new InternalError(
+                                "SupplementalData.defaultContentToChild(): defaultContent list in wrong order? Tried to map "
+                                    + nextParent + " -> " + child + ", replacing " + oldChild + " (should have been "
+                                    + childParent + ")");
+                        }
+                    }
+                    p2c.put(nextParent, child); // wo -> wo_Arab_SN
+                }
+            }
+
+            // done, save the hashtables..
+            baseToDefaultContent = Collections.unmodifiableMap(p2c); // wo -> wo_Arab_SN
+            defaultContentToBase = Collections.unmodifiableMap(c2p); // wo_Arab_SN -> wo
+        }
+    }
+
+    public Map<String, PreferredAndAllowedHour> getTimeData() {
+        return timeData;
     }
 }

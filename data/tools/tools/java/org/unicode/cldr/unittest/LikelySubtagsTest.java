@@ -19,8 +19,6 @@ import com.ibm.icu.text.UnicodeSet;
 
 public class LikelySubtagsTest extends TestFmwk {
 
-    private static final boolean ENABLE_REGION_TEST = false;
-
     public static void main(String[] args) {
         new LikelySubtagsTest().run(args);
     }
@@ -77,7 +75,7 @@ public class LikelySubtagsTest extends TestFmwk {
     }
 
     public void TestMissingInfoForRegion() {
-        if (!ENABLE_REGION_TEST) {
+        if (TestInfo.isCldrVersionBefore(23, 0, 0, 1)) {
             return;
         }
         Map<String, String> likely = TestInfo.getInstance().getSupplementalDataInfo().getLikelySubtags();
@@ -86,7 +84,7 @@ public class LikelySubtagsTest extends TestFmwk {
         for (String region : StandardCodes.make().getGoodAvailableCodes("territory")) {
             String likelyExpansion = likely.get("und_" + region);
             if (likelyExpansion == null) {
-                errln("Missing likely subtags for region: " + region);
+                errln("Missing likely subtags for region: " + region + "\t" + english.getName("territory", region));
             } else {
                 logln("Likely subtags for region: " + region + ":\t " + likely);
             }

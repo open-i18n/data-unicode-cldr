@@ -1,5 +1,6 @@
 package org.unicode.cldr.unittest;
 
+import java.io.File;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
@@ -10,6 +11,7 @@ import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.DraftStatus;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Factory;
+import org.unicode.cldr.util.SimpleFactory;
 
 import com.ibm.icu.text.UTF16;
 
@@ -20,6 +22,19 @@ public class TestCLDRFile {
         testDraftFilter();
         simpleTest();
         resolutionTest();
+    }
+
+    public static Factory getAllFactory() {
+        File mainDir = new File(CldrUtility.MAIN_DIRECTORY);
+        if (!mainDir.isDirectory()) {
+            throw new IllegalArgumentException("MAIN_DIRECTORY is not a directory: " + CldrUtility.MAIN_DIRECTORY);
+        }
+        File seedDir = new File(CldrUtility.SEED_DIRECTORY);
+        if (!seedDir.isDirectory()) {
+            throw new IllegalArgumentException("SEED_DIRECTORY is not a directory: " + CldrUtility.SEED_DIRECTORY);
+        }
+        File dirs[] = { mainDir, seedDir };
+        return SimpleFactory.make(dirs, ".*", DraftStatus.approved);
     }
 
     private static void testExtraPaths() {

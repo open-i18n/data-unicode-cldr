@@ -56,10 +56,6 @@
 
 # Defaults
 
-//ldml/dates/calendars/default[@choice="(%A)"]   ; /calendar/default ; values=$1
-
-//ldml/dates/calendars/calendar[@type="(%A)"]/(month|day)s/default[@choice="(%A)"] ; /calendar/$1/$2Names/default  ; values=$3
-//ldml/dates/calendars/calendar[@type="(%A)"]/(month|day)s/%W[@type="(%A)"]/default[@choice="(%A)"] ; /calendar/$1/$2Names/$3/default  ; values=$4
 //ldml/dates/calendars/calendar[@type="(%A)"]/(monthPattern)s/\2Context[@type="(%W)"]/\2Width[@type="(%W)"]/\2[@type="(%W)"]   ; /calendar/$1/$2s/$3/$4/$5
 
 # Dates
@@ -89,17 +85,15 @@
 //ldml/dates/calendars/calendar[@type="(%A)"]/eras/eraAbbr/era[@type="(%A)"] ; /calendar/$1/eras/abbreviated ; key=$2
 //ldml/dates/calendars/calendar[@type="(%A)"]/eras/eraNames/era[@type="(%A)"] ; /calendar/$1/eras/wide ; key=$2
 
-//ldml/dates/calendars/calendar[@type="(%A)"]/fields/field[@type="(%A)"]/displayName ; /calendar/$1/fields/$2/dn
-//ldml/dates/calendars/calendar[@type="(%A)"]/fields/field[@type="(%A)"]/relative[@type="(%A)"] ; /calendar/$1/fields/$2/relative/"$3"
-
 //ldml/dates/calendars/calendar[@type="(%A)"]/(day|month)s/%W[@type="(%A)"]/%W[@type="(%A)"]/%W[@type="(%A)"]([@yeartype="(%A)"])? ; /calendar/$1/$2Names/$3/$4
 //ldml/dates/calendars/calendar[@type="(%A)"]/(quarters)/%W[@type="(%A)"]/%W[@type="(%A)"]/%W[@type="(?:%A)"] ; /calendar/$1/$2/$3/$4
+
+//ldml/dates/fields/field[@type="(%A)"]/displayName ; /fields/$1/dn
+//ldml/dates/fields/field[@type="(%A)"]/relative[@type="(%A)"] ; /fields/$1/relative/"$2"
 
 //ldml/dates/timeZoneNames/(%GFormat)   ; /zoneStrings/$1
 
 //ldml/dates/timeZoneNames/metazone[@type="(%A)"]/(\w)%W/(\w)%W ; /zoneStrings/"meta:$1"/$2$3
-
-//ldml/dates/timeZoneNames/singleCountries[@list="(%A)"] ; /zoneStrings/singleCountries ; values=$1
 
 //ldml/dates/timeZoneNames/zone[@type="(%W)/(%W)"]/exemplarCity ; /zoneStrings/"$1:$2"/ec
 //ldml/dates/timeZoneNames/zone[@type="(%W)/(%W)"]/(\w)%W/(\w)%W ; /zoneStrings/"$1:$2"/$3$4
@@ -136,9 +130,10 @@
 //ldml/numbers/currencies/currency[@type="(%A)"]/displayName[@count="(%A)"] ; /CurrencyPlurals/$1/$2
 
 //ldml/numbers/currencies/currency[@type="(%W)"]/symbol ; /Currencies/$1 ; fallback=$1
-//ldml/numbers/currencies/currency[@type="(%W)"]/displayName ; /Currencies/$1
+//ldml/numbers/currencies/currency[@type="(%W)"]/displayName ; /Currencies/$1 ; fallback=$1
 //ldml/numbers/currencies/currency[@type="(%W)"]/pattern[@type="standard"]; /Currencies/$1/ ; fallback=//ldml/numbers/currencyFormats[@numberSystem="%D"]/currencyFormatLength/currencyFormat[@type="standard"]/pattern[@type="standard"]
-//ldml/numbers/currencies/currency[@type="(%W)"]/(decimal|group) ; /Currencies/$1/
+//ldml/numbers/currencies/currency[@type="(%W)"]/decimal ; /Currencies/$1/ ; fallback=//ldml/numbers/symbols[@numberSystem="%D"]/decimal
+//ldml/numbers/currencies/currency[@type="(%W)"]/group ; /Currencies/$1/ ; fallback=//ldml/numbers/symbols[@numberSystem="%D"]/group
 
 
 //ldml/numbers/currencyFormats[@numberSystem="%D"]/currencySpacing/(%W)/(%W)   ; /currencySpacing/$1/$2
@@ -162,9 +157,7 @@
 
 //ldml/delimiters/(%W) ; /delimiters/$1
 
-//ldml/layout/orientation[@lines="(%A)"][@characters="(%A)"]
-    ; /layout/lines ; values=$1
-    ; /layout/characters ; values=$2
+//ldml/layout/orientation/(%G)Order ; /layout/$1s
 
 //ldml/listPatterns/listPattern/listPatternPart[@type="(%A)"] ; /listPattern/standard/$1
 

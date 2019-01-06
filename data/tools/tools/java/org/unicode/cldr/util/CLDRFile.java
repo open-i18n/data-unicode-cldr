@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -38,6 +39,7 @@ import org.unicode.cldr.util.DayPeriodInfo.DayPeriod;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo.Count;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralType;
 import org.unicode.cldr.util.With.SimpleIterator;
+import org.unicode.cldr.util.XPathParts.Comments;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.ErrorHandler;
@@ -59,6 +61,7 @@ import com.ibm.icu.text.PluralRules;
 import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.util.Freezable;
 import com.ibm.icu.util.ULocale;
+import com.ibm.icu.util.VersionInfo;
 
 /**
  * This is a class that represents the contents of a CLDR file, as <key,value> pairs,
@@ -107,11 +110,12 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
     public static final String SUPPLEMENTAL_NAME = "supplementalData";
     public static final String SUPPLEMENTAL_METADATA = "supplementalMetadata";
     public static final String SUPPLEMENTAL_PREFIX = "supplemental";
-    public static final String GEN_VERSION = "22.1";
+    public static final String GEN_VERSION = "23";
+
+    private Collection<String> extraPaths = null;
 
     private boolean locked;
     XMLSource dataSource; // TODO(jchye): make private
-    private String dtdVersion;
 
     private File supplementalDirectory;
 
@@ -229,7 +233,9 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
             cldrFile.setNonInheriting(DEFAULT_DECLHANDLER.isSupplemental > 0);
             if (DEFAULT_DECLHANDLER.overrideCount > 0) {
                 throw new IllegalArgumentException("Internal problems: either data file has duplicate path, or" +
-                    " isDistinguishing() or isOrdered() are badly defined: " + DEFAULT_DECLHANDLER.overrideCount);
+                    " CLDRFile.isDistinguishing() or CLDRFile.isOrdered() need updating: "
+                    + DEFAULT_DECLHANDLER.overrideCount
+                    + "; The exact problems are printed on the consol above.");
             }
             if (localeName == null) {
                 cldrFile.dataSource.setLocaleID(cldrFile.getLocaleIDFromIdentity());
@@ -320,6 +326,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
             }
             pw.println("<!DOCTYPE " + dtdType + " SYSTEM \"" + dtdDir + dtdType + ".dtd\">");
         }
+
         if (options.containsKey("COMMENT")) {
             pw.println("<!-- " + options.get("COMMENT") + " -->");
         }
@@ -363,8 +370,18 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
             }
         }
         // now do the rest
+        final String COPYRIGHT_STRING = "Copyright \u00A9 1991-"
+            + Calendar.getInstance().get(Calendar.YEAR)
+            + " Unicode, Inc.\n"
+            + "CLDR data files are interpreted according to the LDML specification "
+            + "(http://unicode.org/reports/tr35/)\n"
+            + "For terms of use, see http://www.unicode.org/copyright.html";
 
-        XPathParts.writeComment(pw, 0, dataSource.getXpathComments().getInitialComment(), false);
+        String initialComment = dataSource.getXpathComments().getInitialComment();
+        if (!initialComment.contains("Copyright") || !initialComment.contains("Unicode")) {
+            initialComment = initialComment + COPYRIGHT_STRING;
+        }
+        XPathParts.writeComment(pw, 0, initialComment, true);
 
         XPathParts.Comments tempComments = (XPathParts.Comments) dataSource.getXpathComments().clone();
         tempComments.fixLineEndings();
@@ -449,7 +466,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
     /**
      * Only call if xpath doesn't exist in the current file.
      * <p>
-     * For now, just handle counts: see getCountPath
+     * For now, just handle counts: see getCountPath Also handle extraPaths
      * 
      * @param xpath
      * @param winning
@@ -460,6 +477,9 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
         // || xpath.contains("/currency") && xpath.contains("/displayName")
         if (xpath.contains("[@count=")) {
             return getCountPathWithFallback(xpath, Count.other, winning);
+        }
+        if (getRawExtraPaths().contains(xpath)) {
+            return xpath;
         }
         return null;
     }
@@ -535,7 +555,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
         return this;
     }
 
-    public CLDRFile addComment(String xpath, String comment, int type) {
+    public CLDRFile addComment(String xpath, String comment, Comments.CommentType type) {
         if (locked) throw new UnsupportedOperationException("Attempt to modify locked object");
         // System.out.println("Adding comment: <" + xpath + "> '" + comment + "'");
         Log.logln(LOG_PROGRESS, "ADDING Comment: \t" + type + "\t" + xpath + " \t" + comment);
@@ -1018,12 +1038,12 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
         return dataSource.iterator(pathFilter);
     }
 
-    public Iterator<String> iterator(String prefix, Comparator comparator) {
-        Iterator it = (prefix == null || prefix.length() == 0)
+    public Iterator<String> iterator(String prefix, Comparator<String> comparator) {
+        Iterator<String> it = (prefix == null || prefix.length() == 0)
             ? dataSource.iterator()
             : dataSource.iterator(prefix);
         if (comparator == null) return it;
-        Set orderedSet = new TreeSet(comparator);
+        Set<String> orderedSet = new TreeSet<String>(comparator);
         CollectionUtilities.addAll(it, orderedSet);
         return orderedSet.iterator();
     }
@@ -1208,7 +1228,8 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
                 || elementName.equals("territoryCodes") &&
                 (attribute.equals("alpha3") || attribute.equals("numeric") || attribute.equals("type"))
                 || elementName.equals("group") && attribute.equals("status")
-                || elementName.equals("plurals") && attribute.equals("type");
+                || elementName.equals("plurals") && attribute.equals("type")
+                || elementName.equals("hours") && attribute.equals("regions");
         case keyboard:
         case platform:
             return false;
@@ -1428,9 +1449,11 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
                     // if (!isSupplemental) ldmlComparator.addAttribute(attribute); // must do BEFORE put
                     // ldmlComparator.addValue(value);
                     // special fix to remove version
+                    // <!ATTLIST version number CDATA #REQUIRED >
+                    // <!ATTLIST version cldrVersion CDATA #FIXED "23" >
                     if (attribute.equals("cldrVersion")
                         && (qName.equals("version"))) {
-                        target.dtdVersion = value;
+                        ((SimpleXMLSource) target.dataSource).setDtdVersionInfo(VersionInfo.getInstance(value));
                     } else {
                         putAndFixDeprecatedAttribute(qName, attribute, value);
                     }
@@ -1448,7 +1471,11 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
                 }
             }
             if (comment != null) {
-                target.addComment(currentFullXPath, comment, XPathParts.Comments.PREBLOCK);
+                if (currentFullXPath.equals("//ldml") || currentFullXPath.equals("//supplementalData")) {
+                    target.setInitialComment(comment);
+                } else {
+                    target.addComment(currentFullXPath, comment, XPathParts.Comments.CommentType.PREBLOCK);
+                }
                 comment = null;
             }
             justPopped = false;
@@ -1500,6 +1527,24 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
         static final Pattern draftPattern = Pattern.compile("\\[@draft=\"([^\"]*)\"\\]");
         Matcher draftMatcher = draftPattern.matcher("");
 
+        /**
+         * Adds a parsed XPath to the CLDRFile.
+         * 
+         * @param fullXPath
+         * @param value
+         */
+        private void addPath(String fullXPath, String value) {
+            String former = target.getStringValue(fullXPath);
+            if (former != null) {
+                String formerPath = target.getFullXPath(fullXPath);
+                if (!former.equals(value) || !fullXPath.equals(formerPath)) {
+                    warnOnOverride(former, formerPath);
+                }
+            }
+            value = trimWhitespaceSpecial(value);
+            target.add(fullXPath, value);
+        }
+
         private void pop(String qName) {
             Log.logln(LOG_PROGRESS, "pop\t" + qName);
             --level;
@@ -1518,18 +1563,25 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
                     }
                 }
                 if (acceptItem) {
-                    if (false && currentFullXPath.indexOf("i-klingon") >= 0) {
-                        System.out.println(currentFullXPath);
-                    }
-                    String former = target.getStringValue(currentFullXPath);
-                    if (former != null) {
-                        String formerPath = target.getFullXPath(currentFullXPath);
-                        if (!former.equals(lastChars) || !currentFullXPath.equals(formerPath)) {
-                            warnOnOverride(former, formerPath);
+                    // Change any deprecated orientation attributes into values
+                    // for backwards compatibility.
+                    boolean skipAdd = false;
+                    if (currentFullXPath.startsWith("//ldml/layout/orientation")) {
+                        XPathParts parts = new XPathParts().set(currentFullXPath);
+                        String value = parts.getAttributeValue(-1, "characters");
+                        if (value != null) {
+                            addPath("//ldml/layout/orientation/characterOrder", value);
+                            skipAdd = true;
+                        }
+                        value = parts.getAttributeValue(-1, "lines");
+                        if (value != null) {
+                            addPath("//ldml/layout/orientation/lineOrder", value);
+                            skipAdd = true;
                         }
                     }
-                    lastChars = trimWhitespaceSpecial(lastChars);
-                    target.add(currentFullXPath, lastChars);
+                    if (!skipAdd) {
+                        addPath(currentFullXPath, lastChars);
+                    }
                     lastLeafNode = lastActiveLeafNode = currentFullXPath;
                 }
                 lastChars = "";
@@ -1538,7 +1590,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
                     + lastActiveLeafNode);
                 lastActiveLeafNode = null;
                 if (comment != null) {
-                    target.addComment(lastLeafNode, comment, XPathParts.Comments.POSTBLOCK);
+                    target.addComment(lastLeafNode, comment, XPathParts.Comments.CommentType.POSTBLOCK);
                     comment = null;
                 }
             }
@@ -1689,7 +1741,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
                 if (commentStack != 0) return;
                 String comment0 = trimWhitespaceSpecial(string).trim();
                 if (lastActiveLeafNode != null) {
-                    target.addComment(lastActiveLeafNode, comment0, XPathParts.Comments.LINE);
+                    target.addComment(lastActiveLeafNode, comment0, XPathParts.Comments.CommentType.LINE);
                 } else {
                     comment = (comment == null ? comment0 : comment + XPathParts.NEWLINE + comment0);
                 }
@@ -1723,7 +1775,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
         public void endDocument() throws SAXException {
             Log.logln(LOG_PROGRESS, "endDocument");
             try {
-                if (comment != null) target.addComment(null, comment, XPathParts.Comments.LINE);
+                if (comment != null) target.addComment(null, comment, XPathParts.Comments.CommentType.LINE);
             } catch (RuntimeException e) {
                 e.printStackTrace();
                 throw e;
@@ -1980,6 +2032,9 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
      * @return
      */
     public static int typeNameToCode(String type) {
+        if (type.equalsIgnoreCase("region")) {
+            type = "territory";
+        }
         for (int i = 0; i < LIMIT_TYPES; ++i) {
             if (type.equalsIgnoreCase(getNameName(i))) return i;
         }
@@ -2128,7 +2183,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
      * 
      * @return ordered collection with items.
      */
-    public static Collection getValueOrder() {
+    public static Collection<String> getValueOrder() {
         return valueOrdering.getOrder(); // already unmodifiable
     }
 
@@ -2138,18 +2193,26 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
     private static MapComparator<String> attributeOrdering = new MapComparator<String>()
         .add(
             // START MECHANICALLY attributeOrdering GENERATED BY FindDTDOrder
-            "_q type id choice key registry source target path day date version count lines characters before from to iso4217 mzone number time casing list uri digits rounding iso3166 hex request direction alternate backwards caseFirst caseLevel hiraganaQuarternary hiraganaQuaternary variableTop normalization numeric strength elements element attributes attribute attributeValue contains multizone order other replacement scripts services territories territory aliases tzidVersion value values variant variants visibility alpha3 code end exclude fips10 gdp internet literacyPercent locales population writingPercent populationPercent officialStatus start used otherVersion typeVersion access after allowsParsing at bcp47 decexp desired indexSource numberSystem numbers oneway ordering percent priority radix rules supported tender territoryId yeartype cldrVersion grouping inLanguage inScript inTerritory match parent private reason reorder status validSubLocales standard references alt draft"
-                // END MECHANICALLY attributeOrdering GENERATED BY FindDTDOrder
-                .split("\\s+"))
+            "_q type id choice key registry source target path day date version count lines characters before from to iso4217 mzone number time casing list uri digits rounding iso3166 hex request direction alternate backwards caseFirst caseLevel hiraganaQuarternary hiraganaQuaternary variableTop normalization numeric strength elements element attributes attribute attributeValue contains multizone order other replacement scripts services territories territory aliases tzidVersion value values variant variants visibility alpha3 code end exclude fips10 gdp internet literacyPercent locales population writingPercent populationPercent officialStatus start used otherVersion typeVersion access after allowsParsing at bcp47 decexp desired indexSource numberSystem numbers oneway ordering percent priority radix rules supported tender territoryId yeartype cldrVersion grouping inLanguage inScript inTerritory match parent private reason reorder status cashRounding allowed preferred regions validSubLocales standard references alt draft" // END
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            // MECHANICALLY
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            // attributeOrdering
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            // GENERATED
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            // BY
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            // FindDTDOrder
+            .trim().split("\\s+"))
         .setErrorOnMissing(false)
         .freeze();
 
     private static MapComparator<String> elementOrdering = new MapComparator<String>()
         .add(
             // START MECHANICALLY elementOrdering GENERATED BY FindDTDOrder
-            "ldml alternate attributeOrder attributes blockingItems calendarPreference calendarSystem casingData casingItem character character-fallback codesByTerritory comment context coverageVariable coverageLevel cp dayPeriodRule dayPeriodRules deprecatedItems distinguishingItems elementOrder first_variable fractions identity indexSeparator compressedIndexSeparator indexRangePattern indexLabelBefore indexLabelAfter indexLabel info keyMap languageAlias languageCodes languageCoverage languageMatch languageMatches languagePopulation last_variable first_tertiary_ignorable last_tertiary_ignorable first_secondary_ignorable last_secondary_ignorable first_primary_ignorable last_primary_ignorable first_non_ignorable last_non_ignorable first_trailing last_trailing likelySubtag mapKeys mapTypes mapZone numberingSystem parentLocale personList pluralRule pluralRules postCodeRegex reference region scriptAlias scriptCoverage serialElements stopwordList substitute suppress tRule telephoneCountryCode territoryAlias territoryCodes territoryCoverage currencyCoverage timezone timezoneCoverage transform typeMap usesMetazone validity alias appendItem base beforeCurrency afterCurrency codePattern contextTransform contextTransformUsage currencyMatch cyclicName cyclicNameContext cyclicNameSet cyclicNameWidth dateFormatItem day dayPeriod dayPeriodContext dayPeriodWidth defaultNumberingSystem deprecated distinguishing blocking coverageAdditions era eraNames eraAbbr eraNarrow exemplarCharacters ellipsis fallback field generic greatestDifference height hourFormat hoursFormat gmtFormat gmtZeroFormat intervalFormatFallback intervalFormatItem key listPattern listPatternPart localeDisplayNames layout contextTransforms localeDisplayPattern languages localePattern localeSeparator localeKeyTypePattern localizedPatternChars dateRangePattern calendars long measurementSystem measurementSystemName messages minDays firstDay month monthPattern monthPatternContext monthPatternWidth months monthNames monthAbbr monthPatterns days dayNames dayAbbr moreInformation native orientation inList inText otherNumberingSystems paperSize pattern displayName quarter quarters quotationStart quotationEnd alternateQuotationStart alternateQuotationEnd rbnfrule regionFormat fallbackFormat fallbackRegionFormat abbreviationFallback preferenceOrdering relative reset import p pc rule ruleset rulesetGrouping s sc scripts segmentation settings short commonlyUsed exemplarCity singleCountries default calendar collation currency currencyFormat currencySpacing currencyFormatLength dateFormat dateFormatLength dateTimeFormat dateTimeFormatLength availableFormats appendItems dayContext dayWidth decimalFormat decimalFormatLength intervalFormats monthContext monthWidth percentFormat percentFormatLength quarterContext quarterWidth scientificFormat scientificFormatLength skipDefaultLocale defaultContent standard daylight stopwords indexLabels mapping suppress_contractions optimize rules surroundingMatch insertBetween symbol decimal group list percentSign nativeZeroDigit patternDigit plusSign minusSign exponential perMille infinity nan currencyDecimal currencyGroup symbols decimalFormats scientificFormats percentFormats currencyFormats currencies t tc q qc i ic extend territories timeFormat timeFormatLength timeZoneNames traditional finance transformName type unit unitPattern variable attributeValues variables segmentRules variantAlias variants keys types transformNames measurementSystemNames codePatterns version generation cldrVersion currencyData language script territory territoryContainment languageData territoryInfo postalCodeData calendarData calendarPreferenceData variant week am pm dayPeriods eras cyclicNameSets dateFormats timeFormats dateTimeFormats fields weekData measurementData timezoneData characters delimiters measurement dates numbers transforms units listPatterns collations posix segmentations rbnf metadata codeMappings parentLocales likelySubtags metazoneInfo mapTimezones plurals telephoneCodeData numberingSystems bcp47KeywordMappings gender references languageMatching dayPeriodRuleSet metaZones weekendStart weekendEnd width windowsZones coverageLevels x yesstr nostr yesexpr noexpr zone metazone special zoneAlias zoneFormatting zoneItem supplementalData"
-                // END MECHANICALLY elementOrdering GENERATED BY FindDTDOrder
-                .split("\\s+"))
+            "ldml alternate attributeOrder attributes blockingItems calendarPreference calendarSystem casingData casingItem character character-fallback characterOrder codesByTerritory comment context coverageVariable coverageLevel cp dayPeriodRule dayPeriodRules deprecatedItems distinguishingItems elementOrder first_variable fractions hours identity indexSeparator compressedIndexSeparator indexRangePattern indexLabelBefore indexLabelAfter indexLabel info keyMap languageAlias languageCodes languageCoverage languageMatch languageMatches languagePopulation last_variable first_tertiary_ignorable last_tertiary_ignorable first_secondary_ignorable last_secondary_ignorable first_primary_ignorable last_primary_ignorable first_non_ignorable last_non_ignorable first_trailing last_trailing likelySubtag lineOrder mapKeys mapTypes mapZone numberingSystem parentLocale personList pluralRule pluralRules postCodeRegex primaryZone reference region scriptAlias scriptCoverage serialElements stopwordList substitute suppress tRule telephoneCountryCode territoryAlias territoryCodes territoryCoverage currencyCoverage timezone timezoneCoverage transform typeMap usesMetazone validity alias appendItem base beforeCurrency afterCurrency codePattern contextTransform contextTransformUsage currencyMatch cyclicName cyclicNameContext cyclicNameSet cyclicNameWidth dateFormatItem day dayPeriod dayPeriodContext dayPeriodWidth defaultNumberingSystem deprecated distinguishing blocking coverageAdditions era eraNames eraAbbr eraNarrow exemplarCharacters ellipsis fallback field generic greatestDifference height hourFormat hoursFormat gmtFormat gmtZeroFormat intervalFormatFallback intervalFormatItem key listPattern listPatternPart localeDisplayNames layout contextTransforms localeDisplayPattern languages localePattern localeSeparator localeKeyTypePattern localizedPatternChars dateRangePattern calendars long measurementSystem measurementSystemName messages minDays firstDay month monthPattern monthPatternContext monthPatternWidth months monthNames monthAbbr monthPatterns days dayNames dayAbbr moreInformation native orientation inList inText otherNumberingSystems paperSize pattern displayName quarter quarters quotationStart quotationEnd alternateQuotationStart alternateQuotationEnd rbnfrule regionFormat fallbackFormat fallbackRegionFormat abbreviationFallback preferenceOrdering relative reset import p pc rule ruleset rulesetGrouping s sc scripts segmentation settings short commonlyUsed exemplarCity singleCountries default calendar collation currency currencyFormat currencySpacing currencyFormatLength dateFormat dateFormatLength dateTimeFormat dateTimeFormatLength availableFormats appendItems dayContext dayWidth decimalFormat decimalFormatLength intervalFormats monthContext monthWidth percentFormat percentFormatLength quarterContext quarterWidth scientificFormat scientificFormatLength skipDefaultLocale defaultContent standard daylight stopwords indexLabels mapping suppress_contractions optimize rules surroundingMatch insertBetween symbol decimal group list percentSign nativeZeroDigit patternDigit plusSign minusSign exponential perMille infinity nan currencyDecimal currencyGroup symbols decimalFormats scientificFormats percentFormats currencyFormats currencies t tc q qc i ic extend territories timeFormat timeFormatLength traditional finance transformName type unit unitPattern variable attributeValues variables segmentRules variantAlias variants keys types transformNames measurementSystemNames codePatterns version generation cldrVersion currencyData language script territory territoryContainment languageData territoryInfo postalCodeData calendarData calendarPreferenceData variant week am pm dayPeriods eras cyclicNameSets dateFormats timeFormats dateTimeFormats fields timeZoneNames weekData timeData measurementData timezoneData characters delimiters measurement dates numbers transforms units listPatterns collations posix segmentations rbnf metadata codeMappings parentLocales likelySubtags metazoneInfo mapTimezones plurals telephoneCodeData numberingSystems bcp47KeywordMappings gender references languageMatching dayPeriodRuleSet metaZones primaryZones weekendStart weekendEnd width windowsZones coverageLevels x yesstr nostr yesexpr noexpr zone metazone special zoneAlias zoneFormatting zoneItem supplementalData" // END
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     // MECHANICALLY
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     // elementOrdering
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     // GENERATED
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     // BY
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     // FindDTDOrder
+            .trim().split("\\s+"))
         .setErrorOnMissing(false)
         .freeze();
 
@@ -2208,7 +2271,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
         "era", "year", "month", "week", "day", "weekday", "dayperiod",
         "hour", "minute", "second", "zone").freeze();
     static MapComparator<String> countValueOrder = new MapComparator<String>().add(
-        "zero", "one", "two", "few", "many", "other").freeze();
+        "0", "1", "zero", "one", "two", "few", "many", "other").freeze();
     static Comparator<String> zoneOrder = StandardCodes.make().getTZIDComparator();
 
     static Set<String> orderedElements = Collections.unmodifiableSet(new HashSet<String>(Arrays
@@ -2302,7 +2365,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
             else if (element.equals("field"))
                 comp = dateFieldOrder;
             else if (element.equals("zone")) comp = zoneOrder;
-        } else if (attribute.equals("count")) {
+        } else if (attribute.equals("count") && !element.equals("minDays")) {
             comp = countValueOrder;
         }
         return comp;
@@ -2411,16 +2474,6 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
 
     public static Map getDefaultSuppressionMap() {
         return defaultSuppressionMap;
-    }
-
-    private static boolean matches(Map map, Object[] items, boolean doStar) {
-        for (int i = 0; i < items.length - 2; ++i) {
-            Map tempMap = (Map) map.get(items[i]);
-            if (doStar && map == null) map = (Map) map.get("*");
-            if (map == null) return false;
-            map = tempMap;
-        }
-        return map.get(items[items.length - 2]) == items[items.length - 1];
     }
 
     private static Map asMap(String[][] data, boolean tree) {
@@ -2668,7 +2721,11 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
     }
 
     public String getDtdVersion() {
-        return dtdVersion;
+        return dataSource.getDtdVersionInfo().toString();
+    }
+
+    public VersionInfo getDtdVersionInfo() {
+        return dataSource.getDtdVersionInfo();
     }
 
     public String getStringValue(String path, boolean ignoreOtherLeafAttributes) {
@@ -2829,7 +2886,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
      * @author markdavis
      * 
      */
-    static class WinningComparator implements Comparator {
+    static class WinningComparator implements Comparator<String> {
         String user;
 
         public WinningComparator(String user) {
@@ -2841,9 +2898,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
          * at
          * the number of votes next, and whither there was an approved or provisional path.
          */
-        public int compare(Object oo1, Object oo2) {
-            String o1 = (String) oo1;
-            String o2 = (String) oo2;
+        public int compare(String o1, String o2) {
             if (o1.contains(user)) {
                 if (!o2.contains(user)) {
                     return -1; // if it contains user
@@ -2900,11 +2955,62 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
         }
     }
 
+    /**
+     * Returns the extra paths, skipping those that are already represented in the locale.
+     * 
+     * @return
+     */
     public Collection<String> getExtraPaths() {
         return getExtraPaths(new HashSet<String>());
     }
 
+    /**
+     * Returns the extra paths, skipping those that are already represented in the locale.
+     * 
+     * @return
+     */
     public Collection<String> getExtraPaths(Collection<String> toAddTo) {
+        for (String item : getRawExtraPaths()) {
+            if (dataSource.getValueAtPath(item) == null) { // don't use getStringValue, since it recurses.
+                toAddTo.add(item);
+            }
+        }
+        return toAddTo;
+    }
+
+    /**
+     * Returns the extra paths, skipping those that are already represented in the locale.
+     * 
+     * @return
+     */
+    public Collection<String> getExtraPaths(String prefix, Collection<String> toAddTo) {
+        for (String item : getRawExtraPaths()) {
+            if (item.startsWith(prefix) && dataSource.getValueAtPath(item) == null) { // don't use getStringValue, since
+                                                                                      // it recurses.
+                toAddTo.add(item);
+            }
+        }
+        return toAddTo;
+    }
+
+    // extraPaths contains the raw extra paths.
+    // It requires filtering in those cases where we don't want duplicate paths.
+    /**
+     * Returns the raw extra paths, irrespective of what paths are already represented in the locale.
+     * 
+     * @return
+     */
+    public Collection<String> getRawExtraPaths() {
+        if (extraPaths == null) {
+            extraPaths = Collections.unmodifiableCollection(getRawExtraPathsPrivate(new HashSet<String>()));
+            if (DEBUG) {
+                System.out.println(getLocaleID() + "\textras: " + extraPaths.size());
+            }
+        }
+        return extraPaths;
+    }
+
+    private Collection<String> getRawExtraPathsPrivate(Collection<String> toAddTo) {
         SupplementalDataInfo supplementalData = SupplementalDataInfo.getInstance(getSupplementalDirectory());
         Set<String> codes = StandardCodes.make().getAvailableCodes("currency");
         // units
@@ -2914,38 +3020,38 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
             for (Count count : pluralCounts) {
                 for (String unit : new String[] { "year", "month", "week", "day", "hour", "minute", "second" }) {
                     for (String when : new String[] { "", "-past", "-future" }) {
-                        addUnlessValueEmpty("//ldml/units/unit[@type=\"" + unit + when + "\"]/unitPattern[@count=\""
-                            + count + "\"]", toAddTo);
+                        toAddTo.add("//ldml/units/unit[@type=\"" + unit + when + "\"]/unitPattern[@count=\""
+                            + count + "\"]");
                     }
                     for (String alt : new String[] { "", "[@alt=\"short\"]" }) {
-                        addUnlessValueEmpty("//ldml/units/unit[@type=\"" + unit + "\"]/unitPattern[@count=\"" + count
-                            + "\"]" + alt, toAddTo);
+                        toAddTo.add("//ldml/units/unit[@type=\"" + unit + "\"]/unitPattern[@count=\"" + count
+                            + "\"]" + alt);
                     }
                 }
 
-                // do units now, but only if pattern is not empty
-
-                final String currencyPattern = "//ldml/numbers/currencyFormats/unitPattern[@count=\"" + count + "\"]";
-                String value = getWinningValue(currencyPattern);
-                if (value != null && value.length() == 0) {
-                    continue;
-                }
-                toAddTo.add(currencyPattern);
                 for (String unit : codes) {
                     toAddTo.add("//ldml/numbers/currencies/currency[@type=\"" + unit + "\"]/displayName[@count=\""
                         + count + "\"]");
                 }
 
-                for (String numberSystem : XMLSource.getNumberSystems()) {
+                for (String numberSystem : supplementalData.getNumericNumberingSystems()) {
+                    String numberSystemString = "[@numberSystem=\"" + numberSystem + "\"]";
+                    final String currencyPattern = "//ldml/numbers/currencyFormats" + numberSystemString +
+                        "/unitPattern[@count=\"" + count + "\"]";
+                    toAddTo.add(currencyPattern);
+                    if (DEBUG) {
+                        System.out.println(getLocaleID() + "\t" + currencyPattern);
+                    }
+
                     for (String type : new String[] {
                         "1000", "10000", "100000", "1000000", "10000000", "100000000", "1000000000",
                         "10000000000", "100000000000", "1000000000000", "10000000000000", "100000000000000" }) {
                         for (String width : new String[] { "short", "long" }) {
-                            addUnlessValueEmpty("//ldml/numbers/decimalFormats[@numberSystem=\"" +
-                                numberSystem + "\"]/decimalFormatLength[@type=\"" +
+                            toAddTo.add("//ldml/numbers/decimalFormats" +
+                                numberSystemString + "/decimalFormatLength[@type=\"" +
                                 width + "\"]/decimalFormat[@type=\"standard\"]/pattern[@type=\"" +
                                 type + "\"][@count=\"" +
-                                count + "\"]", toAddTo);
+                                count + "\"]");
                         }
                     }
                 }
@@ -2996,24 +3102,16 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
         return toAddTo;
     }
 
-    private boolean addUnlessValueEmpty(final String path, Collection<String> toAddTo) {
-        String value = getWinningValue(path);
-        if (value != null && value.length() == 0) {
-            return false;
-        } else {
-            toAddTo.add(path);
-            return true;
-        }
-    }
-
-    public Collection<String> getExtraPaths(String prefix, Collection<String> toAddTo) {
-        for (String item : getExtraPaths()) {
-            if (item.startsWith(prefix)) {
-                toAddTo.add(item);
-            }
-        }
-        return toAddTo;
-    }
+    // This code never worked right, since extraPaths is static.
+    // private boolean addUnlessValueEmpty(final String path, Collection<String> toAddTo) {
+    // String value = getWinningValue(path);
+    // if (value != null && value.length() == 0) {
+    // return false;
+    // } else {
+    // toAddTo.add(path);
+    // return true;
+    // }
+    // }
 
     private Matcher typeValueMatcher = Pattern.compile("\\[@type=\"([^\"]*)\"\\]").matcher("");
 
@@ -3036,12 +3134,6 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
             if (excludedZones == null) {
                 SupplementalDataInfo supplementalData = SupplementalDataInfo.getInstance(getSupplementalDirectory());
                 excludedZones = new HashSet<String>(supplementalData.getSingleRegionZones());
-                List<String> singleCountries = Arrays.asList(
-                    new XPathParts()
-                        .set(getFullXPath("//ldml/dates/timeZoneNames/singleCountries"))
-                        .getAttributeValue(-1, "list")
-                        .split("\\s+"));
-                excludedZones.addAll(singleCountries);
                 excludedZones = Collections.unmodifiableSet(excludedZones); // protect
             }
             return excludedZones;

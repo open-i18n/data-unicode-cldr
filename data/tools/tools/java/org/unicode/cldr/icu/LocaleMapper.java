@@ -80,7 +80,6 @@ public class LocaleMapper extends LdmlMapper {
          * //ldml/dates/calendars/calendar[@type="([^"]*)"]/(dateFormats|dateTimeFormats|timeFormats)/(?:[^/\[]*)[@type=
          * "([^"]*)"]/(?:[^/\[]*)[@type="([^"]*)"]/.* ; locales ; /calendar/$1/DateTimePatterns
          */
-        @SuppressWarnings("unchecked")
         @Override
         public int compare(String arg0, String arg1) {
             Matcher[] matchers = new Matcher[2];
@@ -151,7 +150,7 @@ public class LocaleMapper extends LdmlMapper {
         // some rbPaths (e.g. /calendar/x/DateTimePatterns) have a fixed number
         // of values that must always be present regardless of filtering.
         if (useAltValues || organization != null) {
-            unresolvedFactory = new FilterFactory(factory, organization, useAltValues);
+            unresolvedFactory = FilterFactory.load(factory, organization, useAltValues);
         }
         this.specialFactory = specialFactory;
         this.supplementalDataInfo = supplementalDataInfo;
@@ -376,8 +375,9 @@ public class LocaleMapper extends LdmlMapper {
             if (validRbPaths != null && !validRbPaths.contains(rbPath)) continue;
             CldrArray valueList = getCldrArray(rbPath, pathValueMap);
             List<String> values = info.processValues(arguments, cldrFile, xpath);
+            String baseXPath = info.processXPath(arguments, xpath);
             String groupKey = info.processGroupKey(arguments);
-            valueList.add(xpath, values, groupKey);
+            valueList.put(baseXPath, values, groupKey);
         }
     }
 
@@ -397,12 +397,15 @@ public class LocaleMapper extends LdmlMapper {
         // <version number="$Revision: 5806 $"/>
         String versionPath = cldrResolved.getFullXPath("//ldml/identity/version");
         Matcher versionMatcher = VERSION_PATTERN.matcher(versionPath);
+        int versionNum;
         if (!versionMatcher.find()) {
             int failPoint = RegexUtilities.findMismatch(versionMatcher, versionPath);
             String show = versionPath.substring(0, failPoint) + "☹" + versionPath.substring(failPoint);
-            throw new IllegalArgumentException("no version match with: " + show);
+            System.err.println("Warning: no version match with: " + show);
+            versionNum = 0;
+        } else {
+            versionNum = Integer.parseInt(versionMatcher.group(1));
         }
-        int versionNum = Integer.parseInt(versionMatcher.group(1));
         String versionValue = "2.0." + (versionNum / 100) + "." + (versionNum % 100);
         icuData.add("/Version", versionValue);
 
@@ -432,6 +435,43 @@ public class LocaleMapper extends LdmlMapper {
         } else {
             throw new IllegalArgumentException("Unknown measurement system");
         }
+
+        // Default calendar.
+        String calendar = getCalendarIfDifferent(localeID);
+        if (calendar != null) {
+            icuData.add("/calendar/default", calendar);
+        }
+    }
+
+    /**
+     * Returns the default calendar to be used for a locale. If the default
+     * calendar for the parent locale is the same, null is returned.
+     */
+    private String getCalendarIfDifferent(String localeID) {
+        String calendar = getCalendar(localeID);
+        if (calendar == null) return null;
+        String parent = LocaleIDParser.getParent(localeID);
+        String parentCalendar = null;
+        while (parentCalendar == null && parent != null) {
+            parentCalendar = getCalendar(parent);
+            parent = LocaleIDParser.getParent(parent);
+        }
+        return calendar.equals(parentCalendar) ? null : calendar;
+    }
+
+    /**
+     * Returns the default calendar to be used for a locale, if any.
+     */
+    private String getCalendar(String localeID) {
+        LanguageTagParser parser = new LanguageTagParser().set(localeID);
+        String region = localeID.equals("root") ? "001" : parser.getRegion();
+        if (region.equals("")) {
+            parser.set(supplementalDataInfo.getLikelySubtags().get(parser.getLanguage()));
+            region = parser.getRegion();
+            if (region == null) region = "001";
+        }
+        List<String> calendars = supplementalDataInfo.getCalendars(region);
+        return calendars == null ? null : calendars.get(0);
     }
 
     /**

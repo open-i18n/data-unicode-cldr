@@ -450,6 +450,11 @@ public class ICUServiceBuilder {
         return _getNumberFormat(currency, CURRENCY, currencySymbol, null);
     }
 
+    public DecimalFormat getLongCurrencyFormat(String currency) {
+        // CLDRFile cldrFile = cldrFactory.make(localeID, true);
+        return _getNumberFormat(currency, CURRENCY, null, null);
+    }
+
     public DecimalFormat getNumberFormat(int index) {
         // CLDRFile cldrFile = cldrFactory.make(localeID, true);
         return _getNumberFormat(NumberNames[index], OTHER_KEY, null, null);

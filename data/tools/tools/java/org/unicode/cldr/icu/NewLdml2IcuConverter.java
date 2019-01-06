@@ -221,7 +221,7 @@ public class NewLdml2IcuConverter extends CLDRConverterTool {
             DayPeriodsMapper mapper = new DayPeriodsMapper(sourceDir);
             icuData = mapper.fillFromCldr();
         } else {
-            SupplementalMapper mapper = new SupplementalMapper(sourceDir, cldrVersion);
+            SupplementalMapper mapper = SupplementalMapper.create(sourceDir, cldrVersion);
             icuData = mapper.fillFromCldr(type.toString());
         }
         writeIcuData(icuData, destinationDir);
@@ -274,14 +274,14 @@ public class NewLdml2IcuConverter extends CLDRConverterTool {
      * @param mapper
      * @param aliasList
      */
-    private void writeAliasedFiles(LocaleMapper mapper, List<Alias> aliasList) {
-        for (Alias alias : aliasList) {
-            IcuData icuData = mapper.fillFromCldr(alias);
-            if (icuData != null) {
-                writeIcuData(icuData, destinationDir);
-            }
-        }
-    }
+    // private void writeAliasedFiles(LocaleMapper mapper, List<Alias> aliasList) {
+    // for (Alias alias : aliasList) {
+    // IcuData icuData = mapper.fillFromCldr(alias);
+    // if (icuData != null) {
+    // writeIcuData(icuData, destinationDir);
+    // }
+    // }
+    // }
 
     /**
      * In this prototype, just convert one file.
@@ -293,7 +293,7 @@ public class NewLdml2IcuConverter extends CLDRConverterTool {
         long totalTime = System.currentTimeMillis();
         NewLdml2IcuConverter converter = new NewLdml2IcuConverter();
         converter.processArgs(args);
-        System.out.println("Total time taken: " + (System.currentTimeMillis() - totalTime));
+        System.out.println("Total time taken: " + (System.currentTimeMillis() - totalTime) + "ms");
     }
 
 }

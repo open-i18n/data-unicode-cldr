@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.unicode.cldr.draft.FileUtilities;
 
@@ -22,6 +24,11 @@ public class IcuTextWriter {
      * The default tab indent (actually spaces)
      */
     private static final String TAB = "    ";
+    // List of characters to escape in UnicodeSets.
+    private static final Pattern UNICODESET_ESCAPE = Pattern.compile("\\\\[\\\\\\[\\]\\{\\}\\-&:^=]");
+    // Only escape \ and " from other strings.
+    private static final Pattern STRING_ESCAPE = Pattern.compile("\\\\\\\\");
+    private static final Pattern QUOTE_ESCAPE = Pattern.compile("\\\\?\"");
 
     /**
      * ICU paths have a simple comparison, alphabetical within a level. We do
@@ -107,9 +114,12 @@ public class IcuTextWriter {
                     out.println();
                 }
             }
-            boolean quote = !IcuData.isIntRbPath(path);
             List<String[]> values = icuData.get(path);
-            wasSingular = appendValues(path, values, labels.length, quote, out);
+            try {
+                wasSingular = appendValues(path, values, labels.length, out);
+            } catch (NullPointerException npe) {
+                System.err.println("Null value encountered in " + path);
+            }
             out.flush();
             lastLabels = labels;
         }
@@ -135,13 +145,17 @@ public class IcuTextWriter {
      * @param out
      * @return
      */
-    private static boolean appendValues(String rbPath, List<String[]> values, int numTabs, boolean quote,
+    private static boolean appendValues(String rbPath, List<String[]> values, int numTabs,
         PrintWriter out) {
         String[] firstArray;
         boolean wasSingular = false;
+        boolean quote = !IcuData.isIntRbPath(rbPath);
         if (values.size() == 1) {
             if ((firstArray = values.get(0)).length == 1 && !mustBeArray(rbPath)) {
-                String value = quoteInside(firstArray[0]);
+                String value = firstArray[0];
+                if (quote) {
+                    value = quoteInside(value);
+                }
                 int maxWidth = 84 - Math.min(4, numTabs) * TAB.length();
                 if (value.length() <= maxWidth) {
                     // Single value for path: don't add newlines.
@@ -250,10 +264,29 @@ public class IcuTextWriter {
      * @return
      */
     private static String quoteInside(String item) {
-        if (item.contains("\"")) {
-            item = item.replace("\"", "\\\"");
+        // Unicode-escape all quotes.
+        item = QUOTE_ESCAPE.matcher(item).replaceAll("\\\\u0022");
+        // Double up on backslashes, ignoring Unicode-escaped characters.
+        Pattern pattern = item.startsWith("[") && item.endsWith("]") ? UNICODESET_ESCAPE : STRING_ESCAPE;
+        Matcher matcher = pattern.matcher(item);
+
+        if (!matcher.find()) {
+            return item;
         }
-        return item;
+        StringBuffer buffer = new StringBuffer();
+        int start = 0;
+        do {
+            buffer.append(item.substring(start, matcher.start()));
+            int punctuationChar = item.codePointAt(matcher.end() - 1);
+            buffer.append("\\");
+            if (punctuationChar == '\\') {
+                buffer.append('\\');
+            }
+            buffer.append(matcher.group());
+            start = matcher.end();
+        } while (matcher.find());
+        buffer.append(item.substring(start));
+        return buffer.toString();
     }
 
     /**

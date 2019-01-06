@@ -1,6 +1,9 @@
 package org.unicode.cldr.tool;
 
+import java.io.File;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRTransforms;
@@ -20,24 +23,91 @@ import com.ibm.icu.text.UnicodeSet;
  * @author jchye
  */
 public class CLDRFileTransformer {
-    private UnicodeSet cyrillic = new UnicodeSet("[:script=Cyrl:]");
+    /**
+     * Contains all supported locale-to-locale conversions along with information
+     * needed to convert each locale. Each enum value is named after the locale that results
+     * from the conversion.
+     */
+    public enum LocaleTransform {
+        sr_Latn("sr", "Serbian-Latin-BGN.xml", Transliterator.FORWARD, "[:script=Cyrl:]");
+
+        private final String inputLocale;
+        private final String transformFilename;
+        private final int direction;
+        private final UnicodeSet inputChars;
+
+        private LocaleTransform(String inputLocale, String transformFilename, int direction, String inputCharPattern) {
+            this.inputLocale = inputLocale;
+            this.transformFilename = transformFilename;
+            this.direction = direction;
+            this.inputChars = new UnicodeSet(inputCharPattern);
+        }
+
+        /**
+         * @return the locale that used for conversion
+         */
+        public String getInputLocale() {
+            return inputLocale;
+        }
+
+        /**
+         * @return the locale that used for conversion
+         */
+        public String getOutputLocale() {
+            return this.toString();
+        }
+
+        /**
+         * @return the filename of the transform used to make the conversion
+         */
+        public String getTransformFilename() {
+            return transformFilename;
+        }
+
+        /**
+         * @return the direction of the transformation
+         */
+        public int getDirection() {
+            return direction;
+        }
+
+        /**
+         * @return the set of characters in the input locale that should have been removed after
+         *         transformation, used for internal debugging
+         */
+        private UnicodeSet getInputChars() {
+            return inputChars;
+        }
+    }
+
     private UnicodeSet unconverted = new UnicodeSet();
-    private Transliterator transliterator;
+    private Factory factory;
+    private Map<LocaleTransform, Transliterator> transliterators = new HashMap<LocaleTransform, Transliterator>();
+    private String transformDir;
 
     /**
-     * @param transformFilename
-     *            the filename of the transform data
-     * @param direction
-     *            the direction that the transliteration should be in
+     * @param factory
+     *            the factory to get locale data from
+     * @param transformDir
+     *            the directory containing the transform files
      */
-    public CLDRFileTransformer(String transformFilename, int direction) {
+    public CLDRFileTransformer(Factory factory, String transformDir) {
+        this.factory = factory;
+        this.transformDir = transformDir;
+    }
+
+    private Transliterator loadTransliterator(LocaleTransform localeTransform) {
+        if (transliterators.containsKey(localeTransform)) {
+            return transliterators.get(localeTransform);
+        }
         CLDRTransforms transforms = CLDRTransforms.getInstance();
         ParsedTransformID directionInfo = new ParsedTransformID();
         String ruleString = transforms.getIcuRulesFromXmlFile(
-            CldrUtility.COMMON_DIRECTORY + "transforms/",
-            transformFilename, directionInfo);
-        transliterator = Transliterator.createFromRules(directionInfo.getId(),
-            ruleString, direction);
+            transformDir, localeTransform.getTransformFilename(), directionInfo);
+        Transliterator transliterator = Transliterator.createFromRules(directionInfo.getId(),
+            ruleString, localeTransform.getDirection());
+        transliterators.put(localeTransform, transliterator);
+        return transliterator;
     }
 
     /**
@@ -46,12 +116,16 @@ public class CLDRFileTransformer {
      * @param input
      * @return
      */
-    public CLDRFile transformCldrFile(CLDRFile input) {
-        XMLSource outputSource = new SimpleXMLSource("sr_Latn");
+    public CLDRFile transform(LocaleTransform localeTransform) {
+        Transliterator transliterator = loadTransliterator(localeTransform);
+        CLDRFile input = factory.make(localeTransform.getInputLocale(), false);
+        CLDRFile output = factory.make(localeTransform.getOutputLocale(), false);
+        XMLSource outputSource = new SimpleXMLSource(localeTransform.toString());
         for (String xpath : input) {
             String fullPath = input.getFullXPath(xpath);
             String value = input.getStringValue(xpath);
-            value = transform(xpath, value);
+            String oldValue = output.getStringValue(xpath);
+            value = transformValue(transliterator, localeTransform.getInputChars(), xpath, value, oldValue);
             outputSource.putValueAtPath(fullPath, value);
         }
         return new CLDRFile(outputSource);
@@ -60,34 +134,37 @@ public class CLDRFileTransformer {
     /**
      * Transforms a CLDRFile value into another form.
      */
-    private String transform(String path, String value) {
+    private String transformValue(Transliterator transliterator, UnicodeSet inputChars, String path, String value,
+        String oldValue) {
         String transliterated;
         // TODO: Don't transform dates/patterns.
+        // For now, don't try to transliterate the exemplar characters - use the ones from the original locale.
+        // In the future, we can probably control this better with a config file - similar to CLDRModify's config file.
         if (path.contains("exemplarCharacters")) {
-            UnicodeSet oldExemplars = new UnicodeSet(value);
-            UnicodeSet newExemplars = new UnicodeSet();
-            for (String ch : oldExemplars) {
-                newExemplars.add(transliterator.transliterate(ch));
-            }
-            transliterated = newExemplars.toString();
+            transliterated = oldValue;
         } else {
             transliterated = transliterator.transliterate(value);
         }
-        if (cyrillic.containsSome(transliterated)) {
-            unconverted.addAll(new UnicodeSet().addAll(cyrillic).retainAll(transliterated));
+        if (inputChars.containsSome(transliterated)) {
+            unconverted.addAll(new UnicodeSet().addAll(inputChars).retainAll(transliterated));
         }
         return transliterated;
     }
 
     public static void main(String[] args) throws Exception {
         Factory factory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
-        CLDRFile input = factory.make("sr", false);
-        CLDRFileTransformer transformer = new CLDRFileTransformer(
-            "Serbian-Latin-BGN.xml", Transliterator.FORWARD);
-        CLDRFile output = transformer.transformCldrFile(input);
-        PrintWriter out = BagFormatter.openUTF8Writer(CldrUtility.GEN_DIRECTORY, output.getLocaleID() + ".xml");
-        output.write(out);
-        out.close();
-        System.out.println("Untransformed characters: " + transformer.unconverted);
+        CLDRFileTransformer transformer = new CLDRFileTransformer(factory, CldrUtility.COMMON_DIRECTORY + "transforms/");
+        for (LocaleTransform localeTransform : LocaleTransform.values()) {
+            CLDRFile output = transformer.transform(localeTransform);
+            String outputDir = CldrUtility.GEN_DIRECTORY + "main" + File.separator;
+            String outputFile = output.getLocaleID() + ".xml";
+            PrintWriter out = BagFormatter.openUTF8Writer(outputDir, outputFile);
+            System.out.println("Generating locale file: " + outputDir + outputFile);
+            output.write(out);
+            out.close();
+        }
+        if (!transformer.unconverted.isEmpty()) {
+            System.out.println("Untransformed characters: " + transformer.unconverted);
+        }
     }
 }

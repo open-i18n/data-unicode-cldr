@@ -1,6 +1,6 @@
 /*
  **********************************************************************
- * Copyright (c) 2002-2010, International Business Machines
+ * Copyright (c) 2002-2013, International Business Machines
  * Corporation and others.  All Rights Reserved.
  **********************************************************************
  * Author: John Emmons
@@ -39,7 +39,7 @@ public class POSIXUtilities {
         controlCodeNames.put(0x0004, "END_OF_TRANSMISSION");
         controlCodeNames.put(0x0005, "ENQUIRY");
         controlCodeNames.put(0x0006, "ACKNOWLEDGE");
-        controlCodeNames.put(0x0007, "BELL");
+        controlCodeNames.put(0x0007, "ALERT");
         controlCodeNames.put(0x0008, "BACKSPACE");
         controlCodeNames.put(0x0009, "tab"); // Required element for POSIX portable character set
         controlCodeNames.put(0x000A, "newline"); // Required element for POSIX portable character set

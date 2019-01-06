@@ -11,9 +11,12 @@ import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRLocale;
 import org.unicode.cldr.util.Factory;
 
+import com.ibm.icu.impl.Utility;
+
 public class CheckChildren extends FactoryCheckCLDR {
+    static final String EMPTY_SET_OVERRIDE = Utility.unescape("\u2205\u2205\u2205");
     CLDRFile[] immediateChildren;
-    Map tempSet = new HashMap();
+    Map<String, String> tempSet = new HashMap<String, String>();
 
     public CheckChildren(Factory factory) {
         super(factory);
@@ -24,6 +27,7 @@ public class CheckChildren extends FactoryCheckCLDR {
         if (immediateChildren == null) return this; // skip - test isn't even relevant
         if (isSkipTest()) return this; // disabled
         if (fullPath == null) return this; // skip paths that we don't have
+        if (value == null) return this; // skip null values
         String winningValue = this.getCldrFileToCheck().getWinningValue(fullPath);
         if (!value.equals(winningValue)) {
             return this; // only run this test against winning values.
@@ -38,7 +42,11 @@ public class CheckChildren extends FactoryCheckCLDR {
             } catch (RuntimeException e) {
                 throw e;
             }
-            tempSet.put(immediateChildren[i].getLocaleID(), otherValue);
+            if (!otherValue.equals(EMPTY_SET_OVERRIDE)) {
+                tempSet.put(immediateChildren[i].getLocaleID(), otherValue);
+            } else {
+                tempSet.put(immediateChildren[i].getLocaleID(), value);
+            }
         }
         if (tempSet.values().contains(value)) return this;
 
@@ -55,11 +63,7 @@ public class CheckChildren extends FactoryCheckCLDR {
         List<CheckStatus> possibleErrors) {
         if (cldrFileToCheck == null) return this;
         if (cldrFileToCheck.getLocaleID().equals("root")) return this; // Root's children can override.
-        if (CLDRFile.GEN_VERSION.startsWith("22.")) {
-            if (cldrFileToCheck.getLocaleID().equals("pt_PT")) {
-                return this; // disable this test for 22, see ticket:XXXX
-            }
-        }
+
         // Skip if the phase is not final testing
         if (Phase.FINAL_TESTING == getPhase()) {
             setSkipTest(false); // ok

@@ -122,7 +122,7 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
                     if (!builtCollisions[type.getIndex()]) {
                         buildCollisions(type.getIndex());
                     }
-                    Set codes = hasCollisions.getAll(path);
+                    Set<String> codes = hasCollisions.getAll(path);
                     if (codes != null) {
                         // String code = CLDRFile.getCode(path);
                         // Set codes = new TreeSet(s);
@@ -138,6 +138,9 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
                 }
             }
         } else {
+            if (value == null || value.length() == 0) {
+                return this;
+            }
             if (value.equals("∅∅∅")) {
                 return this;
             }
@@ -236,7 +239,7 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
             // as long as the context ( generic/recurring vs. specific time ) is known.
             // ( JCE: 8/7/2012 )
 
-            String thisErrorType = CheckStatus.errorType;
+            CheckStatus.Type thisErrorType = CheckStatus.errorType;
 
             if (path.contains("timeZoneNames") && collidingTypes.size() == 1) {
                 PathHeader pathHeader = pathHeaderFactory.fromPath(path);

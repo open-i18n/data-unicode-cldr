@@ -26,21 +26,23 @@ public class TestMetadata extends TestFmwk {
     public void TestOrdering() {
         FindDTDOrder order = FindDTDOrder.getInstance();
 
-        warnln("Make sure that all and only blocking elements are serialElements.");
+        logln("Make sure that all and only blocking elements are serialElements.");
 
         // First Elements
 
         List<String> dtdElementOrder = order.getElementOrder();
         List<String> cldrFileElementOrder = CLDRFile.getElementOrder();
-        checkEquals("Element orderings", "CLDRFile", cldrFileElementOrder, "DTD", dtdElementOrder);
+        checkEquals("LDML element order", "CLDRFile.elementOrdering", cldrFileElementOrder, "DTD", dtdElementOrder);
 
         List<String> metadataElementOrder = testInfo.getSupplementalDataInfo().getElementOrder();
-        checkEquals("Element orderings", "supplemental", metadataElementOrder, "DTD", dtdElementOrder);
+        checkEquals("Metadata element order", "supplementalMetaData/.../elementOrder", metadataElementOrder, "DTD",
+            dtdElementOrder);
 
         // Then Serial Order
         Set<String> cldrFileSerialElements = new TreeSet<String>(CLDRFile.getSerialElements());
         Set<String> metadataSerialElements = new TreeSet<String>(testInfo.getSupplementalDataInfo().getSerialElements());
-        checkEquals("Serial elements", "metadata", metadataSerialElements, "cldrFile", cldrFileSerialElements);
+        checkEquals("Serial Order", "CLDRFile.orderedElements", metadataSerialElements, "cldrFile",
+            cldrFileSerialElements);
 
         // Then Attributes
         List<String> rawDtdAttributeOrder = order.getAttributeOrder();
@@ -58,26 +60,30 @@ public class TestMetadata extends TestFmwk {
         modifiedDtdOrder.addAll(order.getCommonAttributes());
 
         // now make a list for comparison
-        List<String> dtdAttributeOrder = new ArrayList(modifiedDtdOrder);
+        List<String> dtdAttributeOrder = new ArrayList<String>(modifiedDtdOrder);
 
         // fix to and from
         dtdAttributeOrder.remove("from");
         dtdAttributeOrder.add(dtdAttributeOrder.indexOf("to"), "from");
 
-        checkEquals("Attribute orderings", "CLDRFile", cldrFileAttributeOrder, "DTD", dtdAttributeOrder);
+        checkEquals("Attribute orderings", "CLDRFile.attributeOrdering", cldrFileAttributeOrder, "DTD",
+            dtdAttributeOrder);
 
-        checkEquals("Attribute orderings", "supplemental", metadataAttributeOrder, "DTD", dtdAttributeOrder);
+        checkEquals("Attribute orderings", "supplementalMetadata/../attributeOrder", metadataAttributeOrder, "DTD",
+            dtdAttributeOrder);
     }
 
     private void checkEquals(String title, String firstTitle, Collection<String> cldrFileOrder, String secondTitle,
         Collection<String> dtdAttributeOrder) {
         if (!cldrFileOrder.equals(dtdAttributeOrder)) {
             errln(title + " differ:" + CldrUtility.LINE_SEPARATOR
-                + firstTitle + ": " + cldrFileOrder + CldrUtility.LINE_SEPARATOR
-                + secondTitle + ": " + dtdAttributeOrder + CldrUtility.LINE_SEPARATOR
-                + "to fix, replace in " + firstTitle + ":" + CldrUtility.LINE_SEPARATOR + "\t"
-                + CldrUtility.join(dtdAttributeOrder, " "));
-            Differ differ = new Differ(200, 1);
+                + firstTitle + ":" + CldrUtility.LINE_SEPARATOR + "\t" + cldrFileOrder + CldrUtility.LINE_SEPARATOR
+                + secondTitle + ":" + CldrUtility.LINE_SEPARATOR + "\t" + dtdAttributeOrder
+                + CldrUtility.LINE_SEPARATOR
+                + "To fix, replace contents of " + firstTitle + " with" + CldrUtility.LINE_SEPARATOR
+                + "\t" + CldrUtility.join(dtdAttributeOrder, " ") + CldrUtility.LINE_SEPARATOR
+                + "Differences:");
+            Differ<String> differ = new Differ<String>(200, 1);
             Iterator<String> oldIt = cldrFileOrder.iterator();
             Iterator<String> newIt = dtdAttributeOrder.iterator();
             while (oldIt.hasNext() || newIt.hasNext()) {
@@ -90,21 +96,21 @@ public class TestMetadata extends TestFmwk {
                 if (differ.getACount() != 0 || differ.getBCount() != 0) {
                     final Object start = differ.getA(-1);
                     if (start.toString().length() != 0) {
-                        logln("..." + CldrUtility.LINE_SEPARATOR + "\tSame: " + start);
+                        errln("..." + CldrUtility.LINE_SEPARATOR + "\tSame: " + start);
                     }
                     for (int i = 0; i < differ.getACount(); ++i) {
-                        logln("\t" + firstTitle + ": " + differ.getA(i));
+                        errln("\t" + firstTitle + ": " + differ.getA(i));
                     }
                     for (int i = 0; i < differ.getBCount(); ++i) {
-                        logln("\t" + secondTitle + ": " + differ.getB(i));
+                        errln("\t" + secondTitle + ": " + differ.getB(i));
                     }
                     final Object end = differ.getA(differ.getACount());
                     if (end.toString().length() != 0) {
-                        logln("Same: " + end + CldrUtility.LINE_SEPARATOR + "\t...");
+                        errln("Same: " + end + CldrUtility.LINE_SEPARATOR + "\t...");
                     }
                 }
             }
-            logln("Done with differences");
+            errln("Done with differences");
 
         }
     }
