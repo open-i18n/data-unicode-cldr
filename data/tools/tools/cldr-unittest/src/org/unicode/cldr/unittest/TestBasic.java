@@ -19,7 +19,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.unicode.cldr.test.CheckCLDR;
 import org.unicode.cldr.test.DisplayAndInputProcessor;
 import org.unicode.cldr.tool.GenerateBirth.Versions;
 import org.unicode.cldr.tool.LikelySubtags;
@@ -28,7 +27,6 @@ import org.unicode.cldr.util.Builder;
 import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.DraftStatus;
-import org.unicode.cldr.util.CLDRFile.DtdType;
 import org.unicode.cldr.util.CLDRFile.Status;
 import org.unicode.cldr.util.CLDRFile.WinningChoice;
 import org.unicode.cldr.util.CLDRPaths;
@@ -41,13 +39,14 @@ import org.unicode.cldr.util.DtdData;
 import org.unicode.cldr.util.DtdData.Attribute;
 import org.unicode.cldr.util.DtdData.Element;
 import org.unicode.cldr.util.DtdData.ElementType;
+import org.unicode.cldr.util.DtdType;
 import org.unicode.cldr.util.ElementAttributeInfo;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.InputStreamFactory;
 import org.unicode.cldr.util.LanguageTagParser;
 import org.unicode.cldr.util.Level;
 import org.unicode.cldr.util.LocaleIDParser;
-import org.unicode.cldr.util.StandardCodes;
+import org.unicode.cldr.util.Pair;
 import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralType;
@@ -59,6 +58,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
+import com.google.common.collect.ImmutableSet;
 import com.ibm.icu.dev.util.Relation;
 import com.ibm.icu.impl.Row;
 import com.ibm.icu.impl.Row.R2;
@@ -77,12 +77,29 @@ import com.ibm.icu.util.ULocale;
 
 public class TestBasic extends TestFmwkPlus {
 
-    private static final boolean TEST_VERSIONS = false;
-
     static TestInfo testInfo = TestInfo.getInstance();
 
     private static final SupplementalDataInfo SUPPLEMENTAL_DATA_INFO = testInfo
         .getSupplementalDataInfo();
+    
+    private static final ImmutableSet<Pair<String,String>> knownElementExceptions = 
+        ImmutableSet.of(
+            Pair.of("ldml","usesMetazone"),
+            Pair.of("ldmlICU","usesMetazone"));
+
+    private static final ImmutableSet<Pair<String,String>> knownAttributeExceptions = 
+        ImmutableSet.of(
+            Pair.of( "ldml", "version" ),
+            Pair.of( "supplementalData", "version" ),
+            Pair.of( "ldmlICU", "version" ),
+            Pair.of( "layout", "standard" ));
+
+    private static final ImmutableSet<Pair<String,String>> knownChildExceptions = 
+        ImmutableSet.of(
+            Pair.of( "abbreviationFallback", "special" ),
+            Pair.of( "inList", "special" ),
+            Pair.of( "preferenceOrdering", "special" ));
+   
 
     /**
      * Simple test that loads each file in the cldr directory, thus verifying
@@ -95,12 +112,13 @@ public class TestBasic extends TestFmwkPlus {
         new TestBasic().run(args);
     }
 
-    private static final Set<String> skipAttributes = new HashSet<String>(
-        Arrays.asList("alt", "draft", "references"));
+    private static final ImmutableSet<String> skipAttributes = ImmutableSet.of(
+        "alt", "draft", "references");
 
-    private final String localeRegex = CldrUtility.getProperty("locale", ".*");
-
-    private final String mainDirectory = CLDRPaths.MAIN_DIRECTORY;
+    private final ImmutableSet<String> eightPointLocales = ImmutableSet.of(
+        "ar", "ca", "cs", "da", "de", "el", "es", "fi", "fr", "he", "hi", "hr", "hu", "id",
+        "it", "ja", "ko", "lt", "lv", "nb", "nl", "pl", "pt", "pt_PT", "ro", "ru", "sk", "sl", "sr", "sv",
+        "th", "tr", "uk", "vi", "zh", "zh_Hant");
 
     // private final boolean showForceZoom = Utility.getProperty("forcezoom",
     // false);
@@ -157,9 +175,7 @@ public class TestBasic extends TestFmwkPlus {
             } else if (name.endsWith(".xml")) {
                 data.add(check(fileName));
                 if (deepCheck // takes too long to do all the time
-                // fileName.getCanonicalPath().compareTo("/Users/markdavis/workspace/cldr/common/supplemental")
-                // >= 0
-                ) {
+                    ) {
                     CLDRFile cldrfile = CLDRFile.loadFromFile(fileName, "temp",
                         DraftStatus.unconfirmed);
                     for (String xpath : cldrfile) {
@@ -174,9 +190,6 @@ public class TestBasic extends TestFmwkPlus {
                         DtdType type = parts.getDtdData().dtdType;
                         for (int i = 0; i < parts.size(); ++i) {
                             String element = parts.getElement(i);
-                            if (element.equals("reset")) {
-                                int debug = 1;
-                            }
                             R2<DtdType, String> typeElement = Row.of(type,
                                 element);
                             if (parts.getAttributeCount(i) == 0) {
@@ -224,7 +237,7 @@ public class TestBasic extends TestFmwkPlus {
             Set<String> theoryAttributeSet = s.getValue();
             DtdType type = typeElement.get0();
             String element = typeElement.get1();
-            if (element.equals("ANY") || element.equals("PCDATA")) {
+            if (element.equals("ANY") || element.equals("#PCDATA")) {
                 continue;
             }
             boolean deprecatedElement = SUPPLEMENTAL_DATA_INFO.isDeprecated(
@@ -235,26 +248,26 @@ public class TestBasic extends TestFmwkPlus {
             Set<String> unusedAttributes = new LinkedHashSet<String>(
                 theoryAttributeSet);
             if (usedAttributes == null) {
-                System.out.println(header
+                logln(header
                     + "<NOT-FOUND>\t\t"
                     + siftDeprecated(type, element, unusedAttributes,
                         attributesToTypeElementUsed, false));
                 continue;
             }
             unusedAttributes.removeAll(usedAttributes);
-            System.out.println(header
+            logln(header
                 + siftDeprecated(type, element, usedAttributes,
                     attributesToTypeElementUsed, true)
-                + "\t"
-                + siftDeprecated(type, element, unusedAttributes,
-                    attributesToTypeElementUsed, false));
+                    + "\t"
+                    + siftDeprecated(type, element, unusedAttributes,
+                        attributesToTypeElementUsed, false));
         }
 
-        System.out.println("Undeprecated Attributes\t");
+        logln("Undeprecated Attributes\t");
         for (Entry<String, R3<Boolean, DtdType, String>> s : attributesToTypeElementUsed
             .keyValueSet()) {
             R3<Boolean, DtdType, String> typeElementUsed = s.getValue();
-            System.out.println(s.getKey() + "\t" + typeElementUsed.get0()
+            logln(s.getKey() + "\t" + typeElementUsed.get0()
                 + "\t" + typeElementUsed.get1() + "\t"
                 + typeElementUsed.get2());
         }
@@ -271,9 +284,9 @@ public class TestBasic extends TestFmwkPlus {
         for (String attribute : attributeSet) {
             String attributeName = "«"
                 + attribute
-                + (CLDRFile.isDistinguishing(type, element, attribute) ? "*"
+                + (!"NONE".equals(attribute) && CLDRFile.isDistinguishing(type, element, attribute) ? "*"
                     : "") + "»";
-            if (SUPPLEMENTAL_DATA_INFO.isDeprecated(type, element, attribute,
+            if (!"NONE".equals(attribute) && SUPPLEMENTAL_DATA_INFO.isDeprecated(type, element, attribute,
                 "*")) {
                 if (bdep.length() != 0) {
                     bdep.append(" ");
@@ -344,8 +357,8 @@ public class TestBasic extends TestFmwkPlus {
 
     public void TestCurrencyFallback() {
         XPathParts parts = new XPathParts();
-        Factory cldrFactory = Factory.make(mainDirectory, localeRegex);
-        Set<String> currencies = StandardCodes.make().getAvailableCodes(
+        Factory cldrFactory = testInfo.getCldrFactory();
+        Set<String> currencies = testInfo.getStandardCodes().getAvailableCodes(
             "currency");
 
         final UnicodeSet CHARACTERS_THAT_SHOULD_HAVE_FALLBACKS = (UnicodeSet) new UnicodeSet(
@@ -354,7 +367,7 @@ public class TestBasic extends TestFmwkPlus {
         CharacterFallbacks fallbacks = CharacterFallbacks.make();
 
         for (String locale : cldrFactory.getAvailable()) {
-            CLDRFile file = cldrFactory.make(locale, false);
+            CLDRFile file = testInfo.getCLDRFile(locale, false);
             if (file.isNonInheriting())
                 continue;
 
@@ -428,7 +441,7 @@ public class TestBasic extends TestFmwkPlus {
                                             + it2.getString()
                                             + "\t"
                                             + UCharacter
-                                                .getName(fishyCodepoint));
+                                            .getName(fishyCodepoint));
                                     }
                                     if (fallback == null) {
                                         fallback = fb;
@@ -458,8 +471,8 @@ public class TestBasic extends TestFmwkPlus {
     }
 
     public void TestAbstractPaths() {
-        Factory cldrFactory = Factory.make(mainDirectory, localeRegex);
-        CLDRFile english = cldrFactory.make("en", true);
+        Factory cldrFactory = testInfo.getCldrFactory();
+        CLDRFile english = testInfo.getEnglish();
         Map<String, Counter<Level>> abstactPaths = new TreeMap<String, Counter<Level>>();
         RegexTransform abstractPathTransform = new RegexTransform(
             RegexTransform.Processing.ONE_PASS).add("//ldml/", "")
@@ -467,10 +480,8 @@ public class TestBasic extends TestFmwkPlus {
             .add("([^]])\\[", "$1\t[").add("([^]])/", "$1\t/")
             .add("/", "\t");
 
-        for (String locale : cldrFactory.getAvailable()) {
-            // if (locale.equals("root") && !localeRegex.equals("root"))
-            // continue;
-            CLDRFile file = cldrFactory.make(locale, resolved);
+        for (String locale : getInclusion() <= 5 ? eightPointLocales : cldrFactory.getAvailable()) {
+            CLDRFile file = testInfo.getCLDRFile(locale, resolved);
             if (file.isNonInheriting())
                 continue;
             logln(locale + "\t-\t" + english.getName(locale));
@@ -513,7 +524,7 @@ public class TestBasic extends TestFmwkPlus {
                 result.append(' ');
             }
             result.append("L").append(level.ordinal()).append("=")
-                .append(counter.get(level));
+            .append(counter.get(level));
         }
         return result;
     }
@@ -537,16 +548,15 @@ public class TestBasic extends TestFmwkPlus {
             new TreeMap<String, Set<String>>(), TreeSet.class);
         XPathParts parts = new XPathParts();
         Factory cldrFactory = testInfo.getCldrFactory();
-        CLDRFile english = cldrFactory.make("en", true);
+        CLDRFile english = testInfo.getEnglish();
 
         Relation<String, String> pathToLocale = Relation.of(
             new TreeMap<String, Set<String>>(CLDRFile
                 .getComparator(DtdType.ldml)), TreeSet.class, null);
-
-        for (String locale : cldrFactory.getAvailable()) {
-            // if (locale.equals("root") && !localeRegex.equals("root"))
-            // continue;
-            CLDRFile file = cldrFactory.make(locale, resolved);
+        Set<String> localesToTest = getInclusion() <= 5 ? eightPointLocales : cldrFactory.getAvailable();
+        for (String locale : localesToTest ) {
+            CLDRFile file = testInfo.getCLDRFile(locale, resolved);
+            DtdType dtdType = null;
             if (file.isNonInheriting())
                 continue;
             DisplayAndInputProcessor displayAndInputProcessor = new DisplayAndInputProcessor(
@@ -556,6 +566,10 @@ public class TestBasic extends TestFmwkPlus {
 
             for (Iterator<String> it = file.iterator(); it.hasNext();) {
                 String path = it.next();
+                if (dtdType == null) {
+                    dtdType = DtdType.fromPath(path);
+                }
+
                 if (path.endsWith("/alias")) {
                     continue;
                 }
@@ -607,7 +621,7 @@ public class TestBasic extends TestFmwkPlus {
                     for (String attribute : parts.getAttributeKeys(i)) {
                         if (skipAttributes.contains(attribute))
                             continue;
-                        if (CLDRFile.isDistinguishing(element, attribute)) {
+                        if (CLDRFile.isDistinguishing(dtdType, element, attribute)) {
                             distinguishing.put(element, attribute);
                         } else {
                             nonDistinguishing.put(element, attribute);
@@ -618,28 +632,12 @@ public class TestBasic extends TestFmwkPlus {
         }
 
         if (isVerbose()) {
-
             System.out.format("Distinguishing Elements: %s"
                 + CldrUtility.LINE_SEPARATOR, distinguishing);
             System.out.format("Nondistinguishing Elements: %s"
                 + CldrUtility.LINE_SEPARATOR, nonDistinguishing);
             System.out.format("Skipped %s" + CldrUtility.LINE_SEPARATOR,
                 skipAttributes);
-
-            logln(CldrUtility.LINE_SEPARATOR + "Paths to skip in Survey Tool");
-            for (String path : pathToLocale.keySet()) {
-                if (CheckCLDR.skipShowingInSurvey.matcher(path).matches()) {
-                    logln("Skipping: " + path);
-                }
-            }
-
-            logln(CldrUtility.LINE_SEPARATOR
-                + "Paths to force zoom in Survey Tool");
-            for (String path : pathToLocale.keySet()) {
-                if (CheckCLDR.FORCE_ZOOMED_EDIT.matcher(path).matches()) {
-                    logln("Forced Zoom Edit: " + path);
-                }
-            }
         }
     }
 
@@ -726,7 +724,7 @@ public class TestBasic extends TestFmwkPlus {
         for (String locale : defaultContents) {
             CLDRFile cldrFile;
             try {
-                cldrFile = testInfo.getCldrFactory().make(locale, false);
+                cldrFile = testInfo.getCLDRFile(locale, false);
             } catch (RuntimeException e) {
                 logln("Can't open default content file:\t" + locale);
                 continue;
@@ -814,10 +812,9 @@ public class TestBasic extends TestFmwkPlus {
     }
 
     private void showDifferences(String locale) {
-        CLDRFile cldrFile = testInfo.getCldrFactory().make(locale, false);
+        CLDRFile cldrFile = testInfo.getCLDRFile(locale, false);
         final String localeParent = LocaleIDParser.getParent(locale);
-        CLDRFile parentFile = testInfo.getCldrFactory()
-            .make(localeParent, true);
+        CLDRFile parentFile = testInfo.getCLDRFile(localeParent, true);
         int funnyCount = 0;
         for (Iterator<String> it = cldrFile.iterator("",
             cldrFile.getComparator()); it.hasNext();) {
@@ -857,7 +854,6 @@ public class TestBasic extends TestFmwkPlus {
             MissingType.index_exemplars, MissingType.punct_exemplars);
 
         Set<String> collations = new HashSet<String>();
-        XPathParts parts = new XPathParts();
 
         // collect collation info
         Factory collationFactory = Factory.make(CLDRPaths.COLLATION_DIRECTORY,
@@ -969,20 +965,15 @@ public class TestBasic extends TestFmwkPlus {
     public void TestDtdCompleteness() {
         for (DtdType type : DtdType.values()) {
             DtdData dtdData = DtdData.getInstance(type);
-            Set<Element> descendents = new LinkedHashSet();
+            Set<Element> descendents = new LinkedHashSet<Element>();
             dtdData.getDescendents(dtdData.ROOT, descendents);
             Set<Element> elements = dtdData.getElements();
             if (!elements.equals(descendents)) {
                 for (Element e : elements) {
                     if (!descendents.contains(e) && !e.equals(dtdData.PCDATA)
                         && !e.equals(dtdData.ANY)) {
-                        if (e.name.equals("usesMetazone")) {
-                            logKnownIssue("cldrbug:6768",
-                                "catch orphan usesMetazone");
-                        } else {
                             errln(type + ": Element " + e
                                 + " not contained in descendents of ROOT.");
-                        }
                     }
                 }
                 for (Element e : descendents) {
@@ -1004,21 +995,20 @@ public class TestBasic extends TestFmwkPlus {
     }
 
     public void TestBasicDTDCompatibility() {
-        if (logKnownIssue("Cldrbug:6903",
-            "Need the directory before enabling this test")) {
+
+        // Only run the rest in exhaustive mode, since it requires CLDR_ARCHIVE_DIRECTORY
+        if (getInclusion() <= 5) { 
             return;
         }
 
-        final String oldCommon = CldrUtility
-            .getProperty("oldCommon",
-                "/Users/markdavis/Documents/workspace/cldr-archive/cldr-22.1/common");
+        final String oldCommon = CLDRPaths.ARCHIVE_DIRECTORY + "/cldr-" + Versions.v22_1.toString() + "/common";
 
         // set up exceptions
         Set<String> changedToEmpty = new HashSet<String>(
             Arrays.asList(new String[] { "version", "languageCoverage",
                 "scriptCoverage", "territoryCoverage",
                 "currencyCoverage", "timezoneCoverage",
-                "skipDefaultLocale" }));
+            "skipDefaultLocale" }));
         Set<String> PCDATA = new HashSet<String>();
         PCDATA.add("PCDATA");
         Set<String> EMPTY = new HashSet<String>();
@@ -1053,8 +1043,10 @@ public class TestBasic extends TestFmwkPlus {
                     Set<String> newChildren = newElement2Children
                         .getAll(element);
                     if (newChildren == null) {
-                        errln("Old " + dtd + " contains element not in new: <"
-                            + element + ">");
+                        if (!knownElementExceptions.contains(Pair.of(dtd.toString(), element))) {
+                            errln("Old " + dtd + " contains element not in new: <"
+                                + element + ">");
+                        }
                         continue;
                     }
                     Set<String> funny = containsInOrder(newChildren,
@@ -1132,9 +1124,7 @@ public class TestBasic extends TestFmwkPlus {
     }
 
     public void TestDtdCompatibility() {
-        if (logKnownIssue("Cldrbug:6768", "catch orphan usesMetazone")) {
-            return;
-        }
+        
         for (DtdType type : DtdType.values()) {
             DtdData dtdData = DtdData.getInstance(type);
             Map<String, Element> currentElementFromName = dtdData
@@ -1164,13 +1154,14 @@ public class TestBasic extends TestFmwkPlus {
                         if (element.getAttributeNamed("draft") == null) {
                             elementsWithoutDraft.add(element.name);
                         }
-                    }
-                    if (children.size() != 0 && !"alias".equals(element.name)) {
-                        if (element.getChildNamed("alias") == null) {
-                            elementsWithoutAlias.add(element.name);
-                        }
-                        if (element.getChildNamed("special") == null) {
-                            elementsWithoutSpecial.add(element.name);
+                    } else {
+                        if (children.size() != 0 && !"alias".equals(element.name)) {
+                            if (element.getChildNamed("alias") == null) {
+                                elementsWithoutAlias.add(element.name);
+                            }
+                            if (element.getChildNamed("special") == null) {
+                                elementsWithoutSpecial.add(element.name);
+                            }
                         }
                     }
                 }
@@ -1188,9 +1179,14 @@ public class TestBasic extends TestFmwkPlus {
                 Collections.EMPTY_SET, elementsWithoutAlias);
             assertEquals(
                 type
-                    + " DTD elements with children must have 'special' elements",
+                + " DTD elements with children must have 'special' elements",
                 Collections.EMPTY_SET, elementsWithoutSpecial);
 
+            // Only run the rest in exhaustive mode, since it requires CLDR_ARCHIVE_DIRECTORY
+            if (getInclusion() <= 5) { 
+                return;
+            }
+            
             for (Versions version : Versions.values()) {
                 if (version == Versions.trunk) {
                     continue;
@@ -1210,6 +1206,9 @@ public class TestBasic extends TestFmwkPlus {
                     case platform:
                         tooOld = version.compareTo(Versions.v22_1) >= 0;
                         break;
+                    case ldmlICU:
+                        tooOld = version.compareTo(Versions.v1_2_0) >= 0;
+                        break;
                     default:
                         break;
                     }
@@ -1226,6 +1225,9 @@ public class TestBasic extends TestFmwkPlus {
                     Element oldElement = entry.getValue();
                     Element newElement = currentElementFromName.get(entry
                         .getKey());
+                    if ( knownElementExceptions.contains(Pair.of(type.toString(),oldElement.getName()))) {
+                        continue;
+                    }
                     if (assertNotNull(type
                         + " DTD for trunk must be superset of v" + version
                         + ", and must contain «" + oldElement.getName()
@@ -1233,27 +1235,38 @@ public class TestBasic extends TestFmwkPlus {
                         // TODO Check order also
                         for (Element oldChild : oldElement.getChildren()
                             .keySet()) {
+                            if (oldChild == null) {
+                                continue;
+                            }
                             Element newChild = newElement
                                 .getChildNamed(oldChild.getName());
+
+                            if ( knownChildExceptions.contains(Pair.of(newElement.getName(), oldChild.getName()))) {
+                                continue;
+                            }
                             assertNotNull(
                                 type + " DTD - Children of «"
                                     + newElement.getName()
                                     + "» must be superset of v"
                                     + version + ", and must contain «"
                                     + oldChild.getName() + "»",
-                                newChild);
+                                    newChild);
                         }
                         for (Attribute oldAttribute : oldElement
                             .getAttributes().keySet()) {
                             Attribute newAttribute = newElement
                                 .getAttributeNamed(oldAttribute.getName());
-                            assertNotNull(
+
+                            if ( knownAttributeExceptions.contains(Pair.of(newElement.getName(),oldAttribute.getName()))) {
+                                continue;
+                            }
+                           assertNotNull(
                                 type + " DTD - Attributes of «"
                                     + newElement.getName()
                                     + "» must be superset of v"
                                     + version + ", and must contain «"
                                     + oldAttribute.getName() + "»",
-                                newAttribute);
+                                    newAttribute);
 
                         }
                     }
@@ -1276,15 +1289,17 @@ public class TestBasic extends TestFmwkPlus {
         sortPaths(
             DtdData.getInstance(DtdType.supplementalData).getDtdComparator(
                 null),
-            "//supplementalData/territoryContainment/group[@type=\"419\"][@contains=\"013 029 005\"][@grouping=\"true\"]",
+                "//supplementalData/territoryContainment/group[@type=\"419\"][@contains=\"013 029 005\"][@grouping=\"true\"]",
             "//supplementalData/territoryContainment/group[@type=\"003\"][@contains=\"021 013 029\"][@grouping=\"true\"]");
 
         checkDtdComparatorForResource("TestBasic_ja.xml", DtdType.ldmlICU);
     }
 
     public void TestDtdComparisonsAll() {
-        for (File file : CLDRConfig.getInstance().getAllCLDRFilesEndingWith(
-            ".xml")) {
+        if (getInclusion() <= 5) { // Only run this test in exhaustive mode.
+            return;
+        }
+        for (File file : CLDRConfig.getInstance().getAllCLDRFilesEndingWith(".xml")) {
             checkDtdComparatorFor(file, null);
         }
     }
@@ -1365,5 +1380,36 @@ public class TestBasic extends TestFmwkPlus {
 
     public void sortPaths(Comparator<String> dc, String... array) {
         Arrays.sort(array, 0, array.length, dc);
+    }
+
+    public void TestNewDtdData() {
+        for (DtdType type : DtdType.values()) {
+            if (type == DtdType.ldmlICU) {
+                continue;
+            }
+            DtdData dtdData = DtdData.getInstance(type);
+            for (Element element : dtdData.getElements()) {
+                boolean orderedNew = dtdData.isOrdered(element.name);
+                boolean orderedOld = DtdData.isOrderedOld(element.name, type);
+                assertEquals("isOrdered " + type + ":" + element, orderedOld, orderedNew);
+                boolean deprecatedNew = dtdData.isDeprecated(element.name, "*", "*");
+                boolean deprecatedOld = SUPPLEMENTAL_DATA_INFO.isDeprecated(type, element.name, "*", "*");
+                assertEquals("isDeprecated " + type + ":" + element, deprecatedOld, deprecatedNew);
+
+                for (Attribute attribute : element.getAttributes().keySet()) {
+                    boolean distinguishedNew = dtdData.isDistinguishing(element.name, attribute.name);
+                    boolean distinguishedOld = dtdData.isDistinguishingOld(element.name, attribute.name);
+                    assertEquals("isDistinguished " + type + ":" + attribute, distinguishedOld, distinguishedNew);
+                    deprecatedNew = dtdData.isDeprecated(element.name, attribute.name, "*");
+                    deprecatedOld = SUPPLEMENTAL_DATA_INFO.isDeprecated(type, element.name, attribute.name, "*");
+                    assertEquals("isDeprecated " + type + ":" + attribute, deprecatedOld, deprecatedNew);
+                    for (String value : attribute.values.keySet()) {
+                        deprecatedNew = dtdData.isDeprecated(element.name, attribute.name, value);
+                        deprecatedOld = SUPPLEMENTAL_DATA_INFO.isDeprecated(type, element.name, attribute.name, value);
+                        assertEquals("isDeprecated " + type + ":" + attribute + ":" + value, deprecatedOld, deprecatedNew);
+                    }
+                }
+            }
+        }
     }
 }

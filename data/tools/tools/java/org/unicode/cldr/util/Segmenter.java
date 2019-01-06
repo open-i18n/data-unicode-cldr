@@ -53,7 +53,7 @@ public class Segmenter {
     private static final String DEBUG_AT_STRING = "\u0009\u0308\u00A0"; // null to turn off
     private static final String DEBUG_AT_RULE_CONTAINING = "$Spec3_"; // null to turn off
 
-    private UnicodeMap<Object> samples = new UnicodeMap<Object>();
+    private UnicodeMap<String> samples = new UnicodeMap<String>();
 
     static public interface CodePointShower {
         String show(int codePoint);
@@ -116,13 +116,13 @@ public class Segmenter {
             return false;
         }
         for (int i = 0; i < rules.size(); ++i) {
-            Rule rule = (Rule) rules.get(i);
+            Rule rule = rules.get(i);
             if (DEBUG_AT_RULE_CONTAINING != null && rule.toString().contains(DEBUG_AT_RULE_CONTAINING)) {
                 System.out.println(" !#$@543 Debug");
             }
             Breaks result = rule.matches(text, position);
             if (result != Rule.Breaks.UNKNOWN_BREAK) {
-                breakRule = ((Double) orders.get(i)).doubleValue();
+                breakRule = orders.get(i).doubleValue();
                 return result == Rule.Breaks.BREAK;
             }
         }
@@ -149,7 +149,7 @@ public class Segmenter {
     public Rule get(double order) {
         int loc = orders.indexOf(new Double(order));
         if (loc < 0) return null;
-        return (Rule) rules.get(loc);
+        return rules.get(loc);
     }
 
     /**
@@ -172,7 +172,7 @@ public class Segmenter {
         String result = "";
         for (int i = 0; i < rules.size(); ++i) {
             if (i != 0) result += Utility.LINE_SEPARATOR;
-            result += orders.get(i) + ")\t" + ((Rule) rules.get(i)).toString(showResolved);
+            result += orders.get(i) + ")\t" + rules.get(i).toString(showResolved);
         }
         return result;
     }
@@ -222,7 +222,7 @@ public class Segmenter {
             // COMMENTS allows whitespace
         }
 
-        // Matcher numberMatcher = Pattern.compile("[0-9]+").matcher("");
+        // Matcher numberMatcher = PatternCache.get("[0-9]+").matcher("");
 
         /**
          * Match the rule against text, at a position
@@ -308,7 +308,7 @@ public class Segmenter {
         private Map<Double, String> xmlRules = new TreeMap<Double, String>();
         private Map<Double, String> htmlRules = new TreeMap<Double, String>();
         private List<String> lastComments = new ArrayList<String>();
-        private UnicodeMap<Object> samples = new UnicodeMap<Object>();
+        private UnicodeMap<String> samples = new UnicodeMap<String>();
 
         public Builder(UnicodeProperty.Factory factory) {
             propFactory = factory;
@@ -414,8 +414,8 @@ public class Segmenter {
          * @return
          */
 
-        static class MyComposer extends UnicodeMap.Composer<Object> {
-            public Object compose(int codePoint, String string, Object a, Object b) {
+        static class MyComposer extends UnicodeMap.Composer<String> {
+            public String compose(int codePoint, String string, String a, String b) {
                 if (a == null) return b;
                 if (b == null) return a;
                 if (a.equals(b)) return a;
@@ -477,12 +477,12 @@ public class Segmenter {
             return this;
         }
 
-        public static UnicodeMap<Object> composeWith(UnicodeMap<Object> target, UnicodeSet set, Object value,
-            Composer<Object> composer) {
+        public static UnicodeMap<String> composeWith(UnicodeMap<String> target, UnicodeSet set, String value,
+            Composer<String> composer) {
             for (UnicodeSetIterator it = new UnicodeSetIterator(set); it.next();) {
                 int i = it.codepoint;
-                Object v1 = target.getValue(i);
-                Object v3 = composer.compose(i, null, v1, value);
+                String v1 = target.getValue(i);
+                String v3 = composer.compose(i, null, v1, value);
                 if (v1 != v3 && (v1 == null || !v1.equals(v3))) target.put(i, v3);
             }
             return target;
@@ -523,6 +523,12 @@ public class Segmenter {
                 }
                 lastComments.clear();
             }
+            if (htmlRules.containsKey(order)
+                || xmlRules.containsKey(order)
+                || rules.containsKey(order)
+                ) {
+                throw new IllegalArgumentException("Duplicate numbers for rules: " + order);
+            }
             htmlRules.put(order, TransliteratorUtilities.toHTML.transliterate(line));
             xmlRules.put(order, "<rule id=\"" + Segmenter.nf.format(order) + "\""
                 // + (flagItems.reset(line).find() ? " normative=\"true\"" : "")
@@ -542,7 +548,7 @@ public class Segmenter {
         public Segmenter make() {
             Segmenter result = new Segmenter();
             for (Double key : rules.keySet()) {
-                result.add(key.doubleValue(), (Segmenter.Rule) rules.get(key));
+                result.add(key.doubleValue(), rules.get(key));
             }
             result.samples = samples;
             return result;
@@ -680,7 +686,7 @@ public class Segmenter {
     private List<Double> orders = new ArrayList<Double>(1);
     private double breakRule;
 
-    public UnicodeMap<Object> getSamples() {
+    public UnicodeMap<String> getSamples() {
         return samples;
     }
 
@@ -781,7 +787,8 @@ public class Segmenter {
             "$CL=($CL $X)",
             "$CP=($CP $X)",
             "$CM=($CM $X)",
-            "$CM=($CM $X)",
+            //"$CM=($CM $X)",
+            "$EX=($EX $X)",
             "$GL=($GL $X)",
             "$H2=($H2 $X)",
             "$H3=($H3 $X)",
@@ -866,14 +873,17 @@ public class Segmenter {
             "21.02) \u00D7 $HY",
             "21.03) \u00D7 $NS",
             "21.04) $BB \u00D7",
-            "# LB 21  Do not break before hyphen-minus, other hyphens, fixed-width spaces, small kana and other non-starters, or after acute accents.",
+            "# LB 21a  Don't break after Hebrew + Hyphen.",
             "21.1) $HL ($HY | $BA) \u00D7",
-            "# LB 22  Do not break between two ellipses, or between letters or numbers and ellipsis.",
+            "# LB 21b Don’t break between Solidus and Hebrew letters.",
+            "21.2) $SY × $HL",
+            "# LB 22  Do not break between two ellipses, or between letters, numbers or exclamations and ellipsis.",
             // "show $AL",
             "22.01) ($AL | $HL) \u00D7 $IN",
-            "22.02) $ID \u00D7 $IN",
-            "22.03) $IN \u00D7 $IN",
-            "22.04) $NU \u00D7 $IN",
+            "22.02) $EX \u00D7 $IN",
+            "22.03) $ID \u00D7 $IN",
+            "22.04) $IN \u00D7 $IN",
+            "22.05) $NU \u00D7 $IN",
             "# LB 23  Do not break within \u2018a9\u2019, \u20183a\u2019, or \u2018H%\u2019.",
             "23.01) $ID \u00D7 $PO",
             "23.02) ($AL | $HL) \u00D7 $NU",
@@ -933,7 +943,7 @@ public class Segmenter {
             // "$NotStuff=[^$OLetter $Upper $Lower $Sep]",
             // "# $ATerm and $Sterm are temporary, to match ICU until UTC decides.",
 
-            "# WARNING: For Rule 5, now add format and extend to everything but Sep",
+            "# WARNING: For Rule 5, now add format and extend to everything but Sep, Format, and Extend",
             "$FE=[$Format $Extend]",
             // Special Rules
             "$NotPreLower_=[^ $OLetter $Upper $Lower $Sep $CR $LF $STerm $ATerm]",
@@ -949,11 +959,15 @@ public class Segmenter {
             "$STerm=($STerm $FE*)",
             "$Close=($Close $FE*)",
             "$SContinue=($SContinue $FE*)",
+            
+            // macros
+            "$ParaSep = ($Sep | $CR | $LF)",
+            "$SATerm = ($STerm | $ATerm)",
 
             "# Do not break within CRLF",
             "3) $CR  	\u00D7  	$LF",
             "# Break after paragraph separators.",
-            "4) ($Sep | $CR | $LF)  	\u00F7",
+            "4) $ParaSep  	\u00F7",
             // "3.4) ( $Control | $CR | $LF ) 	\u00F7",
             // "3.5) \u00F7 	( $Control | $CR | $LF )",
             "# Ignore Format and Extend characters, except when they appear at the beginning of a region of text.",
@@ -966,14 +980,14 @@ public class Segmenter {
             "# is between uppercase letters, or if the first following letter (optionally after certain punctuation) is lowercase.",
             "# For example, a period may be an abbreviation or numeric period, and not mark the end of a sentence.",
             "6) $ATerm 	\u00D7 	$Numeric",
-            "7) $Upper $ATerm 	\u00D7 	$Upper",
+            "7) ($Upper | $Lower) $ATerm 	\u00D7 	$Upper",
             "8) $ATerm $Close* $Sp* 	\u00D7 	$NotPreLower_* $Lower",
-            "8.1) ($STerm | $ATerm) $Close* $Sp* 	\u00D7 	($SContinue | $STerm | $ATerm)",
+            "8.1) $SATerm $Close* $Sp* 	\u00D7 	($SContinue | $SATerm)",
             "#Break after sentence terminators, but include closing punctuation, trailing spaces, and (optionally) a paragraph separator.",
-            "9) ( $STerm | $ATerm ) $Close* 	\u00D7 	( $Close | $Sp | $Sep | $CR | $LF )",
+            "9) $SATerm $Close* 	\u00D7 	( $Close | $Sp | $ParaSep )",
             "# Note the fix to $Sp*, $Sep?",
-            "10) ( $STerm | $ATerm ) $Close* $Sp* 	\u00D7 	( $Sp | $Sep | $CR | $LF )",
-            "11) ( $STerm | $ATerm ) $Close* $Sp* ($Sep | $CR | $LF)? \u00F7",
+            "10) $SATerm $Close* $Sp* 	\u00D7 	( $Sp | $ParaSep )",
+            "11) $SATerm $Close* $Sp* $ParaSep? \u00F7",
             "#Otherwise, do not break",
             "12) \u00D7 	$Any",
         }, {
@@ -1018,6 +1032,12 @@ public class Segmenter {
             "$Hebrew_Letter=($Hebrew_Letter $FE*)",
             "$Double_Quote=($Double_Quote $FE*)",
             "$Single_Quote=($Single_Quote $FE*)",
+            
+            // macros
+            
+            "$AHLetter=($ALetter | $Hebrew_Letter)",
+            "$MidNumLetQ=($MidNumLet | $Single_Quote)",
+            
             // "# Do not break within CRLF",
             "3) $CR  	\u00D7  	$LF",
             "3.1) ($Newline | $CR | $LF)	\u00F7",
@@ -1033,20 +1053,20 @@ public class Segmenter {
             // "4) \u00D7 [$Format $Extend]",
             "4) $NotBreak_ \u00D7 [$Format $Extend]",
             "# Vanilla rules",
-            "5)($ALetter | $Hebrew_Letter)  	\u00D7  	($ALetter | $Hebrew_Letter)",
-            "6)($ALetter | $Hebrew_Letter) 	\u00D7 	($MidLetter | $MidNumLet | $Single_Quote) ($ALetter | $Hebrew_Letter)",
-            "7)($ALetter | $Hebrew_Letter) ($MidLetter | $MidNumLet | $Single_Quote) 	\u00D7 	($ALetter | $Hebrew_Letter)",
+            "5)$AHLetter  	\u00D7  	$AHLetter",
+            "6)$AHLetter 	\u00D7 	($MidLetter | $MidNumLetQ) $AHLetter",
+            "7)$AHLetter ($MidLetter | $MidNumLetQ) 	\u00D7 	$AHLetter",
             "7.1) $Hebrew_Letter × $Single_Quote",
             "7.2) $Hebrew_Letter × $Double_Quote $Hebrew_Letter",
-            "7.3) $Hebrew_Letter ($Single_Quote | $Double_Quote) × $Hebrew_Letter",
+            "7.3) $Hebrew_Letter $Double_Quote × $Hebrew_Letter",
             "8)$Numeric 	\u00D7 	$Numeric",
-            "9)($ALetter | $Hebrew_Letter) 	\u00D7 	$Numeric",
-            "10)$Numeric 	\u00D7 	($ALetter | $Hebrew_Letter)",
-            "11)$Numeric ($MidNum | $MidNumLet | $Single_Quote) 	\u00D7 	$Numeric",
-            "12)$Numeric 	\u00D7 	($MidNum | $MidNumLet | $Single_Quote) $Numeric",
+            "9)$AHLetter 	\u00D7 	$Numeric",
+            "10)$Numeric 	\u00D7 	$AHLetter",
+            "11)$Numeric ($MidNum | $MidNumLetQ) 	\u00D7 	$Numeric",
+            "12)$Numeric 	\u00D7 	($MidNum | $MidNumLetQ) $Numeric",
             "13)$Katakana 	\u00D7 	$Katakana",
-            "13.1)($ALetter | $Hebrew_Letter | $Numeric | $Katakana | $ExtendNumLet) 	\u00D7 	$ExtendNumLet",
-            "13.2)$ExtendNumLet 	\u00D7 	($ALetter | $Hebrew_Letter | $Numeric | $Katakana)",
+            "13.1)($AHLetter | $Numeric | $Katakana | $ExtendNumLet) 	\u00D7 	$ExtendNumLet",
+            "13.2)$ExtendNumLet 	\u00D7 	($AHLetter | $Numeric | $Katakana)",
             "13.3) $Regional_Indicator \u00D7 $Regional_Indicator",
         // "#15.1,100)$ALetter \u00F7",
         // "#15.1,100)$Numeric \u00F7",

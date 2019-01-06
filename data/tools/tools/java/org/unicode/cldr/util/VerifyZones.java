@@ -15,7 +15,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.unicode.cldr.tool.Option;
 import org.unicode.cldr.tool.Option.Options;
@@ -32,12 +31,16 @@ import com.ibm.icu.util.TimeZone;
 import com.ibm.icu.util.ULocale;
 
 public class VerifyZones {
+    private static final CLDRConfig CLDR_CONFIG = CLDRConfig.getInstance();
+
+    private static final String DIR = CLDRPaths.CHART_DIRECTORY + "verify/zones/";
+
     private static final boolean DEBUG = false;
 
     final static Options myOptions = new Options();
 
     enum MyOptions {
-        organization(".*", "Google", "organization"),
+        organization(".*", "CLDR", "organization"),
         filter(".*", ".*", "locale filter (regex)"),
         timezoneFilter(".*", null, "timezone filter (regex)"), ;
         // boilerplate
@@ -279,31 +282,48 @@ public class VerifyZones {
     public static void main(String[] args) throws IOException {
         myOptions.parse(MyOptions.organization, args, true);
 
-        // String organization = MyOptions.organization.option.getValue();
+        String organization = MyOptions.organization.option.getValue();
         String filter = MyOptions.filter.option.getValue();
         String timezoneFilterString = MyOptions.timezoneFilter.option.getValue();
-        Matcher timezoneFilter = timezoneFilterString == null ? null : Pattern.compile(timezoneFilterString)
+        Matcher timezoneFilter = timezoneFilterString == null ? null : PatternCache.get(timezoneFilterString)
             .matcher("");
 
         Factory factory2 = Factory.make(CLDRPaths.MAIN_DIRECTORY, filter);
         CLDRFile englishCldrFile = factory2.make("en", true);
+        DateTimeFormats.writeCss(DIR);
+        final CLDRFile english = CLDR_CONFIG.getEnglish();
+
+        Map<String,String> indexMap = new TreeMap<>(CLDR_CONFIG.getCollator());
 
         for (String localeID : factory2.getAvailableLanguages()) {
+            Level level = StandardCodes.make().getLocaleCoverageLevel(organization, localeID);
+            if (Level.MODERN.compareTo(level) > 0) {
+                continue;
+            }
             CLDRFile cldrFile = factory2.make(localeID, true);
-            PrintWriter out = BagFormatter.openUTF8Writer(CLDRPaths.TMP_DIRECTORY + "verify/zones/", localeID +
+            PrintWriter out = BagFormatter.openUTF8Writer(DIR, localeID +
                 ".html");
             String title = "Verify Time Zones: " + englishCldrFile.getName(localeID);
             out.println("<html><head>\n" +
                 "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>\n" +
                 "<title>" + title + "</title>\n" +
                 "<link rel='stylesheet' type='text/css' href='index.css'>\n" +
-                "</head><body><h1>" + title + "</h1>");
+                "</head><body><h1>" + title + "</h1>\n"
+                + "<p><a href='index.html'>Index</a></p>\n"
+                );
+            
 
             showZones(timezoneFilter, englishCldrFile, cldrFile, out);
 
             out.println("</body></html>");
             out.close();
+            
+            indexMap.put(english.getName(localeID), localeID + ".html");
         }
+        try (PrintWriter index = DateTimeFormats.openIndex(DIR, "Time Zones")) {
+            DateTimeFormats.writeIndexMap(indexMap, index);
+        }
+
 
         // Look at DateTimeFormats.java
 
@@ -393,7 +413,8 @@ public class VerifyZones {
             .setHeaderAttributes("class='dtf-th'").setCellAttributes("class='dtf-s'")
             .addColumn("Region: TZID").setHeaderCell(true).setSpanRows(true)
             .setHeaderAttributes("class='dtf-th'").setCellAttributes("class='dtf-s'")
-            .setCellPattern(CldrUtility.getDoubleLinkMsg())
+            //.setCellPattern(CldrUtility.getDoubleLinkMsg())
+            // HACK because anchors don't work any more
         // .addColumn("Region: City").setHeaderCell(true).setSpanRows(true)
         // .addColumn("Region/City").setSpanRows(true)
         ;
@@ -473,7 +494,7 @@ public class VerifyZones {
         }
     }
 
-    private static String surveyUrl = CLDRConfig.getInstance().getProperty("CLDR_SURVEY_URL",
+    private static String surveyUrl = CLDR_CONFIG.getProperty("CLDR_SURVEY_URL",
         "http://st.unicode.org/cldr-apps/survey");
 
     static private String METAZONE_PREFIX = "//ldml/dates/timeZoneNames/metazone[@type=\"";

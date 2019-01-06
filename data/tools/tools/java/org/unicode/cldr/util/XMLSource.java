@@ -316,7 +316,7 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
         }
 
         // static final String ATTRIBUTE_PATTERN = "\\[@([^=]+)=\"([^\"]*)\"]";
-        static final Pattern MIDDLE_OF_ATTRIBUTE_VALUE = Pattern.compile("[^\"]*\"\\]");
+        static final Pattern MIDDLE_OF_ATTRIBUTE_VALUE = PatternCache.get("[^\"]*\"\\]");
 
         public static String stripLastElement(String oldPath) {
             int oldPos = oldPath.lastIndexOf('/');
@@ -652,7 +652,7 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
      * for debugging only
      */
     public String toString(String regex) {
-        Matcher matcher = Pattern.compile(regex).matcher("");
+        Matcher matcher = PatternCache.get(regex).matcher("");
         StringBuffer result = new StringBuffer();
         for (Iterator<String> it = iterator(matcher); it.hasNext();) {
             String path = it.next();
@@ -685,7 +685,7 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
      * @author davis
      * 
      */
-    protected static class ResolvingSource extends XMLSource implements Listener {
+    public static class ResolvingSource extends XMLSource implements Listener {
         private XMLSource currentSource;
         private LinkedHashMap<String, XMLSource> sources;
 
@@ -928,7 +928,7 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
             return fullStatus.localeWhereFound;
         }
 
-        static final Pattern COUNT_EQUALS = Pattern.compile("\\[@count=\"[^\"]*\"]");
+        static final Pattern COUNT_EQUALS = PatternCache.get("\\[@count=\"[^\"]*\"]");
 
         private AliasLocation getPathLocation(String xpath, boolean skipFirst) {
             for (XMLSource source : sources.values()) {
@@ -938,6 +938,10 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
                     continue;
                 }
                 if (source.hasValueAtDPath(xpath)) {
+                    String value = source.getValueAtDPath(xpath);
+                    if (CldrUtility.INHERITANCE_MARKER.equals(value)) {
+                        continue;
+                    }
                     return new AliasLocation(xpath, source.getLocaleID());
                 }
             }
@@ -988,7 +992,7 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
          */
         static final boolean TRACE_FILL = CldrUtility.getProperty("TRACE_FILL", false);
         static final String DEBUG_PATH_STRING = CldrUtility.getProperty("DEBUG_PATH", null);
-        static final Pattern DEBUG_PATH = DEBUG_PATH_STRING == null ? null : Pattern.compile(DEBUG_PATH_STRING);
+        static final Pattern DEBUG_PATH = DEBUG_PATH_STRING == null ? null : PatternCache.get(DEBUG_PATH_STRING);
         static final boolean SKIP_FALLBACKID = CldrUtility.getProperty("SKIP_FALLBACKID", false);;
 
         static final int MAX_LEVEL = 40; /* Throw an error if it goes past this. */
@@ -1191,11 +1195,17 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
 
         private static final String[] keyDisplayNames = {
             "calendar",
+            "cf",
             "collation",
             "currency",
+            "hc",
+            "lb",
+            "ms",
             "numbers"
         };
         private static final String[][] typeDisplayNames = {
+            { "account", "cf" },
+            { "ahom", "numbers" },
             { "arab", "numbers" },
             { "arabext", "numbers" },
             { "armn", "numbers" },
@@ -1208,11 +1218,14 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
             { "cakm", "numbers" },
             { "cham", "numbers" },
             { "chinese", "calendar" },
+            { "compat", "collation" },
             { "coptic", "calendar" },
+            { "cyrl", "numbers" },
             { "dangi", "calendar" },
             { "deva", "numbers" },
             { "dictionary", "collation" },
             { "ducet", "collation" },
+            { "emoji", "collation" },
             { "eor", "collation" },
             { "ethi", "numbers" },
             { "ethiopic", "calendar" },
@@ -1225,6 +1238,10 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
             { "greklow", "numbers" },
             { "gujr", "numbers" },
             { "guru", "numbers" },
+            { "h11", "hc" },
+            { "h12", "hc" },
+            { "h23", "hc" },
+            { "h24", "hc" },
             { "hanidec", "numbers" },
             { "hans", "numbers" },
             { "hansfin", "numbers" },
@@ -1232,6 +1249,7 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
             { "hantfin", "numbers" },
             { "hebr", "numbers" },
             { "hebrew", "calendar" },
+            { "hmng", "numbers" },
             { "indian", "calendar" },
             { "islamic", "calendar" },
             { "islamic-civil", "calendar" },
@@ -1252,12 +1270,23 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
             { "latn", "numbers" },
             { "lepc", "numbers" },
             { "limb", "numbers" },
+            { "loose", "lb" },
+            { "mathbold", "numbers" },
+            { "mathdbl", "numbers" },
+            { "mathmono", "numbers" },
+            { "mathsanb", "numbers" },
+            { "mathsans", "numbers" },
+            { "metric", "ms" },
             { "mlym", "numbers" },
+            { "modi", "numbers" },
             { "mong", "numbers" },
+            { "mroo", "numbers" },
             { "mtei", "numbers" },
             { "mymr", "numbers" },
             { "mymrshan", "numbers" },
+            { "mymrtlng", "numbers" },
             { "nkoo", "numbers" },
+            { "normal", "lb" },
             { "olck", "numbers" },
             { "orya", "numbers" },
             { "osma", "numbers" },
@@ -1272,8 +1301,12 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
             { "search", "collation" },
             { "searchjl", "collation" },
             { "shrd", "numbers" },
+            { "sind", "numbers" },
+            { "sinh", "numbers" },
             { "sora", "numbers" },
+            { "standard", "cf" },
             { "standard", "collation" },
+            { "strict", "lb" },
             { "stroke", "collation" },
             { "sund", "numbers" },
             { "takr", "numbers" },
@@ -1283,9 +1316,13 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
             { "telu", "numbers" },
             { "thai", "numbers" },
             { "tibt", "numbers" },
+            { "tirh", "numbers" },
             { "traditional", "collation" },
             { "unihan", "collation" },
+            { "uksystem", "ms" },
+            { "ussystem", "ms" },
             { "vaii", "numbers" },
+            { "wara", "numbers" },
             { "zhuyin", "collation" } };
 
         private static final boolean SKIP_SINGLEZONES = false;
@@ -1337,7 +1374,7 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
             // }
 
             String[] extraCodes = { "ar_001", "de_AT", "de_CH", "en_AU", "en_CA", "en_GB", "en_US", "es_419", "es_ES", "es_MX",
-                "fr_CA", "fr_CH", "nl_BE", "pt_BR", "pt_PT", "ro_MD", "zh_Hans", "zh_Hant" };
+                "fr_CA", "fr_CH", "nds_NL", "nl_BE", "pt_BR", "pt_PT", "ro_MD", "zh_Hans", "zh_Hant" };
             for (String extraCode : extraCodes) {
                 addFallbackCode(CLDRFile.LANGUAGE_NAME, extraCode, extraCode);
             }
@@ -1379,8 +1416,8 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
             for (int i = 0; i < typeDisplayNames.length; ++i) {
                 constructedItems.putValueAtPath(
                     "//ldml/localeDisplayNames/types/type"
-                        + "[@type=\"" + typeDisplayNames[i][0] + "\"]"
-                        + "[@key=\"" + typeDisplayNames[i][1] + "\"]",
+                        + "[@key=\"" + typeDisplayNames[i][1] + "\"]"
+                        + "[@type=\"" + typeDisplayNames[i][0] + "\"]",
                     typeDisplayNames[i][0]);
             }
             //            String[][] relativeValues = {

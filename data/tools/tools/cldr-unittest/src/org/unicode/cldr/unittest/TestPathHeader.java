@@ -15,9 +15,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.unicode.cldr.test.CheckCLDR;
 import org.unicode.cldr.test.CoverageLevel2;
 import org.unicode.cldr.test.ExampleGenerator;
 import org.unicode.cldr.unittest.TestAll.TestInfo;
@@ -26,6 +24,7 @@ import org.unicode.cldr.util.CLDRFile.Status;
 import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.Containment;
 import org.unicode.cldr.util.Counter;
+import org.unicode.cldr.util.DtdType;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.LanguageTagParser;
 import org.unicode.cldr.util.Level;
@@ -35,6 +34,7 @@ import org.unicode.cldr.util.PathHeader.PageId;
 import org.unicode.cldr.util.PathHeader.SectionId;
 import org.unicode.cldr.util.PathHeader.SurveyToolStatus;
 import org.unicode.cldr.util.PathStarrer;
+import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.PatternPlaceholders;
 import org.unicode.cldr.util.PatternPlaceholders.PlaceholderInfo;
 import org.unicode.cldr.util.PatternPlaceholders.PlaceholderStatus;
@@ -129,7 +129,7 @@ public class TestPathHeader extends TestFmwkPlus {
         Set<PathHeader> sorted = new TreeSet<PathHeader>();
         for (String locale : new String[] { "ru", "ar", "ja" }) {
             sorted.clear();
-            CLDRFile cldrFile = info.getCldrFactory().make(locale, true);
+            CLDRFile cldrFile = info.getCLDRFile(locale, true);
             CoverageLevel2 coverageLevel = CoverageLevel2.getInstance(locale);
             for (String path : cldrFile.fullIterable()) {
                 if (!path.contains("@count")) {
@@ -199,20 +199,19 @@ public class TestPathHeader extends TestFmwkPlus {
     }
 
     public void TestOptional() {
+        if (true) return;
         Map<PathHeader, String> sorted = new TreeMap<PathHeader, String>();
         XPathParts parts = new XPathParts();
         for (String locale : new String[] { "af" }) {
             sorted.clear();
-            CLDRFile cldrFile = info.getCldrFactory().make(locale, true);
+            CLDRFile cldrFile = info.getCLDRFile(locale, true);
             CoverageLevel2 coverageLevel = CoverageLevel2.getInstance(locale);
             for (String path : cldrFile.fullIterable()) {
                 // if (!path.contains("@count")) {
                 // continue;
                 // }
                 Level level = coverageLevel.getLevel(path);
-                boolean isDeprecated = supplemental.hasDeprecatedItem("ldml",
-                    parts.set(path));
-                if (isDeprecated) {
+                if (supplemental.isDeprecated(DtdType.ldml, path)) {
                     continue;
                 }
 
@@ -293,8 +292,7 @@ public class TestPathHeader extends TestFmwkPlus {
         verifyContains(PageId.C_Unknown, filePaths, "many", false);
 
         // check that Arabic does contain few and many
-        filePaths = pathHeaderFactory.pathsForFile(info.getCldrFactory().make(
-            "ar", true));
+        filePaths = pathHeaderFactory.pathsForFile(info.getCLDRFile("ar", true));
 
         verifyContains(PageId.Duration, filePaths, "few", true);
         verifyContains(PageId.C_NAmerica, filePaths, "many", true);
@@ -315,11 +313,8 @@ public class TestPathHeader extends TestFmwkPlus {
     public void TestCoverage() {
         Map<Row.R2<SectionId, PageId>, Counter<Level>> data = new TreeMap<Row.R2<SectionId, PageId>, Counter<Level>>();
         CLDRFile cldrFile = english;
-        XPathParts parts = new XPathParts();
         for (String path : cldrFile.fullIterable()) {
-            boolean deprecated = supplemental.hasDeprecatedItem("ldml",
-                parts.set(path));
-            if (deprecated) {
+            if (supplemental.isDeprecated(DtdType.ldml, path)) {
                 errln("Deprecated path in English: " + path);
                 continue;
             }
@@ -427,7 +422,7 @@ public class TestPathHeader extends TestFmwkPlus {
 
     public void TestMetazones() {
 
-        CLDRFile nativeFile = factory.make("en", true);
+        CLDRFile nativeFile = info.getEnglish();
         Set<PathHeader> pathHeaders = getPathHeaders(nativeFile);
         // String oldPage = "";
         String oldHeader = "";
@@ -487,7 +482,7 @@ public class TestPathHeader extends TestFmwkPlus {
     }
 
     public void TestUniqueness() {
-        CLDRFile nativeFile = factory.make("en", true);
+        CLDRFile nativeFile = info.getEnglish();
         Map<PathHeader, String> headerToPath = new HashMap<PathHeader, String>();
         Map<String, String> headerVisibleToPath = new HashMap<String, String>();
         for (String path : nativeFile.fullIterable()) {
@@ -513,7 +508,7 @@ public class TestPathHeader extends TestFmwkPlus {
     }
 
     public void TestStatus() {
-        CLDRFile nativeFile = factory.make("en", true);
+        CLDRFile nativeFile = info.getEnglish();
         PathStarrer starrer = new PathStarrer();
         EnumMap<SurveyToolStatus, Relation<String, String>> info2 = new EnumMap<SurveyToolStatus, Relation<String, String>>(
             SurveyToolStatus.class);
@@ -545,10 +540,6 @@ public class TestPathHeader extends TestFmwkPlus {
             // check against old
             SurveyToolStatus oldStatus = SurveyToolStatus.READ_WRITE;
 
-            if (CheckCLDR.skipShowingInSurvey.matcher(path).matches()) {
-                oldStatus = SurveyToolStatus.HIDE;
-            }
-
             if (tempSTS != oldStatus
                 && oldStatus != SurveyToolStatus.READ_WRITE
                 && !path.endsWith(APPEND_TIMEZONE_END)) {
@@ -560,11 +551,10 @@ public class TestPathHeader extends TestFmwkPlus {
             }
 
             // check against deprecated
-            boolean isDeprecated = supplemental.hasDeprecatedItem("ldml",
-                parts.set(path));
+            boolean isDeprecated = supplemental.isDeprecated(DtdType.ldml,path);
             if (isDeprecated != (surveyToolStatus == SurveyToolStatus.DEPRECATED)) {
                 if (!deprecatedStar.contains(starred)) {
-                    errln("Different from supplementalMetadata deprecated:\t"
+                    errln("Different from DtdData deprecated:\t"
                         + isDeprecated + "\t" + surveyToolStatus + "\t"
                         + path);
                     deprecatedStar.add(starred);
@@ -603,7 +593,7 @@ public class TestPathHeader extends TestFmwkPlus {
         Set<String> alreadySeen = new HashSet<String>(englishPaths);
 
         for (String locale : factory.getAvailable()) {
-            CLDRFile nativeFile = factory.make(locale, false);
+            CLDRFile nativeFile = info.getCLDRFile(locale, false);
             CoverageLevel2 coverageLevel2 = null;
             for (String path : nativeFile.fullIterable()) {
                 if (alreadySeen.contains(path) || path.contains("@count")) {
@@ -625,7 +615,7 @@ public class TestPathHeader extends TestFmwkPlus {
     public void TestPathDescriptionCompleteness() {
         PathDescription pathDescription = new PathDescription(supplemental,
             english, null, null, PathDescription.ErrorHandling.CONTINUE);
-        Matcher normal = Pattern.compile(
+        Matcher normal = PatternCache.get(
             "http://cldr.org/translation/[a-zA-Z0-9]").matcher("");
         Set<String> alreadySeen = new HashSet<String>();
         PathStarrer starrer = new PathStarrer();
@@ -729,7 +719,7 @@ public class TestPathHeader extends TestFmwkPlus {
 
     public void check(String localeID, boolean resolved,
         Map<String, PathHeader> uniqueness, Set<String> alreadySeen) {
-        CLDRFile nativeFile = factory.make(localeID, resolved);
+        CLDRFile nativeFile = info.getCLDRFile(localeID, resolved);
         int count = 0;
         for (String path : nativeFile) {
             if (alreadySeen.contains(path)) {
@@ -942,4 +932,36 @@ public class TestPathHeader extends TestFmwkPlus {
         }
     }
 
+    public void TestOrder() {
+        String[] paths = {
+            "//ldml/dates/calendars/calendar[@type=\"gregorian\"]/dayPeriods/dayPeriodContext[@type=\"format\"]/dayPeriodWidth[@type=\"narrow\"]/dayPeriod[@type=\"noon\"]",
+            "//ldml/dates/calendars/calendar[@type=\"gregorian\"]/dayPeriods/dayPeriodContext[@type=\"format\"]/dayPeriodWidth[@type=\"narrow\"]/dayPeriod[@type=\"afternoon1\"]",
+        };
+        PathHeader pathHeaderLast = null;
+        for (String path : paths) {
+            PathHeader pathHeader = pathHeaderFactory.fromPath(path);
+            if (pathHeaderLast != null) {
+                assertRelation("ordering", true, pathHeaderLast, LEQ, pathHeader);
+            }
+            pathHeaderLast = pathHeader;
+        }
+
+    }
+    
+    public void Test8414() {
+        PathDescription pathDescription = new PathDescription(supplemental,
+            english, null, null, PathDescription.ErrorHandling.CONTINUE);
+        
+        String prefix = "//ldml/dates/calendars/calendar[@type=\"gregorian\"]/dayPeriods/dayPeriodContext[@type=\"";
+        String suffix = "\"]/dayPeriodWidth[@type=\"wide\"]/dayPeriod[@type=\"morning1\"]";
+
+        final String path0 = prefix + "format" + suffix;
+        final String path1 = prefix + "stand-alone" + suffix;
+        String v0 = english.getStringValue(path0);
+        String v1 = english.getStringValue(path1);
+        String p0 = pathDescription.getDescription(path0, v0, null, null);
+        String p1 = pathDescription.getDescription(path1, v1, null, null);
+        assertTrue("Check pd for format", p0.contains("in the morning"));
+        assertTrue("Check pd for stand-alone", !p1.contains("in the morning"));
+    }
 }

@@ -31,13 +31,12 @@ import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.WinningChoice;
 import org.unicode.cldr.util.CLDRLocale;
 import org.unicode.cldr.util.CldrUtility;
-import org.unicode.cldr.util.DayPeriodInfo;
-import org.unicode.cldr.util.DayPeriodInfo.DayPeriod;
 import org.unicode.cldr.util.Iso639Data;
 import org.unicode.cldr.util.Iso639Data.Scope;
 import org.unicode.cldr.util.IsoCurrencyParser;
 import org.unicode.cldr.util.LanguageTagParser;
 import org.unicode.cldr.util.Level;
+import org.unicode.cldr.util.Organization;
 import org.unicode.cldr.util.Pair;
 import org.unicode.cldr.util.PluralRanges;
 import org.unicode.cldr.util.PreferredAndAllowedHour;
@@ -58,7 +57,6 @@ import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo.Count;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralType;
 import org.unicode.cldr.util.SupplementalDataInfo.PopulationData;
 import org.unicode.cldr.util.SupplementalDataInfo.SampleList;
-import org.unicode.cldr.util.VoteResolver.Organization;
 
 import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.dev.util.Relation;
@@ -66,6 +64,8 @@ import com.ibm.icu.impl.Row;
 import com.ibm.icu.impl.Row.R2;
 import com.ibm.icu.impl.Row.R3;
 import com.ibm.icu.impl.Utility;
+import com.ibm.icu.lang.UCharacter;
+import com.ibm.icu.lang.UCharacterEnums;
 import com.ibm.icu.lang.UScript;
 import com.ibm.icu.text.PluralRules;
 import com.ibm.icu.text.PluralRules.FixedDecimal;
@@ -143,7 +143,7 @@ public class TestSupplementalInfo extends TestFmwkPlus {
             localesToTest.add(locale);
         }
         Set<String> modernLocales = testInfo.getStandardCodes()
-            .getLocaleCoverageLocales(Organization.cldr.toString(),
+            .getLocaleCoverageLocales(Organization.cldr,
                 EnumSet.of(Level.MODERN));
 
         for (String locale : localesToTest) {
@@ -154,7 +154,7 @@ public class TestSupplementalInfo extends TestFmwkPlus {
                 if (!modernLocales.contains(locale)) {
                     logln("Missing plural ranges for " + locale);
                 } else {
-                    ignoreErrln("Missing plural ranges for " + locale);
+                    errOrLog(CoverageIssue.error, locale + "\tMissing plural ranges", "Cldrbug:7839", "Missing plural data for modern locales");
                 }
                 continue;
             }
@@ -166,8 +166,8 @@ public class TestSupplementalInfo extends TestFmwkPlus {
                     && !counts.contains(count)) {
                     assertTrue(
                         locale
-                            + "\t pluralRanges categories must be valid for locale:\t"
-                            + count + " must be in " + counts,
+                        + "\t pluralRanges categories must be valid for locale:\t"
+                        + count + " must be in " + counts,
                         !pluralRanges.isExplicitlySet(count));
                 }
                 for (Count end : Count.values()) {
@@ -180,7 +180,7 @@ public class TestSupplementalInfo extends TestFmwkPlus {
 
             // check empty range results
             if (found.isEmpty()) {
-                ignoreErrln("Empty range results for " + locale);
+                errOrLog(CoverageIssue.error, "Empty range results for " + locale, "Cldrbug:7839", "Missing plural data for modern locales");
             } else {
                 final SamplePatterns samplePatterns = prf
                     .getSamplePatterns(new ULocale(locale));
@@ -210,28 +210,17 @@ public class TestSupplementalInfo extends TestFmwkPlus {
                         minSample, maxSample);
                     Count explicitValue = pluralRanges.getExplicit(start, end);
                     if (needsValue && explicitValue == null) {
-                        ignoreErrln(locale
-                            + "\tNeeds value, but has none: "
-                            + PluralRanges.showRange(start, end,
-                                Count.other) + ", eg: " + minSample
-                            + "–" + maxSample);
+                        errOrLog(CoverageIssue.error, locale + "\tNeeds value, but has none: "
+                        + PluralRanges.showRange(start, end,
+                            Count.other) + ", eg: " + minSample
+                            + "–" + maxSample, "Cldrbug:7839", "Missing plural data for modern locales");
                     } else if (!needsValue && explicitValue != null) {
-                        ignoreErrln(locale
-                            + "\tDoesn't need value, but has one: "
-                            + PluralRanges.showRange(start, end,
-                                explicitValue));
+                        errOrLog(CoverageIssue.error, locale + "\tDoesn't need value, but has one: "
+                        + PluralRanges.showRange(start, end,
+                            explicitValue), "Cldrbug:7839", "Missing plural data for modern locales");
                     }
                 }
             }
-        }
-    }
-
-    public void ignoreErrln(String s) {
-        if (logKnownIssue("Cldrbug:7839",
-            "Missing plural data for modern locales")) {
-            logln(s);
-        } else {
-            errln(s);
         }
     }
 
@@ -257,16 +246,14 @@ public class TestSupplementalInfo extends TestFmwkPlus {
                 PluralInfo rules = SUPPLEMENTAL.getPlurals(
                     SupplementalDataInfo.PluralType.fromStandardType(type),
                     locale.toString());
+                if (rules.getCounts().size() == 1) {
+                    continue; // don't require rules for unary cases
+                }
                 for (Count count : rules.getCounts()) {
                     String sample = samplePatterns.get(type, count);
                     if (sample == null) {
-                        if (type == PluralRules.PluralType.ORDINAL
-                            && logKnownIssue("cldrbug:7075",
-                                "Missing ordinal minimal pairs")) {
-                            continue;
-                        }
-                        assertNotNull("Missing sample for " + locale + ", "
-                            + type + ", " + count, sample);
+                        errOrLog(CoverageIssue.error, locale + "\t" + type + " \tmissing samples for " + count, "cldrbug:7075",
+                            "Missing ordinal minimal pairs");
                     } else {
                         PluralRules pRules = rules.getPluralRules();
                         double unique = pRules.getUniqueKeywordValue(count
@@ -322,7 +309,7 @@ public class TestSupplementalInfo extends TestFmwkPlus {
                     }
                     assertFalse(
                         "Rule '" + rule + "' for " + Arrays.asList(locales)
-                            + " doesn't contain 'within'",
+                        + " doesn't contain 'within'",
                         rule.contains("within"));
                 }
             }
@@ -341,25 +328,25 @@ public class TestSupplementalInfo extends TestFmwkPlus {
             { "en", "other", "4", "1000-9999, 1000.0, 1000.1, 1000.2, …" },
             { "hr", "one", "1", "1, 0.1, 2.10, 1.1, …" },
             { "hr", "one", "2",
-                "21, 31, 41, 51, 61, 71, …, 10.1, 12.10, 11.1, …" },
+            "21, 31, 41, 51, 61, 71, …, 10.1, 12.10, 11.1, …" },
             { "hr", "one", "3",
-                "101, 121, 131, 141, 151, 161, …, 100.1, 102.10, 101.1, …" },
+            "101, 121, 131, 141, 151, 161, …, 100.1, 102.10, 101.1, …" },
             { "hr", "one", "4",
-                "1001, 1021, 1031, 1041, 1051, 1061, …, 1000.1, 1002.10, 1001.1, …" },
+            "1001, 1021, 1031, 1041, 1051, 1061, …, 1000.1, 1002.10, 1001.1, …" },
             { "hr", "few", "1", "2-4, 0.2, 0.3, 0.4, …" },
             { "hr", "few", "2",
-                "22-24, 32-34, 42-44, …, 10.2, 10.3, 10.4, …" },
+            "22-24, 32-34, 42-44, …, 10.2, 10.3, 10.4, …" },
             { "hr", "few", "3",
-                "102-104, 122-124, 132-134, …, 100.2, 100.3, 100.4, …" },
+            "102-104, 122-124, 132-134, …, 100.2, 100.3, 100.4, …" },
             { "hr", "few", "4",
-                "1002-1004, 1022-1024, 1032-1034, …, 1000.2, 1000.3, 1000.4, …" },
+            "1002-1004, 1022-1024, 1032-1034, …, 1000.2, 1000.3, 1000.4, …" },
             { "hr", "other", "1", "0, 5-9, 0.0, 0.5, 0.6, …" },
             { "hr", "other", "2",
-                "10-20, 25-30, 35-40, …, 10.0, 10.5, 10.6, …" },
+            "10-20, 25-30, 35-40, …, 10.0, 10.5, 10.6, …" },
             { "hr", "other", "3",
-                "100, 105-120, 125-130, 135-140, …, 100.0, 100.5, 100.6, …" },
+            "100, 105-120, 125-130, 135-140, …, 100.0, 100.5, 100.6, …" },
             { "hr", "other", "4",
-                "1000, 1005-1020, 1025-1030, 1035-1040, …, 1000.0, 1000.5, 1000.6, …" }, };
+            "1000, 1005-1020, 1025-1030, 1035-1040, …, 1000.0, 1000.5, 1000.6, …" }, };
         for (String[] row : tests) {
             PluralInfo plurals = SUPPLEMENTAL.getPlurals(row[0]);
             SampleList uset = plurals.getSamples9999(Count.valueOf(row[1]),
@@ -387,27 +374,27 @@ public class TestSupplementalInfo extends TestFmwkPlus {
             { "sv", "one", "0" }, // j is 1
             { "he", "two", "0" }, // j is 2
             { "ru", "one", "0,00,000,0000" }, // j mod 10 is 1 and j mod 100
-                                              // is not 11
+            // is not 11
             { "uk", "one", "0,00,000,0000" }, // j mod 10 is 1 and j mod 100
-                                              // is not 11
+            // is not 11
             { "bs", "one", "0,00,000,0000" }, // j mod 10 is 1 and j mod 100
-                                              // is not 11 or f mod 10 is
-                                              // 1 and f mod 100 is not 11
+            // is not 11 or f mod 10 is
+            // 1 and f mod 100 is not 11
             { "hr", "one", "0,00,000,0000" }, // j mod 10 is 1 and j mod 100
-                                              // is not 11 or f mod 10 is
-                                              // 1 and f mod 100 is not 11
+            // is not 11 or f mod 10 is
+            // 1 and f mod 100 is not 11
             { "sh", "one", "0,00,000,0000" }, // j mod 10 is 1 and j mod 100
-                                              // is not 11 or f mod 10 is
-                                              // 1 and f mod 100 is not 11
+            // is not 11 or f mod 10 is
+            // 1 and f mod 100 is not 11
             { "sr", "one", "0,00,000,0000" }, // j mod 10 is 1 and j mod 100
-                                              // is not 11 or f mod 10 is
-                                              // 1 and f mod 100 is not 11
+            // is not 11 or f mod 10 is
+            // 1 and f mod 100 is not 11
             { "mk", "one", "0,00,000,0000" }, // j mod 10 is 1 or f mod 10
-                                              // is 1
+            // is 1
             { "sl", "one", "0,000,0000" }, // j mod 100 is 1
             { "sl", "two", "0,000,0000" }, // j mod 100 is 2
             { "he", "many", "00,000,0000" }, // j not in 0..10 and j mod 10
-                                             // is 0
+            // is 0
             { "tzm", "one", "0,00" }, // n in 0..1 or n in 11..99
             { "gd", "one", "0,00" }, // n in 1,11
             { "gd", "two", "0,00" }, // n in 2,12
@@ -438,26 +425,26 @@ public class TestSupplementalInfo extends TestFmwkPlus {
             { "br", "many", "" }, // n is not 0 and n mod 1000000 is 0
             { "gv", "one", "0,00,000,0000" }, // n mod 10 is 1
             { "be", "one", "0,00,000,0000" }, // n mod 10 is 1 and n mod 100
-                                              // is not 11
+            // is not 11
             { "lv", "one", "0,00,000,0000" }, // n mod 10 is 1 and n mod 100
-                                              // is not 11 or v is 2 and f
-                                              // mod 10 is 1 and f mod 100
-                                              // is not 11 or v is not 2
-                                              // and f mod 10 is 1
+            // is not 11 or v is 2 and f
+            // mod 10 is 1 and f mod 100
+            // is not 11 or v is not 2
+            // and f mod 10 is 1
             { "br", "one", "0,00,000,0000" }, // n mod 10 is 1 and n mod 100
-                                              // not in 11,71,91
+            // not in 11,71,91
             { "lt", "one", "0,00,000,0000" }, // n mod 10 is 1 and n mod 100
-                                              // not in 11..19
+            // not in 11..19
             { "fil", "one", "0,00,000,0000" }, // v = 0 and i = 1,2,3 or v =
-                                               // 0 and i % 10 != 4,6,9 or
-                                               // v != 0 and f % 10 !=
-                                               // 4,6,9
+            // 0 and i % 10 != 4,6,9 or
+            // v != 0 and f % 10 !=
+            // 4,6,9
             { "tl", "one", "0,00,000,0000" }, // v = 0 and i = 1,2,3 or v =
-                                              // 0 and i % 10 != 4,6,9 or
-                                              // v != 0 and f % 10 !=
-                                              // 4,6,9
+            // 0 and i % 10 != 4,6,9 or
+            // v != 0 and f % 10 !=
+            // 4,6,9
             { "dsb", "one", "0,00,000,0000" }, // v = 0 and i % 100 = 1 or f
-                                               // % 100 = 1
+            // % 100 = 1
         };
         // parse out the exceptions
         Map<PluralInfo, Relation<Count, Integer>> exceptions = new HashMap<PluralInfo, Relation<Count, Integer>>();
@@ -529,7 +516,7 @@ public class TestSupplementalInfo extends TestFmwkPlus {
         }
         if (!ruleToExceptions.isEmpty()) {
             System.out
-                .println("To fix the above, review the following, then replace in TestDigitPluralCompleteness");
+            .println("To fix the above, review the following, then replace in TestDigitPluralCompleteness");
             for (Entry<String, String> entry : ruleToExceptions.entrySet()) {
                 System.out.println(entry.getValue() + "\t// " + entry.getKey());
             }
@@ -604,24 +591,24 @@ public class TestSupplementalInfo extends TestFmwkPlus {
                     .toString();
                 switch (s.size()) {
                 case 1: // ok if already maximized and strange script/country,
-                        // eg it_Arab_JA
+                    // eg it_Arab_JA
                     continue main;
                 case 2: // ok if adds default country/script, eg {en_Cyrl,
-                        // en_Cyrl_US} or {en_GB, en_Latn_GB}
+                    // en_Cyrl_US} or {en_GB, en_Latn_GB}
                     String first = ss.get(0);
                     if (first.equals(noScript) || first.equals(noRegion)) {
                         continue main;
                     }
                     break;
                 case 3: // ok if different script in different country, eg
-                        // {az_IR, az_Arab, az_Arab_IR}
+                    // {az_IR, az_Arab, az_Arab_IR}
                     if (noScript.equals(ss.get(0))
                         && noRegion.equals(ss.get(1))) {
                         continue main;
                     }
                     break;
                 case 4: // ok if all combinations, eg {en, en_US, en_Latn,
-                        // en_Latn_US}
+                    // en_Latn_US}
                     if (language.equals(ss.get(0))
                         && noScript.equals(ss.get(1))
                         && noRegion.equals(ss.get(2))) {
@@ -668,7 +655,7 @@ public class TestSupplementalInfo extends TestFmwkPlus {
                 if (defaultScript != null) {
                     continue;
                 }
-                CLDRFile cldrFile = testInfo.getCldrFactory().make(locale,
+                CLDRFile cldrFile = testInfo.getCLDRFile(locale,
                     false);
                 UnicodeSet set = cldrFile.getExemplarSet("",
                     WinningChoice.NORMAL);
@@ -918,7 +905,7 @@ public class TestSupplementalInfo extends TestFmwkPlus {
         Set<String> bcp47Regions = new LinkedHashSet<String>(
             bcp47RegionData.keySet());
         bcp47Regions.remove("ZZ"); // We don't care about ZZ since it is the
-                                   // unknown region...
+        // unknown region...
         for (Iterator<String> it = bcp47Regions.iterator(); it.hasNext();) {
             String region = it.next();
             Map<String, String> data = bcp47RegionData.get(region);
@@ -1235,8 +1222,8 @@ public class TestSupplementalInfo extends TestFmwkPlus {
                     currencyLastValid.put(currency, end);
                 }
                 if (start.compareTo(NOW) < 0 && end.compareTo(NOW) >= 0) { // Non-tender
-                                                                           // is
-                                                                           // OK...
+                    // is
+                    // OK...
                     modernCurrencyCodes.put(currency,
                         new Pair<String, CurrencyDateInfo>(territory,
                             dateInfo));
@@ -1305,12 +1292,12 @@ public class TestSupplementalInfo extends TestFmwkPlus {
                     errln("Has 'new' in name but used since "
                         + CurrencyDateInfo.formatDate(currencyFirstValid
                             .get(currency)) + "\t" + currency + "\t"
-                        + name + "\t" + data);
+                            + name + "\t" + data);
                 } else {
                     logln("Has 'new' in name but used since "
                         + CurrencyDateInfo.formatDate(currencyFirstValid
                             .get(currency)) + "\t" + currency + "\t"
-                        + name + "\t" + data);
+                            + name + "\t" + data);
                 }
             }
         }
@@ -1324,17 +1311,17 @@ public class TestSupplementalInfo extends TestFmwkPlus {
                 logln("Has 'new' in name but NOT used since "
                     + CurrencyDateInfo.formatDate(currencyLastValid
                         .get(currency)) + "\t" + currency + "\t" + name
-                    + "\t" + nonModernCurrencyCodes.getAll(currency));
+                        + "\t" + nonModernCurrencyCodes.getAll(currency));
             } else if (!oldMatcher.reset(name).find()
                 && !OK_TO_NOT_HAVE_OLD.contains(currency)) {
                 logln("Doesn't have 'old' or date range in name but NOT used since "
                     + CurrencyDateInfo.formatDate(currencyLastValid
                         .get(currency))
-                    + "\t"
-                    + currency
-                    + "\t"
-                    + name
-                    + "\t" + nonModernCurrencyCodes.getAll(currency));
+                        + "\t"
+                        + currency
+                        + "\t"
+                        + name
+                        + "\t" + nonModernCurrencyCodes.getAll(currency));
                 for (Pair<String, CurrencyDateInfo> pair : nonModernCurrencyCodes
                     .getAll(currency)) {
                     final String territory = pair.getFirst();
@@ -1400,41 +1387,6 @@ public class TestSupplementalInfo extends TestFmwkPlus {
         }
     }
 
-    public void TestDayPeriods() {
-        int count = 0;
-        for (String locale : SUPPLEMENTAL.getDayPeriodLocales()) {
-            DayPeriodInfo dayPeriod = SUPPLEMENTAL.getDayPeriods(locale);
-            logln(locale + "\t" + testInfo.getEnglish().getName(locale) + "\t"
-                + dayPeriod);
-            count += dayPeriod.getPeriodCount();
-        }
-        assertTrue("At least some day periods exist", count > 5);
-        CLDRFile file = testInfo.getCldrFactory().make("pl", true);
-
-        SupplementalDataInfo supplementalData = SupplementalDataInfo
-            .getInstance(file.getSupplementalDirectory());
-        DayPeriodInfo dayPeriods = supplementalData.getDayPeriods(file
-            .getLocaleID());
-        LinkedHashSet<DayPeriodInfo.DayPeriod> items = new LinkedHashSet<DayPeriod>(
-            dayPeriods.getPeriods());
-        String prefix = "//ldml/dates/calendars/calendar[@type=\"gregorian\"]/dayPeriods/dayPeriodContext[@type=\"format\"]/dayPeriodWidth[@type=\"wide\"]/dayPeriod[@type=\"";
-
-        for (DayPeriodInfo.DayPeriod dayPeriod : items) {
-            logln(prefix + dayPeriod + "\"]");
-        }
-
-        // Check that day periods are recognized.
-        assertEquals("night1", DayPeriodInfo.DayPeriod.night1,
-            dayPeriods.getDayPeriod(0));
-        assertEquals("night2", DayPeriodInfo.DayPeriod.night2,
-            dayPeriods.getDayPeriod(3 * 60 * 60 * 1000));
-        assertEquals("noon", DayPeriodInfo.DayPeriod.noon,
-            dayPeriods.getDayPeriod(12 * 60 * 60 * 1000));
-        assertEquals("evening1", DayPeriodInfo.DayPeriod.evening1,
-            dayPeriods.getDayPeriod((16 * 60 + 5) * 60 * 1000));
-        assertEquals("11pm = night1 ", DayPeriodInfo.DayPeriod.night1,
-            dayPeriods.getDayPeriod(23 * 60 * 60 * 1000));
-    }
 
     /**
      * Verify that we have a default script for every CLDR base language
@@ -1498,6 +1450,8 @@ public class TestSupplementalInfo extends TestFmwkPlus {
         }
     }
 
+    enum CoverageIssue {log, warn, error}
+
     public void TestPluralCompleteness() {
         // Set<String> cardinalLocales = new
         // TreeSet<String>(SUPPLEMENTAL.getPluralLocales(PluralType.cardinal));
@@ -1514,7 +1468,7 @@ public class TestSupplementalInfo extends TestFmwkPlus {
         // HashSet<ULocale>(overrideCardinals.keySet());
 
         Set<String> testLocales = STANDARD_CODES.getLocaleCoverageLocales(
-            "google", EnumSet.of(Level.MODERN, Level.MODERATE));
+            Organization.cldr, EnumSet.of(Level.MODERN));
         Set<String> allLocales = testInfo.getCldrFactory().getAvailable();
         LanguageTagParser ltp = new LanguageTagParser();
         for (String locale : allLocales) {
@@ -1527,7 +1481,14 @@ public class TestSupplementalInfo extends TestFmwkPlus {
             if (!ltp.getRegion().isEmpty() || !ltp.getScript().isEmpty()) {
                 continue;
             }
-            boolean needsCoverage = testLocales.contains(locale);
+            CoverageIssue needsCoverage = testLocales.contains(locale) 
+                ? CoverageIssue.error 
+                    : CoverageIssue.log;
+//            if (logKnownIssue("Cldrbug:8809", "Missing plural rules/samples be and ga locales")) {
+//                if (locale.equals("be") || locale.equals("ga")) {
+//                    needsCoverage = CoverageIssue.warn;
+//                }
+//            }
             ULocale ulocale = new ULocale(locale);
             PluralRulesFactory prf = PluralRulesFactory
                 .getInstance(TestAll.TestInfo.getInstance()
@@ -1537,8 +1498,7 @@ public class TestSupplementalInfo extends TestFmwkPlus {
                 PluralInfo pluralInfo = SUPPLEMENTAL.getPlurals(type, locale,
                     false);
                 if (pluralInfo == null) {
-                    errOrLog(needsCoverage, locale + ", missing plural " + type
-                        + " rules");
+                    errOrLog(needsCoverage, locale + "\t" + type + " \tmissing plural rules", "Cldrbug:7839", "Missing plural data for modern locales");
                     continue;
                 }
                 Set<Count> counts = pluralInfo.getCounts();
@@ -1563,32 +1523,41 @@ public class TestSupplementalInfo extends TestFmwkPlus {
                             + pattern);
                     }
                 }
-                if (!countsWithNoSamples.isEmpty()
-                    && (type == PluralType.cardinal || !logKnownIssue(
-                        "cldrbug:7075", "Missing ordinal minimal pairs"))) {
-                    errOrLog(needsCoverage, ulocale + "\t" + type
-                        + "\t missing samples: " + countsWithNoSamples);
+                if (!countsWithNoSamples.isEmpty()) {
+                    errOrLog(needsCoverage, ulocale + "\t" + type + "\t missing samples:\t" + countsWithNoSamples, 
+                        "cldrbug:7075", "Missing ordinal minimal pairs");
                 }
                 for (Entry<String, Set<Count>> entry : samplesToCounts
                     .keyValuesSet()) {
-                    if (entry.getValue().size() != 1
-                        && !logKnownIssue("cldrbug:7119",
-                            "Some duplicate minimal pairs")) {
-                        errOrLog(needsCoverage, ulocale + "\t" + type
-                            + "\t duplicate samples: " + entry.getValue()
-                            + " => «" + entry.getKey() + "»");
+                    if (entry.getValue().size() != 1) {
+                        errOrLog(needsCoverage, ulocale + "\t" + type + "\t duplicate samples: " + entry.getValue()
+                            + " => «" + entry.getKey() + "»", "cldrbug:7119", "Some duplicate minimal pairs");
                     }
                 }
             }
         }
     }
 
-    public void errOrLog(boolean causeError, String message) {
-        if (causeError) {
-            errln(message);
-        } else {
+    public void errOrLog(CoverageIssue causeError, String message, String logTicket, String logComment) {
+        switch (causeError) {
+        case error:
+            if (logTicket == null) {
+                errln(message);
+                break;
+            }
+            logKnownIssue(logTicket, logComment);
+            // fall through
+        case warn:
+            warnln(message);
+            break;
+        case log:
             logln(message);
+            break;
         }
+    }
+    
+    public void errOrLog(CoverageIssue causeError, String message) {
+        errOrLog(causeError, message, null, null);
     }
 
     public void TestNumberingSystemDigits() {
@@ -1622,7 +1591,32 @@ public class TestSupplementalInfo extends TestFmwkPlus {
             }
         }
     }
+    public void TestNumberingSystemDigitCompleteness() {
+        List<Integer> unicodeDigits = new ArrayList<Integer>();
+        for ( int cp = UCharacter.MIN_CODE_POINT ; cp <= UCharacter.MAX_CODE_POINT ; cp++ ) {
+            if (UCharacter.getType(cp) == UCharacterEnums.ECharacterCategory.DECIMAL_DIGIT_NUMBER) {
+                unicodeDigits.add(Integer.valueOf(cp));    
+            }
+        }
 
+        for (String ns : SUPPLEMENTAL.getNumericNumberingSystems()) {
+            String digits = SUPPLEMENTAL.getDigits(ns);
+            int ch;
+
+            for (int i = 0; i < digits.length(); i += Character.charCount(ch)) {
+                ch = digits.codePointAt(i);
+                unicodeDigits.remove(Integer.valueOf(ch));
+            }
+        }
+        
+        if (unicodeDigits.size() > 0) {
+            for (Integer i : unicodeDigits) {
+                errln("Unicode digit: "+UCharacter.getName(i)+" is not in any numbering system. Script = "
+                    +UScript.getShortName(UScript.getScript(i)));
+            }
+        }
+    }
+    
     public void TestMetazones() {
         Date goalMin = new Date(70, 0, 1);
         Date goalMax = new Date(300, 0, 2);

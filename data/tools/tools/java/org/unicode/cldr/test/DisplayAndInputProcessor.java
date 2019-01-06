@@ -21,6 +21,7 @@ import org.unicode.cldr.util.DateTimeCanonicalizer;
 import org.unicode.cldr.util.DateTimeCanonicalizer.DateTimePatternType;
 import org.unicode.cldr.util.ICUServiceBuilder;
 import org.unicode.cldr.util.MyanmarZawgyiConverter;
+import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.With;
 import org.unicode.cldr.util.XPathParts;
 
@@ -49,31 +50,32 @@ public class DisplayAndInputProcessor {
     public static final boolean DEBUG_DAIP = CldrUtility.getProperty("DEBUG_DAIP", false);
 
     public static final UnicodeSet RTL = new UnicodeSet("[[:Bidi_Class=Arabic_Letter:][:Bidi_Class=Right_To_Left:]]")
-        .freeze();
+    .freeze();
 
     public static final UnicodeSet TO_QUOTE = (UnicodeSet) new UnicodeSet(
         "[[:Cn:]" +
             "[:Default_Ignorable_Code_Point:]" +
             "[:patternwhitespace:]" +
             "[:Me:][:Mn:]]" // add non-spacing marks
-    ).freeze();
+        ).freeze();
 
     public static final Pattern NUMBER_FORMAT_XPATH = Pattern
         .compile("//ldml/numbers/.*Format\\[@type=\"standard\"]/pattern.*");
-    private static final Pattern APOSTROPHE_SKIP_PATHS = Pattern.compile("//ldml/("
+    private static final Pattern APOSTROPHE_SKIP_PATHS = PatternCache.get("//ldml/("
         + "characters/.*|"
         + "delimiters/.*|"
         + "dates/.+/(pattern|intervalFormatItem|dateFormatItem).*|"
         + "units/.+/unitPattern.*|"
         + "units/.+/durationUnitPattern.*|"
         + "numbers/symbols.*|"
+        + "numbers/miscPatterns.*|"
         + "numbers/(decimal|currency|percent|scientific)Formats.+/(decimal|currency|percent|scientific)Format.*)");
-    private static final Pattern INTERVAL_FORMAT_PATHS = Pattern.compile("//ldml/dates/.+/intervalFormatItem.*");
-    private static final Pattern NON_DECIMAL_PERIOD = Pattern.compile("(?<![0#'])\\.(?![0#'])");
-    private static final Pattern WHITESPACE_NO_NBSP_TO_NORMALIZE = Pattern.compile("\\s+"); // string of whitespace not
+   private static final Pattern INTERVAL_FORMAT_PATHS = PatternCache.get("//ldml/dates/.+/intervalFormatItem.*");
+    private static final Pattern NON_DECIMAL_PERIOD = PatternCache.get("(?<![0#'])\\.(?![0#'])");
+    private static final Pattern WHITESPACE_NO_NBSP_TO_NORMALIZE = PatternCache.get("\\s+"); // string of whitespace not
     // including NBSP, i.e. [
     // \t\n\r]+
-    private static final Pattern WHITESPACE_AND_NBSP_TO_NORMALIZE = Pattern.compile("[\\s\\u00A0]+"); // string of
+    private static final Pattern WHITESPACE_AND_NBSP_TO_NORMALIZE = PatternCache.get("[\\s\\u00A0]+"); // string of
     // whitespace
     // including NBSP,
     // i.e. [
@@ -242,7 +244,7 @@ public class DisplayAndInputProcessor {
                 } catch (IllegalArgumentException e) {
                     if (DEBUG_DAIP) System.err.println("Illegal pattern: " + value);
                 }
-                if (numericType != NumericType.CURRENCY) {
+                if (numericType != NumericType.CURRENCY && numericType != NumericType.CURRENCY_ABBREVIATED) {
                     value = value.replace("'", "");
                 }
             }
@@ -253,6 +255,8 @@ public class DisplayAndInputProcessor {
         }
         // Fix up hyphens, replacing with N-dash as appropriate
         if (INTERVAL_FORMAT_PATHS.matcher(path).matches()) {
+            value = normalizeIntervalHyphens(value);
+        } else {
             value = normalizeHyphens(value);
         }
         return value;
@@ -336,6 +340,9 @@ public class DisplayAndInputProcessor {
             if (numericType != NumericType.NOT_NUMERIC) {
                 if (numericType == NumericType.CURRENCY) {
                     value = value.replaceAll(" ", "\u00A0");
+                    if (numericType == NumericType.CURRENCY_ABBREVIATED) {
+                        value = value.replaceAll("0\\.0+", "0");
+                    }
                 } else {
                     value = value.replaceAll("([%\u00A4]) ", "$1\u00A0")
                         .replaceAll(" ([%\u00A4])", "\u00A0$1");
@@ -406,10 +413,14 @@ public class DisplayAndInputProcessor {
             if (!APOSTROPHE_SKIP_PATHS.matcher(path).matches()) {
                 value = normalizeApostrophes(value);
             }
+            
             // Fix up hyphens, replacing with N-dash as appropriate
             if (INTERVAL_FORMAT_PATHS.matcher(path).matches()) {
+                value = normalizeIntervalHyphens(value);
+            } else {
                 value = normalizeHyphens(value);
             }
+            
             return value;
         } catch (RuntimeException e) {
             if (internalException != null) {
@@ -492,7 +503,7 @@ public class DisplayAndInputProcessor {
         }
     }
 
-    private String normalizeHyphens(String value) {
+    private String normalizeIntervalHyphens(String value) {
         DateTimePatternGenerator.FormatParser fp = new DateTimePatternGenerator.FormatParser();
         fp.set(DateIntervalInfo.genPatternInfo(value, false).getFirstPart());
         List<Object> items = fp.getItems();
@@ -509,6 +520,21 @@ public class DisplayAndInputProcessor {
                     return sb.toString();
                 }
             }
+        }
+        return value;
+    }
+
+    private String normalizeHyphens(String value) {
+        int hyphenLocation = value.indexOf("-");
+        if (hyphenLocation > 0 && 
+            Character.isDigit(value.charAt(hyphenLocation-1)) &&
+            hyphenLocation < value.length()-1 &&
+            Character.isDigit(value.charAt(hyphenLocation+1))) {
+            StringBuilder sb = new StringBuilder();            
+            sb.append(value.substring(0, hyphenLocation));
+            sb.append("\u2013");
+            sb.append(value.substring(hyphenLocation + 1));
+            return sb.toString();
         }
         return value;
     }
@@ -558,7 +584,7 @@ public class DisplayAndInputProcessor {
             }
             if (convertedSaltillo &&
                 ((i > 0 && i < charArray.length - 1 && Character.isUpperCase(charArray[i - 1]) && Character.isUpperCase(charArray[i + 1])) ||
-                (i > 1 && Character.isUpperCase(charArray[i - 1]) && Character.isUpperCase(charArray[i - 2])))) {
+                    (i > 1 && Character.isUpperCase(charArray[i - 1]) && Character.isUpperCase(charArray[i - 2])))) {
                 c = '\uA78B'; // UPPER CASE SALTILLO
             }
             builder.append(c);
@@ -611,14 +637,14 @@ public class DisplayAndInputProcessor {
         return value2;
     }
 
-    private static Pattern UNNORMALIZED_MALAYALAM = Pattern.compile(
+    private static Pattern UNNORMALIZED_MALAYALAM = PatternCache.get(
         "(\u0D23|\u0D28|\u0D30|\u0D32|\u0D33|\u0D15)\u0D4D\u200D");
 
     private static Map<Character, Character> NORMALIZING_MAP =
         Builder.with(new HashMap<Character, Character>())
-            .put('\u0D23', '\u0D7A').put('\u0D28', '\u0D7B')
-            .put('\u0D30', '\u0D7C').put('\u0D32', '\u0D7D')
-            .put('\u0D33', '\u0D7E').put('\u0D15', '\u0D7F').get();
+        .put('\u0D23', '\u0D7A').put('\u0D28', '\u0D7B')
+        .put('\u0D30', '\u0D7C').put('\u0D32', '\u0D7D')
+        .put('\u0D33', '\u0D7E').put('\u0D15', '\u0D7F').get();
 
     /**
      * Normalizes the Malayalam characters in the specified input.
@@ -660,11 +686,11 @@ public class DisplayAndInputProcessor {
         return value;
     }
 
-    static Pattern REMOVE_QUOTE1 = Pattern.compile("(\\s)(\\\\[-\\}\\]\\&])()");
-    static Pattern REMOVE_QUOTE2 = Pattern.compile("(\\\\[\\-\\{\\[\\&])(\\s)"); // ([^\\])([\\-\\{\\[])(\\s)
+    static Pattern REMOVE_QUOTE1 = PatternCache.get("(\\s)(\\\\[-\\}\\]\\&])()");
+    static Pattern REMOVE_QUOTE2 = PatternCache.get("(\\\\[\\-\\{\\[\\&])(\\s)"); // ([^\\])([\\-\\{\\[])(\\s)
 
-    static Pattern NEEDS_QUOTE1 = Pattern.compile("(\\s|$)([-\\}\\]\\&])()");
-    static Pattern NEEDS_QUOTE2 = Pattern.compile("([^\\\\])([\\-\\{\\[\\&])(\\s)"); // ([^\\])([\\-\\{\\[])(\\s)
+    static Pattern NEEDS_QUOTE1 = PatternCache.get("(\\s|$)([-\\}\\]\\&])()");
+    static Pattern NEEDS_QUOTE2 = PatternCache.get("([^\\\\])([\\-\\{\\[\\&])(\\s)"); // ([^\\])([\\-\\{\\[])(\\s)
 
     public static String getCleanedUnicodeSet(UnicodeSet exemplar, PrettyPrinter prettyPrinter,
         ExemplarType exemplarType) {
@@ -721,8 +747,10 @@ public class DisplayAndInputProcessor {
      */
     public static String getCanonicalPattern(String inpattern, NumericType type, boolean isPOSIX) {
         // TODO fix later to properly handle quoted ;
+        
         DecimalFormat df = new DecimalFormat(inpattern);
-        if (type == NumericType.DECIMAL_ABBREVIATED) {
+        if (type == NumericType.DECIMAL_ABBREVIATED || type == NumericType.CURRENCY_ABBREVIATED
+            || CldrUtility.INHERITANCE_MARKER.equals(inpattern)) {
             return inpattern; // TODO fix when ICU bug is fixed
             // df.setMaximumFractionDigits(df.getMinimumFractionDigits());
             // df.setMaximumIntegerDigits(Math.max(1, df.getMinimumIntegerDigits()));
@@ -745,6 +773,7 @@ public class DisplayAndInputProcessor {
      */
     public enum NumericType {
         CURRENCY(new int[] { 1, 2, 2 }, new int[] { 1, 2, 2 }),
+        CURRENCY_ABBREVIATED(),
         DECIMAL(new int[] { 1, 0, 3 }, new int[] { 1, 0, 6 }),
         DECIMAL_ABBREVIATED(),
         PERCENT(new int[] { 1, 0, 0 }, new int[] { 1, 0, 0 }),
@@ -776,8 +805,14 @@ public class DisplayAndInputProcessor {
                     return CURRENCY;
                 } else {
                     NumericType type = NumericType.valueOf(matcher.group(2).toUpperCase());
-                    if (type == DECIMAL && xpath.contains("=\"1000")) {
-                        type = DECIMAL_ABBREVIATED;
+                    if (xpath.contains("=\"1000")) {
+                        if (type == DECIMAL) {
+                            type = DECIMAL_ABBREVIATED;
+                        } else if (type == CURRENCY) {
+                            type = CURRENCY_ABBREVIATED;
+                        } else {
+                            throw new IllegalArgumentException("Internal Error");
+                        }
                     }
                     return type;
                 }

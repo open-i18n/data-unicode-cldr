@@ -12,7 +12,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.unicode.cldr.tool.ConvertLanguageData.InverseComparator;
 import org.unicode.cldr.unittest.TestAll.TestInfo;
@@ -25,8 +24,10 @@ import org.unicode.cldr.util.Counter;
 import org.unicode.cldr.util.DelegatingIterator;
 import org.unicode.cldr.util.EscapingUtilities;
 import org.unicode.cldr.util.Factory;
+import org.unicode.cldr.util.Organization;
 import org.unicode.cldr.util.PathHeader;
 import org.unicode.cldr.util.PathHeader.PageId;
+import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.PluralSamples;
 import org.unicode.cldr.util.SpecialLocales;
 import org.unicode.cldr.util.StringId;
@@ -36,16 +37,14 @@ import org.unicode.cldr.util.VettingViewer.VoteStatus;
 import org.unicode.cldr.util.VoteResolver;
 import org.unicode.cldr.util.VoteResolver.CandidateInfo;
 import org.unicode.cldr.util.VoteResolver.Level;
-import org.unicode.cldr.util.VoteResolver.Organization;
 import org.unicode.cldr.util.VoteResolver.Status;
 import org.unicode.cldr.util.VoteResolver.VoterInfo;
 
-import com.ibm.icu.dev.test.TestFmwk;
 import com.ibm.icu.text.Collator;
 import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.util.ULocale;
 
-public class TestUtilities extends TestFmwk {
+public class TestUtilities extends TestFmwkPlus {
     private static final UnicodeSet DIGITS = new UnicodeSet("[0-9]");
     static TestInfo testInfo = TestInfo.getInstance();
     private static final SupplementalDataInfo SUPPLEMENTAL_DATA_INFO = testInfo
@@ -128,12 +127,12 @@ public class TestUtilities extends TestFmwk {
     }
 
     public void TestUrlEscape() {
-        Matcher byte1 = Pattern.compile("%[A-Za-z0-9]{2}").matcher("");
-        Matcher byte2 = Pattern.compile("%[A-Za-z0-9]{2}%[A-Za-z0-9]{2}")
+        Matcher byte1 = PatternCache.get("%[A-Za-z0-9]{2}").matcher("");
+        Matcher byte2 = PatternCache.get("%[A-Za-z0-9]{2}%[A-Za-z0-9]{2}")
             .matcher("");
-        Matcher byte3 = Pattern.compile(
+        Matcher byte3 = PatternCache.get(
             "%[A-Za-z0-9]{2}%[A-Za-z0-9]{2}%[A-Za-z0-9]{2}").matcher("");
-        Matcher byte4 = Pattern.compile(
+        Matcher byte4 = PatternCache.get(
             "%[A-Za-z0-9]{2}%[A-Za-z0-9]{2}%[A-Za-z0-9]{2}%[A-Za-z0-9]{2}")
             .matcher("");
         for (int i = 1; i <= 0x10FFFF; i = i * 3 / 2 + 1) {
@@ -811,6 +810,7 @@ public class TestUtilities extends TestFmwk {
 
         resolver.setLocale("de");
         resolver.setLastRelease("foo", oldStatus);
+        resolver.setTrunk("foo", oldStatus);
         resolver.add("zebra", toVoterId("googleV"));
         resolver.add("apple", toVoterId("appleV"));
 
@@ -822,6 +822,7 @@ public class TestUtilities extends TestFmwk {
         resolver.clear();
         resolver.setLocale("de");
         resolver.setLastRelease("foo", Status.approved);
+        resolver.setTrunk("foo", Status.approved);
         resolver.add("zebra", toVoterId("googleV"));
         resolver.add("apple", toVoterId("appleV"));
         counts = resolver.getResolvedVoteCounts();
@@ -831,6 +832,7 @@ public class TestUtilities extends TestFmwk {
         resolver.clear();
         resolver.setLocale("de");
         resolver.setLastRelease("foo", Status.approved);
+        resolver.setTrunk("foo", Status.approved);
         resolver.add("zebra", toVoterId("googleS"));
         counts = resolver.getResolvedVoteCounts();
         logln(counts.toString());
@@ -845,7 +847,7 @@ public class TestUtilities extends TestFmwk {
         PathHeader ph = null;
         if (xpath != null) {
             sb.append(" XPath: " + xpath);
-            ph = PathHeader.getFactory(TestInfo.getInstance().getEnglish())
+            ph = PathHeader.getFactory(testInfo.getEnglish())
                 .fromPath(xpath);
         }
         resolver.setLocale(CLDRLocale.getInstance(locale), ph);

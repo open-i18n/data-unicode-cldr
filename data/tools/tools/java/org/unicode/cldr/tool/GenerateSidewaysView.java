@@ -24,7 +24,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.unicode.cldr.tool.ShowData.DataShower;
 import org.unicode.cldr.util.CLDRFile;
@@ -39,6 +38,7 @@ import org.unicode.cldr.util.LocaleIDParser;
 import org.unicode.cldr.util.PathHeader;
 import org.unicode.cldr.util.PathHeader.PageId;
 import org.unicode.cldr.util.PathHeader.SurveyToolStatus;
+import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.StringId;
 import org.unicode.cldr.util.XPathParts;
 import org.xml.sax.SAXException;
@@ -159,7 +159,7 @@ public class GenerateSidewaysView {
         ToolUtilities.registerExtraTransliterators();
         UOption.parseArgs(args, options);
 
-        pathMatcher = options[PATH].value == null ? null : Pattern.compile(options[PATH].value).matcher("");
+        pathMatcher = options[PATH].value == null ? null : PatternCache.get(options[PATH].value).matcher("");
 
         Factory cldrFactory = Factory.make(options[SOURCEDIR].value, options[MATCH].value);
         english = cldrFactory.make("en", true);
@@ -773,8 +773,6 @@ public class GenerateSidewaysView {
             }
             continue;
         }
-        // <a href="patterns.labels.html">Labels</a>
-        // file:///Users/markdavis/Documents/indigo/cldr-tmp/charts/by_type/misc.exemplarCharacters.html
         return out.append("</td></tr>" + System.lineSeparator() + "</table>").toString();
     }
 
@@ -789,7 +787,7 @@ public class GenerateSidewaysView {
             // "<style type='text/css'>" + Utility.LINE_SEPARATOR +
             // "h1 {margin-bottom:1em}" + Utility.LINE_SEPARATOR +
             // "</style>" + Utility.LINE_SEPARATOR,
-            headerAndFooter, null);
+            headerAndFooter, null, false);
         out.println(headerAndFooter[0]);
         return out;
     }

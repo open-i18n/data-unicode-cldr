@@ -12,7 +12,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.unicode.cldr.util.CLDRFile.DraftStatus;
 
@@ -431,7 +430,7 @@ public class SimpleFactory extends Factory {
         //
         this.sourceDirectories = sourceDirectories;
         this.minimalDraftStatus = minimalDraftStatus;
-        Matcher m = Pattern.compile(matchString).matcher("");
+        Matcher m = PatternCache.get(matchString).matcher("");
         this.localeList = CLDRFile.getMatchingXMLFiles(sourceDirectories, m);
         File goodSuppDir = null;
         for (File sourceDirectoryPossibility : sourceDirectories) {

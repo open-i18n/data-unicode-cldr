@@ -91,8 +91,7 @@ public class RBNFWriter {
         out.println("<!DOCTYPE ldml SYSTEM \"../../common/dtd/ldml.dtd\">");
         out.println("<ldml>");
         out.println("    <identity>");
-        out.println("        <version number=\"$Revision: 8786 $\"/>");
-        out.println("        <generation date=\"$Date: 2013-05-28 08:16:59 -0500 (Tue, 28 May 2013) $\"/>");
+        out.println("        <version number=\"$Revision: 11913 $\"/>");
         out.println("        <language type=\"" + language + "\"/>");
 
         if (pieces.length > 1)

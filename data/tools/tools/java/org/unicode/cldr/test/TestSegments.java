@@ -49,7 +49,7 @@ public class TestSegments {
     private static final boolean SHOW_RULE_LIST = false;
     private static final int monkeyLimit = 1000, monkeyStringCount = 10;
 
-//    private static final Matcher flagItems = Pattern.compile(
+//    private static final Matcher flagItems = PatternCache.get(
 //        "[$](BK|CR|LF|CM|NL|WJ|ZW|GL|SP|CB)").matcher("");
 
     /**
@@ -65,8 +65,7 @@ public class TestSegments {
         Log.println("<!DOCTYPE ldml SYSTEM \"../../common/dtd/ldml.dtd\">");
         Log.println("<ldml>");
         Log.println("\t<identity>");
-        Log.println("\t\t<version number=\"$Revision: 9561 $\"/>");
-        Log.println("\t\t<generation date=\"$Date: 2013-12-16 14:24:11 -0600 (Mon, 16 Dec 2013) $\"/>");
+        Log.println("\t\t<version number=\"$Revision: 11913 $\"/>");
         Log.println("\t\t<language type=\"root\"/>");
         Log.println("\t</identity>");
         Log.println("\t<segmentations>");
@@ -105,7 +104,7 @@ public class TestSegments {
             System.out.println();
             System.out.println("Testing");
             Segmenter rl = rb.make();
-            Collection<Object> values = rl.getSamples().getAvailableValues();
+            Collection<String> values = rl.getSamples().getAvailableValues();
             System.out.println("Value Partition: " + values);
 
             if (false) debugRule(rb);

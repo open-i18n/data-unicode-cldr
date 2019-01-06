@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE keyboard SYSTEM "../dtd/ldmlKeyboard.dtd">
 <keyboard locale="lt-t-k0-osx-var">
-	<version platform="10.9" number="$Revision: 9915 $"/>
-	<generation date="$Date: 2014-03-10 13:04:20 -0500 (Mon, 10 Mar 2014) $"/>
+	<version platform="10.9" number="$Revision: 11914 $"/>
 	<names>
 		<name value="Lithuanian – Standard"/>
 	</names>

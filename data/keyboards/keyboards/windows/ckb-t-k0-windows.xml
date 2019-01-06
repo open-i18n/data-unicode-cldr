@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE keyboard SYSTEM "../dtd/ldmlKeyboard.dtd">
 <keyboard locale="ckb-t-k0-windows">
-	<version platform="8" number="$Revision: 9913 $"/>
-	<generation date="$Date: 2014-03-10 12:56:36 -0500 (Mon, 10 Mar 2014) $"/>
+	<version platform="8" number="$Revision: 11914 $"/>
 	<names>
 		<name value="Central Kurdish"/>
 	</names>

@@ -420,6 +420,10 @@ public abstract class PluralRulesFactory extends PluralRules.Factory {
         { "az", "other", "Alış-veriş kartınızda {0} X var. Almaq istəyirsiniz?" },
         { "ast", "one", "{0} día" },
         { "ast", "other", "{0} díes" },
+        { "be", "one", "з {0} кнігі за {0} дзень"},
+        { "be", "few", "з {0} кніг за {0} дні"},
+        { "be", "many", "з {0} кніг за {0} дзён"},
+        { "be", "other", "з {0} кніги за {0} дні"},
         { "bg", "one", "{0} ден" },
         { "bg", "other", "{0} дена" },
         { "bn", "one", "সসে {0}টি আপেল খেল" },
@@ -519,8 +523,8 @@ public abstract class PluralRulesFactory extends PluralRules.Factory {
         { "mk", "other", "{0} дена" },
         { "ml", "one", "{0} വ്യക്തി" },
         { "ml", "other", "{0} വ്യക്തികൾ" },
-        { "mn", "one", "Таны картанд {0} X байна. Та энийг худалдаж авмаар байна уу?" },
-        { "mn", "other", "Таны картанд {0} Х байна. Та эднийг худалдаж авмаар байна уу?" },
+        { "mn", "one", "Картанд {0} Х байна. Үүнийг авах уу?" },
+        { "mn", "other", "Картанд {0} Х байна. Тэднийг авах уу?" },
         { "mr", "one", "{0} घर" },
         { "mr", "other", "{0} घरे" },
         { "ms", "other", "{0} hari" },
@@ -596,6 +600,12 @@ public abstract class PluralRulesFactory extends PluralRules.Factory {
         { "en", "other", "{0} days" }, // added from spreadsheet   
         { "zu", "one", "{0} usuku" }, // added from spreadsheet
         { "zu", "other", "{0} izinsuku" }, // added from spreadsheet
+        
+        { "ga", "one", "{0} ci, {0} gath" },
+        { "ga", "two", "{0} gi, {0} gath" },
+        { "ga", "few", "{0} chi, {0} cath" },
+        { "ga", "many", "{0} chi, {0} chath" },
+        { "ga", "other", "{0} ci, {0} cath" },
     };
 
     static String[][] EXTRA_SAMPLE_SOURCE = {
@@ -682,6 +692,8 @@ public abstract class PluralRulesFactory extends PluralRules.Factory {
         { "az", "{0}-cı sağ döngəni seçin.", "many" },
         { "az", "{0}-cü sağ döngəni seçin.", "few" },
         { "az", "{0}-cu sağ döngəni seçin.", "other" },
+        { "be", "{0}-і дом злева", "few" },
+        { "be", "{0}-ы дом злева", "other" },
         { "bg", "Завийте надясно по {0}-ата пресечка.", "1" },
         { "bn", "ডান দিকে {0}ম বাঁকটি নিন।", "1" },
         { "bn", "ডান দিকে {0}য় বাঁকটি নিন।", "2" },
@@ -691,7 +703,7 @@ public abstract class PluralRulesFactory extends PluralRules.Factory {
         { "bs", "Skrenite na {0}. križanju desno.", "1" },
         { "ca", "Agafa el {0}r a la dreta.", "1" },
         { "ca", "Agafa el {0}n a la dreta.", "2" },
-        { "ca", "Agafa el {0}rt a la dreta.", "4" },
+        { "ca", "Agafa el {0}t a la dreta.", "4" },
         { "ca", "Agafa el {0}è a la dreta.", "5" },
         { "cs", "Na {0}. křižovatce odbočte vpravo.", "1" },
         { "da", "Tag den {0}. vej til højre.", "1" },
@@ -710,6 +722,8 @@ public abstract class PluralRulesFactory extends PluralRules.Factory {
         { "fil", "Lumiko sa ika-{0} kanan.", "2" },
         { "fr", "Prenez la {0}re à droite.", "1" },
         { "fr", "Prenez la {0}e à droite.", "2" },
+        { "ga", "Glac an {0}ú chasadh ar dheis.", "1" },
+        { "ga", "Glac an {0}ú casadh ar dheis.", "2" },
         { "gl", "Colle a {0}.ª curva á dereita.", "1" },
         { "gu", "જમણી બાજુએ {0}લો વળાંક લો.", "1" },
         { "gu", "જમણી બાજુએ {0}જો વળાંક લો.", "2" },

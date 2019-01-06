@@ -1,6 +1,10 @@
 package org.unicode.cldr.util;
 
+import java.util.Set;
+
 import org.unicode.cldr.tool.ToolConstants;
+
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Constant paths (moved here from CldrUtility).
@@ -21,11 +25,13 @@ public class CLDRPaths {
     // <CLDR>
     public static final String COMMON_DIRECTORY = CldrUtility.getPath(BASE_DIRECTORY, "common/");
     public static final String COLLATION_DIRECTORY = CldrUtility.getPath(COMMON_DIRECTORY, "collation/");
+    public static final String CASING_DIRECTORY = CldrUtility.getPath(COMMON_DIRECTORY, "casing/");
     public static final String MAIN_DIRECTORY = CldrUtility.getProperty("CLDR_MAIN",
         CldrUtility.getPath(CLDRPaths.COMMON_DIRECTORY, "main"));
     public static final String SEED_DIRECTORY = CldrUtility.getProperty("CLDR_SEED",
         CldrUtility.getPath(CLDRPaths.COMMON_DIRECTORY, "../seed/main"));
     public static final String SEED_COLLATION_DIRECTORY = CldrUtility.getPath(SEED_DIRECTORY, "../collation/");
+    public static final String SEED_CASING_DIRECTORY = CldrUtility.getPath(SEED_DIRECTORY, "../casing/");
     public static final String EXEMPLARS_DIRECTORY = CldrUtility.getPath(CLDRPaths.BASE_DIRECTORY, "exemplars/main/");
     public static final String RBNF_DIRECTORY = CldrUtility.getPath(CLDRPaths.COMMON_DIRECTORY, "rbnf/");
     public static final String TMP_DIRECTORY = CldrUtility.getPath(CldrUtility.getProperty("CLDR_TMP_DIR",
@@ -38,11 +44,15 @@ public class CLDRPaths {
     public static final String EXTERNAL_DIRECTORY = CldrUtility.getPath(CldrUtility.getProperty("UCD_DIR", BASE_DIRECTORY) + "/../");
     public static final String ARCHIVE_DIRECTORY = CldrUtility.getPath(CldrUtility.getProperty("ARCHIVE", BASE_DIRECTORY));
     public static final String LAST_DIRECTORY = ARCHIVE_DIRECTORY + "cldr-" +
-        ToolConstants.LAST_CHART_VERSION +
+        ToolConstants.PREVIOUS_CHART_VERSION +
         "/";
     public static final String GEN_DIRECTORY = CldrUtility.getPath(CldrUtility.getProperty("CLDR_GEN_DIR",
         CldrUtility.getPath(EXTERNAL_DIRECTORY, "Generated/cldr/")));
+    public static final String DATA_DIRECTORY = CldrUtility.getPath(CldrUtility.getProperty("CLDR_EXT_DATA_DIR",
+        CldrUtility.getPath(GEN_DIRECTORY, "../../Data/")));
+    public static final String UCD_DATA_DIRECTORY = CldrUtility.getPath(EXTERNAL_DIRECTORY + "unicodetools/draft/");
     public static final String ICU_DATA_DIR = CldrUtility.getPath(CldrUtility.getProperty("ICU_DATA_DIR", null)); // eg
+    public static final String BIRTH_DATA_DIR = CldrUtility.getPath(BASE_DIRECTORY, "tools/java/org/unicode/cldr/util/data/births/");
     /**
      * @deprecated please use XMLFile and CLDRFILE getSupplementalDirectory()
      * @see DEFAULT_SUPPLEMENTAL_DIRECTORY
@@ -64,4 +74,14 @@ public class CLDRPaths {
     public static final String UTIL_DATA_DIR = FileReaders.getRelativeFileName(
         CldrUtility.class, "data/");
 
+    public static final Set<String> LDML_DIRECTORIES = ImmutableSet.of(
+        "main", 
+        "annotations",
+        "casing", 
+        "collation",
+        "rbnf", 
+        "segments",
+        "subdivisions"
+        );
+    public static final String UNICODE_VERSION = "8.0.0";
 }

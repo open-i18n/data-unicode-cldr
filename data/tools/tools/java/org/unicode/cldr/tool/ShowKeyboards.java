@@ -14,7 +14,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.unicode.cldr.draft.Keyboard;
 import org.unicode.cldr.draft.Keyboard.Gesture;
@@ -37,6 +36,7 @@ import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.FileCopier;
 import org.unicode.cldr.util.LanguageTagCanonicalizer;
 import org.unicode.cldr.util.Log;
+import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.SupplementalDataInfo;
 
 import com.ibm.icu.dev.util.BagFormatter;
@@ -98,7 +98,7 @@ public class ShowKeyboards {
 
         FileCopier.copy(ShowKeyboards.class, "keyboards-index.html", keyboardChartDir, "index.html");
 
-        Matcher idMatcher = Pattern.compile(idPattern).matcher("");
+        Matcher idMatcher = PatternCache.get(idPattern).matcher("");
         try {
             Log.setLog(CLDRPaths.LOG_DIRECTORY + "keyboard-log.txt");
         } catch (IOException e) {
@@ -167,7 +167,7 @@ public class ShowKeyboards {
                 "Characters → Keyboards",
                 ToolConstants.CHART_DISPLAY_VERSION,
                 "",
-                headerAndFooter, null);
+                headerAndFooter, null, false);
             out.println(headerAndFooter[0] + ABOUT_KEYBOARD_CHARTS);
 
             // printTop("Characters → Keyboards", out);
@@ -181,7 +181,7 @@ public class ShowKeyboards {
                 "Keyboards → Characters",
                 ToolConstants.CHART_DISPLAY_VERSION,
                 "",
-                headerAndFooter, null);
+                headerAndFooter, null, false);
             out.println(headerAndFooter[0]
                 + ABOUT_KEYBOARD_CHARTS);
             // printTop("Keyboards → Characters", out);
@@ -230,7 +230,7 @@ public class ShowKeyboards {
             "Keyboard Layout Index",
             ToolConstants.CHART_DISPLAY_VERSION,
             "",
-            headerAndFooter, "Keyboard Index");
+            headerAndFooter, "Keyboard Index", false);
         index
             .println(headerAndFooter[0] + ABOUT_KEYBOARD_CHARTS);
         // printTop("Keyboard Layout Index", index);
@@ -257,7 +257,7 @@ public class ShowKeyboards {
                 "Layouts: " + localeName + " (" + locale + ")",
                 ToolConstants.CHART_DISPLAY_VERSION,
                 "",
-                headerAndFooter, null);
+                headerAndFooter, null, false);
             out.println(headerAndFooter[0] + ABOUT_KEYBOARD_CHARTS);
             // printTop("Layouts: " + localeName + " (" + locale + ")", out);
             Set<R3<String, String, String>> keyboards = localeKeyboards.getValue();

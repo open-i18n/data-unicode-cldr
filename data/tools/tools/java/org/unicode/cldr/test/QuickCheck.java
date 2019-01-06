@@ -13,22 +13,22 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.unicode.cldr.tool.ToolConfig;
 import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
-import org.unicode.cldr.util.CLDRFile.DtdType;
 import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.DateTimeFormats;
+import org.unicode.cldr.util.DtdType;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.InputStreamFactory;
 import org.unicode.cldr.util.LanguageTagParser;
 import org.unicode.cldr.util.Level;
+import org.unicode.cldr.util.Organization;
+import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.PrettyPath;
 import org.unicode.cldr.util.StandardCodes;
-import org.unicode.cldr.util.VoteResolver.Organization;
 import org.unicode.cldr.util.XMLFileReader;
 import org.unicode.cldr.util.XPathParts;
 import org.xml.sax.ErrorHandler;
@@ -169,7 +169,7 @@ public class QuickCheck {
 //        }
     }
 
-    static Matcher skipPaths = Pattern.compile("/identity" + "|/alias" + "|\\[@alt=\"proposed").matcher("");
+    static Matcher skipPaths = PatternCache.get("/identity" + "|/alias" + "|\\[@alt=\"proposed").matcher("");
 
     private static boolean pretty;
 
@@ -271,22 +271,6 @@ public class QuickCheck {
         System.out.format("Nondistinguishing Elements: %s" + CldrUtility.LINE_SEPARATOR, nonDistinguishing);
         System.out.format("Skipped %s" + CldrUtility.LINE_SEPARATOR, skipAttributes);
 
-        if (verbose) {
-            System.out.println(CldrUtility.LINE_SEPARATOR + "Paths to skip in Survey Tool");
-            for (String path : pathToLocale.keySet()) {
-                if (CheckCLDR.skipShowingInSurvey.matcher(path).matches()) {
-                    System.out.println("Skipping: " + path);
-                }
-            }
-
-            System.out.println(CldrUtility.LINE_SEPARATOR + "Paths to force zoom in Survey Tool");
-            for (String path : pathToLocale.keySet()) {
-                if (CheckCLDR.FORCE_ZOOMED_EDIT.matcher(path).matches()) {
-                    System.out.println("Forced Zoom Edit: " + path);
-                }
-            }
-        }
-
         if (pretty) {
             if (showInfo) {
                 System.out.println(CldrUtility.LINE_SEPARATOR + "Showing Path to PrettyPath mapping"
@@ -339,7 +323,7 @@ public class QuickCheck {
         int total = 0;
         int mismatch = 0;
         LanguageTagParser ltp = new LanguageTagParser();
-        Iterable<String> locales = StandardCodes.make().getLocaleCoverageLocales(Organization.cldr.name(), EnumSet.of(Level.MODERN));
+        Iterable<String> locales = StandardCodes.make().getLocaleCoverageLocales(Organization.cldr, EnumSet.of(Level.MODERN));
         for (String locale : locales) {
             if (!ltp.set(locale).getRegion().isEmpty()) {
                 continue;

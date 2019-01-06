@@ -2,14 +2,12 @@ package org.unicode.cldr.unittest;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.unicode.cldr.unittest.TestAll.TestInfo;
-import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CldrUtility;
-import org.unicode.cldr.util.FindDTDOrder;
+import org.unicode.cldr.util.DtdData;
 
 import com.ibm.icu.dev.test.TestFmwk;
 import com.ibm.icu.impl.Differ;
@@ -23,43 +21,15 @@ public class TestMetadata extends TestFmwk {
 
     // disable, since we no longer have 3 different sources.
     public void oldTestOrdering() {
-        FindDTDOrder order = FindDTDOrder.getInstance();
-
         logln("Make sure that all and only blocking elements are serialElements.");
-
-        // First Elements
-
-        List<String> dtdElementOrder = order.getElementOrder();
-        List<String> cldrFileElementOrder = CLDRFile.getElementOrder();
-        checkEquals("LDML element order", "CLDRFile.elementOrdering",
-            cldrFileElementOrder, "DTD", dtdElementOrder);
-
-        List<String> metadataElementOrder = testInfo.getSupplementalDataInfo()
-            .getElementOrder();
-        checkEquals("Metadata element order",
-            "supplementalMetaData/.../elementOrder", metadataElementOrder,
-            "DTD", dtdElementOrder);
 
         // Then Serial Order
         Set<String> cldrFileSerialElements = new TreeSet<String>(
-            CLDRFile.getSerialElements());
+            DtdData.getSerialElements());
         Set<String> metadataSerialElements = new TreeSet<String>(testInfo
             .getSupplementalDataInfo().getSerialElements());
         checkEquals("Serial Order", "CLDRFile.orderedElements",
             metadataSerialElements, "cldrFile", cldrFileSerialElements);
-
-        // Then Attributes
-        List<String> metadataAttributeOrder = testInfo
-            .getSupplementalDataInfo().getAttributeOrder();
-        List<String> cldrFileAttributeOrder = CLDRFile.getAttributeOrder();
-        List<String> dtdAttributeOrder = order.getAttributeOrder();
-
-        checkEquals("Attribute orderings", "CLDRFile.attributeOrdering",
-            cldrFileAttributeOrder, "DTD", dtdAttributeOrder);
-
-        checkEquals("Attribute orderings",
-            "supplementalMetadata/../attributeOrder",
-            metadataAttributeOrder, "DTD", dtdAttributeOrder);
     }
 
     private void checkEquals(String title, String firstTitle,

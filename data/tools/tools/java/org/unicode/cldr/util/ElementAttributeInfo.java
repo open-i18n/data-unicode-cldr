@@ -11,9 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.unicode.cldr.util.CLDRFile.DtdType;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -86,7 +84,7 @@ public class ElementAttributeInfo {
     // }
     // }
 
-    private ElementAttributeInfo(String filename, CLDRFile.DtdType type) throws IOException {
+    private ElementAttributeInfo(String filename, DtdType type) throws IOException {
         // StringBufferInputStream fis = new StringBufferInputStream(
         // "<!DOCTYPE ldml SYSTEM \"http://www.unicode.org/cldr/dtd/1.2/ldml.dtd\"><ldml></ldml>");
         FileInputStream fis = new FileInputStream(filename);
@@ -135,7 +133,7 @@ public class ElementAttributeInfo {
         private static final boolean SHOW = false;
         private ElementAttributeInfo myData;
 
-        Matcher idmatcher = Pattern.compile("[a-zA-Z0-9][-_a-zA-Z0-9]*").matcher("");
+        Matcher idmatcher = PatternCache.get("[a-zA-Z0-9][-_a-zA-Z0-9]*").matcher("");
 
         public MyDeclHandler(ElementAttributeInfo indata) {
             myData = indata;

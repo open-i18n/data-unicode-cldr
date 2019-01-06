@@ -174,10 +174,6 @@ public class PathHeader implements Comparable<PathHeader> {
         Hebrew(SectionId.DateTime),
         Indian(SectionId.DateTime),
         Islamic(SectionId.DateTime),
-        Islamic_Civil(SectionId.DateTime, "Islamic-Civil"),
-        Islamic_Rgsa(SectionId.DateTime, "Islamic-Rgsa"),
-        Islamic_Tbla(SectionId.DateTime, "Islamic-Tbla"),
-        Islamic_Umalqura(SectionId.DateTime, "Islamic-Umalqura"),
         Japanese(SectionId.DateTime),
         Persian(SectionId.DateTime),
         ROC(SectionId.DateTime),
@@ -200,6 +196,7 @@ public class PathHeader implements Comparable<PathHeader> {
         Symbols(SectionId.Numbers),
         Number_Formatting_Patterns(SectionId.Numbers, "Number Formatting Patterns"),
         Compact_Decimal_Formatting(SectionId.Numbers, "Compact Decimal Formatting"),
+        Compact_Decimal_Formatting_Other(SectionId.Numbers, "Compact Decimal Formatting (Other Numbering Systems)"),
         Measurement_Systems(SectionId.Units, "Measurement Systems"),
         Duration(SectionId.Units),
         Length(SectionId.Units),
@@ -211,6 +208,7 @@ public class PathHeader implements Comparable<PathHeader> {
         ElectricalFrequency(SectionId.Units, "Electrical and Frequency"),
         Weather(SectionId.Units),
         Digital(SectionId.Units),
+        Coordinates(SectionId.Units),
         OtherUnits(SectionId.Units, "Other Units"),
         CompoundUnits(SectionId.Units, "Compound Units"),
         Displaying_Lists(SectionId.Misc, "Displaying Lists"),
@@ -287,8 +285,8 @@ public class PathHeader implements Comparable<PathHeader> {
     private final int codeOrder;
     private final SubstringOrder codeSuborder;
 
-    static final Pattern SEMI = Pattern.compile("\\s*;\\s*");
-    static final Matcher ALT_MATCHER = Pattern.compile(
+    static final Pattern SEMI = PatternCache.get("\\s*;\\s*");
+    static final Matcher ALT_MATCHER = PatternCache.get(
         "\\[@alt=\"([^\"]*+)\"]")
         .matcher("");
 
@@ -659,7 +657,7 @@ public class PathHeader implements Comparable<PathHeader> {
                         fix(data.header, data.headerOrder),
                         order, // only valid after call to fix. TODO, make
                         // this cleaner
-                        fix(data.code + (alt == null ? "" : "-" + alt), data.codeOrder),
+                        fix(data.code + (alt == null ? "" : ("-" + alt)), data.codeOrder),
                         order, // only valid after call to fix
                         suborder,
                         data.status,
@@ -975,6 +973,10 @@ public class PathHeader implements Comparable<PathHeader> {
         static List<String> days = Arrays.asList("sun", "mon",
             "tue", "wed", "thu",
             "fri", "sat");
+        static List<String> unitOrder = DtdData.unitOrder.getOrder();
+        static final MapComparator<String> dayPeriods = new MapComparator<String>().add(
+            "am", "pm", "midnight", "noon",
+            "morning1", "morning2", "afternoon1", "afternoon2", "evening1", "evening2", "night1", "night2").freeze();
         // static Map<String, String> likelySubtags =
         // supplementalDataInfo.getLikelySubtags();
         static LikelySubtags likelySubtags = new LikelySubtags();
@@ -1041,6 +1043,18 @@ public class PathHeader implements Comparable<PathHeader> {
                     return source;
                 }
             });
+            functionMap.put("dayPeriod", new Transform<String, String>() {
+                public String transform(String source) {
+                    try {
+                        order = dayPeriods.getNumericOrder(source);
+                    } catch (Exception e) {
+                        // if an old item is tried, like "evening", this will fail. 
+                        // so that old data still works, hack this.
+                        order = Math.abs(source.hashCode() << 16);
+                    }
+                    return source;
+                }
+            });
             functionMap.put("calendar", new Transform<String, String>() {
                 Map<String, String> fixNames = Builder.with(new HashMap<String, String>())
                     .put("islamicc", "Islamic Civil")
@@ -1080,6 +1094,8 @@ public class PathHeader implements Comparable<PathHeader> {
                     final List<String> calendarFormatSubtypes = Arrays.asList(
                         "date",
                         "time",
+                        "time12",
+                        "time24",
                         "dateTime",
                         "fallback");
 
@@ -1090,6 +1106,8 @@ public class PathHeader implements Comparable<PathHeader> {
                         .put("none", "")
                         .put("date", "Date Formats")
                         .put("time", "Time Formats")
+                        .put("time12", "12 Hour Time Formats")
+                        .put("time24", "24 Hour Time Formats")
                         .put("dateTime", "Date & Time Combination Formats")
                         .freeze();
 
@@ -1151,6 +1169,18 @@ public class PathHeader implements Comparable<PathHeader> {
                     return info.idUsage.name;
                 }
             });
+            functionMap.put("categoryFromKey", new Transform<String, String>() {
+                Map<String, String> fixNames = Builder.with(new HashMap<String, String>())
+                    .put("lb", "Line Break")
+                    .put("hc", "Hour Cycle")
+                    .put("ms", "Measurement System")
+                    .put("cf", "Currency Format")
+                    .freeze();
+                public String transform(String source) {
+                    String fixedName = fixNames.get(source);
+                    return fixedName != null ? fixedName : source;
+                }
+            });
             functionMap.put("languageSection", new Transform<String, String>() {
                 char[] languageRangeStartPoints = { 'A', 'E', 'K', 'O', 'T' };
                 char[] languageRangeEndPoints = { 'D', 'J', 'N', 'S', 'Z' };
@@ -1207,7 +1237,7 @@ public class PathHeader implements Comparable<PathHeader> {
                     }
                 });
             functionMap.put("territorySection", new Transform<String, String>() {
-                final Set<String> specialRegions = new HashSet<String>(Arrays.asList("QO", "ZZ"));
+                final Set<String> specialRegions = new HashSet<String>(Arrays.asList("EU", "QO", "ZZ"));
 
                 public String transform(String source0) {
                     String theTerritory = source0;
@@ -1318,6 +1348,13 @@ public class PathHeader implements Comparable<PathHeader> {
                     return result == null ? source : result;
                 }
             });
+            functionMap.put("unit", new Transform<String, String>() {
+                public String transform(String source) {
+                    int m = unitOrder.indexOf(source);
+                    order = m;
+                    return source.substring(source.indexOf('-')+1);
+                }
+            });
 
             functionMap.put("numericSort", new Transform<String, String>() {
                 // Probably only works well for small values, like -5 through +4.
@@ -1350,7 +1387,7 @@ public class PathHeader implements Comparable<PathHeader> {
                 { "CSD", "RS" },
                 { "CSK", "CZ" },
                 { "DDM", "DE" },
-                { "EUR", "EU" },
+                { "EUR", "ZZ" },
                 { "RHD", "ZW" },
                 { "SUR", "RU" },
                 { "TPE", "TL" },
@@ -1361,7 +1398,7 @@ public class PathHeader implements Comparable<PathHeader> {
                 { "XBC", "ZZ" },
                 { "XBD", "ZZ" },
                 { "XDR", "ZZ" },
-                { "XEU", "EU" },
+                { "XEU", "ZZ" },
                 { "XFO", "ZZ" },
                 { "XFU", "ZZ" },
                 { "XPD", "ZZ" },
@@ -1466,16 +1503,16 @@ public class PathHeader implements Comparable<PathHeader> {
                     if ("latn".equals(source0)) {
                         return "";
                     }
-                    String displayName = englishFile.getStringValue("//ldml/localeDisplayNames/types/type[@type=\""
-                        + source0 +
-                        "\"][@key=\"numbers\"]");
+                    String displayName = englishFile.getStringValue("//ldml/localeDisplayNames/types/type[@key=\"numbers\"][@type=\""
+                        + source0 + "\"]");
                     return "using " + (displayName == null ? source0 : displayName + " (" + source0 + ")");
                 }
             });
-            // //ldml/localeDisplayNames/types/type[@type="%A"][@key="%A"]
+
             functionMap.put("datefield", new Transform<String, String>() {
                 private final String[] datefield = {
                     "era",
+                    "century", "century-short", "century-narrow",
                     "year", "year-short", "year-narrow",
                     "quarter", "quarter-short", "quarter-narrow",
                     "month", "month-short", "month-narrow",
@@ -1485,6 +1522,9 @@ public class PathHeader implements Comparable<PathHeader> {
                     "hour", "hour-short", "hour-narrow",
                     "minute", "minute-short", "minute-narrow",
                     "second", "second-short", "second-narrow",
+                    "millisecond", "millisecond-short", "millisecond-narrow",
+                    "microsecond", "microsecond-short", "microsecond-narrow",
+                    "nanosecond", "nanosecond-short", "nanosecond-narrow",
 
                 };
 

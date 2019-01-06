@@ -26,7 +26,7 @@
         <property name="CLDR_DIR" value="../../common/.."/>
         <property name="CLDR_JAR" value="${CLDR_TOOLS}/cldr.jar"/>
         <property file="${CLDR_TOOLS}/cldr-tools.properties"/>
-        <property name="JVM_OPTIONS" value="-DCLDR_DIR=${CLDR_DIR} -DDEBUG=false -Dverbose=false"/>
+        <property name="JVM_OPTIONS" value="-DCLDR_DIR=${CLDR_DIR} -DDEBUG=false -Dverbose=false -Xmx4G"/>
         <property name="JVM_EXTRA_OPTIONS" value="${env.JVM_EXTRA_OPTIONS}"/>
         <property name="jvm_options" value="${JVM_OPTIONS}"/>
 
@@ -117,6 +117,13 @@
         </antcall>
     </target>
 
+    <target name="unittestExhaustive" description="Run the standard CLDR test suite in exhaustive mode" depends="init,build">
+        <antcall target="_runUnitTests">
+            <param name="rununittest.arg" value="-n -e10"/>
+            <param name="rununittest.jvmarg" value="${jvm_options}"/>
+        </antcall>
+    </target>
+
    <target name="_runUnitTests" depends="init,build">
         <echo message="JVM argument:   ${rununittest.jvmarg} -DCLDR_ENVIRONMENT=UNITTEST  -Djava.awt.headless=true"/>
         <echo message="Test argument:   ${rununittest.arg}"/>
@@ -128,7 +135,7 @@
 
     <target name="datacheck" description="Run the standard data tests" depends="init,build">
         <antcall target="_dataCheck">
-            <param name="datacheck.arg" value="-e -z final_testing"/>
+            <param name="datacheck.arg" value="-S common,seed -e -z final_testing"/>
             <param name="datacheck.jvmarg" value="${jvm_options}"/>
         </antcall>
     </target>

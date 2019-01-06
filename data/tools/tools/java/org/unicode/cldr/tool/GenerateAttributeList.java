@@ -19,12 +19,13 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
+import org.unicode.cldr.util.DtdData;
 import org.unicode.cldr.util.Factory;
+import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.StandardCodes;
 import org.unicode.cldr.util.XPathParts;
 import org.xml.sax.Attributes;
@@ -186,7 +187,7 @@ public class GenerateAttributeList {
         if (attribute_valueSet == null) element_attribute_valueSet.put(element, attribute_valueSet = new TreeMap<String, Set<String>[]>());
         Set<String>[] valueSets = attribute_valueSet.get(attribute);
         if (valueSets == null) {
-            Comparator<String> c = CLDRFile.getAttributeValueComparator(element, attribute);
+            Comparator<String> c = DtdData.getAttributeValueComparator(element, attribute);
             valueSets = new Set[2];
             valueSets[0] = new TreeSet<String>(c);
             valueSets[1] = new TreeSet<String>();
@@ -276,7 +277,7 @@ public class GenerateAttributeList {
 
     class MyDeclHandler implements DeclHandler {
 
-        Matcher idmatcher = Pattern.compile("[a-zA-Z][-_a-zA-Z0-9]*").matcher("");
+        Matcher idmatcher = PatternCache.get("[a-zA-Z][-_a-zA-Z0-9]*").matcher("");
 
         public void attributeDecl(String eName, String aName, String type, String mode, String value)
             throws SAXException {

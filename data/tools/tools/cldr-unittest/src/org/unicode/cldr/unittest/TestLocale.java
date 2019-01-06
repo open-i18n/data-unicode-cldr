@@ -2,6 +2,7 @@ package org.unicode.cldr.unittest;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -12,8 +13,9 @@ import java.util.Set;
 import javax.xml.xpath.XPathException;
 
 import org.unicode.cldr.test.ExampleGenerator;
-import org.unicode.cldr.tool.LikelySubtags;
 import org.unicode.cldr.unittest.TestAll.TestInfo;
+import org.unicode.cldr.util.AttributeValueValidity;
+import org.unicode.cldr.util.AttributeValueValidity.MatcherPattern;
 import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRPaths;
@@ -37,9 +39,9 @@ public class TestLocale extends TestFmwkPlus {
     }
 
     static Set<Type> ALLOWED_LANGUAGE_TYPES = EnumSet.of(Type.Ancient,
-        Type.Living, Type.Constructed, Type.Historical, Type.Extinct);
+        Type.Living, Type.Constructed, Type.Historical, Type.Extinct, Type.Special);
     static Set<Scope> ALLOWED_LANGUAGE_SCOPES = EnumSet.of(Scope.Individual,
-        Scope.Macrolanguage); // , Special, Collection, PrivateUse, Unknown
+        Scope.Macrolanguage, Scope.Special); // , Special, Collection, PrivateUse, Unknown
     static Set<String> ALLOWED_SCRIPTS = testInfo.getStandardCodes()
         .getGoodAvailableCodes(CodeType.script);
     static Set<String> ALLOWED_REGIONS = testInfo.getStandardCodes()
@@ -51,18 +53,12 @@ public class TestLocale extends TestFmwkPlus {
     static String XPATH_ALIAS_STRING = "//alias";
 
     public void TestLanguageRegions() {
-        if (logKnownIssue("Cldrbug:7834",
-            "Language tags need to be canonicalized")) {
-            return;
-        }
-        LikelySubtags ls = new LikelySubtags();
-        Set<String> missingLanguageRegion = new LinkedHashSet();
-        Set<String> extraLanguageScript = new LinkedHashSet();
+        Set<String> missingLanguageRegion = new LinkedHashSet<String>();
+        Set<String> knownMultiScriptLanguages = new HashSet<String>(Arrays.asList("az","bs","pa","shi","sr","vai","uz","zh"));
         Set<String> available = testInfo.getCldrFactory().getAvailable();
         LanguageTagParser ltp = new LanguageTagParser();
         Set<String> defaultContents = testInfo.getSupplementalDataInfo()
             .getDefaultContentLocales();
-        SupplementalDataInfo sdi = testInfo.getSupplementalDataInfo();
         for (String locale : available) {
             String base = ltp.set(locale).getLanguage();
             String script = ltp.getScript();
@@ -72,15 +68,19 @@ public class TestLocale extends TestFmwkPlus {
             }
             ltp.setRegion("");
             String baseScript = ltp.toString();
-            assertFalse("Should NOT have " + locale,
-                defaultContents.contains(baseScript));
-
+            if (!knownMultiScriptLanguages.contains(base)) {
+                assertFalse("Should NOT have " + locale,
+                    defaultContents.contains(baseScript));
+            }           
             if (region.isEmpty()) {
                 continue;
             }
             ltp.setScript("");
             ltp.setRegion(region);
             String baseRegion = ltp.toString();
+            if (knownMultiScriptLanguages.contains(base)) {
+                continue;
+            }
             if (!missingLanguageRegion.contains(baseRegion)
                 && !assertTrue("Should have " + baseRegion,
                     available.contains(baseRegion))) {
@@ -163,8 +163,11 @@ public class TestLocale extends TestFmwkPlus {
         for (File file : CLDRConfig.getInstance().getAllCLDRFilesEndingWith(
             ".xml")) {
             String parent = file.getParent();
-            if (parent.contains("transform") || parent.contains("bcp47")
-                || parent.contains("supplemental")) {
+            if (parent.contains("transform") 
+                || parent.contains("bcp47")
+                || parent.contains("supplemental")
+                || parent.contains("validity")
+                ) {
                 continue;
             }
             String localeName = file.getName();
@@ -227,16 +230,20 @@ public class TestLocale extends TestFmwkPlus {
         }
     }
 
+    final MatcherPattern SCRIPT_NON_UNICODE = AttributeValueValidity.getMatcherPattern("$scriptNonUnicode");
     public void checkScript(String file, String script) {
         if (!script.isEmpty()) {
+            if (!ALLOWED_SCRIPTS.contains(script) && SCRIPT_NON_UNICODE.matches(script, null)) {
+                logKnownIssue("NEED TICKET", "contains non-Unicode script");
+                return;
+            }
             assertRelation("Script ok? " + script + " in " + file, true,
                 ALLOWED_SCRIPTS, TestFmwkPlus.CONTAINS, script);
         }
     }
 
     public void checkLanguage(String file, String language) {
-        if (!language.equals("und") && !language.equals("root")
-            && !language.equals("zxx") && !language.equals("mul")) {
+        if (!language.equals("root")) {
             Scope scope = Iso639Data.getScope(language);
             if (assertRelation("Language ok? " + language + " in " + file,
                 true, ALLOWED_LANGUAGE_SCOPES, TestFmwkPlus.CONTAINS, scope)) {
@@ -348,7 +355,7 @@ public class TestLocale extends TestFmwkPlus {
                 "Anglish [abc] (foo [jkl])", null },
             { "key", "co", "sort (mno)", "en_foobar@co=FOO",
                 "Anglish [abc] (foo [jkl], sort [mno]=FOO)", null },
-            { "type|key", "FII|co", "sortfii (mno)", "en_foobar@co=FII",
+            { "key|type", "co|FII", "sortfii (mno)", "en_foobar@co=FII",
                 "Anglish [abc] (foo [jkl], sortfii [mno])", null }, };
         // load up a dummy source
         SimpleXMLSource dxs = new SimpleXMLSource("xx");
@@ -406,7 +413,7 @@ public class TestLocale extends TestFmwkPlus {
             .getEnglish().getName("zh-US"));
         assertEquals("Locale name", "Chinese (Arabic, United States)", testInfo
             .getEnglish().getName("zh-Arab-US"));
-        CLDRFile japanese = testInfo.getCldrFactory().make("ja", true);
+        CLDRFile japanese = testInfo.getCLDRFile("ja", true);
         assertEquals("Locale name", "中国語", japanese.getName("zh"));
         assertEquals("Locale name", "中国語 (アメリカ合衆国)", japanese.getName("zh-US"));
         assertEquals("Locale name", "中国語 (アラビア文字\u3001アメリカ合衆国)",

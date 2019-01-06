@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -68,10 +67,7 @@ public class ShowData {
     };
 
     public static String dateFooter() {
-        return "<!-- SVN: $" + // break these apart to prevent SVN replacement in code
-            "Date$, $" + // break these apart to prevent SVN replacement in code
-            "Revision: 4538 $ -->" + System.lineSeparator() +
-            "<p>Generation: " + CldrUtility.isoFormat(new java.util.Date()) + "</p>" +
+        return "<p>Generation: " + CldrUtility.isoFormatDateOnly(new java.util.Date()) + "</p>" +
             System.lineSeparator();
     }
 
@@ -109,7 +105,7 @@ public class ShowData {
             english = (CLDRFile) cldrFactory.make("en", true);
             String lastSourceDir = options[LAST_DIR].value; // Utility.COMMON_DIRECTORY
 
-            Level requiredCoverage = Level.valueOf(options[COVERAGE].value.toUpperCase(Locale.ENGLISH)); // Utility.COMMON_DIRECTORY
+            Level requiredCoverage = Level.fromString(options[COVERAGE].toString()); // Utility.COMMON_DIRECTORY
 
             if (options[GET_SCRIPTS].doesOccur) {
                 getScripts();
@@ -236,7 +232,7 @@ public class ShowData {
                         + "document.write('.xx {display:none}');" + System.lineSeparator()
                         + "document.write('</style>');" + System.lineSeparator() + "}" + System.lineSeparator()
                         + "</script>",
-                    headerAndFooter, locale.equals("root") ? "Main Charts Index" : null);
+                    headerAndFooter, locale.equals("root") ? "Main Charts Index" : null, false);
                 pw.println(headerAndFooter[0]);
                 showLinks(pw, locale);
                 showChildren(pw, locale);
@@ -366,7 +362,7 @@ public class ShowData {
                 "Locale Data Summary for ALL-CHANGED",
                 ToolConstants.CHART_DISPLAY_VERSION,
                 "",
-                headerAndFooter, null);
+                headerAndFooter, null, false);
             pw.println(headerAndFooter[0]);
             pw.println("<table border=\"1\" cellpadding=\"2\" cellspacing=\"0\">");
             pw.println("<tr>" +
@@ -687,7 +683,7 @@ public class ShowData {
     // ULocale.ENGLISH);
 
     static public void getChartTemplate(String title, String version,
-        String header, String[] headerAndFooter, String indexTitle) throws IOException {
+        String header, String[] headerAndFooter, String indexTitle, boolean showDate) throws IOException {
         if (version == null) {
             version = ToolConstants.CHART_DISPLAY_VERSION;
         }
@@ -698,7 +694,7 @@ public class ShowData {
             .add("%index%", "index.html")
             .add("%header%", header)
             .add("%version%", version)
-            .add("%date%", CldrUtility.isoFormat(new Date()));
+            .add("%date%", CldrUtility.isoFormatDateOnly(new Date()));
         if (indexTitle != null) {
             langTag
             .add("%index-title%", indexTitle)

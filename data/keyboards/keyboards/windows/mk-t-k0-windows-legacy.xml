@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE keyboard SYSTEM "../dtd/ldmlKeyboard.dtd">
 <keyboard locale="mk-t-k0-windows-legacy">
-	<version platform="8" number="$Revision: 9673 $"/>
-	<generation date="$Date: 2014-01-24 17:27:04 -0600 (Fri, 24 Jan 2014) $"/>
+	<version platform="8" number="$Revision: 11914 $"/>
 	<names>
 		<name value="Macedonian (FYROM)"/>
 	</names>

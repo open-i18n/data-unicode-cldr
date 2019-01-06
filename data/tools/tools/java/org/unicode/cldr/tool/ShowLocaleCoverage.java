@@ -16,13 +16,11 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.unicode.cldr.tool.Option.Options;
 import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.DraftStatus;
-import org.unicode.cldr.util.CLDRFile.DtdType;
 import org.unicode.cldr.util.CLDRLocale;
 import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CLDRURLS;
@@ -31,18 +29,20 @@ import org.unicode.cldr.util.CoreCoverageInfo;
 import org.unicode.cldr.util.CoreCoverageInfo.CoreItems;
 import org.unicode.cldr.util.Counter;
 import org.unicode.cldr.util.Counter2;
+import org.unicode.cldr.util.DtdType;
 import org.unicode.cldr.util.LanguageTagCanonicalizer;
 import org.unicode.cldr.util.LanguageTagParser;
 import org.unicode.cldr.util.Level;
+import org.unicode.cldr.util.Organization;
 import org.unicode.cldr.util.PathHeader;
 import org.unicode.cldr.util.PathHeader.Factory;
+import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.RegexLookup;
 import org.unicode.cldr.util.SimpleFactory;
 import org.unicode.cldr.util.StandardCodes;
 import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.VettingViewer;
 import org.unicode.cldr.util.VettingViewer.MissingStatus;
-import org.unicode.cldr.util.VoteResolver.Organization;
 
 import com.google.common.collect.Ordering;
 import com.ibm.icu.dev.util.BagFormatter;
@@ -52,6 +52,7 @@ import com.ibm.icu.lang.UCharacter;
 
 public class ShowLocaleCoverage {
     private static final boolean DEBUG = false;
+    private static final char DEBUG_FILTER = 0; // use letter to only load locales starting with that letter
 
     private static final String LATEST = ToolConstants.CHART_VERSION;
     private static final double CORE_SIZE = (double) (CoreItems.values().length - CoreItems.ONLY_RECOMMENDED.size());
@@ -106,11 +107,11 @@ public class ShowLocaleCoverage {
     public static void main(String[] args) throws IOException {
         myOptions.parse(MyOptions.filter, args, true);
 
-        Matcher matcher = Pattern.compile(MyOptions.filter.option.getValue()).matcher("");
+        Matcher matcher = PatternCache.get(MyOptions.filter.option.getValue()).matcher("");
 
         if (MyOptions.growth.option.doesOccur()) {
             try (PrintWriter out 
-                = BagFormatter.openUTF8Writer(MyOptions.targetDir.option.getValue(), 
+                = BagFormatter.openUTF8Writer(CLDRPaths.GEN_DIRECTORY + "coverage/", 
                     "showLocaleGrowth.txt")) {
                 doGrowth(matcher, out);
                 return;
@@ -167,11 +168,25 @@ public class ShowLocaleCoverage {
             COMMON_LOCALES = factory.getAvailableLanguages();
         }
     }
-
+    
     private static void doGrowth(Matcher matcher, PrintWriter out) {
         TreeMap<String, List<Double>> growthData = new TreeMap<>(Ordering.natural().reverse()); // sort by version, descending
+        if (DEBUG) {
+            for (String dir : new File(CLDRPaths.ARCHIVE_DIRECTORY).list()) {
+                if (!dir.startsWith("cldr")) {
+                    continue;
+                }
+                String version = getNormalizedVersion(dir);
+                org.unicode.cldr.util.Factory newFactory = org.unicode.cldr.util.Factory.make(
+                    CLDRPaths.ARCHIVE_DIRECTORY + "/" + dir + "/common/main/", ".*");
+                System.out.println("Reading: " + version);
+                Map<String, FoundAndTotal> currentData = addGrowth(newFactory, matcher);
+                System.out.println("Read: " + version + "\t" + currentData);
+                break;
+            }
+        }
         Map<String, FoundAndTotal> latestData = addGrowth(factory, matcher);
-        addCompletionList(LATEST, getCompletion(latestData, latestData), growthData);
+        addCompletionList(versionToYear.get(LATEST), getCompletion(latestData, latestData), growthData);
         if (DEBUG) System.out.println(latestData);
         //System.out.println(growthData);
         for (String dir : new File(CLDRPaths.ARCHIVE_DIRECTORY).list()) {
@@ -179,13 +194,17 @@ public class ShowLocaleCoverage {
                 continue;
             }
             String version = getNormalizedVersion(dir);
+            if (version == null) {
+                continue;
+            }
 //            if (version.compareTo("12") < 0) {
 //                continue;
 //            }
             org.unicode.cldr.util.Factory newFactory = org.unicode.cldr.util.Factory.make(
                 CLDRPaths.ARCHIVE_DIRECTORY + "/" + dir + "/common/main/", ".*");
+            System.out.println("Reading: " + version);
             Map<String, FoundAndTotal> currentData = addGrowth(newFactory, matcher);
-            if (DEBUG) System.out.println(version + "\t" + currentData);
+            System.out.println("Read: " + version + "\t" + currentData);
             Counter2<String> completionData = getCompletion(latestData, currentData);
             //System.out.println(version + "\t" + completionData);
             addCompletionList(version, completionData, growthData);
@@ -204,6 +223,28 @@ public class ShowLocaleCoverage {
         }
     }
 
+    static final Map<String,String> versionToYear = new HashMap<>();
+    static {
+        int[][] mapping = {
+        {28, 2015},
+        {26, 2014},
+        {24, 2013},
+        {22, 2012},
+        {20, 2011},
+        {19, 2010},
+        {17, 2009},
+        {16, 2008},
+        {15, 2007},
+        {14, 2006},
+        {13, 2005},
+        {12, 2004},
+        {10, 2003},
+        };
+        for (int[] row : mapping) {
+            versionToYear.put(String.valueOf(row[0]), String.valueOf(row[1]));
+        }
+    }
+
     public static String getNormalizedVersion(String dir) {
         String rawVersion = dir.substring(dir.indexOf('-') + 1);
         int firstDot = rawVersion.indexOf('.');
@@ -213,7 +254,8 @@ public class ShowLocaleCoverage {
         } else {
             rawVersion = rawVersion.substring(0, firstDot);
         }
-        return rawVersion;
+        String result = versionToYear.get(rawVersion);
+        return result == null ? null : result.toString();
     }
 
     public static void addCompletionList(String version, Counter2<String> completionData, TreeMap<String, List<Double>> growthData) {
@@ -270,6 +312,7 @@ public class ShowLocaleCoverage {
 
     private static Map<String, FoundAndTotal> addGrowth(org.unicode.cldr.util.Factory newFactory, Matcher matcher) {
         Map<String, FoundAndTotal> data = new HashMap<>();
+        char c = 0;
         for (String locale : newFactory.getAvailableLanguages()) {
             if (!matcher.reset(locale).matches()) {
                 continue;
@@ -279,7 +322,14 @@ public class ShowLocaleCoverage {
                 || locale.equals("supplementalData")) {
                 continue;
             }
-            System.out.println("\t" + locale);
+            char nc = locale.charAt(0);
+            if (nc != c) {
+                System.out.println("\t" + locale);
+                c = nc;
+            }
+            if (DEBUG_FILTER != 0 && DEBUG_FILTER != nc) {
+                continue;
+            }
             final CLDRFile file = newFactory.make(locale, true);
             Counter<Level> foundCounter = new Counter<Level>();
             Counter<Level> unconfirmedCounter = new Counter<Level>();
@@ -293,7 +343,7 @@ public class ShowLocaleCoverage {
     }
 
     public static void showCoverage(PrintWriter index) throws IOException {
-        showCoverage(index, Pattern.compile(".*").matcher(""), null, false);
+        showCoverage(index, PatternCache.get(".*").matcher(""), null, false);
     }
 
     public static void showCoverage(PrintWriter index, Matcher matcher, Set<String> locales, boolean useOrgLevel) throws IOException {
@@ -322,7 +372,7 @@ public class ShowLocaleCoverage {
 
     static void printData(PrintWriter pw, Set<String> locales, Matcher matcher, boolean useOrgLevel) {
 //        Set<String> checkModernLocales = STANDARD_CODES.getLocaleCoverageLocales("google", EnumSet.of(Level.MODERN));
-        Set<String> checkModernLocales = STANDARD_CODES.getLocaleCoverageLocales(Organization.cldr.name(), EnumSet.of(Level.MODERN));
+        Set<String> checkModernLocales = STANDARD_CODES.getLocaleCoverageLocales(Organization.cldr, EnumSet.of(Level.MODERN));
         Set<String> availableLanguages = new TreeSet<>(factory.getAvailableLanguages());
         availableLanguages.addAll(checkModernLocales);
         Relation<String, String> languageToRegion = Relation.of(new TreeMap(), TreeSet.class);
@@ -368,7 +418,7 @@ public class ShowLocaleCoverage {
 
         PrintWriter out;
         try {
-            out = BagFormatter.openUTF8Writer(MyOptions.targetDir.option.getValue(), "simpleCoverage.tsv");
+            out = BagFormatter.openUTF8Writer(CLDRPaths.GEN_DIRECTORY + "coverage/", "simpleCoverage.tsv");
         } catch (IOException e1) {
             throw new IllegalArgumentException(e1);
         }
@@ -390,7 +440,7 @@ public class ShowLocaleCoverage {
         }
         PrintWriter out2;
         try {
-            out2 = BagFormatter.openUTF8Writer(MyOptions.targetDir.option.getValue(), 
+            out2 = BagFormatter.openUTF8Writer(CLDRPaths.GEN_DIRECTORY + "coverage/", 
                 "showLocaleCoverage.txt");
         } catch (IOException e1) {
             throw new IllegalArgumentException(e1);

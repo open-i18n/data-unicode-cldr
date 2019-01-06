@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.regex.Pattern;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -107,12 +106,10 @@ public class FindDTDOrder implements DeclHandler, ContentHandler, ErrorHandler {
                     fis.close();
                     // Then Attributes
                     List<String> rawDtdAttributeOrder = Collections.unmodifiableList(new ArrayList<String>(me.attributeSet));
-                    List<String> metadataAttributeOrder = SupplementalDataInfo.getInstance().getAttributeOrder();
                     List<String> cldrFileAttributeOrder = CLDRFile.getAttributeOrder();
 
                     LinkedHashSet<String> modifiedDtdOrder = new LinkedHashSet<String>(cldrFileAttributeOrder);
                     // add items, keeping the ordering stable
-                    modifiedDtdOrder.addAll(metadataAttributeOrder);
                     modifiedDtdOrder.retainAll(rawDtdAttributeOrder); // remove any superfluous stuff
                     modifiedDtdOrder.addAll(rawDtdAttributeOrder);
 
@@ -426,19 +423,19 @@ public class FindDTDOrder implements DeclHandler, ContentHandler, ErrorHandler {
         BufferedReader oldFile = BagFormatter.openUTF8Reader(dir, filename);
         Log.setLogNoBOM(CLDRPaths.GEN_DIRECTORY + "/DTDOrder/" + filename);
 
-        // CldrUtility.copyUpTo(oldFile, Pattern.compile("\\s*" +
+        // CldrUtility.copyUpTo(oldFile, PatternCache.get("\\s*" +
         // startAttributeTag +
         // "\\s*"), Log.getLog(), true);
         // Log.println(startSep + breakLines(attributeSet) + endSep + endAttributeTag);
-        // CldrUtility.copyUpTo(oldFile, Pattern.compile("\\s*" +
+        // CldrUtility.copyUpTo(oldFile, PatternCache.get("\\s*" +
         // endAttributeTag +
         // "\\s*"), null, true);
 
-        CldrUtility.copyUpTo(oldFile, Pattern.compile("\\s*" +
+        CldrUtility.copyUpTo(oldFile, PatternCache.get("\\s*" +
             startElementTag +
             "\\s*"), Log.getLog(), true);
         Log.println(startSep + breakLines(orderingList) + endSep + endElementTag);
-        CldrUtility.copyUpTo(oldFile, Pattern.compile("\\s*" +
+        CldrUtility.copyUpTo(oldFile, PatternCache.get("\\s*" +
             endElementTag +
             "\\s*"), null, true);
 

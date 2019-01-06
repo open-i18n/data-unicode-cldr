@@ -11,7 +11,6 @@ package org.unicode.cldr.util;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.unicode.cldr.test.CheckCLDR;
 
@@ -114,7 +113,7 @@ public class PrettyPath {
         }
     }
 
-    private static Matcher sortingGorpRemoval = Pattern.compile("(?<=(^|[|]))([0-9]+-)?").matcher("");
+    private static Matcher sortingGorpRemoval = PatternCache.get("(?<=(^|[|]))([0-9]+-)?").matcher("");
 
     public boolean isShowErrors() {
         return showErrors;

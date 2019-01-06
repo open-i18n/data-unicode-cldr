@@ -20,7 +20,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.unicode.cldr.draft.ScriptMetadata;
 import org.unicode.cldr.draft.ScriptMetadata.IdUsage;
@@ -39,6 +38,7 @@ import org.unicode.cldr.util.LocaleIDParser;
 import org.unicode.cldr.util.LocaleIDParser.Level;
 import org.unicode.cldr.util.Log;
 import org.unicode.cldr.util.Pair;
+import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.SpreadSheet;
 import org.unicode.cldr.util.StandardCodes;
 import org.unicode.cldr.util.SupplementalDataInfo;
@@ -48,6 +48,7 @@ import org.unicode.cldr.util.SupplementalDataInfo.PopulationData;
 import org.unicode.cldr.util.XPathParts;
 import org.unicode.cldr.util.XPathParts.Comments;
 
+import com.google.common.collect.ImmutableSet;
 import com.ibm.icu.dev.util.BagFormatter;
 import com.ibm.icu.dev.util.Relation;
 import com.ibm.icu.dev.util.TransliteratorUtilities;
@@ -89,6 +90,9 @@ public class ConvertLanguageData {
 
     private static final boolean SHOW_OLD_DEFAULT_CONTENTS = false;
 
+    private static final ImmutableSet<String> scriptAssumedLocales = ImmutableSet.of(
+        "bm_ML", "ha_GH", "ha_NE", "ha_NG", "kk_KZ", "ks_IN", "ky_KG", "mn_MN", "ms_MY", "ms_SG", "tk_TM", "tzm_MA", "ug_CN" );
+    
     static Map<String, String> defaultContent = new TreeMap<String, String>();
 
     static Factory cldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
@@ -112,7 +116,7 @@ public class ConvertLanguageData {
             // Log.println("<supplementalData version=\"1.5\">");
 
             oldFile = BagFormatter.openUTF8Reader(CLDRPaths.DEFAULT_SUPPLEMENTAL_DIRECTORY, "supplementalData.xml");
-            CldrUtility.copyUpTo(oldFile, Pattern.compile("\\s*<languageData>\\s*"), Log.getLog(), false);
+            CldrUtility.copyUpTo(oldFile, PatternCache.get("\\s*<languageData>\\s*"), Log.getLog(), false);
 
             Set<String> available = cldrFactory.getAvailable();
 
@@ -141,6 +145,9 @@ public class ConvertLanguageData {
                 if (!localesWithData.contains(locale)) {
                     CLDRFile locFile = cldrFactory.make(locale, false);
                     if (locFile.isAliasedAtTopLevel()) {
+                        continue;
+                    }
+                    if (scriptAssumedLocales.contains(locale)) {
                         continue;
                     }
                     languageTagParser.set(locale);
@@ -197,11 +204,11 @@ public class ConvertLanguageData {
 
             showFailures(failures);
 
-            CldrUtility.copyUpTo(oldFile, Pattern.compile("\\s*</territoryInfo>\\s*"), null, false);
-            CldrUtility.copyUpTo(oldFile, Pattern.compile("\\s*<references>\\s*"), Log.getLog(), false);
+            CldrUtility.copyUpTo(oldFile, PatternCache.get("\\s*</territoryInfo>\\s*"), null, false);
+            CldrUtility.copyUpTo(oldFile, PatternCache.get("\\s*<references>\\s*"), Log.getLog(), false);
             // generateIso639_2Data();
             references.printReferences();
-            CldrUtility.copyUpTo(oldFile, Pattern.compile("\\s*</references>\\s*"), null, false);
+            CldrUtility.copyUpTo(oldFile, PatternCache.get("\\s*</references>\\s*"), null, false);
             CldrUtility.copyUpTo(oldFile, null, Log.getLog(), false);
             // Log.println("</supplementalData>");
             Log.close();
@@ -1025,7 +1032,7 @@ public class ConvertLanguageData {
                 oldReferences_to_Rxxx.put(Rxxx_to_oldReferences.get(Rxxx), Rxxx);
             }
         }
-        Matcher URI = Pattern.compile("([a-z]+\\://[\\S]+)\\s?(.*)").matcher("");
+        Matcher URI = PatternCache.get("([a-z]+\\://[\\S]+)\\s?(.*)").matcher("");
 
         static int referenceStart = 1000;
 
@@ -1637,7 +1644,7 @@ public class ConvertLanguageData {
 
     // private static void printDefaultContent(Set<String> defaultLocaleContent) {
     // String sep = Utility.LINE_SEPARATOR + "\t\t\t";
-    // String broken = Utility.breakLines(join(defaultLocaleContent," "), sep, Pattern.compile("(\\S)\\S*").matcher(""),
+    // String broken = Utility.breakLines(join(defaultLocaleContent," "), sep, PatternCache.get("(\\S)\\S*").matcher(""),
     // 80);
     //
     // Log.println("\t\t<defaultContent locales=\"" + broken + "\"");
@@ -1778,7 +1785,6 @@ public class ConvertLanguageData {
 
         // #Lcode LanguageName Status Scode ScriptName References
         List<List<String>> input = SpreadSheet.convert(CldrUtility.getUTF8Data("language_script_raw.txt"));
-        // /Users/markdavis/Documents/workspace/cldr-code/java/org/unicode/cldr/util/data/language_script_raw.txt
         System.out.println(CldrUtility.LINE_SEPARATOR + "Problems in language_script_raw.txt"
             + CldrUtility.LINE_SEPARATOR);
         //int count = -1;

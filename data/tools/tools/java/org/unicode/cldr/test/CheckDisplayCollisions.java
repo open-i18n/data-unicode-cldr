@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.unicode.cldr.test.CheckCLDR.CheckStatus.Subtype;
 import org.unicode.cldr.util.CLDRConfig;
@@ -18,6 +17,7 @@ import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.PathHeader;
+import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.SimpleXMLSource;
 import org.unicode.cldr.util.XMLSource;
 import org.unicode.cldr.util.XPathParts;
@@ -43,24 +43,34 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
     /**
      * An enum representing the types of xpaths that we don't want display collisions for.
      */
-    private enum Type {
-        LANGUAGE("//ldml/localeDisplayNames/languages/language", 0),
-        SCRIPT("//ldml/localeDisplayNames/scripts/script", 1),
-        TERRITORY("//ldml/localeDisplayNames/territories/territory", 2),
-        VARIANT("//ldml/localeDisplayNames/variants/variant", 3),
-        CURRENCY("//ldml/numbers/currencies/currency", 4),
-        ZONE("//ldml/dates/timeZoneNames/zone", 5),
-        METAZONE("//ldml/dates/timeZoneNames/metazone", 6),
-        DECIMAL_FORMAT("//ldml/numbers/decimalFormats", 7),
-        UNITS_COMPOUND_LONG("//ldml/units/unitLength[@type=\"long\"]/compoundUnit", 8),
-        UNITS_COMPOUND_SHORT("//ldml/units/unitLength[@type=\"short\"]/compoundUnit", 9),
-        UNITS_IGNORE("//ldml/units/unitLength[@type=\"narrow\"]", 10),
-        UNITS("//ldml/units/unitLength", 11);
+    private static enum MatchType {
+        PREFIX, REGEX
+    }
+    private static enum Type {
+        LANGUAGE("//ldml/localeDisplayNames/languages/language", MatchType.PREFIX, 0),
+        SCRIPT("//ldml/localeDisplayNames/scripts/script", MatchType.PREFIX, 1),
+        TERRITORY("//ldml/localeDisplayNames/territories/territory", MatchType.PREFIX,2),
+        VARIANT("//ldml/localeDisplayNames/variants/variant", MatchType.PREFIX,3),
+        CURRENCY("//ldml/numbers/currencies/currency", MatchType.PREFIX, 4),
+        ZONE("//ldml/dates/timeZoneNames/zone", MatchType.PREFIX,5),
+        METAZONE("//ldml/dates/timeZoneNames/metazone", MatchType.PREFIX,6),
+        DECIMAL_FORMAT("//ldml/numbers/decimalFormats", MatchType.PREFIX,7),
+        UNITS_COMPOUND_LONG("//ldml/units/unitLength[@type=\"long\"]/compoundUnit", MatchType.PREFIX,8),
+        UNITS_COMPOUND_SHORT("//ldml/units/unitLength[@type=\"short\"]/compoundUnit", MatchType.PREFIX,9),
+        UNITS_COORDINATE("//ldml/units/unitLength\\[@type=\".*\"\\]/coordinateUnit/", MatchType.REGEX,10),
+        UNITS_IGNORE("//ldml/units/unitLength[@type=\"narrow\"]", MatchType.PREFIX,11),
+        UNITS("//ldml/units/unitLength", MatchType.PREFIX,12),
+        FIELDS_NARROW("//ldml/dates/fields/field\\[@type=\"(sun|mon|tue|wed|thu|fri|sat)-narrow\"\\]/relative", MatchType.REGEX, 13),
+        FIELDS_RELATIVE("//ldml/dates/fields/field\\[@type=\".*\"\\]/relative\\[@type=\"(-1|0|1)\"\\]", MatchType.REGEX, 14);
 
+        private MatchType matchType;
         private String basePrefix;
+        private Matcher baseMatcher;
 
-        private Type(String basePrefix, int index) {
+        private Type(String basePrefix, MatchType matchType, int index) {
+            this.matchType = matchType;
             this.basePrefix = basePrefix;
+            this.baseMatcher = PatternCache.get("^"+basePrefix+".*").matcher("");
         }
 
         /**
@@ -68,6 +78,12 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
          */
         public String getPrefix() {
             return basePrefix;
+        }
+        /**
+         * @return the regex that matches all XPaths of this type
+         */
+        public Matcher getMatcher() {
+            return baseMatcher;
         }
 
         /**
@@ -77,8 +93,15 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
          */
         public static Type getType(String path) {
             for (Type type : values()) {
-                String prefix = type.getPrefix();
-                if (path.startsWith(prefix)) {
+                if (type.matchType == MatchType.PREFIX) {
+                    if ( path.startsWith(type.getPrefix())) {
+                        return type;
+                    }
+                }
+                 
+                Matcher m = type.getMatcher();
+                m.reset(path);
+                if (m.matches()) {
                     return type;
                 }
             }
@@ -88,11 +111,11 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
 
     static final boolean SKIP_TYPE_CHECK = true;
 
-    private final Matcher exclusions = Pattern.compile("=\"narrow\"]").matcher(""); // no matches
-    private final Matcher typePattern = Pattern.compile("\\[@type=\"([^\"]*+)\"]").matcher("");
-    private final Matcher attributesToIgnore = Pattern.compile("\\[@(?:count|alt)=\"[^\"]*+\"]").matcher("");
-    private final Matcher compactNumberAttributesToIgnore = Pattern.compile("\\[@(?:alt)=\"[^\"]*+\"]").matcher("");
-    private final Matcher compoundUnitPatterns = Pattern.compile("compoundUnitPattern").matcher("");
+    private final Matcher exclusions = PatternCache.get("=\"narrow\"]").matcher(""); // no matches
+    private final Matcher typePattern = PatternCache.get("\\[@type=\"([^\"]*+)\"]").matcher("");
+    private final Matcher attributesToIgnore = PatternCache.get("\\[@(?:count|alt)=\"[^\"]*+\"]").matcher("");
+    private final Matcher compactNumberAttributesToIgnore = PatternCache.get("\\[@(?:alt)=\"[^\"]*+\"]").matcher("");
+    private final Matcher compoundUnitPatterns = PatternCache.get("compoundUnitPattern").matcher("");
 
     // map unique path fragment to set of unique fragments for other
     // paths with which it is OK to have a value collision
@@ -183,10 +206,7 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
         if (value == null || value.length() == 0) {
             return this;
         }
-        if (value.equals(CldrUtility.NO_INHERITANCE_MARKER)) {
-            return this;
-        }
-        if (exclusions.reset(path).find()) {
+        if (value.equals(CldrUtility.NO_INHERITANCE_MARKER) || value.equals(CldrUtility.INHERITANCE_MARKER)) {
             return this;
         }
 
@@ -197,12 +217,14 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
         }
         String myPrefix = myType.getPrefix();
 
+        if (exclusions.reset(path).find() && myType != Type.UNITS_COORDINATE) {
+            return this;
+        }
+
         // get the paths with the same value. If there aren't duplicates, continue;
 
         Matcher matcher = null;
-        String message = getPhase() == Phase.SUBMISSION
-            ? "WARNING: Can't have same translation as {0}. This will become an error during the Vetting phase."
-            : "Can't have same translation as {0}";
+        String message = "Can't have same translation as {0}";
         Matcher currentAttributesToIgnore = attributesToIgnore;
         Set<String> paths;
         if (myType == Type.DECIMAL_FORMAT) {
@@ -212,7 +234,7 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
             XPathParts parts = new XPathParts().set(path);
             String type = parts.getAttributeValue(-1, "type");
             myPrefix = parts.removeElement(-1).toString();
-            matcher = Pattern.compile(myPrefix.replaceAll("\\[", "\\\\[") +
+            matcher = PatternCache.get(myPrefix.replaceAll("\\[", "\\\\[") +
                 "/pattern\\[@type=(?!\"" + type + "\")\"\\d+\"].*").matcher(path);
             currentAttributesToIgnore = compactNumberAttributesToIgnore;
             message = "Can't have same number pattern as {0}";
@@ -271,14 +293,15 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
         // Collisions between 'narrow' forms are allowed (the current is filtered by UNITS_IGNORE)
         //ldml/units/unitLength[@type="narrow"]/unit[@type="duration-day-future"]/unitPattern[@count="one"]
         if (myType == Type.UNITS) {
-            XPathParts parts = new XPathParts().set(path);
-            String myUnit = parts.getAttributeValue(3, "type");
+            XPathParts parts = XPathParts.getInstance(path);
+            int typeLocation = 3;
+            String myUnit = parts.getAttributeValue(typeLocation, "type");
             boolean isDuration = myUnit.startsWith("duration");
             Iterator<String> iterator = paths.iterator();
             while (iterator.hasNext()) {
                 String curVal = iterator.next();
                 parts.set(curVal);
-                String unit = parts.getAttributeValue(3, "type");
+                String unit = parts.getAttributeValue(typeLocation, "type");
                 // we also break the units into two groups: durations and others. Also never collide with a compoundUnitPattern.
                 if (myUnit.equals(unit) || unit != null && isDuration != unit.startsWith("duration") ||
                     compoundUnitPatterns.reset(curVal).find()) {
@@ -299,6 +322,36 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
                             break;
                         }
                     }
+                }
+            }
+        }
+        // Collisions between different lengths and counts of the same field are allowed
+        if (myType == Type.FIELDS_RELATIVE ) {
+            XPathParts parts = new XPathParts().set(path);
+            String myFieldType = parts.getAttributeValue(3, "type").split("-")[0];
+            Iterator<String> iterator = paths.iterator();
+            while (iterator.hasNext()) {
+                String curVal = iterator.next();
+                parts.set(curVal);
+                String fieldType = parts.getAttributeValue(3, "type").split("-")[0];
+                if (myFieldType.equals(fieldType)) {
+                    iterator.remove();
+                    log("Removed '" + curVal + "': COLLISON WITH FIELD  " + fieldType);
+                }
+            }
+        }
+        // Collisions between different lengths of the same field are allowed
+        if (myType == Type.UNITS_COORDINATE ) {
+            XPathParts parts = new XPathParts().set(path);
+            String myFieldType = parts.findAttributeValue("coordinateUnitPattern", "type");
+            Iterator<String> iterator = paths.iterator();
+            while (iterator.hasNext()) {
+                String curVal = iterator.next();
+                parts.set(curVal);
+                String fieldType = parts.findAttributeValue("coordinateUnitPattern", "type");
+                if (myFieldType.equals(fieldType)) {
+                    iterator.remove();
+                    log("Removed '" + curVal + "': COLLISON WITH FIELD  " + fieldType);
                 }
             }
         }
@@ -351,10 +404,8 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
 
         log("CollidingTypes has a size of " + collidingTypes.size());
         CheckStatus.Type thisErrorType;
-        // Specifically allow display collisions during the submission phase only, so that
-        // we don't prevent people from entering stuff properly.
         // Also only do warnings during the build phase, so that SmokeTest will build.
-        if (getPhase() == Phase.SUBMISSION || getPhase() == Phase.BUILD) {
+        if (getPhase() == Phase.BUILD) {
             thisErrorType = CheckStatus.warningType;
         } else {
             thisErrorType = CheckStatus.errorType;
@@ -424,7 +475,11 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
         ) {
 
         Set<String> retrievedPaths = new HashSet<String>();
-        file.getPathsWithValue(value, myPrefix, matcher, retrievedPaths);
+        if ( myType.matchType == MatchType.PREFIX) {
+            file.getPathsWithValue(value, myPrefix, matcher, retrievedPaths);
+        } else {
+            file.getPathsWithValue(value, "//ldml", myType.getMatcher(), retrievedPaths);            
+        }
 
         String normValue = null;
         if (equivalence == Equivalence.unit) {
@@ -439,7 +494,13 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
         // remove paths with "alt/count"; they can be duplicates
         Set<String> paths = new HashSet<String>();
         for (String pathName : retrievedPaths) {
-            if (exclusions.reset(pathName).find()) {
+            Type thisPathType = Type.getType(pathName);
+            // If the colliding path is of a different type than the original,
+            // then it can't be a collision we care about.
+            if (myType != thisPathType) {
+                continue;
+            };            
+            if (exclusions.reset(pathName).find() && thisPathType != Type.UNITS_COORDINATE) {
                 continue;
             }
             // we only care about winning paths

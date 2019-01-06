@@ -104,14 +104,12 @@ public class WritePluralRules {
         return "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
             + "<!DOCTYPE supplementalData SYSTEM \"../../common/dtd/ldmlSupplemental.dtd\">\n"
             + "<!--\n"
-            + "Copyright © 1991-2013 Unicode, Inc.\n"
+            + "Copyright © 1991-2015 Unicode, Inc.\n"
             + "CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)\n"
             + "For terms of use, see http://www.unicode.org/copyright.html\n"
             + "-->\n"
             + "<supplementalData>\n"
             + "    <version number=\"$Revision" +
-            "$\"/>\n"
-            + "    <generation date=\"$Date" +
             "$\"/>\n"
             + "    <plurals type=\"" + type + "\">\n"
             + "        <!-- For a canonicalized list, use " + filename + " -->\n";

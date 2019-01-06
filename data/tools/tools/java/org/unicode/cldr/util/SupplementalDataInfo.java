@@ -21,6 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
@@ -32,9 +33,9 @@ import java.util.regex.Pattern;
 import org.unicode.cldr.test.CoverageLevel2;
 import org.unicode.cldr.tool.LikelySubtags;
 import org.unicode.cldr.util.Builder.CBuilder;
-import org.unicode.cldr.util.CLDRFile.DtdType;
 import org.unicode.cldr.util.CldrUtility.VariableReplacer;
 import org.unicode.cldr.util.DayPeriodInfo.DayPeriod;
+import org.unicode.cldr.util.StandardCodes.LstrType;
 import org.unicode.cldr.util.SupplementalDataInfo.BasicLanguageData.Type;
 import org.unicode.cldr.util.SupplementalDataInfo.NumberingSystemInfo.NumberingSystemType;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo.Count;
@@ -240,7 +241,7 @@ public class SupplementalDataInfo {
         }
     }
 
-    static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s+");
+    static final Pattern WHITESPACE_PATTERN = PatternCache.get("\\s+");
 
     /**
      * Simple language/script/region information
@@ -738,7 +739,7 @@ public class SupplementalDataInfo {
         private Set<String> inTerritorySetInternal;
 
         public CoverageLevelInfo(String match, int value, String language, String script, String territory) {
-            this.inLanguage = language != null ? Pattern.compile(language) : null;
+            this.inLanguage = language != null ? PatternCache.get(language) : null;
             this.inScript = script;
             this.inTerritory = territory;
             this.inScriptSet = toSet(script);
@@ -747,7 +748,7 @@ public class SupplementalDataInfo {
             this.value = Level.fromLevel(value);
         }
 
-        public static final Pattern NON_ASCII_LETTER = Pattern.compile("[^A-Za-z]+");
+        public static final Pattern NON_ASCII_LETTER = PatternCache.get("[^A-Za-z]+");
 
         private Set<String> toSet(String source) {
             if (source == null) {
@@ -821,6 +822,8 @@ public class SupplementalDataInfo {
         LinkedHashSet.class);
     private Relation<String, String> containmentDeprecated = Relation.of(new LinkedHashMap<String, Set<String>>(),
         LinkedHashSet.class);
+    private Relation<String, String> containerToSubdivision = Relation.of(new LinkedHashMap<String, Set<String>>(),
+        LinkedHashSet.class);
 
     private Map<String, CurrencyNumberInfo> currencyToCurrencyNumberInfo = new TreeMap<String, CurrencyNumberInfo>();
 
@@ -841,7 +844,7 @@ public class SupplementalDataInfo {
     private Map<String, Map<String, Map<String, String>>> typeToZoneToRegionToZone = new TreeMap<String, Map<String, Map<String, String>>>();
     private Relation<String, MetaZoneRange> zoneToMetaZoneRanges = Relation.of(
         new TreeMap<String, Set<MetaZoneRange>>(), TreeSet.class);
-    private Map<String, Map<String, Relation<String, String>>> deprecated = new HashMap<String, Map<String, Relation<String, String>>>();
+//    private Map<String, Map<String, Relation<String, String>>> deprecated = new HashMap<String, Map<String, Relation<String, String>>>();
 
     private Map<String, String> metazoneContinentMap = new HashMap<String, String>();
     private Set<String> allMetazones = new TreeSet<String>();
@@ -873,8 +876,8 @@ public class SupplementalDataInfo {
     public Map<Row.R2<String, String>, String> bcp47Preferred = new TreeMap<Row.R2<String, String>, String>();
     public Map<Row.R2<String, String>, String> bcp47Deprecated = new TreeMap<Row.R2<String, String>, String>();
 
-    public Map<String, Row.R2<String, String>> validityInfo = new HashMap<String, Row.R2<String, String>>();
-    public Set<AttributeValidityInfo> attributeValidityInfo = new HashSet<>();
+    public Map<String, Row.R2<String, String>> validityInfo = new LinkedHashMap<String, Row.R2<String, String>>();
+    public Map<AttributeValidityInfo, String> attributeValidityInfo = new LinkedHashMap<>();
 
     public enum MeasurementType {
         measurementSystem, paperSize
@@ -1061,6 +1064,8 @@ public class SupplementalDataInfo {
         containmentGrouping.freeze();
         containmentDeprecated.freeze();
 
+        containerToSubdivision.freeze();
+
         CldrUtility.protectCollection(languageToBasicLanguageData);
         for (String language : languageToTerritories2.keySet()) {
             for (Pair<Boolean, Pair<Double, String>> pair : languageToTerritories2.getAll(language)) {
@@ -1120,13 +1125,22 @@ public class SupplementalDataInfo {
         CoverageLevelInfo.fixEU(coverageLevels, this);
         coverageLevels = Collections.unmodifiableSortedSet(coverageLevels);
 
-        deprecated = CldrUtility.protectCollection(deprecated);
         measurementData = CldrUtility.protectCollection(measurementData);
         timeData = CldrUtility.protectCollection(timeData);
 
         validityInfo = CldrUtility.protectCollection(validityInfo);
         attributeValidityInfo = CldrUtility.protectCollection(attributeValidityInfo);
         parentLocales = Collections.unmodifiableMap(parentLocales);
+        
+        Set<String> newScripts = new LinkedHashSet<String>();
+        Map<Validity.Status, Set<String>> scripts = Validity.getInstance().getData().get(LstrType.script);
+        for (Entry<Validity.Status, Set<String>> e : scripts.entrySet()) {
+            if (e.getKey() != Validity.Status.deprecated) {
+                newScripts.addAll(e.getValue());
+            }
+        }
+        // TODO The above duplicates the old construction, but do we need the Private Use codes for whatever CLDRScriptCodes is used for?
+        CLDRScriptCodes = Collections.unmodifiableSet(newScripts);
     }
 
     // private Map<String, Map<String, String>> makeUnmodifiable(Map<String, Map<String, String>>
@@ -1155,7 +1169,7 @@ public class SupplementalDataInfo {
         }
         // HACK
         String currentScript = null;
-        for (String s : "Latn aa af agq ak asa ast bas bem bez bm br ca cgg cs cy da dav de dje dsb dua dyo ebu ee en eo es et eu ewo ff fi fil fo fr fur fy ga gd gl gsw guz gv haw hr hsb hu ia id ig is it jgo jmc kab kam kde kea khq ki kkj kl kln ksb ksf ksh kw lag lb lg lkt ln lt lu luo luy lv mas mer mfe mg mgh mgo mt mua naq nb nd nl nmg nn nnh nr nso nus nyn om pl pt qu rm rn ro rof rw rwk saq sbp se seh ses sg sk sl smn sn so sq ss ssy st sv sw swc teo tn to tr ts twq ve vi vo vun wae xh xog yav yo zu Ethi am byn ti tig wal Arab ar fa ps ur Beng as bn Cyrl be bg ky mk os ru sah uk Tibt bo dz Deva brx hi kok mr ne Cher chr Grek el Gujr gu Hebr he yi Armn hy Yiii ii Jpan ja Geor ka Khmr km Knda kn Kore ko Laoo lo Mlym ml Mymr my Orya or Sinh si Taml ta Telu te Tfng zgh Thai th"
+        for (String s : "Latn aa af agq ak asa ast az bas bem bez bm br ca cgg cs cy da dav de dje dsb dua dyo ebu ee en eo es et eu ewo ff fi fil fo fr fur fy ga gd gl gsw guz gv ha haw hr hsb hu ia id ig is it jgo jmc kab kam kde kea khq ki kkj kl kln ksb ksf ksh kw lag lb lg lkt ln lt lu luo luy lv mas mer mfe mg mgh mgo ms mt mua naq nb nd nl nmg nn nnh nr nso nus nyn om pl prg pt qu rm rn ro rof rw rwk saq sbp se seh ses sg sk sl smn sn so sq ss ssy st sv sw swc teo tk tn to tr ts twq tzm ve vi vo vun wae xh xog yav yo zu Arab ar ckb fa ks lrc mzn ps sd ug ur Beng as bn Cans iu Cyrl be bg ce cu kk ky mk mn os ru sah tg uk Ethi am byn ti tig wal Deva brx hi kok mr ne Cher chr Grek el Gujr gu Guru pa Hebr he yi Armn hy Yiii ii Jpan ja Geor ka Khmr km Knda kn Kore ko Laoo lo Mlym ml Mymr my Orya or Sinh si Taml ta Telu te Tfng shi zgh Thai th Tibt bo dz Vaii vai"
             .split(" ")) {
             if (s.length() == 4) {
                 currentScript = s;
@@ -1227,6 +1241,9 @@ public class SupplementalDataInfo {
                 } else if (level1.equals("territoryContainment")) {
                     handleTerritoryContainment();
                     return;
+                } else if (level1.equals("subdivisionContainment")) {
+                    handleSubdivisionContainment();
+                    return;  
                 } else if (level1.equals("currencyData")) {
                     if (handleCurrencyData(level2)) {
                         return;
@@ -1301,7 +1318,7 @@ public class SupplementalDataInfo {
                 }
                 // System.out.println("Skipped Element: " + path);
             } catch (Exception e) {
-                throw (IllegalArgumentException) new IllegalArgumentException("path: "
+                throw (IllegalArgumentException) new IllegalArgumentException("Exception while processing path: "
                     + path + ",\tvalue: " + value).initCause(e);
             }
         }
@@ -1359,13 +1376,14 @@ public class SupplementalDataInfo {
 
             bcp47Extension2Keys.put(extension, key);
 
+            final R2<String, String> key_empty = (R2<String, String>) Row.of(key, "").freeze();
+            
             if (keyAlias != null) {
-                bcp47Aliases.putAll((R2<String, String>) Row.of(key, "").freeze(),
-                    Arrays.asList(keyAlias.trim().split("\\s+")));
+                bcp47Aliases.putAll(key_empty, Arrays.asList(keyAlias.trim().split("\\s+")));
             }
 
             if (keyDescription != null) {
-                bcp47Descriptions.put((R2<String, String>) Row.of(key, "").freeze(), keyDescription);
+                bcp47Descriptions.put(key_empty, keyDescription);
             }
 
             if (parts.size() > 3) { // for parts with no subtype: //ldmlBCP47/keyword/key[@extension="t"][@name="x0"]
@@ -1378,22 +1396,23 @@ public class SupplementalDataInfo {
                 String subtypePreferred = parts.getAttributeValue(3, "preferred");
                 String subtypeDeprecated = parts.getAttributeValue(3, "deprecated");
                 bcp47Key2Subtypes.put(key, subtype);
+                
+                final R2<String, String> key_subtype = (R2<String, String>) Row.of(key, subtype).freeze();
+                
                 if (subtypeAlias != null) {
-                    bcp47Aliases.putAll((R2<String, String>) Row.of(key, subtype).freeze(),
-                        Arrays.asList(subtypeAlias.trim().split("\\s+")));
-                }
-
-                if (subtypeDescription != null) {
-                    bcp47Descriptions.put((R2<String, String>) Row.of(key, subtype).freeze(), subtypeDescription);
+                    bcp47Aliases.putAll(key_subtype, Arrays.asList(subtypeAlias.trim().split("\\s+")));
                 }
                 if (subtypeDescription != null) {
-                    bcp47Since.put((R2<String, String>) Row.of(key, subtype).freeze(), subtypeSince);
+                    bcp47Descriptions.put(key_subtype, subtypeDescription);
+                }
+                if (subtypeDescription != null) {
+                    bcp47Since.put(key_subtype, subtypeSince);
                 }
                 if (subtypePreferred != null) {
-                    bcp47Preferred.put((R2<String, String>) Row.of(key, subtype).freeze(), subtypePreferred);
+                    bcp47Preferred.put(key_subtype, subtypePreferred);
                 }
                 if (subtypeDeprecated != null) {
-                    bcp47Deprecated.put((R2<String, String>) Row.of(key, subtype).freeze(), subtypeDeprecated);
+                    bcp47Deprecated.put(key_subtype, subtypeDeprecated);
                 }
             }
 
@@ -1596,7 +1615,7 @@ public class SupplementalDataInfo {
                 final String reason = parts.getAttributeValue(3, "reason");
                 List<String> replacementList = replacement == null ? null : Arrays.asList(replacement.replace("-", "_")
                     .split("\\s+"));
-                String cleanTag = parts.getAttributeValue(3, "type").replace("-", "_");
+                String cleanTag = parts.getAttributeValue(3, "type");
                 tagToReplacement.put(cleanTag, (R2<List<String>, String>) Row.of(replacementList, reason).freeze());
                 return true;
             } else if (level2.equals("validity")) {
@@ -1605,59 +1624,25 @@ public class SupplementalDataInfo {
                 if (level3.equals("variable")) {
                     Map<String, String> attributes = parts.getAttributes(-1);
                     validityInfo.put(attributes.get("id"), Row.of(attributes.get("type"), value));
-                    if ("$language".equals(attributes.get("id")) && "choice".equals(attributes.get("type"))) {
+                    String idString = attributes.get("id");
+                    if (("$language".equals(idString) || "$languageExceptions".equals(attributes.get("id")))
+                        && "choice".equals(attributes.get("type"))) {
                         String[] validCodeArray = value.trim().split("\\s+");
-                        CLDRLanguageCodes = Collections.unmodifiableSet(new TreeSet<String>(Arrays
-                            .asList(validCodeArray)));
+                        CLDRLanguageCodes.addAll(Arrays.asList(validCodeArray));
                     }
-                    if ("$script".equals(attributes.get("id")) && "choice".equals(attributes.get("type"))) {
-                        String[] validCodeArray = value.trim().split("\\s+");
-                        CLDRScriptCodes = Collections
-                            .unmodifiableSet(new TreeSet<String>(Arrays.asList(validCodeArray)));
-                    }
+//                    if ("$script".equals(attributes.get("id")) && "choice".equals(attributes.get("type"))) {
+//                        String[] validCodeArray = value.trim().split("\\s+");
+//                        CLDRScriptCodes = Collections
+//                            .unmodifiableSet(new TreeSet<String>(Arrays.asList(validCodeArray)));
+//                    }
                     return true;
                 } else if (level3.equals("attributeValues")) {
                     AttributeValidityInfo.add(parts.getAttributes(-1), value, attributeValidityInfo);
                     return true;
                 }
-            } else if (level2.equals("attributeOrder")) {
-                attributeOrder = Arrays.asList(value.trim().split("\\s+"));
-                return true;
-            } else if (level2.equals("elementOrder")) {
-                elementOrder = Arrays.asList(value.trim().split("\\s+"));
-                return true;
             } else if (level2.equals("serialElements")) {
                 serialElements = Arrays.asList(value.trim().split("\\s+"));
                 return true;
-            } else if (level2.equals("deprecated")) {
-                // <deprecated>
-                // <deprecatedItems
-                // elements="monthNames monthAbbr localizedPatternChars week minDays firstDay weekendStart weekendEnd yesexpr noexpr measurement hoursFormat abbreviationFallback preferenceOrdering dateRangePattern"/>
-                // <deprecatedItems type="supplemental" elements="calendar" attributes="territories"/>
-
-                // Map<String, String> attributeSet = parts.getAttributes(-1);
-                Collection<String> types = getSpaceDelimited(-1, "type", STAR_SET);
-                Collection<String> elements = getSpaceDelimited(-1, "elements", STAR_SET);
-                Collection<String> attributes = getSpaceDelimited(-1, "attributes", STAR_SET);
-                Collection<String> values = getSpaceDelimited(-1, "values", STAR_SET);
-                for (String type : types) {
-                    Map<String, Relation<String, String>> dep = deprecated.get(type);
-                    if (dep == null) {
-                        deprecated.put(type, dep = new HashMap<String, Relation<String, String>>());
-                    }
-                    for (String element : elements) {
-                        Relation<String, String> attribute2Values = dep.get(element);
-                        if (attribute2Values == null) {
-                            dep.put(element,
-                                attribute2Values = Relation.of(new HashMap<String, Set<String>>(), TreeSet.class));
-                        }
-                        for (String attribute : attributes) {
-                            for (String value0 : values) {
-                                attribute2Values.put(attribute, value0);
-                            }
-                        }
-                    }
-                }
             } else if (level2.equals("distinguishing")) {
                 String level3 = parts.getElement(3);
                 if (level3.equals("distinguishingItems")) {
@@ -1841,6 +1826,16 @@ public class SupplementalDataInfo {
             }
         }
 
+        private void handleSubdivisionContainment() {
+            //      <subgroup type="AL" subtype="04" contains="FR MK LU"/>
+            final String country = parts.getAttributeValue(-1, "type");
+            final String subtype = parts.getAttributeValue(-1, "subtype");
+            final String container = subtype == null ? country : country + "-" + subtype;
+            for (String contained : parts.getAttributeValue(-1, "contains").split("\\s+")) {
+                containerToSubdivision.put(container, country + "-" + contained);
+            }
+        }
+
         private void handleLanguageData() {
             // <languageData>
             // <language type="aa" scripts="Latn" territories="DJ ER ET"/> <!--
@@ -1926,7 +1921,7 @@ public class SupplementalDataInfo {
     private Set<String> defaultContentLocales;
     public Map<CLDRLocale, CLDRLocale> baseToDefaultContent; // wo -> wo_Arab_SN
     public Map<CLDRLocale, CLDRLocale> defaultContentToBase; // wo_Arab_SN -> wo
-    private Set<String> CLDRLanguageCodes;
+    private Set<String> CLDRLanguageCodes = new TreeSet<String>();;
     private Set<String> CLDRScriptCodes;
     private Map<String, String> baseLanguageToDefaultScript = new HashMap<String, String>();
 
@@ -2002,6 +1997,14 @@ public class SupplementalDataInfo {
 
     public Set<String> getContainers() {
         return containment.keySet();
+    }
+    
+    public Set<String> getContainedSubdivisions(String territoryOrSubdivisionCode) {
+        return containerToSubdivision.getAll(territoryOrSubdivisionCode);
+    }
+
+    public Set<String> getContainersForSubdivisions() {
+        return containerToSubdivision.keySet();
     }
 
     public Relation<String, String> getTerritoryToContained() {
@@ -2347,7 +2350,7 @@ public class SupplementalDataInfo {
         if (coverageLookup == null) {
             RegexLookup<Level> lookup = new RegexLookup<Level>(RegexLookup.LookupType.STAR_PATTERN_LOOKUP);
 
-            Matcher variable = Pattern.compile("\\$\\{[A-Za-z][\\-A-Za-z]*\\}").matcher("");
+            Matcher variable = PatternCache.get("\\$\\{[A-Za-z][\\-A-Za-z]*\\}").matcher("");
 
             for (CoverageLevelInfo ci : getCoverageLevelInfo()) {
                 String pattern = ci.match.replace('\'', '"')
@@ -2537,9 +2540,13 @@ public class SupplementalDataInfo {
     }
 
     private Set<String> getCurrentCurrencies(Set<String> territories) {
+        Date now = new Date();
+        return getCurrentCurrencies(territories, now, now);
+    }
+
+    public Set<String> getCurrentCurrencies(Set<String> territories, Date startsBefore, Date endsAfter) {
         Set<String> targetCurrencies = new HashSet<String>();
         Iterator<String> it = territories.iterator();
-        Date now = new Date();
         while (it.hasNext()) {
             Set<CurrencyDateInfo> targetCurrencyInfo = getCurrencyDateInfo(it.next());
             if (targetCurrencyInfo == null) {
@@ -2548,7 +2555,7 @@ public class SupplementalDataInfo {
             Iterator<CurrencyDateInfo> it2 = targetCurrencyInfo.iterator();
             while (it2.hasNext()) {
                 CurrencyDateInfo cdi = it2.next();
-                if (cdi.getStart().before(now) && cdi.getEnd().after(now) && cdi.isLegalTender()) {
+                if (cdi.getStart().before(startsBefore) && cdi.getEnd().after(endsAfter) && cdi.isLegalTender()) {
                     targetCurrencies.add(cdi.getCurrency());
                 }
             }
@@ -2614,7 +2621,7 @@ public class SupplementalDataInfo {
                             String[] coverageLocaleParts = el[i].split(":", 2);
                             String org = coverageLocaleParts[0];
                             String level = coverageLocaleParts[1].toUpperCase();
-                            Set<String> coverageLocales = sc.getLocaleCoverageLocales(org, EnumSet.of(Level.valueOf(level)));
+                            Set<String> coverageLocales = sc.getLocaleCoverageLocales(Organization.fromString(org), EnumSet.of(Level.fromString(level)));
                             for (String cl : coverageLocales) {
                                 localeList.add(CLDRLocale.getInstance(cl));
                             }
@@ -2626,7 +2633,7 @@ public class SupplementalDataInfo {
                 if (xpathMatch == null || xpathMatch.isEmpty() || xpathMatch.equals(STAR)) {
                     xpathMatcher = null;
                 } else {
-                    xpathMatcher = Pattern.compile(xpathMatch);
+                    xpathMatcher = PatternCache.get(xpathMatch);
                 }
             } else {
                 throw new RuntimeException("Unknown approval requirement: " + xpath);
@@ -2849,7 +2856,7 @@ public class SupplementalDataInfo {
         // ldml/dates/calendars/calendar[@type="gregorian"]/dayPeriods/dayPeriodContext[@type="format"]/dayPeriodWidth[@type="wide"]/dayPeriod[@type="am"]
         /*
          * <supplementalData>
-         * <version number="$Revision: 11427 $"/>
+         * <version number="$Revision: 12028 $"/>
          * <generation date="$D..e... $"/>
          * <dayPeriodRuleSet>
          * <dayPeriodRules locales = "en"> <!-- default for any locales not listed under other dayPeriods -->
@@ -2868,6 +2875,10 @@ public class SupplementalDataInfo {
             lastDayPeriodLocales = locales;
             lastDayPeriodType = type;
             // System.out.println(type + ", " + locales + ", " + path);
+        }
+        if (path.size() != 4) {
+            if (locales.equals("root")) return; // we allow root to be empty
+            throw new IllegalArgumentException(locales + " must have dayPeriodRule elements");
         }
         DayPeriod dayPeriod = DayPeriod.fromString(path.getAttributeValue(-1, "type"));
         String at = path.getAttributeValue(-1, "at");
@@ -2898,7 +2909,7 @@ public class SupplementalDataInfo {
         }
     }
 
-    static Pattern PARSE_TIME = Pattern.compile("(\\d\\d?):(\\d\\d)");
+    static Pattern PARSE_TIME = PatternCache.get("(\\d\\d?):(\\d\\d)");
 
     private int parseTime(String string) {
         Matcher matcher = PARSE_TIME.matcher(string);
@@ -3219,7 +3230,7 @@ public class SupplementalDataInfo {
             public static final List<Count> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
         }
 
-        static final Pattern pluralPaths = Pattern.compile(".*pluralRule.*");
+        static final Pattern pluralPaths = PatternCache.get(".*pluralRule.*");
         static final int fractDecrement = 13;
         static final int fractStart = 20;
 
@@ -3623,14 +3634,6 @@ public class SupplementalDataInfo {
         return null;
     }
 
-    public DayPeriodInfo getDayPeriods(String locale) {
-        return getDayPeriods(DayPeriodInfo.Type.format, locale);
-    }
-
-    public Set<String> getDayPeriodLocales() {
-        return getDayPeriodLocales(DayPeriodInfo.Type.format);
-    }
-
     public DayPeriodInfo getDayPeriods(DayPeriodInfo.Type type, String locale) {
         Map<String, DayPeriodInfo> map1 = typeToLocaleToDayPeriodInfo.get(type);
         while (locale != null) {
@@ -3665,6 +3668,16 @@ public class SupplementalDataInfo {
      */
     public Set<CurrencyDateInfo> getCurrencyDateInfo(String territory) {
         return territoryToCurrencyDateInfo.getAll(territory);
+    }
+
+    /**
+     * Returns ordered set of currency data information
+     * 
+     * @param territory
+     * @return
+     */
+    public Set<String> getCurrencyTerritories() {
+        return territoryToCurrencyDateInfo.keySet();
     }
 
     /**
@@ -3713,18 +3726,9 @@ public class SupplementalDataInfo {
         return territoryToTelephoneCodeInfo.keySet();
     }
 
-    private List<String> attributeOrder;
-    private List<String> elementOrder;
     private List<String> serialElements;
     private Collection<String> distinguishingAttributes;
 
-    public List<String> getAttributeOrder() {
-        return attributeOrder;
-    }
-
-    public List<String> getElementOrder() {
-        return elementOrder;
-    }
 
     public List<String> getSerialElements() {
         return serialElements;
@@ -3846,19 +3850,18 @@ public class SupplementalDataInfo {
         return null;
     }
 
-    public Map<String, Map<String, Relation<String, String>>> getDeprecationInfo() {
-        return deprecated;
-    }
-
     public boolean isDeprecated(DtdType type, String element, String attribute, String value) {
-        return isDeprecated(deprecated.get(STAR), element, attribute, value)
-            || isDeprecated(deprecated.get(type.toString()), element, attribute, value);
+        return DtdData.getInstance(type).isDeprecated(element, attribute, value);
     }
 
     public boolean isDeprecated(DtdType type, String path) {
+        
         XPathParts parts = XPathParts.getInstance(path);
         for (int i = 0; i < parts.size(); ++i) {
             String element = parts.getElement(i);
+            if (isDeprecated(type, element, "*", "*")) {
+                return true;
+            }
             for (Entry<String, String> entry : parts.getAttributes(i).entrySet()) {
                 String attribute = entry.getKey();
                 String value = entry.getValue();
@@ -3870,91 +3873,10 @@ public class SupplementalDataInfo {
         return false;
     }
 
-    private boolean isDeprecated(Map<String, Relation<String, String>> map,
-        String element, String attribute, String value) {
-        return map == null ? false
-            : isDeprecated(map.get(STAR), attribute, value)
-                || isDeprecated(map.get(element), attribute, value);
-    }
-
-    private boolean isDeprecated(Relation<String, String> relation,
-        String attribute, String value) {
-        return relation == null ? false
-            : isDeprecated(relation.get(STAR), value)
-                || isDeprecated(relation.get(attribute), value);
-    }
-
-    private boolean isDeprecated(Set<String> set, String value) {
-        return set == null ? false
-            : set.contains(STAR)
-                || value != null && set.contains(value);
-    }
-
     /**
-     * returns true if the path contains a deprecated combination of element or attribute or attribute value
-     * 
-     * @param type
-     * @param parts
+     * Returns map of ID/Type/Value, such as id="$integer" type="regex" value=[0-9]+
      * @return
      */
-    public boolean hasDeprecatedItem(String type, XPathParts parts) {
-        Map<String, Relation<String, String>> badStarElements2Attributes2Values = deprecated.get(STAR);
-        if (matchesBad(parts, badStarElements2Attributes2Values)) {
-            return true;
-        }
-        Map<String, Relation<String, String>> badElements2Attributes2Values = deprecated.get(type);
-        if (matchesBad(parts, badElements2Attributes2Values)) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean matchesBad(XPathParts parts, Map<String, Relation<String, String>> badElements2Attributes2Values) {
-        if (badElements2Attributes2Values == null) {
-            return false;
-        }
-        Relation<String, String> badStarAttributes2Values = badElements2Attributes2Values.get(STAR);
-        for (int i = 0; i < parts.size(); ++i) {
-            Map<String, String> attributeToValue = parts.getAttributes(i);
-            if (matchesBad(badStarAttributes2Values, attributeToValue)) {
-                return true;
-            }
-            String element = parts.getElement(i);
-            Relation<String, String> badAttributes2Values = badElements2Attributes2Values.get(element);
-            if (matchesBad(badAttributes2Values, attributeToValue)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean matchesBad(Relation<String, String> badStarAttributes2Values, Map<String, String> attributeToValue) {
-        if (badStarAttributes2Values == null) {
-            return false;
-        }
-        Set<String> badStarValues = badStarAttributes2Values.get(STAR);
-        if (badStarValues != null && badStarValues.contains(STAR)) {
-            return true;
-        }
-        // at this point, we know that badStarValues doesn't contain STAR
-        for (Entry<String, String> attributeValue : attributeToValue.entrySet()) {
-            String value = attributeValue.getValue();
-            if (badStarValues != null && badStarValues.contains(value)) {
-                return true;
-            }
-            String attribute = attributeValue.getKey();
-            Set<String> badValues = badStarAttributes2Values.get(attribute);
-            if (badValues == null) {
-                continue;
-            }
-            if (badValues.contains(STAR) || badValues.contains(value)) {
-                return true;
-            }
-
-        }
-        return false;
-    }
-
     public Map<String, R2<String, String>> getValidityInfo() {
         return validityInfo;
     }
@@ -4186,35 +4108,59 @@ public class SupplementalDataInfo {
 
     public final static Splitter WHITESPACE_SPLTTER = Splitter.on(PatternCache.get("\\s+")).omitEmptyStrings();
 
-    public static class AttributeValidityInfo {
+    public static final class AttributeValidityInfo {
         //<attributeValues elements="alias" attributes="path" type="path">notDoneYet</attributeValues>
 
         final String type;
+        final Set<DtdType> dtds;
         final Set<String> elements;
         final Set<String> attributes;
-        final List<String> order;
-        final String value;
+        final String order;
+        
+        @Override
+        public String toString() {
+            return "type:" + type
+                + ", elements:" + elements
+                + ", attributes:" + attributes
+                + ", order:" + order;
+        }
 
-        static void add(Map<String, String> inputAttibutes, String inputValue, Set<AttributeValidityInfo> data) {
-            data.add(new AttributeValidityInfo(
+        static void add(Map<String, String> inputAttibutes, String inputValue, Map<AttributeValidityInfo, String> data) {
+            final AttributeValidityInfo key = new AttributeValidityInfo(
+                inputAttibutes.get("dtds"),
                 inputAttibutes.get("type"),
                 inputAttibutes.get("attributes"),
                 inputAttibutes.get("elements"),
-                inputAttibutes.get("order"),
-                inputValue));
+                inputAttibutes.get("order"));
+            if (data.containsKey(key)) {
+                throw new IllegalArgumentException(key + " declared twice");
+            }
+            data.put(key, inputValue);
         }
 
-        public AttributeValidityInfo(String type, String attributes, String elements, String order, String value) {
-            this.type = type;
+        public AttributeValidityInfo(String dtds, String type, String attributes, String elements, String order) {
+            if (dtds == null) {
+                this.dtds = Collections.singleton(DtdType.ldml);
+            } else {
+                Set<DtdType> temp = EnumSet.noneOf(DtdType.class);
+                for (String s : WHITESPACE_SPLTTER.split(dtds)) {
+                    temp.add(DtdType.valueOf(s));
+                }
+                this.dtds = Collections.unmodifiableSet(temp);
+            }
+            this.type = type != null ? type : order != null ? "choice" : null;
             this.elements = elements == null ? Collections.EMPTY_SET
                 : With.in(WHITESPACE_SPLTTER.split(elements)).toUnmodifiableCollection(new HashSet<String>());
             this.attributes = With.in(WHITESPACE_SPLTTER.split(attributes)).toUnmodifiableCollection(new HashSet<String>());
-            this.order = With.in(WHITESPACE_SPLTTER.split(attributes)).toUnmodifiableCollection(new ArrayList<String>());
-            this.value = value;
+            this.order = order;
         }
 
         public String getType() {
             return type;
+        }
+
+        public Set<DtdType> getDtds() {
+            return dtds;
         }
 
         public Set<String> getElements() {
@@ -4222,15 +4168,30 @@ public class SupplementalDataInfo {
         }
 
         public Set<String> getAttributes() {
-            return elements;
+            return attributes;
         }
 
-        public String getValue() {
-            return value;
+        public String getOrder() {
+            return order;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            AttributeValidityInfo other = (AttributeValidityInfo) obj;
+            return CldrUtility.deepEquals(
+                type, other.type, 
+                dtds, other.dtds, 
+                elements, other.elements, 
+                attributes, other.attributes,
+                order, other.order);
+        }
+        @Override
+        public int hashCode() {
+            return Objects.hash(type, dtds, elements, attributes, order);
         }
     }
 
-    public Set<AttributeValidityInfo> getAttributeValidity() {
+    public Map<AttributeValidityInfo, String> getAttributeValidity() {
         return attributeValidityInfo;
     }
 }

@@ -12,6 +12,7 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.StandardCodes;
 
 import com.ibm.icu.dev.test.TestFmwk;
@@ -26,7 +27,7 @@ public class TestCanonicalIds extends TestFmwk {
     // TODO consider whether we can pull the $variable stuff from other
     // sources..
 
-    static final Pattern WHITESPACE_PATTERN = Pattern.compile("\\s+");
+    static final Pattern WHITESPACE_PATTERN = PatternCache.get("\\s+");
 
     static TestAll.TestInfo testInfo = TestAll.TestInfo.getInstance();
     static Map<String, Map<String, R2<List<String>, String>>> aliasInfo = testInfo
@@ -61,46 +62,47 @@ public class TestCanonicalIds extends TestFmwk {
         }
 
         // check that the metadata is up to date
+        // Not necessary any more, since the bcp47 data is used directly.
 
-        Map<String, R2<String, String>> validityInfo = testInfo
-            .getSupplementalDataInfo().getValidityInfo();
-        String timezoneItemString = validityInfo.get("$tzid").get1();
-        HashSet<String> variable = new LinkedHashSet<String>(
-            Arrays.asList(WHITESPACE_PATTERN.split(timezoneItemString
-                .trim())));
-        if (!variable.equals(bcp47Canonical)) {
-            TreeSet<String> bcp47Only = new TreeSet<String>(bcp47Canonical);
-            bcp47Only.removeAll(variable);
-            TreeSet<String> variableOnly = new TreeSet<String>(variable);
-            variableOnly.removeAll(bcp47Canonical);
-            errln("Timezones: bcp47≠validity; bcp47:\t" + bcp47Only
-                + ";\tvalidity:\t" + variableOnly);
-        }
+//        Map<String, R2<String, String>> validityInfo = testInfo
+//            .getSupplementalDataInfo().getValidityInfo();
+//        String timezoneItemString = validityInfo.get("$tzid").get1();
+//        HashSet<String> variable = new LinkedHashSet<String>(
+//            Arrays.asList(WHITESPACE_PATTERN.split(timezoneItemString
+//                .trim())));
+//        if (!variable.equals(bcp47Canonical)) {
+//            TreeSet<String> bcp47Only = new TreeSet<String>(bcp47Canonical);
+//            bcp47Only.removeAll(variable);
+//            TreeSet<String> variableOnly = new TreeSet<String>(variable);
+//            variableOnly.removeAll(bcp47Canonical);
+//            errln("Timezones: bcp47≠validity; bcp47:\t" + bcp47Only
+//                + ";\tvalidity:\t" + variableOnly);
+//        }
     }
 
     enum Type {
         language, script, territory, zone
     }
 
-    public void TestForDeprecatedVariables() {
-        Map<String, Map<String, R2<List<String>, String>>> aliasInfo = testInfo
-            .getSupplementalDataInfo().getLocaleAliasInfo();
-        // language, script, territory, variant, zone
-        Map<String, R2<String, String>> validityInfo = testInfo
-            .getSupplementalDataInfo().getValidityInfo();
-        for (Entry<String, R2<String, String>> entry : validityInfo.entrySet()) {
-            String key = entry.getKey();
-            if (key.equals("$language")) {
-                checkItems(aliasInfo, entry, key, Type.language);
-            } else if (key.equals("$script")) {
-                checkItems(aliasInfo, entry, key, Type.script);
-            } else if (key.equals("$territory")) {
-                checkItems(aliasInfo, entry, key, Type.territory);
-            } else if (key.equals("$tzid")) {
-                checkItems(aliasInfo, entry, key, Type.zone);
-            }
-        }
-    }
+//    public void TestForDeprecatedVariables() {
+//        Map<String, Map<String, R2<List<String>, String>>> aliasInfo = testInfo
+//            .getSupplementalDataInfo().getLocaleAliasInfo();
+//        // language, script, territory, variant, zone
+//        Map<String, R2<String, String>> validityInfo = testInfo
+//            .getSupplementalDataInfo().getValidityInfo();
+//        for (Entry<String, R2<String, String>> entry : validityInfo.entrySet()) {
+//            String key = entry.getKey();
+//            if (key.equals("$language")) {
+//                checkItems(aliasInfo, entry, key, Type.language);
+//            } else if (key.equals("$script")) {
+//                checkItems(aliasInfo, entry, key, Type.script);
+//            } else if (key.equals("$territory")) {
+//                checkItems(aliasInfo, entry, key, Type.territory);
+//            } else if (key.equals("$tzid")) {
+//                checkItems(aliasInfo, entry, key, Type.zone);
+//            }
+//        }
+//    }
 
     private void checkItems(
         Map<String, Map<String, R2<List<String>, String>>> aliasInfo,
@@ -171,7 +173,7 @@ public class TestCanonicalIds extends TestFmwk {
                 errln("No deprecated info for " + value);
                 return false;
             }
-            Matcher m = Pattern.compile("(\\d{4})-(\\d{2})-(\\d{2})").matcher(
+            Matcher m = PatternCache.get("(\\d{4})-(\\d{2})-(\\d{2})").matcher(
                 deprecated);
             if (!m.matches()) {
                 errln("Bad deprecated date for " + value + ", " + deprecated);
@@ -195,7 +197,7 @@ public class TestCanonicalIds extends TestFmwk {
                 errln("No deprecated info for " + value);
                 return false;
             }
-            Matcher m = Pattern.compile("(\\d{4})-(\\d{2})-(\\d{2})").matcher(
+            Matcher m = PatternCache.get("(\\d{4})-(\\d{2})-(\\d{2})").matcher(
                 deprecated);
             if (!m.matches()) {
                 errln("Bad deprecated date for " + value + ", " + deprecated);
@@ -209,8 +211,5 @@ public class TestCanonicalIds extends TestFmwk {
             }
         }
         return false;
-    }
-
-    public void ZZZ() {
     }
 }

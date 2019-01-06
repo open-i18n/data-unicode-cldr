@@ -1,3 +1,1 @@
-locale= /.+/ ; action=delete ; path=//ldml/dates/timeZoneNames/zone[@type="Asia/Harbin"]/exemplarCity
-locale= /.+/ ; action=delete ; path=//ldml/dates/timeZoneNames/zone[@type="Asia/Kashgar"]/exemplarCity
-locale= /.+/ ; action=delete ; path=//ldml/dates/timeZoneNames/zone[@type="Asia/Chongqing"]/exemplarCity
+locale=/.*/; action=delete ; path=/volume-teaspoon-au/

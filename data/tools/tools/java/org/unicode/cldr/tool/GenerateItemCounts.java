@@ -23,14 +23,15 @@ import org.unicode.cldr.tool.Option.Options;
 import org.unicode.cldr.util.Builder;
 import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
-import org.unicode.cldr.util.CLDRFile.DtdType;
 import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Counter;
 import org.unicode.cldr.util.DtdData;
 import org.unicode.cldr.util.DtdData.Attribute;
 import org.unicode.cldr.util.DtdData.Element;
+import org.unicode.cldr.util.DtdType;
 import org.unicode.cldr.util.PathStarrer;
+import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.RegexUtilities;
 import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.XMLFileReader;
@@ -59,7 +60,7 @@ public class GenerateItemCounts {
         // MUST be oldest first!
         // "cldr-archive/cldr-21.0",
         // "cldr-24.0",
-        "cldr-25.0",
+        "cldr-27.0",
         "trunk"
     };
 
@@ -92,8 +93,8 @@ public class GenerateItemCounts {
     public static void main(String[] args) throws IOException {
         myOptions.parse(MyOptions.directory, args, true);
 
-        DIR_FILE_MATCHER = Pattern.compile(MyOptions.directory.option.getValue()).matcher("");
-        RAW_FILE_MATCHER = Pattern.compile(MyOptions.rawfilter.option.getValue()).matcher("");
+        DIR_FILE_MATCHER = PatternCache.get(MyOptions.directory.option.getValue()).matcher("");
+        RAW_FILE_MATCHER = PatternCache.get(MyOptions.rawfilter.option.getValue()).matcher("");
         VERBOSE = MyOptions.verbose.option.doesOccur();
 
         if (MyOptions.summary.option.doesOccur()) {
@@ -104,7 +105,7 @@ public class GenerateItemCounts {
             // doChanges = true;
         } else {
         }
-        // Pattern dirPattern = dirPattern = Pattern.compile(arg);
+        // Pattern dirPattern = dirPattern = PatternCache.get(arg);
         GenerateItemCounts main = new GenerateItemCounts();
         try {
             Relation<String, String> oldPath2value = null;
@@ -216,7 +217,7 @@ public class GenerateItemCounts {
                 final Set<DtdType> possible = x.getValue();
                 Set<DtdType> deprecated = new TreeSet();
                 for (DtdType dtdType : possible) {
-                    if (SUPPLEMENTAL_DATA_INFO.isDeprecated(dtdType, element, null, null)) {
+                    if (SUPPLEMENTAL_DATA_INFO.isDeprecated(dtdType, element, "*", "*")) {
                         deprecated.add(dtdType);
                     }
                 }
@@ -257,7 +258,7 @@ public class GenerateItemCounts {
                 for (R2<DtdType, String> s : possible) {
                     final DtdType dtdType = s.get0();
                     final String element = s.get1();
-                    if (SUPPLEMENTAL_DATA_INFO.isDeprecated(dtdType, element, attribute, null)) {
+                    if (SUPPLEMENTAL_DATA_INFO.isDeprecated(dtdType, element, attribute, "*")) {
                         deprecated.add(s);
                     }
                 }
@@ -318,7 +319,7 @@ public class GenerateItemCounts {
                 }
                 String path = entry.getKey();
                 String[] elements = path.split("/");
-                DtdType type = CLDRFile.DtdType.valueOf(elements[1]);
+                DtdType type = DtdType.valueOf(elements[1]);
                 String finalElement = elements[elements.length - 1];
                 starred.print(path);
                 for (String attribute : attributes) {
@@ -334,7 +335,7 @@ public class GenerateItemCounts {
         }
     }
 
-    static Pattern prefix = Pattern.compile("([^/]+/[^/]+)(.*)");
+    static Pattern prefix = PatternCache.get("([^/]+/[^/]+)(.*)");
 
     static class Delta {
         Counter<String> newCount = new Counter<String>();
@@ -432,14 +433,14 @@ public class GenerateItemCounts {
         return result;
     }
 
-    final static Pattern LOCALE_PATTERN = Pattern.compile(
+    final static Pattern LOCALE_PATTERN = PatternCache.get(
         "([a-z]{2,3})(?:[_-]([A-Z][a-z]{3}))?(?:[_-]([a-zA-Z0-9]{2,3}))?([_-][a-zA-Z0-9]{1,8})*");
 
     public static void doSummary() throws IOException {
         Map<String, R4<Counter<String>, Counter<String>, Counter<String>, Counter<String>>> key_release_count = new TreeMap<String, R4<Counter<String>, Counter<String>, Counter<String>, Counter<String>>>();
         Matcher countryLocale = LOCALE_PATTERN.matcher("");
         List<String> releases = new ArrayList<String>();
-        Pattern releaseNumber = Pattern.compile("count_(?:.*-(\\d+(\\.\\d+)*)|trunk)\\.txt");
+        Pattern releaseNumber = PatternCache.get("count_(?:.*-(\\d+(\\.\\d+)*)|trunk)\\.txt");
         // int releaseCount = 1;
         Relation<String, String> release_keys = Relation.of(new TreeMap<String, Set<String>>(), TreeSet.class);
         Relation<String, String> localesToPaths = Relation.of(new TreeMap<String, Set<String>>(), TreeSet.class);
@@ -585,7 +586,7 @@ public class GenerateItemCounts {
 
     static final Set<String> ATTRIBUTES_TO_SKIP = Builder.with(new HashSet<String>())
         .addAll("version", "references", "standard", "draft").freeze();
-    static final Pattern skipPath = Pattern.compile("" +
+    static final Pattern skipPath = PatternCache.get("" +
         "\\[\\@alt=\"[^\"]*proposed" +
         "|^//" +
         "(ldml(\\[[^/]*)?/identity" +

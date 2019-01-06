@@ -25,7 +25,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -36,6 +35,7 @@ import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.LanguageTagParser;
+import org.unicode.cldr.util.PatternCache;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -161,7 +161,7 @@ public class TestCldr extends TestFmwk {
         addLocales(DateFormat.getAvailableULocales(), s);
         addLocales(Collator.getAvailableULocales(), s);
 
-        Matcher m = Pattern.compile(MATCH).matcher("");
+        Matcher m = PatternCache.get(MATCH).matcher("");
         for (String locale : s) {
             if (!m.reset(locale).matches())
                 continue;

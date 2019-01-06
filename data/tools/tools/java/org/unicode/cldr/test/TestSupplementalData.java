@@ -12,13 +12,13 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.Pair;
+import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.StandardCodes;
 import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.BasicLanguageData;
@@ -126,7 +126,7 @@ public class TestSupplementalData {
         System.out.println(supplementalData.getTerritoryToTelephoneCodeInfo());
     }
 
-    static Matcher numericTerritory = Pattern.compile("[0-9]{3}").matcher("");
+    static Matcher numericTerritory = PatternCache.get("[0-9]{3}").matcher("");
     private static CLDRFile root;
 
     private static void checkTerritoryMapping() {

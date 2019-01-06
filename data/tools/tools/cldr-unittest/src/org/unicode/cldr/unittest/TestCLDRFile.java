@@ -17,14 +17,15 @@ import java.util.regex.Pattern;
 import org.unicode.cldr.unittest.TestAll.TestInfo;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.DraftStatus;
-import org.unicode.cldr.util.CLDRFile.DtdType;
 import org.unicode.cldr.util.CLDRFile.Status;
 import org.unicode.cldr.util.CLDRLocale;
 import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
+import org.unicode.cldr.util.DtdType;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.Level;
 import org.unicode.cldr.util.PathHeader;
+import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.SimpleFactory;
 import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo;
@@ -46,23 +47,6 @@ public class TestCLDRFile extends TestFmwk {
         new TestCLDRFile().run(args);
     }
 
-    public static Factory getAllFactory() {
-        File mainDir = new File(CLDRPaths.MAIN_DIRECTORY);
-        if (!mainDir.isDirectory()) {
-            throw new IllegalArgumentException(
-                "MAIN_DIRECTORY is not a directory: "
-                    + CLDRPaths.MAIN_DIRECTORY);
-        }
-        File seedDir = new File(CLDRPaths.SEED_DIRECTORY);
-        if (!seedDir.isDirectory()) {
-            throw new IllegalArgumentException(
-                "SEED_DIRECTORY is not a directory: "
-                    + CLDRPaths.SEED_DIRECTORY);
-        }
-        File dirs[] = { mainDir, seedDir };
-        return SimpleFactory.make(dirs, ".*", DraftStatus.approved);
-    }
-
     // verify for all paths, if there is a count="other", then there is a
     // count="x", for all x in keywords
     public void testPlurals() {
@@ -75,7 +59,7 @@ public class TestCLDRFile extends TestFmwk {
         .compile("\\[@count=\"([^\"]+)\"]");
 
     private void checkPlurals(String locale) {
-        CLDRFile cldrFile = cldrFactory.make(locale, true);
+        CLDRFile cldrFile = testInfo.getCLDRFile(locale, true);
         Matcher m = COUNT_MATCHER.matcher("");
         Relation<String, String> skeletonToKeywords = Relation.of(
             new TreeMap<String, Set<String>>(cldrFile.getComparator()),
@@ -101,7 +85,7 @@ public class TestCLDRFile extends TestFmwk {
         }
     }
 
-    static Factory cldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
+    static Factory cldrFactory = testInfo.getCldrFactory();
 
     static class LocaleInfo {
         final String locale;
@@ -110,7 +94,7 @@ public class TestCLDRFile extends TestFmwk {
 
         LocaleInfo(String locale) {
             this.locale = locale;
-            cldrFile = cldrFactory.make(locale, true);
+            cldrFile = testInfo.getCLDRFile(locale, true);
             for (String path : cldrFile.fullIterable()) {
                 Level level = sdi.getCoverageLevel(path, locale);
                 if (level.compareTo(Level.COMPREHENSIVE) > 0) {
@@ -148,7 +132,9 @@ public class TestCLDRFile extends TestFmwk {
                 // &&
                 // !path.startsWith("//ldml/numbers/currencyFormats[@numberSystem=\"latn\"]")
                 || path.contains("[@count=")
-                && !path.contains("[@count=\"other\"]")) {
+                && !path.contains("[@count=\"other\"]")
+                || path.contains("dayPeriod[@type=\"noon\"]")
+                ) {
                 continue;
             }
             for (LocaleInfo localeInfo : localeInfos.values()) {
@@ -174,8 +160,13 @@ public class TestCLDRFile extends TestFmwk {
                         || path.contains("[@type=\"islamic-umalqura\"]")
                         || path.contains("/relative[@type=\"-2\"]")
                         || path.contains("/relative[@type=\"2\"]")
-                        || path.startsWith("//ldml/characters/exemplarCharacters[@type=\"index\"]")
-                        && localeInfo.locale.equals("root")
+                        || path.startsWith("//ldml/contextTransforms/contextTransformUsage")
+                        || path.contains("[@alt=\"variant\"]")
+                        || (path.contains("dayPeriod[@type=") 
+                            && (path.endsWith("1\"]") || path.endsWith("\"am\"]") || path.endsWith("\"pm\"]") || path.endsWith("\"midnight\"]")
+                            )) // morning1, afternoon1, ...
+                        || (path.startsWith("//ldml/characters/exemplarCharacters[@type=\"index\"]")
+                        && localeInfo.locale.equals("root"))
                     // //ldml/characters/exemplarCharacters[@type="index"][root]
                     ) {
                         continue;
@@ -183,6 +174,8 @@ public class TestCLDRFile extends TestFmwk {
                     String localeAndStatus = localeInfo.locale
                         + (englishInfo.cldrFile.isHere(path) ? "" : "*");
                     missingPathsToLocales.put(path, localeAndStatus);
+                    // English contains the path, and the target locale doesn't.
+                    // The * means that the value is inherited (eg from root).
                 }
             }
         }
@@ -206,6 +199,8 @@ public class TestCLDRFile extends TestFmwk {
                     String localeAndStatus = localeInfo.locale
                         + (localeInfo.cldrFile.isHere(path) ? "" : "*");
                     extraPathsToLocales.put(path, localeAndStatus);
+                    // English doesn't contains the path, and the target locale does.
+                    // The * means that the value is inherited (eg from root).
                 }
             }
         }
@@ -215,13 +210,13 @@ public class TestCLDRFile extends TestFmwk {
             String path = entry.getKey();
             Set<String> locales = entry.getValue();
             Status status = new Status();
-            Object originalLocale = englishInfo.cldrFile.getSourceLocaleID(
+            String originalLocale = englishInfo.cldrFile.getSourceLocaleID(
                 path, status);
             String engName = "en"
-                + (englishInfo.cldrFile.isHere(path) ? "" : "*"
+                + (englishInfo.cldrFile.isHere(path) ? "" : " (source_locale:"
                     + originalLocale
-                    + (path.equals(status.pathWhereFound) ? "" : ","
-                        + status) + ";");
+                    + (path.equals(status.pathWhereFound) ? "" : ", source_path: "
+                        + status) + ")");
             if (path.startsWith("//ldml/localeDisplayNames/")
                 || path.contains("[@alt=\"accounting\"]")) {
                 logln("+" + engName + ", -" + locales + "\t" + path);
@@ -253,7 +248,7 @@ public class TestCLDRFile extends TestFmwk {
         // }
         // System.out.println("Already in " + locale);
         // for (Iterator<String> it =
-        // cldrFile.iterator(Pattern.compile(".*\\[@count=.*").matcher(""));
+        // cldrFile.iterator(PatternCache.get(".*\\[@count=.*").matcher(""));
         // it.hasNext();) {
         // String path = it.next();
         // System.out.println(path + " => " + cldrFile.getStringValue(path));
@@ -269,7 +264,7 @@ public class TestCLDRFile extends TestFmwk {
     // }
 
     public void checkLocale(CLDRFile cldr) {
-        Matcher m = Pattern.compile("gregorian.*eras").matcher("");
+        Matcher m = PatternCache.get("gregorian.*eras").matcher("");
         for (Iterator<String> it = cldr.iterator("",
             new UTF16.StringComparator()); it.hasNext();) {
             String path = it.next();
@@ -299,8 +294,7 @@ public class TestCLDRFile extends TestFmwk {
 
     public void testSimple() {
         double deltaTime = System.currentTimeMillis();
-        Factory cldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
-        CLDRFile english = cldrFactory.make("en", true);
+        CLDRFile english = testInfo.getEnglish();
         deltaTime = System.currentTimeMillis() - deltaTime;
         logln("Creation: Elapsed: " + deltaTime / 1000.0 + " seconds");
 
@@ -358,8 +352,7 @@ public class TestCLDRFile extends TestFmwk {
     }
 
     public void testResolution() {
-        Factory cldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
-        CLDRFile german = cldrFactory.make("de", true);
+        CLDRFile german = testInfo.getCLDRFile("de", true);
         // Test direct lookup.
         String xpath = "//ldml/localeDisplayNames/localeDisplayPattern/localeSeparator";
         String id = german.getSourceLocaleID(xpath, null);
@@ -402,15 +395,11 @@ public class TestCLDRFile extends TestFmwk {
     }
 
     public void testGeorgeBailey() {
-        Factory cldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
-        PathHeader.Factory phf = PathHeader.getFactory(cldrFactory.make("en",
-            true));
+        PathHeader.Factory phf = PathHeader.getFactory(testInfo.getEnglish());
         for (String locale : Arrays.asList("de", "de_AT", "en", "nl")) {
-            CLDRFile cldrFile = cldrFactory.make(locale, true);
+            CLDRFile cldrFile = testInfo.getCLDRFile(locale, true);
 
-            // CLDRFile parentFile =
-            // cldrFactory.make(LocaleIDParser.getParent(locale), true);
-            CLDRFile cldrFileUnresolved = cldrFactory.make(locale, false);
+            CLDRFile cldrFileUnresolved = testInfo.getCLDRFile(locale, false);
             Status status = new Status();
             Output<String> localeWhereFound = new Output<String>();
             Output<String> pathWhereFound = new Output<String>();
@@ -540,4 +529,20 @@ public class TestCLDRFile extends TestFmwk {
                 + mainLocales.toString());
         }
     }
+
+    public void TestForStrayFiles() {
+        TreeSet<String> mainList = new TreeSet<>(Arrays.asList(new File(CLDRPaths.MAIN_DIRECTORY).list()));
+
+        for (String dir : CLDRPaths.LDML_DIRECTORIES) {
+            Set<String> dirFiles = new TreeSet<String>(Arrays.asList(new File(CLDRPaths.BASE_DIRECTORY + "common/" + dir).list()));
+            if (dir.equals("rbnf")) { // Remove known exceptions.
+                dirFiles.remove("es_003.xml");
+            }
+            if (!mainList.containsAll(dirFiles)) {
+                dirFiles.removeAll(mainList);
+                errln(dir + " has extra files" + dirFiles);
+            }
+        }
+    }
+
 }

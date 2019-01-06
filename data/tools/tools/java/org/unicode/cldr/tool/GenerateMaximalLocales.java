@@ -16,7 +16,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.regex.Pattern;
 
 import org.unicode.cldr.draft.ScriptMetadata;
 import org.unicode.cldr.draft.ScriptMetadata.Info;
@@ -33,6 +32,7 @@ import org.unicode.cldr.util.Iso639Data.Scope;
 import org.unicode.cldr.util.LanguageTagParser;
 import org.unicode.cldr.util.LocaleIDParser;
 import org.unicode.cldr.util.Log;
+import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.SimpleFactory;
 import org.unicode.cldr.util.StandardCodes;
 import org.unicode.cldr.util.SupplementalDataInfo;
@@ -41,6 +41,7 @@ import org.unicode.cldr.util.SupplementalDataInfo.BasicLanguageData.Type;
 import org.unicode.cldr.util.SupplementalDataInfo.OfficialStatus;
 import org.unicode.cldr.util.SupplementalDataInfo.PopulationData;
 
+import com.google.common.collect.ImmutableSet;
 import com.ibm.icu.dev.util.BagFormatter;
 import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.dev.util.Relation;
@@ -468,13 +469,16 @@ public class GenerateMaximalLocales {
             toChildren.put(parent, locale);
         }
 
-        // if any have a script, then throw out any that don't have a script (they're aliases)
+        // Suppress script for locales for which we only have one locale in common/main. See ticket #7834.
+        Set<String> suppressScriptLocales = new HashSet<String>(Arrays.asList("bm_ML", "en_US", "ha_NG", "iu_CA", "ms_MY", "mn_MN"));
+
+        // if any have a script, then throw out any that don't have a script (unless they're specifically included.)
         Set<String> toRemove = new TreeSet<String>();
         for (String locale : hasScript) {
             toRemove.clear();
             Set<String> children = toChildren.getAll(locale);
             for (String child : children) {
-                if (ltp.set(child).getScript().length() == 0) {
+                if (ltp.set(child).getScript().length() == 0 && !suppressScriptLocales.contains(child)) {
                     toRemove.add(child);
                 }
             }
@@ -483,14 +487,10 @@ public class GenerateMaximalLocales {
                 toChildren.removeAll(locale, toRemove);
             }
         }
+        
 
         // we add a child as a default locale if it has the same maximization
         main: for (String locale : toChildren.keySet()) {
-            if (locale.equals("en")) {
-                // special case English (because of Deseret)
-                defaultLocaleContent.add("en_US");
-                continue;
-            }
             String maximized = maximize(locale, toMaximized);
             if (maximized == null) {
                 if (SHOW_ADD) System.out.println("Missing maximized:\t" + locale);
@@ -517,17 +517,17 @@ public class GenerateMaximalLocales {
         Log.setLogNoBOM(CLDRPaths.GEN_DIRECTORY + "/supplemental", "supplementalMetadata.xml");
         BufferedReader oldFile = BagFormatter.openUTF8Reader(CLDRPaths.SUPPLEMENTAL_DIRECTORY,
             "supplementalMetadata.xml");
-        CldrUtility.copyUpTo(oldFile, Pattern.compile("\\s*<defaultContent locales=\"\\s*"), Log.getLog(), false);
+        CldrUtility.copyUpTo(oldFile, PatternCache.get("\\s*<defaultContent locales=\"\\s*"), Log.getLog(), false);
 
         String sep = CldrUtility.LINE_SEPARATOR + "\t\t\t";
         String broken = CldrUtility.breakLines(CldrUtility.join(defaultLocaleContent, " "), sep,
-            Pattern.compile("(\\S)\\S*").matcher(""), 80);
+            PatternCache.get("(\\S)\\S*").matcher(""), 80);
 
         Log.println("\t\t<defaultContent locales=\"" + broken + "\"");
         Log.println("\t\t/>");
 
         // Log.println("</supplementalData>");
-        CldrUtility.copyUpTo(oldFile, Pattern.compile("\\s*/>\\s*(<!--.*)?"), null, true); // skip to matching >
+        CldrUtility.copyUpTo(oldFile, PatternCache.get("\\s*/>\\s*(<!--.*)?"), null, true); // skip to matching >
         CldrUtility.copyUpTo(oldFile, null, Log.getLog(), true); // copy the rest
 
         Log.close();
@@ -657,31 +657,25 @@ public class GenerateMaximalLocales {
     private static final double UNOFFICIAL_SCALE_DOWN = 0.2;
 
     private static final List<String> KEEP_TARGETS = Arrays.asList("und_Arab_PK", "und_Latn_ET");
+    private static final ImmutableSet<String> deprecatedISONotInLST = ImmutableSet.of("scc", "scr");
     // Many of the overrides below can be removed once the language/pop/country data is updated.
     private static final Map<String, String> LANGUAGE_OVERRIDES = CldrUtility.asMap(new String[][] {
         { "eo", "eo_Latn_001" },
         { "eo_Latn", "eo_Latn_001" },
         { "es", "es_Latn_ES" },
         { "es_Latn", "es_Latn_ES" },
-        { "hsb", "hsb_Latn_DE" },
-        { "hsb_Latn", "hsb_Latn_DE" },
-        { "jgo", "jgo_Latn_CM" },
         { "ku_Arab", "ku_Arab_IQ" },
         { "man", "man_Latn_GM" },
         { "man_Latn", "man_Latn_GM" },
         { "mas", "mas_Latn_KE" },
         { "mas_Latn", "mas_Latn_KE" },
-        { "mgh", "mgh_Latn_MZ" },
-        { "mgo", "mgo_Latn_CM" },
         { "mn", "mn_Cyrl_MN" },
         { "mn_Cyrl", "mn_Cyrl_MN" },
         { "ms_Arab", "ms_Arab_MY" },
-        { "nus", "nus_Latn_SD" },
         { "pap", "pap_Latn_AW" },
         { "pap_Latn", "pap_Latn_AW" },
         { "prg", "prg_Latn_001" },
         { "prg_Latn", "prg_Latn_001" },
-        { "sbp", "sbp_Latn_TZ" },
         { "rif", "rif_Tfng_MA" },
         { "rif_Latn", "rif_Latn_MA" },
         { "rif_Tfng", "rif_Tfng_MA" },
@@ -699,6 +693,7 @@ public class GenerateMaximalLocales {
         { "und_Arab", "ar_Arab_EG" },
         { "und_Arab_PK", "ur_Arab_PK" },
         { "und_Bopo", "zh_Bopo_TW" },
+        { "und_Deva_FJ", "hif_Deva_FJ" },
         { "und_Hani", "zh_Hani_CN" },
         { "und_Hani_CN", "zh_Hani_CN" },
         { "und_Kana", "ja_Kana_JP" },
@@ -834,6 +829,9 @@ public class GenerateMaximalLocales {
 
             String badLanguage = str.getKey();
             if (badLanguage.contains("_")) {
+                continue;
+            }
+            if (deprecatedISONotInLST.contains(badLanguage)) {
                 continue;
             }
             Set<R3<Double, String, String>> goodLanguageData = maxData.languages.getAll(goodLanguage);
@@ -1908,6 +1906,7 @@ public class GenerateMaximalLocales {
             String newValue = newContent.get(parent);
             String overrideValue = allowedOverrideValuesTest.get(parent);
             if (overrideValue != null) {
+                newContent.put(parent, overrideValue);
                 newValue = overrideValue;
             }
             if (CldrUtility.equals(oldValue, newValue)) {

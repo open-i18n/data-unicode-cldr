@@ -9,6 +9,7 @@ import org.unicode.cldr.test.CheckCLDR.CheckStatus.Subtype;
 import org.unicode.cldr.util.ApproximateWidth;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.Level;
+import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.RegexLookup;
 import org.unicode.cldr.util.SupplementalDataInfo;
 
@@ -36,7 +37,7 @@ public class CheckWidths extends CheckCLDR {
         NONE, QUOTES, PLACEHOLDERS, NUMBERSYMBOLS
     }
 
-    private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\{\\d\\}");
+    private static final Pattern PLACEHOLDER_PATTERN = PatternCache.get("\\{\\d\\}");
 
     private static class Limit {
         final double warningReference;
@@ -134,6 +135,7 @@ public class CheckWidths extends CheckCLDR {
         "|mass-pound" +
         "|power-horsepower" +
         "|pressure-inch-hg" +
+        "|pressure-millimeter-of-mercury" +
         "|speed-mile-per-hour" +
         "|temperature-fahrenheit" +
         "|volume-cubic-mile" +
@@ -141,10 +143,14 @@ public class CheckWidths extends CheckCLDR {
         "|speed-kilometer-per-hour" +
         "|speed-meter-per-second" +
         ")";
+    
+    static final String ALLOW_LONGEST = "consumption-liter-per-100kilometers";
 
     static RegexLookup<Limit[]> lookup = new RegexLookup<Limit[]>()
         .setPatternTransform(RegexLookup.RegexFinderTransformPath)
         .addVariable("%A", "\"[^\"]+\"")
+        .addVariable("%P", "\"[ap]m\"")
+        .addVariable("%Q", "[^ap].*|[ap][^m].*") // Anything but am or pm
         .add("//ldml/delimiters/(quotation|alternateQuotation)", new Limit[] {
             new Limit(1, 1, Measure.CODE_POINTS, LimitType.MAXIMUM, Special.NONE)
         })
@@ -183,6 +189,37 @@ public class CheckWidths extends CheckCLDR {
             new Limit(5 * EM, 10 * EM, Measure.DISPLAY_WIDTH, LimitType.MAXIMUM, Special.PLACEHOLDERS)
         })
 
+        // Era Abbreviations
+
+        // Allow longer for Japanese calendar eras
+        .add("//ldml/dates/calendars/calendar[@type=\"japanese\"]/.*/eraAbbr/era[@type=%A]", new Limit[] {
+            new Limit(12 * EM, 16 * EM, Measure.DISPLAY_WIDTH, LimitType.MAXIMUM, Special.NONE)
+        })
+        // Allow longer for ROC calendar eras
+        .add("//ldml/dates/calendars/calendar[@type=\"roc\"]/.*/eraAbbr/era[@type=%A]", new Limit[] {
+            new Limit(4 * EM, 8 * EM, Measure.DISPLAY_WIDTH, LimitType.MAXIMUM, Special.NONE)
+        })
+        .add("//ldml/dates/calendars/calendar.*/eraAbbr/era[@type=%A]", new Limit[] {
+            new Limit(3 * EM, 6 * EM, Measure.DISPLAY_WIDTH, LimitType.MAXIMUM, Special.NONE)
+        })
+        
+        // am/pm abbreviated
+        .add("//ldml/dates/calendars/calendar[@type=\"gregorian\"]/dayPeriods/.*/dayPeriodWidth[@type=\"abbreviated\"]/dayPeriod[@type=%P]", new Limit[] {
+            new Limit(4 * EM, 6 * EM, Measure.DISPLAY_WIDTH, LimitType.MAXIMUM, Special.NONE)
+        })
+        // other day periods abbreviated
+        .add("//ldml/dates/calendars/calendar[@type=\"gregorian\"]/dayPeriods/.*/dayPeriodWidth[@type=\"abbreviated\"]/dayPeriod[@type=%Q]", new Limit[] {
+            new Limit(8 * EM, 12 * EM, Measure.DISPLAY_WIDTH, LimitType.MAXIMUM, Special.NONE)
+        })
+        // am/pm wide
+        .add("//ldml/dates/calendars/calendar[@type=\"gregorian\"]/dayPeriods/.*/dayPeriodWidth[@type=\"wide\"]/dayPeriod[@type=%P]", new Limit[] {
+            new Limit(5 * EM, 10 * EM, Measure.DISPLAY_WIDTH, LimitType.MAXIMUM, Special.NONE)
+        })
+        // other day periods wide
+        .add("//ldml/dates/calendars/calendar[@type=\"gregorian\"]/dayPeriods/.*/dayPeriodWidth[@type=\"wide\"]/dayPeriod[@type=%Q]", new Limit[] {
+            new Limit(10 * EM, 20 * EM, Measure.DISPLAY_WIDTH, LimitType.MAXIMUM, Special.NONE)
+        })
+
         // Narrow items
 
         .add("//ldml/dates/calendars/calendar.*[@type=\"narrow\"](?!/cyclic|/dayPeriod|/monthPattern)", new Limit[] {
@@ -199,6 +236,10 @@ public class CheckWidths extends CheckCLDR {
         // Catch -future/past Narrow units  and allow much wider values
         .add("//ldml/units/unitLength[@type=\"narrow\"]/unit[@type=\"[^\"]+-(future|past)\"]/unitPattern", new Limit[] {
             new Limit(10 * EM, 15 * EM, Measure.DISPLAY_WIDTH, LimitType.MAXIMUM, Special.PLACEHOLDERS)
+        })
+        // Catch widest units and allow a bit wider
+        .add("//ldml/units/unitLength[@type=\"narrow\"]/unit[@type=\"" + ALLOW_LONGEST + "\"]/unitPattern", new Limit[] {
+            new Limit(5 * EM, 6 * EM, Measure.DISPLAY_WIDTH, LimitType.MAXIMUM, Special.PLACEHOLDERS)
         })
         // Catch special units and allow a bit wider
         .add("//ldml/units/unitLength[@type=\"narrow\"]/unit[@type=\"" + ALLOW_LONGER + "\"]/unitPattern", new Limit[] {

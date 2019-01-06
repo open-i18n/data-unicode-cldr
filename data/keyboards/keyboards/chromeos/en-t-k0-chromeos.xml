@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE keyboard SYSTEM "../dtd/ldmlKeyboard.dtd">
 <keyboard locale="en-t-k0-chromeos">
-	<version platform="33" number="$Revision: 9576 $"/>
-	<generation date="$Date: 2013-12-18 18:30:13 -0600 (Wed, 18 Dec 2013) $"/>
+	<version platform="33" number="$Revision: 11914 $"/>
 	<names>
 		<name value="USA"/>
 	</names>

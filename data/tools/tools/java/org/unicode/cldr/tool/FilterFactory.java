@@ -19,12 +19,13 @@ import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CoverageInfo;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.LocaleIDParser;
+import org.unicode.cldr.util.Organization;
+import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.RegexFileParser;
 import org.unicode.cldr.util.RegexFileParser.RegexLineParser;
 import org.unicode.cldr.util.RegexLookup;
 import org.unicode.cldr.util.StandardCodes;
 import org.unicode.cldr.util.SupplementalDataInfo;
-import org.unicode.cldr.util.VoteResolver.Organization;
 import org.unicode.cldr.util.XMLSource;
 import org.unicode.cldr.util.XPathParts;
 
@@ -301,7 +302,7 @@ public class FilterFactory extends Factory {
                 } else {
                     Iterator<String> iterator = file.iterator();
                     if (filteringPath != null) {
-                        Matcher matcher = Pattern.compile(filteringPath).matcher("");
+                        Matcher matcher = PatternCache.get(filteringPath).matcher("");
                         iterator = file.iterator(matcher);
                     }
                     while (iterator.hasNext()) {
@@ -416,7 +417,7 @@ public class FilterFactory extends Factory {
         modifiers.add(valueModifier);
     }
 
-    private Pattern XPATH_PATTERN = Pattern.compile("/(/\\w++(\\[@\\w++=\"[^\"()%\\\\]+\"])*)++");
+    private Pattern XPATH_PATTERN = PatternCache.get("/(/\\w++(\\[@\\w++=\"[^\"()%\\\\]+\"])*)++");
 
     /**
      * @param path

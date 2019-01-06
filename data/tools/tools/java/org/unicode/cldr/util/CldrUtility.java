@@ -14,6 +14,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -25,11 +26,14 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -41,6 +45,7 @@ import java.util.regex.Pattern;
 
 import org.unicode.cldr.util.RegexLookup.Finder;
 
+import com.google.common.base.Splitter;
 import com.ibm.icu.dev.test.TestFmwk;
 import com.ibm.icu.dev.util.BagFormatter;
 import com.ibm.icu.dev.util.TransliteratorUtilities;
@@ -62,13 +67,16 @@ public class CldrUtility {
     public static final boolean BETA = false;
 
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
-    public final static Pattern SEMI_SPLIT = Pattern.compile("\\s*;\\s*");
+    public final static Pattern SEMI_SPLIT = PatternCache.get("\\s*;\\s*");
 
     private static final boolean HANDLEFILE_SHOW_SKIP = false;
     // Constant for "∅∅∅". Indicates that a child locale has no value for a
     // path even though a parent does.
     public static final String NO_INHERITANCE_MARKER = new String(new char[] { 0x2205, 0x2205, 0x2205 });
 
+    // Constant for "↑↑↑". Indicates a "passthru" vote to the parent locale. If CLDRFile ever
+    // finds this value in a data field, writing of the field should be suppressed.
+    public static final String INHERITANCE_MARKER = new String(new char[] { 0x2191, 0x2191, 0x2191 });
     /**
      * Very simple class, used to replace variables in a string. For example
      * <p>
@@ -129,7 +137,7 @@ public class CldrUtility {
             return null;
         }
         final File file = filename == null ? new File(path)
-            : new File(path, filename);
+        : new File(path, filename);
         try {
             return file.getCanonicalPath() + File.separatorChar;
         } catch (IOException e) {
@@ -226,7 +234,7 @@ public class CldrUtility {
             return LINES_DIFFERENT;
         }
 
-        // private Matcher dtdMatcher = Pattern.compile(
+        // private Matcher dtdMatcher = PatternCache.get(
         // "\\Q<!DOCTYPE ldml SYSTEM \"http://www.unicode.org/cldr/dtd/\\E.*\\Q/ldml.dtd\">\\E").matcher("");
 
         private String[] CVS_TAGS = { "Revision", "Date" };
@@ -395,6 +403,18 @@ public class CldrUtility {
     }
 
     public static List<String> splitList(String source, char separator, boolean trim, List<String> output) {
+        return splitList(source, Character.toString(separator), trim, output);
+    }
+
+    public static List<String> splitList(String source, String separator) {
+        return splitList(source, separator, false, null);
+    }
+
+    public static List<String> splitList(String source, String separator, boolean trim) {
+        return splitList(source, separator, trim, null);
+    }
+
+    public static List<String> splitList(String source, String separator, boolean trim, List<String> output) {
         if (output == null) output = new ArrayList<String>();
         if (source.length() == 0) return output;
         int pos = 0;
@@ -451,6 +471,60 @@ public class CldrUtility {
     }
 
     /**
+     * Protect a collections where we don't need to clone.
+     * @param source
+     * @return
+     */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public static <T> T protectCollectionX(T source) {
+        // TODO - exclude UnmodifiableMap, Set, ...
+        if (isImmutable(source)) {
+            return source;
+        } if (source instanceof Map) {
+            Map sourceMap = (Map) source;
+            // recurse
+            LinkedHashMap tempMap = new LinkedHashMap<>(sourceMap); // copy contents
+            sourceMap.clear();
+            for (Object key : tempMap.keySet()) {
+                sourceMap.put(protectCollection(key), protectCollectionX(tempMap.get(key)));
+            }
+            return sourceMap instanceof SortedMap ? (T) Collections.unmodifiableSortedMap((SortedMap) sourceMap)
+                : (T) Collections.unmodifiableMap(sourceMap);
+        } else if (source instanceof Collection) {
+            Collection sourceCollection = (Collection) source;
+            LinkedHashSet tempSet = new LinkedHashSet<>(sourceCollection); // copy contents
+
+            sourceCollection.clear();
+            for (Object item : tempSet) {
+                sourceCollection.add(protectCollectionX(item));
+            }
+
+            return sourceCollection instanceof List ? (T) Collections.unmodifiableList((List) sourceCollection)
+                : sourceCollection instanceof SortedSet ? (T) Collections
+                    .unmodifiableSortedSet((SortedSet) sourceCollection)
+                    : sourceCollection instanceof Set ? (T) Collections.unmodifiableSet((Set) sourceCollection)
+                        : (T) Collections.unmodifiableCollection(sourceCollection);
+        } else if (source instanceof Freezable) {
+            Freezable freezableSource = (Freezable) source;
+            return (T) freezableSource.freeze();
+        } else {
+            throw new IllegalArgumentException("Can’t protect: " + source.getClass().toString());
+        }
+    }
+
+    private static final Set<Object> KNOWN_IMMUTABLES = new HashSet<Object>(Arrays.asList(
+        String.class
+        ));
+    
+    public static boolean isImmutable(Object source) {
+        return source == null 
+            || source instanceof Enum
+            || source instanceof Number
+            || KNOWN_IMMUTABLES.contains(source.getClass())
+            ;
+    }
+
+    /**
      * Clones T if we can; otherwise returns null.
      * 
      * @param <T>
@@ -458,14 +532,17 @@ public class CldrUtility {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static <T> T clone(T source) {
+    private static <T> T clone(T source) {
+        final Class<? extends Object> class1 = source.getClass();
         try {
-            final Class<? extends Object> class1 = source.getClass();
             final Method declaredMethod = class1.getDeclaredMethod("clone", (Class<?>) null);
             return (T) declaredMethod.invoke(source, (Object) null);
-        } catch (Exception e) {
-            return null; // uncloneable
-        }
+        } catch (Exception e) {}
+        try {
+            final Constructor<? extends Object> declaredMethod = class1.getConstructor((Class<?>)null);
+            return (T) declaredMethod.newInstance((Object)null);
+        } catch (Exception e) {}
+        return null; // uncloneable
     }
 
     /**
@@ -572,8 +649,8 @@ public class CldrUtility {
     private static final Transliterator DEFAULT_REGEX_ESCAPER = Transliterator.createFromRules(
         "foo",
         "([ \\- \\\\ \\[ \\] ]) > '\\' $1 ;"
-            // + " ([:c:]) > &hex($1);"
-            + " ([[:control:][[:z:]&[:ascii:]]]) > &hex($1);",
+        // + " ([:c:]) > &hex($1);"
+        + " ([[:control:][[:z:]&[:ascii:]]]) > &hex($1);",
         Transliterator.FORWARD);
 
     /**
@@ -678,7 +755,7 @@ public class CldrUtility {
             for (UnicodeSet last : lastToFirst.keySet()) {
                 ++alternateCount;
                 alternates.append('|').append(toRegex(lastToFirst.get(last), escaper, onlyBmp))
-                    .append(toRegex(last, escaper, onlyBmp));
+                .append(toRegex(last, escaper, onlyBmp));
             }
         }
         // Return the output. We separate cases in order to get the minimal extra apparatus
@@ -828,7 +905,7 @@ public class CldrUtility {
         private Matcher matcher;
 
         public MatcherFilter(String pattern) {
-            this.matcher = Pattern.compile(pattern).matcher("");
+            this.matcher = PatternCache.get(pattern).matcher("");
         }
 
         public MatcherFilter(Matcher matcher) {
@@ -841,7 +918,7 @@ public class CldrUtility {
         }
 
         public MatcherFilter<T> set(String pattern) {
-            this.matcher = Pattern.compile(pattern).matcher("");
+            this.matcher = PatternCache.get(pattern).matcher("");
             return this;
         }
 
@@ -856,6 +933,38 @@ public class CldrUtility {
     // return Handling.valueOf(source);
     // }
     // }
+
+    public static final class PairComparator<K extends Comparable<K>, V extends Comparable<V>> implements java.util.Comparator<Pair<K,V>> {
+
+        private Comparator<K> comp1;
+        private Comparator<V> comp2;
+
+        public PairComparator(Comparator<K> comp1, Comparator<V> comp2) {
+            this.comp1 = comp1;
+            this.comp2 = comp2;
+        }
+        @Override
+        public int compare(Pair<K,V> o1, Pair<K,V> o2) {
+            {
+                K o1First = o1.getFirst();
+                K o2First = o2.getFirst();
+                int diff = o1First == null ? (o2First == null ? 0 : -1)
+                    : o2First == null ? 1
+                        : comp1 == null ? o1First.compareTo(o2First) 
+                            : comp1.compare(o1First, o2First);
+                        if (diff != 0) {
+                            return diff;
+                        }
+            }
+            V o1Second = o1.getSecond();
+            V o2Second = o2.getSecond();
+            return o1Second == null ? (o2Second == null ? 0 : -1)
+                : o2Second == null ? 1
+                    : comp2 == null ? o1Second.compareTo(o2Second) 
+                        : comp2.compare(o1Second, o2Second);
+        }
+
+    }
 
     /**
      * Fetch data from jar
@@ -888,6 +997,7 @@ public class CldrUtility {
         return getInputStream(CldrUtility.class, "data/" + name);
     }
 
+    @SuppressWarnings("resource")
     public static InputStream getInputStream(Class<?> callingClass, String relativePath) {
         InputStream is = callingClass.getResourceAsStream(relativePath);
         // add buffering
@@ -984,7 +1094,7 @@ public class CldrUtility {
             return rules;
         } catch (IOException e) {
             throw (IllegalArgumentException) new IllegalArgumentException("Can't open " + dir + ", " + filename)
-                .initCause(e);
+            .initCause(e);
         }
     }
 
@@ -1190,13 +1300,21 @@ public class CldrUtility {
     }
 
     private static DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss 'GMT'");
+    private static DateFormat DATE_ONLY = new SimpleDateFormat("yyyy-MM-dd");
     static {
         df.setTimeZone(TimeZone.getTimeZone("GMT"));
+        DATE_ONLY.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
     public static String isoFormat(Date date) {
         synchronized (df) {
             return df.format(date);
+        }
+    }
+
+    public static String isoFormatDateOnly(Date date) {
+        synchronized (DATE_ONLY) {
+            return DATE_ONLY.format(date);
         }
     }
 
@@ -1238,11 +1356,11 @@ public class CldrUtility {
     public static String getCopyrightString() {
         // now do the rest
         return "Copyright \u00A9 1991-"
-            + Calendar.getInstance().get(Calendar.YEAR)
-            + " Unicode, Inc." + CldrUtility.LINE_SEPARATOR
-            + "CLDR data files are interpreted according to the LDML specification "
-            + "(http://unicode.org/reports/tr35/)" + CldrUtility.LINE_SEPARATOR
-            + "For terms of use, see http://www.unicode.org/copyright.html";
+        + Calendar.getInstance().get(Calendar.YEAR)
+        + " Unicode, Inc." + CldrUtility.LINE_SEPARATOR
+        + "CLDR data files are interpreted according to the LDML specification "
+        + "(http://unicode.org/reports/tr35/)" + CldrUtility.LINE_SEPARATOR
+        + "For terms of use, see http://www.unicode.org/copyright.html";
     }
 
     // TODO Move to collection utilities
@@ -1313,7 +1431,7 @@ public class CldrUtility {
                     }
                 } catch (Exception e) {
                     throw (RuntimeException) new IllegalArgumentException("Problem with line: " + line)
-                        .initCause(e);
+                    .initCause(e);
                 }
             }
         }
@@ -1326,6 +1444,10 @@ public class CldrUtility {
 
     public static <T> T ifSame(T source, T replaceIfSame, T replacement) {
         return source == replaceIfSame ? replacement : source;
+    }
+
+    public static <T> T ifEqual(T source, T replaceIfSame, T replacement) {
+        return Objects.equals(source, replaceIfSame) ? replacement : source;
     }
 
     public static <T> Set<T> intersect(Set<T> a, Collection<T> b) {
@@ -1345,10 +1467,24 @@ public class CldrUtility {
         Output<Finder> matcherFound = new Output<>();
         List<String> failures = new ArrayList<String>();
         lookup.get(toLookup, null, arguments, matcherFound, failures);
-        testFramework.logln("lookup arguments: " + Arrays.asList(arguments.value));
+        testFramework.logln("lookup arguments: " + (arguments.value == null ? "null" : Arrays.asList(arguments.value)));
         testFramework.logln("lookup matcherFound: " + matcherFound);
         for (String s : failures) {
             testFramework.logln(s);
         }
+    }
+
+    public static boolean deepEquals(Object... pairs) {
+        for (int item = 0; item < pairs.length;) {
+            if (!Objects.deepEquals(pairs[item++], pairs[item++])) {
+                return false;
+            }  
+        }
+        return true;
+    }
+
+    public static String[] array(Splitter splitter, String source) {
+        List<String> list = splitter.splitToList(source);
+        return list.toArray(new String[list.size()]);
     }
 }

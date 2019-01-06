@@ -23,7 +23,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.unicode.cldr.test.CLDRTest;
 import org.unicode.cldr.test.DisplayAndInputProcessor;
@@ -31,17 +30,21 @@ import org.unicode.cldr.test.QuickCheck;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.DraftStatus;
 import org.unicode.cldr.util.CLDRFile.Status;
+import org.unicode.cldr.util.CLDRLocale;
 import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CLDRTool;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.CldrUtility.SimpleLineComparator;
 import org.unicode.cldr.util.DateTimeCanonicalizer;
 import org.unicode.cldr.util.DateTimeCanonicalizer.DateTimePatternType;
+import org.unicode.cldr.util.DtdData;
+import org.unicode.cldr.util.DtdType;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.FileProcessor;
 import org.unicode.cldr.util.LocaleIDParser;
 import org.unicode.cldr.util.Log;
 import org.unicode.cldr.util.PathHeader;
+import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.SimpleFactory;
 import org.unicode.cldr.util.StandardCodes;
 import org.unicode.cldr.util.StringId;
@@ -55,7 +58,6 @@ import com.ibm.icu.dev.tool.UOption;
 import com.ibm.icu.dev.util.BagFormatter;
 import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.dev.util.PrettyPrinter;
-import com.ibm.icu.dev.util.Relation;
 import com.ibm.icu.impl.Utility;
 import com.ibm.icu.text.Collator;
 import com.ibm.icu.text.DateTimePatternGenerator;
@@ -80,7 +82,7 @@ public class CLDRModify {
     static final boolean COMMENT_REMOVALS = false; // append removals as comments
     static final UnicodeSet whitespace = (UnicodeSet) new UnicodeSet("[:whitespace:]").freeze();
     static final UnicodeSet HEX = new UnicodeSet("[a-fA-F0-9]").freeze();
-
+    private static final DtdData dtdData = DtdData.getInstance(DtdType.ldml);
     // TODO make this into input option.
 
     enum ConfigKeys {
@@ -123,7 +125,7 @@ public class CLDRModify {
                     throw new IllegalArgumentException("Regex only allowed for old path/value.");
                 }
                 exactMatch = null;
-                regexMatch = Pattern.compile(match.substring(1, match.length() - 1)
+                regexMatch = PatternCache.get(match.substring(1, match.length() - 1)
                     .replace("[@", "\\[@")
                     ).matcher("");
                 action = null;
@@ -218,7 +220,7 @@ public class CLDRModify {
         UOption.HELP_H(),
         UOption.HELP_QUESTION_MARK(),
         UOption.SOURCEDIR().setDefault(CLDRPaths.MAIN_DIRECTORY),
-        UOption.DESTDIR().setDefault(CLDRPaths.GEN_DIRECTORY + "main/"),
+        UOption.DESTDIR().setDefault(CLDRPaths.GEN_DIRECTORY + "common/main/"),
         UOption.create("match", 'm', UOption.REQUIRES_ARG).setDefault(".*"),
         UOption.create("join", 'j', UOption.OPTIONAL_ARG),
         UOption.create("minimize", 'r', UOption.NO_ARG),
@@ -281,7 +283,9 @@ public class CLDRModify {
         + XPathParts.NEWLINE
         + "-c\t check that resulting xml files are valid. Requires that a dtd directory be copied to the output directory, in the appropriate location."
         + XPathParts.NEWLINE
-        + "-k\t config_file\twith -fk perform modifications according to what is in the config file. For format details, see XXX."
+        + "-k\t config_file\twith -fk perform modifications according to what is in the config file. For format details, see:"
+        + XPathParts.NEWLINE
+        + "\t\thttp://cldr.unicode.org/development/cldr-big-red-switch/cldrmodify-passes/cldrmodify-config."
         + XPathParts.NEWLINE;
 
     static final String HELP_TEXT2 = "Note: A set of bat files are also generated in <dest_dir>/diff. They will invoke a comparison program on the results."
@@ -322,7 +326,7 @@ public class CLDRModify {
             dirSet.add("");
         } else {
             String[] subdirs = new File(sourceDirBase).list();
-            Matcher subdirMatch = Pattern.compile(recurseOnDirectories).matcher("");
+            Matcher subdirMatch = PatternCache.get(recurseOnDirectories).matcher("");
             for (String subdir : subdirs) {
                 if (!subdirMatch.reset(subdir).find()) continue;
                 dirSet.add(subdir + "/");
@@ -587,10 +591,12 @@ public class CLDRModify {
 
     static class RetainWhenMinimizing implements CLDRFile.RetentionTest {
         private CLDRFile file;
+        private CLDRLocale c;
         Status status = new Status();
 
         public RetainWhenMinimizing setParentFile(CLDRFile file) {
             this.file = file;
+            this.c = CLDRLocale.getInstance(file.getLocaleIDFromIdentity());
             return this;
         }
 
@@ -600,10 +606,7 @@ public class CLDRModify {
                 return Retention.RETAIN;
             }
             String localeId = file.getSourceLocaleID(path, status);
-            // if (!path.equals(status.pathWhereFound)) { // remove items just there for aliases
-            // return Retention.REMOVE;
-            // }
-            if (XMLSource.ROOT_ID.equals(localeId) || XMLSource.CODE_FALLBACK_ID.equals(localeId)) {
+            if ((c.isLanguageLocale() || c.equals(CLDRLocale.getInstance("pt_PT"))) && (XMLSource.ROOT_ID.equals(localeId) || XMLSource.CODE_FALLBACK_ID.equals(localeId))) {
                 return Retention.RETAIN;
             }
             return Retention.RETAIN_IF_DIFFERENT;
@@ -728,8 +731,8 @@ public class CLDRModify {
         public void remove(String path, String reason) {
             if (toBeRemoved.contains(path)) return;
             toBeRemoved.add(path);
-            System.out.println("%" + localeID + "\t" + reason + "\tRemoving:\t«"
-                + cldrFileToFilter.getStringValue(path) + "»\t at:\t" + path);
+//            System.out.println("%" + localeID + "\t" + reason + "\tRemoving:\t«"
+//                + cldrFileToFilter.getStringValue(path) + "»\t at:\t" + path);
             String oldValueOldPath = cldrFileToFilter.getStringValue(path);
             showAction(reason, "Removing", oldValueOldPath, null, null, path, path);
         }
@@ -743,9 +746,9 @@ public class CLDRModify {
             System.out.println("%"
                 + localeID
                 + "\t"
-                + reason
-                + "\t"
                 + action
+                + "\t"
+                + reason
                 + "\t«"
                 + oldValueOldPath
                 + "»"
@@ -939,132 +942,48 @@ public class CLDRModify {
         rootUnitMap.put("month", "m");
         rootUnitMap.put("year", "y");
 
-        fixList.add('z', "remove metaData deprecated", new CLDRFilter() {
+        fixList.add('z', "Remove deprecated elements", new CLDRFilter() {
 
-            Set<String> didRemove = new TreeSet<String>();
-            SupplementalDataInfo sdi = SupplementalDataInfo.getInstance(CLDRPaths.DEFAULT_SUPPLEMENTAL_DIRECTORY);
-            Map<String, Map<String, Relation<String, String>>> deprecationInfo = sdi.getDeprecationInfo();
+            public boolean isDeprecated(DtdType type, String element, String attribute, String value) {
+                return DtdData.getInstance(type).isDeprecated(element, attribute, value);
+            }
 
-            Map<String, Relation<String, String>> ourTypes[] = null;
-
-            @Override
-            public void handleSetup() {
-                super.handleSetup();
-
-                // initialize list of types we are interested in
-                ourTypes = new Map[]
-                { deprecationInfo.get("ldml"),
-                    deprecationInfo.get("*") };
-
-                // verify types
-                for (Map<String, Relation<String, String>> m : ourTypes) {
-                    if (m == null) continue;
-                    Relation<String, String> r = m.get(SupplementalDataInfo.STAR);
-                    if (r != null && r.containsKey(SupplementalDataInfo.STAR)) {
-                        throw new InternalError("This filter doesn't support deprecating all elements.");
+            public boolean isDeprecated(DtdType type, String path) {
+                
+                XPathParts parts = XPathParts.getInstance(path);
+                for (int i = 0; i < parts.size(); ++i) {
+                    String element = parts.getElement(i);
+                    if (isDeprecated(type, element, "*", "*")) {
+                        return true;
                     }
-                }
-
-                if (false) { // dump deprecates
-                    for (Map.Entry<String, Map<String, Relation<String, String>>> e : deprecationInfo.entrySet()) {
-                        System.out.println("DEPR type=" + e.getKey());
-                        Map<String, Relation<String, String>> m = e.getValue();
-                        for (Map.Entry<String, Relation<String, String>> ee : m.entrySet()) {
-                            System.out.print("  <" + ee.getKey() + "   ");
-                            for (Map.Entry<String, String> eee : ee.getValue().entrySet()) {
-                                System.out.print("   " + eee.getKey() + " = " + eee.getValue());
-                            }
-                            System.out.println();
+                    for (Entry<String, String> entry : parts.getAttributes(i).entrySet()) {
+                        String attribute = entry.getKey();
+                        String value = entry.getValue();
+                        if (isDeprecated(type, element, attribute, value)) {
+                            return true;
                         }
                     }
                 }
+                return false;
             }
-
             @Override
             public void handlePath(String xpath) {
-                XPathParts xpp = new XPathParts(null, null);
-                // xpp.clear();
-                String fullPath = cldrFileToFilter.getFullXPath(xpath);
-                xpp.initialize(fullPath);
-                boolean changed[] = { false };
-
-                for (Map<String, Relation<String, String>> type : ourTypes) {
-                    if (type == null) continue;
-                    Relation<String, String> attribs = type.get(xpp.getElement(-1)); // current leaf element
-                    if (attribs != null) {
-                        xpp = handleAttribs(xpath, xpp, attribs, changed);
-                        if (xpp == null) return; // removed
-                    }
-                    Relation<String, String> star = type.get(SupplementalDataInfo.STAR); // catchall
-                    if (star != null) {
-                        xpp = handleAttribs(xpath, xpp, star, changed);
-                        if (xpp == null) return; // removed
-                    }
-                }
-
-                if (changed[0]) {
-                    remove(fullPath, "Removed deprecated attribute");
-                }
-                // replace(fullPath,newFullPath,value);
-                // remove(xpath, "Message", reason);
-            }
-
-            private XPathParts handleAttribs(String xpath, XPathParts xpp, Relation<String, String> attribs,
-                boolean changed[]) {
-                if (attribs == null) return xpp; // no change
-
-                Set<String> star = attribs.get(SupplementalDataInfo.STAR);
-
-                if (star != null) {
-                    if (star.contains(SupplementalDataInfo.STAR)) {
-                        didRemove.add("Element: " + xpp.getElement(-1));
-                        remove(xpath, "Deprecated Element: " + xpp.getElement(-1));
-                        return null;
-                    }
-                }
-                Map<String, String> xattribs = xpp.getAttributes(-1);
-                Set<String> removeThese = null;
-                for (Map.Entry<String, String> e : xattribs.entrySet()) {
-                    String attr = e.getKey();
-                    Set<String> thiAttrib = attribs.get(attr);
-                    if (thiAttrib != null) {
-                        if (thiAttrib.contains(SupplementalDataInfo.STAR) || thiAttrib.contains(e.getValue())) {
-                            // remove "foo=*" or "foo=bar" attribute
-                            if (removeThese == null) removeThese = new HashSet<String>();
-                            removeThese.add(attr);
-                            continue;
-                        }
-                    }
-                    if (star != null && star.contains(e.getValue())) {
-                        // remove "*=foo" attribute. Needed?
-                        if (removeThese == null) removeThese = new HashSet<String>();
-                        removeThese.add(attr);
-                        continue;
-                    }
-                }
-                if (removeThese != null) {
-                    changed[0] = true;
-                    for (String attr : removeThese) {
-                        xpp.putAttributeValue(-1, attr, null);
-                        didRemove.add("Attribute: " + attr);
-                    }
-                    changed[0] = true;
-                }
-
-                return xpp; // continue
-            }
-
-            @Override
-            public void handleCleanup() {
-                super.handleCleanup();
-
-                if (!didRemove.isEmpty()) {
-                    System.out.print(" -fz: Removed these deprecated items:  ");
-                    for (String s : didRemove) {
-                        System.out.print(s + ", ");
-                    }
-                    System.out.println();
-                }
+                 String fullPath = cldrFileToFilter.getFullXPath(xpath);
+                 XPathParts parts = XPathParts.getInstance(fullPath);
+                 for (int i = 0; i < parts.size(); ++i) {
+                     String element = parts.getElement(i);
+                     if (dtdData.isDeprecated(element, "*", "*")) {
+                         remove(fullPath, "Deprecated element");
+                         return;
+                     }
+                     for (Entry<String, String> entry : parts.getAttributes(i).entrySet()) {
+                         String attribute = entry.getKey();
+                         String value = entry.getValue();
+                         if (dtdData.isDeprecated(element, attribute, value)) {
+                             remove(fullPath, "Element with deprecated attribute(s)");
+                         }
+                     }
+                 }
             }
         });
 
@@ -1129,7 +1048,7 @@ public class CLDRModify {
 
             public void handlePath(String xpath) {
                 if (m == null) {
-                    m = Pattern.compile(options[PATH].value).matcher("");
+                    m = PatternCache.get(options[PATH].value).matcher("");
                 }
                 //String v = cldrFileToFilter.getStringValue(xpath);
                 String fullXPath = cldrFileToFilter.getFullXPath(xpath);
@@ -1996,7 +1915,7 @@ public class CLDRModify {
         });
 
         fixList.add('q', "fix g-force", new CLDRFilter() {
-            Matcher m = Pattern.compile("(\\P{L}*)g(\\P{L}*)").matcher("");
+            Matcher m = PatternCache.get("(\\P{L}*)g(\\P{L}*)").matcher("");
 
             @Override
             public void handlePath(String xpath) {

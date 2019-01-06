@@ -14,7 +14,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.unicode.cldr.draft.ScriptMetadata;
 import org.unicode.cldr.draft.ScriptMetadata.Info;
@@ -24,14 +23,13 @@ import org.unicode.cldr.unittest.TestAll.TestInfo;
 import org.unicode.cldr.util.Builder;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRLocale;
-import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.ChainedMap;
 import org.unicode.cldr.util.ChainedMap.M3;
 import org.unicode.cldr.util.CldrUtility;
-import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.LanguageTagCanonicalizer;
 import org.unicode.cldr.util.LanguageTagParser;
 import org.unicode.cldr.util.LocaleIDParser;
+import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.StandardCodes;
 import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.BasicLanguageData;
@@ -51,7 +49,7 @@ public class TestInheritance extends TestFmwk {
 
     private static boolean DEBUG = CldrUtility.getProperty("DEBUG", false);
 
-    private static Matcher pathMatcher = Pattern.compile(
+    private static Matcher pathMatcher = PatternCache.get(
         CldrUtility.getProperty("XPATH", ".*")).matcher("");
 
     public static void main(String[] args) throws IOException {
@@ -65,13 +63,7 @@ public class TestInheritance extends TestFmwk {
 
     private static final boolean EXPECT_EQUALITY = false;
 
-    private static Factory factory = Factory.make(CLDRPaths.MAIN_DIRECTORY,
-        ".*");
-    private static Factory factory2 = Factory.make(CLDRPaths.SEED_DIRECTORY,
-        ".*");
-    private static Set<String> availableLocales = Builder
-        .with(new TreeSet<String>()).addAll(factory.getAvailable())
-        .addAll(factory2.getAvailable()).freeze();
+    private static Set<String> availableLocales = testInfo.getFullCldrFactory().getAvailable();
 
     public void TestLocalesHaveOfficial() {
         // If we have a language, we have all the region locales where the
@@ -262,6 +254,7 @@ public class TestInheritance extends TestFmwk {
         Relation<String, String> base2locales = Relation.of(
             new TreeMap<String, Set<String>>(), TreeSet.class);
 
+        Set<String> knownMultiScriptLanguages = new HashSet<String>(Arrays.asList("bm","ha"));
         // get multiscript locales
         for (String localeID : availableLocales) {
             String script = ltp.set(localeID).getScript();
@@ -272,6 +265,9 @@ public class TestInheritance extends TestFmwk {
             base2locales.put(base, localeID);
             if (!script.isEmpty() && !base.equals("en")) { // HACK for en
                 base2scripts.put(base, script);
+            }
+            if (script.isEmpty() && knownMultiScriptLanguages.contains(base)) {
+                base2scripts.put(base, dataInfo.getDefaultScript(base));
             }
         }
 
@@ -316,7 +312,7 @@ public class TestInheritance extends TestFmwk {
     public void TestParentLocaleRelationships() {
         // Testing invariant relationships between locales - See
         // http://unicode.org/cldr/trac/ticket/5758
-        Matcher langScript = Pattern.compile("^[a-z]{2,3}_[A-Z][a-z]{3}$")
+        Matcher langScript = PatternCache.get("^[a-z]{2,3}_[A-Z][a-z]{3}$")
             .matcher("");
         for (String loc : availableLocales) {
             if (langScript.reset(loc).matches()) {
@@ -396,9 +392,9 @@ public class TestInheritance extends TestFmwk {
         Map<String, String> parent2default,
         Relation<String, String> base2locales) {
         Set<String> skip = Builder.with(new HashSet<String>())
-            .addAll("in", "iw", "mo", "no", "root", "sh", "tl", "und")
+            .addAll("root", "und")
             .freeze();
-
+        Set<String> languagesWithOneOrLessLocaleScriptInCommon = new HashSet<String>(Arrays.asList("bm","ha","ms","iu","mn"));
         // for each base we have to have,
         // if multiscript, we have default contents for base+script,
         // base+script+region;
@@ -422,22 +418,22 @@ public class TestInheritance extends TestFmwk {
             ltp.set(defaultContent);
             String script = ltp.getScript();
             String region = ltp.getRegion();
-            if (scripts == null) {
+            if (scripts == null || languagesWithOneOrLessLocaleScriptInCommon.contains(base)) {
                 if (!script.isEmpty()) {
                     errln("Script should be empty in default content for: "
                         + base + "," + defaultContent);
                 }
                 if (region.isEmpty()) {
-                    errln("Region must be empty in default content for: "
+                    errln("Region must not be empty in default content for: "
                         + base + "," + defaultContent);
                 }
             } else {
                 if (script.isEmpty()) {
-                    errln("Script should be empty in default content for: "
+                    errln("Script should not be empty in default content for: "
                         + base + "," + defaultContent);
                 }
                 if (!region.isEmpty()) {
-                    errln("Region should not be empty in default content for: "
+                    errln("Region should be empty in default content for: "
                         + base + "," + defaultContent);
                 }
                 String defaultContent2 = parent2default.get(defaultContent);
@@ -448,7 +444,7 @@ public class TestInheritance extends TestFmwk {
                 ltp.set(defaultContent2);
                 region = ltp.getRegion();
                 if (region.isEmpty()) {
-                    errln("Region must be empty in default content for: "
+                    errln("Region must not be empty in default content for: "
                         + base + "," + defaultContent);
                 }
             }
@@ -763,7 +759,7 @@ public class TestInheritance extends TestFmwk {
     public void TestCldrFileConsistency() {
         boolean haveErrors = false;
         for (String locale : testInfo.getCldrFactory().getAvailable()) {
-            CLDRFile cldrFileToCheck = testInfo.getCldrFactory().make(locale,
+            CLDRFile cldrFileToCheck = testInfo.getCLDRFile(locale,
                 false);
             int errors = 0;
             for (String path : cldrFileToCheck) {
@@ -979,7 +975,7 @@ public class TestInheritance extends TestFmwk {
     // }
     // }
 
-    Matcher aliasMatcher = Pattern.compile("//ldml.*/alias.*").matcher("");
+    Matcher aliasMatcher = PatternCache.get("//ldml.*/alias.*").matcher("");
 
     private void checkAliasValues(CLDRFile cldrFileToCheck, Set<String> locales) {
         Set<String> aliasPaths = new TreeSet<String>();
@@ -1075,7 +1071,7 @@ public class TestInheritance extends TestFmwk {
 
     // TODO move this into central utilities
 
-    private static final StandardCodes STANDARD_CODES = StandardCodes.make();
+    private static final StandardCodes STANDARD_CODES = testInfo.getStandardCodes();
     private static final Map<String, Map<String, R2<List<String>, String>>> DEPRECATED_INFO = dataInfo
         .getLocaleAliasInfo();
 

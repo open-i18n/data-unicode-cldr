@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -34,6 +35,7 @@ import org.unicode.cldr.util.InternalCldrException;
 import org.unicode.cldr.util.Level;
 import org.unicode.cldr.util.PathHeader;
 import org.unicode.cldr.util.PathHeader.SurveyToolStatus;
+import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.RegexFileParser;
 import org.unicode.cldr.util.RegexFileParser.RegexLineParser;
 import org.unicode.cldr.util.StandardCodes;
@@ -215,14 +217,17 @@ abstract public class CheckCLDR {
             // We are not in submission.
             // Only allow ADD if we have an error or warning
             ValueStatus valueStatus = ValueStatus.NONE;
-            for (CandidateInfo value : pathValueInfo.getValues()) {
-                valueStatus = getValueStatus(value, valueStatus);
-                if (valueStatus != ValueStatus.NONE) {
-                    return (status == SurveyToolStatus.READ_WRITE || status == SurveyToolStatus.LTR_ALWAYS)
-                        ? StatusAction.ALLOW
-                        : StatusAction.ALLOW_VOTING_AND_TICKET;
-                }
+            CandidateInfo winner = pathValueInfo.getCurrentItem();
+            // Only check winning value for errors/warnings per ticket #8677
+            // We used to check all candidates.
+//            for (CandidateInfo value : pathValueInfo.getValues()) {
+            valueStatus = getValueStatus(winner, valueStatus);
+            if (valueStatus != ValueStatus.NONE) {
+                return (status == SurveyToolStatus.READ_WRITE || status == SurveyToolStatus.LTR_ALWAYS)
+                    ? StatusAction.ALLOW
+                    : StatusAction.ALLOW_VOTING_AND_TICKET;
             }
+//            }
 
             // No warnings, so allow just voting.
             return StatusAction.ALLOW_VOTING_BUT_NO_ADD;
@@ -303,17 +308,17 @@ abstract public class CheckCLDR {
         }
 
         private ValueStatus getValueStatus(CandidateInfo value, ValueStatus previous) {
-            if (previous == ValueStatus.ERROR) {
+            if (previous == ValueStatus.ERROR || value == null) {
                 return previous;
             }
+            
             for (CheckStatus item : value.getCheckStatusList()) {
                 CheckStatus.Type type = item.getType();
                 if (type.equals(CheckStatus.Type.Error)) {
-                    if (item.getSubtype() != Subtype.dateSymbolCollision
-                        && item.getSubtype() != Subtype.displayCollision) {
-                        return ValueStatus.ERROR;
-                    } else {
+                    if (CheckStatus.crossCheckSubtypes.contains(item.getSubtype())) {
                         return ValueStatus.WARNING;
+                    } else {
+                        return ValueStatus.ERROR;
                     }
                 } else if (type.equals(CheckStatus.Type.Warning)) {
                     previous = ValueStatus.WARNING;
@@ -573,6 +578,7 @@ abstract public class CheckCLDR {
             .add(new CheckDisplayCollisions(factory))
             .add(new CheckExemplars(factory))
             .add(new CheckForExemplars(factory))
+            .add(new CheckForInheritanceMarkers())
             .add(new CheckNames())
             .add(new CheckNumbers(factory))
             // .add(new CheckZones()) // this doesn't work; many spurious errors that user can't correct
@@ -620,43 +626,6 @@ abstract public class CheckCLDR {
      * [refs][hide] Ref: [Zoom...]
      */
 
-    public static final Pattern skipShowingInSurvey = Pattern.compile(
-        ".*/(" +
-            "beforeCurrency" + // hard to explain, use bug
-            "|afterCurrency" + // hard to explain, use bug
-            "|orientation" + // hard to explain, use bug
-            "|appendItems" + // hard to explain, use bug
-            "|singleCountries" + // hard to explain, use bug
-            // from deprecatedItems in supplemental metadata
-            "|hoursFormat" + // deprecated
-            "|localizedPatternChars" + // deprecated
-            "|abbreviationFallback" + // deprecated
-            "|default" + // deprecated
-            "|inText" + // internal use only
-            "|inList" + // internal use only
-            "|mapping" + // deprecated
-            "|zone/long" +
-            "|zone/short" +
-            "|zone/commonlyUsed" +
-            "|measurementSystem" + // deprecated
-            "|preferenceOrdering" + // deprecated
-            ")((\\[|/).*)?", Pattern.COMMENTS); // the last bit is to ensure whole element
-
-    /**
-     * These are paths for items that are complicated, and we need to force a zoom on.
-     */
-    public static final Pattern FORCE_ZOOMED_EDIT = Pattern.compile(
-        ".*/(" +
-            "nothingAtTheMoment" + // Remove forced zooming since we have inline pre-edit in ST
-            // "exemplarCharacters" +
-            /* "|metazone" + */
-            // "|pattern" +
-            // "|dateFormatItem" +
-            // "|relative" +
-            // "|hourFormat" +
-            // "|gmtFormat" +
-            // "|regionFormat" +
-            ")((\\[|/).*)?", Pattern.COMMENTS); // the last bit is to ensure whole element
 
     /**
      * Get the CLDRFile.
@@ -701,7 +670,7 @@ abstract public class CheckCLDR {
         String locale = cldrFileToCheck.getLocaleID();
         filtersForLocale.clear();
         for (R3<Pattern, Subtype, Pattern> filter : allFilters) {
-            if (!filter.get0().matcher(locale).matches()) continue;
+            if (filter.get0() == null || !filter.get0().matcher(locale).matches()) continue;
             Subtype subtype = filter.get1();
             List<Pattern> xpaths = filtersForLocale.get(subtype);
             if (xpaths == null) {
@@ -716,7 +685,8 @@ abstract public class CheckCLDR {
      * Status value returned from check
      */
     public static class CheckStatus {
-        public static final Type alertType = Type.Comment,
+        public static final Type
+            alertType = Type.Comment,
             warningType = Type.Warning,
             errorType = Type.Error,
             exampleType = Type.Example,
@@ -741,10 +711,11 @@ abstract public class CheckCLDR {
             charactersNotInMainOrAuxiliaryExemplars, asciiCharactersNotInMainOrAuxiliaryExemplars,
 
             narrowDateFieldTooWide, illegalCharactersInExemplars, orientationDisagreesWithExemplars,
-            inconsistentDatePattern, missingDatePattern,
+            inconsistentDatePattern, inconsistentTimePattern, missingDatePattern,
             illegalDatePattern, missingMainExemplars,
             mustNotStartOrEndWithSpace,
-            illegalCharactersInNumberPattern, numberPatternNotCanonical, currencyPatternMissingCurrencySymbol, badNumericType,
+            illegalCharactersInNumberPattern, numberPatternNotCanonical, currencyPatternMissingCurrencySymbol, missingMinusSign,
+            badNumericType,
             percentPatternMissingPercentSymbol, illegalNumberFormat, unexpectedAttributeValue, metazoneContainsDigit,
             tooManyGroupingSeparators, inconsistentPluralFormat,
             sameAsEnglishOrCode, dateSymbolCollision, incompleteLogicalGroup, extraMetazoneString, inconsistentDraftStatus,
@@ -757,14 +728,28 @@ abstract public class CheckCLDR {
             unexpectedOrderOfEraYear,
             invalidPlaceHolder,
             asciiQuotesNotAllowed,
-            badMinimumGroupingDigits;
+            badMinimumGroupingDigits,
+            inconsistentPeriods,
+            inheritanceMarkerNotAllowed;
 
             public String toString() {
                 return TO_STRING.matcher(name()).replaceAll(" $1").toLowerCase();
             }
 
-            static Pattern TO_STRING = Pattern.compile("([A-Z])");
+            static Pattern TO_STRING = PatternCache.get("([A-Z])");
         };
+ 
+        public static EnumSet<Subtype> crossCheckSubtypes = 
+            EnumSet.of(
+                Subtype.dateSymbolCollision,
+                Subtype.displayCollision,
+                Subtype.inconsistentDraftStatus,
+                Subtype.incompleteLogicalGroup,
+                Subtype.inconsistentPeriods,
+                Subtype.abbreviatedDateFieldTooWide,
+                Subtype.narrowDateFieldTooWide,
+                Subtype.coverageLevel);
+
 
         private Type type;
         private Subtype subtype = Subtype.none;
@@ -1113,6 +1098,15 @@ abstract public class CheckCLDR {
         if (value == cldrFileToCheck.getBaileyValue(path, null, null) && value != cldrFileToCheck.getWinningValue(path)) {
             return this;
         }
+        // If we're being asked to run tests for an inheritance marker, then we need to change it
+        // to the "real" value first before running tests. Testing the value "↑↑↑" doesn't make sense.
+        if (CldrUtility.INHERITANCE_MARKER.equals(value)) {
+            value = cldrFileToCheck.getConstructedBaileyValue(path, null, null);
+            // If it hasn't changed, then don't run any tests.
+            if (CldrUtility.INHERITANCE_MARKER.equals(value)) {
+                return this;
+            }
+        }
         CheckCLDR instance = handleCheck(path, fullPath, value, options, result);
         Iterator<CheckStatus> iterator = result.iterator();
         // Filter out any errors/warnings that match the filter list in CheckCLDR-exceptions.txt.
@@ -1182,6 +1176,11 @@ abstract public class CheckCLDR {
         Options options, List<CheckStatus> result);
 
     /**
+     * Only for use in ConsoleCheck, for debugging
+     */
+    public void handleFinish() {}
+
+    /**
      * Internal class used to bundle up a number of Checks.
      * 
      * @author davis
@@ -1208,6 +1207,11 @@ abstract public class CheckCLDR {
         public CheckCLDR handleCheck(String path, String fullPath, String value,
             Options options, List<CheckStatus> result) {
             result.clear();
+            // If we're being asked to run tests for an inheritance marker, then we need to change it
+            // to the "real" value first before running tests. Testing the value "↑↑↑" doesn't make sense.
+            if (CldrUtility.INHERITANCE_MARKER.equals(value)) {
+                value = getCldrFileToCheck().getConstructedBaileyValue(path, null, null);
+            }
             for (Iterator<CheckCLDR> it = filteredCheckList.iterator(); it.hasNext();) {
                 CheckCLDR item = it.next();
                 // skip proposed items in final testing.
@@ -1226,6 +1230,14 @@ abstract public class CheckCLDR {
                 }
             }
             return this;
+        }
+
+        @Override
+        public void handleFinish() {
+            for (Iterator<CheckCLDR> it = filteredCheckList.iterator(); it.hasNext();) {
+                CheckCLDR item = it.next();
+                item.handleFinish();
+            }
         }
 
         protected CheckCLDR handleGetExamples(String path, String fullPath, String value, Options options,
@@ -1358,8 +1370,8 @@ abstract public class CheckCLDR {
             public void parse(String line) {
                 String[] fields = line.split("\\s*;\\s*");
                 Subtype subtype = Subtype.valueOf(fields[0]);
-                Pattern locale = Pattern.compile(fields[1]);
-                Pattern xpathRegex = Pattern.compile(fields[2].replaceAll("\\[@", "\\\\[@"));
+                Pattern locale = PatternCache.get(fields[1]);
+                Pattern xpathRegex = PatternCache.get(fields[2].replaceAll("\\[@", "\\\\[@"));
                 allFilters.add(new R3<Pattern, Subtype, Pattern>(locale, subtype, xpathRegex));
             }
         });

@@ -1,26 +1,28 @@
 package org.unicode.cldr.json;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.unicode.cldr.util.Builder;
 import org.unicode.cldr.util.CLDRFile;
+import org.unicode.cldr.util.PatternCache;
+
+import com.google.common.collect.ImmutableSet;
 
 class LdmlConvertRules {
 
-    /** File set that will not be processed in JSON transformation. */
-    public static final Set<String> IGNORE_FILE_SET = Builder.with(new HashSet<String>())
-        .add("coverageLevels").add("pluralRanges").add("dayPeriods").freeze();
+    /** File sets that will not be processed in JSON transformation. */
+    public static final ImmutableSet<String> IGNORE_FILE_SET = 
+        ImmutableSet.of("attributeValueValidity", "coverageLevels", "dayPeriods", "postalCodeData", "pluralRanges", "subdivisions");
 
     /**
      * The attribute list that should become part of the name in form of
      * name-(attribute)-(value).
      * [parent_element]:[element]:[attribute]
      */
-    private static final String[] NAME_PART_DISTINGUISHING_ATTR_LIST = {
         // common/main
+        static final ImmutableSet<String> NAME_PART_DISTINGUISHING_ATTR_SET = ImmutableSet.of(
         "monthWidth:month:yeartype",
         "dateFormat:pattern:numbers",
         "currencyFormats:unitPattern:count",
@@ -33,6 +35,7 @@ class LdmlConvertRules {
         "numbers:miscPatterns:numberSystem",
         "territoryContainment:group:status",
         "decimalFormat:pattern:count",
+        "currencyFormat:pattern:count",
         "unit:unitPattern:count",
         "field:relative:type",
         "field:relativeTime:type",
@@ -45,15 +48,13 @@ class LdmlConvertRules {
         "weekData:weekendStart:territories",
         "weekData:weekendEnd:territories",
         "supplemental:plurals:type",
-        "pluralRules:pluralRule:count"
-    };
+        "pluralRules:pluralRule:count",
+        "languageMatches:languageMatch:desired");
 
     /**
      * The set of attributes that should become part of the name in form of
      * name-(attribute)-(value).
      */
-    public static final Set<String> NAME_PART_DISTINGUISHING_ATTR_SET =
-        new HashSet<String>(Arrays.asList(NAME_PART_DISTINGUISHING_ATTR_LIST));
 
     /**
      * Following is a list of element:attribute pair. These attributes should be
@@ -65,7 +66,7 @@ class LdmlConvertRules {
      * "_key": "numbers"
      * }
      */
-    private static final String[] ATTR_AS_VALUE_LIST = {
+    static final ImmutableSet<String> ATTR_AS_VALUE_SET = ImmutableSet.of(
 
         // in common/supplemental/dayPeriods.xml
         "dayPeriodRules:dayPeriodRule:from",
@@ -118,16 +119,12 @@ class LdmlConvertRules {
         "identity:language:type",
         "identity:script:type",
         "identity:territory:type",
-        "identity:variant:type",
-
-    };
+        "identity:variant:type");
 
     /**
      * The set of element:attribute pair in which the attribute should be
      * treated as value. All the attribute here are non-distinguishing attributes.
      */
-    public static final Set<String> ATTR_AS_VALUE_SET =
-        new HashSet<String>(Arrays.asList(ATTR_AS_VALUE_LIST));
 
     /**
      * For those attributes that are treated as values, they taken the form of
@@ -144,7 +141,7 @@ class LdmlConvertRules {
      * omit "to" and have this simple mapping:
      * "zh" : "zh_Hans_CN",
      */
-    private static final String[] COMPACTABLE_ATTR_AS_VALUE_LIST = {
+    static final ImmutableSet<String> COMPACTABLE_ATTR_AS_VALUE_SET = ImmutableSet.of(
         // common/main
         "calendars:default:choice",
         "dateFormats:default:choice",
@@ -170,15 +167,12 @@ class LdmlConvertRules {
         "identity:language:type",
         "identity:script:type",
         "identity:territory:type",
-        "identity:variant:type",
-    };
+        "identity:variant:type");
 
     /**
      * The set of attributes that should be treated as value, and reduce to
      * simple value only form.
      */
-    public static final Set<String> COMPACTABLE_ATTR_AS_VALUE_SET =
-        new HashSet<String>(Arrays.asList(COMPACTABLE_ATTR_AS_VALUE_LIST));
 
     /**
      * Anonymous key name.
@@ -200,10 +194,8 @@ class LdmlConvertRules {
     /**
      * The set of attributes that should be ignored in the conversion process.
      */
-    public static final Set<String> IGNORABLE_NONDISTINGUISHING_ATTR_SET =
-        Builder.with(new HashSet<String>())
-            .add("draft")
-            .add("references").freeze();
+    public static final ImmutableSet<String> IGNORABLE_NONDISTINGUISHING_ATTR_SET =
+        ImmutableSet.of("draft", "references");
 
     /**
      * List of attributes that should be suppressed.
@@ -303,7 +295,7 @@ class LdmlConvertRules {
      * Some elements in CLDR has multiple children of the same type of element.
      * We would like to treat them as array.
      */
-    public static final Pattern ARRAY_ITEM_PATTERN = Pattern.compile(
+    public static final Pattern ARRAY_ITEM_PATTERN = PatternCache.get(
         "(.*/collation[^/]*/rules[^/]*/" +
             "|.*/character-fallback[^/]*/character[^/]*/" +
             "|.*/dayPeriodRuleSet[^/]*/dayPeriodRules[^/]*/" +
@@ -352,7 +344,7 @@ class LdmlConvertRules {
         public String replacement;
 
         PathTransformSpec(String patternStr, String replacement) {
-            pattern = Pattern.compile(patternStr);
+            pattern = PatternCache.get(patternStr);
             this.replacement = replacement;
         }
     }
@@ -375,8 +367,8 @@ class LdmlConvertRules {
         new PathTransformSpec("(.*/identity/version\\[@number=\"([^\"]*)\")(\\])", "$1" + "\\]\\[@cldrVersion=\""
             + CLDRFile.GEN_VERSION + "\"\\]"),
         // Add cldrVersion attribute to supplemental data
-        new PathTransformSpec("(.*/supplementalData/version\\[@number=\"([^\"]*)\")(\\])", "$1" + "\\]\\[@cldrVersion=\""
-            + CLDRFile.GEN_VERSION + "\"\\]"),
+        new PathTransformSpec("(.*/version\\[@number=\"([^\"]*)\")(\\])\\[@unicodeVersion=\"([^\"]*\")(\\])", "$1" + "\\]\\[@cldrVersion=\""
+            + CLDRFile.GEN_VERSION + "\"\\]"+"\\[@unicodeVersion=\""+ "$4"+ "\\]"),
 
         // Transform underscore to hyphen-minus in language keys
         new PathTransformSpec("(.*/language\\[@type=\"[a-z]{2,3})_([^\"]*\"\\](\\[@alt=\"short\"])?)", "$1-$2"),
@@ -398,8 +390,8 @@ class LdmlConvertRules {
         new PathTransformSpec("(.*/metazone)\\[@type=\"([^\"]*)\"\\]/(.*)$", "$1/$2/$3"),
 
         // Split out types into its various fields
-        new PathTransformSpec("(.*)/types/type\\[@type=\"([^\"]*)\"\\]\\[@key=\"([^\"]*)\"\\](.*)$",
-            "$1/types/$3/$2$4"),
+        new PathTransformSpec("(.*)/types/type\\[@key=\"([^\"]*)\"\\]\\[@type=\"([^\"]*)\"\\](.*)$",
+            "$1/types/$2/$3$4"),
 
         new PathTransformSpec(
             "(.*/numbers/(decimal|scientific|percent|currency)Formats\\[@numberSystem=\"([^\"]*)\"\\])/(decimal|scientific|percent|currency)FormatLength/(decimal|scientific|percent|currency)Format\\[@type=\"standard\"]/pattern.*$",

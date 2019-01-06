@@ -38,7 +38,6 @@ import org.unicode.cldr.util.PathHeader.SectionId;
 import org.unicode.cldr.util.StandardCodes.LocaleCoverageType;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo.Count;
-import org.unicode.cldr.util.VoteResolver.Organization;
 
 import com.ibm.icu.dev.util.BagFormatter;
 import com.ibm.icu.dev.util.CollectionUtilities;
@@ -78,7 +77,7 @@ public class VettingViewer<T> {
     private static final boolean TESTING = CldrUtility.getProperty("TEST", false);
     private static final boolean SHOW_ALL = CldrUtility.getProperty("SHOW", true);
 
-    public static final Pattern ALT_PROPOSED = Pattern.compile("\\[@alt=\"[^\"]*proposed");
+    public static final Pattern ALT_PROPOSED = PatternCache.get("\\[@alt=\"[^\"]*proposed");
 
     public static Set<CheckCLDR.CheckStatus.Subtype> OK_IF_VOTED = EnumSet.of(Subtype.sameAsEnglishOrCode,
         Subtype.sameAsEnglishOrCode);
@@ -217,7 +216,7 @@ public class VettingViewer<T> {
     }
 
     static private PathHeader.Factory pathTransform;
-    static final Pattern breaks = Pattern.compile("\\|");
+    static final Pattern breaks = PatternCache.get("\\|");
     static final OutdatedPaths outdatedPaths = new OutdatedPaths();
 
 //    private static final UnicodeSet NEEDS_PERCENT_ESCAPED = new UnicodeSet("[[\\u0000-\\u009F]-[a-zA-z0-9]]");
@@ -517,7 +516,7 @@ public class VettingViewer<T> {
     // // each one will be marked with the choice that it triggered.
     //
     // CLDRFile sourceFile = cldrFactory.make(localeID, true);
-    // Matcher altProposed = Pattern.compile("\\[@alt=\"[^\"]*proposed").matcher("");
+    // Matcher altProposed = PatternCache.get("\\[@alt=\"[^\"]*proposed").matcher("");
     // EnumSet<Choice> problems = EnumSet.noneOf(Choice.class);
     //
     // // Initialize
@@ -990,11 +989,11 @@ public class VettingViewer<T> {
     }
 
     public static final class LocalesWithExplicitLevel implements Predicate<String> {
-        private final String org;
+        private final Organization org;
         private final Level desiredLevel;
 
         public LocalesWithExplicitLevel(Organization org, Level level) {
-            this.org = org.toString();
+            this.org = org;
             this.desiredLevel = level;
         }
 
@@ -1003,9 +1002,9 @@ public class VettingViewer<T> {
             Output<LocaleCoverageType> output = new Output<LocaleCoverageType>();
             // For admin - return true if SOME organization has explicit coverage for the locale
             // TODO: Make admin pick up any locale that has a vote
-            if (org.equals(Organization.surveytool.toString())) {
+            if (org.equals(Organization.surveytool)) {
                 for (Organization checkorg : Organization.values()) {
-                    StandardCodes.make().getLocaleCoverageLevel(checkorg.toString(), localeId, output);
+                    StandardCodes.make().getLocaleCoverageLevel(checkorg, localeId, output);
                     if (output.value == StandardCodes.LocaleCoverageType.explicit) {
                         return true;
                     }
@@ -2070,7 +2069,7 @@ public class VettingViewer<T> {
         source(".*", CLDRPaths.MAIN_DIRECTORY, // CldrUtility.TMP2_DIRECTORY + "/vxml/common/main"
             "if summary, creates filtered version (eg -d main): does a find in the name, which is of the form dir/file"),
         verbose(null, null, "verbose debugging messages"),
-        output(".*", CLDRPaths.TMP_DIRECTORY + "dropbox/mark/vetting/", "filter the raw files (non-summary, mostly for debugging)"), ;
+        output(".*", CLDRPaths.GEN_DIRECTORY + "vetting/", "filter the raw files (non-summary, mostly for debugging)"), ;
         // boilerplate
         final Option option;
 

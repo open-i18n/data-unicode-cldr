@@ -27,7 +27,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.unicode.cldr.util.Builder;
 import org.unicode.cldr.util.CLDRFile;
@@ -38,6 +37,7 @@ import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.ICUServiceBuilder;
 import org.unicode.cldr.util.LanguageTagParser;
 import org.unicode.cldr.util.Log;
+import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.TimezoneFormatter;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -329,7 +329,7 @@ public class GenerateCldrTests {
             addLocale(it.next());
         }
 
-        Matcher m = Pattern.compile(pat).matcher("");
+        Matcher m = PatternCache.get(pat).matcher("");
         for (Iterator<String> it = parentToLocales.keySet().iterator(); it.hasNext();) {
             String p = it.next();
             if (!m.reset(p).matches())
@@ -963,7 +963,7 @@ public class GenerateCldrTests {
     }
 
     static public Set<String> getMatchingXMLFiles(String dir, String localeRegex) {
-        Matcher m = Pattern.compile(localeRegex).matcher("");
+        Matcher m = PatternCache.get(localeRegex).matcher("");
         Set<String> s = new TreeSet<String>();
         File[] files = new File(dir).listFiles();
         for (int i = 0; i < files.length; ++i) {

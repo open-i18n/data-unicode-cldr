@@ -4,8 +4,7 @@
 	Prepared by Dilmurat Abduqayyum <d.abduqayyum@gmail.com>, reviewed by Waris Abdukerim Janbaz <oyghan@gmail.com> of the Uyghur Computer Science Association http://ukij.org 
 -->
 <keyboard locale="ug-t-k0-android-intl">
-	<version platform="4.4" number="$Revision: 10763 $"/>
-	<generation date="$Date: 2014-08-11 18:54:17 -0500 (Mon, 11 Aug 2014) $"/>
+	<version platform="4.4" number="$Revision: 11914 $"/>
 	<names>
 		<name value="Uyghur (International)"/>
 	</names>

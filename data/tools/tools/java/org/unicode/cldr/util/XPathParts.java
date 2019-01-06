@@ -20,8 +20,6 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.unicode.cldr.util.CLDRFile.DtdType;
-
 import com.ibm.icu.dev.util.TransliteratorUtilities;
 import com.ibm.icu.impl.Utility;
 import com.ibm.icu.util.Freezable;
@@ -1034,7 +1032,7 @@ public final class XPathParts implements Freezable<XPathParts> {
             boolean first = true;
             int countEmptyLines = 0;
             // trim the line iff the indent != 0.
-            for (Iterator<String> it = CldrUtility.splitList(comment, '\n', indent != 0, null).iterator(); it.hasNext();) {
+            for (Iterator<String> it = CldrUtility.splitList(comment, NEWLINE, indent != 0, null).iterator(); it.hasNext();) {
                 String line = it.next();
                 if (line.length() == 0) {
                     ++countEmptyLines;

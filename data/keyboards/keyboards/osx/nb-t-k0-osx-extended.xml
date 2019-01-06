@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE keyboard SYSTEM "../dtd/ldmlKeyboard.dtd">
 <keyboard locale="nb-t-k0-osx-extended">
-	<version platform="10.9" number="$Revision: 9693 $"/>
-	<generation date="$Date: 2014-01-31 15:17:05 -0600 (Fri, 31 Jan 2014) $"/>
+	<version platform="10.9" number="$Revision: 11914 $"/>
 	<names>
 		<name value="Norwegian Extended"/>
 	</names>

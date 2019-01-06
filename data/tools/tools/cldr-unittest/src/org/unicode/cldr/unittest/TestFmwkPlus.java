@@ -207,6 +207,27 @@ public class TestFmwkPlus extends TestFmwk {
     };
 
     @SuppressWarnings("rawtypes")
+    public static TestRelation CONTAINS_ALL = new TestRelation<Collection, Object>() {
+        @Override
+        public boolean isTrue(Collection a, Object... bs) {
+            for (Object b : bs) {
+                if (!(b instanceof Collection)) {
+                    return false;
+                }
+                if (!a.containsAll((Collection)b)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        @Override
+        public String toString() {
+            return "contains-all";
+        }
+    };
+
+    @SuppressWarnings("rawtypes")
     public static TestRelation EMPTY = new TestRelation<Collection, Object>() {
         @Override
         public boolean isTrue(Collection a, Object... bs) {
@@ -223,8 +244,8 @@ public class TestFmwkPlus extends TestFmwk {
         }
     };
 
-    // @SuppressWarnings("rawtypes")
-    static TestRelation LEQ = new TestRelation<Comparable, Comparable>() {
+    @SuppressWarnings("rawtypes")
+    public static TestRelation LEQ = new TestRelation<Comparable, Comparable>() {
         @SuppressWarnings("unchecked")
         @Override
         public boolean isTrue(Comparable a, Comparable... bs) {
@@ -240,8 +261,8 @@ public class TestFmwkPlus extends TestFmwk {
         }
     };
 
-    // @SuppressWarnings("rawtypes")
-    static TestRelation GEQ = new TestRelation<Comparable, Comparable>() {
+    @SuppressWarnings("rawtypes")
+    public static TestRelation GEQ = new TestRelation<Comparable, Comparable>() {
         @SuppressWarnings("unchecked")
         @Override
         public boolean isTrue(Comparable a, Comparable... bs) {
@@ -318,7 +339,7 @@ public class TestFmwkPlus extends TestFmwk {
         }
         throw new InternalError();
     }
-
+    
     public static void main(String[] args) {
         new TestFmwkPlus().run(args);
     }

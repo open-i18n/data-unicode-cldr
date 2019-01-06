@@ -20,6 +20,7 @@ import org.unicode.cldr.util.CoverageInfo;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.FileCopier;
 import org.unicode.cldr.util.Level;
+import org.unicode.cldr.util.Organization;
 import org.unicode.cldr.util.PathHeader;
 import org.unicode.cldr.util.PathHeader.PageId;
 import org.unicode.cldr.util.PathHeader.SectionId;
@@ -50,7 +51,7 @@ public class GenerateChangeChart {
 
         CLDRFile currentRoot = current.make("root", true);
         CLDRFile oldRoot = old.make("root", true);
-        Set<String> locales = CONFIG.getStandardCodes().getLocaleCoverageLocales("cldr", EnumSet.of(Level.MODERN));
+        Set<String> locales = CONFIG.getStandardCodes().getLocaleCoverageLocales(Organization.cldr, EnumSet.of(Level.MODERN));
         String dir = CLDRPaths.CHART_DIRECTORY + "changes/";
         CoverageInfo coverage = CONFIG.getCoverageInfo();
         EnumSet<SectionId> sections = EnumSet.noneOf(SectionId.class);
@@ -341,7 +342,7 @@ public class GenerateChangeChart {
             out.write("</div>");
             PrintWriter pw2 = BagFormatter.openUTF8Writer(dir, filename);
             String[] replacements = { "%header%", "", "%title%", title, "%version%", ToolConstants.CHART_DISPLAY_VERSION,
-                "%date%", CldrUtility.isoFormat(new Date()), "%body%", out.toString() };
+                "%date%", CldrUtility.isoFormatDateOnly(new Date()), "%body%", out.toString() };
             final String templateFileName = "chart-template.html";
             FileUtilities.appendBufferedReader(ToolUtilities.getUTF8Data(templateFileName), pw2, replacements);
             pw2.close();

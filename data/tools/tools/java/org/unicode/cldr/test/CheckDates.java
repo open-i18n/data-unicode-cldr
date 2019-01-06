@@ -7,7 +7,6 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -17,18 +16,28 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.unicode.cldr.test.CheckCLDR.CheckStatus.Subtype;
+import org.unicode.cldr.util.ApproximateWidth;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.Status;
+import org.unicode.cldr.util.CLDRLocale;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.DateTimeCanonicalizer.DateTimePatternType;
+import org.unicode.cldr.util.DayPeriodInfo;
+import org.unicode.cldr.util.DayPeriodInfo.DayPeriod;
+import org.unicode.cldr.util.DayPeriodInfo.Type;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.ICUServiceBuilder;
 import org.unicode.cldr.util.Level;
+import org.unicode.cldr.util.LocaleIDParser;
+import org.unicode.cldr.util.LogicalGrouping;
 import org.unicode.cldr.util.PathHeader;
 import org.unicode.cldr.util.PathStarrer;
+import org.unicode.cldr.util.PatternCache;
+import org.unicode.cldr.util.PreferredAndAllowedHour;
 import org.unicode.cldr.util.RegexUtilities;
 import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.XPathParts;
@@ -43,6 +52,7 @@ import com.ibm.icu.text.MessageFormat;
 import com.ibm.icu.text.NumberFormat;
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.text.UnicodeSet;
+import com.ibm.icu.util.Output;
 import com.ibm.icu.util.ULocale;
 
 public class CheckDates extends FactoryCheckCLDR {
@@ -54,8 +64,20 @@ public class CheckDates extends FactoryCheckCLDR {
     DateTimePatternGenerator.FormatParser formatParser = new DateTimePatternGenerator.FormatParser();
     DateTimePatternGenerator dateTimePatternGenerator = DateTimePatternGenerator.getEmptyInstance();
     private CoverageLevel2 coverageLevel;
+    private SupplementalDataInfo sdi = SupplementalDataInfo.getInstance();
+
+    // Use the width of the character "0" as the basic unit for checking widths
+    // It's not perfect, but I'm not sure that anything can be. This helps us
+    // weed out some false positives in width checking, like 10月 vs. 十月
+    // in Chinese, which although technically longer, shouldn't trigger an
+    // error.
+    private static final int REFCHAR = ApproximateWidth.getWidth("0");
 
     private Level requiredLevel;
+    private String language;
+    private String territory;
+
+    private DayPeriodInfo dateFormatInfoFormat;
 
     static String[] samples = {
         // "AD 1970-01-01T00:00:00Z",
@@ -65,13 +87,14 @@ public class CheckDates extends FactoryCheckCLDR {
         // "AD 2100-07-11T10:15:16Z",
     }; // keep aligned with following
     static String SampleList = "{0}"
-    // + Utility.LINE_SEPARATOR + "\t\u200E{1}\u200E" + Utility.LINE_SEPARATOR + "\t\u200E{2}\u200E" +
-    // Utility.LINE_SEPARATOR + "\t\u200E{3}\u200E"
-    ; // keep aligned with previous
+        // + Utility.LINE_SEPARATOR + "\t\u200E{1}\u200E" + Utility.LINE_SEPARATOR + "\t\u200E{2}\u200E" +
+        // Utility.LINE_SEPARATOR + "\t\u200E{3}\u200E"
+        ; // keep aligned with previous
 
     private static final String DECIMAL_XPATH = "//ldml/numbers/symbols[@numberSystem='latn']/decimal";
-    private static final Pattern HOUR_SYMBOL = Pattern.compile("H{1,2}");
-    private static final Pattern MINUTE_SYMBOL = Pattern.compile("mm");
+    private static final Pattern HOUR_SYMBOL = PatternCache.get("H{1,2}");
+    private static final Pattern MINUTE_SYMBOL = PatternCache.get("mm");
+    private static final Pattern YEAR_FIELDS = PatternCache.get("(y|Y|u|U|r){1,5}");
 
     static String[] calTypePathsToCheck = {
         "//ldml/dates/calendars/calendar[@type=\"buddhist\"]",
@@ -123,16 +146,6 @@ public class CheckDates extends FactoryCheckCLDR {
     // "[@type=\"1\"]",
     // "[@type=\"12\"]",
 
-    // Day periods that are allowed to have duplicate names with only a warning
-    private static final Map<String, String> dayPeriodsEquivMap = new HashMap<String, String>();
-    static {
-        dayPeriodsEquivMap.put("[@type=\"am\"]", "[@type=\"morning\"]");
-        dayPeriodsEquivMap.put("[@type=\"morning\"]", "[@type=\"am\"]");
-        dayPeriodsEquivMap.put("[@type=\"noon\"]", "[@type=\"midDay\"]");
-        dayPeriodsEquivMap.put("[@type=\"midDay\"]", "[@type=\"noon\"]");
-        dayPeriodsEquivMap.put("[@type=\"pm\"]", "[@type=\"afternoon\"]");
-        dayPeriodsEquivMap.put("[@type=\"afternoon\"]", "[@type=\"pm\"]");
-    }
 
     // Map<String, Set<String>> calPathsToSymbolSets;
     // Map<String, Map<String, String>> calPathsToSymbolMaps = new HashMap<String, Map<String, String>>();
@@ -166,8 +179,28 @@ public class CheckDates extends FactoryCheckCLDR {
             flexInfo.checkFlexibles(DECIMAL_XPATH, decimal, DECIMAL_XPATH);
         }
 
-        String localeID = getCldrFileToCheck().getLocaleID();
-        SupplementalDataInfo sdi = SupplementalDataInfo.getInstance();
+        String localeID = cldrFileToCheck.getLocaleID();
+        LocaleIDParser lp = new LocaleIDParser();
+        territory = lp.set(localeID).getRegion();
+        language = lp.getLanguage();
+        if (territory == null || territory.length() == 0) {
+            if (language.equals("root")) {
+                territory = "001";
+            } else {
+                CLDRLocale loc = CLDRLocale.getInstance(localeID);
+                CLDRLocale defContent = sdi.getDefaultContentFromBase(loc);
+                if (defContent == null) {
+                    territory = "001";
+                } else {
+                    territory = defContent.getCountry();
+                }
+                // Set territory for 12/24 hour clock to Egypt (12 hr) for ar_001
+                // instead of 24 hour (exception).
+                if (territory.equals("001") && language.equals("ar")) {
+                    territory = "EG";
+                }
+            }
+        }
         coverageLevel = CoverageLevel2.getInstance(sdi, localeID);
         requiredLevel = options.getRequiredLevel(localeID);
 
@@ -181,10 +214,10 @@ public class CheckDates extends FactoryCheckCLDR {
             } catch (Exception e) {
                 final String message = e.getMessage();
                 CheckStatus item = new CheckStatus()
-                    .setCause(this)
-                    .setMainType(CheckStatus.errorType)
-                    .setSubtype(
-                        message.contains("Conflicting fields") ? Subtype.dateSymbolCollision : Subtype.internalError)
+                .setCause(this)
+                .setMainType(CheckStatus.errorType)
+                .setSubtype(
+                    message.contains("Conflicting fields") ? Subtype.dateSymbolCollision : Subtype.internalError)
                     .setMessage(message);
                 possibleErrors.add(item);
             }
@@ -208,10 +241,10 @@ public class CheckDates extends FactoryCheckCLDR {
         pathsWithConflictingOrder2sample = DateOrder.getOrderingInfo(cldrFileToCheck, resolved, flexInfo.fp);
         if (pathsWithConflictingOrder2sample == null) {
             CheckStatus item = new CheckStatus()
-                .setCause(this)
-                .setMainType(CheckStatus.errorType)
-                .setSubtype(Subtype.internalError)
-                .setMessage("DateOrder.getOrderingInfo fails");
+            .setCause(this)
+            .setMainType(CheckStatus.errorType)
+            .setSubtype(Subtype.internalError)
+            .setMessage("DateOrder.getOrderingInfo fails");
             possibleErrors.add(item);
         }
 
@@ -222,6 +255,7 @@ public class CheckDates extends FactoryCheckCLDR {
         // }
         // }
 
+        dateFormatInfoFormat = sdi.getDayPeriods(Type.format, cldrFileToCheck.getLocaleID());
         return this;
     }
 
@@ -249,8 +283,17 @@ public class CheckDates extends FactoryCheckCLDR {
     PathStarrer pathStarrer = new PathStarrer();
     PathHeader.Factory pathHeaderFactory;
 
+    private String stripPrefix(String s) {
+        if (s != null && s.lastIndexOf(" ") < 3) {
+            return s.substring(s.lastIndexOf(" ") + 1);
+        }
+        return s;
+    }
+
     public CheckCLDR handleCheck(String path, String fullPath, String value, Options options,
         List<CheckStatus> result) {
+
+
         if (fullPath == null) {
             return this; // skip paths that we don't have
         }
@@ -261,9 +304,13 @@ public class CheckDates extends FactoryCheckCLDR {
             return this;
         }
 
-        getCldrFileToCheck().getSourceLocaleID(path, status);
+        String sourceLocale = getCldrFileToCheck().getSourceLocaleID(path, status);
 
-        if (!path.equals(status.pathWhereFound)) {
+        if (!path.equals(status.pathWhereFound) ||  !sourceLocale.equals(getCldrFileToCheck().getLocaleID())) {
+            return this;
+        }
+
+        if (value == null) {
             return this;
         }
 
@@ -271,37 +318,100 @@ public class CheckDates extends FactoryCheckCLDR {
             Map<DateOrder, String> problem = pathsWithConflictingOrder2sample.get(path);
             if (problem != null) {
                 CheckStatus item = new CheckStatus()
-                    .setCause(this)
-                    .setMainType(CheckStatus.warningType)
-                    .setSubtype(Subtype.incorrectDatePattern)
-                    .setMessage("The ordering of date fields is inconsistent with others: {0}",
-                        getValues(getResolvedCldrFileToCheck(), problem.values()));
+                .setCause(this)
+                .setMainType(CheckStatus.warningType)
+                .setSubtype(Subtype.incorrectDatePattern)
+                .setMessage("The ordering of date fields is inconsistent with others: {0}",
+                    getValues(getResolvedCldrFileToCheck(), problem.values()));
                 result.add(item);
             }
         }
-        try {
 
-            if (path.indexOf("[@type=\"abbreviated\"]") >= 0 && value.length() > 0) {
+        try {
+            if (path.indexOf("[@type=\"abbreviated\"]") >= 0) {
                 String pathToWide = path.replace("[@type=\"abbreviated\"]", "[@type=\"wide\"]");
-                String wideValue = getCldrFileToCheck().getStringValue(pathToWide);
-                if (wideValue != null && value.length() > wideValue.length()) {
+                String wideValue = getCldrFileToCheck().getWinningValueWithBailey(pathToWide);
+                if (wideValue != null && isTooMuchWiderThan(value,wideValue)) {
                     CheckStatus item = new CheckStatus()
-                        .setCause(this)
-                        .setMainType(CheckStatus.warningType)
-                        .setSubtype(Subtype.abbreviatedDateFieldTooWide)
-                        .setMessage("Illegal abbreviated value {0}, can't be longer than wide value {1}", value,
-                            wideValue);
+                    .setCause(this)
+                    .setMainType(CheckStatus.errorType)
+                    .setSubtype(Subtype.abbreviatedDateFieldTooWide)
+                    .setMessage("Abbreviated value \"{0}\" can't be longer than the corresponding wide value \"{1}\"", value,
+                        wideValue);
                     result.add(item);
                 }
+                for (String lgPath : LogicalGrouping.getPaths(getCldrFileToCheck(), path)) {
+                    String lgPathValue = getCldrFileToCheck().getWinningValueWithBailey(lgPath);
+                    String lgPathToWide = lgPath.replace("[@type=\"abbreviated\"]", "[@type=\"wide\"]");
+                    String lgPathWideValue = getCldrFileToCheck().getWinningValueWithBailey(lgPathToWide);
+                    // This helps us get around things like "de març" vs. "març" in Catalan
+                    String thisValue = stripPrefix(value);
+                    wideValue = stripPrefix(wideValue);
+                    lgPathValue = stripPrefix(lgPathValue);
+                    lgPathWideValue = stripPrefix(lgPathWideValue);
+                    boolean thisPathHasPeriod = thisValue.contains(".");
+                    boolean lgPathHasPeriod = lgPathValue.contains(".");
+                    if (!thisValue.equalsIgnoreCase(wideValue) && !lgPathValue.equalsIgnoreCase(lgPathWideValue) &&
+                        thisPathHasPeriod != lgPathHasPeriod) {
+                        CheckStatus.Type et = CheckStatus.errorType;
+                        if (path.contains("dayPeriod")) {
+                            et = CheckStatus.warningType;
+                        }
+                        CheckStatus item = new CheckStatus()
+                        .setCause(this)
+                        .setMainType(et)
+                        .setSubtype(Subtype.inconsistentPeriods)
+                        .setMessage("Inconsistent use of periods in abbreviations for this section.");
+                        result.add(item);
+                        break;
+                    }
+                }
+            } else if (path.indexOf("[@type=\"narrow\"]") >= 0) {
+                String pathToAbbr = path.replace("[@type=\"narrow\"]", "[@type=\"abbreviated\"]");
+                String abbrValue = getCldrFileToCheck().getWinningValueWithBailey(pathToAbbr);
+                if (abbrValue != null && isTooMuchWiderThan(value,abbrValue)) {
+                    CheckStatus item = new CheckStatus()
+                    .setCause(this)
+                    .setMainType(CheckStatus.warningType) // Making this just a warning, because there are some oddball cases.
+                    .setSubtype(Subtype.narrowDateFieldTooWide)
+                    .setMessage("Narrow value \"{0}\" shouldn't be longer than the corresponding abbreviated value \"{1}\"", value,
+                        abbrValue);
+                    result.add(item);
+                }
+            } else if (path.indexOf("/eraNarrow") >= 0) {
+                String pathToAbbr = path.replace("/eraNarrow", "/eraAbbr");
+                String abbrValue = getCldrFileToCheck().getWinningValueWithBailey(pathToAbbr);
+                if (abbrValue != null && isTooMuchWiderThan(value,abbrValue)) {
+                    CheckStatus item = new CheckStatus()
+                    .setCause(this)
+                    .setMainType(CheckStatus.errorType)
+                    .setSubtype(Subtype.narrowDateFieldTooWide)
+                    .setMessage("Narrow value \"{0}\" can't be longer than the corresponding abbreviated value \"{1}\"", value,
+                        abbrValue);
+                    result.add(item);
+                }
+            } else if (path.indexOf("/eraAbbr") >= 0) {
+                String pathToWide = path.replace("/eraAbbr", "/eraNames");
+                String wideValue = getCldrFileToCheck().getWinningValueWithBailey(pathToWide);
+                if (wideValue != null && isTooMuchWiderThan(value,wideValue)) {
+                    CheckStatus item = new CheckStatus()
+                    .setCause(this)
+                    .setMainType(CheckStatus.errorType)
+                    .setSubtype(Subtype.abbreviatedDateFieldTooWide)
+                    .setMessage("Abbreviated value \"{0}\" can't be longer than the corresponding wide value \"{1}\"", value,
+                        wideValue);
+                    result.add(item);
+                }
+
             }
 
             String failure = flexInfo.checkValueAgainstSkeleton(path, value);
             if (failure != null) {
                 result.add(new CheckStatus()
-                    .setCause(this)
-                    .setMainType(CheckStatus.errorType)
-                    .setSubtype(Subtype.illegalDatePattern)
-                    .setMessage(failure));
+                .setCause(this)
+                .setMainType(CheckStatus.errorType)
+                .setSubtype(Subtype.illegalDatePattern)
+                .setMessage(failure));
             }
 
             final String collisionPrefix = "//ldml/dates/calendars/calendar";
@@ -329,7 +439,20 @@ public class CheckDates extends FactoryCheckCLDR {
                 // ldml/dates/calendars/calendar[@type="gregorian"]/eras/eraAbbr/era[@type="0"],
                 // ldml/dates/calendars/calendar[@type="gregorian"]/eras/eraNames/era[@type="0"],
                 // ldml/dates/calendars/calendar[@type="gregorian"]/eras/eraNarrow/era[@type="0"]]
+                Type type = null;
+                DayPeriod dayPeriod = null;
+                final boolean isDayPeriod = path.contains("dayPeriod");
+                if (isDayPeriod) {
+                    XPathParts parts = XPathParts.getFrozenInstance(fullPath);
+                    type = Type.fromString(parts.getAttributeValue(5, "type"));
+                    dayPeriod = DayPeriod.valueOf(parts.getAttributeValue(-1, "type"));
+                }
+
+                // TODO redo above and below in terms of parts instead of searching strings
+
                 Set<String> filteredPaths = new HashSet<String>();
+                Output<Integer> sampleError = new Output<>();
+
                 for (String item : retrievedPaths) {
                     if (item.equals(path)
                         || skipPath(item)
@@ -344,6 +467,16 @@ public class CheckDates extends FactoryCheckCLDR {
                     if (!myMainType.equals(mainType)) { // we *only* care about items with the same type value
                         continue;
                     }
+                    if (isDayPeriod) {
+                        //ldml/dates/calendars/calendar[@type="gregorian"]/dayPeriods/dayPeriodContext[@type="format"]/dayPeriodWidth[@type="wide"]/dayPeriod[@type="am"]
+                        XPathParts itemParts = XPathParts.getFrozenInstance(item);
+                        Type itemType = Type.fromString(itemParts.getAttributeValue(5, "type"));
+                        DayPeriod itemDayPeriod = DayPeriod.valueOf(itemParts.getAttributeValue(-1, "type"));
+                        
+                        if (!dateFormatInfoFormat.collisionIsError(type, dayPeriod, itemType, itemDayPeriod, sampleError)) {
+                            continue;
+                        }
+                    }
                     filteredPaths.add(item);
                 }
                 if (filteredPaths.size() == 0) {
@@ -356,14 +489,19 @@ public class CheckDates extends FactoryCheckCLDR {
                 }
                 CheckStatus.Type statusType = getPhase() == Phase.SUBMISSION || getPhase() == Phase.BUILD
                     ? CheckStatus.warningType
-                    : CheckStatus.errorType;
-                result.add(new CheckStatus()
-                    .setCause(this)
-                    .setMainType(statusType)
-                    .setSubtype(Subtype.dateSymbolCollision)
-                    .setMessage("The date value “{0}” is the same as what is used for a different item: {1}", value,
-                        others.toString()));
-
+                        : CheckStatus.errorType;
+                final CheckStatus checkStatus = new CheckStatus()
+                .setCause(this)
+                .setMainType(statusType)
+                .setSubtype(Subtype.dateSymbolCollision);
+                if (sampleError.value == null) {
+                    checkStatus.setMessage("The date value “{0}” is the same as what is used for a different item: {1}",
+                        value, others.toString());
+                } else {
+                    checkStatus.setMessage("The date value “{0}” is the same as what is used for a different item: {1}. Sample problem: {2}",
+                        value, others.toString(), sampleError.value / DayPeriodInfo.HOUR);
+                }
+                result.add(checkStatus);
             }
 
             // result.add(new CheckStatus()
@@ -441,11 +579,11 @@ public class CheckDates extends FactoryCheckCLDR {
                 int semicolonPos = value.indexOf(';');
                 if (semicolonPos < 0) {
                     CheckStatus item = new CheckStatus()
-                        .setCause(this)
-                        .setMainType(CheckStatus.errorType)
-                        .setSubtype(Subtype.illegalDatePattern)
-                        .setMessage(
-                            "Value should contain a positive hour format and a negative hour format separated by a semicolon.");
+                    .setCause(this)
+                    .setMainType(CheckStatus.errorType)
+                    .setSubtype(Subtype.illegalDatePattern)
+                    .setMessage(
+                        "Value should contain a positive hour format and a negative hour format separated by a semicolon.");
                     result.add(item);
                 } else {
                     String[] formats = value.split(";");
@@ -476,6 +614,10 @@ public class CheckDates extends FactoryCheckCLDR {
             }
         }
         return this;
+    }
+    private boolean isTooMuchWiderThan(String shortString, String longString) {
+        // We all 1/3 the width of the reference character as a "fudge factor" in determining the allowable width
+        return ApproximateWidth.getWidth(shortString) > ApproximateWidth.getWidth(longString) + REFCHAR / 3;
     }
 
     /**
@@ -514,9 +656,10 @@ public class CheckDates extends FactoryCheckCLDR {
             || path.contains("/availableFormats")
             || path.contains("/interval")
             || path.contains("/dateTimeFormat")
-            || path.contains("/dayPeriod[")
-            && !path.endsWith("=\"pm\"]")
-            && !path.endsWith("=\"am\"]");
+//            || path.contains("/dayPeriod[")
+//            && !path.endsWith("=\"pm\"]")
+//            && !path.endsWith("=\"am\"]")
+            ;
     }
 
     public String getLastType(String path) {
@@ -556,7 +699,7 @@ public class CheckDates extends FactoryCheckCLDR {
         return "{" + CollectionUtilities.join(results, "},{") + "}";
     }
 
-    static final Pattern HACK_CONFLICTING = Pattern.compile("Conflicting fields:\\s+M+,\\s+l");
+    static final Pattern HACK_CONFLICTING = PatternCache.get("Conflicting fields:\\s+M+,\\s+l");
 
     public CheckCLDR handleGetExamples(String path, String fullPath, String value, Options options, List<CheckStatus> result) {
         if (path.indexOf("/dates") < 0 || path.indexOf("gregorian") < 0) return this;
@@ -599,13 +742,13 @@ public class CheckDates extends FactoryCheckCLDR {
         if (value.contains("MMM.") || value.contains("LLL.") || value.contains("E.") || value.contains("eee.")
             || value.contains("ccc.") || value.contains("QQQ.") || value.contains("qqq.")) {
             result
-                .add(new CheckStatus()
-                    .setCause(this)
-                    .setMainType(CheckStatus.warningType)
-                    .setSubtype(Subtype.incorrectDatePattern)
-                    .setMessage(
-                        "Your pattern ({0}) is probably incorrect; abbreviated month/weekday/quarter names that need a period should include it in the name, rather than adding it to the pattern.",
-                        value));
+            .add(new CheckStatus()
+            .setCause(this)
+            .setMainType(CheckStatus.warningType)
+            .setSubtype(Subtype.incorrectDatePattern)
+            .setMessage(
+                "Your pattern ({0}) is probably incorrect; abbreviated month/weekday/quarter names that need a period should include it in the name, rather than adding it to the pattern.",
+                value));
         }
 
         pathParts.set(path);
@@ -637,16 +780,16 @@ public class CheckDates extends FactoryCheckCLDR {
             } else if (!dateTimePatternGenerator.skeletonsAreSimilar(idCanonical, skeletonCanonical)) {
                 String fixedValue = dateTimePatternGenerator.replaceFieldTypes(value, id);
                 result
-                    .add(new CheckStatus()
-                        .setCause(this)
-                        .setMainType(CheckStatus.errorType)
-                        .setSubtype(Subtype.incorrectDatePattern)
-                        // "Internal ID ({0}) doesn't match generated ID ({1}) for pattern ({2}). " +
-                        .setMessage(
-                            "Your pattern ({2}) doesn't correspond to what is asked for. Yours would be right for an ID ({1}) but not for the ID ({0}). "
-                                +
-                                "Please change your pattern to match what was asked, such as ({3}), with the right punctuation and/or ordering for your language. See http://cldr.org/translation/date-time-patterns.",
-                            id, skeletonCanonical, value, fixedValue));
+                .add(new CheckStatus()
+                .setCause(this)
+                .setMainType(CheckStatus.errorType)
+                .setSubtype(Subtype.incorrectDatePattern)
+                // "Internal ID ({0}) doesn't match generated ID ({1}) for pattern ({2}). " +
+                .setMessage(
+                    "Your pattern ({2}) doesn't correspond to what is asked for. Yours would be right for an ID ({1}) but not for the ID ({0}). "
+                        +
+                        "Please change your pattern to match what was asked, such as ({3}), with the right punctuation and/or ordering for your language. See http://cldr.org/translation/date-time-patterns.",
+                        id, skeletonCanonical, value, fixedValue));
             }
             String failureMessage = (String) flexInfo.getFailurePath(path);
             if (failureMessage != null) {
@@ -709,7 +852,8 @@ public class CheckDates extends FactoryCheckCLDR {
                 style += 4;
                 len = pathParts.findAttributeValue("dateFormatLength", "type");
                 if (len == null) {
-                    throw new IllegalArgumentException();
+                    len = pathParts.findAttributeValue("dateTimeFormatLength", "type");
+                    dateOrTime = DateOrTime.dateTime;
                 }
             }
 
@@ -718,7 +862,9 @@ public class CheckDates extends FactoryCheckCLDR {
             if (calendar.equals("gregorian") && !"root".equals(getCldrFileToCheck().getLocaleID())) {
                 checkValue(dateTimeLength, dateOrTime, value, result);
             }
-
+            if (dateOrTime == DateOrTime.dateTime) {
+                return; // We don't need to do the rest for date/time combo patterns.
+            }
             style += dateTimeLength.ordinal();
             // do regex match with skeletonCanonical but report errors using skeleton; they have corresponding field lengths
             if (!dateTimePatterns[style].matcher(skeletonCanonical).matches()
@@ -727,11 +873,32 @@ public class CheckDates extends FactoryCheckCLDR {
                 int i = RegexUtilities.findMismatch(dateTimePatterns[style], skeletonCanonical);
                 String skeletonPosition = skeleton.substring(0, i) + "☹" + skeleton.substring(i);
                 result.add(new CheckStatus()
+                .setCause(this)
+                .setMainType(CheckStatus.errorType)
+                .setSubtype(Subtype.missingOrExtraDateField)
+                .setMessage("Field is missing, extra, or the wrong length. Expected {0} [Internal: {1} / {2}]",
+                    new Object[] { dateTimeMessage[style], skeletonPosition, dateTimePatterns[style].pattern() }));
+            }
+        } else if (dateTypePatternType == DateTimePatternType.INTERVAL) {
+            if (id.contains("y")) {
+                String greatestDifference = pathParts.findAttributeValue("greatestDifference", "id");
+                int requiredYearFieldCount = 1;
+                if ("y".equals(greatestDifference)) {
+                    requiredYearFieldCount = 2;
+                }
+                int yearFieldCount = 0;
+                Matcher yearFieldMatcher = YEAR_FIELDS.matcher(value);
+                while (yearFieldMatcher.find()) {
+                    yearFieldCount++;
+                }
+                if (yearFieldCount < requiredYearFieldCount) {
+                    result.add(new CheckStatus()
                     .setCause(this)
                     .setMainType(CheckStatus.errorType)
                     .setSubtype(Subtype.missingOrExtraDateField)
-                    .setMessage("Field is missing, extra, or the wrong length. Expected {0} [Internal: {1} / {2}]",
-                        new Object[] { dateTimeMessage[style], skeletonPosition, dateTimePatterns[style].pattern() }));
+                    .setMessage("Not enough year fields in interval pattern. Must have {0} but only found {1}",
+                        new Object[] { requiredYearFieldCount, yearFieldCount }));                    
+                }
             }
         }
 
@@ -740,17 +907,17 @@ public class CheckDates extends FactoryCheckCLDR {
             GyState expected = getExpectedGy(getCldrFileToCheck().getLocaleID());
             if (actual != expected) {
                 result.add(new CheckStatus()
-                    .setCause(this)
-                    .setMainType(CheckStatus.warningType)
-                    .setSubtype(Subtype.unexpectedOrderOfEraYear)
-                    .setMessage("Unexpected order of era/year. Expected {0}, but got {1} in 〈{2}〉 for {3}/{4}",
-                        expected, actual, value, calendar, id));
+                .setCause(this)
+                .setMainType(CheckStatus.warningType)
+                .setSubtype(Subtype.unexpectedOrderOfEraYear)
+                .setMessage("Unexpected order of era/year. Expected {0}, but got {1} in 〈{2}〉 for {3}/{4}",
+                    expected, actual, value, calendar, id));
             }
         }
     }
 
     enum DateOrTime {
-        date, time
+        date, time, dateTime
     }
 
     static final Map<DateOrTime, Relation<DateTimeLengths, String>> STOCK_PATTERNS = new EnumMap<DateOrTime, Relation<DateTimeLengths, String>>(
@@ -788,63 +955,105 @@ public class CheckDates extends FactoryCheckCLDR {
     static final String APPEND_TIMEZONE = "//ldml/dates/calendars/calendar[@type=\"gregorian\"]/dateTimeFormats/appendItems/appendItem[@request=\"Timezone\"]";
 
     private void checkValue(DateTimeLengths dateTimeLength, DateOrTime dateOrTime, String value, List<CheckStatus> result) {
-        Set<String> keys = STOCK_PATTERNS.get(dateOrTime).get(dateTimeLength);
-        StringBuilder b = new StringBuilder();
-        boolean onlyNulls = true;
-        int countMismatches = 0;
-        boolean errorOnMissing = false;
-        String timezonePattern = null;
-        Set<String> bases = new LinkedHashSet<String>();
-        for (String key : keys) {
-            int star = key.indexOf('*');
-            boolean hasStar = star >= 0;
-            String base = !hasStar ? key : key.substring(0, star);
-            bases.add(base);
-            String xpath = AVAILABLE_PREFIX + base + AVAILABLE_SUFFIX;
-            String value1 = getCldrFileToCheck().getStringValue(xpath);
-            // String localeFound = getCldrFileToCheck().getSourceLocaleID(xpath, null);  && !localeFound.equals("root") && !localeFound.equals("code-fallback")
-            if (value1 != null) {
-                onlyNulls = false;
-                if (hasStar) {
-                    String zone = key.substring(star + 1);
-                    timezonePattern = getResolvedCldrFileToCheck().getStringValue(APPEND_TIMEZONE);
-                    value1 = MessageFormat.format(timezonePattern, value1, zone);
-                }
-                if (equalsExceptWidth(value, value1)) {
-                    return;
-                }
+        // Check consistency of the pattern vs. supplemental wrt 12 vs. 24 hour clock.
+        if (dateOrTime == DateOrTime.time) {
+            PreferredAndAllowedHour pref = sdi.getTimeData().get(territory);
+            if (pref == null) {
+                pref = sdi.getTimeData().get("001");
+            }
+            String checkForHour, clockType;
+            if (pref.preferred.equals(PreferredAndAllowedHour.HourStyle.h)) {
+                checkForHour = "h";
+                clockType = "12";
             } else {
-                // Example, if the requiredLevel for the locale is moderate, 
-                // and the level for the path is modern, then we'll skip the error,
-                // but if the level for the path is basic, then we won't
-                Level pathLevel = coverageLevel.getLevel(xpath);
-                if (requiredLevel.compareTo(pathLevel) >= 0) {
-                    errorOnMissing = true;
+                checkForHour = "H";
+                clockType = "24";
+            }
+            if (!value.contains(checkForHour)) {
+                CheckStatus.Type errType = CheckStatus.errorType;
+                // French/Canada is strange, they use 24 hr clock while en_CA uses 12.
+                if (language.equals("fr") && territory.equals("CA")) {
+                    errType = CheckStatus.warningType;
+                }
+
+                result.add(new CheckStatus().setCause(this).setMainType(errType)
+                    .setSubtype(Subtype.inconsistentTimePattern)
+                    .setMessage("Time format inconsistent with supplemental time data for territory \"" + territory + "\"."
+                        + " Use '" + checkForHour + "' for " + clockType + " hour clock."));
+            }
+        }
+        if (dateOrTime == DateOrTime.dateTime) {
+            boolean inQuotes = false;
+            for (int i = 0; i < value.length(); i++) {
+                char ch = value.charAt(i);
+                if (ch == '\'') {
+                    inQuotes = !inQuotes;
+                }
+                if (!inQuotes && (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) {
+                    result.add(new CheckStatus().setCause(this).setMainType(CheckStatus.errorType)
+                        .setSubtype(Subtype.patternContainsInvalidCharacters)
+                        .setMessage("Unquoted letter \"{0}\" in dateTime format.", ch));
                 }
             }
-            add(b, base, value1);
-            countMismatches++;
-        }
-        if (!onlyNulls) {
-            if (timezonePattern != null) {
-                b.append(" (with appendZonePattern: “" + timezonePattern + "”)");
-            }
-            String msg = countMismatches != 1
-                ? "{1}-{0} → “{2}” didn't match any of the corresponding flexible skeletons: [{3}]. This or the flexible patterns needs to be changed."
-                : "{1}-{0} → “{2}” didn't match the corresponding flexible skeleton: {3}. This or the flexible pattern needs to be changed.";
-            result.add(new CheckStatus().setCause(this).setMainType(CheckStatus.warningType)
-                .setSubtype(Subtype.inconsistentDatePattern)
-                .setMessage(msg,
-                    dateTimeLength, dateOrTime, value, b));
         } else {
-            if (errorOnMissing) {
+            Set<String> keys = STOCK_PATTERNS.get(dateOrTime).get(dateTimeLength);
+            StringBuilder b = new StringBuilder();
+            boolean onlyNulls = true;
+            int countMismatches = 0;
+            boolean errorOnMissing = false;
+            String timezonePattern = null;
+            Set<String> bases = new LinkedHashSet<String>();
+            for (String key : keys) {
+                int star = key.indexOf('*');
+                boolean hasStar = star >= 0;
+                String base = !hasStar ? key : key.substring(0, star);
+                bases.add(base);
+                String xpath = AVAILABLE_PREFIX + base + AVAILABLE_SUFFIX;
+                String value1 = getCldrFileToCheck().getStringValue(xpath);
+                // String localeFound = getCldrFileToCheck().getSourceLocaleID(xpath, null);  && !localeFound.equals("root") && !localeFound.equals("code-fallback")
+                if (value1 != null) {
+                    onlyNulls = false;
+                    if (hasStar) {
+                        String zone = key.substring(star + 1);
+                        timezonePattern = getResolvedCldrFileToCheck().getStringValue(APPEND_TIMEZONE);
+                        value1 = MessageFormat.format(timezonePattern, value1, zone);
+                    }
+                    if (equalsExceptWidth(value, value1)) {
+                        return;
+                    }
+                } else {
+                    // Example, if the requiredLevel for the locale is moderate, 
+                    // and the level for the path is modern, then we'll skip the error,
+                    // but if the level for the path is basic, then we won't
+                    Level pathLevel = coverageLevel.getLevel(xpath);
+                    if (requiredLevel.compareTo(pathLevel) >= 0) {
+                        errorOnMissing = true;
+                    }
+                }
+                add(b, base, value1);
+                countMismatches++;
+            }
+            if (!onlyNulls) {
+                if (timezonePattern != null) {
+                    b.append(" (with appendZonePattern: “" + timezonePattern + "”)");
+                }
                 String msg = countMismatches != 1
-                    ? "{1}-{0} → “{2}” doesn't have at least one value for a corresponding flexible skeleton {3}, which needs to be added."
-                    : "{1}-{0} → “{2}” doesn't have a value for the corresponding flexible skeleton {3}, which needs to be added.";
+                    ? "{1}-{0} → “{2}” didn't match any of the corresponding flexible skeletons: [{3}]. This or the flexible patterns needs to be changed."
+                        : "{1}-{0} → “{2}” didn't match the corresponding flexible skeleton: {3}. This or the flexible pattern needs to be changed.";
                 result.add(new CheckStatus().setCause(this).setMainType(CheckStatus.warningType)
-                    .setSubtype(Subtype.missingDatePattern)
+                    .setSubtype(Subtype.inconsistentDatePattern)
                     .setMessage(msg,
-                        dateTimeLength, dateOrTime, value, CollectionUtilities.join(bases, ", ")));
+                        dateTimeLength, dateOrTime, value, b));
+            } else {
+                if (errorOnMissing) {
+                    String msg = countMismatches != 1
+                        ? "{1}-{0} → “{2}” doesn't have at least one value for a corresponding flexible skeleton {3}, which needs to be added."
+                            : "{1}-{0} → “{2}” doesn't have a value for the corresponding flexible skeleton {3}, which needs to be added.";
+                    result.add(new CheckStatus().setCause(this).setMainType(CheckStatus.warningType)
+                        .setSubtype(Subtype.missingDatePattern)
+                        .setMessage(msg,
+                            dateTimeLength, dateOrTime, value, CollectionUtilities.join(bases, ", ")));
+                }
             }
         }
     }
@@ -932,14 +1141,18 @@ public class CheckDates extends FactoryCheckCLDR {
     // H or h (not k or K)
     // v (not z, Z, V)
     static final Pattern[] dateTimePatterns = {
-        Pattern.compile("(h|hh|H|HH)(m|mm)"), // time-short
-        Pattern.compile("(h|hh|H|HH)(m|mm)(s|ss)"), // time-medium
-        Pattern.compile("(h|hh|H|HH)(m|mm)(s|ss)(v+)"), // time-long
-        Pattern.compile("(h|hh|H|HH)(m|mm)(s|ss)(v+)"), // time-full
-        Pattern.compile("G*y{1,4}M{1,2}(d|dd)"), // date-short; allow yyy for Minguo/ROC calendar
-        Pattern.compile("G*y(yyy)?M{1,3}(d|dd)"), // date-medium
-        Pattern.compile("G*y(yyy)?M{1,4}(d|dd)"), // date-long
-        Pattern.compile("G*y(yyy)?M{1,4}E*(d|dd)"), // date-full
+        PatternCache.get("(h|hh|H|HH)(m|mm)"), // time-short
+        PatternCache.get("(h|hh|H|HH)(m|mm)(s|ss)"), // time-medium
+        PatternCache.get("(h|hh|H|HH)(m|mm)(s|ss)(v+)"), // time-long
+        PatternCache.get("(h|hh|H|HH)(m|mm)(s|ss)(v+)"), // time-full
+        PatternCache.get("G*y{1,4}M{1,2}(d|dd)"), // date-short; allow yyy for Minguo/ROC calendar
+        PatternCache.get("G*y(yyy)?M{1,3}(d|dd)"), // date-medium
+        PatternCache.get("G*y(yyy)?M{1,4}(d|dd)"), // date-long
+        PatternCache.get("G*y(yyy)?M{1,4}E*(d|dd)"), // date-full
+        PatternCache.get(".*"), // datetime-short
+        PatternCache.get(".*"), // datetime-medium
+        PatternCache.get(".*"), // datetime-long
+        PatternCache.get(".*"), // datetime-full
     };
 
     static final String[] dateTimeMessage = {
@@ -992,8 +1205,8 @@ public class CheckDates extends FactoryCheckCLDR {
         // .setCause(this).setType(CheckStatus.exampleType)
         // .setMessage(SampleList, arguments));
         result.add(new MyCheckStatus()
-            .setFormat(x)
-            .setCause(this).setMainType(CheckStatus.demoType));
+        .setFormat(x)
+        .setCause(this).setMainType(CheckStatus.demoType));
     }
 
     static final UnicodeSet XGRAPHEME = new UnicodeSet("[[:mark:][:grapheme_extend:][:punctuation:]]");

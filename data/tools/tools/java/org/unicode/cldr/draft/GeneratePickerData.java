@@ -181,9 +181,6 @@ class GeneratePickerData {
         renamingLog = getFileWriter(outputDirectory, "renamingLog.txt");
 
         renamer = new Renamer("GeneratePickerData.txt");
-        /*
-         * NamesList-5.1.0d8.txt /Users/markdavis/Documents/workspace/DATA/UCD/5.1.0-Update/Unihan.txt
-         */
 
         if (DEBUG)
             System.out.println("Whitespace? "
@@ -448,7 +445,6 @@ class GeneratePickerData {
     private static void writeMainFile(String directory, String categoryTable) throws IOException, FileNotFoundException {
         PrintWriter out = getFileWriter(directory, "CharData.java");
         out.println("package org.unicode.cldr.draft.picker;");
-        out.println("// $Date: 2014-09-12 17:58:11 -0500 (Fri, 12 Sep 2014) $");
         out.println("public class CharData {");
         out.println("public static String[][] CHARACTERS_TO_NAME = {");
         out.println(buildNames());

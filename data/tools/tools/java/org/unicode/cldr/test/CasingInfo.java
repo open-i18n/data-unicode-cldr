@@ -3,15 +3,18 @@ package org.unicode.cldr.test;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.unicode.cldr.test.CheckConsistentCasing.CasingType;
+import org.unicode.cldr.test.CheckConsistentCasing.CasingTypeAndErrFlag;
 import org.unicode.cldr.test.CheckConsistentCasing.Category;
 import org.unicode.cldr.tool.Option.Options;
 import org.unicode.cldr.util.CLDRFile;
@@ -20,6 +23,7 @@ import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.LocaleIDParser;
+import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.SimpleXMLSource;
 import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.XMLFileReader;
@@ -42,11 +46,13 @@ public class CasingInfo {
         .add("locales", ".*", ".*", "A regex of the locales to generate casing information for")
         .add("summary", null,
             "generates a summary of the casing for all locales that had casing generated for this run");
-    private Map<String, Map<Category, CasingType>> casing;
-    private File casingDir;
-
-    public CasingInfo(String dir) {
-        this.casingDir = new File(dir);
+    private Map<String, Map<Category, CasingTypeAndErrFlag>> casing;
+    private List<File> casingDirs;
+    public CasingInfo(Factory factory) {
+        casingDirs = new ArrayList<File>();
+        for (File f : factory.getSourceDirectories()) {
+            this.casingDirs.add(new File(f.getAbsolutePath() + "/../casing"));
+        }
         casing = CldrUtility.newConcurrentHashMap();
     }
 
@@ -54,7 +60,9 @@ public class CasingInfo {
      * ONLY usable in command line tests.
      */
     public CasingInfo() {
-        this(CLDRPaths.COMMON_DIRECTORY + "/casing");
+        casingDirs = new ArrayList<File>();
+        this.casingDirs.add(new File(CLDRPaths.CASING_DIRECTORY));
+        casing = CldrUtility.newConcurrentHashMap();
     }
 
     /**
@@ -63,7 +71,7 @@ public class CasingInfo {
      * @param localeID
      * @return
      */
-    public Map<Category, CasingType> getLocaleCasing(String localeID) {
+    public Map<Category, CasingTypeAndErrFlag> getLocaleCasing(String localeID) {
         // Check if the localeID contains casing first.
         // If there isn't a casing file available for the locale,
         // recurse over the locale's parents until something is found.
@@ -93,13 +101,15 @@ public class CasingInfo {
      * @param localeID
      */
     private CasingHandler loadFromXml(String localeID) {
-        File casingFile = new File(casingDir, localeID + ".xml");
-        if (casingFile.isFile()) {
-            CasingHandler handler = new CasingHandler();
-            XMLFileReader xfr = new XMLFileReader().setHandler(handler);
-            xfr.read(casingFile.toString(), -1, true);
-            return handler;
-        } // Fail silently if file not found.
+        for (File casingDir : casingDirs) {
+            File casingFile = new File(casingDir, localeID + ".xml");
+            if (casingFile.isFile()) {
+                CasingHandler handler = new CasingHandler();
+                XMLFileReader xfr = new XMLFileReader().setHandler(handler);
+                xfr.read(casingFile.toString(), -1, true);
+                return handler;
+            }
+        }// Fail silently if file not found.
         return null;
     }
 
@@ -171,10 +181,10 @@ public class CasingInfo {
             out.print(localeID);
             out.print(",");
             out.print(localeUsesCasing.get(localeID) ? "Y" : "N");
-            Map<Category, CasingType> types = casing.get(localeID);
+            Map<Category, CasingTypeAndErrFlag> types = casing.get(localeID);
             for (Category category : Category.values()) {
-                CasingType value = types.get(category);
-                out.print("," + value == null ? null : value.toString().charAt(0));
+                CasingTypeAndErrFlag value = types.get(category);
+                out.print("," + value == null ? null : value.type().toString().charAt(0));
             }
             out.println();
             out.flush();
@@ -235,9 +245,9 @@ public class CasingInfo {
      * XML handler for parsing casing files.
      */
     private class CasingHandler extends XMLFileReader.SimpleHandler {
-        private Pattern localePattern = Pattern.compile("//ldml/identity/language\\[@type=\"(\\w+)\"\\]");
+        private Pattern localePattern = PatternCache.get("//ldml/identity/language\\[@type=\"(\\w+)\"\\]");
         private String localeID;
-        private Map<Category, CasingType> caseMap = new EnumMap<Category, CasingType>(Category.class);
+        private Map<Category, CasingTypeAndErrFlag> caseMap = new EnumMap<Category, CasingTypeAndErrFlag>(Category.class);
         private Map<Category, CasingType> overrideMap = new EnumMap<Category, CasingType>(Category.class);
 
         @Override
@@ -247,7 +257,13 @@ public class CasingInfo {
                 XPathParts parts = new XPathParts().set(path);
                 Category category = Category.valueOf(parts.getAttributeValue(-1, "type").replace('-', '_'));
                 CasingType casingType = CasingType.valueOf(value);
-                caseMap.put(category, casingType);
+                boolean errFlag = Boolean.parseBoolean(parts.getAttributeValue(-1, "forceError"));
+                for (CasingTypeAndErrFlag typeAndFlag: CasingTypeAndErrFlag.values()) {
+                    if (casingType == typeAndFlag.type() && errFlag == typeAndFlag.flag()) {
+                        caseMap.put(category, typeAndFlag);
+                        break;
+                    }
+                }
                 if (Boolean.valueOf(parts.getAttributeValue(-1, "override"))) {
                     overrideMap.put(category, casingType);
                 }
@@ -260,7 +276,7 @@ public class CasingInfo {
             }
         }
 
-        public void addParsedResult(Map<String, Map<Category, CasingType>> map) {
+        public void addParsedResult(Map<String, Map<Category, CasingTypeAndErrFlag>> map) {
             map.put(localeID, caseMap);
         }
 

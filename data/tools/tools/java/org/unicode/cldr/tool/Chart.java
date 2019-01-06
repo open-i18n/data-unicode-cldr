@@ -7,10 +7,16 @@ import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.SupplementalDataInfo;
 
+/**
+ * To add a new chart, subclass this, and add the subclass to {@link ShowLanguages.printLanguageData()}. There isn't much
+ * documentation, so best to look at a simple subclass to see how it works.
+ * @author markdavis
+ */
 public abstract class Chart {
     public static final CLDRConfig CONFIG = CLDRConfig.getInstance();
     public static final SupplementalDataInfo SDI = CONFIG.getSupplementalDataInfo();
     public static final CLDRFile ENGLISH = CONFIG.getEnglish();
+    public static final String LS = System.lineSeparator();
 
     /**
      * null means a string will be constructed from the title. Otherwise a real file name (no html extension).
@@ -20,12 +26,21 @@ public abstract class Chart {
         return null; 
     };
     /**
-     * Short explanation that will go just after the title/dates.
+     * Show Date?
      * @return
      */
     public String getExplanation() {
         return null;
     }
+    
+    /**
+     * Short explanation that will go just after the title/dates.
+     * @return
+     */
+    public boolean getShowDate() {
+        return true;
+    }
+
     /**
      * Directory for the file to go into.
      * @return
@@ -47,6 +62,7 @@ public abstract class Chart {
         try (
             FormattedFileWriter x = new FormattedFileWriter(getFileName(), getTitle(), getExplanation(), anchors);) {
             x.setDirectory(getDirectory());
+            x.setShowDate(getShowDate());
             writeContents(x);
         } catch (IOException e) {
             throw new IllegalArgumentException(e);

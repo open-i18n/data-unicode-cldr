@@ -274,132 +274,145 @@ Google	;	uz	;	modern		;	T4.1	Uzbek	(Latin)
 #Google	Tier	generated					
 Google	;	sr_Latn	;	modern		;	Tx	Serbian (auto-generated)														
 				
-#Google	Tier	ext
-Google	;	eu	;	modern	;	ext	Basque
-Google	;	gl	;	modern	;	ext	Galician
-Google	;	zu	;	modern	;	ext	Zulu										
-Google	;	bs	;	modern	;	ext	Bosnian
+#Google	Tier	T5
+Google	;	eu	;	modern	;	T5	Basque
+Google	;	gl	;	modern	;	T5	Galician
+Google	;	zu	;	modern	;	T5	Zulu										
+Google	;	ga	;	modern	;	T5	Irish
+Google	;	bs	;	modern	;	T5	Bosnian
+Google	;	be	;	modern	;	T5	Belarusian
+Google	;	cy	;	modern	;	T5	Welsh
 
-Google	;	cy	;	moderate	;	T5	Welsh
-Google	;	uz_Cyrl	;	moderate	;	T5	Uzbek	(Cyrillic)														
-#Google	;	fr_CA	;	modern	;	T4	Canadian French
-#Google	;	zh_Hant_HK	;	modern	;	T4	Hong Kong Chinese (T)
-										
-Google	;	be	;	basic	;	Belarusian
-Google	;	ht	;	basic	;	Haitian
-Google	;	ga	;	basic	;	Irish
-Google	;	mt	;	basic	;	Maltese
-Google	;	so	;	basic	;	Somali
-Google	;	ig	;	basic	;	Igbo
-Google	;	yo	;	basic	;	Yoruba
-Google	;	ceb	;	basic	;	Cebuano
-Google	;	ha	;	basic	;	Hausa
-Google	;	tg	;	basic	;	Tajik
-Google	;	mg	;	basic	;	Malagasy
-Google	;	ve	;	basic	;	Venda
-Google	;	crs	;	basic	;	crs
-Google	;	nso	;	basic	;	NorthernSotho
-Google	;	ny	;	basic	;	Nyanja
-Google	;	pcm	;	basic	;	pcm
-Google	;	st	;	basic	;	SouthernSotho
-Google	;	tn	;	basic	;	Tswana
-Google	;	xh	;	basic	;	Xhosa
-Google	;	kri	;	basic	;	kri
-Google	;	ti	;	basic	;	Tigrinya
-Google	;	rm	;	basic	;	Romansh
-Google	;	ach	;	basic	;	Acoli
-Google	;	ban	;	basic	;	Balinese
-Google	;	bem	;	basic	;	Bemba
-Google	;	ee	;	basic	;	Ewe
-Google	;	fo	;	basic	;	Faroese
-Google	;	gaa	;	basic	;	Ga
-Google	;	lg	;	basic	;	Ganda
-Google	;	jw	;	basic	;	Javanese
-Google	;	rw	;	basic	;	Kinyarwanda
-Google	;	kg	;	basic	;	Kongo
-Google	;	ln	;	basic	;	Lingala
-Google	;	loz	;	basic	;	Lozi
-Google	;	lua	;	basic	;	Luba-Lulua
-Google	;	mi	;	basic	;	Maori
-Google	;	mfe	;	basic	;	Morisyen
-Google	;	nyn	;	basic	;	Nyankole
-Google	;	om	;	basic	;	Oromo
-Google	;	ps	;	basic	;	Pashto
-Google	;	qu	;	basic	;	Quechua
-Google	;	rn	;	basic	;	Rundi
-Google	;	sn	;	basic	;	Shona
-Google	;	ckb	;	basic	;	SoraniKurdish
-Google	;	to	;	basic	;	Tongan
-Google	;	tum	;	basic	;	Tumbuka
-Google	;	tk	;	basic	;	Turkmen
-Google	;	wo	;	basic	;	Wolof
-Google	;	gsw	;	basic	;	Swiss German
+#Google Tier T6
+Cherokee	;	chr	;	basic	;	T5 Cherokee
+
+#Google Tier TR
+Google	;	es_US	;	modern	; TR Spanish (United States)
+Google	;	es_MX	;	modern	; TR Spanish (Mexico)
+Google	;	en_CA	;	modern	; TR English (Canada)
+Google	;	en_AU	;	modern	; TR English (Australia)
+Google	;	en_IN	;	modern	; TR English (English)
+Google	;	fr_CA	;	modern	; TR French (Canada)
+Google	;	de_CH	;	modern	; TR High German (Switzerland)
+Google	;	zh_Hant_HK	;	modern	;	TR	Mandarin Chinese (Traditional, Hong Kong)
+
+#Google	;	uz_Cyrl	;	basic	;	Uzbek	(Cyrillic)														
+#Google	;	ht	;	basic	;	Haitian
+#Google	;	mt	;	basic	;	Maltese
+#Google	;	so	;	basic	;	Somali
+#Google	;	ig	;	basic	;	Igbo
+#Google	;	yo	;	basic	;	Yoruba
+#Google	;	ceb	;	basic	;	Cebuano
+#Google	;	ha	;	basic	;	Hausa
+#Google	;	tg	;	basic	;	Tajik
+#Google	;	mg	;	basic	;	Malagasy
+#Google	;	ve	;	basic	;	Venda
+#Google	;	crs	;	basic	;	crs
+#Google	;	nso	;	basic	;	NorthernSotho
+#Google	;	ny	;	basic	;	Nyanja
+#Google	;	pcm	;	basic	;	pcm
+#Google	;	st	;	basic	;	SouthernSotho
+#Google	;	tn	;	basic	;	Tswana
+#Google	;	xh	;	basic	;	Xhosa
+#Google	;	kri	;	basic	;	kri
+#Google	;	ti	;	basic	;	Tigrinya
+#Google	;	rm	;	basic	;	Romansh
+#Google	;	ach	;	basic	;	Acoli
+#Google	;	ban	;	basic	;	Balinese
+#Google	;	bem	;	basic	;	Bemba
+#Google	;	ee	;	basic	;	Ewe
+#Google	;	fo	;	basic	;	Faroese
+#Google	;	gaa	;	basic	;	Ga
+#Google	;	lg	;	basic	;	Ganda
+#Google	;	jw	;	basic	;	Javanese
+#Google	;	rw	;	basic	;	Kinyarwanda
+#Google	;	kg	;	basic	;	Kongo
+#Google	;	ln	;	basic	;	Lingala
+#Google	;	loz	;	basic	;	Lozi
+#Google	;	lua	;	basic	;	Luba-Lulua
+#Google	;	mi	;	basic	;	Maori
+#Google	;	mfe	;	basic	;	Morisyen
+#Google	;	nyn	;	basic	;	Nyankole
+#Google	;	om	;	basic	;	Oromo
+#Google	;	ps	;	basic	;	Pashto
+#Google	;	qu	;	basic	;	Quechua
+#Google	;	rn	;	basic	;	Rundi
+#Google	;	sn	;	basic	;	Shona
+#Google	;	ckb	;	basic	;	SoraniKurdish
+#Google	;	to	;	basic	;	Tongan
+#Google	;	tum	;	basic	;	Tumbuka
+#Google	;	tk	;	basic	;	Turkmen
+#Google	;	wo	;	basic	;	Wolof
+#Google	;	gsw	;	basic	;	Swiss German
 			
 Apple	;	en	;	comprehensive
 Apple	;	en_AU	;	modern
 Apple	;	en_GB	;	modern
 Apple	;	ar	;	modern
-Apple	;	da	;	modern
-Apple	;	de	;	modern
-Apple	;	es	;	modern
-Apple	;	es_MX	;	modern
-Apple	;	fi	;	modern
-Apple	;	fr	;	modern
-Apple	;	fr_CA	;	modern
-Apple	;	it	;	modern
-Apple	;	ja	;	modern
-Apple	;	ko	;	modern
-Apple	;	nb	;	modern
-Apple	;	nl	;	modern
-Apple	;	pl	;	modern
-Apple	;	pt	;	modern
-Apple	;	pt_PT	;	modern
-Apple	;	ru	;	modern
-Apple	;	sv	;	modern
-Apple	;	th	;	modern
-Apple	;	tr	;	modern
-Apple	;	zh	;	modern
-Apple	;	zh_Hant	;	modern
-Apple	;	zh_Hant_HK	;	modern
 Apple	;	bg	;	modern
+Apple	;	bn	;	modern
 Apple	;	ca	;	modern
 Apple	;	cs	;	modern
+Apple	;	da	;	modern
+Apple	;	de	;	modern
 Apple	;	el	;	modern
+Apple	;	es	;	modern
+Apple	;	es_419	;	modern
+Apple	;	es_MX	;	modern
 Apple	;	et	;	modern
+Apple	;	fa	;	modern
+Apple	;	fi	;	modern
+Apple	;	fil	;	modern
+Apple	;	fo	;	modern
+Apple	;	fr	;	modern
+Apple	;	fr_CA	;	modern
+Apple	;	gu	;	modern
 Apple	;	he	;	modern
 Apple	;	hi	;	modern
 Apple	;	hr	;	modern
 Apple	;	hu	;	modern
 Apple	;	id	;	modern
 Apple	;	is	;	modern
+Apple	;	it	;	modern
+Apple	;	ja	;	modern
+Apple	;	kn	;	modern
+Apple	;	ko	;	modern
 Apple	;	lt	;	modern
 Apple	;	lv	;	modern
 Apple	;	mk	;	modern
+Apple	;	ml	;	modern
+Apple	;	mr	;	modern
 Apple	;	ms	;	modern
+Apple	;	nb	;	modern
+Apple	;	nn	;	modern
+Apple	;	nl	;	modern
+Apple	;	pa	;	modern
+Apple	;	pl	;	modern
+Apple	;	pt	;	modern
+Apple	;	pt_PT	;	modern
 Apple	;	ro	;	modern
+Apple	;	ru	;	modern
 Apple	;	sk	;	modern
 Apple	;	sl	;	modern
 Apple	;	sr	;	modern
 Apple	;	sr_Latn	;	modern
-Apple	;	uk	;	modern
-Apple	;	vi	;	modern
-Apple	;	bn	;	modern
-Apple	;	fil	;	modern
-Apple	;	gu	;	modern
-Apple	;	kn	;	modern
-Apple	;	ml	;	modern
-Apple	;	mr	;	modern
-Apple	;	pa	;	modern
+Apple	;	sv	;	modern
 Apple	;	ta	;	modern
 Apple	;	te	;	modern
-Apple	;	ur	;	modern
+Apple	;	th	;	modern
 Apple	;	to	;	modern
+Apple	;	tr	;	modern
+Apple	;	uk	;	modern
+Apple	;	ur	;	modern
+Apple	;	vi	;	modern
+Apple	;	zh	;	modern
+Apple	;	zh_Hant	;	modern
+Apple	;	zh_Hant_HK	;	modern
 Apple	;	as	;	basic
 Apple	;	az	;	basic
 Apple	;	be	;	basic
 Apple	;	bs	;	basic
 Apple	;	cy	;	basic
-Apple	;	fa	;	basic
 Apple	;	hy	;	basic
 Apple	;	ii	;	basic
 Apple	;	kk	;	basic
@@ -545,30 +558,35 @@ Cldr	;	my	;	modern	;	T3.1	Burmese (Myanmar)
 Cldr	;	am	;	modern	;	T4	Amharic
 Cldr	;	gu	;	modern	;	T4	Gujarati
 Cldr	;	kn	;	modern	;	T4	Kannada
-Cldr	;	ky	;	modern	;	T4.1	Kirghiz																
+Cldr	;	ky	;	modern	;	T4	Kirghiz																
 Cldr	;	ml	;	modern	;	T4	Malayalam
-Cldr	;	pa	;	modern	;	T4.1	Punjabi
+Cldr	;	pa	;	modern	;	T4	Punjabi
 Cldr	;	te	;	modern	;	T4	Telugu
 Cldr	;	ur	;	modern	;	T4	Urdu
-Cldr	;	uz	;	modern		;	T4.1	Uzbek	(Latin)		
+Cldr	;	uz	;	modern		;	T4	Uzbek	(Latin)		
 
 # ext													
-Cldr	;	bs	;	modern	;	ext	Bosnian		
-Cldr	;	eu	;	modern	;	ext	Basque
-Cldr	;	gl	;	modern	;	ext	Galician
-Cldr	;	zu	;	modern	;	ext	Zulu										
-													
+Cldr	;	bs	;	modern	;	T5	Bosnian		
+Cldr	;	eu	;	modern	;	T5	Basque
+Cldr	;	gl	;	modern	;	T5	Galician
+Cldr	;	zu	;	modern	;	T5	Zulu
+	
+Cldr	;	ga	;	modern	;	T5	Irish
+Cldr	;	be	;	modern	;	T5	Belarusian
+Cldr	;	cy	;	modern	;	T5	Welsh
 
 #Cldr	Tier	generated					
 Cldr	;	sr_Latn	;	modern		;	Tx	Serbian (auto-generated)		
 														
-#Cldr	Tier	ext	
-#Cldr	;	fr_CA	;	modern	;	T4	Canadian French
-#Cldr	;	zh_Hant_HK	;	modern	;	T4	Hong Kong Chinese (T)
-#Cldr	;	uz_Cyrl	;	modern	;	T5	Uzbek	(Cyrillic)														
+#Cldr regional (from Google)
+Cldr	;	es_US	;	modern	; TR Spanish (United States)
+Cldr	;	en_CA	;	modern	; TR English (Canada)
+Cldr	;	en_IN	;	modern	; TR English (English)
+Cldr	;	de_CH	;	modern	; TR High German (Switzerland)
 
 #Cldr	other (from Apple)		
-Cldr	;	to	;	modern
+Cldr    ;   fo  ;   modern
+Cldr    ;   to  ;   modern
 Cldr	;	en_AU	;	modern
 Cldr	;	es_MX	;	modern
 Cldr	;	fr_CA	;	modern
@@ -841,6 +859,9 @@ Bangladesh	;	*	;	moderate	;	All others
 
 Rumantscha	;	rm	;	modern	;	Romansch
 Rumantscha	;	*	;	moderate	;	All others
+
+Adlam	;	ff	;	modern	;	Fulah
+Adlam	;	*	;	moderate	;	All others
 
 
 # not used

@@ -2058,10 +2058,10 @@ public class LDMLUtilities {
         return loadFileRevision(sourceDir, new File(fileName).getName());
     }
 
-    // //ldml[@version="1.7"]/identity/version[@number="$Revision: 7859 $"]
+    // //ldml[@version="1.7"]/identity/version[@number="$Revision: 11905 $"]
     // private static Pattern VERSION_PATTERN =
-    // Pattern.compile("//ldml[^/]*/identity/version\\[@number=\"[^0-9]*\\([0-9.]+\\).*");
-    private static Pattern VERSION_PATTERN = Pattern.compile(".*identity/version.*Revision[: ]*([0-9.]*).*");
+    // PatternCache.get("//ldml[^/]*/identity/version\\[@number=\"[^0-9]*\\([0-9.]+\\).*");
+    private static Pattern VERSION_PATTERN = PatternCache.get(".*identity/version.*Revision[: ]*([0-9.]*).*");
 
     /**
      * Load the revision from CVS or from the Identity element.
