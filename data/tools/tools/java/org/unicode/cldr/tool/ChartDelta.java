@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -41,20 +40,19 @@ import org.unicode.cldr.util.PathStarrer;
 import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.SimpleXMLSource;
 import org.unicode.cldr.util.SupplementalDataInfo;
+import org.unicode.cldr.util.TransliteratorUtilities;
 import org.unicode.cldr.util.XMLFileReader;
 import org.unicode.cldr.util.XPathParts;
 
-import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;
 import com.ibm.icu.dev.util.CollectionUtilities;
-import com.ibm.icu.dev.util.TransliteratorUtilities;
 import com.ibm.icu.impl.Relation;
 import com.ibm.icu.impl.Row.R3;
 import com.ibm.icu.impl.Row.R4;
 import com.ibm.icu.text.NumberFormat;
+import com.ibm.icu.util.Output;
 
 public class ChartDelta extends Chart {
     private static final PageId DEBUG_PAGE_ID = PageId.DayPeriod;
@@ -288,46 +286,46 @@ public class ChartDelta extends Chart {
                     for (String path : old.fullIterable()) {
                         paths.add(path);
                     }
+
+                    Output<String> reformattedValue = new Output<String>();
+                    Output<Boolean> hasReformattedValue = new Output<Boolean>();
+
                     for (String path : paths) {
                         if (path.startsWith("//ldml/identity")
                             || path.endsWith("/alias")
                             || path.startsWith("//ldml/segmentations") // do later
-                            //|| path.startsWith("//ldml/annotations") // do later
                             || path.startsWith("//ldml/rbnf") // do later
                             ) {
                             continue;
                         }
-
-//                        if (path.startsWith("//ldml/dates/calendars/calendar[@type=\"gregorian\"]/dayPeriods/dayPeriodContext[@type=\"stand-alone\"]")) {
-//                            System.out.println(path);
-//                        }
-                        String sourceLocaleCurrent = current.getSourceLocaleID(path, currentStatus);
-                        String sourceLocaleOld = old.getSourceLocaleID(path, oldStatus);
-
-                        // filter out stuff that differs at a higher level, except allow root when we are in base
-                        if (!sourceLocaleCurrent.equals(locale)
-                            && !sourceLocaleOld.equals(locale)) {
-                            continue;
-//                            if (!isBase) {
-//                                continue;
-//                            } else if (!sourceLocaleCurrent.equals("root") && !sourceLocaleOld.equals("root")) {
-//                                continue;
-//                            } else if (sourceLocaleCurrent.equals(sourceLocaleOld)) {
-//                                continue;
-//                            }
+                        if (path.contains("/tRule")) {
+                            int debug = 0;
                         }
-                        if (!path.equals(currentStatus.pathWhereFound)
-                            && !path.equals(oldStatus.pathWhereFound)) {
-                            continue;
-                        }
-                        // fix some incorrect cases
-
-                        final String oldValue = old.getStringValue(path);
-                        final String currentValue = current.getStringValue(path);
-
                         PathHeader ph = getPathHeader(path);
                         if (ph == null) {
                             continue;
+                        }
+
+                        String oldValue = null;
+                        String currentValue = null;
+
+                        {
+                            String sourceLocaleCurrent = current.getSourceLocaleID(path, currentStatus);
+                            String sourceLocaleOld = getReformattedPath(oldStatus, old, path, reformattedValue, hasReformattedValue);
+
+                            // filter out stuff that differs at a higher level
+                            if (!sourceLocaleCurrent.equals(locale)
+                                && !sourceLocaleOld.equals(locale)) {
+                                continue;
+                            }
+                            if (!path.equals(currentStatus.pathWhereFound)
+                                && !path.equals(oldStatus.pathWhereFound)) {
+                                continue;
+                            }
+                            // fix some incorrect cases?
+
+                            currentValue = current.getStringValue(path);
+                            oldValue = hasReformattedValue.value ? reformattedValue.value : old.getStringValue(path);
                         }
                         // handle non-distinguishing attributes
                         addPathDiff(old, current, locale, ph, diff);
@@ -340,6 +338,38 @@ public class ChartDelta extends Chart {
             diff.clear();
         }
         writeDiffs(anchors, diffAll);
+    }
+
+    private String getReformattedPath(Status oldStatus, CLDRFile old, String path, Output<String> value, Output<Boolean> hasReformattedValue) {
+        if (!path.startsWith("//ldml/annotations/")) {
+            hasReformattedValue.value = Boolean.FALSE;
+            return old.getSourceLocaleID(path, oldStatus);
+        }
+        // OLD:     <annotation cp='[😀]' tts='grinning face'>face; grin</annotation>
+        // NEW:     <annotation cp="😀">face | grin</annotation>
+        //          <annotation cp="😀" type="tts">grinning face</annotation>
+        // from the NEW paths, get the OLD values
+        XPathParts parts = XPathParts.getInstance(path);
+        boolean isTts = parts.getAttributeValue(-1, "type") != null;
+        if (isTts) {
+            parts.removeAttribute(-1, "type");
+        }
+        String cp = parts.getAttributeValue(-1, "cp");
+        parts.setAttribute(-1, "cp", "[" + cp + "]");
+
+        String oldStylePath = parts.toString();
+        String temp = old.getStringValue(oldStylePath);
+        if (temp == null) {
+            hasReformattedValue.value = Boolean.FALSE;
+        } else if (isTts) {
+            String temp2 = old.getFullXPath(oldStylePath);
+            value.value = XPathParts.getInstance(temp2).getAttributeValue(-1, "tts");
+            hasReformattedValue.value = Boolean.TRUE;
+        } else {
+            value.value = temp.replaceAll("\\s*;\\s*", " | ");
+            hasReformattedValue.value = Boolean.TRUE;
+        }
+        return old.getSourceLocaleID(oldStylePath, oldStatus);
     }
 
     PathStarrer starrer = new PathStarrer().setSubstitutionPattern("%A");
@@ -434,12 +464,48 @@ public class ChartDelta extends Chart {
     private void addValueDiff(String valueOld, String valueCurrent, String locale, PathHeader ph, Set<PathDiff> diff, Relation<PathHeader, String> diffAll) {
 //        String path = ph.getOriginalPath();
         counter.add(ChangeType.totalItems, 1);
-
+        // handle stuff with lines specially
         if (!Objects.equals(valueCurrent, valueOld)) {
+            if (valueOld != null && valueCurrent != null && (valueOld.contains("\n") || valueCurrent.contains("\n"))) {
+                List<String> setOld = DtdData.CR_SPLITTER.splitToList(valueOld);
+                List<String> setNew = DtdData.CR_SPLITTER.splitToList(valueCurrent);
+                valueOld = getFilteredValue(setOld, setNew);
+                valueCurrent = getFilteredValue(setNew, setOld);
+            }
             PathDiff row = new PathDiff(locale, new PathHeaderSegment(ph, -1, ""), valueOld, valueCurrent);
             diff.add(row);
             diffAll.put(ph, locale);
         }
+    }
+
+    /**
+     * Return string with all lines from linesToRemove removed
+     * @param toGetStringFor
+     * @param linesToRemove
+     * @return
+     */
+    private String getFilteredValue(Collection<String> toGetStringFor, Collection<String> linesToRemove) {
+        String valueOld;
+        StringBuilder buf = new StringBuilder();
+        Set<String> toRemove = new HashSet<>(linesToRemove);
+        boolean removed = false;
+        for (String old : toGetStringFor) {
+            if (toRemove.contains(old)) {
+                removed = true;
+            } else {
+                if (removed) {
+                    buf.append("…\n");
+                    removed = false;
+                }
+                buf.append(old).append('\n');
+            }
+        }
+        if (removed) {
+            buf.append("…");
+        } else if (buf.length() > 0) {
+            buf.setLength(buf.length()-1); // remove final \n
+        }
+        return buf.toString();
     }
 
     private void writeDiffs(Anchors anchors, String file, String title, SortedMap<PathHeader, String> bcp) {
@@ -448,8 +514,8 @@ public class ChartDelta extends Chart {
         .addColumn("Page", "class='source'", null, "class='source'", true).setRepeatDivider(true)
         .addColumn("Header", "class='source'", null, "class='source'", true)
         .addColumn("Code", "class='source'", null, "class='source'", false)
-        .addColumn("Old", "class='target' width='20%'", null, "class='target'", false)
-        .addColumn("New", "class='target' width='20%'", null, "class='target'", false);
+        .addColumn("Old", "class='target'", null, "class='target'", false) //  width='20%'
+        .addColumn("New", "class='target'", null, "class='target'", false); //  width='20%'
         PathHeader ph1 = phf.fromPath("//supplementalData/metadata/alias/subdivisionAlias[@type=\"TW-TXQ\"]/_reason");
         PathHeader ph2 = phf.fromPath("//supplementalData/metadata/alias/subdivisionAlias[@type=\"LA-XN\"]/_replacement");
         ph1.compareTo(ph2);
@@ -501,8 +567,8 @@ public class ChartDelta extends Chart {
         .addColumn("Header", "class='source'", null, "class='source'", true)
         .addColumn("Code", "class='source'", null, "class='source'", true)
         .addColumn("Locale", "class='source'", null, "class='source'", true)
-        .addColumn("Old", "class='target' width='20%'", null, "class='target'", true)
-        .addColumn("New", "class='target' width='20%'", null, "class='target'", true)
+        .addColumn("Old", "class='target'", null, "class='target'", true) //  width='20%'
+        .addColumn("New", "class='target'", null, "class='target'", true) //  width='20%'
         .addColumn("Level", "class='target'", null, "class='target'", true);
 
         for (PathDiff row : diff) {
@@ -596,6 +662,7 @@ public class ChartDelta extends Chart {
     public void writeNonLdmlPlain(Anchors anchors, String directory) {
         SortedMap<PathHeader, String> bcp = new TreeMap<>();
         SortedMap<PathHeader, String> supplemental = new TreeMap<>();
+        SortedMap<PathHeader, String> transforms = new TreeMap<>();
 
         for (String dir : new File(CLDRPaths.BASE_DIRECTORY + "common/").list()) {
             if (CLDRPaths.LDML_DIRECTORIES.contains(dir)
@@ -615,6 +682,9 @@ public class ChartDelta extends Chart {
                 }
                 String base = file.substring(0, file.length() - 4);
                 if (fileFilter != null && !fileFilter.reset(dir + "/" + base).find()) {
+                    if (verbose) {
+                        System.out.println("SKIPPING: " + dir + "/" + base);
+                    }
                     continue;
                 }
 
@@ -628,13 +698,13 @@ public class ChartDelta extends Chart {
                 keys.addAll(CldrUtility.ifNull(contents2.keySet(), Collections.<PathHeader> emptySet()));
                 DtdType dtdType = null;
                 for (PathHeader key : keys) {
-                    if (key.getOriginalPath().contains("land-agricult")) {
-                        int debug = 0;
-                    }
+                    boolean isTransform = key.getOriginalPath().contains("/tRule");
                     if (dtdType == null) {
                         dtdType = DtdType.fromPath(key.getOriginalPath());
                     }
-                    Map<PathHeader, String> target = dtdType == DtdType.supplementalData ? supplemental : bcp;
+                    Map<PathHeader, String> target = dtdType == DtdType.ldmlBCP47 ? bcp
+                        : isTransform ? transforms
+                            : supplemental ;
                     Set<String> set1 = contents1.get(key);
                     Set<String> set2 = contents2.get(key);
 
@@ -656,10 +726,12 @@ public class ChartDelta extends Chart {
                             addRow(target, key, s, "▷removed◁");
                         }
                     } else {
-                        Set<String> s1M2 = new LinkedHashSet<>(set1);
-                        s1M2.removeAll(set2);
-                        Set<String> s2M1 = new LinkedHashSet<>(set2);
-                        s2M1.removeAll(set1);
+                        Set<String> s1M2 = set1;
+                        Set<String> s2M1 = set2;
+//                        Set<String> s1M2 = new LinkedHashSet<>(set1);
+//                        s1M2.removeAll(set2);
+//                        Set<String> s2M1 = new LinkedHashSet<>(set2);
+//                        s2M1.removeAll(set1);
                         if (s1M2.isEmpty()) {
                             addRow(target, key, "▷missing◁", CollectionUtilities.join(s2M1, ", "));
                             counter.add(ChangeType.newItems, s2M1.size());
@@ -667,7 +739,16 @@ public class ChartDelta extends Chart {
                             addRow(target, key, CollectionUtilities.join(s1M2, ", "), "▷removed◁");
                             counter.add(ChangeType.deletedItems, s1M2.size());
                         } else {
-                            addRow(target, key, CollectionUtilities.join(s1M2, ", "), CollectionUtilities.join(s2M1, ", "));
+                            String valueOld;
+                            String valueCurrent;
+                            if (s1M2.size() > 1 || s2M1.size() > 1) {
+                                valueOld = getFilteredValue(s1M2, s2M1);
+                                valueCurrent = getFilteredValue(s2M1, s1M2);
+                            } else {
+                                valueOld = s1M2.iterator().next();
+                                valueCurrent = s2M1.iterator().next();
+                            }
+                            addRow(target, key, valueOld, valueCurrent);
                             counter.add(ChangeType.changedItems, (s1M2.size() + s2M1.size())/2);
                         }
                     }
@@ -678,6 +759,7 @@ public class ChartDelta extends Chart {
 
         writeDiffs(anchors, "bcp47", "¤¤BCP47 Delta", bcp);
         writeDiffs(anchors, "supplemental-data", "¤¤Supplemental Delta", supplemental);
+        writeDiffs(anchors, "transforms", "¤¤Transforms Delta", transforms);
     }
 
     private void addRow(Map<PathHeader, String> target, PathHeader key, String oldItem, String newItem) {
@@ -729,7 +811,7 @@ public class ChartDelta extends Chart {
 //        return key;
 //    }
 //
-    private Relation<PathHeader, String> fillData(String directory, String file) {
+    public Relation<PathHeader, String> fillData(String directory, String file) {
         Relation<PathHeader, String> results = Relation.of(new TreeMap<PathHeader, Set<String>>(), TreeSet.class);
 
         List<Pair<String, String>> contents1;
@@ -744,7 +826,7 @@ public class ChartDelta extends Chart {
 
         for (Pair<String, String> s : contents1) {
             String path = s.getFirst();
-            if (path.contains("land-agricult")) {
+            if (path.contains("/collat")) {
                 int debug = 0;
             }
 
@@ -757,16 +839,18 @@ public class ChartDelta extends Chart {
             if (dtdData.isMetadata(pathPlain)) {
                 continue;
             }
-            String pathForValue = dtdData.getRegularizedPaths(pathPlain, extras);
-            if (pathForValue != null) {
-                PathHeader pathHeader = phf.fromPath(pathForValue);
-                Splitter splitter = getValueSplitter(pathPlain);
-                for (String line : splitter.split(value)) {
-                    // special case # in transforms
-                    if (isComment(pathPlain, line)) {
-                        continue;
+            Set<String> pathForValues = dtdData.getRegularizedPaths(pathPlain, extras);
+            if (pathForValues != null) {
+                for (String pathForValue : pathForValues) {
+                    PathHeader pathHeader = phf.fromPath(pathForValue);
+                    Splitter splitter = getValueSplitter(pathPlain);
+                    for (String line : splitter.split(value)) {
+                        // special case # in transforms
+                        if (isComment(pathPlain, line)) {
+                            continue;
+                        }
+                        results.put(pathHeader, line);
                     }
-                    results.put(pathHeader, line);
                 }
             }
             for (Entry<String, Collection<String>> entry : extras.asMap().entrySet()) {
@@ -775,13 +859,13 @@ public class ChartDelta extends Chart {
                 final Collection<String> extraValue = entry.getValue();
                 if (isExtraSplit(extraPath)) {
                     for (String items : extraValue) {
-                        results.putAll(pathHeaderExtra, SPACE_SPLITTER.splitToList(items));
+                        results.putAll(pathHeaderExtra, DtdData.SPACE_SPLITTER.splitToList(items));
                     }
                 } else {
                     results.putAll(pathHeaderExtra, extraValue);
                 }
             }
-            if (pathForValue == null && !value.isEmpty()) {
+            if (pathForValues == null && !value.isEmpty()) {
                 System.err.println("Shouldn't happen");
             }
         }
@@ -795,18 +879,8 @@ public class ChartDelta extends Chart {
         return false;
     }
 
-    final static Splitter CR_SPLITTER = Splitter.on(CharMatcher.anyOf("\n\r")).trimResults().omitEmptyStrings();
-    final static Splitter SPACE_SPLITTER = Splitter.on(CharMatcher.WHITESPACE).trimResults().omitEmptyStrings();
-    // TODO: add to DTD annotations
-    static final Set<String> SPACED_VALUES = ImmutableSet.of(
-        "idValidity"
-        );
-
-    private Splitter getValueSplitter(XPathParts pathPlain) {
-        if (!Collections.disjoint(pathPlain.getElements(), SPACED_VALUES)) {
-            return SPACE_SPLITTER;
-        }
-        return CR_SPLITTER;
+    public Splitter getValueSplitter(XPathParts pathPlain) {
+        return DtdData.getValueSplitter(pathPlain);
     }
 
     public static boolean isComment(XPathParts pathPlain, String line) {

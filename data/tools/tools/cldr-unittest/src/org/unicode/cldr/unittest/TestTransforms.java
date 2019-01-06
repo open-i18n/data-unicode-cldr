@@ -15,6 +15,7 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.unicode.cldr.draft.FileUtilities;
 import org.unicode.cldr.unittest.TestAll.TestInfo;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRPaths;
@@ -24,7 +25,6 @@ import org.unicode.cldr.util.Pair;
 import org.unicode.cldr.util.XMLFileReader;
 import org.unicode.cldr.util.XPathParts;
 
-import com.ibm.icu.dev.util.BagFormatter;
 import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.impl.Utility;
 import com.ibm.icu.lang.UCharacter;
@@ -345,6 +345,48 @@ public class TestTransforms extends TestFmwkPlus {
             trans.transliterate("Kornilʹev Kirill"));
     }
 
+    private Pattern rfc6497Pattern =
+        Pattern.compile("([a-zA-Z0-9-]+)-t-([a-zA-Z0-9-]+?)(?:-m0-([a-zA-Z0-9-]+))?");
+
+    // cs-fonipa --> cs_fonipa; und-deva --> deva
+    // TODO: Remove this workaround once ICU supports BCP47-T identifiers.
+    // http://bugs.icu-project.org/trac/ticket/12599
+    private String getLegacyCode(String code) {
+        code = code.replace('-', '_');
+        if (code.startsWith("und_") && code.length() == 8) {
+            code = code.substring(4);
+        }
+        return code;
+    }
+
+    private Transliterator getTransliterator(String id) {
+        // TODO: Pass unmodified transform name to ICU, once
+        // ICU can handle transform identifiers according to
+        // BCP47 Extension T (RFC 6497). The rewriting below
+        // is just a temporary workaround, allowing us to use
+        // BCP47-T identifiers for naming test data files.
+        // http://bugs.icu-project.org/trac/ticket/12599
+        if (id.equalsIgnoreCase("und-t-d0-publish")) {
+            return Transliterator.getInstance("Any-Publishing");
+        } else if (id.equalsIgnoreCase("und-t-s0-publish")) {
+            return Transliterator.getInstance("Publishing-Any");
+        } else if (id.equalsIgnoreCase("my-t-my-s0-zawgyi")) {
+            return Transliterator.getInstance("Zawgyi-my");
+        }
+
+        Matcher rfc6497Matcher = rfc6497Pattern.matcher(id);
+        if (rfc6497Matcher.matches()) {
+            String targetLanguage = getLegacyCode(rfc6497Matcher.group(1));
+            String originalLanguage = getLegacyCode(rfc6497Matcher.group(2));
+            String mechanism = rfc6497Matcher.group(3);
+            id = originalLanguage + "-" + targetLanguage;
+            if (mechanism != null && !mechanism.isEmpty()) {
+                id += "/" + mechanism.replace('-', '_');
+            }
+        }
+        return Transliterator.getInstance(id);
+    }
+
     public void TestData() {
         register();
         try {
@@ -364,34 +406,21 @@ public class TestTransforms extends TestFmwkPlus {
             // file
             logln("Testing files in: " + fileDirectoryName);
 
-            Pattern rfc6497Pattern =
-                Pattern.compile("([a-zA-Z0-9-]+)-t-([a-zA-Z0-9-]+?)(?:-m0-([a-zA-Z0-9-]+))?");
             for (String file : fileDirectory.list()) {
                 if (!file.endsWith(".txt")) {
                     continue;
                 }
                 logln("Testing file: " + file);
                 String transName = file.substring(0, file.length() - 4);
-
-                // TODO: Pass unmodified transform name to ICU, once
-                // ICU can handle transform identifiers according to
-                // BCP47 Extension T (RFC 6497). The rewriting below
-                // is just a temporary workaround, allowing us to use
-                // BCP47 identifiers for naming test data files.
-                Matcher rfc6497Matcher = rfc6497Pattern.matcher(transName);
-                if (rfc6497Matcher.matches()) {
-                    String targetLanguage = rfc6497Matcher.group(1).replace('-', '_');
-                    String originalLanguage = rfc6497Matcher.group(2).replace('-', '_');
-                    String mechanism = rfc6497Matcher.group(3);
-                    transName = originalLanguage + "-" + targetLanguage;
-                    if (mechanism != null && !mechanism.isEmpty()) {
-                        transName += "/" + mechanism.replace('-', '_');
-                    }
+                if (transName.startsWith("ur-t-und-")) {
+                  if (logKnownIssue("cldrbug:9737",
+                      "CLDR test suite is loading transforms non-deterministically")) {
+                    continue;
+                  }
                 }
 
-                Transliterator trans = Transliterator.getInstance(transName);
-                BufferedReader in = BagFormatter.openUTF8Reader(
-                    fileDirectoryName, file);
+                Transliterator trans = getTransliterator(transName);
+                BufferedReader in = FileUtilities.openUTF8Reader(fileDirectoryName, file);
                 int counter = 0;
                 while (true) {
                     String line = in.readLine();
@@ -428,7 +457,7 @@ public class TestTransforms extends TestFmwkPlus {
         Transliterator elLower = checkString("el", Casing.Lower,
             "οδός οδός σο σο oς ος σ ἕξ", greekSource, true);
         Transliterator elUpper = checkString("el", Casing.Upper,
-            "ΟΔΟΣ ΟΔΟΣ ΣΟ ΣΟ OΣ ΟΣ Σ ΕΞ", greekSource, false);
+            "ΟΔΟΣ ΟΔΟΣ ΣΟ ΣΟ OΣ ΟΣ Σ ΕΞ", greekSource, true); // now true due to ICU #5456
 
         String turkishSource = "Isiİ İsıI";
         Transliterator trTitle = checkString("tr", Casing.Title, "Isii İsıı",

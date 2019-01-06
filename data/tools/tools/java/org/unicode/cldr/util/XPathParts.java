@@ -23,7 +23,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
-import com.ibm.icu.dev.util.TransliteratorUtilities;
 import com.ibm.icu.impl.Utility;
 import com.ibm.icu.util.Freezable;
 
@@ -159,6 +158,10 @@ public final class XPathParts implements Freezable<XPathParts> {
             }
         }
 
+        public String getComment(CommentType style, String xpath) {
+           return comments.get(style).get(xpath);
+        }
+        
         public Comments addComment(CommentType style, String xpath, String comment) {
             String existing = comments.get(style).get(xpath);
             if (existing != null) {

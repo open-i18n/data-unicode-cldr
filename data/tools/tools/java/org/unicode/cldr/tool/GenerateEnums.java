@@ -346,8 +346,7 @@ public class GenerateEnums {
         }
         codes.close();
 //        String values = supplementalDataInfo.getValidityInfo().get("$territory").get1().trim();
-        Map<LstrType, Map<Status, Set<String>>> v = Validity.getInstance().getData();
-        Map<Status, Set<String>> validRegions = v.get(LstrType.region);
+        Map<Status, Set<String>> validRegions = Validity.getInstance().getStatusToCodes(LstrType.region);
         Set<String> regions = new TreeSet<String>();
         regions.addAll(validRegions.get(Status.regular));
         regions.addAll(validRegions.get(Status.macroregion));
@@ -381,8 +380,10 @@ public class GenerateEnums {
         // missing.remove("172");
         // Remove the following. They don't have numeric or alpha3 codes so they can't be found.
         missing.remove("EA");
+        missing.remove("EZ");
         missing.remove("IC");
         missing.remove("QU");
+        missing.remove("UN");
 
         if (missing.size() != 0) {
             throw new IllegalArgumentException("Codes in Registry but not in CLDR: "

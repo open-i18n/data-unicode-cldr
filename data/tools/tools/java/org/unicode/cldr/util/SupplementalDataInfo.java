@@ -39,10 +39,11 @@ import org.unicode.cldr.util.StandardCodes.LstrType;
 import org.unicode.cldr.util.SupplementalDataInfo.BasicLanguageData.Type;
 import org.unicode.cldr.util.SupplementalDataInfo.NumberingSystemInfo.NumberingSystemType;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo.Count;
+import org.unicode.cldr.util.Validity.Status;
 
 import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableSet;
 import com.ibm.icu.dev.util.CollectionUtilities;
-import com.ibm.icu.dev.util.XEquivalenceClass;
 import com.ibm.icu.impl.IterableComparator;
 import com.ibm.icu.impl.Relation;
 import com.ibm.icu.impl.Row;
@@ -83,6 +84,7 @@ import com.ibm.icu.util.VersionInfo;
 public class SupplementalDataInfo {
     private static final boolean DEBUG = false;
     private static final StandardCodes sc = StandardCodes.make();
+    private static final String UNKNOWN_SCRIPT = "Zzzz";
 
     // TODO add structure for items shown by TestSupplementalData to be missing
     /*
@@ -1080,9 +1082,6 @@ public class SupplementalDataInfo {
         zone_aliases.freeze();
         languageToScriptVariants.freeze();
 
-        addDefaultScripts();
-        baseLanguageToDefaultScript = CldrUtility.protectCollection(baseLanguageToDefaultScript);
-
         numericTerritoryMapping.freeze();
         alpha3TerritoryMapping.freeze();
         numericCurrencyCodeMapping.freeze();
@@ -1135,15 +1134,20 @@ public class SupplementalDataInfo {
         attributeValidityInfo = CldrUtility.protectCollection(attributeValidityInfo);
         parentLocales = Collections.unmodifiableMap(parentLocales);
 
-        Set<String> newScripts = new LinkedHashSet<String>();
-        Map<Validity.Status, Set<String>> scripts = Validity.getInstance().getData().get(LstrType.script);
-        for (Entry<Validity.Status, Set<String>> e : scripts.entrySet()) {
-            if (e.getKey() != Validity.Status.deprecated) {
+        ImmutableSet.Builder<String> newScripts = ImmutableSet.<String>builder();
+        Map<Validity.Status, Set<String>> scripts = Validity.getInstance().getStatusToCodes(LstrType.script);
+        for (Entry<Status, Set<String>> e : scripts.entrySet()) {
+            switch(e.getKey()) {
+            case regular:
+            case special:
+            case unknown:
                 newScripts.addAll(e.getValue());
+                break;
+            default:
+                break; // do nothing
             }
         }
-        // TODO The above duplicates the old construction, but do we need the Private Use codes for whatever CLDRScriptCodes is used for?
-        CLDRScriptCodes = Collections.unmodifiableSet(newScripts);
+        CLDRScriptCodes = newScripts.build();
     }
 
     // private Map<String, Map<String, String>> makeUnmodifiable(Map<String, Map<String, String>>
@@ -1155,35 +1159,6 @@ public class SupplementalDataInfo {
     // return Collections.unmodifiableMap(temp);
     // }
 
-    private void addDefaultScripts() {
-        // add scripts to mapping
-        for (Entry<String, Set<String>> entry : languageToScriptVariants.keyValuesSet()) {
-            String baseLanguage = entry.getKey();
-            Set<String> scriptVariants = entry.getValue();
-            String current = baseLanguageToDefaultScript.get(baseLanguage);
-            if (scriptVariants.size() == 1 && current == null) {
-                String scriptVariant = scriptVariants.iterator().next();
-                int pos = scriptVariant.indexOf('_');
-                if (!baseLanguage.equals(scriptVariant.substring(0, pos))) {
-                    throw new IllegalArgumentException("Bad script variant\t" + baseLanguage + "\t" + scriptVariant);
-                }
-                baseLanguageToDefaultScript.put(baseLanguage, scriptVariant.substring(pos + 1));
-            }
-        }
-        // HACK
-        String currentScript = null;
-        for (String s : "Latn aa af agq ak asa ast az bas bem bez bm br ca cgg cs cy da dav de dje dsb dua dyo ebu ee en eo es et eu ewo ff fi fil fo fr fur fy ga gd gl gsw guz gv ha haw hr hsb hu ia id ig is it jgo jmc kab kam kde kea khq ki kkj kl kln ksb ksf ksh kw lag lb lg lkt ln lt lu luo luy lv mas mer mfe mg mgh mgo ms mt mua naq nb nd nl nmg nn nnh nr nso nus nyn om pl prg pt qu rm rn ro rof rw rwk saq sbp se seh ses sg sk sl smn sn so sq ss ssy st sv sw swc teo tk tn to tr ts twq tzm ve vi vo vun wae xh xog yav yo zu Arab ar ckb fa ks lrc mzn ps sd ug ur Beng as bn Cans iu Cyrl be bg ce cu kk ky mk mn os ru sah tg uk Ethi am byn ti tig wal Deva brx hi kok mr ne Cher chr Grek el Gujr gu Guru pa Hebr he yi Armn hy Yiii ii Jpan ja Geor ka Hant yue Khmr km Knda kn Kore ko Laoo lo Mlym ml Mymr my Orya or Sinh si Taml ta Telu te Tfng shi zgh Thai th Tibt bo dz Vaii vai"
-            .split(" ")) {
-            if (s.length() == 4) {
-                currentScript = s;
-            } else {
-                String old = baseLanguageToDefaultScript.put(s, currentScript);
-//                if (old != null) {
-//                    System.out.println(s + ", " + currentScript);
-//                }
-            }
-        }
-    }
 
     /**
      * Core function used to process each of the paths, and add the data to the appropriate data member.
@@ -1393,7 +1368,7 @@ public class SupplementalDataInfo {
                 bcp47Descriptions.put(key_empty, keyDescription);
             }
             if (deprecated != null && deprecated.equals("true")) {
-                bcp47Deprecated.put(key_empty, deprecated); 
+                bcp47Deprecated.put(key_empty, deprecated);
             }
 
             if (parts.size() > 3) { // for parts with no subtype: //ldmlBCP47/keyword/key[@extension="t"][@name="x0"]
@@ -1604,12 +1579,6 @@ public class SupplementalDataInfo {
                 String defContent = parts.getAttributeValue(-1, "locales").trim();
                 String[] defLocales = defContent.split("\\s+");
                 defaultContentLocales = Collections.unmodifiableSet(new TreeSet<String>(Arrays.asList(defLocales)));
-                for (String defaultContentLocale : defaultContentLocales) {
-                    int pos = LocaleIDParser.getScriptPosition(defaultContentLocale);
-                    if (pos >= 0) {
-                        baseLanguageToDefaultScript.put(defaultContentLocale.substring(0, pos), defaultContentLocale.substring(pos + 1));
-                    }
-                }
                 return true;
             }
             if (level2.equals("alias")) {
@@ -1942,7 +1911,6 @@ public class SupplementalDataInfo {
     public Map<CLDRLocale, CLDRLocale> defaultContentToBase; // wo_Arab_SN -> wo
     private Set<String> CLDRLanguageCodes = new TreeSet<String>();;
     private Set<String> CLDRScriptCodes;
-    private Map<String, String> baseLanguageToDefaultScript = new HashMap<String, String>();
 
     /**
      * Get the population data for a language. Warning: if the language has script variants, cycle on those variants.
@@ -2875,7 +2843,7 @@ public class SupplementalDataInfo {
         // ldml/dates/calendars/calendar[@type="gregorian"]/dayPeriods/dayPeriodContext[@type="format"]/dayPeriodWidth[@type="wide"]/dayPeriod[@type="am"]
         /*
          * <supplementalData>
-         * <version number="$Revision: 12438 $"/>
+         * <version number="$Revision: 13015 $"/>
          * <generation date="$D..e... $"/>
          * <dayPeriodRuleSet>
          * <dayPeriodRules locales = "en"> <!-- default for any locales not listed under other dayPeriods -->
@@ -3257,7 +3225,7 @@ public class SupplementalDataInfo {
         static final int fractDecrement = 13;
         static final int fractStart = 20;
 
-        private final Map<Count, List<Double>> countToExampleList;
+        private final Map<Count, Set<Double>> countToExampleSet;
         private final Map<Count, String> countToStringExample;
         private final Map<Integer, Count> exampleToCount;
         private final PluralRules pluralRules;
@@ -3313,7 +3281,7 @@ public class SupplementalDataInfo {
 
             countSampleList = new CountSampleList(pluralRules, keywords, pluralType);
 
-            Map<Count, List<Double>> countToExampleListRaw = new TreeMap<Count, List<Double>>();
+            Map<Count, Set<Double>> countToExampleSetRaw = new TreeMap<Count, Set<Double>>();
             Map<Integer, Count> exampleToCountRaw = new TreeMap<Integer, Count>();
 
             Output<Map<Count, SampleList[]>> output = new Output();
@@ -3336,22 +3304,30 @@ public class SupplementalDataInfo {
             String otherExamples = (baseOtherExamples == null ? "" : baseOtherExamples + "; ")
                 + otherFractionalExamples + "...";
             countToStringExampleRaw.put(Count.other, otherExamples);
-            // add otherFractions
-            List<Double> list_temp = countToExampleListRaw.get(Count.other);
-            if (list_temp == null) {
-                countToExampleListRaw.put(Count.other, list_temp = new ArrayList<Double>(0));
-            }
-            list_temp.addAll(otherFractions);
 
-            for (Count type : countToExampleListRaw.keySet()) {
-                List<Double> list = countToExampleListRaw.get(type);
-                // if (type.equals(Count.other)) {
-                // list.addAll(otherFractions);
-                // }
-                list = Collections.unmodifiableList(list);
+            // Now do double examples (previously unused & not working).
+            // Currently a bit of a hack, we should enhance SampleList to make this easier
+            // and then use SampleList directly, see http://unicode.org/cldr/trac/ticket/9813
+            for (Count type : countToStringExampleRaw.keySet()) {
+                Set<Double> doublesSet = new LinkedHashSet<Double>(0);
+                String examples = countToStringExampleRaw.get(type);
+                if (examples == null) {
+                    examples = "";
+                }
+                String strippedExamples = examples.replaceAll("(, …)|(; ...)", "");
+                String[] exampleArray = strippedExamples.split("(, )|(-)");
+                for (String example: exampleArray) {
+                    if (example == null || example.length() == 0) {
+                        continue;
+                    }
+                    Double doubleValue = Double.valueOf(example);
+                    doublesSet.add(doubleValue);
+                }
+                doublesSet = Collections.unmodifiableSet(doublesSet);
+                countToExampleSetRaw.put(type, doublesSet);
             }
 
-            countToExampleList = Collections.unmodifiableMap(countToExampleListRaw);
+            countToExampleSet = Collections.unmodifiableMap(countToExampleSetRaw);
             countToStringExample = Collections.unmodifiableMap(countToStringExampleRaw);
             exampleToCount = Collections.unmodifiableMap(exampleToCountRaw);
             Set<String> temp = new LinkedHashSet<String>();
@@ -3389,11 +3365,11 @@ public class SupplementalDataInfo {
         }
 
         public String toString() {
-            return countToExampleList + "; " + exampleToCount + "; " + pluralRules;
+            return countToExampleSet + "; " + exampleToCount + "; " + pluralRules;
         }
 
-        public Map<Count, List<Double>> getCountToExamplesMap() {
-            return countToExampleList;
+        public Map<Count, Set<Double>> getCountToExamplesMap() {
+            return countToExampleSet;
         }
 
         public Map<Count, String> getCountToStringExamplesMap() {
@@ -3584,6 +3560,23 @@ public class SupplementalDataInfo {
                 }
             }
             return result;
+        }
+
+        public static FixedDecimal getNonZeroSampleIfPossible(FixedDecimalSamples exampleList) {
+            Set<FixedDecimalRange> sampleSet = exampleList.getSamples();
+            FixedDecimal sampleDecimal = null;
+            // skip 0 if possible
+            for (FixedDecimalRange range : sampleSet) {
+                sampleDecimal = range.start;
+                if (sampleDecimal.source != 0.0) {
+                    break;
+                }
+                sampleDecimal = range.end;
+                if (sampleDecimal.source != 0.0) {
+                    break;
+                }
+            }
+            return sampleDecimal;
         }
     }
 
@@ -3979,7 +3972,17 @@ public class SupplementalDataInfo {
     }
 
     public String getDefaultScript(String baseLanguage) {
-        return baseLanguageToDefaultScript.get(baseLanguage);
+        String ls = likelySubtags.get(baseLanguage);
+        if (ls == null) {
+            return UNKNOWN_SCRIPT;
+        }
+        LocaleIDParser lp = new LocaleIDParser().set(ls);
+        String defaultScript = lp.getScript();
+        if (defaultScript.length() > 0) {
+            return defaultScript;
+        } else {
+            return UNKNOWN_SCRIPT;
+        }
     }
 
     private XEquivalenceClass<String, String> equivalentLocales = null;

@@ -113,7 +113,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
     public static final String SUPPLEMENTAL_NAME = "supplementalData";
     public static final String SUPPLEMENTAL_METADATA = "supplementalMetadata";
     public static final String SUPPLEMENTAL_PREFIX = "supplemental";
-    public static final String GEN_VERSION = "29";
+    public static final String GEN_VERSION = "30";
     public static final List<String> SUPPLEMENTAL_NAMES = Arrays.asList("characters", "coverageLevels", "dayPeriods", "genderList", "languageInfo",
         "likelySubtags", "metaZones", "numberingSystems", "ordinals", "plurals", "postalCodeData", "rgScope", "supplementalData", "supplementalMetadata",
         "telephoneCodeData", "windowsZones");
@@ -122,6 +122,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
 
     private boolean locked;
     private DtdType dtdType;
+    private DtdData dtdData;
 
     XMLSource dataSource; // TODO(jchye): make private
 
@@ -405,12 +406,8 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
             }
         }
         // now do the rest
-        final String COPYRIGHT_STRING = CldrUtility.getCopyrightString();
 
-        String initialComment = dataSource.getXpathComments().getInitialComment();
-        if (!initialComment.contains("Copyright") || !initialComment.contains("Unicode")) {
-            initialComment = initialComment + COPYRIGHT_STRING;
-        }
+        String initialComment = fixInitialComment(dataSource.getXpathComments().getInitialComment());
         XPathParts.writeComment(pw, 0, initialComment, true);
 
         XPathParts.Comments tempComments = (XPathParts.Comments) dataSource.getXpathComments().clone();
@@ -480,6 +477,27 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
         }
         XPathParts.writeComment(pw, 0, finalComment, true);
         return this;
+    }
+
+    static final Splitter LINE_SPLITTER = Splitter.on('\n');
+    
+    private String fixInitialComment(String initialComment) {
+        if (initialComment == null || initialComment.isEmpty()) {
+            return CldrUtility.getCopyrightString();
+        } else {
+            StringBuilder sb = new StringBuilder(CldrUtility.getCopyrightString()).append(XPathParts.NEWLINE);
+            for (String line : LINE_SPLITTER.split(initialComment)) {
+                if (line.contains("Copyright") 
+                    || line.contains("©") 
+                    || line.contains("trademark")
+                    || line.startsWith("CLDR data files are interpreted")
+                    || line.startsWith("For terms of use")) {
+                    continue;
+                }
+                sb.append(XPathParts.NEWLINE).append(line);
+            }
+            return sb.toString();
+        }
     }
 
     /**
@@ -1816,7 +1834,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
                 );
             commentStack++;
             target.dtdType = DtdType.valueOf(name);
-            dtdData = DtdData.getInstance(target.dtdType);
+            target.dtdData = dtdData = DtdData.getInstance(target.dtdType);
         }
 
         public void endDTD() throws SAXException {
@@ -3303,7 +3321,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
                 continue;
             }
             String start = path.substring(0, countPos) + "[@count=\"";
-            String end = path.substring(countPos + countAttr.length()) + "\"]";
+            String end =  "\"]" + path.substring(countPos + countAttr.length());
             for (Count count : pluralCounts) {
                 if (count == Count.other) {
                     continue;
@@ -3527,6 +3545,16 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
 
     public Comparator<String> getComparator() {
         return getComparator(dtdType);
+    }
+
+    public DtdType getDtdType() {
+        return dtdType != null ? dtdType
+            : dataSource.getDtdType();
+    }
+
+    public DtdData getDtdData() {
+        return dtdData != null ? dtdData 
+            : DtdData.getInstance(getDtdType());
     }
 
     public static Comparator<String> getPathComparator(String path) {

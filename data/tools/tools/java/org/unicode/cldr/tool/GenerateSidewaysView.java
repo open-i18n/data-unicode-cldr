@@ -25,6 +25,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 
+import org.unicode.cldr.draft.FileUtilities;
 import org.unicode.cldr.tool.ShowData.DataShower;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.Status;
@@ -40,13 +41,12 @@ import org.unicode.cldr.util.PathHeader.PageId;
 import org.unicode.cldr.util.PathHeader.SurveyToolStatus;
 import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.StringId;
+import org.unicode.cldr.util.TransliteratorUtilities;
 import org.unicode.cldr.util.XPathParts;
 import org.xml.sax.SAXException;
 
 import com.google.common.collect.ImmutableMap;
 import com.ibm.icu.dev.tool.UOption;
-import com.ibm.icu.dev.util.BagFormatter;
-import com.ibm.icu.dev.util.TransliteratorUtilities;
 import com.ibm.icu.dev.util.UnicodeMap;
 import com.ibm.icu.impl.Relation;
 import com.ibm.icu.impl.Utility;
@@ -119,7 +119,7 @@ public class GenerateSidewaysView {
 
     private static final Matcher altProposedMatcher = CLDRFile.ALT_PROPOSED_PATTERN.matcher("");
     // private static final UnicodeSet ALL_CHARS = new UnicodeSet(0, 0x10FFFF);
-    protected static final UnicodeSet COMBINING = (UnicodeSet) new UnicodeSet("[[:m:]]").freeze();
+    protected static final UnicodeSet COMBINING = new UnicodeSet("[[:m:]]").freeze();
 
     static int getFirstScript(UnicodeSet exemplars) {
         for (UnicodeSetIterator it = new UnicodeSetIterator(exemplars); it.next();) {
@@ -137,7 +137,7 @@ public class GenerateSidewaysView {
         RuleBasedCollator UCA2 = (RuleBasedCollator) Collator.getInstance(ULocale.ROOT);
         UCA2.setNumericCollation(true);
         UCA2.setStrength(Collator.IDENTICAL);
-        UCA = new com.ibm.icu.impl.MultiComparator(UCA2, new UTF16.StringComparator(true, false, 0));
+        UCA = new org.unicode.cldr.util.MultiComparator(UCA2, new UTF16.StringComparator(true, false, 0));
     }
 
     private static Map<PathHeader, Map<String, Set<String>>> path_value_locales = new TreeMap<PathHeader, Map<String, Set<String>>>();
@@ -681,7 +681,7 @@ public class GenerateSidewaysView {
             // String element = parts.getElement(i);
             Map<String, String> attributes = parts.getAttributes(i);
             for (Iterator<String> it = attributes.keySet().iterator(); it.hasNext();) {
-                String attribute = (String) it.next();
+                String attribute = it.next();
                 if (skipAttributes.contains(attribute)) it.remove();
             }
         }
@@ -778,7 +778,7 @@ public class GenerateSidewaysView {
 
     private static PrintWriter writeHeader(String main, String title) throws IOException {
         PrintWriter out;
-        out = BagFormatter.openUTF8Writer(options[DESTDIR].value, main + ".html");
+        out = FileUtilities.openUTF8Writer(options[DESTDIR].value, main + ".html");
 
         ShowData.getChartTemplate("By-Type Chart: " + title,
             ToolConstants.CHART_DISPLAY_VERSION,

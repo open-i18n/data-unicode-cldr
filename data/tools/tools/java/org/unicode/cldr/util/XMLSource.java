@@ -949,6 +949,18 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
             TreeMap<String, String> aliases = sources.get("root").getAliases();
             String aliasedPath = aliases.get(xpath);
 
+            if (aliasedPath == null) {
+                // Check if there is an alias for a subset xpath.
+                // If there are one or more matching aliases, lowerKey() will
+                // return the alias with the longest matching prefix since the
+                // hashmap is sorted according to xpath.
+                String possibleSubpath = aliases.lowerKey(xpath);
+                if (possibleSubpath != null && xpath.startsWith(possibleSubpath)) {
+                    aliasedPath = aliases.get(possibleSubpath) +
+                        xpath.substring(possibleSubpath.length());
+                }
+            }
+
             // counts are special; they act like there is a root alias to 'other'
             // and in the special case of currencies, other => null
             // //ldml/numbers/currencies/currency[@type="BRZ"]/displayName[@count="other"] => //ldml/numbers/currencies/currency[@type="BRZ"]/displayName
@@ -966,17 +978,6 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
                 }
             }
 
-            if (aliasedPath == null) {
-                // Check if there is an alias for a subset xpath.
-                // If there are one or more matching aliases, lowerKey() will
-                // return the alias with the longest matching prefix since the
-                // hashmap is sorted according to xpath.
-                String possibleSubpath = aliases.lowerKey(xpath);
-                if (possibleSubpath != null && xpath.startsWith(possibleSubpath)) {
-                    aliasedPath = aliases.get(possibleSubpath) +
-                        xpath.substring(possibleSubpath.length());
-                }
-            }
             if (aliasedPath != null) {
                 // Call getCachedFullStatus recursively to avoid recalculating cached aliases.
                 return getCachedFullStatus(aliasedPath);
@@ -1395,6 +1396,7 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
             addFallbackCode(CLDRFile.TERRITORY_NAME, "CD", "CD", "variant"); // add other geopolitical items
             addFallbackCode(CLDRFile.TERRITORY_NAME, "CG", "CG", "variant");
             addFallbackCode(CLDRFile.TERRITORY_NAME, "CI", "CI", "variant");
+            addFallbackCode(CLDRFile.TERRITORY_NAME, "CZ", "CZ", "variant");
             addFallbackCode(CLDRFile.TERRITORY_NAME, "FK", "FK", "variant");
             addFallbackCode(CLDRFile.TERRITORY_NAME, "MK", "MK", "variant");
             addFallbackCode(CLDRFile.TERRITORY_NAME, "TL", "TL", "variant");
@@ -1622,5 +1624,15 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
 
     public String getBaileyValue(String xpath, Output<String> pathWhereFound, Output<String> localeWhereFound) {
         return null; // only a resolving xmlsource will return a value
+    }
+
+    // HACK, should be field on XMLSource
+    public DtdType getDtdType() {
+        final Iterator<String> it = iterator();
+        if (it.hasNext()) {
+            String path = it.next();
+            return DtdType.fromPath(path);
+        }
+        return null;
     }
 }

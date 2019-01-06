@@ -30,9 +30,12 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.unicode.cldr.draft.FileUtilities;
 import org.unicode.cldr.draft.ScriptMetadata;
 import org.unicode.cldr.draft.ScriptMetadata.Info;
 import org.unicode.cldr.test.ExampleGenerator.HelpMessages;
+import org.unicode.cldr.util.ArrayComparator;
+import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.WinningChoice;
 import org.unicode.cldr.util.CLDRPaths;
@@ -59,13 +62,10 @@ import org.unicode.cldr.util.SupplementalDataInfo.CurrencyDateInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.CurrencyNumberInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.OfficialStatus;
 import org.unicode.cldr.util.SupplementalDataInfo.PopulationData;
+import org.unicode.cldr.util.TransliteratorUtilities;
 import org.unicode.cldr.util.XPathParts;
 
-import com.ibm.icu.dev.util.ArrayComparator;
-import com.ibm.icu.dev.util.BagFormatter;
 import com.ibm.icu.dev.util.CollectionUtilities;
-import com.ibm.icu.dev.util.FileUtilities;
-import com.ibm.icu.dev.util.TransliteratorUtilities;
 import com.ibm.icu.impl.Relation;
 import com.ibm.icu.impl.Row.R2;
 import com.ibm.icu.lang.UCharacter;
@@ -81,15 +81,15 @@ import com.ibm.icu.util.ULocale;
 public class ShowLanguages {
     private static final boolean SHOW_NATIVE = true;
 
-    static Comparator col = new com.ibm.icu.impl.MultiComparator(
+    static Comparator col = new org.unicode.cldr.util.MultiComparator(
         Collator.getInstance(new ULocale("en")),
         new UTF16.StringComparator(true, false, 0)
         );
 
     static StandardCodes sc = StandardCodes.make();
 
-    static Factory cldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
-    static CLDRFile english = cldrFactory.make("en", true);
+    static Factory cldrFactory = CLDRConfig.getInstance().getCldrFactory();//.make(CLDRPaths.MAIN_DIRECTORY, ".*");
+    static CLDRFile english = CLDRConfig.getInstance().getEnglish();
 
     public static void main(String[] args) throws IOException {
         System.out.println("Writing into " + FormattedFileWriter.CHART_TARGET_DIR);
@@ -176,7 +176,7 @@ public class ShowLanguages {
 
         String[] replacements = { "%date%", CldrUtility.isoFormatDateOnly(new Date()), "%contents%", SUPPLEMENTAL_INDEX_ANCHORS.toString(), "%data%",
             sw.toString() };
-        PrintWriter pw2 = BagFormatter.openUTF8Writer(FormattedFileWriter.CHART_TARGET_DIR, filename);
+        PrintWriter pw2 = org.unicode.cldr.draft.FileUtilities.openUTF8Writer(FormattedFileWriter.CHART_TARGET_DIR, filename);
         FileUtilities.appendFile(CLDRPaths.BASE_DIRECTORY + java.io.File.separatorChar
             + "tools/java/org/unicode/cldr/tool/supplemental.html", "utf-8", pw2, replacements);
         pw2.close();
@@ -706,9 +706,9 @@ public class ShowLanguages {
                         if (!element.equals("info"))
                             throw new IllegalArgumentException("Unexpected fractions element: " + element);
                         Map<String, String> attributes = parts.getAttributes(parts.size() - 1);
-                        String iso4217 = (String) attributes.get("iso4217");
-                        String digits = (String) attributes.get("digits");
-                        String rounding = (String) attributes.get("rounding");
+                        String iso4217 = attributes.get("iso4217");
+                        String digits = attributes.get("digits");
+                        String rounding = attributes.get("rounding");
                         digits = digits + (rounding.equals("0") ? "" : " (" + rounding + ")");
                         if (iso4217.equals("DEFAULT"))
                             defaultDigits = digits;
@@ -720,13 +720,13 @@ public class ShowLanguages {
                     // <currency iso4217="ARS" from="1992-01-01"/>
                     if (path.indexOf("/region") >= 0) {
                         Map<String, String> attributes = parts.getAttributes(parts.size() - 2);
-                        String iso3166 = (String) attributes.get("iso3166");
+                        String iso3166 = attributes.get("iso3166");
                         attributes = parts.getAttributes(parts.size() - 1);
-                        String iso4217 = (String) attributes.get("iso4217");
-                        String to = (String) attributes.get("to");
+                        String iso4217 = attributes.get("iso4217");
+                        String to = attributes.get("to");
                         if (to == null)
                             to = "\u221E";
-                        String from = (String) attributes.get("from");
+                        String from = attributes.get("from");
                         if (from == null)
                             from = "-\u221E";
                         String countryName = getName(CLDRFile.TERRITORY_NAME, iso3166, false);
@@ -765,7 +765,7 @@ public class ShowLanguages {
                     else
                         language += "*" + alt;
                     // <language type="af" scripts="Latn" territories="ZA"/>
-                    addTokens(language, (String) attributes.get("territories"), " ", language_territories);
+                    addTokens(language, attributes.get("territories"), " ", language_territories);
                     continue;
                 }
 
@@ -779,8 +779,8 @@ public class ShowLanguages {
                         System.err.println("Err: on path " + fullPath
                             + " , no attributes on 'calendar'. Probably, this tool is out of date.");
                     } else {
-                        String type = (String) attributes.get("type");
-                        String territories = (String) attributes.get("territories");
+                        String type = attributes.get("type");
+                        String territories = attributes.get("territories");
                         if (territories == null) {
                             System.err.println("Err: on path " + fullPath
                                 + ", missing territories. Probably, this tool is out of date.");
@@ -798,30 +798,42 @@ public class ShowLanguages {
                     // later, make this a table
                     String key = "count";
                     String display = "Days in week (min)";
-                    if (element.equals("firstDay")) {
+                    boolean useTerritory = true;
+                    switch (element) {
+                    case "firstDay":
                         key = "day";
                         display = "First day of week";
-                    } else if (element.equals("weekendStart")) {
+                        break;
+                    case "weekendStart":
                         key = "day";
                         display = "First day of weekend";
-                    } else if (element.equals("weekendEnd")) {
+                        break;
+                    case "weekendEnd":
                         key = "day";
                         display = "Last day of weekend";
-                    } else if (element.equals("measurementSystem")) {
+                        break;
+                    case "measurementSystem":
                         // <measurementSystem type="metric" territories="001"/>
                         key = "type";
                         display = "Meas. system";
-                    } else if (element.equals("paperSize")) {
+                        break;
+                    case "paperSize":
                         key = "type";
                         display = "Paper Size";
+                        break;
+                    case "weekOfPreference":
+                        useTerritory = false;
+                        break;
                     }
-                    String type = (String) attributes.get(key);
-                    String territories = (String) attributes.get("territories");
-                    addTerritoryInfo(territories, display, type);
+                    if (useTerritory) {
+                        String type = attributes.get(key);
+                        String territories = attributes.get("territories");
+                        addTerritoryInfo(territories, display, type);
+                    }
                 }
                 if (path.indexOf("/territoryInfo") >= 0) {
                     Map<String, String> attributes = parts.getAttributes(2);
-                    String type = (String) attributes.get("type");
+                    String type = attributes.get("type");
                     String name = english.getName(CLDRFile.TERRITORY_NAME, type);
                     Map<String, Object> languageData = territoryLanguageData.get(name);
                     if (languageData == null) territoryLanguageData.put(name, languageData = new TreeMap<String, Object>());
@@ -1140,7 +1152,7 @@ public class ShowLanguages {
         // "{" | "}" | "|" | "\" | "^" | "[" | "]" | "`"
         // Within a query component, the characters ";", "/", "?", ":", "@",
         // "&", "=", "+", ",", and "$" are reserved.
-        static final UnicodeSet ESCAPED_URI_QUERY = (UnicodeSet) new UnicodeSet(
+        static final UnicodeSet ESCAPED_URI_QUERY = new UnicodeSet(
             "[\\u0000-\\u0020\\u007F <>#%\"\\{}|\\\\\\^\\[\\]`;/?:@\\&=+,$\\u0080-\\U0001FFFF]").freeze();
 
         private static final int MINIMAL_BIG_VENDOR = 8;
@@ -1747,11 +1759,13 @@ public class ShowLanguages {
             for (int i = 0; i < territories.length; ++i) {
                 String territory = getName(CLDRFile.TERRITORY_NAME, territories[i], false);
                 Map<String, Set<String>> s = territoryData.get(territory);
-                if (s == null)
+                if (s == null) {
                     territoryData.put(territory, s = new TreeMap<String, Set<String>>());
+                }
                 Set<String> ss = s.get(type);
-                if (ss == null)
+                if (ss == null) {
                     s.put(type, ss = new TreeSet<String>());
+                }
                 ss.add(info);
             }
         }
@@ -1761,7 +1775,7 @@ public class ShowLanguages {
             pw.println("<table>");
             pw.println("<tr><th class='source'>Territory</th>");
             for (Iterator<String> it = territoryTypes.iterator(); it.hasNext();) {
-                String header = (String) it.next();
+                String header = it.next();
                 if (header.equals("calendar")) header = "calendar (+gregorian)";
                 pw.println("<th class='target'>" + header + "</th>");
             }
@@ -1839,14 +1853,14 @@ public class ShowLanguages {
                 }
                 for (int i = 0; i < words.length; ++i) {
                     String name = words[i];
-                    String script = (String) name_script.get(name);
+                    String script = name_script.get(name);
                     if (script != null) {
                         Set<String> langSet = script_languages.get(script);
                         if (langSet != null && langSet.contains(language))
                             System.out.print("*");
                         System.out.println("\t" + name + " [" + language + "]\t=> " + name + " [" + script + "]");
                     } else {
-                        String language2 = (String) name_language.get(name);
+                        String language2 = name_language.get(name);
                         if (language2 != null && !language.equals(language2)) {
                             Set<String> langSet = language_scripts.get(language);
                             if (langSet != null)
@@ -2273,7 +2287,7 @@ public class ShowLanguages {
         private Collection<String> getContainedCollection(String start, int depth) {
             Collection<String> contains = supplementalDataInfo.getContainmentCore().get(start);
             if (contains == null) {
-                contains = (Collection<String>) sc.getCountryToZoneSet().get(start);
+                contains = sc.getCountryToZoneSet().get(start);
                 if (contains == null && depth == 3) {
                     contains = new TreeSet<String>();
                     if (start.compareTo("A") >= 0) {
@@ -2509,7 +2523,7 @@ public class ShowLanguages {
             //Collection<String> contains = (Collection<String>) group_contains.get(start);
             Collection<String> contains = supplementalDataInfo.getContainmentCore().get(start);
             if (contains == null) {
-                contains = (Collection<String>) sc.getCountryToZoneSet().get(start);
+                contains = sc.getCountryToZoneSet().get(start);
                 currentRow.add("");
                 if (contains == null) {
                     currentRow.set(len + 1, "???");

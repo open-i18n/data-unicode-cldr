@@ -614,6 +614,7 @@ public class ICUServiceBuilder {
         MyCurrency mc = null;
         if (kind == CURRENCY) {
             // in this case numberSystem is null and symbols are for the default system
+            // ^^^^^ NO, that is not true.
 
             String prefix = "//ldml/numbers/currencies/currency[@type=\"" + key1 + "\"]/";
             // /ldml/numbers/currencies/currency[@type="GBP"]/symbol
@@ -782,7 +783,9 @@ public class ICUServiceBuilder {
         return getSymbolString(key, numsys).charAt(0);
     }
 
-    // TODO fix once http://bugs.icu-project.org/trac/ticket/11837 is done.
+    // TODO fix once http://bugs.icu-project.org/trac/ticket/10368 is done.
+    // Actually CLDR is instead now using a hacked version of DecimalFormatSymbols
+    // to address http://unicode.org/cldr/trac/ticket/9040
     private char getHackSymbolCharacter(String key, String numsys) {
         String minusString = getSymbolString(key, numsys);
         char minusSign = (minusString.length() > 1 && isBidiMark(minusString.charAt(0))) ? minusString.charAt(1) : minusString.charAt(0);
@@ -901,6 +904,6 @@ public class ICUServiceBuilder {
     }
 
     public String getMinusSign(String numberSystem) {
-        return _getDecimalFormatSymbols(numberSystem).getMinusString();
+        return _getDecimalFormatSymbols(numberSystem).getMinusSignString();
     }
 }

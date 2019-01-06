@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -30,15 +31,14 @@ import org.unicode.cldr.util.StandardCodes;
 import org.unicode.cldr.util.StandardCodes.LstrField;
 import org.unicode.cldr.util.StandardCodes.LstrType;
 import org.unicode.cldr.util.SupplementalDataInfo;
+import org.unicode.cldr.util.TransliteratorUtilities;
 import org.unicode.cldr.util.Validity;
 import org.unicode.cldr.util.Validity.Status;
 import org.unicode.cldr.util.XMLFileReader;
 import org.unicode.cldr.util.XPathParts;
 
 import com.google.common.base.Splitter;
-import com.ibm.icu.dev.util.BagFormatter;
 import com.ibm.icu.dev.util.CollectionUtilities;
-import com.ibm.icu.dev.util.TransliteratorUtilities;
 import com.ibm.icu.impl.Relation;
 import com.ibm.icu.impl.Row.R2;
 import com.ibm.icu.impl.Utility;
@@ -56,7 +56,7 @@ public class GenerateSubdivisions {
         RuleBasedCollator _ROOT_COL = (RuleBasedCollator) Collator.getInstance(ULocale.ENGLISH);
         _ROOT_COL.setNumericCollation(true);
         _ROOT_COL.freeze();
-        ROOT_COL = (Comparator<String>) (Comparator) _ROOT_COL;
+        ROOT_COL = (Comparator) _ROOT_COL;
     }
 
     private static final CLDRConfig CLDR_CONFIG = CLDRConfig.getInstance();
@@ -88,25 +88,25 @@ public class GenerateSubdivisions {
     public static void main(String[] args) throws IOException {
         loadIso();
         loadWiki();
-        try (PrintWriter pw = BagFormatter.openUTF8Writer(CLDRPaths.GEN_DIRECTORY, "subdivision/subdivisions.xml")) {
+        try (PrintWriter pw = FileUtilities.openUTF8Writer(CLDRPaths.GEN_DIRECTORY, "subdivision/subdivisions.xml")) {
             SubdivisionNode.printXml(pw);
         }
-        try (PrintWriter pw = BagFormatter.openUTF8Writer(CLDRPaths.GEN_DIRECTORY, "subdivision/subdivisionAliases.txt")) {
+        try (PrintWriter pw = FileUtilities.openUTF8Writer(CLDRPaths.GEN_DIRECTORY, "subdivision/subdivisionAliases.txt")) {
             SubdivisionNode.printAliases(pw);
         }
-        try (PrintWriter pw = BagFormatter.openUTF8Writer(CLDRPaths.GEN_DIRECTORY, "subdivision/en.xml")) {
+        try (PrintWriter pw = FileUtilities.openUTF8Writer(CLDRPaths.GEN_DIRECTORY, "subdivision/en.xml")) {
             SubdivisionNode.printEnglish(pw);
         }
-        try (PrintWriter pw = BagFormatter.openUTF8Writer(CLDRPaths.GEN_DIRECTORY, "subdivision/categories.txt")) {
+        try (PrintWriter pw = FileUtilities.openUTF8Writer(CLDRPaths.GEN_DIRECTORY, "subdivision/categories.txt")) {
             SubdivisionNode.printSamples(pw);
         }
-        try (PrintWriter pw = BagFormatter.openUTF8Writer(CLDRPaths.GEN_DIRECTORY, "subdivision/en.txt")) {
+        try (PrintWriter pw = FileUtilities.openUTF8Writer(CLDRPaths.GEN_DIRECTORY, "subdivision/en.txt")) {
             SubdivisionNode.printEnglishComp(pw);
         }
-        try (PrintWriter pw = BagFormatter.openUTF8Writer(CLDRPaths.GEN_DIRECTORY, "subdivision/en-full.txt")) {
+        try (PrintWriter pw = FileUtilities.openUTF8Writer(CLDRPaths.GEN_DIRECTORY, "subdivision/en-full.txt")) {
             SubdivisionNode.printEnglishCompFull(pw);
         }
-        try (PrintWriter pw = BagFormatter.openUTF8Writer(CLDRPaths.GEN_DIRECTORY, "subdivision/missing-mid.txt")) {
+        try (PrintWriter pw = FileUtilities.openUTF8Writer(CLDRPaths.GEN_DIRECTORY, "subdivision/missing-mid.txt")) {
             SubdivisionNode.printMissingMIDs(pw);
         }
     }
@@ -325,7 +325,7 @@ public class GenerateSubdivisions {
         }
 
         public static void printEnglish(Appendable output) throws IOException {
-            Map<Status, Set<String>> oldSubdivisionData = VALIDITY_FORMER.getData().get(LstrType.subdivision);
+            Map<Status, Set<String>> oldSubdivisionData = VALIDITY_FORMER.getStatusToCodes(LstrType.subdivision);
             Relation<String,String> regionToOld = Relation.of(new HashMap<String,Set<String>>(), TreeSet.class, ROOT_COL);
             for (Entry<Status, Set<String>> e : oldSubdivisionData.entrySet()) {
                 final Status status = e.getKey();
@@ -609,7 +609,7 @@ public class GenerateSubdivisions {
             addAliases(output, TO_COUNTRY_CODE.keySet());
 
             // Get the old validity data
-            Map<Status, Set<String>> oldSubdivisionData = VALIDITY_FORMER.getData().get(LstrType.subdivision);
+            Map<Status, Set<String>> oldSubdivisionData = VALIDITY_FORMER.getStatusToCodes(LstrType.subdivision);
             Set<String> missing = new TreeSet<>(ROOT_COL);
             missing.addAll(TO_COUNTRY_CODE.keySet());
             Set<String> nowValid = ID_TO_NODE.keySet();
@@ -619,7 +619,9 @@ public class GenerateSubdivisions {
                     continue;
                 }
                 Set<String> set = e.getValue();
-                for (String sdcode : set) {
+                for (String sdcodeRaw : set) {
+                    String sdcode = sdcodeRaw.toUpperCase(Locale.ROOT);
+                    sdcode = sdcode.substring(0,2) + "-" + sdcode.substring(2);
                     if (!nowValid.contains(sdcode)) {
                         missing.add(sdcode);
                     }

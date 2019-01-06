@@ -501,8 +501,17 @@ public class RegexLookup<T> implements Iterable<Map.Entry<Finder, T>> {
             }
 
             public String toString() {
-                return this._finder.toString();
+                return toString("", new StringBuilder()).toString();
             }
+
+            private StringBuilder toString(String prefix, StringBuilder result) {
+                result.append(prefix).append(this._finder.toString()).append("\n");
+                for (RegexTree<T>.RTNode child : _children) {
+                    child.toString(prefix+"\t", result);
+                }
+                return result;
+            }
+
 
             //greatest common prefix between two strings
             public String greatestCommonPrefix(String a, String b) {
@@ -532,6 +541,9 @@ public class RegexLookup<T> implements Iterable<Map.Entry<Finder, T>> {
                     return -1;
                 }
             }
+        }
+        public String toString() {
+            return root.toString();
         }
     }
 
@@ -937,6 +949,17 @@ public class RegexLookup<T> implements Iterable<Map.Entry<Finder, T>> {
         return new RegexLookup<T>().setPatternTransform(RegexFinderTransform);
     }
 
+    /**
+     * @deprecated Use {@link #of(LookupType,Transform)} instead
+     */
+    public static <T> RegexLookup<T> of(LookupType lookupType) {
+        return of(lookupType, RegexFinderTransform);
+    }
+
+    public static <T> RegexLookup<T> of(LookupType lookupType, Transform<String, RegexFinder> transform) {
+        return new RegexLookup<T>(lookupType).setPatternTransform(transform);
+    }
+
     public RegexLookup<T> setValueTransform(Transform<String, ? extends T> valueTransform) {
         this.valueTransform = valueTransform;
         return this;
@@ -1118,5 +1141,9 @@ public class RegexLookup<T> implements Iterable<Map.Entry<Finder, T>> {
         default:
             return MEntries.size();
         }
+    }
+    @Override
+    public String toString() {
+        return storage.toString();
     }
 }

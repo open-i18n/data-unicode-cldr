@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.unicode.cldr.draft.FileUtilities;
 import org.unicode.cldr.draft.ScriptMetadata;
 import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CLDRTool;
@@ -29,7 +30,6 @@ import org.unicode.cldr.util.Validity.Status;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
-import com.ibm.icu.dev.util.BagFormatter;
 import com.ibm.icu.impl.Relation;
 import com.ibm.icu.impl.Row.R2;
 import com.ibm.icu.util.ICUUncheckedIOException;
@@ -41,6 +41,8 @@ public class GenerateValidityXml {
     private static final Map<LstrType, Map<String, Map<LstrField, String>>> LSTREG = StandardCodes.getEnumLstreg();
 
     private static final SupplementalDataInfo SDI = SupplementalDataInfo.getInstance();
+    private static final Validity VALIDITY = Validity.getInstance();
+    private static Validity OLD_VALIDITY = Validity.getInstance(CLDRPaths.LAST_DIRECTORY + "common/");
 
     private static class MyAdder implements Adder {
         Appendable target;
@@ -97,7 +99,6 @@ public class GenerateValidityXml {
     }
 
     static final Map<String, Info> types = Info.types;
-    static final Validity VALIDITY = Validity.getInstance();
 
     public static void main(String[] args) throws IOException {
         
@@ -110,7 +111,7 @@ public class GenerateValidityXml {
             String type = entry.getKey();
             final Info info = entry.getValue();
             Relation<Status, String> subtypeMap = info.statusMap;
-            try (PrintWriter output = BagFormatter.openUTF8Writer(CLDRPaths.GEN_DIRECTORY, "validity/" + type + ".xml")) {
+            try (PrintWriter output = FileUtilities.openUTF8Writer(CLDRPaths.GEN_DIRECTORY, "validity/" + type + ".xml")) {
                 adder.target = output;
                 output.append(DtdType.supplementalData.header(MethodHandles.lookup().lookupClass())
                     + "\t<version number=\"$Revision" /*hack to stop SVN changing this*/ + "$\"/>\n"
@@ -192,7 +193,7 @@ public class GenerateValidityXml {
         
         // find out which items were valid, but are no longer in the containment map
         // add them as deprecated
-        Map<Status, Set<String>> subdivisionData = VALIDITY.getData().get(LstrType.subdivision);
+        Map<Status, Set<String>> subdivisionData = OLD_VALIDITY.getStatusToCodes(LstrType.subdivision);
         TreeSet<String> missing = new TreeSet<>();
         for (Entry<Status, Set<String>> entry : subdivisionData.entrySet()) {
             for (String missingItem : entry.getValue()) {
@@ -236,6 +237,9 @@ public class GenerateValidityXml {
             }
             for (Entry<String, Map<LstrField, String>> entry2 : entry.getValue().entrySet()) {
                 String code = entry2.getKey();
+                if (type == LstrType.language && code.startsWith("bh")) {
+                    int debug = 0;
+                }
                 Map<LstrField, String> data = entry2.getValue();
                 Validity.Status subtype = Validity.Status.regular;
                 if (code.equals(type.unknown)) {

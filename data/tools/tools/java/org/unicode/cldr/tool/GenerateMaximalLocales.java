@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.BitSet;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,6 +18,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.unicode.cldr.draft.FileUtilities;
 import org.unicode.cldr.draft.ScriptMetadata;
 import org.unicode.cldr.draft.ScriptMetadata.Info;
 import org.unicode.cldr.util.Builder;
@@ -42,7 +44,6 @@ import org.unicode.cldr.util.SupplementalDataInfo.OfficialStatus;
 import org.unicode.cldr.util.SupplementalDataInfo.PopulationData;
 
 import com.google.common.collect.ImmutableSet;
-import com.ibm.icu.dev.util.BagFormatter;
 import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.impl.Relation;
 import com.ibm.icu.impl.Row;
@@ -66,6 +67,8 @@ import com.ibm.icu.util.ULocale;
  *
  */
 public class GenerateMaximalLocales {
+
+    private static final String TEMP_UNKNOWN_REGION = "XZ";
 
     private static final String DEBUG_ADD_KEY = "und_Latn_ZA";
 
@@ -95,7 +98,7 @@ public class GenerateMaximalLocales {
     private static StandardCodes standardCodes = StandardCodes.make();
     private static CLDRFile english = factory.make("en", false);
     static Relation<String, String> cldrContainerToLanguages =
-            Relation.of(new HashMap<String, Set<String>>(), HashSet.class);
+        Relation.of(new HashMap<String, Set<String>>(), HashSet.class);
     static {
         for (CLDRLocale locale : ToolConfig.getToolInstance().getCldrFactory().getAvailableCLDRLocales()) {
             String region = locale.getCountry();
@@ -116,15 +119,29 @@ public class GenerateMaximalLocales {
 
         Map<String, String> toMaximized = new TreeMap<String, String>();
 
-        if (tryDifferent) {
-            tryDifferentAlgorithm(toMaximized);
-
-        } else {
-            throw new IllegalArgumentException();
-            // oldAlgorithm(toMaximized);
-        }
+        tryDifferentAlgorithm(toMaximized);
 
         minimize(toMaximized);
+        
+        // HACK TEMP_UNKNOWN_REGION
+        // this is to get around the removal of items with ZZ in minimize.
+        // probably cleaner way to do it, but this provides control over just those we want to retain.
+        Set<String> toRemove = new TreeSet<>();
+        Map<String,String> toFix = new TreeMap<>();
+        for (Entry<String, String> entry : toMaximized.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            if (key.contains(TEMP_UNKNOWN_REGION)) {
+                toRemove.add(key);
+            } else if (value.contains(TEMP_UNKNOWN_REGION)) {
+                toFix.put(key, value.replace(TEMP_UNKNOWN_REGION, UNKNOWN_REGION));
+            }
+        }
+        for (String key : toRemove) {
+            toMaximized.remove(key);
+        }
+        toMaximized.putAll(toFix);
+        
         Map<String, String> oldLikely = SupplementalDataInfo.getInstance().getLikelySubtags();
         Set<String> changes = compareMapsAndFixNew("*WARNING* Likely Subtags: ", oldLikely, toMaximized, "ms_Arab",
             "ms_Arab_ID");
@@ -342,6 +359,7 @@ public class GenerateMaximalLocales {
         // Specials
         add(languageToReason, "und", "001", OfficialStatus.unknown, 0);
 
+
         // for (String language : Iso639Data.getAvailable()) {
         // Scope scope = Iso639Data.getScope(language);
         // Type type = Iso639Data.getType(language);
@@ -514,8 +532,7 @@ public class GenerateMaximalLocales {
         showDefaultContentDifferencesAndFix(defaultLocaleContent);
 
         Log.setLogNoBOM(CLDRPaths.GEN_DIRECTORY + "/supplemental", "supplementalMetadata.xml");
-        BufferedReader oldFile = BagFormatter.openUTF8Reader(CLDRPaths.SUPPLEMENTAL_DIRECTORY,
-            "supplementalMetadata.xml");
+        BufferedReader oldFile = FileUtilities.openUTF8Reader(CLDRPaths.SUPPLEMENTAL_DIRECTORY, "supplementalMetadata.xml");
         CldrUtility.copyUpTo(oldFile, PatternCache.get("\\s*<defaultContent locales=\"\\s*"), Log.getLog(), false);
 
         String sep = CldrUtility.LINE_SEPARATOR + "\t\t\t";
@@ -698,6 +715,7 @@ public class GenerateMaximalLocales {
         { "und_Arab_PK", "ur_Arab_PK" },
         { "und_Bopo", "zh_Bopo_TW" },
         { "und_Deva_FJ", "hif_Deva_FJ" },
+        { "und_EZ", "de_Latn_EZ" },
         { "und_Hani", "zh_Hani_CN" },
         { "und_Hani_CN", "zh_Hani_CN" },
         { "und_Kana", "ja_Kana_JP" },
@@ -715,6 +733,7 @@ public class GenerateMaximalLocales {
         { "und_SO", "so_Latn_SO" },
         { "und_SS", "en_Latn_SS" },
         { "und_TK", "tkl_Latn_TK" },
+        { "und_UN", "en_Latn_UN" },
         { "vo", "vo_Latn_001" },
         { "vo_Latn", "vo_Latn_001" },
         { "yi", "yi_Hebr_001" },
@@ -812,9 +831,30 @@ public class GenerateMaximalLocales {
             { "gez", "Ethi", "ET" },
             { "ken", "Latn", "CM" },
             { "und", "Arab", "PK" },
-            { "wa", "Latn", "BE" }
+            { "wa", "Latn", "BE" },
+
+            { "fub", "Arab", "CM" },
+            { "fuf", "Latn", "GN" },
+            { "kby", "Arab", "NE" },
+            { "kdh", "Arab", "TG" },
+            { "apd", "Arab", "TG" },
+            { "zlm", "Latn", "TG" },
         }) {
-            maxData.add(additions[0], additions[1], additions[2], 1.0);
+            if (!maxData.languages.containsKey(additions[0])) {
+                maxData.add(additions[0], additions[1], additions[2], 1.0);
+            }
+        }
+
+        for (Entry<String, Collection<String>> entry : DeriveScripts.getLanguageToScript().asMap().entrySet()) {
+            String language = entry.getKey();
+            final Collection<String> values = entry.getValue();
+            if (values.size() != 1) {
+                continue; // skip, no either way 
+            }
+            Set<R3<Double, String, String>> old = maxData.languages.get(language);
+            if (!maxData.languages.containsKey(language)) {
+                maxData.add(language, values.iterator().next(), TEMP_UNKNOWN_REGION, 1.0);
+            }
         }
 
         // add others, with English default
@@ -1361,8 +1401,7 @@ public class GenerateMaximalLocales {
 
     private static void printLikelySubtags(Map<String, String> fluffup) throws IOException {
 
-        PrintWriter out = BagFormatter.openUTF8Writer(CLDRPaths.GEN_DIRECTORY,
-            "/supplemental/likelySubtags" + (OUTPUT_STYLE == OutputStyle.XML ? ".xml" : ".txt"));
+        PrintWriter out = FileUtilities.openUTF8Writer(CLDRPaths.GEN_DIRECTORY, "/supplemental/likelySubtags" + (OUTPUT_STYLE == OutputStyle.XML ? ".xml" : ".txt"));
         String spacing = OUTPUT_STYLE == OutputStyle.PLAINTEXT ? "\t" : " ";
         String header = OUTPUT_STYLE != OutputStyle.XML ? "const MapToMaximalSubtags default_subtags[] = {"
             : "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" + CldrUtility.LINE_SEPARATOR

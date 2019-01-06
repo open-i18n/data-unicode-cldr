@@ -6,13 +6,14 @@ import org.unicode.cldr.util.VerifyZones;
 
 public class GenerateAllCharts {
     public static void main(String[] args) throws Exception {
+        ShowLanguages.main(args);
         GenerateBcp47Text.main(args);
         GenerateSidewaysView.main(args);
         ShowData.main(args);
         GenerateTransformCharts.main(args);
         ShowKeyboards.main(args);
-        ShowLanguages.main(args);
         ChartDelta.main(args);
+        ChartCollation.main(args);
         DateTimeFormats.main(args);
         VerifyCompactNumbers.main(args);
         VerifyZones.main(args);
