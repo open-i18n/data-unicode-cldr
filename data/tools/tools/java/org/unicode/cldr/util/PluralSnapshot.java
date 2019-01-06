@@ -16,7 +16,7 @@ import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralType;
 
 import com.ibm.icu.dev.util.CollectionUtilities;
-import com.ibm.icu.dev.util.Relation;
+import com.ibm.icu.impl.Relation;
 import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.text.NumberFormat;
 import com.ibm.icu.text.PluralRules;
@@ -239,7 +239,7 @@ public class PluralSnapshot implements Comparable<PluralSnapshot> {
             result.append(" colSpan='" + colSpan + "'");
         }
         result.append(" title='").append(item.toString()).append("'>")
-            .append(item.abbreviated()).append("</td>");
+        .append(item.abbreviated()).append("</td>");
     }
 
     private static <T> void appendItems(StringBuilder result, T[] plurals3, double offset) {

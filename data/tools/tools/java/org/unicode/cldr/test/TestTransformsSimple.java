@@ -17,7 +17,7 @@ import com.ibm.icu.text.UnicodeSetIterator;
 public class TestTransformsSimple extends TestFmwk {
 
     public static void main(String[] args) throws Exception {
-        CLDRTransforms.registerCldrTransforms(null, null, out);
+        CLDRTransforms.registerCldrTransforms(null, null, out, true);
         new TestTransformsSimple().run(args);
     }
 
@@ -153,7 +153,7 @@ public class TestTransformsSimple extends TestFmwk {
 
     private int writeFile(String title, UnicodeSet sourceSet, Transliterator nfd, Transliterator toLatin,
         Transliterator fromLatin, boolean doLatin, UnicodeSet nativeSpecials, UnicodeSet latinSpecials)
-        throws IOException {
+            throws IOException {
         int errorCount = 0;
         PrintWriter out = BagFormatter.openUTF8Writer(org.unicode.cldr.util.CLDRPaths.GEN_DIRECTORY + "transTest/",
             title + ".html");

@@ -2,8 +2,8 @@ package org.unicode.cldr.tool;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Map.Entry;
 import java.util.EnumSet;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -12,13 +12,13 @@ import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.ChainedMap;
+import org.unicode.cldr.util.ChainedMap.M3;
+import org.unicode.cldr.util.ChainedMap.M4;
 import org.unicode.cldr.util.CldrUtility;
+import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.Level;
 import org.unicode.cldr.util.Organization;
 import org.unicode.cldr.util.StandardCodes;
-import org.unicode.cldr.util.ChainedMap.M3;
-import org.unicode.cldr.util.ChainedMap.M4;
-import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.XPathParts;
 
 import com.google.common.base.Objects;
@@ -27,9 +27,9 @@ public class FindAttributeValueDifferences {
     private static final String LAST_ARCHIVE_DIRECTORY = CLDRPaths.ARCHIVE_DIRECTORY;
 
     static public M4<String, String, String, Boolean> getActuals(
-        CLDRFile english, 
+        CLDRFile english,
         M4<String, String, String, Boolean> result) {
-        
+
         for (String path : english.fullIterable()) {
             XPathParts parts = XPathParts.getFrozenInstance(path);
             for (int i = 0; i < parts.size(); ++i) {
@@ -47,7 +47,6 @@ public class FindAttributeValueDifferences {
         CLDRConfig config = CLDRConfig.getInstance();
         Factory current = config.getCldrFactory();
         Factory last = Factory.make(LAST_ARCHIVE_DIRECTORY + "cldr-" + ToolConstants.PREVIOUS_CHART_VERSION + "/common/main/", ".*");
-
 
         @SuppressWarnings({ "rawtypes", "unchecked" })
         M4<String, String, String, Boolean> newValues = ChainedMap.of(new TreeMap(), new TreeMap(), new TreeMap(), Boolean.class);
@@ -68,8 +67,8 @@ public class FindAttributeValueDifferences {
         elements.addAll(oldValues.keySet());
 
         for (String element : elements) {
-            M3<String, String, Boolean> newSubmap = CldrUtility.ifNull(newValues.get(element),emptyM3);
-            M3<String, String, Boolean> oldSubmap = CldrUtility.ifNull(oldValues.get(element),emptyM3);
+            M3<String, String, Boolean> newSubmap = CldrUtility.ifNull(newValues.get(element), emptyM3);
+            M3<String, String, Boolean> oldSubmap = CldrUtility.ifNull(oldValues.get(element), emptyM3);
             Set<String> attributes = new TreeSet<>(newSubmap.keySet());
             attributes.addAll(oldSubmap.keySet());
 

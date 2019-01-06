@@ -13,7 +13,7 @@ import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralType;
 
 import com.ibm.icu.dev.util.CollectionUtilities;
-import com.ibm.icu.dev.util.Relation;
+import com.ibm.icu.impl.Relation;
 import com.ibm.icu.text.PluralRules;
 
 public class WritePluralRules {
@@ -178,6 +178,6 @@ public class WritePluralRules {
         PluralRules override = null; // PluralRulesFactory.getPluralOverrides().get(new ULocale(locale));
         return override != null
             ? override
-            : sInfo.getPlurals(locale).getPluralRules();
+                : sInfo.getPlurals(locale).getPluralRules();
     }
 }

@@ -44,7 +44,7 @@ import org.unicode.cldr.util.SupplementalDataInfo.PopulationData;
 import com.google.common.collect.ImmutableSet;
 import com.ibm.icu.dev.util.BagFormatter;
 import com.ibm.icu.dev.util.CollectionUtilities;
-import com.ibm.icu.dev.util.Relation;
+import com.ibm.icu.impl.Relation;
 import com.ibm.icu.impl.Row;
 import com.ibm.icu.impl.Row.R2;
 import com.ibm.icu.impl.Row.R3;
@@ -61,11 +61,10 @@ import com.ibm.icu.util.ULocale;
  * Problems:
  * "und_Hani", "zh_Hani"
  * "und_Sinh", "si_Sinh"
- * 
+ *
  * @author markdavis
- * 
+ *
  */
-@SuppressWarnings("unchecked")
 public class GenerateMaximalLocales {
 
     private static final String DEBUG_ADD_KEY = "und_Latn_ZA";
@@ -95,7 +94,8 @@ public class GenerateMaximalLocales {
         .getInstance(CLDRPaths.SUPPLEMENTAL_DIRECTORY);
     private static StandardCodes standardCodes = StandardCodes.make();
     private static CLDRFile english = factory.make("en", false);
-    static Relation<String, String> cldrContainerToLanguages = Relation.of(new HashMap(), HashSet.class);
+    static Relation<String, String> cldrContainerToLanguages =
+            Relation.of(new HashMap<String, Set<String>>(), HashSet.class);
     static {
         for (CLDRLocale locale : ToolConfig.getToolInstance().getCldrFactory().getAvailableCLDRLocales()) {
             String region = locale.getCountry();
@@ -136,80 +136,80 @@ public class GenerateMaximalLocales {
 
         if (SHOW_ADD)
             System.out
-                .println("/*"
-                    + CldrUtility.LINE_SEPARATOR
-                    + " To Maximize:"
-                    +
-                    CldrUtility.LINE_SEPARATOR
-                    + " If using raw strings, make sure the input language/locale uses the right separator, and has the right casing."
-                    +
-                    CldrUtility.LINE_SEPARATOR
-                    + " Remove the script Zzzz and the region ZZ if they occur; change an empty language subtag to 'und'."
-                    +
-                    CldrUtility.LINE_SEPARATOR
-                    + " Get the language, region, and script from the cleaned-up tag, plus any variants/extensions"
-                    +
-                    CldrUtility.LINE_SEPARATOR
-                    + " Try each of the following in order (where the field exists)"
-                    +
-                    CldrUtility.LINE_SEPARATOR
-                    + "   Lookup language-script-region. If in the table, return the result + variants"
-                    +
-                    CldrUtility.LINE_SEPARATOR
-                    + "   Lookup language-script. If in the table, return the result (substituting the original region if it exists) + variants"
-                    +
-                    CldrUtility.LINE_SEPARATOR
-                    + "   Lookup language-region. If in the table, return the result (substituting the original script if it exists) + variants"
-                    +
-                    CldrUtility.LINE_SEPARATOR
-                    + "   Lookup language. If in the table, return the result (substituting the original region and script if either or both exist) + variants"
-                    +
-                    CldrUtility.LINE_SEPARATOR
-                    +
-                    CldrUtility.LINE_SEPARATOR
-                    + " Example: Input is zh-ZZZZ-SG."
-                    +
-                    CldrUtility.LINE_SEPARATOR
-                    + " Normalize to zh-SG. Lookup in table. No match."
-                    +
-                    CldrUtility.LINE_SEPARATOR
-                    + " Remove SG, but remember it. Lookup zh, and get the match (zh-Hans-CN). Substitute SG, and return zh-Hans-SG."
-                    +
-                    CldrUtility.LINE_SEPARATOR
-                    +
-                    CldrUtility.LINE_SEPARATOR
-                    + " To Minimize:"
-                    +
-                    CldrUtility.LINE_SEPARATOR
-                    + " First get max = maximize(input)."
-                    +
-                    CldrUtility.LINE_SEPARATOR
-                    + " Then for trial in {language, language-region, language-script}"
-                    +
-                    CldrUtility.LINE_SEPARATOR
-                    + "     If maximize(trial) == max, then return trial."
-                    +
-                    CldrUtility.LINE_SEPARATOR
-                    + " If you don't get a match, return max."
-                    +
-                    CldrUtility.LINE_SEPARATOR
-                    +
-                    CldrUtility.LINE_SEPARATOR
-                    + " Example: Input is zh-Hant. Maximize to get zh-Hant-TW."
-                    +
-                    CldrUtility.LINE_SEPARATOR
-                    + " zh => zh-Hans-CN. No match, so continue."
-                    +
-                    CldrUtility.LINE_SEPARATOR
-                    + " zh-TW => zh-Hans-TW. Match, so return zh-TW."
-                    +
-                    CldrUtility.LINE_SEPARATOR
-                    +
-                    CldrUtility.LINE_SEPARATOR
-                    + " (A variant of this uses {language, language-script, language-region}): that is, tries script before language."
-                    +
-                    CldrUtility.LINE_SEPARATOR + " toMaximal size:\t" + toMaximized.size() +
-                    CldrUtility.LINE_SEPARATOR + "*/"
+            .println("/*"
+                + CldrUtility.LINE_SEPARATOR
+                + " To Maximize:"
+                +
+                CldrUtility.LINE_SEPARATOR
+                + " If using raw strings, make sure the input language/locale uses the right separator, and has the right casing."
+                +
+                CldrUtility.LINE_SEPARATOR
+                + " Remove the script Zzzz and the region ZZ if they occur; change an empty language subtag to 'und'."
+                +
+                CldrUtility.LINE_SEPARATOR
+                + " Get the language, region, and script from the cleaned-up tag, plus any variants/extensions"
+                +
+                CldrUtility.LINE_SEPARATOR
+                + " Try each of the following in order (where the field exists)"
+                +
+                CldrUtility.LINE_SEPARATOR
+                + "   Lookup language-script-region. If in the table, return the result + variants"
+                +
+                CldrUtility.LINE_SEPARATOR
+                + "   Lookup language-script. If in the table, return the result (substituting the original region if it exists) + variants"
+                +
+                CldrUtility.LINE_SEPARATOR
+                + "   Lookup language-region. If in the table, return the result (substituting the original script if it exists) + variants"
+                +
+                CldrUtility.LINE_SEPARATOR
+                + "   Lookup language. If in the table, return the result (substituting the original region and script if either or both exist) + variants"
+                +
+                CldrUtility.LINE_SEPARATOR
+                +
+                CldrUtility.LINE_SEPARATOR
+                + " Example: Input is zh-ZZZZ-SG."
+                +
+                CldrUtility.LINE_SEPARATOR
+                + " Normalize to zh-SG. Lookup in table. No match."
+                +
+                CldrUtility.LINE_SEPARATOR
+                + " Remove SG, but remember it. Lookup zh, and get the match (zh-Hans-CN). Substitute SG, and return zh-Hans-SG."
+                +
+                CldrUtility.LINE_SEPARATOR
+                +
+                CldrUtility.LINE_SEPARATOR
+                + " To Minimize:"
+                +
+                CldrUtility.LINE_SEPARATOR
+                + " First get max = maximize(input)."
+                +
+                CldrUtility.LINE_SEPARATOR
+                + " Then for trial in {language, language-region, language-script}"
+                +
+                CldrUtility.LINE_SEPARATOR
+                + "     If maximize(trial) == max, then return trial."
+                +
+                CldrUtility.LINE_SEPARATOR
+                + " If you don't get a match, return max."
+                +
+                CldrUtility.LINE_SEPARATOR
+                +
+                CldrUtility.LINE_SEPARATOR
+                + " Example: Input is zh-Hant. Maximize to get zh-Hant-TW."
+                +
+                CldrUtility.LINE_SEPARATOR
+                + " zh => zh-Hans-CN. No match, so continue."
+                +
+                CldrUtility.LINE_SEPARATOR
+                + " zh-TW => zh-Hans-TW. Match, so return zh-TW."
+                +
+                CldrUtility.LINE_SEPARATOR
+                +
+                CldrUtility.LINE_SEPARATOR
+                + " (A variant of this uses {language, language-script, language-region}): that is, tries script before language."
+                +
+                CldrUtility.LINE_SEPARATOR + " toMaximal size:\t" + toMaximized.size() +
+                CldrUtility.LINE_SEPARATOR + "*/"
                 );
 
         printLikelySubtags(toMaximized);
@@ -280,11 +280,11 @@ public class GenerateMaximalLocales {
         LanguageTagParser ltp = new LanguageTagParser();
         /*
          * A. X is a qualified language**, and at least one of the following is true:
-         * 
+         *
          * 1. X is has official status* in any country
          * 2. X exceeds a threshold population† of literate users worldwide: 1M
          * 3. X exceeds a threshold population† in some country Z: 100K and 20% of Z's population†.
-         * 
+         *
          * B. X is an exception explicitly approved by the committee or X has minimal
          * language coverage‡ in CLDR itself.
          */
@@ -359,20 +359,20 @@ public class GenerateMaximalLocales {
             RowData lastReason = reasons.iterator().next();
 
             System.out.append(language)
-                .append("\t")
-                .append(english.getName(language))
-                .append("\t")
-                .append(lastReason.getStatus().toShortString())
-                .append("\t")
-                .append(nf.format(languageToLiteratePopulation.getCount(language)));
+            .append("\t")
+            .append(english.getName(language))
+            .append("\t")
+            .append(lastReason.getStatus().toShortString())
+            .append("\t")
+            .append(nf.format(languageToLiteratePopulation.getCount(language)));
             for (RowData reason : reasons) {
                 String status = reason.getStatus().toShortString();
                 System.out.append("\t")
-                    .append(status)
-                    .append("-")
-                    .append(reason.getName())
-                    .append("-")
-                    .append(nf.format(reason.getLiteratePopulation()));
+                .append(status)
+                .append("-")
+                .append(reason.getName())
+                .append("-")
+                .append(nf.format(reason.getLiteratePopulation()));
             }
             System.out.append("\n");
         }
@@ -487,7 +487,6 @@ public class GenerateMaximalLocales {
                 toChildren.removeAll(locale, toRemove);
             }
         }
-        
 
         // we add a child as a default locale if it has the same maximization
         main: for (String locale : toChildren.keySet()) {
@@ -588,7 +587,7 @@ public class GenerateMaximalLocales {
         Map<String, Counter<String>> regionsToLanguages = new TreeMap<String, Counter<String>>();
         Map<String, Counter<String>> regionsToScripts = new TreeMap<String, Counter<String>>();
 
-        Map<String, Counter<Row.R2<String, String>>> containersToLanguage = new TreeMap();
+        Map<String, Counter<Row.R2<String, String>>> containersToLanguage = new TreeMap<String, Counter<Row.R2<String, String>>>();
         Relation<String, Row.R4<Double, String, String, String>> containersToLangRegion = Relation.of(
             new TreeMap<String, Set<Row.R4<Double, String, String, String>>>(), TreeSet.class);
 
@@ -664,13 +663,18 @@ public class GenerateMaximalLocales {
         { "eo_Latn", "eo_Latn_001" },
         { "es", "es_Latn_ES" },
         { "es_Latn", "es_Latn_ES" },
+        { "ff_Adlm", "ff_Adlm_GN" },
         { "ku_Arab", "ku_Arab_IQ" },
+        { "lrc", "lrc_Arab_IR" },
+        { "lrc_Arab", "lrc_Arab_IR" },
         { "man", "man_Latn_GM" },
         { "man_Latn", "man_Latn_GM" },
         { "mas", "mas_Latn_KE" },
         { "mas_Latn", "mas_Latn_KE" },
         { "mn", "mn_Cyrl_MN" },
         { "mn_Cyrl", "mn_Cyrl_MN" },
+        { "mro", "mro_Mroo_BD" },
+        { "mro_BD", "mro_Mroo_BD" },
         { "ms_Arab", "ms_Arab_MY" },
         { "pap", "pap_Latn_AW" },
         { "pap_Latn", "pap_Latn_AW" },
@@ -715,6 +719,10 @@ public class GenerateMaximalLocales {
         { "vo_Latn", "vo_Latn_001" },
         { "yi", "yi_Hebr_001" },
         { "yi_Hebr", "yi_Hebr_001" },
+        { "yue", "yue_Hant_HK" },
+        { "yue_Hant", "yue_Hant_HK" },
+        { "yue_Hans", "yue_Hans_CN" },
+        { "yue_CN", "yue_Hans_CN" },
         { "zh_Hani", "zh_Hani_CN" },
 
         { "zh_Bopo", "zh_Bopo_TW" },
@@ -729,6 +737,9 @@ public class GenerateMaximalLocales {
         { "en_Shaw", "en_Shaw_GB" },
         { "sd_Sind", "sd_Sind_IN" },
         { "und_Brai", "fr_Brai_FR" }, // hack
+        { "und_Hanb", "zh_Hanb_TW" }, // Special script code
+        { "zh_Hanb", "zh_Hanb_TW" }, // Special script code
+        { "und_Jamo", "ko_Jamo_KR" }, // Special script code
     });
 
     private static NumberFormat percent = NumberFormat.getPercentInstance();
@@ -1239,7 +1250,7 @@ public class GenerateMaximalLocales {
 
     /**
      * Generate tags where the deprecated values map to the expanded values
-     * 
+     *
      * @param toMaximized
      */
     // private static void addDeprecated(Map<String, String> toMaximized) {
@@ -1355,31 +1366,29 @@ public class GenerateMaximalLocales {
         String spacing = OUTPUT_STYLE == OutputStyle.PLAINTEXT ? "\t" : " ";
         String header = OUTPUT_STYLE != OutputStyle.XML ? "const MapToMaximalSubtags default_subtags[] = {"
             : "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" + CldrUtility.LINE_SEPARATOR
-                + "<!DOCTYPE supplementalData SYSTEM \"../../common/dtd/ldmlSupplemental.dtd\">"
-                + CldrUtility.LINE_SEPARATOR
-                + "<!--"
-                + CldrUtility.LINE_SEPARATOR
-                + CldrUtility.getCopyrightString()
-                + CldrUtility.LINE_SEPARATOR
-                + "-->"
-                + CldrUtility.LINE_SEPARATOR
-                + "<!--"
-                + CldrUtility.LINE_SEPARATOR
-                + "Likely subtags data is generated programatically from CLDR's language/territory/population" + CldrUtility.LINE_SEPARATOR
-                + "data using the GenerateMaximalLocales tool. Under normal circumstances, this file should" + CldrUtility.LINE_SEPARATOR
-                + "not be patched by hand, as any changes made in that fashion may be lost."
-                + CldrUtility.LINE_SEPARATOR
-                + "-->"
-                + CldrUtility.LINE_SEPARATOR
-                + "<supplementalData>" + CldrUtility.LINE_SEPARATOR
-                + "    <version number=\"$" +
-                "Revision$\"/>" + CldrUtility.LINE_SEPARATOR
-                + "    <generation date=\"$" + // separate
-                "Date$\"/>" + CldrUtility.LINE_SEPARATOR
-                + "    <likelySubtags>";
+            + "<!DOCTYPE supplementalData SYSTEM \"../../common/dtd/ldmlSupplemental.dtd\">"
+            + CldrUtility.LINE_SEPARATOR
+            + "<!--"
+            + CldrUtility.LINE_SEPARATOR
+            + CldrUtility.getCopyrightString()
+            + CldrUtility.LINE_SEPARATOR
+            + "-->"
+            + CldrUtility.LINE_SEPARATOR
+            + "<!--"
+            + CldrUtility.LINE_SEPARATOR
+            + "Likely subtags data is generated programatically from CLDR's language/territory/population" + CldrUtility.LINE_SEPARATOR
+            + "data using the GenerateMaximalLocales tool. Under normal circumstances, this file should" + CldrUtility.LINE_SEPARATOR
+            + "not be patched by hand, as any changes made in that fashion may be lost."
+            + CldrUtility.LINE_SEPARATOR
+            + "-->"
+            + CldrUtility.LINE_SEPARATOR
+            + "<supplementalData>" + CldrUtility.LINE_SEPARATOR
+            + "    <version number=\"$" +
+            "Revision$\"/>" + CldrUtility.LINE_SEPARATOR
+            + "    <likelySubtags>";
         String footer = OUTPUT_STYLE != OutputStyle.XML ? SEPARATOR + "};"
             : "    </likelySubtags>" + CldrUtility.LINE_SEPARATOR
-                + "</supplementalData>";
+            + "</supplementalData>";
         out.println(header);
         boolean first = true;
         Set<String> keys = new TreeSet<String>(new LocaleStringComparator());
@@ -1849,10 +1858,10 @@ public class GenerateMaximalLocales {
         { "tet", "Latn" }, // Tetum (East Timor)
         { "tk", "Latn" }, // Turkmen (Turkmenistan)
         { "ty", "Latn" }, // Tahitian (French Polynesia)
-        { "ja", "Jpan" }, // Tahitian (French Polynesia)
-        { "und", "Latn" }, // Tahitian (French Polynesia)
+        { "ja", "Jpan" }, // Special script for japan
+        { "und", "Latn" }, // Ultimate fallback
     };
-    private static Map<String, String> localeToScriptCache = new TreeMap();
+    private static Map<String, String> localeToScriptCache = new TreeMap<String, String>();
     static {
         for (String[] pair : SpecialScripts) {
             localeToScriptCache.put(pair[0], pair[1]);

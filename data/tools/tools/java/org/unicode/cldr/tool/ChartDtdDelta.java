@@ -3,7 +3,6 @@ package org.unicode.cldr.tool;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.EnumSet;
@@ -22,13 +21,12 @@ import org.unicode.cldr.util.DtdType;
 import org.unicode.cldr.util.SupplementalDataInfo;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.impl.Utility;
+import com.ibm.icu.util.VersionInfo;
 
 /**
  * Changed ShowDtdDiffs into a chart.
@@ -44,10 +42,12 @@ public class ChartDtdDelta extends Chart {
     public String getDirectory() {
         return FormattedFileWriter.CHART_TARGET_DIR;
     }
+
     @Override
     public String getTitle() {
         return "DTD Deltas";
     }
+
     @Override
     public String getExplanation() {
         return "<p>Shows additions to the LDML dtds over time. New elements or attributes are indicated with a + sign. "
@@ -60,32 +60,36 @@ public class ChartDtdDelta extends Chart {
 
         TablePrinter tablePrinter = new TablePrinter()
         .addColumn("Version", "class='source'", CldrUtility.getDoubleLinkMsg(), "class='source'", true)
-        .setSortPriority(1)
+        .setSortPriority(0)
         .setSortAscending(false)
         .setBreakSpans(true)
         .addColumn("Dtd Type", "class='source'", null, "class='source'", true)
-        .setSortPriority(2)
+        .setSortPriority(1)
 
         .addColumn("Intermediate Path", "class='source'", null, "class='target'", true)
-        .setSortPriority(3)
+        .setSortPriority(2)
 
         .addColumn("Element", "class='target'", null, "class='target'", true)
         .setSpanRows(false)
         .addColumn("Attributes", "class='target'", null, "class='target'", true)
-        .setSpanRows(false)
-        ;
+        .setSpanRows(false);
 
         String last = null;
-        for (String current : CLDR_VERSIONS) {
-            String currentName = current;
+        LinkedHashSet<String> allVersions = new LinkedHashSet<>(ToolConstants.CLDR_VERSIONS);
+        allVersions.add(ToolConstants.LAST_CHART_VERSION);
+        for (String current : allVersions) {
+            System.out.println("DTD delta: " + current);
+            final boolean finalVersion = current.equals(ToolConstants.LAST_CHART_VERSION);
+            String currentName = finalVersion ? ToolConstants.CHART_DISPLAY_VERSION : current;
             for (DtdType type : TYPES) {
-                String firstVersion = FIRST_VERSION.get(type);
+                String firstVersion = type.firstVersion; // FIRST_VERSION.get(type);
                 if (firstVersion != null && current != null && current.compareTo(firstVersion) < 0) {
                     continue;
                 }
                 DtdData dtdCurrent = null;
                 try {
-                    dtdCurrent = DtdData.getInstance(type, current.endsWith("β") ? null : current);
+                    dtdCurrent = DtdData.getInstance(type,
+                        finalVersion && ToolConstants.CHART_STATUS != ToolConstants.ChartStatus.release ? null : current);
                 } catch (Exception e) {
                     if (!(e.getCause() instanceof FileNotFoundException)) {
                         throw e;
@@ -110,7 +114,7 @@ public class ChartDtdDelta extends Chart {
 
         for (DiffElement datum : data) {
             tablePrinter.addRow()
-            .addCell(datum.version)
+            .addCell(datum.getVersionString())
             .addCell(datum.dtdType)
             .addCell(datum.newPath)
             .addCell(datum.newElement)
@@ -125,33 +129,12 @@ public class ChartDtdDelta extends Chart {
 
     static final SupplementalDataInfo SDI = CLDRConfig.getInstance().getSupplementalDataInfo();
 
-    static final List<String> CLDR_VERSIONS = ImmutableList.of(
-        "1.1.1",
-        "1.2.0",
-        "1.3.0",
-        "1.4.1",
-        "1.5.1",
-        "1.6.1",
-        "1.7.2",
-        "1.8.1",
-        "1.9.1",
-        "2.0.1",
-        "21.0",
-        "22.1",
-        "23.1",
-        "24.0",
-        "25.0",
-        "26.0",
-        "27.0",
-        ToolConstants.CHART_DISPLAY_VERSION
-        );
-
     static Set<DtdType> TYPES = EnumSet.allOf(DtdType.class);
     static {
         TYPES.remove(DtdType.ldmlICU);
     }
 
-    static final Map<DtdType,String> FIRST_VERSION = new EnumMap<>(DtdType.class);
+    static final Map<DtdType, String> FIRST_VERSION = new EnumMap<>(DtdType.class);
     static {
         FIRST_VERSION.put(DtdType.ldmlBCP47, "1.7.2");
         FIRST_VERSION.put(DtdType.keyboard, "22.1");
@@ -208,18 +191,27 @@ public class ChartDtdDelta extends Chart {
         }
     }
 
-    enum DiffType {Element, Attribute, AttributeValue}
+    enum DiffType {
+        Element, Attribute, AttributeValue
+    }
 
     private static class DiffElement {
 
-        final String version;
+        final VersionInfo version;
         final DtdType dtdType;
+        final boolean isBeta;
         final String newPath;
         final String newElement;
         final String attributeNames;
 
         public DiffElement(DtdData dtdCurrent, String version, String newPath, String newElement, Set<String> attributeNames2) {
-            this.version = version;
+            isBeta = version.endsWith("β");
+            try {
+                this.version = isBeta ? VersionInfo.getInstance(version.substring(0, version.length()-1)) : VersionInfo.getInstance(version);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw e;
+            }
             dtdType = dtdCurrent.dtdType;
             this.newPath = fix(newPath);
             this.attributeNames = attributeNames2.isEmpty() ? NONE : "+" + CollectionUtilities.join(attributeNames2, ", +");
@@ -234,15 +226,20 @@ public class ChartDtdDelta extends Chart {
             substring = substring.substring(base, last);
             return substring.replace("/", "\u200B/") + "/";
         }
+
         @Override
         public String toString() {
             return MoreObjects.toStringHelper(this)
-                .add("version", version)
+                .add("version", getVersionString())
                 .add("dtdType", dtdType)
                 .add("newPath", newPath)
                 .add("newElement", newElement)
                 .add("attributeNames", attributeNames)
                 .toString();
+        }
+
+        private String getVersionString() {
+            return version.getVersionString(2, 4) + (isBeta ? "β" : "");
         }
     }
 
@@ -258,24 +255,24 @@ public class ChartDtdDelta extends Chart {
 
     static final Set<String> SKIP_ATTRIBUTES = ImmutableSet.of("references", "standard", "draft", "alt");
 
-    private static Set<String> getAttributeNames(DtdData dtdCurrent, String elementName, Map<Attribute, Integer> attributesOld, Map<Attribute, Integer> attributes) {
+    private static Set<String> getAttributeNames(DtdData dtdCurrent, String elementName, Map<Attribute, Integer> attributesOld,
+        Map<Attribute, Integer> attributes) {
         Set<String> names = new LinkedHashSet<>();
-        main:
-            for (Attribute attribute : attributes.keySet()) {
-                String name = attribute.getName();
-                if (SKIP_ATTRIBUTES.contains(name)) {
-                    continue;
-                }
-                if (isDeprecated(dtdCurrent.dtdType, elementName, name)) { // SDI.isDeprecated(dtdCurrent, elementName, name, "*")) {
-                    continue;
-                }
-                for (Attribute attributeOld : attributesOld.keySet()) {
-                    if (attributeOld.name.equals(name)) {
-                        continue main;
-                    }
-                }
-                names.add(name);
+        main: for (Attribute attribute : attributes.keySet()) {
+            String name = attribute.getName();
+            if (SKIP_ATTRIBUTES.contains(name)) {
+                continue;
             }
+            if (isDeprecated(dtdCurrent.dtdType, elementName, name)) { // SDI.isDeprecated(dtdCurrent, elementName, name, "*")) {
+                continue;
+            }
+            for (Attribute attributeOld : attributesOld.keySet()) {
+                if (attributeOld.name.equals(name)) {
+                    continue main;
+                }
+            }
+            names.add(name);
+        }
         return names;
     }
 

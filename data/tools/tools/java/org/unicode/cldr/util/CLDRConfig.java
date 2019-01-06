@@ -54,6 +54,11 @@ public class CLDRConfig extends Properties {
     private static final Object RBNF_FACTORY_SYNC = new Object();
 
     /**
+     * Object to use for synchronization when interacting with Factory
+     */
+    private static final Object ANNOTATIONS_FACTORY_SYNC = new Object();
+
+    /**
      * Object used for synchronization when interacting with SupplementalData
      */
     private static final Object SUPPLEMENTAL_DATA_SYNC = new Object();
@@ -139,6 +144,7 @@ public class CLDRConfig extends Properties {
     private Factory exemplarsFactory;
     private Factory collationFactory;
     private Factory rbnfFactory;
+    private Factory annotationsFactory;
     private Factory supplementalFactory;
     private RuleBasedCollator col;
     private Phase phase = null; // default
@@ -147,19 +153,19 @@ public class CLDRConfig extends Properties {
         .maximumSize(200)
         .build(
             new CacheLoader<String, CLDRFile>() {
-              public CLDRFile load(String locale){
-                return getFullCldrFactory().make(locale,true);
-              }
+                public CLDRFile load(String locale) {
+                    return getFullCldrFactory().make(locale, true);
+                }
             });
-    
+
     // Unresolved CLDRFiles are smaller than resolved, so we can cache more of them safely.
     private LoadingCache<String, CLDRFile> cldrFileUnresolvedCache = CacheBuilder.newBuilder()
         .maximumSize(1000)
         .build(
             new CacheLoader<String, CLDRFile>() {
-              public CLDRFile load(String locale){
-                return getFullCldrFactory().make(locale,false);
-              }
+                public CLDRFile load(String locale) {
+                    return getFullCldrFactory().make(locale, false);
+                }
             });
     private TestLog testLog = null;
 
@@ -247,6 +253,15 @@ public class CLDRConfig extends Properties {
         return rbnfFactory;
     }
 
+    public Factory getAnnotationsFactory() {
+        synchronized (ANNOTATIONS_FACTORY_SYNC) {
+            if (annotationsFactory == null) {
+                annotationsFactory = Factory.make(CLDRPaths.ANNOTATIONS_DIRECTORY, ".*");
+            }
+        }
+        return annotationsFactory;
+    }
+
     public Factory getFullCldrFactory() {
         synchronized (FULL_FACTORY_SYNC) {
             if (fullFactory == null) {
@@ -273,7 +288,7 @@ public class CLDRConfig extends Properties {
     public CLDRFile getCLDRFile(String locale, boolean resolved) {
 
         return resolved ? cldrFileResolvedCache.getUnchecked(locale) :
-                cldrFileUnresolvedCache.getUnchecked(locale);
+            cldrFileUnresolvedCache.getUnchecked(locale);
 
     }
 
@@ -566,7 +581,7 @@ public class CLDRConfig extends Properties {
     }
 
     /**
-     * Get the debug settings (whether debugging is enabled for the calling class; This will look for a property corresponding 
+     * Get the debug settings (whether debugging is enabled for the calling class; This will look for a property corresponding
      * to the canonical classname +".debug"; if that property cannot be found, the default value will be returned.
      * @param callingClass
      * @param defaultValue

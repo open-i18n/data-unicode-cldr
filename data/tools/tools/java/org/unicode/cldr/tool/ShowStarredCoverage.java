@@ -29,7 +29,7 @@ import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.LengthFirstComparator;
 
 import com.ibm.icu.dev.util.CollectionUtilities;
-import com.ibm.icu.dev.util.Relation;
+import com.ibm.icu.impl.Relation;
 import com.ibm.icu.impl.Row.R2;
 
 public class ShowStarredCoverage {
@@ -96,9 +96,9 @@ public class ShowStarredCoverage {
                 System.out.println(count
                     + "\t" + level
                     + "\t" + starredStatus[0]
-                    + "\t" + starredStatus[1]
-                    + "\t" + starredStatus[2]
-                    + "\t" + CollectionUtilities.join(attributes.keySet(), ", "));
+                        + "\t" + starredStatus[1]
+                            + "\t" + starredStatus[2]
+                                + "\t" + CollectionUtilities.join(attributes.keySet(), ", "));
             }
         }
         Counter<String> pageCount = new Counter<>();

@@ -47,7 +47,7 @@ import org.unicode.cldr.util.VettingViewer.MissingStatus;
 import com.google.common.collect.Ordering;
 import com.ibm.icu.dev.util.BagFormatter;
 import com.ibm.icu.dev.util.CollectionUtilities;
-import com.ibm.icu.dev.util.Relation;
+import com.ibm.icu.impl.Relation;
 import com.ibm.icu.lang.UCharacter;
 
 public class ShowLocaleCoverage {
@@ -110,8 +110,8 @@ public class ShowLocaleCoverage {
         Matcher matcher = PatternCache.get(MyOptions.filter.option.getValue()).matcher("");
 
         if (MyOptions.growth.option.doesOccur()) {
-            try (PrintWriter out 
-                = BagFormatter.openUTF8Writer(CLDRPaths.GEN_DIRECTORY + "coverage/", 
+            try (PrintWriter out
+                = BagFormatter.openUTF8Writer(CLDRPaths.GEN_DIRECTORY + "coverage/",
                     "showLocaleGrowth.txt")) {
                 doGrowth(matcher, out);
                 return;
@@ -168,7 +168,7 @@ public class ShowLocaleCoverage {
             COMMON_LOCALES = factory.getAvailableLanguages();
         }
     }
-    
+
     private static void doGrowth(Matcher matcher, PrintWriter out) {
         TreeMap<String, List<Double>> growthData = new TreeMap<>(Ordering.natural().reverse()); // sort by version, descending
         if (DEBUG) {
@@ -223,22 +223,22 @@ public class ShowLocaleCoverage {
         }
     }
 
-    static final Map<String,String> versionToYear = new HashMap<>();
+    static final Map<String, String> versionToYear = new HashMap<>();
     static {
         int[][] mapping = {
-        {28, 2015},
-        {26, 2014},
-        {24, 2013},
-        {22, 2012},
-        {20, 2011},
-        {19, 2010},
-        {17, 2009},
-        {16, 2008},
-        {15, 2007},
-        {14, 2006},
-        {13, 2005},
-        {12, 2004},
-        {10, 2003},
+            { 28, 2015 },
+            { 26, 2014 },
+            { 24, 2013 },
+            { 22, 2012 },
+            { 20, 2011 },
+            { 19, 2010 },
+            { 17, 2009 },
+            { 16, 2008 },
+            { 15, 2007 },
+            { 14, 2006 },
+            { 13, 2005 },
+            { 12, 2004 },
+            { 10, 2003 },
         };
         for (int[] row : mapping) {
             versionToYear.put(String.valueOf(row[0]), String.valueOf(row[1]));
@@ -440,7 +440,7 @@ public class ShowLocaleCoverage {
         }
         PrintWriter out2;
         try {
-            out2 = BagFormatter.openUTF8Writer(CLDRPaths.GEN_DIRECTORY + "coverage/", 
+            out2 = BagFormatter.openUTF8Writer(CLDRPaths.GEN_DIRECTORY + "coverage/",
                 "showLocaleCoverage.txt");
         } catch (IOException e1) {
             throw new IllegalArgumentException(e1);
@@ -535,7 +535,7 @@ public class ShowLocaleCoverage {
                 String language = likelySubtags.minimize(locale);
                 Level currentLevel = STANDARD_CODES.getLocaleCoverageLevel("cldr", locale);
 //                Level otherLevel = STANDARD_CODES.getLocaleCoverageLevel("apple", locale);
-//                if (otherLevel.compareTo(currentLevel) > 0 
+//                if (otherLevel.compareTo(currentLevel) > 0
 //                    && otherLevel.compareTo(Level.MODERN) <= 0) {
 //                    currentLevel = otherLevel;
 //                }
@@ -646,13 +646,13 @@ public class ShowLocaleCoverage {
 
                 if (checkModernLocales.contains(locale)) {
                     for (String path : unconfirmed) {
-//                        String header2 = 
+//                        String header2 =
 //                            language
 //                            + "\t" + ENGLISH.getName(language)
 //                            + "\t" + script
 //                            ;
 //                        PathHeader ph = pathHeaderFactory.fromPath(path);
-//                        String line = header2 
+//                        String line = header2
 //                            + "\t" + ENGLISH.getStringValue(path)
 //                            + "\t" + file.getStringValue(path)
 //                            + "\t" + "UNCONFIRMED"

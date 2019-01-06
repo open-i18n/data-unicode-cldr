@@ -20,7 +20,7 @@ import org.unicode.cldr.util.SupplementalDataInfo.OfficialStatus;
 import org.unicode.cldr.util.SupplementalDataInfo.PopulationData;
 
 import com.ibm.icu.dev.util.BagFormatter;
-import com.ibm.icu.dev.util.Relation;
+import com.ibm.icu.impl.Relation;
 
 /**
  * To update, copy the list from http://en.wikipedia.org/wiki/List_of_official_languages_by_state into WikipediaOfficialLanguages.txt
@@ -63,9 +63,9 @@ public class WikipediaOfficialLanguages {
             REPLACE_REGIONS.put(s, "SKIP");
         }
         for (String s : Arrays.asList(
-            //"Akrotiri and Dhekelia", 
+            //"Akrotiri and Dhekelia",
             "Anguilla", "Bermuda",
-            //"British Antarctic Territory", 
+            //"British Antarctic Territory",
             "British Indian Ocean Territory", "British Virgin Islands", "Cayman Islands", "Falkland Islands", "Gibraltar",
             "Montserrat", "Pitcairn Islands", "Saint Helena", "Ascension Island", "Tristan da Cunha")) {
             String region = CountryCodeConverter.getCodeFromName(s);

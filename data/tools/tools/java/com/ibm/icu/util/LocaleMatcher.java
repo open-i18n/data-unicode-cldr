@@ -17,8 +17,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.ibm.icu.dev.util.Relation;
 import com.ibm.icu.impl.ICUResourceBundle;
+import com.ibm.icu.impl.Relation;
 import com.ibm.icu.impl.Row;
 import com.ibm.icu.impl.Row.R3;
 import com.ibm.icu.impl.Utility;
@@ -27,14 +27,14 @@ import com.ibm.icu.impl.Utility;
  * Provides a way to match the languages (locales) supported by a product to the
  * languages (locales) acceptable to a user, and get the best match. For
  * example:
- * 
+ *
  * <pre>
  * LocaleMatcher matcher = new LocaleMatcher("fr, en-GB, en");
- * 
+ *
  * // afterwards:
  * matcher.getBestMatch("en-US").toLanguageTag() => "en"
  * </pre>
- * 
+ *
  * It takes into account when languages are close to one another, such as fil
  * and tl, and when language regional variants are close, like en-GB and en-AU.
  * It also handles scripts, like zh-Hant vs zh-TW. For examples, see the test
@@ -43,7 +43,7 @@ import com.ibm.icu.impl.Utility;
  * product will just need one static instance, built with the languages
  * that it supports. However, it may want multiple instances with different
  * default languages based on additional information, such as the domain.
- * 
+ *
  * @author markdavis@google.com
  * @stable ICU 4.4
  */
@@ -75,7 +75,7 @@ public class LocaleMatcher {
      * threshold, that default language is chosen. Typically the default is English,
      * but it could be different based on additional information, such as the domain
      * of the page.
-     * 
+     *
      * @param languagePriorityList weighted list
      * @stable ICU 4.4
      */
@@ -86,7 +86,7 @@ public class LocaleMatcher {
     /**
      * Create a new language matcher from a String form. The highest-weighted
      * language is the default.
-     * 
+     *
      * @param languagePriorityListString String form of LanguagePriorityList
      * @stable ICU 4.4
      */
@@ -125,7 +125,6 @@ public class LocaleMatcher {
         this.threshold = threshold;
     }
 
-
     /**
      * Returns a fraction between 0 and 1, where 1 means that the languages are a
      * perfect match, and 0 means that they are completely different. Note that
@@ -141,7 +140,6 @@ public class LocaleMatcher {
     public double match(ULocale desired, ULocale desiredMax, ULocale supported, ULocale supportedMax) {
         return matcherData.match(desired, desiredMax, supported, supportedMax);
     }
-
 
     /**
      * Canonicalize a locale (language). Note that for now, it is canonicalizing
@@ -163,15 +161,14 @@ public class LocaleMatcher {
             return new ULocale(
                 lang2 == null ? lang : lang2,
                     script2 == null ? script : script2,
-                        region2 == null ? region : region2
-                );
+                        region2 == null ? region : region2);
         }
         return ulocale;
     }
 
     /**
      * Get the best match for a LanguagePriorityList
-     * 
+     *
      * @param languageList list to match
      * @return best matching language code
      * @stable ICU 4.4
@@ -198,7 +195,7 @@ public class LocaleMatcher {
 
     /**
      * Convenience method: Get the best match for a LanguagePriorityList
-     * 
+     *
      * @param languageList String form of language priority list
      * @return best matching language code
      * @stable ICU 4.4
@@ -209,7 +206,7 @@ public class LocaleMatcher {
 
     /**
      * Get the best match for an individual language code.
-     * 
+     *
      * @param ulocale locale/language code to match
      * @return best matching language code
      * @stable ICU 4.4
@@ -233,14 +230,15 @@ public class LocaleMatcher {
      */
     @Override
     public String toString() {
-        return "{" + defaultLanguage + ", " 
+        return "{" + defaultLanguage + ", "
             + localeToMaxLocaleAndWeight + "}";
     }
+
     // ================= Privates =====================
 
     /**
      * Get the best match for an individual language code.
-     * 
+     *
      * @param languageCode
      * @return best matching language code and weight (as per
      *         {@link #match(ULocale, ULocale)})
@@ -283,7 +281,7 @@ public class LocaleMatcher {
         }
         return bestTableMatch;
     }
-    
+
     public static class OutputDouble { // TODO, move to where OutputInt is
         double value;
     }
@@ -296,7 +294,7 @@ public class LocaleMatcher {
     }
 
     /**
-     * We preprocess the data to get just the possible matches for each desired base language. 
+     * We preprocess the data to get just the possible matches for each desired base language.
      */
     private void processMapping() {
         for (Entry<String, Set<String>> desiredToMatchingLanguages : matcherData.matchingLanguages().keyValuesSet()) {
@@ -330,8 +328,7 @@ public class LocaleMatcher {
     }
 
     Set<Row.R3<ULocale, ULocale, Double>> localeToMaxLocaleAndWeight = new LinkedHashSet<Row.R3<ULocale, ULocale, Double>>();
-    Map<String,Set<Row.R3<ULocale, ULocale, Double>>> desiredLanguageToPossibleLocalesToMaxLocaleToData 
-    = new LinkedHashMap<String,Set<Row.R3<ULocale, ULocale, Double>>>();
+    Map<String, Set<Row.R3<ULocale, ULocale, Double>>> desiredLanguageToPossibleLocalesToMaxLocaleToData = new LinkedHashMap<String, Set<Row.R3<ULocale, ULocale, Double>>>();
 
     // =============== Special Mapping Information ==============
 
@@ -360,12 +357,12 @@ public class LocaleMatcher {
             final String language = languageCode.getLanguage();
             final String script = languageCode.getScript();
             final String region = languageCode.getCountry();
-            return new ULocale((language.length()==0 ? "und"
+            return new ULocale((language.length() == 0 ? "und"
                 : language)
                 + "_"
-                + (script.length()==0 ? "Zzzz" : script)
+                + (script.length() == 0 ? "Zzzz" : script)
                 + "_"
-                + (region.length()==0 ? "ZZ" : region));
+                + (region.length() == 0 ? "ZZ" : region));
         }
         return result;
     }
@@ -468,7 +465,7 @@ public class LocaleMatcher {
 
     enum Level {
         language(0.99),
-        script(0.2), 
+        script(0.2),
         region(0.04);
 
         final double worst;
@@ -485,14 +482,14 @@ public class LocaleMatcher {
         @SuppressWarnings("unused")
         private static final double maxUnequal_changeEqual = 0.75;
 
-        LinkedHashSet<Row.R3<LocalePatternMatcher,LocalePatternMatcher,Double>> scores = new LinkedHashSet<R3<LocalePatternMatcher, LocalePatternMatcher, Double>>();
+        LinkedHashSet<Row.R3<LocalePatternMatcher, LocalePatternMatcher, Double>> scores = new LinkedHashSet<R3<LocalePatternMatcher, LocalePatternMatcher, Double>>();
         final Level level;
 
         public ScoreData(Level level) {
             this.level = level;
         }
 
-        void addDataToScores(String desired, String supported, R3<LocalePatternMatcher,LocalePatternMatcher,Double> data) {
+        void addDataToScores(String desired, String supported, R3<LocalePatternMatcher, LocalePatternMatcher, Double> data) {
             //            Map<String, Set<R3<LocalePatternMatcher,LocalePatternMatcher,Double>>> lang_result = scores.get(desired);
             //            if (lang_result == null) {
             //                scores.put(desired, lang_result = new HashMap());
@@ -504,11 +501,11 @@ public class LocaleMatcher {
             //            result.add(data);
             boolean added = scores.add(data);
             if (!added) {
-                throw new ICUException("trying to add duplicate data: " +  data);
+                throw new ICUException("trying to add duplicate data: " + data);
             }
         }
 
-        double getScore(ULocale dMax, String desiredRaw, String desiredMax, 
+        double getScore(ULocale dMax, String desiredRaw, String desiredMax,
             ULocale sMax, String supportedRaw, String supportedMax) {
             double distance = 0;
             if (!desiredMax.equals(supportedMax)) {
@@ -523,8 +520,8 @@ public class LocaleMatcher {
             if (DEBUG) {
                 System.out.println("\t\t\t" + level + " Raw Score:\t" + desiredLocale + ";\t" + supportedLocale);
             }
-            for (R3<LocalePatternMatcher,LocalePatternMatcher,Double> datum : scores) { // : result
-                if (datum.get0().matches(desiredLocale) 
+            for (R3<LocalePatternMatcher, LocalePatternMatcher, Double> datum : scores) { // : result
+                if (datum.get0().matches(desiredLocale)
                     && datum.get1().matches(supportedLocale)) {
                     if (DEBUG) {
                         System.out.println("\t\t\t\tFOUND\t" + datum);
@@ -545,7 +542,6 @@ public class LocaleMatcher {
             }
             return result.toString();
         }
-
 
         @SuppressWarnings("unchecked")
         public ScoreData cloneAsThawed() {
@@ -570,8 +566,8 @@ public class LocaleMatcher {
             return frozen;
         }
 
-        public Relation<String,String> getMatchingLanguages() {
-            Relation<String,String> desiredToSupported = Relation.of(new LinkedHashMap<String,Set<String>>(), HashSet.class);
+        public Relation<String, String> getMatchingLanguages() {
+            Relation<String, String> desiredToSupported = Relation.of(new LinkedHashMap<String, Set<String>>(), HashSet.class);
             for (R3<LocalePatternMatcher, LocalePatternMatcher, Double> item : scores) {
                 LocalePatternMatcher desired = item.get0();
                 LocalePatternMatcher supported = item.get1();
@@ -596,7 +592,6 @@ public class LocaleMatcher {
         private ScoreData regionScores = new ScoreData(Level.region);
         private Relation<String, String> matchingLanguages;
         private volatile boolean frozen = false;
-
 
         /**
          * @internal
@@ -652,7 +647,6 @@ public class LocaleMatcher {
             return 1.0 - diff;
         }
 
-
         /**
          * Add an exceptional distance between languages, typically because regional
          * dialects were given their own language codes. At this point the code is
@@ -667,6 +661,7 @@ public class LocaleMatcher {
         private LanguageMatcherData addDistance(String desired, String supported, int percent) {
             return addDistance(desired, supported, percent, false, null);
         }
+
         /**
          * @internal
          * @deprecated This API is ICU internal only.
@@ -675,6 +670,7 @@ public class LocaleMatcher {
         public LanguageMatcherData addDistance(String desired, String supported, int percent, String comment) {
             return addDistance(desired, supported, percent, false, comment);
         }
+
         /**
          * @internal
          * @deprecated This API is ICU internal only.
@@ -702,7 +698,7 @@ public class LocaleMatcher {
                 //                        );
 
             }
-            double score = 1-percent/100.0; // convert from percentage
+            double score = 1 - percent / 100.0; // convert from percentage
             LocalePatternMatcher desiredMatcher = new LocalePatternMatcher(desired);
             Level desiredLen = desiredMatcher.getLevel();
             LocalePatternMatcher supportedMatcher = new LocalePatternMatcher(supported);
@@ -710,8 +706,8 @@ public class LocaleMatcher {
             if (desiredLen != supportedLen) {
                 throw new IllegalArgumentException("Lengths unequal: " + desired + ", " + supported);
             }
-            R3<LocalePatternMatcher,LocalePatternMatcher,Double> data = Row.of(desiredMatcher, supportedMatcher, score);
-            R3<LocalePatternMatcher,LocalePatternMatcher,Double> data2 = oneway ? null : Row.of(supportedMatcher, desiredMatcher, score);
+            R3<LocalePatternMatcher, LocalePatternMatcher, Double> data = Row.of(desiredMatcher, supportedMatcher, score);
+            R3<LocalePatternMatcher, LocalePatternMatcher, Double> data2 = oneway ? null : Row.of(supportedMatcher, desiredMatcher, score);
             boolean desiredEqualsSupported = desiredMatcher.equals(supportedMatcher);
             switch (desiredLen) {
             case language:
@@ -742,7 +738,7 @@ public class LocaleMatcher {
             return this;
         }
 
-        /** 
+        /**
          * {@inheritDoc}
          * @internal
          * @deprecated This API is ICU internal only.
@@ -762,7 +758,7 @@ public class LocaleMatcher {
             }
         }
 
-        /** 
+        /**
          * {@inheritDoc}
          * @internal
          * @deprecated This API is ICU internal only.
@@ -777,7 +773,7 @@ public class LocaleMatcher {
             return this;
         }
 
-        /** 
+        /**
          * {@inheritDoc}
          * @internal
          * @deprecated This API is ICU internal only.
@@ -792,8 +788,7 @@ public class LocaleMatcher {
 
     private static final LanguageMatcherData defaultWritten;
 
-    private static HashMap<String,String> canonicalMap = new HashMap<String, String>();
-
+    private static HashMap<String, String> canonicalMap = new HashMap<String, String>();
 
     static {
         canonicalMap.put("iw", "he");
@@ -805,7 +800,7 @@ public class LocaleMatcher {
         ICUResourceBundle written = (ICUResourceBundle) languageMatching.get("written");
         defaultWritten = new LanguageMatcherData();
 
-        for(UResourceBundleIterator iter = written.getIterator(); iter.hasNext();) {
+        for (UResourceBundleIterator iter = written.getIterator(); iter.hasNext();) {
             ICUResourceBundle item = (ICUResourceBundle) iter.next();
             /*
             "*_*_*",

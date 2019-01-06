@@ -8,9 +8,9 @@ import org.unicode.cldr.util.VoteResolver.VoterInfo;
 
 /**
  * Provides detailed information about paths and voters
- * 
+ *
  * @author markdavis
- * 
+ *
  */
 public class CLDRInfo {
 
@@ -18,7 +18,7 @@ public class CLDRInfo {
         Collection<? extends CandidateInfo> getValues();
 
         CandidateInfo getCurrentItem();
-        
+
         String getLastReleaseValue();
 
         Level getCoverageLevel(); // OK

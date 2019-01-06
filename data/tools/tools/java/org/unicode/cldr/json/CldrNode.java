@@ -37,7 +37,9 @@ public class CldrNode {
                 String value = node.distinguishingAttributes.get(key);
                 if (value != null && value.equals(suppressList[i + 1])) {
                     node.distinguishingAttributes.remove(key);
+                    
                 }
+                
             }
         }
         return node;
@@ -45,12 +47,12 @@ public class CldrNode {
 
     /**
      * Extract all the attributes and their value in the path.
-     * 
+     *
      * @param pathSegment
      *            A complete or partial path.
      * @param attributes
      *            String map to receive attribute mapping.
-     * 
+     *
      * @return Part of the string before the first attribute.
      * @throws ParseException
      */
@@ -134,7 +136,7 @@ public class CldrNode {
 
     /**
      * Get the string map for attributes that should be treated as values.
-     * 
+     *
      * @return String map.
      */
     public Map<String, String> getAttrAsValueMap() {
@@ -166,6 +168,14 @@ public class CldrNode {
         return attributesAsValues;
     }
 
+    public void setDistinguishingAttributes(Map<String, String> distinguishingAttributes) {
+        this.distinguishingAttributes = distinguishingAttributes;
+    }
+
+    public void setNondistinguishingAttributes(Map<String, String> nondistinguishingAttributes) {
+        this.nondistinguishingAttributes = nondistinguishingAttributes;
+    }
+
     public Map<String, String> getDistinguishingAttributes() {
         return distinguishingAttributes;
     }
@@ -181,18 +191,18 @@ public class CldrNode {
     /**
      * Construct a name that can be used as key in its container (by
      * incorporating distinguishing attributes).
-     * 
+     *
      * Each segment in CLDR path corresponding to a XML element. Element name
      * itself can not be used as JSON key because it might not be unique in its
      * container. A set of rules is used here to construct this key name. Some
      * of the attributes will be used in constructing the key name, the remaining
      * attributes are returned and should be used to fill the mapping.
-     * 
+     *
      * The basic mapping is from
      * <element_name>[@<attr_name>=<attr_value>]+
      * to
      * <element_name>-<attr_name>-<attr_value>
-     * 
+     *
      * @return A unique name that can be used as key in its container.
      */
     public String getNodeKeyName() {
@@ -264,10 +274,10 @@ public class CldrNode {
     /**
      * Construct a name that has all distinguishing attributes that should not be
      * ignored.
-     * 
+     *
      * Different from getNodeKeyName, this name has include those distinguishing
      * attributes that will be treated as values.
-     * 
+     *
      * @return A distinguishing name for differentiating element.
      */
     public String getNodeDistinguishingName() {

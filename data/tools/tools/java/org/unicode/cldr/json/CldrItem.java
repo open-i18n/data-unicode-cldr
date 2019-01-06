@@ -18,7 +18,7 @@ public class CldrItem implements Comparable<CldrItem> {
 
     /**
      * Split the path to an array of string, each string represent a segment.
-     * 
+     *
      * @param path
      *            The path of XML element.
      * @return array of segments.
@@ -61,14 +61,14 @@ public class CldrItem implements Comparable<CldrItem> {
 
     /**
      * The full path of a CLDR item.
-     * 
+     *
      * Comparing to path, this full contains non-distinguishable attributes.
      */
     private String fullPath;
 
     /**
      * The resolution path of a CLDR item.
-     * 
+     *
      * This path only contains distinguishable attributes that are necessary to
      * identify a CLDR XML item in the CLDR tree.
      */
@@ -76,14 +76,14 @@ public class CldrItem implements Comparable<CldrItem> {
 
     /**
      * The full path of a CLDR item.
-     * 
+     *
      * Comparing to path, this full contains non-distinguishable attributes.
      */
     private String untransformedFullPath;
 
     /**
      * The resolution path of a CLDR item.
-     * 
+     *
      * This path only contains distinguishable attributes that are necessary to
      * identify a CLDR XML item in the CLDR tree.
      */
@@ -126,7 +126,7 @@ public class CldrItem implements Comparable<CldrItem> {
 
     /**
      * Obtain the sortKey string, construct it if not yet.
-     * 
+     *
      * @return sort key string.
      */
 
@@ -141,13 +141,21 @@ public class CldrItem implements Comparable<CldrItem> {
     // like the original path is written as:
     // .../zone/America/Adak/...
 
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public void setFullPath(String fullPath) {
+        this.fullPath = fullPath;
+    }
+
     /**
      * This function create a node list from a CLDR path.
-     * 
+     *
      * Mostly, the node has one-to-one correspondence with path segment. But there
      * are special cases where one segment can be split to multiple nodes. If
      * necessary, several segments can also be combined to one node.
-     * 
+     *
      * @return A list of node in strict parent-to-child order.
      * @throws ParseException
      */
@@ -194,6 +202,10 @@ public class CldrItem implements Comparable<CldrItem> {
         return nodesInPath;
     }
 
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     /**
      * Some CLDR items have attributes that should be split before
      * transformation. For examples, item like:
@@ -201,7 +213,7 @@ public class CldrItem implements Comparable<CldrItem> {
      * should really be treated as 2 separate items:
      * <calendarPreference territories="CN" ordering="gregorian chinese"/>
      * <calendarPreference territories="CX" ordering="gregorian chinese"/>
-     * 
+     *
      * @return Array of CldrItem if it can be split, otherwise null.
      */
     public CldrItem[] split() {
@@ -255,7 +267,7 @@ public class CldrItem implements Comparable<CldrItem> {
 
     /**
      * Check if the element path contains any item that need to be sorted first.
-     * 
+     *
      * @return True if the element need to be sorted before further process.
      */
     public boolean needsSort() {
@@ -298,7 +310,18 @@ public class CldrItem implements Comparable<CldrItem> {
         } else {
             fileDtdType = DtdType.ldml;
         }
-        int result = DtdData.getInstance(fileDtdType).getDtdComparator(null).compare(untransformedPath, otherItem.untransformedPath);
+        int result = 0;
+        if (thisxpp.getElement(1).equals("weekData") && thisxpp.getElement(2).equals(otherxpp.getElement(2))) {
+            String thisTerritory = thisxpp.findFirstAttributeValue("territories");
+            String otherTerritory = otherxpp.findFirstAttributeValue("territories");
+            if (thisTerritory != null && otherTerritory != null) {
+                result = thisTerritory.compareTo(otherTerritory);
+            }
+            if (result != 0) {
+                return result;
+            }
+        }
+        result = DtdData.getInstance(fileDtdType).getDtdComparator(null).compare(untransformedPath, otherItem.untransformedPath);
         return result;
         //return CLDRFile.getLdmlComparator().compare(path, otherItem.path);
         //return path.compareTo(otherItem.path);

@@ -309,7 +309,7 @@ public class AddPopulationData {
                 code = code.toUpperCase(Locale.ENGLISH);
                 String valueString = FBLiteracy.Percent.get(pieces).trim();
                 double percent = Double.parseDouble(valueString);
-                factbook_literacy.add(code, percent);
+                factbook_literacy.put(code, percent);
                 if (ADD_POP) {
                     System.out.println("Factbook literacy:\t" + code + "\t" + percent);
                 }
@@ -318,7 +318,7 @@ public class AddPopulationData {
             }
         });
     }
-    
+
     private static void loadWorldBankInfo() throws IOException {
         final String filename = "external/world_bank_data.csv";
 

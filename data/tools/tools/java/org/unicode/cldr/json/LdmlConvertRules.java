@@ -13,7 +13,7 @@ import com.google.common.collect.ImmutableSet;
 class LdmlConvertRules {
 
     /** File sets that will not be processed in JSON transformation. */
-    public static final ImmutableSet<String> IGNORE_FILE_SET = 
+    public static final ImmutableSet<String> IGNORE_FILE_SET =
         ImmutableSet.of("attributeValueValidity", "coverageLevels", "dayPeriods", "postalCodeData", "pluralRanges", "subdivisions");
 
     /**
@@ -21,8 +21,8 @@ class LdmlConvertRules {
      * name-(attribute)-(value).
      * [parent_element]:[element]:[attribute]
      */
-        // common/main
-        static final ImmutableSet<String> NAME_PART_DISTINGUISHING_ATTR_SET = ImmutableSet.of(
+    // common/main
+    static final ImmutableSet<String> NAME_PART_DISTINGUISHING_ATTR_SET = ImmutableSet.of(
         "monthWidth:month:yeartype",
         "dateFormat:pattern:numbers",
         "currencyFormats:unitPattern:count",
@@ -70,7 +70,7 @@ class LdmlConvertRules {
 
         // in common/supplemental/dayPeriods.xml
         "dayPeriodRules:dayPeriodRule:from",
-
+       
         // in common/supplemental/likelySubtags.xml
         "likelySubtags:likelySubtag:to",
 
@@ -97,7 +97,8 @@ class LdmlConvertRules {
         "codeMappings:territoryCodes:numeric",
         "codeMappings:territoryCodes:alpha3",
         "codeMappings:currencyCodes:numeric",
-
+        "timeData:hours:allowed",
+        "timeData:hours:preferred",
         // common/supplemental/supplementalMetaData.xml
         "validity:variable:type",
         "deprecated:deprecatedItems:elements",
@@ -152,7 +153,9 @@ class LdmlConvertRules {
         "timeFormats:default:choice",
         "dateTimeFormats:default:choice",
         "timeZoneNames:singleCountries:list",
-
+        
+        //rbnf
+        "ruleset:rbnfrule:value",
         // common/supplemental
         "likelySubtags:likelySubtag:to",
         //"territoryContainment:group:type",
@@ -181,10 +184,10 @@ class LdmlConvertRules {
 
     /**
      * Check if the attribute should be suppressed.
-     * 
+     *
      * Right now only "_q" is suppressed. In most cases array is used and there
      * is no need for this information. In other cases, order is irrelevant.
-     * 
+     *
      * @return True if the attribute should be suppressed.
      */
     public static boolean IsSuppresedAttr(String attr) {
@@ -272,7 +275,7 @@ class LdmlConvertRules {
 
     /**
      * There are a handful of attribute values that are more properly represented as an array of strings rather than
-     * as a single string.  
+     * as a single string.
      */
     public static final Set<String> ATTRVALUE_AS_ARRAY_SET =
         Builder.with(new HashSet<String>())
@@ -280,7 +283,7 @@ class LdmlConvertRules {
 
     /**
      * Following is the list of elements that need to be sorted before output.
-     * 
+     *
      * Time zone item is split to multiple level, and each level should be
      * grouped together. The locale list in "dayPeriodRule" could be split to
      * multiple items, and items for each locale should be grouped together.
@@ -297,8 +300,9 @@ class LdmlConvertRules {
      */
     public static final Pattern ARRAY_ITEM_PATTERN = PatternCache.get(
         "(.*/collation[^/]*/rules[^/]*/" +
-            "|.*/character-fallback[^/]*/character[^/]*/" +
-            "|.*/dayPeriodRuleSet[^/]*/dayPeriodRules[^/]*/" +
+            "|.*/character-fallback[^/]*/character[^/]*/" +            
+            "|.*/rbnfrule[^/]*/"+
+            "|.*/ruleset[^/]*/"+
             "|.*/languageMatching[^/]*/languageMatches[^/]*/" +
             "|.*/windowsZones[^/]*/mapTimezones[^/]*/" +
             "|.*/metaZones[^/]*/mapTimezones[^/]*/" +
@@ -315,9 +319,9 @@ class LdmlConvertRules {
             ")(.*)");
 
     /**
-      * Number elements without a numbering system are there only for compatibility purposes.
-      * We automatically suppress generation of JSON objects for them.
-      */
+     * Number elements without a numbering system are there only for compatibility purposes.
+     * We automatically suppress generation of JSON objects for them.
+     */
     public static final Pattern NO_NUMBERING_SYSTEM_PATTERN = Pattern
         .compile("//ldml/numbers/(symbols|(decimal|percent|scientific|currency)Formats)/.*");
     public static final Pattern NUMBERING_SYSTEM_PATTERN = Pattern
@@ -362,13 +366,13 @@ class LdmlConvertRules {
         new PathTransformSpec(
             "(.*ldml/exemplarCharacters)\\[@type=\"([^\"]*)\"\\](.*)", "$1/$2$3"),
         new PathTransformSpec("(.*ldml/exemplarCharacters)(.*)$", "$1/standard$2"),
-
+        
         // Add cldrVersion attribute
         new PathTransformSpec("(.*/identity/version\\[@number=\"([^\"]*)\")(\\])", "$1" + "\\]\\[@cldrVersion=\""
             + CLDRFile.GEN_VERSION + "\"\\]"),
         // Add cldrVersion attribute to supplemental data
         new PathTransformSpec("(.*/version\\[@number=\"([^\"]*)\")(\\])\\[@unicodeVersion=\"([^\"]*\")(\\])", "$1" + "\\]\\[@cldrVersion=\""
-            + CLDRFile.GEN_VERSION + "\"\\]"+"\\[@unicodeVersion=\""+ "$4"+ "\\]"),
+            + CLDRFile.GEN_VERSION + "\"\\]" + "\\[@unicodeVersion=\"" + "$4" + "\\]"),
 
         // Transform underscore to hyphen-minus in language keys
         new PathTransformSpec("(.*/language\\[@type=\"[a-z]{2,3})_([^\"]*\"\\](\\[@alt=\"short\"])?)", "$1-$2"),
@@ -422,5 +426,8 @@ class LdmlConvertRules {
         new PathTransformSpec("(.*currencyData/region)(.*)", "$1/region$2"),
 
         new PathTransformSpec("(.*/transforms/transform[^/]*)/(.*)", "$1/tRules/$2"),
+        new PathTransformSpec("(.*)\\[@territories=\"([^\"]*)\"\\](.*)\\[@alt=\"variant\"\\](.*)", "$1\\[@territories=\"$2-alt-variant\"\\]"),
+        new PathTransformSpec("(.*)/weekData/(.*)\\[@alt=\"variant\"\\](.*)", "$1/weekData/$2$3"),
+        
     };
 }

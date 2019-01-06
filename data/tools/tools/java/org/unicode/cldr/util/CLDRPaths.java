@@ -1,9 +1,11 @@
 package org.unicode.cldr.util;
 
+import java.util.List;
 import java.util.Set;
 
 import org.unicode.cldr.tool.ToolConstants;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 /**
@@ -34,6 +36,8 @@ public class CLDRPaths {
     public static final String SEED_CASING_DIRECTORY = CldrUtility.getPath(SEED_DIRECTORY, "../casing/");
     public static final String EXEMPLARS_DIRECTORY = CldrUtility.getPath(CLDRPaths.BASE_DIRECTORY, "exemplars/main/");
     public static final String RBNF_DIRECTORY = CldrUtility.getPath(CLDRPaths.COMMON_DIRECTORY, "rbnf/");
+    public static final String TRANSFORMS_DIRECTORY = CldrUtility.getPath(CLDRPaths.COMMON_DIRECTORY, "transforms/");
+    public static final String ANNOTATIONS_DIRECTORY = CldrUtility.getPath(CLDRPaths.COMMON_DIRECTORY, "annotations/");
     public static final String TMP_DIRECTORY = CldrUtility.getPath(CldrUtility.getProperty("CLDR_TMP_DIR",
         CldrUtility.getPath(BASE_DIRECTORY, "../cldr-tmp/")));
     public static final String AUX_DIRECTORY = CldrUtility.getPath(CldrUtility.getProperty("CLDR_TMP_DIR",
@@ -46,6 +50,10 @@ public class CLDRPaths {
     public static final String LAST_DIRECTORY = ARCHIVE_DIRECTORY + "cldr-" +
         ToolConstants.PREVIOUS_CHART_VERSION +
         "/";
+    public static final String LAST_COMMON_DIRECTORY =
+	CldrUtility.getPath(CLDRPaths.LAST_DIRECTORY, "common/");
+    public static final String LAST_TRANSFORMS_DIRECTORY =
+	CldrUtility.getPath(CLDRPaths.LAST_COMMON_DIRECTORY, "transforms/");
     public static final String GEN_DIRECTORY = CldrUtility.getPath(CldrUtility.getProperty("CLDR_GEN_DIR",
         CldrUtility.getPath(EXTERNAL_DIRECTORY, "Generated/cldr/")));
     public static final String DATA_DIRECTORY = CldrUtility.getPath(CldrUtility.getProperty("CLDR_EXT_DATA_DIR",
@@ -74,12 +82,47 @@ public class CLDRPaths {
     public static final String UTIL_DATA_DIR = FileReaders.getRelativeFileName(
         CldrUtility.class, "data/");
 
+    public enum DIRECTORIES {
+        common_dtd,
+        common_properties,
+        common_uca,
+        
+        common_bcp47(DtdType.ldmlBCP47),
+        
+        common_annotations(DtdType.ldml),
+        common_casing(DtdType.ldml),
+        common_collation(DtdType.ldml),
+        common_main(DtdType.ldml),
+        common_rbnf(DtdType.ldml),
+        common_segments(DtdType.ldml),
+        common_subdivisions(DtdType.ldml),
+        
+        common_supplemental(DtdType.supplementalData),
+        common_transforms(DtdType.supplementalData),
+        common_validity(DtdType.supplementalData),
+        
+        keyboards_android(DtdType.keyboard, DtdType.platform),
+        keyboards_chromeos(DtdType.keyboard, DtdType.platform),
+        keyboards_dtd(DtdType.keyboard, DtdType.platform),
+        keyboards_osx(DtdType.keyboard, DtdType.platform),
+        keyboards_und(DtdType.keyboard, DtdType.platform),
+        keyboards_windows(DtdType.keyboard, DtdType.platform),
+        ;
+        
+        public final List<DtdType> dtdType;
+        
+        private DIRECTORIES(DtdType... dtdType) {
+            this.dtdType = ImmutableList.copyOf(dtdType);
+        }
+    }
+    
+    @Deprecated
     public static final Set<String> LDML_DIRECTORIES = ImmutableSet.of(
-        "main", 
+        "main",
         "annotations",
-        "casing", 
+        "casing",
         "collation",
-        "rbnf", 
+        "rbnf",
         "segments",
         "subdivisions"
         );

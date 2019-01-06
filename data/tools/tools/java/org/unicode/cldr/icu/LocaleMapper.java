@@ -32,7 +32,7 @@ import com.ibm.icu.util.Output;
 
 /**
  * A mapper that converts locale data from CLDR to the ICU data structure.
- * 
+ *
  * @author jchye
  */
 public class LocaleMapper extends Mapper {
@@ -70,8 +70,9 @@ public class LocaleMapper extends Mapper {
             "//ldml/numbers/currencies/currency\\[@type=\"\\w++\"]/(.++)");
         private final Pattern DATE_OR_TIME_FORMAT = PatternCache.get(
             "//ldml/dates/calendars/calendar\\[@type=\"\\w++\"]/(date|time)Formats/.*");
-        private final Pattern MONTH_PATTERN = PatternCache.get(
-            "//ldml/dates/calendars/calendar\\[@type=\"\\w++\"]/months/monthContext\\[@type=\"[\\w\\-]++\"]/monthWidth\\[@type=\"\\w++\"]/month\\[@type=\"\\d++\"](\\[@yeartype=\"leap\"])?");
+        private final Pattern MONTH_PATTERN = PatternCache
+            .get(
+                "//ldml/dates/calendars/calendar\\[@type=\"\\w++\"]/months/monthContext\\[@type=\"[\\w\\-]++\"]/monthWidth\\[@type=\"\\w++\"]/month\\[@type=\"\\d++\"](\\[@yeartype=\"leap\"])?");
         private final Pattern CONTEXT_TRANSFORM = PatternCache.get(
             "//ldml/contextTransforms/contextTransformUsage\\[@type=\"([^\"]++)\"]/contextTransform\\[@type=\"([^\"]++)\"]");
 
@@ -117,7 +118,7 @@ public class LocaleMapper extends Mapper {
 
     /**
      * Looks for a string in an array
-     * 
+     *
      * @param order
      *            the array to be searched
      * @param key
@@ -133,7 +134,7 @@ public class LocaleMapper extends Mapper {
 
     /**
      * LocaleMapper constructor.
-     * 
+     *
      * @param factory
      *            the factory containing the CLDR data to be converted
      * @param specialFactory
@@ -196,7 +197,7 @@ public class LocaleMapper extends Mapper {
 
     /**
      * Fills an IcuData object using the CLDR data for the specified locale.
-     * 
+     *
      * @param locale
      * @return the filled IcuData object
      */
@@ -309,7 +310,7 @@ public class LocaleMapper extends Mapper {
      * @param cldr
      * @param path
      * @param matcherFound
-     * @param firstInfo 
+     * @param firstInfo
      * @return the result of converting an xpath into an ICU-style path
      */
     private RegexResult matchXPath(RegexLookup<RegexResult> lookup,
@@ -336,7 +337,7 @@ public class LocaleMapper extends Mapper {
     /**
      * Attempts to match an xpath and adds the results of a successful match to
      * the specified map
-     * 
+     *
      * @param xpath
      *            the xpath to be matched
      * @param cldrFile
@@ -387,7 +388,7 @@ public class LocaleMapper extends Mapper {
 
     /**
      * Adds all mappings that couldn't be represented in the ldml2icu.txt file.
-     * 
+     *
      * @param cldrResolved
      * @param locale
      */

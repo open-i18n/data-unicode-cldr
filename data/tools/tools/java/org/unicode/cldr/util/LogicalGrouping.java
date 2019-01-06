@@ -31,9 +31,9 @@ public class LogicalGrouping {
         "New_Zealand", "Newfoundland", "Noronha", "Novosibirsk", "Omsk", "Pakistan", "Paraguay", "Peru", "Philippines",
         "Pierre_Miquelon", "Qyzylorda", "Sakhalin", "Samara", "Samoa",
         "Taipei", "Tonga", "Turkmenistan", "Uruguay", "Uzbekistan",
-        "Vanuatu", "Vladivostok", "Volgograd", "Yakutsk", "Yekaterinburg" );
+        "Vanuatu", "Vladivostok", "Volgograd", "Yakutsk", "Yekaterinburg");
 
-    public static final ImmutableList<String> days = ImmutableList.of( "sun", "mon", "tue", "wed", "thu", "fri", "sat" );
+    public static final ImmutableList<String> days = ImmutableList.of("sun", "mon", "tue", "wed", "thu", "fri", "sat");
 
     public static final ImmutableSet<String> calendarsWith13Months = ImmutableSet.of("coptic", "ethiopic", "hebrew");
     public static final ImmutableSet<String> compactDecimalFormatLengths = ImmutableSet.of("short", "long");
@@ -41,12 +41,12 @@ public class LogicalGrouping {
 
     /**
      * Return the set of paths that are in the same logical set as the given path
-     * 
+     *
      * @param path
      *            - the distinguishing xpath
      */
     public static Set<String> getPaths(CLDRFile cldrFile, String path) {
-        ImmutableSet<String> metazone_string_types = ImmutableSet.of( "generic", "standard", "daylight" );
+        ImmutableSet<String> metazone_string_types = ImmutableSet.of("generic", "standard", "daylight");
 
         Set<String> result = new TreeSet<String>();
         if (path == null) return result;
@@ -66,7 +66,7 @@ public class LogicalGrouping {
         } else if (path.indexOf("/days") > 0) {
             String dayName = parts.size() > 7 ? parts.getAttributeValue(7, "type") : null;
             if (dayName != null && days.contains(dayName)) { // This is just a quick check to make sure the path is
-                                                                 // good.
+                                                             // good.
                 for (String str : days) {
                     parts.setAttribute("day", "type", str);
                     result.add(parts.toString());
@@ -127,15 +127,18 @@ public class LogicalGrouping {
                 }
             }
         } else if (parts.containsElement("relative")) {
+            String fieldType = parts.findAttributeValue("field", "type");
             String relativeType = parts.findAttributeValue("relative", "type");
             Integer relativeValue = relativeType == null ? 999 : Integer.valueOf(relativeType);
             if (relativeValue >= -3 && relativeValue <= 3) { // This is just a quick check to make sure the path is good.
-                for (Integer i = -1; i <= 1; i++) {
-                    parts.setAttribute("relative", "type", i.toString());
-                    result.add(parts.toString());
+                if (!(fieldType.startsWith("second") && relativeValue == 0)) { // Workaround for "now"
+                    for (Integer i = -1; i <= 1; i++) {
+                        parts.setAttribute("relative", "type", i.toString());
+                        result.add(parts.toString());
+                    }
                 }
             }
-       } else if (path.indexOf("/decimalFormatLength") > 0) {
+        } else if (path.indexOf("/decimalFormatLength") > 0) {
             PluralInfo pluralInfo = getPluralInfo(cldrFile);
             Set<Count> pluralTypes = pluralInfo.getCounts();
             String decimalFormatLengthType = parts.size() > 3 ? parts.getAttributeValue(3, "type") : null;

@@ -17,7 +17,7 @@ import org.unicode.cldr.util.DtdType;
 import org.unicode.cldr.util.ElementAttributeInfo;
 
 import com.ibm.icu.dev.test.TestFmwk;
-import com.ibm.icu.dev.util.Relation;
+import com.ibm.icu.impl.Relation;
 import com.ibm.icu.impl.Row;
 import com.ibm.icu.impl.Row.R2;
 
@@ -126,7 +126,7 @@ public class TestComparisonBuilder extends TestFmwk {
             try {
                 Set<String> items = new TreeSet<String>(comp);
                 items.addAll(eaInfo.keySet()); // we'll get exception if it
-                                               // fails
+                // fails
             } catch (Exception e) {
                 Set<String> missing = new LinkedHashSet<String>(eaInfo.keySet());
                 missing.removeAll(comp.getOrdering());

@@ -23,7 +23,7 @@ public class TestTransforms {
         CLDRTransforms.verifyNullFilter("halfwidth-fullwidth");
 
         if (source == null) {
-            CLDRTransforms.registerCldrTransforms(null, ".*", out);
+            CLDRTransforms.registerCldrTransforms(null, ".*", out, false);
         } else {
             CLDRTransforms.getInstance().setShowProgress(out).registerFromIcuFormatFiles(source);
         }
@@ -51,6 +51,7 @@ public class TestTransforms {
             // TestAll.main(new String[]{"-n"});
         } catch (Exception ex) {
             System.err.println("Could not load TestAll. Encountered exception: " + ex.toString());
+            ex.printStackTrace();
         }
     }
 
@@ -90,7 +91,7 @@ public class TestTransforms {
 
     /*
      * // The order of creation might matter, so try these multiple times.
-     * 
+     *
      * for (int j = 0; j < 4; ++j) {
      * System.out.println("Pass " + j + "\t trying: " + tryList.size());
      * for (int i = tryList.size()-1; i >= 0 ; --i) {
@@ -109,7 +110,7 @@ public class TestTransforms {
      * tryList.clear();
      * tryList.addAll(failureList);
      * failureList.clear();
-     * 
+     *
      * for (int i = tryListR.size()-1; i >= 0 ; --i) {
      * String id = (String)tryListR.get(i);
      * try {
@@ -126,12 +127,12 @@ public class TestTransforms {
      * tryListR.clear();
      * tryListR.addAll(failureList);
      * failureListR.clear();
-     * 
+     *
      * if (numberDone + numberDone2 == 0) {
      * System.out.println("Failed to make progress! Aborting!");
      * throw new RuntimeException("Failed to make progress!");
      * }
-     * 
+     *
      * t = Transliterator.getInstance("Latin-ConjoiningJamo");
      * t2 = Transliterator.getInstance("ConjoiningJamo-Latin");
      * }

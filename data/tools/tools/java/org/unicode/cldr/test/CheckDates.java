@@ -43,8 +43,8 @@ import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.XPathParts;
 
 import com.ibm.icu.dev.util.CollectionUtilities;
-import com.ibm.icu.dev.util.Relation;
 import com.ibm.icu.dev.util.UnicodeProperty.PatternMatcher;
+import com.ibm.icu.impl.Relation;
 import com.ibm.icu.text.BreakIterator;
 import com.ibm.icu.text.DateTimePatternGenerator;
 import com.ibm.icu.text.DateTimePatternGenerator.VariableField;
@@ -125,6 +125,7 @@ public class CheckDates extends FactoryCheckCLDR {
         "/eras/eraAbbr/era", // Hmm, root eraAbbr for japanese has many dups, should we change them or drop this test?
         "/eras/eraNarrow/era", // We may need to allow dups here too
     };
+
     // The following calendar symbol sets need not have distinct values
     // "/months/monthContext[@type=\"format\"]/monthWidth[@type=\"narrow\"]/month",
     // "/months/monthContext[@type=\"stand-alone\"]/monthWidth[@type=\"abbreviated\"]/month",
@@ -145,7 +146,6 @@ public class CheckDates extends FactoryCheckCLDR {
     // "[@type=\"0\"]",
     // "[@type=\"1\"]",
     // "[@type=\"12\"]",
-
 
     // Map<String, Set<String>> calPathsToSymbolSets;
     // Map<String, Map<String, String>> calPathsToSymbolMaps = new HashMap<String, Map<String, String>>();
@@ -293,7 +293,6 @@ public class CheckDates extends FactoryCheckCLDR {
     public CheckCLDR handleCheck(String path, String fullPath, String value, Options options,
         List<CheckStatus> result) {
 
-
         if (fullPath == null) {
             return this; // skip paths that we don't have
         }
@@ -306,7 +305,7 @@ public class CheckDates extends FactoryCheckCLDR {
 
         String sourceLocale = getCldrFileToCheck().getSourceLocaleID(path, status);
 
-        if (!path.equals(status.pathWhereFound) ||  !sourceLocale.equals(getCldrFileToCheck().getLocaleID())) {
+        if (!path.equals(status.pathWhereFound) || !sourceLocale.equals(getCldrFileToCheck().getLocaleID())) {
             return this;
         }
 
@@ -331,7 +330,7 @@ public class CheckDates extends FactoryCheckCLDR {
             if (path.indexOf("[@type=\"abbreviated\"]") >= 0) {
                 String pathToWide = path.replace("[@type=\"abbreviated\"]", "[@type=\"wide\"]");
                 String wideValue = getCldrFileToCheck().getWinningValueWithBailey(pathToWide);
-                if (wideValue != null && isTooMuchWiderThan(value,wideValue)) {
+                if (wideValue != null && isTooMuchWiderThan(value, wideValue)) {
                     CheckStatus item = new CheckStatus()
                     .setCause(this)
                     .setMainType(CheckStatus.errorType)
@@ -369,7 +368,7 @@ public class CheckDates extends FactoryCheckCLDR {
             } else if (path.indexOf("[@type=\"narrow\"]") >= 0) {
                 String pathToAbbr = path.replace("[@type=\"narrow\"]", "[@type=\"abbreviated\"]");
                 String abbrValue = getCldrFileToCheck().getWinningValueWithBailey(pathToAbbr);
-                if (abbrValue != null && isTooMuchWiderThan(value,abbrValue)) {
+                if (abbrValue != null && isTooMuchWiderThan(value, abbrValue)) {
                     CheckStatus item = new CheckStatus()
                     .setCause(this)
                     .setMainType(CheckStatus.warningType) // Making this just a warning, because there are some oddball cases.
@@ -381,7 +380,7 @@ public class CheckDates extends FactoryCheckCLDR {
             } else if (path.indexOf("/eraNarrow") >= 0) {
                 String pathToAbbr = path.replace("/eraNarrow", "/eraAbbr");
                 String abbrValue = getCldrFileToCheck().getWinningValueWithBailey(pathToAbbr);
-                if (abbrValue != null && isTooMuchWiderThan(value,abbrValue)) {
+                if (abbrValue != null && isTooMuchWiderThan(value, abbrValue)) {
                     CheckStatus item = new CheckStatus()
                     .setCause(this)
                     .setMainType(CheckStatus.errorType)
@@ -393,7 +392,7 @@ public class CheckDates extends FactoryCheckCLDR {
             } else if (path.indexOf("/eraAbbr") >= 0) {
                 String pathToWide = path.replace("/eraAbbr", "/eraNames");
                 String wideValue = getCldrFileToCheck().getWinningValueWithBailey(pathToWide);
-                if (wideValue != null && isTooMuchWiderThan(value,wideValue)) {
+                if (wideValue != null && isTooMuchWiderThan(value, wideValue)) {
                     CheckStatus item = new CheckStatus()
                     .setCause(this)
                     .setMainType(CheckStatus.errorType)
@@ -472,7 +471,7 @@ public class CheckDates extends FactoryCheckCLDR {
                         XPathParts itemParts = XPathParts.getFrozenInstance(item);
                         Type itemType = Type.fromString(itemParts.getAttributeValue(5, "type"));
                         DayPeriod itemDayPeriod = DayPeriod.valueOf(itemParts.getAttributeValue(-1, "type"));
-                        
+
                         if (!dateFormatInfoFormat.collisionIsError(type, dayPeriod, itemType, itemDayPeriod, sampleError)) {
                             continue;
                         }
@@ -615,6 +614,7 @@ public class CheckDates extends FactoryCheckCLDR {
         }
         return this;
     }
+
     private boolean isTooMuchWiderThan(String shortString, String longString) {
         // We all 1/3 the width of the reference character as a "fudge factor" in determining the allowable width
         return ApproximateWidth.getWidth(shortString) > ApproximateWidth.getWidth(longString) + REFCHAR / 3;
@@ -622,7 +622,7 @@ public class CheckDates extends FactoryCheckCLDR {
 
     /**
      * Check for the presence of hour and minute symbols.
-     * 
+     *
      * @param value
      *            the value to be checked
      * @param result
@@ -643,7 +643,7 @@ public class CheckDates extends FactoryCheckCLDR {
 
     /**
      * Convenience method for creating errors.
-     * 
+     *
      * @return
      */
     private CheckStatus createErrorCheckStatus() {
@@ -897,7 +897,7 @@ public class CheckDates extends FactoryCheckCLDR {
                     .setMainType(CheckStatus.errorType)
                     .setSubtype(Subtype.missingOrExtraDateField)
                     .setMessage("Not enough year fields in interval pattern. Must have {0} but only found {1}",
-                        new Object[] { requiredYearFieldCount, yearFieldCount }));                    
+                        new Object[] { requiredYearFieldCount, yearFieldCount }));
                 }
             }
         }
@@ -923,7 +923,7 @@ public class CheckDates extends FactoryCheckCLDR {
     static final Map<DateOrTime, Relation<DateTimeLengths, String>> STOCK_PATTERNS = new EnumMap<DateOrTime, Relation<DateTimeLengths, String>>(
         DateOrTime.class);
 
-    // 
+    //
     private static void add(Map<DateOrTime, Relation<DateTimeLengths, String>> stockPatterns,
         DateOrTime dateOrTime, DateTimeLengths dateTimeLength, String... keys) {
         Relation<DateTimeLengths, String> rel = STOCK_PATTERNS.get(dateOrTime);
@@ -933,7 +933,7 @@ public class CheckDates extends FactoryCheckCLDR {
         rel.putAll(dateTimeLength, Arrays.asList(keys));
     }
 
-    /*  Ticket #4936 
+    /*  Ticket #4936
     value(short time) = value(hm) or value(Hm)
     value(medium time) = value(hms) or value(Hms)
     value(long time) = value(medium time+z)
@@ -1022,7 +1022,7 @@ public class CheckDates extends FactoryCheckCLDR {
                         return;
                     }
                 } else {
-                    // Example, if the requiredLevel for the locale is moderate, 
+                    // Example, if the requiredLevel for the locale is moderate,
                     // and the level for the path is modern, then we'll skip the error,
                     // but if the level for the path is basic, then we won't
                     Level pathLevel = coverageLevel.getLevel(xpath);

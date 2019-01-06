@@ -14,7 +14,7 @@ import org.unicode.cldr.util.Log;
 
 import com.ibm.icu.dev.util.CaseIterator;
 import com.ibm.icu.dev.util.PrettyPrinter;
-import com.ibm.icu.dev.util.Relation;
+import com.ibm.icu.impl.Relation;
 import com.ibm.icu.text.Collator;
 import com.ibm.icu.text.RuleBasedCollator;
 import com.ibm.icu.text.Transliterator;
@@ -52,8 +52,8 @@ public class TestCollationMapMaker {
         UnicodeSet unicodeSet = new UnicodeSet();
         PrettyPrinter pretty = new PrettyPrinter().setOrdering(
             Collator.getInstance(ULocale.ROOT)).setSpaceComparator(
-            Collator.getInstance(ULocale.ROOT).setStrength2(
-                RuleBasedCollator.PRIMARY));
+                Collator.getInstance(ULocale.ROOT).setStrength2(
+                    RuleBasedCollator.PRIMARY));
         for (String target : inverse.keySet()) {
             unicodeSet.clear();
             unicodeSet.addAll(inverse.getAll(target));

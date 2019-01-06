@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
-import com.ibm.icu.dev.util.Relation;
+import com.ibm.icu.impl.Relation;
 import com.ibm.icu.text.DateFormatSymbols;
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.ULocale;
@@ -45,7 +45,7 @@ import com.ibm.icu.util.ULocale;
 /**
  * Simple test that loads each file in the cldr directory, thus verifying that
  * the DTD works, and also checks that the PrettyPaths work.
- * 
+ *
  * @author markdavis
  */
 public class QuickCheck {

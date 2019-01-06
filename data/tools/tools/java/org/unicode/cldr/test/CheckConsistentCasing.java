@@ -53,7 +53,7 @@ public class CheckConsistentCasing extends FactoryCheckCLDR {
         if (cldrFileToCheck == null) return this;
         super.setCldrFileToCheck(cldrFileToCheck, options, possibleErrors);
         locale = cldrFileToCheck.getLocaleID();
-        // get info about casing; note that this is done in two steps since 
+        // get info about casing; note that this is done in two steps since
         // ScriptMetadata.getInfo() returns null, in some instances.
         // OLD: Info localeInfo = ScriptMetadata.getInfo(locale);
         String script = new LikelySubtags().getLikelyScript(locale);
@@ -63,7 +63,7 @@ public class CheckConsistentCasing extends FactoryCheckCLDR {
             // this script has casing info, so we can request it here
             types = casingInfo.getLocaleCasing(locale);
         } else {
-            // no casing info - since the types Map is global, and null checks aren't done, 
+            // no casing info - since the types Map is global, and null checks aren't done,
             // we are better off  with an empty map here
             types = Collections.emptyMap();
         }
@@ -161,13 +161,16 @@ public class CheckConsistentCasing extends FactoryCheckCLDR {
 
         private final CasingType type;
         private final boolean flag; // force error instead of warning for mismatch
+
         private CasingTypeAndErrFlag(CasingType type, boolean flag) {
             this.type = type;
             this.flag = flag;
         }
+
         public CasingType type() {
             return type;
         }
+
         public boolean flag() {
             return flag;
         }
@@ -206,10 +209,10 @@ public class CheckConsistentCasing extends FactoryCheckCLDR {
         .add("//ldml/numbers/currencies/currency.*/displayName", Category.currencyName)
         .add("//ldml/units/unit.*/unitPattern.*(past|future)", Category.relative)
         .add("//ldml/units/unit.*/unitPattern", Category.unit_pattern)
-    // ldml/localeDisplayNames/keys/key[@type=".*"]
-    // ldml/localeDisplayNames/measurementSystemNames/measurementSystemName[@type=".*"]
-    // ldml/localeDisplayNames/transformNames/transformName[@type=".*"]
-    ;
+        // ldml/localeDisplayNames/keys/key[@type=".*"]
+        // ldml/localeDisplayNames/measurementSystemNames/measurementSystemName[@type=".*"]
+        // ldml/localeDisplayNames/transformNames/transformName[@type=".*"]
+        ;
 
     Map<Category, CasingTypeAndErrFlag> types = new EnumMap<Category, CasingTypeAndErrFlag>(Category.class);
 
@@ -239,7 +242,7 @@ public class CheckConsistentCasing extends FactoryCheckCLDR {
 
     /**
      * Calculates casing information using data from the specified CLDRFile.
-     * 
+     *
      * @param resolved
      *            the resolved CLDRFile to calculate casing information from
      * @return
@@ -302,12 +305,12 @@ public class CheckConsistentCasing extends FactoryCheckCLDR {
         }
         return info;
     }
-    
+
     private static final String CASE_WARNING =
         "The first letter of 〈{0}〉 is {1}, which differs from what is expected " +
-        "for the {2} category: that almost all values be {3}.\n\n" +
-        "For guidance, see ​http://cldr.org/translation/capitalization. " +
-        "If this warning is wrong, please file a ticket at http://unicode.org/cldr/trac/.";
+            "for the {2} category: that almost all values be {3}.\n\n" +
+            "For guidance, see ​http://cldr.org/translation/capitalization. " +
+            "If this warning is wrong, please file a ticket at http://unicode.org/cldr/trac/.";
 
     private void checkConsistentCasing(Category category, String path, String fullPath, String value,
         Options options, List<CheckStatus> result) {
@@ -320,7 +323,7 @@ public class CheckConsistentCasing extends FactoryCheckCLDR {
             }
             if (!ft.worksWith(typeAndFlagFromCat.type())) {
                 result.add(new CheckStatus().setCause(this)
-                    .setMainType(typeAndFlagFromCat.flag()? CheckStatus.errorType: CheckStatus.warningType)
+                    .setMainType(typeAndFlagFromCat.flag() ? CheckStatus.errorType : CheckStatus.warningType)
                     .setSubtype(Subtype.incorrectCasing) // typically warningType or errorType
                     .setMessage(CASE_WARNING, value, ft, category, typeAndFlagFromCat.type())); // the message; can be MessageFormat with arguments
             }

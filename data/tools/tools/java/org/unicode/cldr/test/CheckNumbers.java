@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 import org.unicode.cldr.test.CheckCLDR.CheckStatus.Subtype;
 import org.unicode.cldr.test.DisplayAndInputProcessor.NumericType;
 import org.unicode.cldr.util.CLDRFile;
+import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.ICUServiceBuilder;
 import org.unicode.cldr.util.PathHeader;
@@ -33,7 +34,7 @@ public class CheckNumbers extends FactoryCheckCLDR {
     private static final Splitter SEMI_SPLITTER = Splitter.on(';');
 
     private static final UnicodeSet FORBIDDEN_NUMERIC_PATTERN_CHARS = new UnicodeSet("[[:n:]-[0]]");
-
+    
     /**
      * If you are going to use ICU services, then ICUServiceBuilder will allow you to create
      * them entirely from CLDR data, without using the ICU data.
@@ -121,23 +122,27 @@ public class CheckNumbers extends FactoryCheckCLDR {
         if (path.indexOf("/minimumGroupingDigits") >= 0) {
             try {
                 int mgd = Integer.valueOf(value);
-                if (mgd > 4) {
+                if (!CldrUtility.DIGITS.contains(value)) {
                     result.add(new CheckStatus().setCause(this).setMainType(CheckStatus.errorType)
                         .setSubtype(Subtype.badMinimumGroupingDigits)
-                        .setMessage("Minimum grouping digits cannot be greater than 4."));
+                        .setMessage("Minimum grouping digits can only contain Western digits [0-9]."));
+                } else {
+                    if (mgd > 4) {
+                        result.add(new CheckStatus().setCause(this).setMainType(CheckStatus.errorType)
+                            .setSubtype(Subtype.badMinimumGroupingDigits)
+                            .setMessage("Minimum grouping digits cannot be greater than 4."));
 
-                }
-                if (mgd < 1) {
-                    result.add(new CheckStatus().setCause(this).setMainType(CheckStatus.errorType)
-                        .setSubtype(Subtype.badMinimumGroupingDigits)
-                        .setMessage("Minimum grouping digits cannot be less than 1."));
+                    } else if (mgd < 1) {
+                        result.add(new CheckStatus().setCause(this).setMainType(CheckStatus.errorType)
+                            .setSubtype(Subtype.badMinimumGroupingDigits)
+                            .setMessage("Minimum grouping digits cannot be less than 1."));
 
-                }
-                if (mgd > 2) {
-                    result.add(new CheckStatus().setCause(this).setMainType(CheckStatus.warningType)
-                        .setSubtype(Subtype.badMinimumGroupingDigits)
-                        .setMessage("Minimum grouping digits > 2 is rare. Please double check this."));
+                    } else if (mgd > 2) {
+                        result.add(new CheckStatus().setCause(this).setMainType(CheckStatus.warningType)
+                            .setSubtype(Subtype.badMinimumGroupingDigits)
+                            .setMessage("Minimum grouping digits > 2 is rare. Please double check this."));
 
+                    }
                 }
             } catch (NumberFormatException e) {
                 result.add(new CheckStatus().setCause(this).setMainType(CheckStatus.errorType)
@@ -167,7 +172,7 @@ public class CheckNumbers extends FactoryCheckCLDR {
 
         boolean isPositive = true;
         for (String patternPart : SEMI_SPLITTER.split(value)) {
-            if (!isPositive 
+            if (!isPositive
                 && !"accounting".equals(parts.getAttributeValue(-2, "type"))) {
                 // must contain the minus sign if not accounting.
                 // String numberSystem = parts.getAttributeValue(2, "numberSystem");
@@ -484,7 +489,7 @@ public class CheckNumbers extends FactoryCheckCLDR {
 
     /**
      * Produce a canonical pattern, which will vary according to type and whether it is posix or not.
-     * 
+     *
      * @param path
      */
     public static String getCanonicalPattern(String inpattern, NumericType type, int zeroCount, boolean isPOSIX) {

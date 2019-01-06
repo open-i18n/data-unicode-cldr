@@ -91,10 +91,10 @@ public class TestPaths extends TestFmwkPlus {
         StringBuilder b = new StringBuilder();
         for (PathHeader path : altPaths) {
             b.append("\n\t\t")
-            .append(path)
-            .append(":\t")
-            .append(testInfo.getEnglish().getStringValue(
-                path.getOriginalPath()));
+                .append(path)
+                .append(":\t")
+                .append(testInfo.getEnglish().getStringValue(
+                    path.getOriginalPath()));
         }
         return b.toString();
     }
@@ -180,10 +180,10 @@ public class TestPaths extends TestFmwkPlus {
 
     static final class CheckDeprecated {
         M5<DtdType, String, String, String, Boolean> data = ChainedMap.of(
-            new HashMap<DtdType,Object>(), 
-            new HashMap<String,Object>(), 
-            new HashMap<String,Object>(),
-            new HashMap<String,Object>(),
+            new HashMap<DtdType, Object>(),
+            new HashMap<String, Object>(),
+            new HashMap<String, Object>(),
+            new HashMap<String, Object>(),
             Boolean.class);
         private TestPaths testPaths;
 
@@ -194,43 +194,48 @@ public class TestPaths extends TestFmwkPlus {
         static final Set<String> ALLOWED = new HashSet<>(Arrays.asList("postalCodeData", "postCodeRegex"));
         static final Set<String> OK_IF_MISSING = new HashSet<>(Arrays.asList("alt", "draft", "references"));
 
-        public void check(DtdData dtdData, XPathParts parts) {
+        public boolean check(DtdData dtdData, XPathParts parts, String fullName) {
             for (int i = 0; i < parts.size(); ++i) {
                 String elementName = parts.getElement(i);
                 if (dtdData.isDeprecated(elementName, "*", "*")) {
                     if (ALLOWED.contains(elementName)) {
-                        return;
+                        return false;
                     }
-                    testPaths.errln("Deprecated item in data: " 
-                        + dtdData.dtdType 
-                        + ":" + elementName);
-                    return;
+                    testPaths.errln("Deprecated item in data: "
+                        + dtdData.dtdType
+                        + ":" + elementName
+                        + " \t;" + fullName
+                        );
+                    return true;
                 }
                 data.put(dtdData.dtdType, elementName, "*", "*", true);
                 for (Entry<String, String> attributeNValue : parts.getAttributes(i).entrySet()) {
                     String attributeName = attributeNValue.getKey();
                     if (dtdData.isDeprecated(elementName, attributeName, "*")) {
-                        testPaths.errln("Deprecated item in data: " 
-                            + dtdData.dtdType 
+                        testPaths.errln("Deprecated item in data: "
+                            + dtdData.dtdType
                             + ":" + elementName
                             + ":" + attributeName
+                            + " \t;" + fullName
                             );
-                        return;
+                        return true;
                     }
                     String attributeValue = attributeNValue.getValue();
                     if (dtdData.isDeprecated(elementName, attributeName, attributeValue)) {
-                        testPaths.errln("Deprecated item in data: " 
-                            + dtdData.dtdType 
+                        testPaths.errln("Deprecated item in data: "
+                            + dtdData.dtdType
                             + ":" + elementName
                             + ":" + attributeName
                             + ":" + attributeValue
+                            + " \t;" + fullName
                             );
-                        return;
+                        return true;
                     }
                     data.put(dtdData.dtdType, elementName, attributeName, "*", true);
                     data.put(dtdData.dtdType, elementName, attributeName, attributeValue, true);
                 }
             }
+            return false;
         }
 
         public void show() {
@@ -240,10 +245,10 @@ public class TestPaths extends TestFmwkPlus {
                 }
                 M4<String, String, String, Boolean> infoEAV = data.get(dtdType);
                 if (infoEAV == null) {
-                    testPaths.warnln("Data doesn't contain: " 
-                        + dtdType 
+                    testPaths.warnln("Data doesn't contain: "
+                        + dtdType
                         );
-                    continue; 
+                    continue;
                 }
                 DtdData dtdData = DtdData.getInstance(dtdType);
                 for (Element element : dtdData.getElements()) {
@@ -252,8 +257,8 @@ public class TestPaths extends TestFmwkPlus {
                     }
                     M3<String, String, Boolean> infoAV = infoEAV.get(element.name);
                     if (infoAV == null) {
-                        testPaths.logln("Data doesn't contain: " 
-                            + dtdType 
+                        testPaths.logln("Data doesn't contain: "
+                            + dtdType
                             + ":" + element.name
                             );
                         continue;
@@ -265,8 +270,8 @@ public class TestPaths extends TestFmwkPlus {
                         }
                         Map<String, Boolean> infoV = infoAV.get(attribute.name);
                         if (infoV == null) {
-                            testPaths.logln("Data doesn't contain: " 
-                                + dtdType 
+                            testPaths.logln("Data doesn't contain: "
+                                + dtdType
                                 + ":" + element.name
                                 + ":" + attribute.name
                                 );
@@ -277,8 +282,8 @@ public class TestPaths extends TestFmwkPlus {
                                 continue;
                             }
                             if (!infoV.containsKey(value)) {
-                                testPaths.logln("Data doesn't contain: " 
-                                    + dtdType 
+                                testPaths.logln("Data doesn't contain: "
+                                    + dtdType
                                     + ":" + element.name
                                     + ":" + attribute.name
                                     + ":" + value
@@ -291,39 +296,41 @@ public class TestPaths extends TestFmwkPlus {
         }
     }
 
-    public void TestNonLdml () {
-        if (getInclusion() <= 5) { // Only run this test in exhaustive mode.
-            return;
-        }
+    public void TestNonLdml() {
+        int maxPerDirectory = getInclusion() <= 5 ? 20 : Integer.MAX_VALUE;
         CheckDeprecated checkDeprecated = new CheckDeprecated(this);
         XPathParts parts = new XPathParts();
         PathStarrer starrer = new PathStarrer();
         StringBuilder removed = new StringBuilder();
         Set<String> nonFinalValues = new LinkedHashSet<>();
         Set<String> skipLast = new HashSet(Arrays.asList("version", "generation"));
-        String[] normalizedPath = {""};
+        String[] normalizedPath = { "" };
 
-        int counter = 0;        
+        int counter = 0;
         for (String directory : Arrays.asList("keyboards/", "common/")) {
             String dirPath = CLDRPaths.BASE_DIRECTORY + directory;
             for (String fileName : new File(dirPath).list()) {
                 File dir2 = new File(dirPath + fileName);
                 if (!dir2.isDirectory()
                     || fileName.equals("properties") // TODO as flat files
-//                    || fileName.equals(".DS_Store") 
-//                    || ChartDelta.LDML_DIRECTORIES.contains(dir) 
+//                    || fileName.equals(".DS_Store")
+//                    || ChartDelta.LDML_DIRECTORIES.contains(dir)
 //                    || fileName.equals("dtd")  // TODO as flat files
 //                    || fileName.equals(".project")  // TODO as flat files
 //                    //|| dir.equals("uca") // TODO as flat files
-                    ) {
+                ) {
                     continue;
                 }
 
-                Set<Pair<String,String>> seen = new HashSet<>();
+                Set<Pair<String, String>> seen = new HashSet<>();
                 Set<String> seenStarred = new HashSet<>();
+                int count = 0;
                 for (String file : dir2.list()) {
                     if (!file.endsWith(".xml")) {
                         continue;
+                    }
+                    if (++count > maxPerDirectory) {
+                        break;
                     }
                     DtdType type = null;
                     DtdData dtdData = null;
@@ -336,7 +343,9 @@ public class TestPaths extends TestFmwkPlus {
                             type = DtdType.valueOf(parts.getElement(0));
                             dtdData = DtdData.getInstance(type);
                         }
-                        checkDeprecated.check(dtdData, parts);
+                        if (checkDeprecated.check(dtdData, parts, fullName)) {
+                            break;
+                        }
 
                         String last = parts.getElement(-1);
                         if (skipLast.contains(last)) {
@@ -411,7 +420,7 @@ public class TestPaths extends TestFmwkPlus {
         HashSet<String> toRemove = new HashSet<>();
         nonFinalValues.clear();
         int size = parts.size();
-        int last = size-1;
+        int last = size - 1;
 //        if (parts.getElement(-1).equals("rbnfrule")) {
 //            int x = 0;
 //        }

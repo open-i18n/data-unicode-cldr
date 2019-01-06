@@ -34,7 +34,7 @@ import org.unicode.cldr.util.SupplementalDataInfo.PluralType;
 import org.unicode.cldr.util.XPathParts;
 
 import com.ibm.icu.dev.util.CollectionUtilities.ObjectMatcher;
-import com.ibm.icu.dev.util.Relation;
+import com.ibm.icu.impl.Relation;
 import com.ibm.icu.impl.Row;
 import com.ibm.icu.impl.Row.R2;
 import com.ibm.icu.text.UnicodeSet;
@@ -42,8 +42,8 @@ import com.ibm.icu.text.UnicodeSet;
 public class CheckAttributeValues extends FactoryCheckCLDR {
 
     private static final ObjectMatcher<String> NOT_DONE_YET = new RegexMatcher().set(".*", Pattern.COMMENTS);
-    private static final boolean FIND_MISSING = CldrUtility.getProperty("FIND_MISSING_ATTRIBUTE_TESTS", false);        // turn on to show <attributeValues> that are missing.
-    private static final boolean SHOW_UNNECESSARY = false;      // turn on to show <attributeValues> we should delete.
+    private static final boolean FIND_MISSING = CldrUtility.getProperty("FIND_MISSING_ATTRIBUTE_TESTS", false); // turn on to show <attributeValues> that are missing.
+    private static final boolean SHOW_UNNECESSARY = false; // turn on to show <attributeValues> we should delete.
 
     static LinkedHashSet<String> elementOrder = new LinkedHashSet<String>();
     static LinkedHashSet<String> attributeOrder = new LinkedHashSet<String>();
@@ -61,7 +61,7 @@ public class CheckAttributeValues extends FactoryCheckCLDR {
 
     boolean isEnglish;
     PluralInfo pluralInfo;
-    Relation<String,String> missingTests = Relation.of(new TreeMap(), TreeSet.class);
+    Relation<String, String> missingTests = Relation.of(new TreeMap(), TreeSet.class);
 
     XPathParts parts = new XPathParts(null, null);
     static final UnicodeSet DIGITS = new UnicodeSet("[0-9]").freeze();
@@ -75,6 +75,7 @@ public class CheckAttributeValues extends FactoryCheckCLDR {
             System.out.println("Missing element: " + entry.getKey() + ", attributes: " + entry.getValue());
         }
     }
+
     public CheckCLDR handleCheck(String path, String fullPath, String value, Options options,
         List<CheckStatus> result) {
         if (fullPath == null) return this; // skip paths that we don't have
@@ -225,7 +226,7 @@ public class CheckAttributeValues extends FactoryCheckCLDR {
     /**
      * Returns replacement, or null if there is none. "" if the code is deprecated, but without a replacement.
      * Input is of the form $language
-     * 
+     *
      * @return
      */
     String getReplacement(String value, String attributeValue) {
@@ -322,7 +323,8 @@ public class CheckAttributeValues extends FactoryCheckCLDR {
                                 System.out.println("Illegal <attributeValues>, attribute not valid: element: " + element + ", attribute: " + attribute);
                             } else if (!attributeInfo.values.isEmpty()) {
                                 if (SHOW_UNNECESSARY) {
-                                    System.out.println("Unnecessary <attributeValues …>, the DTD has specific list: element: " + element + ", attribute: " + attribute + ", " + attributeInfo.values);
+                                    System.out.println("Unnecessary <attributeValues …>, the DTD has specific list: element: " + element + ", attribute: "
+                                        + attribute + ", " + attributeInfo.values);
                                 }
                             }
                         }
@@ -432,7 +434,6 @@ public class CheckAttributeValues extends FactoryCheckCLDR {
         }
         return result;
     }
-
 
     private void addAttributes(Set<String> attributes, Map<String, MatcherPattern> attribute_validity, MatcherPattern mp) {
         for (String attribute : attributes) {

@@ -6,7 +6,7 @@ package org.unicode.cldr.util;
  * others. All Rights Reserved.                                                *
  *******************************************************************************
  *
- * $Revision: 11913 $
+ * $Revision: 12218 $
  *
  *******************************************************************************
  */
@@ -49,6 +49,10 @@ public final class Counter2<T> implements Iterable<T>, Comparable<Counter2<T>> {
         } else {
             map.put(obj, addN(count, one2));
         }
+        return this;
+    }
+    public Counter2<T> put(T obj, Double one2) {
+        map.put(obj, one2);
         return this;
     }
 

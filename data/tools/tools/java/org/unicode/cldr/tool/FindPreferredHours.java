@@ -23,7 +23,7 @@ import org.unicode.cldr.util.SupplementalDataInfo.PopulationData;
 import org.unicode.cldr.util.With;
 
 import com.ibm.icu.dev.util.CollectionUtilities;
-import com.ibm.icu.dev.util.Relation;
+import com.ibm.icu.impl.Relation;
 import com.ibm.icu.text.DateTimePatternGenerator.FormatParser;
 import com.ibm.icu.text.DateTimePatternGenerator.VariableField;
 import com.ibm.icu.text.UnicodeSet;
@@ -135,9 +135,7 @@ public class FindPreferredHours {
                 for (Object item : formatDateParser.getItems()) {
                     if (item instanceof VariableField) {
                         String itemString = item.toString();
-                        char c = itemString.charAt(0);
-
-                        if (PreferredAndAllowedHour.HourStyle.isHourCharacter(c)) {
+                        if (PreferredAndAllowedHour.HourStyle.isHourCharacter(itemString)) {
                             lang2Hours.put(locale, new Hours(type, itemString));
                         }
                     }

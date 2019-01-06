@@ -69,9 +69,9 @@ import com.ibm.icu.util.ULocale;
 
 /**
  * Class to generate examples and help messages for the Survey tool (or console version).
- * 
+ *
  * @author markdavis
- * 
+ *
  */
 public class ExampleGenerator {
     private static final String ALT_STAND_ALONE = "[@alt=\"stand-alone\"]";
@@ -161,7 +161,7 @@ public class ExampleGenerator {
      * For getting the end of the "background" style. Default is "</span>". It is
      * used in composing patterns, so it can show the part that corresponds to the
      * value.
-     * 
+     *
      * @return
      */
     public String getBackgroundEnd() {
@@ -172,7 +172,7 @@ public class ExampleGenerator {
      * For setting the end of the "background" style. Default is "</span>". It is
      * used in composing patterns, so it can show the part that corresponds to the
      * value.
-     * 
+     *
      * @return
      */
     public void setBackgroundEnd(String backgroundEnd) {
@@ -183,7 +183,7 @@ public class ExampleGenerator {
      * For getting the "background" style. Default is "<span
      * style='background-color: gray'>". It is used in composing patterns, so it
      * can show the part that corresponds to the value.
-     * 
+     *
      * @return
      */
     public String getBackgroundStart() {
@@ -194,7 +194,7 @@ public class ExampleGenerator {
      * For setting the "background" style. Default is "<span
      * style='background-color: gray'>". It is used in composing patterns, so it
      * can show the part that corresponds to the value.
-     * 
+     *
      * @return
      */
     public void setBackgroundStart(String backgroundStart) {
@@ -212,7 +212,7 @@ public class ExampleGenerator {
 
     /**
      * Create an Example Generator. If this is shared across threads, it must be synchronized.
-     * 
+     *
      * @param resolvedCldrFile
      * @param supplementalDataDirectory
      */
@@ -258,7 +258,7 @@ public class ExampleGenerator {
      * have a path that Engish doesn't, but you want to return the best English
      * example. <br>
      * The result is valid HTML.
-     * 
+     *
      * @param xpath
      * @return
      */
@@ -280,12 +280,12 @@ public class ExampleGenerator {
             // "real" value to generate from.
             if (CldrUtility.INHERITANCE_MARKER.equals(value)) {
                 if (type.equals(ExampleType.ENGLISH)) {
-                    value = englishFile.getConstructedBaileyValue(xpath, null, null);                  
+                    value = englishFile.getConstructedBaileyValue(xpath, null, null);
                 } else {
                     value = cldrFile.getConstructedBaileyValue(xpath, null, null);
                 }
             }
-            
+
             // result is null at this point. Get the real value if we can.
             parts.set(xpath);
             if (parts.contains("dateRangePattern")) { // {0} - {1}
@@ -371,12 +371,12 @@ public class ExampleGenerator {
     }
 
     private String handleDayPeriod(String xpath, String value, ExampleContext context, ExampleType type) {
-      //ldml/dates/calendars/calendar[@type="gregorian"]/dayPeriods/dayPeriodContext[@type="format"]/dayPeriodWidth[@type="wide"]/dayPeriod[@type="morning1"]
-      //ldml/dates/calendars/calendar[@type="gregorian"]/dayPeriods/dayPeriodContext[@type="stand-alone"]/dayPeriodWidth[@type="wide"]/dayPeriod[@type="morning1"]
+        //ldml/dates/calendars/calendar[@type="gregorian"]/dayPeriods/dayPeriodContext[@type="format"]/dayPeriodWidth[@type="wide"]/dayPeriod[@type="morning1"]
+        //ldml/dates/calendars/calendar[@type="gregorian"]/dayPeriods/dayPeriodContext[@type="stand-alone"]/dayPeriodWidth[@type="wide"]/dayPeriod[@type="morning1"]
         List<String> examples = new ArrayList<>();
         final String dayPeriodType = parts.getAttributeValue(5, "type");
         org.unicode.cldr.util.DayPeriodInfo.Type aType = dayPeriodType.equals("format") ? DayPeriodInfo.Type.format : DayPeriodInfo.Type.selection;
-        DayPeriodInfo dayPeriodInfo = supplementalDataInfo.getDayPeriods(aType , cldrFile.getLocaleID());
+        DayPeriodInfo dayPeriodInfo = supplementalDataInfo.getDayPeriods(aType, cldrFile.getLocaleID());
         String periodString = parts.getAttributeValue(-1, "type");
 
         DayPeriod dayPeriod = DayPeriod.valueOf(periodString);
@@ -643,7 +643,7 @@ public class ExampleGenerator {
     /**
      * Helper method for handleListPatterns. Returns the pattern to be used for
      * a specified pattern type.
-     * 
+     *
      * @param pathFormat
      * @param pathPatternType
      * @param valuePatternType
@@ -696,7 +696,7 @@ public class ExampleGenerator {
 
     /**
      * Handle miscellaneous calendar patterns.
-     * 
+     *
      * @param parts
      * @param value
      * @return
@@ -1177,7 +1177,7 @@ public class ExampleGenerator {
                 SimpleDateFormat sdf = icuServiceBuilder.getDateFormat(calendar, value, numbersOverride);
                 sdf.setTimeZone(ZONE_SAMPLE);
                 String defaultNumberingSystem = cldrFile.getWinningValue("//ldml/numbers/defaultNumberingSystem");
-                String timeSeparator = cldrFile.getWinningValue("//ldml/numbers/symbols[@numberSystem='"+defaultNumberingSystem+"']/timeSeparator");
+                String timeSeparator = cldrFile.getWinningValue("//ldml/numbers/symbols[@numberSystem='" + defaultNumberingSystem + "']/timeSeparator");
                 DateFormatSymbols dfs = sdf.getDateFormatSymbols();
                 dfs.setTimeSeparatorString(timeSeparator);
                 sdf.setDateFormatSymbols(dfs);
@@ -1188,7 +1188,7 @@ public class ExampleGenerator {
 
     /**
      * Creates examples for currency formats.
-     * 
+     *
      * @param value
      * @return
      */
@@ -1225,6 +1225,9 @@ public class ExampleGenerator {
             if (territory == null || territory.length() == 0) {
                 loc = supplementalDataInfo.getDefaultContentFromBase(loc);
                 territory = loc.getCountry();
+                if (territory.equals("001") && loc.getLanguage().equals("ar")) {
+                    territory = "EG"; // Use Egypt as territory for examples in ar locale, since its default content is ar_001.
+                }
             }
             if (territory == null || territory.length() == 0) {
                 territory = "US";
@@ -1235,7 +1238,7 @@ public class ExampleGenerator {
 
     /**
      * Creates examples for decimal formats.
-     * 
+     *
      * @param value
      * @return
      */
@@ -1287,7 +1290,7 @@ public class ExampleGenerator {
     /**
      * Calculates a numerical example to use for the specified pattern using
      * brute force (TODO: there should be a more elegant way to do this).
-     * 
+     *
      * @param format
      * @param count
      * @return
@@ -1501,7 +1504,7 @@ public class ExampleGenerator {
 
     /**
      * Put a background on an item, skipping enclosed patterns.
-     * 
+     *
      * @param sampleTerritory
      * @return
      */
@@ -1513,11 +1516,11 @@ public class ExampleGenerator {
 
     /**
      * Put a background on an item, skipping enclosed patterns, except for {0}
-     * 
+     *
      * @param patternToEmbed
      *            TODO
      * @param sampleTerritory
-     * 
+     *
      * @return
      */
     private String setBackgroundExceptMatch(String input, Pattern patternToEmbed) {
@@ -1528,11 +1531,11 @@ public class ExampleGenerator {
 
     /**
      * Put a background on an item, skipping enclosed patterns, except for {0}
-     * 
+     *
      * @param patternToEmbed
      *            TODO
      * @param sampleTerritory
-     * 
+     *
      * @return
      */
     private String setBackgroundOnMatch(String inputPattern, Pattern patternToEmbed) {
@@ -1542,7 +1545,7 @@ public class ExampleGenerator {
 
     /**
      * This adds the transliteration of a result in case it has one (i.e. sr_Cyrl -> sr_Latn).
-     * 
+     *
      * @param input
      *            string with special characters from setBackground.
      * @param value
@@ -1571,7 +1574,7 @@ public class ExampleGenerator {
 
     /**
      * This is called just before we return a result. It fixes the special characters that were added by setBackground.
-     * 
+     *
      * @param input
      *            string with special characters from setBackground.
      * @param invert
@@ -1616,7 +1619,7 @@ public class ExampleGenerator {
      * Utility to format using a gmtHourString, gmtFormat, and an integer hours. We only need the hours because that's
      * all
      * the TZDB IDs need. Should merge this eventually into TimeZoneFormatter and call there.
-     * 
+     *
      * @param gmtHourString
      * @param gmtFormat
      * @param hours
@@ -1674,7 +1677,7 @@ public class ExampleGenerator {
      * HTML-formatted table of all placeholders required in the value.<br>
      * TODO: add more help, and modify to get from property or xml file for easy
      * modification.
-     * 
+     *
      * @return null if none available.
      */
     public synchronized String getHelpHtml(String xpath, String value, boolean listPlaceholders) {
@@ -1787,7 +1790,7 @@ public class ExampleGenerator {
          * <p>
          * {@link http://unicode.org/cldr/data/tools/java/org/unicode/cldr/util/data/test_help_messages.html} is used
          * for help messages in the survey tool, where the key is an xpath.
-         * 
+         *
          * @param filename
          */
         public HelpMessages(String filename) {
@@ -1857,7 +1860,7 @@ public class ExampleGenerator {
          * For many files, the key will be an xpath, but it doesn't have to be.
          * Note that <i>all</i> of pairs of <keyRegex,htmlText> where the key matches keyRegex
          * will be concatenated together in order to get the result.
-         * 
+         *
          * @param key
          * @return
          */
@@ -1870,7 +1873,7 @@ public class ExampleGenerator {
          * For many files, the key will be an xpath, but it doesn't have to be.
          * Note that <i>all</i> of pairs of <keyRegex,htmlText> where the key matches keyRegex
          * will be concatenated together in order to get the result.
-         * 
+         *
          * @param key
          * @param addHeader
          *            true if you want a header formed by looking at all the hN elements.

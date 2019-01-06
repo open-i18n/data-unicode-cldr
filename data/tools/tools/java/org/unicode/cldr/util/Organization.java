@@ -22,6 +22,7 @@ public enum Organization {
     breton("Office of Breton Lang"),
     cherokee("Cherokee Nation"),
     cldr("Cldr"),
+    facebook("Facebook"),
     gaeilge("Foras na Gaeilge"),
     georgia_isi("Georgia ISI"),
     gnome("Gnome Foundation"),
@@ -71,7 +72,7 @@ public enum Organization {
             for (String name : x.names) {
                 OrganizationNameMap.put(name.toLowerCase().replace('-', '_').replace('.', '_'), x);
             }
-            OrganizationNameMap.put(x.name().toLowerCase().replace('-', '_').replace('.', '_'), x);        
+            OrganizationNameMap.put(x.name().toLowerCase().replace('-', '_').replace('.', '_'), x);
         }
     }
 

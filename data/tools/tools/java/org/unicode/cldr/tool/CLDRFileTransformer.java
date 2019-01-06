@@ -20,7 +20,7 @@ import com.ibm.icu.text.UnicodeSet;
 
 /**
  * Transforms the contents of a CLDRFile.
- * 
+ *
  * @author jchye
  */
 public class CLDRFileTransformer {
@@ -116,7 +116,7 @@ public class CLDRFileTransformer {
 
     /**
      * NOTE: This method does not currently handle nested transliterators.
-     * 
+     *
      * @param input
      * @return
      */
@@ -145,7 +145,11 @@ public class CLDRFileTransformer {
         // For now, don't try to transliterate the exemplar characters - use the ones from the original locale.
         // In the future, we can probably control this better with a config file - similar to CLDRModify's config file.
         if (path.contains("exemplarCharacters")) {
-            transliterated = oldValue;
+            if (oldValue != null) {
+                transliterated = oldValue;
+            } else {
+                transliterated = value;
+            }
         } else {
             transliterated = transliterator.transliterate(value);
             transliterated = Normalizer.compose(transliterated, false);

@@ -18,10 +18,12 @@ public class ChartLanguageMatching extends Chart {
     public String getDirectory() {
         return FormattedFileWriter.CHART_TARGET_DIR;
     }
+
     @Override
     public String getTitle() {
         return "Language Matching";
     }
+
     @Override
     public String getExplanation() {
         return "<p>Language Matching data is used to match the user’s desired language/locales against an application’s supported languages/locales. "
@@ -39,8 +41,7 @@ public class ChartLanguageMatching extends Chart {
             + "<li>A ⬌︎ in the <i>Sym?</i> column indicates that the distance is symmetric, "
             + "and is thus used for both directions: Supported→Desired and Desired→Supported. "
             + "A → indicates that the distance is <i>not</i> symmetric: this is usually a <i>fallback</i> match.</li>"
-            + "</ul>"
-            ;
+            + "</ul>";
     }
 
     @Override
@@ -53,8 +54,7 @@ public class ChartLanguageMatching extends Chart {
         .addColumn("S. Code", "class='source'", null, "class='source'", true)
         .setBreakSpans(true)
         .addColumn("Distance", "class='target'", null, "class='target'", true)
-        .addColumn("Sym?", "class='target'", null, "class='target'", true)
-        ;
+        .addColumn("Sym?", "class='target'", null, "class='target'", true);
 
         for (String type : SDI.getLanguageMatcherKeys()) {
             pw.write("<h2>Type=" + type + "</h2>");
@@ -68,7 +68,7 @@ public class ChartLanguageMatching extends Chart {
                 .addCell(getName(row.get1(), false))
                 .addCell(row.get0())
                 .addCell(row.get1())
-                .addCell((100-row.get2()))
+                .addCell((100 - row.get2()))
                 .addCell(row.get3() ? "→" : "⬌")
                 .finishRow();
             }
@@ -96,11 +96,9 @@ public class ChartLanguageMatching extends Chart {
             result = result
                 .replace("Xxxx", "any-script")
                 .replace("xxx", "any-language")
-                .replace("XX", "any-region")
-                ;
+                .replace("XX", "any-region");
         } else {
-            result = replaceStar(result)
-                ;        
+            result = replaceStar(result);
         }
         return result;
     }

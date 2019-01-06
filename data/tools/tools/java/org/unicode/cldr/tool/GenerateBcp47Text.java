@@ -11,14 +11,16 @@ import org.unicode.cldr.util.SupplementalDataInfo;
 
 import com.ibm.icu.dev.util.BagFormatter;
 import com.ibm.icu.dev.util.CollectionUtilities;
-import com.ibm.icu.dev.util.Relation;
+import com.ibm.icu.impl.Relation;
 import com.ibm.icu.impl.Row;
 import com.ibm.icu.impl.Row.R2;
 
 public class GenerateBcp47Text {
     static final boolean SHOW_ONLY_WITHOUT_DESCRIPTION = false;
 
-    SupplementalDataInfo info = SupplementalDataInfo.getInstance();
+    static SupplementalDataInfo info = SupplementalDataInfo.getInstance();
+    static Map<R2<String, String>, String> deprecatedMap = info.getBcp47Deprecated();
+
     Relation<String, String> extension2Keys = info.getBcp47Extension2Keys();
     Relation<String, String> keys2subtypes = info.getBcp47Keys();
     Relation<R2<String, String>, String> keySubtype2Aliases = info.getBcp47Aliases();
@@ -65,7 +67,7 @@ public class GenerateBcp47Text {
      * Added: 2005-10-16
      * Suppress-Script: Cyrl
      * %%
-     * 
+     *
      * @param key
      * @param string
      */
@@ -82,6 +84,10 @@ public class GenerateBcp47Text {
         showField(out, "Aliases", keySubtype2Aliases.get(probe));
         showField(out, "Description", description);
         showField(out, "Since", since);
+        String deprecatedValue = deprecatedMap.get(Row.of(key, subtype));
+        if (!"false".equals(deprecatedValue)) {
+            showField(out, "Deprecated", deprecatedValue);
+        }
     }
 
     private void showField(PrintWriter out, String title, Collection<String> set) {

@@ -77,10 +77,12 @@ public class CldrUtility {
     // Constant for "↑↑↑". Indicates a "passthru" vote to the parent locale. If CLDRFile ever
     // finds this value in a data field, writing of the field should be suppressed.
     public static final String INHERITANCE_MARKER = new String(new char[] { 0x2191, 0x2191, 0x2191 });
+    public static final UnicodeSet DIGITS = new UnicodeSet("[0-9]").freeze();
+
     /**
      * Very simple class, used to replace variables in a string. For example
      * <p>
-     * 
+     *
      * <pre>
      * static VariableReplacer langTag = new VariableReplacer()
      * 			.add("$alpha", "[a-zA-Z]")
@@ -123,11 +125,11 @@ public class CldrUtility {
     }
 
     public interface LineHandler {
-        /** 
-         * Return false if line was skipped 
-         *  
-         * @param line 
-         * @return 
+        /**
+         * Return false if line was skipped
+         *
+         * @param line
+         * @return
          */
         boolean handle(String line) throws Exception;
     }
@@ -169,7 +171,7 @@ public class CldrUtility {
 
         /**
          * Returns LINES_DIFFERENT, LINES_SAME, or if one of the lines is ignorable, SKIP_FIRST or SKIP_SECOND
-         * 
+         *
          * @param line1
          * @param line2
          * @return
@@ -259,7 +261,7 @@ public class CldrUtility {
     }
 
     /**
-     * 
+     *
      * @param file1
      * @param file2
      * @param failureLines
@@ -358,20 +360,20 @@ public class CldrUtility {
     }
 
     public static String[] splitCommaSeparated(String line) {
-        // items are separated by ',' 
-        // each item is of the form abc... 
-        // or "..." (required if a comma or quote is contained) 
-        // " in a field is represented by "" 
+        // items are separated by ','
+        // each item is of the form abc...
+        // or "..." (required if a comma or quote is contained)
+        // " in a field is represented by ""
         List<String> result = new ArrayList<String>();
         StringBuilder item = new StringBuilder();
         boolean inQuote = false;
         for (int i = 0; i < line.length(); ++i) {
-            char ch = line.charAt(i); // don't worry about supplementaries 
+            char ch = line.charAt(i); // don't worry about supplementaries
             switch (ch) {
             case '"':
                 inQuote = !inQuote;
-                // at start or end, that's enough 
-                // if get a quote when we are not in a quote, and not at start, then add it and return to inQuote 
+                // at start or end, that's enough
+                // if get a quote when we are not in a quote, and not at start, then add it and return to inQuote
                 if (inQuote && item.length() != 0) {
                     item.append('"');
                     inQuote = true;
@@ -480,7 +482,8 @@ public class CldrUtility {
         // TODO - exclude UnmodifiableMap, Set, ...
         if (isImmutable(source)) {
             return source;
-        } if (source instanceof Map) {
+        }
+        if (source instanceof Map) {
             Map sourceMap = (Map) source;
             // recurse
             LinkedHashMap tempMap = new LinkedHashMap<>(sourceMap); // copy contents
@@ -515,18 +518,17 @@ public class CldrUtility {
     private static final Set<Object> KNOWN_IMMUTABLES = new HashSet<Object>(Arrays.asList(
         String.class
         ));
-    
+
     public static boolean isImmutable(Object source) {
-        return source == null 
+        return source == null
             || source instanceof Enum
             || source instanceof Number
-            || KNOWN_IMMUTABLES.contains(source.getClass())
-            ;
+            || KNOWN_IMMUTABLES.contains(source.getClass());
     }
 
     /**
      * Clones T if we can; otherwise returns null.
-     * 
+     *
      * @param <T>
      * @param source
      * @return
@@ -537,11 +539,13 @@ public class CldrUtility {
         try {
             final Method declaredMethod = class1.getDeclaredMethod("clone", (Class<?>) null);
             return (T) declaredMethod.invoke(source, (Object) null);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         try {
-            final Constructor<? extends Object> declaredMethod = class1.getConstructor((Class<?>)null);
-            return (T) declaredMethod.newInstance((Object)null);
-        } catch (Exception e) {}
+            final Constructor<? extends Object> declaredMethod = class1.getConstructor((Class<?>) null);
+            return (T) declaredMethod.newInstance((Object) null);
+        } catch (Exception e) {
+        }
         return null; // uncloneable
     }
 
@@ -635,7 +639,7 @@ public class CldrUtility {
     /**
      * Convert a UnicodeSet into a string that can be embedded into a Regex. Handles strings that are in the UnicodeSet,
      * Supplementary ranges, and escaping
-     * 
+     *
      * @param source
      *            The source set
      * @param escaper
@@ -657,7 +661,7 @@ public class CldrUtility {
      * Convert a UnicodeSet into a string that can be embedded into a Regex.
      * Handles strings that are in the UnicodeSet, Supplementary ranges, and
      * escaping
-     * 
+     *
      * @param source
      *            The source set
      * @param escaper
@@ -672,28 +676,28 @@ public class CldrUtility {
      *            case, ranges of supplementary characters are converted to lists of
      *            ranges. For example, [\uFFF0-\U0010000F \U0010100F-\U0010300F]
      *            converts into:
-     * 
+     *
      *            <pre>
      *          [\uD800][\uDC00-\uDFFF]
      *          [\uD801-\uDBBF][\uDC00-\uDFFF]
      *          [\uDBC0][\uDC00-\uDC0F]
      * </pre>
-     * 
+     *
      *            and
-     * 
+     *
      *            <pre>
      *          [\uDBC4][\uDC0F-\uDFFF]
      *          [\uDBC5-\uDBCB][\uDC00-\uDFFF]
      *          [\uDBCC][\uDC00-\uDC0F]
      * </pre>
-     * 
+     *
      *            These are then coalesced into a list of alternatives by sharing
      *            parts where feasible. For example, the above turns into 3 pairs of ranges:
-     * 
+     *
      *            <pre>
      *          [\uDBC0\uDBCC][\uDC00-\uDC0F]|\uDBC4[\uDC0F-\uDFFF]|[\uD800-\uDBBF\uDBC5-\uDBCB][\uDC00-\uDFFF]
      * </pre>
-     * 
+     *
      * @return escaped string. Something like [a-z] or (?:[a-m]|{zh}) if there is
      *         a string zh in the set, or a more complicated case for
      *         supplementaries. <br>
@@ -934,7 +938,7 @@ public class CldrUtility {
     // }
     // }
 
-    public static final class PairComparator<K extends Comparable<K>, V extends Comparable<V>> implements java.util.Comparator<Pair<K,V>> {
+    public static final class PairComparator<K extends Comparable<K>, V extends Comparable<V>> implements java.util.Comparator<Pair<K, V>> {
 
         private Comparator<K> comp1;
         private Comparator<V> comp2;
@@ -943,14 +947,15 @@ public class CldrUtility {
             this.comp1 = comp1;
             this.comp2 = comp2;
         }
+
         @Override
-        public int compare(Pair<K,V> o1, Pair<K,V> o2) {
+        public int compare(Pair<K, V> o1, Pair<K, V> o2) {
             {
                 K o1First = o1.getFirst();
                 K o2First = o2.getFirst();
                 int diff = o1First == null ? (o2First == null ? 0 : -1)
                     : o2First == null ? 1
-                        : comp1 == null ? o1First.compareTo(o2First) 
+                        : comp1 == null ? o1First.compareTo(o2First)
                             : comp1.compare(o1First, o2First);
                         if (diff != 0) {
                             return diff;
@@ -960,7 +965,7 @@ public class CldrUtility {
             V o2Second = o2.getSecond();
             return o1Second == null ? (o2Second == null ? 0 : -1)
                 : o2Second == null ? 1
-                    : comp2 == null ? o1Second.compareTo(o2Second) 
+                    : comp2 == null ? o1Second.compareTo(o2Second)
                         : comp2.compare(o1Second, o2Second);
         }
 
@@ -968,7 +973,7 @@ public class CldrUtility {
 
     /**
      * Fetch data from jar
-     * 
+     *
      * @param name
      *            a name residing in the org/unicode/cldr/util/data/ directory, or loading from a jar will break.
      */
@@ -984,7 +989,7 @@ public class CldrUtility {
 
     /**
      * Fetch data from jar
-     * 
+     *
      * @param name
      *            a name residing in the org/unicode/cldr/util/data/ directory, or loading from a jar will break.
      */
@@ -1006,7 +1011,7 @@ public class CldrUtility {
 
     /**
      * Takes a Map that goes from Object to Set, and fills in the transpose
-     * 
+     *
      * @param source_key_valueSet
      * @param output_value_key
      */
@@ -1137,7 +1142,7 @@ public class CldrUtility {
 
     /**
      * Breaks lines if they are too long, or if matcher.group(1) != last. Only breaks just before matcher.
-     * 
+     *
      * @param input
      * @param separator
      * @param matcher
@@ -1187,7 +1192,7 @@ public class CldrUtility {
     /**
      * Get a property value, returning the value if there is one (eg -Dkey=value),
      * otherwise the default value (for either empty or null).
-     * 
+     *
      * @param key
      * @param valueIfNull
      * @param valueIfEmpty
@@ -1208,7 +1213,7 @@ public class CldrUtility {
      * Get a property value, returning the value if there is one (eg -Dkey=value),
      * the valueIfEmpty if there is one with no value (eg -Dkey) and the valueIfNull
      * if there is no property.
-     * 
+     *
      * @param key
      * @param valueIfNull
      * @param valueIfEmpty
@@ -1265,7 +1270,7 @@ public class CldrUtility {
 
     /**
      * Copy up to matching line (not included). If output is null, then just skip until.
-     * 
+     *
      * @param oldFile
      *            file to copy
      * @param readUntilPattern
@@ -1419,10 +1424,10 @@ public class CldrUtility {
         try (BufferedReader in = getUTF8Data(filename);) {
             String line = null;
             while ((line = in.readLine()) != null) {
-                //                String line = in.readLine(); 
-                //                if (line == null) { 
-                //                    break; 
-                //                } 
+                //                String line = in.readLine();
+                //                if (line == null) {
+                //                    break;
+                //                }
                 try {
                     if (!handler.handle(line)) {
                         if (HANDLEFILE_SHOW_SKIP) {
@@ -1435,7 +1440,7 @@ public class CldrUtility {
                 }
             }
         }
-        //        in.close(); 
+        //        in.close();
     }
 
     public static <T> T ifNull(T x, T y) {
@@ -1478,7 +1483,7 @@ public class CldrUtility {
         for (int item = 0; item < pairs.length;) {
             if (!Objects.deepEquals(pairs[item++], pairs[item++])) {
                 return false;
-            }  
+            }
         }
         return true;
     }

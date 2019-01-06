@@ -83,7 +83,7 @@ public class GenerateTransformCharts {
         FileCopier.copy(ShowData.class, "transforms-index.css", TRANSFORM_DIRECTORY, "index.css");
 
         // PrintWriter out = new PrintWriter(System.out);
-        CLDRTransforms.registerCldrTransforms(null, filter, verbose ? new PrintWriter(System.out) : null);
+        CLDRTransforms.registerCldrTransforms(null, filter, verbose ? new PrintWriter(System.out) : null, true);
         try {
             showAllLatin();
             // doIndic();
@@ -340,7 +340,7 @@ public class GenerateTransformCharts {
         // index.println("<h1>Transliteration Charts</h1>");
         index.println("<p>The following illustrates some of the CLDR transliterations to/from the Latin script.</p>");
         index.println("<blockquote>"
-            +"<b>Note:</b> "
+            + "<b>Note:</b> "
             + "These charts do not show the available script and language transliterations that are not to/from Latin. "
             + "It also does not show other transforms that are available in CLDR, such as the casing transformations, "
             + "full-width and half-width transformations, and specialized transformations such as IPA-XSampa. "
@@ -398,36 +398,36 @@ public class GenerateTransformCharts {
             index.println("<li>A cell with a blue background indicates a case that doesn't roundtrip.</li>");
             index.println("<li>A cell with a red background indicates a missing case.</li>");
             index
-                .println("<li>Hovering over each cell should show the character name, if enabled on your browser.</li>");
+            .println("<li>Hovering over each cell should show the character name, if enabled on your browser.</li>");
             index.println("</ul>");
             index.println("<h2>Known Data Issues</h2><ul>");
             index.println("<li>The CLDR data currently does not contain many language-specific transliterations. " +
                 "So, for example, the Cyrillic transliteration is not very natural for English speakers.</li>");
             index
-                .println("<li>The unmarked script transliterations to Latin are generally designed to be reversible, "
-                    + "thus some of the transliterations use extra accents to provide for a round-trip. "
-                    +
-                    "(Implementations like ICU allows those to be easily stripped.). "
-                    + "Variant transliterations (such as BGN) typically only go one direction.</li>");
+            .println("<li>The unmarked script transliterations to Latin are generally designed to be reversible, "
+                + "thus some of the transliterations use extra accents to provide for a round-trip. "
+                +
+                "(Implementations like ICU allows those to be easily stripped.). "
+                + "Variant transliterations (such as BGN) typically only go one direction.</li>");
             index
-                .println("<li>Less common characters may be missing; as may be some characters that don't appear in isolation.</li>");
+            .println("<li>Less common characters may be missing; as may be some characters that don't appear in isolation.</li>");
             index
-                .println("<li>Some transliterations only work in context, which won't be visible. For example, an isolated 'a' transliterates to </li>");
+            .println("<li>Some transliterations only work in context, which won't be visible. For example, an isolated 'a' transliterates to </li>");
             index.println("<li>There are known bugs in some of the charts, such as Hangul.</li>");
             index.println("</ul>");
 
             index.println("<h2>Known Chart Issues</h2><ul>");
             index
-                .println("<li>Some browsers will not show combinations of accents correctly. See <a href='http://www.unicode.org/help/display_problems.html'>Display Problems?</a></li>");
+            .println("<li>Some browsers will not show combinations of accents correctly. See <a href='http://www.unicode.org/help/display_problems.html'>Display Problems?</a></li>");
             index
-                .println("<li>Because the context is not taken into account, significant combinations will not show in the charts. "
-                    +
-                    "For example: For greek, \u03A8 shows as 'PH', when the transliteration rules will change it to 'Ph' in front of lowercase letters. "
-                    +
-                    "Characters that are not normally used in isolation, such as \u3041, will show as an odd format (eg with extra punctuations marks or accents).</li>");
+            .println("<li>Because the context is not taken into account, significant combinations will not show in the charts. "
+                +
+                "For example: For greek, \u03A8 shows as 'PH', when the transliteration rules will change it to 'Ph' in front of lowercase letters. "
+                +
+                "Characters that are not normally used in isolation, such as \u3041, will show as an odd format (eg with extra punctuations marks or accents).</li>");
             index.println("<li>Only the script-script charts are shown.</li>");
             index
-                .println("<li>The display in some of the charts needs to be improved, such as Greek, Indic, and Kana. In particular, the nonLatin-Latin display needs to be merged.</li>");
+            .println("<li>The display in some of the charts needs to be improved, such as Greek, Indic, and Kana. In particular, the nonLatin-Latin display needs to be merged.</li>");
             index.println("</ul>");
             index.println(headerAndFooter[1]);
             // index.println("</body></html>");

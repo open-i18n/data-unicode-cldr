@@ -17,7 +17,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.DeclHandler;
 
-import com.ibm.icu.dev.util.Relation;
+import com.ibm.icu.impl.Relation;
 import com.ibm.icu.impl.Row;
 import com.ibm.icu.impl.Row.R2;
 import com.ibm.icu.impl.Row.R3;
@@ -31,8 +31,8 @@ public class ElementAttributeInfo {
     private Relation<String, String> element2attributes = Relation.of(new LinkedHashMap<String, Set<String>>(), LinkedHashSet.class);
 
     static Map<String, Map<DtdType, ElementAttributeInfo>> cache = new HashMap<String, Map<DtdType, ElementAttributeInfo>>(); // new
-                                                                                                                              // HashMap<DtdType,
-                                                                                                                              // Data>();
+    // HashMap<DtdType,
+    // Data>();
 
     public static final ElementAttributeInfo getInstance(DtdType dtdType) {
         return getInstance(CLDRPaths.COMMON_DIRECTORY, dtdType);

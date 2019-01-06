@@ -61,7 +61,7 @@ import com.ibm.icu.dev.tool.UOption;
 import com.ibm.icu.dev.util.BagFormatter;
 import com.ibm.icu.dev.util.ElapsedTimer;
 import com.ibm.icu.dev.util.PrettyPrinter;
-import com.ibm.icu.dev.util.Relation;
+import com.ibm.icu.impl.Relation;
 import com.ibm.icu.impl.Row;
 import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.text.Collator;
@@ -71,16 +71,16 @@ import com.ibm.icu.util.ULocale;
 /**
  * Console test for CheckCLDR. <br>
  * Some common source directories:
- * 
+ *
  * <pre>
  *  -s C:/cvsdata/unicode/cldr/incoming/vetted/main
  *  -s C:/cvsdata/unicode/cldr/incoming/proposed/main
  *  -s C:/cvsdata/unicode/cldr/incoming/proposed/main
  *  -s C:/cvsdata/unicode/cldr/testdata/main
  * </pre>
- * 
+ *
  * @author markdavis
- * 
+ *
  */
 @CLDRTool(alias = "check",
 description = "Run CheckCLDR against CLDR data")
@@ -185,7 +185,7 @@ public class ConsoleCheckCLDR {
      * For each cldrfile, it will set the cldrFile.
      * Then on each path in the file it will call check.
      * Right now it doesn't work with resolved files, so just use unresolved ones.
-     * 
+     *
      * @param args
      * @throws IOException
      */
@@ -257,9 +257,9 @@ public class ConsoleCheckCLDR {
         final CLDRConfig cldrConf = CLDRConfig.getInstance();
         // set the envronment to UNITTEST as suggested
         cldrConf.setEnvironment(Environment.UNITTEST);
-        // get the Phase from CLDRConfig object     
+        // get the Phase from CLDRConfig object
         final Phase phase;
-        //   Phase phase = Phase.BUILD; 
+        //   Phase phase = Phase.BUILD;
         if (options[PHASE].doesOccur) {
             String phaseVal = options[PHASE].value;
             try {
@@ -602,7 +602,7 @@ public class ConsoleCheckCLDR {
                 if (checkFlexibleDates) {
                     fset.checkFlexibles(path, value, fullPath);
                 }
-                
+
                 if (path.contains("duration-century")) {
                     int debug = 0;
                 }
@@ -951,7 +951,7 @@ public class ConsoleCheckCLDR {
     /*
      * static class ErrorCount implements Comparable<ErrorCount> {
      * private Counter<ErrorType> counter = new Counter<ErrorType>();
-     * 
+     *
      * public int compareTo(ErrorCount o) {
      * // we don't really need a good comparison - aren't going to be sorting
      * return total() < o.total() ? -1 : total() > o.total() ? 1 : 0;
@@ -1666,7 +1666,7 @@ public class ConsoleCheckCLDR {
 
     /**
      * Utility for getting information.
-     * 
+     *
      * @param locale
      * @return
      */
@@ -1678,7 +1678,7 @@ public class ConsoleCheckCLDR {
 
     /**
      * Utility for getting information.
-     * 
+     *
      * @param locale
      * @param linkToXml
      *            TODO

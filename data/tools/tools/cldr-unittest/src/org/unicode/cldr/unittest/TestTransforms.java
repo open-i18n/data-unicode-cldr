@@ -3,15 +3,26 @@ package org.unicode.cldr.unittest;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.unicode.cldr.unittest.TestAll.TestInfo;
 import org.unicode.cldr.util.CLDRFile;
+import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CLDRTransforms;
 import org.unicode.cldr.util.Factory;
+import org.unicode.cldr.util.Pair;
+import org.unicode.cldr.util.XMLFileReader;
+import org.unicode.cldr.util.XPathParts;
 
 import com.ibm.icu.dev.util.BagFormatter;
 import com.ibm.icu.dev.util.CollectionUtilities;
@@ -83,7 +94,7 @@ public class TestTransforms extends TestFmwkPlus {
                     cyrillicToLatin, s + e);
             }
             for (String s : Arrays.asList(" ", "")) { // start of string,
-                                                      // non-letter
+                // non-letter
                 String expected = getPrefix(cyrillicToLatin, s, ysuffix);
                 assertTransformsTo("Uzbek to Latin ye", expected,
                     cyrillicToLatin, s + e);
@@ -163,7 +174,7 @@ public class TestTransforms extends TestFmwkPlus {
     void register() {
         if (!registered) {
             CLDRTransforms.registerCldrTransforms(null, null,
-                isVerbose() ? getLogPrintWriter() : null);
+                isVerbose() ? getLogPrintWriter() : null, true);
             registered = true;
         }
     }
@@ -172,13 +183,127 @@ public class TestTransforms extends TestFmwkPlus {
         transliterator, roundtrip
     };
 
+    private String makeLegacyTransformID(String source, String target, String variant) {
+	if (variant != null) {
+	    return source + "-" + target + "/" + variant;
+	} else {
+	    return source + "-" + target;
+	}
+    }
+
+    private void checkTransformID(String id, File file) {
+	if (id.indexOf("-t-") > 0) {
+	    String expected = ULocale.forLanguageTag(id).toLanguageTag();
+	    if (!id.equals(expected)) {
+		errln(file.getName() + ": BCP47-T identifier \"" +
+		      id + "\" should be \"" + expected + "\"");			
+	    }
+        }
+    }
+
+    private void addTransformID(String id, File file, Map<String, File> ids) {
+	File oldFile = ids.get(id);
+	if (oldFile == null || oldFile.equals(file)) {
+	    ids.put(id, file);
+	} else {
+	    errln(file.getName() + ": Transform \"" + id +
+		  "\" already defined in " + oldFile.getName());
+	}
+    }
+
+    private void addTransformIDs(File file, XPathParts parts, int element, Map<String, File> ids) {
+	String source = parts.getAttributeValue(element, "source");
+	String target = parts.getAttributeValue(element, "target");
+	String variant = parts.getAttributeValue(element, "variant");
+	String direction = parts.getAttributeValue(element, "direction");
+
+	if (source != null && target != null) {
+	    if ("forward".equals(direction)) {
+		addTransformID(makeLegacyTransformID(source, target, variant), file, ids);
+	    } else if ("both".equals(direction)) {
+		addTransformID(makeLegacyTransformID(source, target, variant), file, ids);
+		addTransformID(makeLegacyTransformID(target, source, variant), file, ids);
+	    }
+	}
+
+	String alias = parts.getAttributeValue(element, "alias");
+	if (alias != null) {
+	    for (String id : alias.split("\\s+")) {
+		addTransformID(id, file, ids);
+	    }
+	}
+
+	String backwardAlias = parts.getAttributeValue(element, "backwardAlias");
+	if (backwardAlias != null) {
+	    if (!"both".equals(direction)) {
+		errln(file.getName() + ": Expected direction=\"both\" " +
+		      "when backwardAlias is present");
+	    }
+
+	    for (String id : backwardAlias.split("\\s+")) {
+		addTransformID(id, file, ids);
+	    }
+	}
+    }
+
+    private Map<String, File> getTransformIDs(String transformsDirectoryPath) {
+	Map<String, File> ids = new HashMap<String, File>();
+	File dir = new File(transformsDirectoryPath);
+	if (!dir.exists()) {
+	    errln("Cannot find transforms directory at " + transformsDirectoryPath);
+	    return ids;
+	}
+
+	for (File file : dir.listFiles()) {
+	    if (!file.getName().endsWith(".xml")) {
+		continue;
+	    }
+	    List<Pair<String, String>> data = new ArrayList<>();
+	    XMLFileReader.loadPathValues(file.getPath(), data, true);
+	    for (Pair<String, String> entry : data) {
+		final String xpath = entry.getFirst();
+		if (xpath.startsWith("//supplementalData/transforms/transform[")) {
+		    String fileName = file.getName();
+		    XPathParts parts = XPathParts.getFrozenInstance(xpath);
+		    addTransformIDs(file, parts, 2, ids);
+		}
+	    }
+	}
+	return ids;
+    }
+
+    public void TestTransformIDs() {
+        Map<String, File> transforms = getTransformIDs(CLDRPaths.TRANSFORMS_DIRECTORY);
+        for (Map.Entry<String, File> entry : transforms.entrySet()) {
+	    checkTransformID(entry.getKey(), entry.getValue());
+        }
+
+ 	// Only run the rest in exhaustive mode since it requires CLDR_ARCHIVE_DIRECTORY.
+        if (getInclusion() <= 5) {
+            return;
+        }
+
+	Set<String> removedTransforms = new HashSet<String>();
+	removedTransforms.add("ASCII-Latin");  // http://unicode.org/cldr/trac/ticket/9163
+
+        Map<String, File> oldTransforms = getTransformIDs(CLDRPaths.LAST_TRANSFORMS_DIRECTORY);
+        for (Map.Entry<String, File> entry : oldTransforms.entrySet()) {
+	    String id = entry.getKey();
+	    if (!transforms.containsKey(id) && !removedTransforms.contains(id)) {
+		File oldFile = entry.getValue();
+		errln("Missing transform \"" + id +
+		      "\"; the previous CLDR release had defined it in " + oldFile.getName());
+	    }
+	}
+    }
+
     public void Test1461() {
         register();
 
         String[][] tests = {
             { "transliterator=", "Katakana-Latin" },
             { "\u30CF \u30CF\uFF70 \u30CF\uFF9E \u30CF\uFF9F",
-                "ha hā ba pa" }, { "transliterator=", "Hangul-Latin" },
+            "ha hā ba pa" }, { "transliterator=", "Hangul-Latin" },
             { "roundtrip=", "true" }, { "갗", "gach" }, { "느", "neu" }, };
 
         Transliterator transform = null;
@@ -192,15 +317,15 @@ public class TestTransforms extends TestFmwkPlus {
                 switch (Options.valueOf(source
                     .substring(0, source.length() - 1).toLowerCase(
                         Locale.ENGLISH))) {
-                case transliterator:
-                    id = target;
-                    transform = Transliterator.getInstance(id);
-                    inverse = Transliterator.getInstance(id,
-                        Transliterator.REVERSE);
-                    break;
-                case roundtrip:
-                    roundtrip = target.toLowerCase(Locale.ENGLISH).charAt(0) == 't';
-                    break;
+                        case transliterator:
+                            id = target;
+                            transform = Transliterator.getInstance(id);
+                            inverse = Transliterator.getInstance(id,
+                                Transliterator.REVERSE);
+                            break;
+                        case roundtrip:
+                            roundtrip = target.toLowerCase(Locale.ENGLISH).charAt(0) == 't';
+                            break;
                 }
                 continue;
             }
@@ -211,6 +336,13 @@ public class TestTransforms extends TestFmwkPlus {
                 assertEquals(id + " (inv): from " + target, source, result2);
             }
         }
+    }
+
+    public void Test8921() {
+        register();
+        Transliterator trans = Transliterator.getInstance("Latin-ASCII");
+        assertEquals("Test8921", "Kornil'ev Kirill",
+            trans.transliterate("Kornilʹev Kirill"));
     }
 
     public void TestData() {
@@ -225,21 +357,39 @@ public class TestTransforms extends TestFmwkPlus {
             File fileDirectory = new File(name
                 + "/../unittest/data/transformtest/");
             String fileDirectoryName = fileDirectory.getCanonicalPath(); // TODO:
-                                                                         // use
-                                                                         // resource,
-                                                                         // not
-                                                                         // raw
-                                                                         // file
+            // use
+            // resource,
+            // not
+            // raw
+            // file
             logln("Testing files in: " + fileDirectoryName);
 
+            Pattern rfc6497Pattern =
+                Pattern.compile("([a-zA-Z0-9-]+)-t-([a-zA-Z0-9-]+?)(?:-m0-([a-zA-Z0-9-]+))?");
             for (String file : fileDirectory.list()) {
                 if (!file.endsWith(".txt")) {
                     continue;
                 }
                 logln("Testing file: " + file);
                 String transName = file.substring(0, file.length() - 4);
-                Transliterator trans = Transliterator.getInstance(transName);
 
+                // TODO: Pass unmodified transform name to ICU, once
+                // ICU can handle transform identifiers according to
+                // BCP47 Extension T (RFC 6497). The rewriting below
+                // is just a temporary workaround, allowing us to use
+                // BCP47 identifiers for naming test data files.
+                Matcher rfc6497Matcher = rfc6497Pattern.matcher(transName);
+                if (rfc6497Matcher.matches()) {
+                    String targetLanguage = rfc6497Matcher.group(1).replace('-', '_');
+                    String originalLanguage = rfc6497Matcher.group(2).replace('-', '_');
+                    String mechanism = rfc6497Matcher.group(3);
+                    transName = originalLanguage + "-" + targetLanguage;
+                    if (mechanism != null && !mechanism.isEmpty()) {
+                        transName += "/" + mechanism.replace('-', '_');
+                    }
+                }
+
+                Transliterator trans = Transliterator.getInstance(transName);
                 BufferedReader in = BagFormatter.openUTF8Reader(
                     fileDirectoryName, file);
                 int counter = 0;
@@ -331,10 +481,10 @@ public class TestTransforms extends TestFmwkPlus {
         ULocale ulocale = new ULocale(locale);
         String specialCasing;
         Normalizer2 normNFC = Normalizer2.getNFCInstance(); // UCharacter.toXxxCase
-                                                            // doesn't
-                                                            // normalize,
-                                                            // Transliterator
-                                                            // does
+        // doesn't
+        // normalize,
+        // Transliterator
+        // does
         switch (casing) {
         case Upper:
             specialCasing = normNFC.normalize(UCharacter.toUpperCase(ulocale,

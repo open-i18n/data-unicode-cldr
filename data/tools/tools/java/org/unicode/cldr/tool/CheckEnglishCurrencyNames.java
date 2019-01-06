@@ -16,7 +16,7 @@ import org.unicode.cldr.util.SupplementalDataInfo.CurrencyDateInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.OfficialStatus;
 import org.unicode.cldr.util.SupplementalDataInfo.PopulationData;
 
-import com.ibm.icu.dev.util.Relation;
+import com.ibm.icu.impl.Relation;
 
 public class CheckEnglishCurrencyNames {
     static SupplementalDataInfo supplementalDataInfo = SupplementalDataInfo
@@ -124,9 +124,9 @@ public class CheckEnglishCurrencyNames {
                         currency);
                     System.out.println(
                         currency + "\t" + english.getName(CLDRFile.CURRENCY_NAME, currency)
-                            + "\t" + territory + "\t" + english.getName(CLDRFile.TERRITORY_NAME, territory)
-                            + "\t" + language + "\t" + english.getName(language)
-                            + "\t" + symbol);
+                        + "\t" + territory + "\t" + english.getName(CLDRFile.TERRITORY_NAME, territory)
+                        + "\t" + language + "\t" + english.getName(language)
+                        + "\t" + symbol);
                     // TODO add script
                     if (nativeLanguage != null) {
                         currency2symbols.put(currency, symbol);

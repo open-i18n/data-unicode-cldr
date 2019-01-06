@@ -25,7 +25,7 @@ import org.unicode.cldr.util.XPathParts;
 
 import com.google.common.base.Splitter;
 import com.ibm.icu.dev.util.CollectionUtilities;
-import com.ibm.icu.dev.util.Relation;
+import com.ibm.icu.impl.Relation;
 import com.ibm.icu.text.DisplayContext;
 import com.ibm.icu.text.LocaleDisplayNames;
 import com.ibm.icu.text.UnicodeSet;
@@ -181,8 +181,8 @@ public class GenerateCasingChart {
         LocaleDisplayNames localeDisplayNames = LocaleDisplayNames.getInstance(locale, DisplayContext.CAPITALIZATION_FOR_UI_LIST_OR_MENU);
         System.out.println(
             locale.getDisplayName(ULocale.ENGLISH)
-                + "\t" + locale.getDisplayName(locale)
-                + "\t" + localeDisplayNames.localeDisplayName(locale)
+            + "\t" + locale.getDisplayName(locale)
+            + "\t" + localeDisplayNames.localeDisplayName(locale)
             );
     }
 

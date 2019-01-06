@@ -16,7 +16,7 @@ public class CheckLogicalGroupings extends CheckCLDR {
     // Change MINIMUM_DRAFT_STATUS to DraftStatus.contributed if you only care about
     // contributed or higher. This can help to reduce the error count when you have a lot of new data.
 
-    static final DraftStatus MIMIMUM_DRAFT_STATUS = DraftStatus.approved;
+    static final DraftStatus MIMIMUM_DRAFT_STATUS = DraftStatus.unconfirmed;
 
     // remember to add this class to the list in CheckCLDR.getCheckAll
     // to run just this test, on just locales starting with 'nl', use CheckCLDR with -fnl.* -t.*LogicalGroupings.*
@@ -29,15 +29,15 @@ public class CheckLogicalGroupings extends CheckCLDR {
         if (LogicalGrouping.isOptional(getCldrFileToCheck(), path)) return this;
         Set<String> paths = LogicalGrouping.getPaths(getCldrFileToCheck(), path);
         if (paths.size() < 2) return this; // skip if not part of a logical grouping
-        boolean logicalGroupingIsEmpty = true;
+        int logicalGroupingCount = 0;
         for (String apath : paths) {
             if (getCldrFileToCheck().isHere(apath)) {
-                logicalGroupingIsEmpty = false;
-                break;
+                logicalGroupingCount++;
             }
         }
-        if (logicalGroupingIsEmpty) return this; // skip if the logical grouping is empty
-        if (!getCldrFileToCheck().isHere(path)) {
+        if (logicalGroupingCount == 0) return this; // skip if the logical grouping is empty
+        if (!getCldrFileToCheck().isHere(path) || 
+            (this.getPhase().equals(Phase.FINAL_TESTING) && logicalGroupingCount != paths.size())) {
             CheckStatus.Type showError = CheckStatus.errorType;
             if (this.getPhase().equals(Phase.BUILD)) {
                 showError = CheckStatus.warningType;
@@ -50,7 +50,7 @@ public class CheckLogicalGroupings extends CheckCLDR {
         // Special test during vetting phase to allow changes in a logical group when another item in the group
         // contains an error or warning.  See http://unicode.org/cldr/trac/ticket/4943.
         // I added the option lgWarningCheck so that we don't loop back on ourselves forever.
-        // JCE: 2015-04-13: I don't think we need this any more, since we implemented 
+        // JCE: 2015-04-13: I don't think we need this any more, since we implemented
         // http://unicode.org/cldr/trac/ticket/6480, and it really slows things down.
         // I'll just comment it out until we get through a whole release without it.
         // TODO: Remove it completely if we really don't need it.
@@ -80,45 +80,45 @@ public class CheckLogicalGroupings extends CheckCLDR {
         //}
 
         //if (Phase.FINAL_TESTING.equals(this.getPhase())) {
-            Factory factory = PathHeader.getFactory(CheckCLDR.getDisplayInformation());
-            DraftStatus myStatus = null;
-            EnumMap<DraftStatus, PathHeader> draftStatuses = new EnumMap<DraftStatus, PathHeader>(DraftStatus.class);
-            for (String apath : paths) {
-                String fPath = getCldrFileToCheck().getFullXPath(apath);
-                if (fPath == null) {
-                    continue;
-                }
-                parts.set(fPath);
-                DraftStatus draftStatus = DraftStatus.forString(parts.findFirstAttributeValue("draft"));
-
-                // anything at or above the minimum is ok.
-
-                if (draftStatus.compareTo(MIMIMUM_DRAFT_STATUS) >= 0) {
-                    draftStatus = DraftStatus.approved;
-                }
-                if (apath.equals(path)) { // record what this path has, for later.
-                    myStatus = draftStatus;
-                }
-                PathHeader old = draftStatuses.get(draftStatus);
-                if (old == null) { // take first or path itself
-                    draftStatuses.put(draftStatus, factory.fromPath(apath));
-                }
+        Factory factory = PathHeader.getFactory(CheckCLDR.getDisplayInformation());
+        DraftStatus myStatus = null;
+        EnumMap<DraftStatus, PathHeader> draftStatuses = new EnumMap<DraftStatus, PathHeader>(DraftStatus.class);
+        for (String apath : paths) {
+            String fPath = getCldrFileToCheck().getFullXPath(apath);
+            if (fPath == null) {
+                continue;
             }
-            if (draftStatuses.size() > 1 && myStatus != DraftStatus.approved) { // only show errors for the items that
-                                                                                // have insufficient status
-                if (myStatus != null) { // remove my status from the list
-                    draftStatuses.remove(myStatus);
-                }
-                result.add(new CheckStatus().setCause(this).setMainType(CheckStatus.errorType)
-                    .setSubtype(Subtype.inconsistentDraftStatus) // typically warningType or errorType
-                    .setMessage("Inconsistent draft status within a logical group: {0}", draftStatuses.values())); // the
-                                                                                                                   // message;
-                                                                                                                   // can
-                                                                                                                   // be
-                                                                                                                   // MessageFormat
-                                                                                                                   // with
-                                                                                                                   // arguments
+            parts.set(fPath);
+            DraftStatus draftStatus = DraftStatus.forString(parts.findFirstAttributeValue("draft"));
+
+            // anything at or above the minimum is ok.
+
+            if (draftStatus.compareTo(MIMIMUM_DRAFT_STATUS) >= 0) {
+                draftStatus = DraftStatus.approved;
             }
+            if (apath.equals(path)) { // record what this path has, for later.
+                myStatus = draftStatus;
+            }
+            PathHeader old = draftStatuses.get(draftStatus);
+            if (old == null) { // take first or path itself
+                draftStatuses.put(draftStatus, factory.fromPath(apath));
+            }
+        }
+        if (draftStatuses.size() > 1 && myStatus != DraftStatus.approved) { // only show errors for the items that
+            // have insufficient status
+            if (myStatus != null) { // remove my status from the list
+                draftStatuses.remove(myStatus);
+            }
+            result.add(new CheckStatus().setCause(this).setMainType(CheckStatus.errorType)
+                .setSubtype(Subtype.inconsistentDraftStatus) // typically warningType or errorType
+                .setMessage("Inconsistent draft status within a logical group: {0}", draftStatuses.values())); // the
+            // message;
+            // can
+            // be
+            // MessageFormat
+            // with
+            // arguments
+        }
         // }
         return this;
     }

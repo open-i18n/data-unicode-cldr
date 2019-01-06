@@ -46,20 +46,21 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
     private static enum MatchType {
         PREFIX, REGEX
     }
+
     private static enum Type {
         LANGUAGE("//ldml/localeDisplayNames/languages/language", MatchType.PREFIX, 0),
         SCRIPT("//ldml/localeDisplayNames/scripts/script", MatchType.PREFIX, 1),
-        TERRITORY("//ldml/localeDisplayNames/territories/territory", MatchType.PREFIX,2),
-        VARIANT("//ldml/localeDisplayNames/variants/variant", MatchType.PREFIX,3),
+        TERRITORY("//ldml/localeDisplayNames/territories/territory", MatchType.PREFIX, 2),
+        VARIANT("//ldml/localeDisplayNames/variants/variant", MatchType.PREFIX, 3),
         CURRENCY("//ldml/numbers/currencies/currency", MatchType.PREFIX, 4),
-        ZONE("//ldml/dates/timeZoneNames/zone", MatchType.PREFIX,5),
-        METAZONE("//ldml/dates/timeZoneNames/metazone", MatchType.PREFIX,6),
-        DECIMAL_FORMAT("//ldml/numbers/decimalFormats", MatchType.PREFIX,7),
-        UNITS_COMPOUND_LONG("//ldml/units/unitLength[@type=\"long\"]/compoundUnit", MatchType.PREFIX,8),
-        UNITS_COMPOUND_SHORT("//ldml/units/unitLength[@type=\"short\"]/compoundUnit", MatchType.PREFIX,9),
-        UNITS_COORDINATE("//ldml/units/unitLength\\[@type=\".*\"\\]/coordinateUnit/", MatchType.REGEX,10),
-        UNITS_IGNORE("//ldml/units/unitLength[@type=\"narrow\"]", MatchType.PREFIX,11),
-        UNITS("//ldml/units/unitLength", MatchType.PREFIX,12),
+        ZONE("//ldml/dates/timeZoneNames/zone", MatchType.PREFIX, 5),
+        METAZONE("//ldml/dates/timeZoneNames/metazone", MatchType.PREFIX, 6),
+        DECIMAL_FORMAT("//ldml/numbers/decimalFormats", MatchType.PREFIX, 7),
+        UNITS_COMPOUND_LONG("//ldml/units/unitLength[@type=\"long\"]/compoundUnit", MatchType.PREFIX, 8),
+        UNITS_COMPOUND_SHORT("//ldml/units/unitLength[@type=\"short\"]/compoundUnit", MatchType.PREFIX, 9),
+        UNITS_COORDINATE("//ldml/units/unitLength\\[@type=\".*\"\\]/coordinateUnit/", MatchType.REGEX, 10),
+        UNITS_IGNORE("//ldml/units/unitLength[@type=\"narrow\"]", MatchType.PREFIX, 11),
+        UNITS("//ldml/units/unitLength", MatchType.PREFIX, 12),
         FIELDS_NARROW("//ldml/dates/fields/field\\[@type=\"(sun|mon|tue|wed|thu|fri|sat)-narrow\"\\]/relative", MatchType.REGEX, 13),
         FIELDS_RELATIVE("//ldml/dates/fields/field\\[@type=\".*\"\\]/relative\\[@type=\"(-1|0|1)\"\\]", MatchType.REGEX, 14);
 
@@ -70,7 +71,7 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
         private Type(String basePrefix, MatchType matchType, int index) {
             this.matchType = matchType;
             this.basePrefix = basePrefix;
-            this.baseMatcher = PatternCache.get("^"+basePrefix+".*").matcher("");
+            this.baseMatcher = PatternCache.get("^" + basePrefix + ".*").matcher("");
         }
 
         /**
@@ -79,6 +80,7 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
         public String getPrefix() {
             return basePrefix;
         }
+
         /**
          * @return the regex that matches all XPaths of this type
          */
@@ -94,11 +96,11 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
         public static Type getType(String path) {
             for (Type type : values()) {
                 if (type.matchType == MatchType.PREFIX) {
-                    if ( path.startsWith(type.getPrefix())) {
+                    if (path.startsWith(type.getPrefix())) {
                         return type;
                     }
                 }
-                 
+
                 Matcher m = type.getMatcher();
                 m.reset(path);
                 if (m.matches()) {
@@ -124,66 +126,66 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
     private static Map<String, Set<String>> createMapPathPartsToSets() {
         Map<String, Set<String>> mapPathPartsToSets = new HashMap<String, Set<String>>();
 
-        // Add OK collisions for /unit[@type=\"energy-calorie\"]     
+        // Add OK collisions for /unit[@type=\"energy-calorie\"]
         Set<String> set1 = new HashSet<String>();
         set1.add("/unit[@type=\"energy-foodcalorie\"]");
         mapPathPartsToSets.put("/unit[@type=\"energy-calorie\"]", set1);
 
-        // Add OK collisions for /unit[@type=\"energy-foodcalorie\"]   
+        // Add OK collisions for /unit[@type=\"energy-foodcalorie\"]
         Set<String> set2 = new HashSet<String>();
         set2.add("/unit[@type=\"energy-calorie\"]");
         set2.add("/unit[@type=\"energy-kilocalorie\"]");
         mapPathPartsToSets.put("/unit[@type=\"energy-foodcalorie\"]", set2);
 
-        // Add OK collisions for /unit[@type=\"energy-kilocalorie\"]     
+        // Add OK collisions for /unit[@type=\"energy-kilocalorie\"]
         Set<String> set3 = new HashSet<String>();
         set3.add("/unit[@type=\"energy-foodcalorie\"]");
         mapPathPartsToSets.put("/unit[@type=\"energy-kilocalorie\"]", set3);
 
-        // Add OK collisions for /unit[@type=\"mass-carat\"]      
+        // Add OK collisions for /unit[@type=\"mass-carat\"]
         Set<String> set4 = new HashSet<String>();
-        set4.add("/unit[@type=\"proportion-karat\"]");
+        set4.add("/unit[@type=\"concentr-karat\"]");
         mapPathPartsToSets.put("/unit[@type=\"mass-carat\"]", set4);
 
-        // Add OK collisions for /unit[@type=\"proportion-karat\"]     
+        // Add OK collisions for /unit[@type=\"concentr-karat\"]
         Set<String> set5 = new HashSet<String>();
         set5.add("/unit[@type=\"mass-carat\"]");
         set5.add("/unit[@type=\"temperature-kelvin\"]");
-        mapPathPartsToSets.put("/unit[@type=\"proportion-karat\"]", set5);
+        mapPathPartsToSets.put("/unit[@type=\"concentr-karat\"]", set5);
 
-        // Add OK collisions for /unit[@type=\"digital-byte\"]     
+        // Add OK collisions for /unit[@type=\"digital-byte\"]
         Set<String> set6 = new HashSet<String>();
         set6.add("/unit[@type=\"mass-metric-ton\"]");
         mapPathPartsToSets.put("/unit[@type=\"digital-byte\"]", set6);
 
-        // Add OK collisions for /unit[@type=\"mass-metric-ton\"]     
+        // Add OK collisions for /unit[@type=\"mass-metric-ton\"]
         Set<String> set7 = new HashSet<String>();
         set7.add("/unit[@type=\"digital-byte\"]");
         mapPathPartsToSets.put("/unit[@type=\"mass-metric-ton\"]", set7);
 
         // delete the exceptions allowing acceleration-g-force and mass-gram to have the same symbol, see #7561
 
-        // Add OK collisions for /unit[@type=\"length-foot\"]     
+        // Add OK collisions for /unit[@type=\"length-foot\"]
         Set<String> set10 = new HashSet<String>();
         set10.add("/unit[@type=\"angle-arc-minute\"]");
         mapPathPartsToSets.put("/unit[@type=\"length-foot\"]", set10);
 
-        // Add OK collisions for /unit[@type=\"angle-arc-minute\"]     
+        // Add OK collisions for /unit[@type=\"angle-arc-minute\"]
         Set<String> set11 = new HashSet<String>();
         set11.add("/unit[@type=\"length-foot\"]");
         mapPathPartsToSets.put("/unit[@type=\"angle-arc-minute\"]", set11);
 
-        // Add OK collisions for /unit[@type=\"temperature-kelvin\"]     
+        // Add OK collisions for /unit[@type=\"temperature-kelvin\"]
         Set<String> set12 = new HashSet<String>();
-        set12.add("/unit[@type=\"proportion-karat\"]");
+        set12.add("/unit[@type=\"concentr-karat\"]");
         mapPathPartsToSets.put("/unit[@type=\"temperature-kelvin\"]", set12);
 
-        // Add OK collisions for /unit[@type=\"temperature-generic\"]     
+        // Add OK collisions for /unit[@type=\"temperature-generic\"]
         Set<String> set13 = new HashSet<String>();
         set13.add("/unit[@type=\"temperature-generic\"]");
         mapPathPartsToSets.put("/unit[@type=\"angle-degree\"]", set13);
 
-        // Add OK collisions for /unit[@type=\"angle-degree\"]     
+        // Add OK collisions for /unit[@type=\"angle-degree\"]
         Set<String> set14 = new HashSet<String>();
         set14.add("/unit[@type=\"angle-degree\"]");
         mapPathPartsToSets.put("/unit[@type=\"temperature-generic\"]", set14);
@@ -326,7 +328,7 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
             }
         }
         // Collisions between different lengths and counts of the same field are allowed
-        if (myType == Type.FIELDS_RELATIVE ) {
+        if (myType == Type.FIELDS_RELATIVE) {
             XPathParts parts = new XPathParts().set(path);
             String myFieldType = parts.getAttributeValue(3, "type").split("-")[0];
             Iterator<String> iterator = paths.iterator();
@@ -341,7 +343,7 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
             }
         }
         // Collisions between different lengths of the same field are allowed
-        if (myType == Type.UNITS_COORDINATE ) {
+        if (myType == Type.UNITS_COORDINATE) {
             XPathParts parts = new XPathParts().set(path);
             String myFieldType = parts.findAttributeValue("coordinateUnitPattern", "type");
             Iterator<String> iterator = paths.iterator();
@@ -475,10 +477,10 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
         ) {
 
         Set<String> retrievedPaths = new HashSet<String>();
-        if ( myType.matchType == MatchType.PREFIX) {
+        if (myType.matchType == MatchType.PREFIX) {
             file.getPathsWithValue(value, myPrefix, matcher, retrievedPaths);
         } else {
-            file.getPathsWithValue(value, "//ldml", myType.getMatcher(), retrievedPaths);            
+            file.getPathsWithValue(value, "//ldml", myType.getMatcher(), retrievedPaths);
         }
 
         String normValue = null;
@@ -499,7 +501,8 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
             // then it can't be a collision we care about.
             if (myType != thisPathType) {
                 continue;
-            };            
+            }
+            ;
             if (exclusions.reset(pathName).find() && thisPathType != Type.UNITS_COORDINATE) {
                 continue;
             }
@@ -567,7 +570,7 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
     /**
      * Checks if the specified region code has any exceptions to the requirement
      * that all exemplar cities and territory names have to be unique.
-     * 
+     *
      * @param regionCode
      *            the region code to be checked
      * @return the corresponding region code that can have a value identical to

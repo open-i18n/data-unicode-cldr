@@ -19,7 +19,7 @@ import com.ibm.icu.util.Calendar;
 
 /**
  * Writes an IcuData object to a text file.
- * 
+ *
  * @author jchye
  */
 public class IcuTextWriter {
@@ -86,7 +86,7 @@ public class IcuTextWriter {
     /**
      * Write a file in ICU format. LDML2ICUConverter currently has some
      * funny formatting in a few cases; don't try to match everything.
-     * 
+     *
      * @param icuData
      *            the icu data structure to be written
      * @param dirPath
@@ -226,7 +226,7 @@ public class IcuTextWriter {
     /**
      * Wrapper for a hack to determine if the given rb path should always
      * present its values as an array. This hack is required for an ICU data test to pass.
-     * 
+     *
      * @param topValues
      * @param name
      * @param rbPath
@@ -268,7 +268,7 @@ public class IcuTextWriter {
 
     /**
      * Can a string be broken here? If not, backup until we can.
-     * 
+     *
      * @param quoted
      * @param end
      * @return
@@ -298,7 +298,7 @@ public class IcuTextWriter {
 
     /**
      * Fix characters inside strings.
-     * 
+     *
      * @param item
      * @return
      */
@@ -330,7 +330,7 @@ public class IcuTextWriter {
 
     /**
      * find the initial labels (from a path) that are identical.
-     * 
+     *
      * @param item
      * @return
      */

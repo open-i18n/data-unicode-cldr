@@ -24,7 +24,7 @@ import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.XMLFileReader;
 
 import com.ibm.icu.dev.test.TestFmwk;
-import com.ibm.icu.dev.util.Relation;
+import com.ibm.icu.impl.Relation;
 import com.ibm.icu.impl.Row;
 import com.ibm.icu.impl.Row.R2;
 import com.ibm.icu.lang.UCharacter;
@@ -56,7 +56,7 @@ public class TestBcp47Transforms extends TestFmwk {
         }
         Map<String, String> old2newName = new TreeMap<String, String>();
         for (String file : Arrays.asList(new File(CLDRTransforms.TRANSFORM_DIR)
-            .list())) {
+        .list())) {
             if (!file.endsWith(".xml"))
                 continue;
             ParsedTransformID directionInfo = new ParsedTransformID();
@@ -157,8 +157,8 @@ public class TestBcp47Transforms extends TestFmwk {
         }
         // real special cases
         builder.put("any", "und").put("simplified", "Hans")
-            .put("traditional", "Hant").put("ipa", "und-fonipa")
-            .put("xsampa", "und-fonxsamp").put("japanesekana", "und-Hrkt");
+        .put("traditional", "Hant").put("ipa", "und-fonipa")
+        .put("xsampa", "und-fonxsamp").put("japanesekana", "und-Hrkt");
         /*
          * source fullwidth source jamo target accents target ascii target
          * halfwidth target jamo target numericpinyin target publishing

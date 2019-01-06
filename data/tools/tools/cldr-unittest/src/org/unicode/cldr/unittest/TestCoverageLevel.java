@@ -35,7 +35,7 @@ import org.unicode.cldr.util.XPathParts;
 
 import com.google.common.collect.ImmutableSet;
 import com.ibm.icu.dev.util.CollectionUtilities;
-import com.ibm.icu.dev.util.Relation;
+import com.ibm.icu.impl.Relation;
 import com.ibm.icu.impl.Row.R2;
 import com.ibm.icu.text.CompactDecimalFormat;
 import com.ibm.icu.text.CompactDecimalFormat.CompactStyle;
@@ -111,7 +111,7 @@ public class TestCoverageLevel extends TestFmwkPlus {
                 + "\t"
                 + (maxLevelCount == 1 ? "all" : localesWithUniqueLevels
                     .size() == 0 ? "none" : CollectionUtilities.join(
-                    localesWithUniqueLevels, ", ")));
+                        localesWithUniqueLevels, ", ")));
         }
     }
 
@@ -225,15 +225,15 @@ public class TestCoverageLevel extends TestFmwkPlus {
             switch (field) {
             case CLDRFile.LANGUAGE_NAME:
                 dep = SDI.getLocaleAliasInfo()
-                    .get("language");
+                .get("language");
                 break;
             case CLDRFile.TERRITORY_NAME:
                 dep = SDI.getLocaleAliasInfo()
-                    .get("territory");
+                .get("territory");
                 break;
             case CLDRFile.SCRIPT_NAME:
                 dep = SDI.getLocaleAliasInfo()
-                    .get("script");
+                .get("script");
                 break;
             default:
                 dep = null;
@@ -264,10 +264,10 @@ public class TestCoverageLevel extends TestFmwkPlus {
 
     RegexLookup<Level> exceptions = RegexLookup.of(null,
         new Transform<String, Level>() {
-            public Level transform(String source) {
-                return Level.fromLevel(Integer.parseInt(source));
-            }
-        }, null).loadFromFile(TestCoverageLevel.class,
+        public Level transform(String source) {
+            return Level.fromLevel(Integer.parseInt(source));
+        }
+    }, null).loadFromFile(TestCoverageLevel.class,
         "TestCoverageLevel.txt");
 
     public void TestExceptions() {
@@ -329,15 +329,15 @@ public class TestCoverageLevel extends TestFmwkPlus {
             + "zap?|zbl|ze[an]|znd|zun|zza)");
 
         final Pattern script100 = PatternCache.get("("
-            + "Afak|Aghb|Ahom|Armi|Avst|Bali|Bamu|Bass|Batk|Blis|Brah|Bugi|Buhd|Cakm|Cans|Cari|Cham|Cher|Cirt|Copt|Cprt|Cyrs|"
-            + "Dsrt|Dupl|Egy[dhp]|Elba|Geok|Glag|Goth|Gran|Hatr|Hano|Hluw|Hmng|Hrkt|Hung|Inds|Ital|Java|Jurc|"
-            + "Kali|Khar|Khoj|Kpel|Kthi|Kits|Lana|Lat[fg]|Lepc|Limb|Lin[ab]|Lisu|Loma|Ly[cd]i|Mahj|Man[di]|Maya|Mend|Mer[co]|Modi|Moon|Mroo|Mtei|Mult|"
-            + "Narb|Nbat|Nkgb|Nkoo|Nshu|Ogam|Olck|Orkh|Osma|Palm|Pauc|Perm|Phag|Phl[ipv]|Phnx|Plrd|Prti|"
+            + "Adlm|Afak|Aghb|Ahom|Armi|Avst|Bali|Bamu|Bass|Batk|Bhks|Blis|Brah|Bugi|Buhd|Cakm|Cans|Cari|Cham|Cher|Cirt|Copt|Cprt|Cyrs|"
+            + "Dsrt|Dupl|Egy[dhp]|Elba|Geok|Glag|Goth|Gran|Hatr|Hanb|Hano|Hluw|Hmng|Hrkt|Hung|Inds|Ital|Jamo|Java|Jurc|"
+            + "Kali|Khar|Khoj|Kpel|Kthi|Kits|Lana|Lat[fg]|Lepc|Limb|Lin[ab]|Lisu|Loma|Ly[cd]i|Mahj|Man[di]|Marc|Maya|Mend|Mer[co]|Modi|Moon|Mroo|Mtei|Mult|"
+            + "Narb|Nbat|Newa|Nkgb|Nkoo|Nshu|Ogam|Olck|Orkh|Osge|Osma|Palm|Pauc|Perm|Phag|Phl[ipv]|Phnx|Plrd|Prti|"
             + "Rjng|Roro|Runr|Samr|Sar[ab]|Saur|Sgnw|Shaw|Shrd|Sidd|Sind|Sora|Sund|Sylo|Syr[cejn]|"
             + "Tagb|Takr|Tal[eu]|Tang|Tavt|Teng|Tfng|Tglg|Tirh|Ugar|Vaii|Visp|Wara|Wole|Xpeo|Xsux|Yiii|Zinh|Zmth)");
 
         final Pattern keys100 = PatternCache.get("(col(Alternate|Backwards|CaseFirst|CaseLevel|HiraganaQuaternary|"
-            + "Normalization|Numeric|Reorder|Strength)|kv|timezone|va|variableTop|x)");
+            + "Normalization|Numeric|Reorder|Strength)|kv|sd|timezone|va|variableTop|x)");
 
         final Pattern numberingSystem100 = PatternCache.get("("
             + "finance|native|traditional|ahom|bali|brah|cakm|cham|cyrl|hanidays|hmng|java|kali|lana(tham)?|lepc|limb|"

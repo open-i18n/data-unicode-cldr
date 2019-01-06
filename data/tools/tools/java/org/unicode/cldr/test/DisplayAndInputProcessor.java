@@ -70,7 +70,7 @@ public class DisplayAndInputProcessor {
         + "numbers/symbols.*|"
         + "numbers/miscPatterns.*|"
         + "numbers/(decimal|currency|percent|scientific)Formats.+/(decimal|currency|percent|scientific)Format.*)");
-   private static final Pattern INTERVAL_FORMAT_PATHS = PatternCache.get("//ldml/dates/.+/intervalFormatItem.*");
+    private static final Pattern INTERVAL_FORMAT_PATHS = PatternCache.get("//ldml/dates/.+/intervalFormatItem.*");
     private static final Pattern NON_DECIMAL_PERIOD = PatternCache.get("(?<![0#'])\\.(?![0#'])");
     private static final Pattern WHITESPACE_NO_NBSP_TO_NORMALIZE = PatternCache.get("\\s+"); // string of whitespace not
     // including NBSP, i.e. [
@@ -130,7 +130,7 @@ public class DisplayAndInputProcessor {
 
     /**
      * Constructor, taking cldrFile.
-     * 
+     *
      * @param cldrFileToCheck
      */
     public DisplayAndInputProcessor(CLDRFile cldrFileToCheck, boolean needsCollator) {
@@ -176,7 +176,7 @@ public class DisplayAndInputProcessor {
 
     /**
      * Constructor, taking locale.
-     * 
+     *
      * @param locale
      */
     public DisplayAndInputProcessor(ULocale locale, boolean needsCollator) {
@@ -185,7 +185,7 @@ public class DisplayAndInputProcessor {
 
     /**
      * Constructor, taking locale.
-     * 
+     *
      * @param locale
      */
     public DisplayAndInputProcessor(ULocale locale) {
@@ -194,7 +194,7 @@ public class DisplayAndInputProcessor {
 
     /**
      * Constructor, taking locale.
-     * 
+     *
      * @param locale
      */
     public DisplayAndInputProcessor(CLDRLocale locale, boolean needsCollator) {
@@ -203,7 +203,7 @@ public class DisplayAndInputProcessor {
 
     /**
      * Constructor, taking locale.
-     * 
+     *
      * @param locale
      */
     public DisplayAndInputProcessor(CLDRLocale locale) {
@@ -213,7 +213,7 @@ public class DisplayAndInputProcessor {
     /**
      * Process the value for display. The result is a string for display in the
      * Survey tool or similar program.
-     * 
+     *
      * @param path
      * @param value
      * @param fullPath
@@ -270,7 +270,7 @@ public class DisplayAndInputProcessor {
      * an exemplar set is modified to be in the normal format, and any missing [ ]
      * are added (a common omission on entry). If there are any failures then the
      * original value is returned, so that the proper error message can be given.
-     * 
+     *
      * @param path
      * @param value
      * @param internalException
@@ -298,7 +298,7 @@ public class DisplayAndInputProcessor {
                 value = standardizeNgomba(value);
             } else if (locale.childOf(KWASIO) && !path.startsWith("//ldml/characters/exemplarCharacters")) {
                 value = standardizeKwasio(value);
-            } else if (locale.childOf(HEBREW) && !path.startsWith("//ldml/characters/exemplarCharacters")) {
+            } else if (locale.childOf(HEBREW) && !APOSTROPHE_SKIP_PATHS.matcher(path).matches()) {
                 value = standardizeHebrew(value);
             } else if ((locale.childOf(SWISS_GERMAN) || locale.childOf(GERMAN_SWITZERLAND)) && !path.startsWith("//ldml/characters/exemplarCharacters")) {
                 value = standardizeSwissGerman(value);
@@ -413,14 +413,14 @@ public class DisplayAndInputProcessor {
             if (!APOSTROPHE_SKIP_PATHS.matcher(path).matches()) {
                 value = normalizeApostrophes(value);
             }
-            
+
             // Fix up hyphens, replacing with N-dash as appropriate
             if (INTERVAL_FORMAT_PATHS.matcher(path).matches()) {
                 value = normalizeIntervalHyphens(value);
             } else {
                 value = normalizeHyphens(value);
             }
-            
+
             return value;
         } catch (RuntimeException e) {
             if (internalException != null) {
@@ -526,11 +526,11 @@ public class DisplayAndInputProcessor {
 
     private String normalizeHyphens(String value) {
         int hyphenLocation = value.indexOf("-");
-        if (hyphenLocation > 0 && 
-            Character.isDigit(value.charAt(hyphenLocation-1)) &&
-            hyphenLocation < value.length()-1 &&
-            Character.isDigit(value.charAt(hyphenLocation+1))) {
-            StringBuilder sb = new StringBuilder();            
+        if (hyphenLocation > 0 &&
+            Character.isDigit(value.charAt(hyphenLocation - 1)) &&
+            hyphenLocation < value.length() - 1 &&
+            Character.isDigit(value.charAt(hyphenLocation + 1))) {
+            StringBuilder sb = new StringBuilder();
             sb.append(value.substring(0, hyphenLocation));
             sb.append("\u2013");
             sb.append(value.substring(hyphenLocation + 1));
@@ -648,7 +648,7 @@ public class DisplayAndInputProcessor {
 
     /**
      * Normalizes the Malayalam characters in the specified input.
-     * 
+     *
      * @param value
      *            the input to be normalized
      * @return
@@ -676,7 +676,7 @@ public class DisplayAndInputProcessor {
 
     /**
      * Normalizes the Arabic presentation forms characters in the specified input.
-     * 
+     *
      * @param value
      *            the input to be normalized
      * @return
@@ -747,7 +747,7 @@ public class DisplayAndInputProcessor {
      */
     public static String getCanonicalPattern(String inpattern, NumericType type, boolean isPOSIX) {
         // TODO fix later to properly handle quoted ;
-        
+
         DecimalFormat df = new DecimalFormat(inpattern);
         if (type == NumericType.DECIMAL_ABBREVIATED || type == NumericType.CURRENCY_ABBREVIATED
             || CldrUtility.INHERITANCE_MARKER.equals(inpattern)) {

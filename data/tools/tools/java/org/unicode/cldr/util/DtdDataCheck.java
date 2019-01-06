@@ -20,7 +20,7 @@ import org.unicode.cldr.util.DtdData.ElementType;
 
 import com.ibm.icu.dev.util.BagFormatter;
 import com.ibm.icu.dev.util.CollectionUtilities;
-import com.ibm.icu.dev.util.Relation;
+import com.ibm.icu.impl.Relation;
 import com.ibm.icu.impl.Row;
 import com.ibm.icu.impl.Row.R2;
 import com.ibm.icu.impl.Row.R4;
@@ -341,7 +341,7 @@ public class DtdDataCheck {
     //                        int stockCompare = comp.compare(lastAttributeValue, value);
     //                        if (stockCompare >= 0) {
     //                            errors.add("Failure with "
-    //                                    + element.name 
+    //                                    + element.name
     //                                    + ":" + attribute.name
     //                                    + " values:\t" + lastAttributeValue + " ≥ " + value);
     //                        }
