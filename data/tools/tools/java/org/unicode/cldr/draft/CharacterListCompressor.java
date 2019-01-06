@@ -38,6 +38,14 @@ public class CharacterListCompressor {
         public String toString() {
             return "«" + first + "-" + last + "»";
         }
+
+        public int first() {
+            return first;
+        }
+
+        public int last() {
+            return last;
+        }
     }
 
     //

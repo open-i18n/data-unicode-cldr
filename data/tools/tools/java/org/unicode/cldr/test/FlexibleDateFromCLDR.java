@@ -4,8 +4,8 @@
  * and others. All Rights Reserved.                                           *
  ******************************************************************************
  * $Source$
- * $Date: 2014-03-13 15:53:16 -0500 (Thu, 13 Mar 2014) $
- * $Revision: 9959 $
+ * $Date: 2014-05-30 23:36:28 -0500 (Fri, 30 May 2014) $
+ * $Revision: 10460 $
  ******************************************************************************
  */
 package org.unicode.cldr.test;
@@ -190,10 +190,6 @@ class FlexibleDateFromCLDR {
             } catch (RuntimeException e) {
                 failureMap.put(path, e.getMessage());
             }
-        }
-        String failure = checkValueAgainstSkeleton(path, value);
-        if (failure != null) {
-            failureMap.put(path, failure);
         }
     }
 

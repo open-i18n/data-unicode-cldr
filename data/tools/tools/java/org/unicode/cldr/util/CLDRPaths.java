@@ -1,6 +1,5 @@
 package org.unicode.cldr.util;
 
-import org.unicode.cldr.draft.FileUtilities;
 import org.unicode.cldr.tool.ToolConstants;
 
 /**
@@ -27,6 +26,8 @@ public class CLDRPaths {
     public static final String SEED_DIRECTORY = CldrUtility.getProperty("CLDR_SEED",
         CldrUtility.getPath(CLDRPaths.COMMON_DIRECTORY, "../seed/main"));
     public static final String SEED_COLLATION_DIRECTORY = CldrUtility.getPath(SEED_DIRECTORY, "../collation/");
+    public static final String EXEMPLARS_DIRECTORY = CldrUtility.getPath(CLDRPaths.BASE_DIRECTORY, "exemplars/main/");
+    public static final String RBNF_DIRECTORY = CldrUtility.getPath(CLDRPaths.COMMON_DIRECTORY, "rbnf/");
     public static final String TMP_DIRECTORY = CldrUtility.getPath(CldrUtility.getProperty("CLDR_TMP_DIR",
         CldrUtility.getPath(BASE_DIRECTORY, "../cldr-tmp/")));
     public static final String AUX_DIRECTORY = CldrUtility.getPath(CldrUtility.getProperty("CLDR_TMP_DIR",
@@ -39,7 +40,6 @@ public class CLDRPaths {
     public static final String LAST_DIRECTORY = ARCHIVE_DIRECTORY + "cldr-" +
         ToolConstants.LAST_CHART_VERSION +
         "/";
-    public static final String UCD_DIRECTORY = CldrUtility.getPath(EXTERNAL_DIRECTORY, "data/UCD/6.3.0-Update");
     public static final String GEN_DIRECTORY = CldrUtility.getPath(CldrUtility.getProperty("CLDR_GEN_DIR",
         CldrUtility.getPath(EXTERNAL_DIRECTORY, "Generated/cldr/")));
     public static final String ICU_DATA_DIR = CldrUtility.getPath(CldrUtility.getProperty("ICU_DATA_DIR", null)); // eg
@@ -61,7 +61,7 @@ public class CLDRPaths {
      * @deprecated Don't use this from any code that is run from the .JAR (SurveyTool, tests, etc).
      *             If it must be used, add a comment next to the usage to explain why it is needed.
      */
-    public static final String UTIL_DATA_DIR = FileUtilities.getRelativeFileName(
+    public static final String UTIL_DATA_DIR = FileReaders.getRelativeFileName(
         CldrUtility.class, "data/");
 
 }

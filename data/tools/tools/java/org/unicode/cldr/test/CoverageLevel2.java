@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.unicode.cldr.unittest.TestAll;
-import org.unicode.cldr.unittest.TestAll.TestInfo;
+import org.unicode.cldr.tool.ToolConfig;
 import org.unicode.cldr.util.Builder;
+import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.LanguageTagParser;
@@ -27,6 +27,11 @@ import com.ibm.icu.util.ULocale;
 public class CoverageLevel2 {
 
     // To modify the results, see /cldr/common/supplemental/coverageLevels.xml
+
+    /**
+     * Enable to get more verbose output when debugging
+     */
+    private static final boolean DEBUG_LOOKUP = false;
 
     private RegexLookup<Level> lookup = null;
 
@@ -62,15 +67,15 @@ public class CoverageLevel2 {
         }
 
         @Override
-        public boolean find(String item, Object context) {
+        public boolean find(String item, Object context, Info info) {
             LocaleSpecificInfo localeSpecificInfo = (LocaleSpecificInfo) context;
             // Modified the logic to handle the case where we want specific languages and specific territories.
             // Any match in language script or territory will succeed when multiple items are present.
             boolean lstOK = false;
-            if (ci.inLanguageSet == null && ci.inScriptSet == null && ci.inTerritorySet == null) {
+            if (ci.inLanguage == null && ci.inScriptSet == null && ci.inTerritorySet == null) {
                 lstOK = true;
-            } else if (ci.inLanguageSet != null
-                && ci.inLanguageSet.contains(localeSpecificInfo.targetLanguage)) {
+            } else if (ci.inLanguage != null
+                && ci.inLanguage.matcher(localeSpecificInfo.targetLanguage).matches()) {
                 lstOK = true;
             } else if (ci.inScriptSet != null
                 && CollectionUtilities.containsSome(ci.inScriptSet, localeSpecificInfo.cvi.targetScripts)) {
@@ -83,13 +88,13 @@ public class CoverageLevel2 {
             if (!lstOK) {
                 return false;
             }
-
-            boolean result = super.find(item, context); // also sets matcher in RegexFinder
+            boolean result = super.find(item, context, info); // also sets matcher in RegexFinder
             if (!result) {
                 return false;
             }
             if (additionalMatch != null) {
-                String groupMatch = matcher.group(1);
+                String groupMatch = info.value[1];
+//                    String groupMatch = matcher.group(1);
                 // we match on a group, so get the right one
                 switch (additionalMatch) {
                 case Target_Language:
@@ -112,6 +117,7 @@ public class CoverageLevel2 {
                     return localeSpecificInfo.cvi.calendars.contains(groupMatch);
                 }
             }
+
             return true;
         }
 
@@ -150,7 +156,7 @@ public class CoverageLevel2 {
         }
         synchronized (lookup) { // synchronize on the class, since the Matchers are changed during the matching process
             Level result;
-            if (false) { // for testing
+            if (DEBUG_LOOKUP) { // for testing
                 Output<String[]> checkItems = new Output<String[]>();
                 Output<Finder> matcherFound = new Output<Finder>();
                 List<String> failures = new ArrayList<String>();
@@ -174,7 +180,7 @@ public class CoverageLevel2 {
         // TODO convert to unit test
         CoverageLevel2 cv2 = CoverageLevel2.getInstance("de");
         ULocale uloc = new ULocale("de");
-        TestInfo testInfo = TestAll.TestInfo.getInstance();
+        CLDRConfig testInfo = ToolConfig.getToolInstance();
         SupplementalDataInfo supplementalDataInfo2 = testInfo.getSupplementalDataInfo();
         CLDRFile englishPaths1 = testInfo.getEnglish();
         Set<String> englishPaths = Builder.with(new TreeSet<String>()).addAll(englishPaths1).get();
@@ -202,4 +208,5 @@ public class CoverageLevel2 {
             }
         }
     }
+
 }

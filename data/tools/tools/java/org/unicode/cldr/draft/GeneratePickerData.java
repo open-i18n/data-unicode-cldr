@@ -23,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -33,6 +34,7 @@ import org.unicode.cldr.draft.GeneratePickerData.CategoryTable.Separation;
 import org.unicode.cldr.tool.Option;
 import org.unicode.cldr.tool.Option.Options;
 import org.unicode.cldr.util.CLDRPaths;
+import org.unicode.cldr.util.CLDRTool;
 
 import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.lang.UProperty;
@@ -47,6 +49,7 @@ import com.ibm.icu.text.UnicodeSetIterator;
 import com.ibm.icu.util.LocaleData;
 import com.ibm.icu.util.ULocale;
 
+@CLDRTool(alias = "generate-picker-data", description = "Generate draft.PickerData content", hidden = "generator for draft data")
 class GeneratePickerData {
     static final boolean DEBUG = true;
 
@@ -154,7 +157,7 @@ class GeneratePickerData {
     enum MyOptions {
         output(".*", CLDRPaths.BASE_DIRECTORY + "tools/java/org/unicode/cldr/draft/picker/",
             "output data directory"),
-        unicodedata(null, CLDRPaths.UCD_DIRECTORY, "Unicode Data directory"),
+        unicodedata(".*", DraftUtils.UCD_DIRECTORY, "Unicode Data directory"),
         verbose(null, null, "verbose debugging messages"),
         korean(null, null, "generate korean hangul defectives instead"), ;
         // boilerplate
@@ -168,7 +171,6 @@ class GeneratePickerData {
     public static void main(String[] args) throws Exception {
         // System.out.println(ScriptCategories.ARCHAIC);
         myOptions.parse(MyOptions.unicodedata, args, true);
-
         if (MyOptions.korean.option.doesOccur()) {
             generateHangulDefectives();
             return;
@@ -190,6 +192,9 @@ class GeneratePickerData {
         buildMainTable();
         addEmojiCharacters();
         addManualCorrections("ManualChanges.txt");
+
+        writeCategories();
+
         String categoryData = CATEGORYTABLE.toString(true, outputDirectory);
         writeMainFile(outputDirectory, categoryData);
         // writeMainFile(outputDirectory, categoryData);
@@ -213,6 +218,25 @@ class GeneratePickerData {
         System.out.println("Compression\t" + Compacter.totalOld + ",\t" + Compacter.totalNew + ",\t"
             + (Compacter.totalNew / Compacter.totalOld));
         System.out.println("DONE");
+    }
+
+    public static void writeCategories() throws FileNotFoundException, IOException {
+        PrintWriter out = getFileWriter(outputDirectory, "categories.txt");
+        for (Entry<String, Map<String, USet>> catData : CategoryTable.categoryTable.entrySet()) {
+            String main = catData.getKey();
+            if (main.equals("Latin")) {
+                break;
+            }
+            Map<String, USet> value = catData.getValue();
+            for (Entry<String, USet> subData : value.entrySet()) {
+                String sub = subData.getKey();
+                if (sub.equals("Emoji") || sub.contains("Emotic")) {
+                    continue;
+                }
+                out.println(main + " ;\t" + sub + " ;\t" + simpleList(subData.getValue().strings));
+            }
+        }
+        out.close();
     }
 
     private static void buildMainTable() throws IOException {
@@ -424,11 +448,11 @@ class GeneratePickerData {
     private static void writeMainFile(String directory, String categoryTable) throws IOException, FileNotFoundException {
         PrintWriter out = getFileWriter(directory, "CharData.java");
         out.println("package org.unicode.cldr.draft.picker;");
-        out.println("// $Date: 2014-03-13 15:53:16 -0500 (Thu, 13 Mar 2014) $");
+        out.println("// $Date: 2014-09-12 17:58:11 -0500 (Fri, 12 Sep 2014) $");
         out.println("public class CharData {");
-        out.println("static String[][] CHARACTERS_TO_NAME = {");
+        out.println("public static String[][] CHARACTERS_TO_NAME = {");
         out.println(buildNames());
-        out.println("  };\n" + "  static String[][][] CATEGORIES = {");
+        out.println("  };\n" + "  public static String[][][] CATEGORIES = {");
 
         out.println(categoryTable);
         out.println("  };\n" + "}");
@@ -1144,7 +1168,15 @@ class GeneratePickerData {
         for (String valueAlias : propertyValues) {
             valueChars.clear();
             // valueChars.applyPropertyAlias(propertyAlias, valueAlias);
-            ScriptCategories.applyPropertyAlias(propertyAlias, valueAlias, valueChars);
+            try {
+                ScriptCategories.applyPropertyAlias(propertyAlias, valueAlias, valueChars);
+            } catch (RuntimeException e) {
+                if (propertyAlias == "Script") {
+                    System.out.println("Skipping script " + valueAlias);
+                    continue;
+                }
+                throw e;
+            }
             valueAlias = ScriptCategories.getFixedPropertyValue(propertyAlias, valueAlias, UProperty.NameChoice.SHORT);
 
             if (DEBUG) System.out.println(valueAlias + ": " + valueChars.size() + ", " + valueChars);
@@ -1239,6 +1271,29 @@ class GeneratePickerData {
     }
 
     public static Set<Exception> ERROR_COUNT = new LinkedHashSet<Exception>();
+
+    /**
+     * Provide a simple list of strings
+     * @param source
+     * @return
+     */
+    public static String simpleList(Iterable<String> source) {
+        StringBuilder b = new StringBuilder();
+        for (String s : source) {
+            if (b.length() != 0) {
+                b.append(' ');
+            }
+            if (Character.offsetByCodePoints(s, 0, 1) == s.length()) {
+                if (s.equals("{")) {
+                    b.append('\\');
+                }
+                b.append(s);
+            } else {
+                b.append('{').append(s).append('}');
+            }
+        }
+        return b.toString();
+    }
 
     static class USet {
         Collection<String> strings;

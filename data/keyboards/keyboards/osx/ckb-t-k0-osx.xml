@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE keyboard SYSTEM "../dtd/ldmlKeyboard.dtd">
 <keyboard locale="ckb-t-k0-osx">
-	<version platform="10.9" number="$Revision: 9914 $"/>
-	<generation date="$Date: 2014-03-10 13:02:01 -0500 (Mon, 10 Mar 2014) $"/>
+	<version platform="10.9" number="$Revision: 9912 $"/>
+	<generation date="$Date: 2014-03-10 12:52:57 -0500 (Mon, 10 Mar 2014) $"/>
 	<names>
 		<name value="Kurdish-Sorani"/>
 	</names>

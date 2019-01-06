@@ -36,8 +36,11 @@ import org.unicode.cldr.test.ExampleGenerator.HelpMessages;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.WinningChoice;
 import org.unicode.cldr.util.CLDRPaths;
+import org.unicode.cldr.util.CLDRTool;
+import org.unicode.cldr.util.CLDRURLS;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Factory;
+import org.unicode.cldr.util.FileCopier;
 import org.unicode.cldr.util.Iso639Data;
 import org.unicode.cldr.util.Iso639Data.Scope;
 import org.unicode.cldr.util.Iso639Data.Type;
@@ -74,6 +77,7 @@ import com.ibm.icu.text.UTF16;
 import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.util.ULocale;
 
+@CLDRTool(alias = "showlanguages", description = "Generate Lanugage info charts")
 public class ShowLanguages {
     public static final String CHART_TARGET_DIR = CLDRPaths.CHART_DIRECTORY + "/supplemental/";
 
@@ -91,7 +95,7 @@ public class ShowLanguages {
 
     public static void main(String[] args) throws IOException {
         System.out.println("Writing into " + CHART_TARGET_DIR);
-        org.unicode.cldr.draft.FileUtilities.copyFile(ShowLanguages.class, "index.css", CHART_TARGET_DIR);
+        FileCopier.copy(ShowLanguages.class, "index.css", CHART_TARGET_DIR);
         printLanguageData(cldrFactory, "index.html");
         // cldrFactory = Factory.make(Utility.COMMON_DIRECTORY + "../dropbox/extra2/", ".*");
         // printLanguageData(cldrFactory, "language_info2.txt");
@@ -115,8 +119,8 @@ public class ShowLanguages {
 //        linfo.showTerritoryInfo();
 
         ShowLocaleCoverage.showCoverage(pw);
-        
-        ShowPlurals.printPlurals(english, null, pw);
+
+        new ShowPlurals().printPlurals(english, null, pw, cldrFactory);
 
         linfo.showCoverageGoals(pw);
 
@@ -659,8 +663,8 @@ public class ShowLanguages {
             PrintWriter pw2 = BagFormatter.openUTF8Writer(CHART_TARGET_DIR, filename);
             String[] replacements = { "%header%", "", "%title%", title, "%version%", ToolConstants.CHART_DISPLAY_VERSION,
                 "%date%", CldrUtility.isoFormat(new Date()), "%body%", out.toString() };
-            final String templateFileName = "../../tool/chart-template.html";
-            FileUtilities.appendBufferedReader(CldrUtility.getUTF8Data(templateFileName), pw2, replacements);
+            final String templateFileName = "chart-template.html";
+            FileUtilities.appendBufferedReader(ToolUtilities.getUTF8Data(templateFileName), pw2, replacements);
             pw2.close();
         }
 
@@ -1233,7 +1237,7 @@ public class ShowLanguages {
                 parameters += "&summary=" + urlEncode(subject);
             }
             if (parameters.length() != 0) parameters = "?" + parameters;
-            return "<a target='_blank' href='http://unicode.org/cldr/trac/newticket"
+            return "<a target='_blank' href='" + CLDRURLS.CLDR_NEWTICKET_URL
                 + parameters + "'>" + text + "</a>";
         }
 
@@ -1506,6 +1510,10 @@ public class ShowLanguages {
             String temp;
             for (String old : localeAliasInfo.get("language").keySet()) {
                 if (locale.startsWith(old)) {
+                    // the above is a rough check, and will fail with old=moh and locale=mo
+                    if (!locale.equals(old) && !locale.startsWith(old + "_")) {
+                        continue;
+                    }
                     temp = localeAliasInfo.get("language").get(old);
                     lpt2.setLanguage(temp.split("\\s+")[0] + locale.substring(old.length()));
                     break;

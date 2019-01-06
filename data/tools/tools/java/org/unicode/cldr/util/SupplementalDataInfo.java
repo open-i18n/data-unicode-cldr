@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Deque;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -38,6 +39,7 @@ import org.unicode.cldr.util.SupplementalDataInfo.BasicLanguageData.Type;
 import org.unicode.cldr.util.SupplementalDataInfo.NumberingSystemInfo.NumberingSystemType;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo.Count;
 
+import com.google.common.base.Splitter;
 import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.dev.util.Relation;
 import com.ibm.icu.dev.util.XEquivalenceClass;
@@ -79,6 +81,7 @@ import com.ibm.icu.util.VersionInfo;
 
 public class SupplementalDataInfo {
     private static final boolean DEBUG = false;
+    private static final StandardCodes sc = StandardCodes.make();
 
     // TODO add structure for items shown by TestSupplementalData to be missing
     /*
@@ -463,10 +466,10 @@ public class SupplementalDataInfo {
      * @author markdavis
      */
     public static final class DateRange implements Comparable<DateRange> {
-        static final long START_OF_TIME = Long.MIN_VALUE;
-        static final long END_OF_TIME = Long.MAX_VALUE;
-        private final long from;
-        private final long to;
+        public static final long START_OF_TIME = Long.MIN_VALUE;
+        public static final long END_OF_TIME = Long.MAX_VALUE;
+        public final long from;
+        public final long to;
 
         public DateRange(String fromString, String toString) {
             from = parseDate(fromString, START_OF_TIME);
@@ -594,8 +597,8 @@ public class SupplementalDataInfo {
     }
 
     public static final class MetaZoneRange implements Comparable<MetaZoneRange> {
-        final DateRange dateRange;
-        final String metazone;
+        public final DateRange dateRange;
+        public final String metazone;
 
         /**
          * @param metazone
@@ -727,8 +730,7 @@ public class SupplementalDataInfo {
     public static class CoverageLevelInfo implements Comparable<CoverageLevelInfo> {
         public final String match;
         public final Level value;
-        public final String inLanguage;
-        public final Set<String> inLanguageSet;
+        public final Pattern inLanguage;
         public final String inScript;
         public final Set<String> inScriptSet;
         public final String inTerritory;
@@ -736,10 +738,9 @@ public class SupplementalDataInfo {
         private Set<String> inTerritorySetInternal;
 
         public CoverageLevelInfo(String match, int value, String language, String script, String territory) {
-            this.inLanguage = language;
+            this.inLanguage = language != null ? Pattern.compile(language) : null;
             this.inScript = script;
             this.inTerritory = territory;
-            this.inLanguageSet = toSet(language);
             this.inScriptSet = toSet(script);
             this.inTerritorySet = toSet(territory); // MUST BE LAST, sets inTerritorySetInternal
             this.match = match;
@@ -853,6 +854,9 @@ public class SupplementalDataInfo {
     public Relation<String, String> alpha3TerritoryMapping = Relation.of(new HashMap<String, Set<String>>(),
         HashSet.class);
 
+    public Relation<String, Integer> numericCurrencyCodeMapping = Relation.of(new HashMap<String, Set<Integer>>(),
+        HashSet.class);
+
     static Map<String, SupplementalDataInfo> directory_instance = new HashMap<String, SupplementalDataInfo>();
 
     public Map<String, Map<String, Row.R2<List<String>, String>>> typeToTagToReplacement = new TreeMap<String, Map<String, Row.R2<List<String>, String>>>();
@@ -870,6 +874,7 @@ public class SupplementalDataInfo {
     public Map<Row.R2<String, String>, String> bcp47Deprecated = new TreeMap<Row.R2<String, String>, String>();
 
     public Map<String, Row.R2<String, String>> validityInfo = new HashMap<String, Row.R2<String, String>>();
+    public Set<AttributeValidityInfo> attributeValidityInfo = new HashSet<>();
 
     public enum MeasurementType {
         measurementSystem, paperSize
@@ -884,6 +889,10 @@ public class SupplementalDataInfo {
 
     public Relation<String, Integer> getNumericTerritoryMapping() {
         return numericTerritoryMapping;
+    }
+
+    public Relation<String, Integer> getNumericCurrencyCodeMapping() {
+        return numericCurrencyCodeMapping;
     }
 
     /**
@@ -1068,6 +1077,7 @@ public class SupplementalDataInfo {
 
         numericTerritoryMapping.freeze();
         alpha3TerritoryMapping.freeze();
+        numericCurrencyCodeMapping.freeze();
 
         // freeze contents
         for (String language : languageToPopulation.keySet()) {
@@ -1115,6 +1125,7 @@ public class SupplementalDataInfo {
         timeData = CldrUtility.protectCollection(timeData);
 
         validityInfo = CldrUtility.protectCollection(validityInfo);
+        attributeValidityInfo = CldrUtility.protectCollection(attributeValidityInfo);
     }
 
     // private Map<String, Map<String, String>> makeUnmodifiable(Map<String, Map<String, String>>
@@ -1143,7 +1154,7 @@ public class SupplementalDataInfo {
         }
         // HACK
         String currentScript = null;
-        for (String s : "Latn aa af agq ak asa ast bas bem bez bm br ca cgg cs cy da dav de dje dua dyo ebu ee en eo es et eu ewo ff fi fil fo fr fur fy ga gd gl gsw guz gv haw hr hu ia id ig is it jgo jmc kab kam kde kea khq ki kkj kl kln ksb ksf ksh kw lag lg lkt ln lt lu luo luy lv mas mer mfe mg mgh mgo mt mua naq nb nd nl nmg nn nnh nr nso nus nyn om pl pt rm rn ro rof rw rwk saq sbp se seh ses sg sk sl sn so sq ss ssy st sv sw swc teo tn to tr ts twq ve vi vo vun wae xh xog yav yo zu Ethi am byn ti tig wal Arab ar fa ps ur Beng as bn Cyrl be bg ky mk os ru sah uk Tibt bo dz Deva brx hi kok mr ne Cher chr Grek el Gujr gu Hebr he Armn hy Yiii ii Jpan ja Geor ka Khmr km Knda kn Kore ko Laoo lo Mlym ml Mymr my Orya or Sinh si Taml ta Telu te Tfng zgh Thai th"
+        for (String s : "Latn aa af agq ak asa ast bas bem bez bm br ca cgg cs cy da dav de dje dsb dua dyo ebu ee en eo es et eu ewo ff fi fil fo fr fur fy ga gd gl gsw guz gv haw hr hsb hu ia id ig is it jgo jmc kab kam kde kea khq ki kkj kl kln ksb ksf ksh kw lag lb lg lkt ln lt lu luo luy lv mas mer mfe mg mgh mgo mt mua naq nb nd nl nmg nn nnh nr nso nus nyn om pl pt qu rm rn ro rof rw rwk saq sbp se seh ses sg sk sl smn sn so sq ss ssy st sv sw swc teo tn to tr ts twq ve vi vo vun wae xh xog yav yo zu Ethi am byn ti tig wal Arab ar fa ps ur Beng as bn Cyrl be bg ky mk os ru sah uk Tibt bo dz Deva brx hi kok mr ne Cher chr Grek el Gujr gu Hebr he yi Armn hy Yiii ii Jpan ja Geor ka Khmr km Knda kn Kore ko Laoo lo Mlym ml Mymr my Orya or Sinh si Taml ta Telu te Tfng zgh Thai th"
             .split(" ")) {
             if (s.length() == 4) {
                 currentScript = s;
@@ -1413,6 +1424,14 @@ public class SupplementalDataInfo {
                     alpha3TerritoryMapping.put(type, alpha3);
                 }
                 return true;
+            } else if (level2.equals("currencyCodes")) {
+                // <currencyCodes type="BBD" numeric="52"/>
+                String type = parts.getAttributeValue(-1, "type");
+                final String numeric = parts.getAttributeValue(-1, "numeric");
+                if (numeric != null) {
+                    numericCurrencyCodeMapping.put(type, Integer.parseInt(numeric));
+                }
+                return true;
             }
             return false;
         }
@@ -1432,6 +1451,9 @@ public class SupplementalDataInfo {
                 String match = parts.containsAttribute("match") ? coverageVariables.replace(parts.getAttributeValue(-1,
                     "match")) : null;
                 String valueStr = parts.getAttributeValue(-1, "value");
+                // Ticket 7125: map the number to English. So switch from English to number for construction
+                valueStr = Integer.toString(Level.get(valueStr).getLevel());
+
                 String inLanguage = parts.containsAttribute("inLanguage") ? coverageVariables.replace(parts
                     .getAttributeValue(-1, "inLanguage")) : null;
                 String inScript = parts.containsAttribute("inScript") ? coverageVariables.replace(parts
@@ -1593,6 +1615,9 @@ public class SupplementalDataInfo {
                             .unmodifiableSet(new TreeSet<String>(Arrays.asList(validCodeArray)));
                     }
                     return true;
+                } else if (level3.equals("attributeValues")) {
+                    AttributeValidityInfo.add(parts.getAttributes(-1), value, attributeValidityInfo);
+                    return true;
                 }
             } else if (level2.equals("attributeOrder")) {
                 attributeOrder = Arrays.asList(value.trim().split("\\s+"));
@@ -1736,14 +1761,14 @@ public class SupplementalDataInfo {
                 // System.out.println(territory + "\tnewData:\t" + newData + "\tdata:\t" + data);
                 // }
                 String baseLanguage = languageTagParser.set(language).getLanguage();
+                data = baseLanguageToPopulation.get(baseLanguage);
+                if (data == null) {
+                    baseLanguageToPopulation.put(baseLanguage, data = new PopulationData().set(newData));
+                } else {
+                    data.add(newData);
+                }
                 if (!baseLanguage.equals(language)) {
                     languageToScriptVariants.put(baseLanguage, language);
-
-                    data = baseLanguageToPopulation.get(baseLanguage);
-                    if (data == null)
-                        baseLanguageToPopulation.put(baseLanguage,
-                            data = new PopulationData());
-                    data.add(newData);
                 }
             }
             return true;
@@ -1913,6 +1938,10 @@ public class SupplementalDataInfo {
      */
     public PopulationData getLanguagePopulationData(String language) {
         return languageToPopulation.get(language);
+    }
+
+    public PopulationData getBaseLanguagePopulationData(String language) {
+        return baseLanguageToPopulation.get(language);
     }
 
     public Set<String> getLanguages() {
@@ -2212,14 +2241,19 @@ public class SupplementalDataInfo {
      * List that can hold up to MAX_LOCALES caches of locales, when one locale hasn't been used for a while it will removed and GC'd
      */
     private class CoverageCache {
-        private LinkedList<Node> localeList;
+        private final Deque<Node> localeList = new LinkedList<>();
         private final int MAX_LOCALES = 10;
+
+        /**
+         * Object to sync on for modifying the locale list
+         */
+        private final Object LOCALE_LIST_ITER_SYNC = new Object();
 
         /*
          * constructor
          */
         public CoverageCache() {
-            localeList = new LinkedList<Node>();
+//            localeList = new LinkedList<Node>();
         }
 
         /*
@@ -2229,16 +2263,25 @@ public class SupplementalDataInfo {
          * @return the coverage level of the above two keys
          */
         public Level get(String xpath, String loc) {
-            for (Iterator<Node> it = localeList.iterator(); it.hasNext();) {
-                Node node = it.next();
-                if (node.loc.equals(loc)) {
-                    //move node to front of list
-                    localeList.remove(node);
-                    localeList.addFirst(node);
-                    return node.map.get(xpath);
+            synchronized (LOCALE_LIST_ITER_SYNC) {
+                Iterator<Node> it = localeList.iterator();
+                Node reAddNode = null;
+                while (it.hasNext()) {
+//            for (Iterator<Node> it = localeList.iterator(); it.hasNext();) {
+                    Node node = it.next();
+                    if (node.loc.equals(loc)) {
+                        reAddNode = node;
+                        it.remove();
+                        break;
+
+                    }
                 }
+                if (reAddNode != null) {
+                    localeList.addFirst(reAddNode);
+                    return reAddNode.map.get(xpath);
+                }
+                return null;
             }
-            return null;
         }
 
         /*
@@ -2248,22 +2291,25 @@ public class SupplementalDataInfo {
          * @param covLevel    the coverage level of the above two keys
          */
         public void put(String xpath, String loc, Level covLevel) {
-            //if locale's map is already in the cache add to it
-            for (Iterator<Node> it = localeList.iterator(); it.hasNext();) {
-                Node node = it.next();
-                if (node.loc.equals(loc)) {
-                    node.map.put(xpath, covLevel);
-                    return;
+            synchronized (LOCALE_LIST_ITER_SYNC) {
+                //if locale's map is already in the cache add to it
+//            for (Iterator<Node> it = localeList.iterator(); it.hasNext();) {
+                for (Node node : localeList) {
+//                Node node = it.next();
+                    if (node.loc.equals(loc)) {
+                        node.map.put(xpath, covLevel);
+                        return;
+                    }
                 }
-            }
 
-            //if it is not, add a new map with the coverage level, and remove the last map in the list (used most seldom) if the list is too large
-            Map<String, Level> newMap = new ConcurrentHashMap<String, Level>();
-            newMap.put(xpath, covLevel);
-            localeList.addFirst(new Node(loc, newMap));
+                //if it is not, add a new map with the coverage level, and remove the last map in the list (used most seldom) if the list is too large
+                Map<String, Level> newMap = new ConcurrentHashMap<String, Level>();
+                newMap.put(xpath, covLevel);
+                localeList.addFirst(new Node(loc, newMap));
 
-            if (localeList.size() > MAX_LOCALES) {
-                localeList.removeLast();
+                if (localeList.size() > MAX_LOCALES) {
+                    localeList.removeLast();
+                }
             }
         }
 
@@ -2306,8 +2352,7 @@ public class SupplementalDataInfo {
                 String pattern = ci.match.replace('\'', '"')
                     .replace("[@", "\\[@") // make sure that attributes are quoted
                     .replace("(", "(?:") // make sure that there are no capturing groups (beyond what we generate
-                // below).
-                ;
+                    .replace("(?:?!", "(?!"); // Allow negative lookahead
                 pattern = "^//ldml/" + pattern + "$"; // for now, force a complete match
                 String variableType = null;
                 variable.reset(pattern);
@@ -2388,7 +2433,7 @@ public class SupplementalDataInfo {
             }
             // Special logic added for coverage fields that are only to be applicable
             // to certain languages
-            if (ci.inLanguage != null && !targetLanguage.matches(ci.inLanguage)) {
+            if (ci.inLanguage != null && !ci.inLanguage.matcher(targetLanguage).matches()) {
                 continue;
             }
 
@@ -2557,7 +2602,17 @@ public class SupplementalDataInfo {
                     Set<CLDRLocale> localeList = new HashSet<CLDRLocale>();
                     String[] el = localeAttrib.split(" ");
                     for (int i = 0; i < el.length; i++) {
-                        localeList.add(CLDRLocale.getInstance(el[i]));
+                        if (el[i].indexOf(":") == -1) { // Just a simple locale designation
+                            localeList.add(CLDRLocale.getInstance(el[i]));
+                        } else { // Org:CoverageLevel
+                            String[] coverageLocaleParts = el[i].split(":", 2);
+                            String org = coverageLocaleParts[0];
+                            String level = coverageLocaleParts[1].toUpperCase();
+                            Set<String> coverageLocales = sc.getLocaleCoverageLocales(org, EnumSet.of(Level.valueOf(level)));
+                            for (String cl : coverageLocales) {
+                                localeList.add(CLDRLocale.getInstance(cl));
+                            }
+                        }
                     }
                     locales = Collections.unmodifiableSet(localeList);
                 }
@@ -2587,7 +2642,7 @@ public class SupplementalDataInfo {
         }
 
         public boolean matches(CLDRLocale loc, PathHeader ph) {
-            if (false) System.err.println(">> testing " + loc + " / " + ph + " vs " + toString());
+            if (DEBUG) System.err.println(">> testing " + loc + " / " + ph + " vs " + toString());
             if (locales != null) {
                 if (!locales.contains(loc)) {
                     return false;
@@ -2766,7 +2821,7 @@ public class SupplementalDataInfo {
         }
     };
 
-    private EnumMap<PluralType,Map<String, PluralInfo>> localeToPluralInfo2 = new EnumMap<>(PluralType.class);
+    private EnumMap<PluralType, Map<String, PluralInfo>> localeToPluralInfo2 = new EnumMap<>(PluralType.class);
     {
         localeToPluralInfo2.put(PluralType.cardinal, new LinkedHashMap<String, PluralInfo>());
         localeToPluralInfo2.put(PluralType.ordinal, new LinkedHashMap<String, PluralInfo>());
@@ -2786,7 +2841,7 @@ public class SupplementalDataInfo {
         // ldml/dates/calendars/calendar[@type="gregorian"]/dayPeriods/dayPeriodContext[@type="format"]/dayPeriodWidth[@type="wide"]/dayPeriod[@type="am"]
         /*
          * <supplementalData>
-         * <version number="$Revision: 9967 $"/>
+         * <version number="$Revision: 10980 $"/>
          * <generation date="$D..e... $"/>
          * <dayPeriodRuleSet>
          * <dayPeriodRules locales = "en"> <!-- default for any locales not listed under other dayPeriods -->
@@ -3382,7 +3437,7 @@ public class SupplementalDataInfo {
         public static final FixedDecimal POSITIVE_INFINITY = new FixedDecimal(Double.POSITIVE_INFINITY, 0, 0);
 
         static double doubleValue(FixedDecimal a) {
-            return a.isNegative ? -a.doubleValue() : a.doubleValue();
+            return a.doubleValue();
         }
 
         public boolean rangeExists(Count s, Count e, Output<FixedDecimal> minSample, Output<FixedDecimal> maxSample) {
@@ -3766,6 +3821,21 @@ public class SupplementalDataInfo {
             || isDeprecated(deprecated.get(type.toString()), element, attribute, value);
     }
 
+    public boolean isDeprecated(DtdType type, String path) {
+        XPathParts parts = XPathParts.getInstance(path);
+        for (int i = 0; i < parts.size(); ++i) {
+            String element = parts.getElement(i);
+            for (Entry<String, String> entry : parts.getAttributes(i).entrySet()) {
+                String attribute = entry.getKey();
+                String value = entry.getValue();
+                if (isDeprecated(type, element, attribute, value)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     private boolean isDeprecated(Map<String, Relation<String, String>> map,
         String element, String attribute, String value) {
         return map == null ? false
@@ -4080,4 +4150,53 @@ public class SupplementalDataInfo {
         return directory;
     }
 
+    public final static Splitter WHITESPACE_SPLTTER = Splitter.on(PatternCache.get("\\s+")).omitEmptyStrings();
+
+    public static class AttributeValidityInfo {
+        //<attributeValues elements="alias" attributes="path" type="path">notDoneYet</attributeValues>
+
+        final String type;
+        final Set<String> elements;
+        final Set<String> attributes;
+        final List<String> order;
+        final String value;
+
+        static void add(Map<String, String> inputAttibutes, String inputValue, Set<AttributeValidityInfo> data) {
+            data.add(new AttributeValidityInfo(
+                inputAttibutes.get("type"),
+                inputAttibutes.get("attributes"),
+                inputAttibutes.get("elements"),
+                inputAttibutes.get("order"),
+                inputValue));
+        }
+
+        public AttributeValidityInfo(String type, String attributes, String elements, String order, String value) {
+            this.type = type;
+            this.elements = elements == null ? Collections.EMPTY_SET
+                : With.in(WHITESPACE_SPLTTER.split(elements)).toUnmodifiableCollection(new HashSet<String>());
+            this.attributes = With.in(WHITESPACE_SPLTTER.split(attributes)).toUnmodifiableCollection(new HashSet<String>());
+            this.order = With.in(WHITESPACE_SPLTTER.split(attributes)).toUnmodifiableCollection(new ArrayList<String>());
+            this.value = value;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public Set<String> getElements() {
+            return elements;
+        }
+
+        public Set<String> getAttributes() {
+            return elements;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
+    public Set<AttributeValidityInfo> getAttributeValidity() {
+        return attributeValidityInfo;
+    }
 }

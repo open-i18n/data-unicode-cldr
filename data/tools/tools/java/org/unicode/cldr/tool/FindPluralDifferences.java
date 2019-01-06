@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.unicode.cldr.unittest.TestAll.TestInfo;
 import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo;
@@ -33,15 +32,16 @@ public class FindPluralDifferences {
             //            "21.0", 
             //            "22.1", 
             //            "23.1", 
-            "24.0",
+            //              "24.0",
+            "25.0",
             "trunk"
         };
 
         BitSet x = new BitSet();
-        x.set(3,6);
+        x.set(3, 6);
         x.set(9);
-        x.set(11,13);
-        Map<String,BitSet> foo = new TreeMap<String,BitSet>();
+        x.set(11, 13);
+        Map<String, BitSet> foo = new TreeMap<String, BitSet>();
         foo.put("x", x);
         FindPluralDifferences.show(foo);
 
@@ -80,7 +80,7 @@ public class FindPluralDifferences {
                 System.out.println("Modifications:");
 
                 for (String locale : oldLocales) {
-                    Map<String,BitSet> results = new TreeMap<String,BitSet>();
+                    Map<String, BitSet> results = new TreeMap<String, BitSet>();
                     PluralInfo oldPluralInfo = supplementalOld.getPlurals(pluralType, locale);
                     PluralRules oldRules = oldPluralInfo.getPluralRules();
                     PluralInfo newPluralInfo = supplementalNew.getPlurals(pluralType, locale);
@@ -113,16 +113,16 @@ public class FindPluralDifferences {
                         type = "DISJOINT FROM";
                     }
                     System.out.println(pluralType
-                        + "\t" + oldVersion + "➞" + newVersion 
-                        + "\t" + TestInfo.getInstance().getEnglish().getName(locale) 
+                        + "\t" + oldVersion + "➞" + newVersion
+                        + "\t" + ToolConfig.getToolInstance().getEnglish().getName(locale)
                         + "\t" + locale
-                        + "\t" + oldKeywords + "\t" + type + "\t" + newKeywords 
+                        + "\t" + oldKeywords + "\t" + type + "\t" + newKeywords
                         + "\t" + FindPluralDifferences.show(results));
                 }
             }
         }
         Set<String> pluralRangesLocales = supplementalNew.getPluralRangesLocales();
-        System.out.println("\nLocales for plural ranges: " + pluralRangesLocales.size() 
+        System.out.println("\nLocales for plural ranges: " + pluralRangesLocales.size()
             + "\t" + new TreeSet(pluralRangesLocales));
     }
 
@@ -135,7 +135,7 @@ public class FindPluralDifferences {
                 result.append("; ");
             }
             result.append(key).append(" for {");
-            int start=0;
+            int start = 0;
             boolean first = true;
             while (true) {
                 start = value.nextSetBit(start);
@@ -155,7 +155,7 @@ public class FindPluralDifferences {
                 result.append(start);
                 if (end != start) {
                     result.append("–")
-                    .append(end);
+                        .append(end);
                 }
                 start = limit;
             }

@@ -15,12 +15,12 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.unicode.cldr.ant.CLDRConverterTool;
-import org.unicode.cldr.draft.FileUtilities;
 import org.unicode.cldr.icu.ResourceSplitter.SplitInfo;
 import org.unicode.cldr.tool.Option;
 import org.unicode.cldr.tool.Option.Options;
 import org.unicode.cldr.util.CLDRFile.DraftStatus;
 import org.unicode.cldr.util.Factory;
+import org.unicode.cldr.util.FileReaders;
 import org.unicode.cldr.util.SupplementalDataInfo;
 
 /**
@@ -59,6 +59,7 @@ public class NewLdml2IcuConverter extends CLDRConverterTool {
         metadata, metaZones,
         numberingSystems,
         plurals,
+        pluralRanges,
         postalCodeData,
         supplementalData,
         windowsZones,
@@ -111,7 +112,7 @@ public class NewLdml2IcuConverter extends CLDRConverterTool {
 
     private static Map<String, String> loadMapFromFile(String filename) {
         Map<String, String> map = new HashMap<String, String>();
-        BufferedReader reader = FileUtilities.openFile(NewLdml2IcuConverter.class, filename);
+        BufferedReader reader = FileReaders.openFile(NewLdml2IcuConverter.class, filename);
         String line;
         try {
             int lineNum = 1;
@@ -228,7 +229,7 @@ public class NewLdml2IcuConverter extends CLDRConverterTool {
             if (option.doesOccur()) {
                 supplementalDataInfo = SupplementalDataInfo.getInstance(options.get("supplementaldir").getValue());
             } else {
-                throw new IllegalArgumentException("Supplemental directory must be specified.");
+                throw new IllegalArgumentException("Supplemental directory must be specified with -s");
             }
 
             Factory factory = Factory.make(sourceDir, ".*", DraftStatus.contributed);
@@ -273,18 +274,29 @@ public class NewLdml2IcuConverter extends CLDRConverterTool {
 
     private void processSupplemental(Type type, String debugXPath) {
         IcuData icuData;
-        if (type == Type.plurals) {
+        switch (type) {
+        case plurals: {
             PluralsMapper mapper = new PluralsMapper(sourceDir);
             icuData = mapper.fillFromCldr();
-        } else if (type == Type.dayPeriods) {
+            break;
+        }
+        case pluralRanges: {
+            PluralRangesMapper mapper = new PluralRangesMapper(sourceDir);
+            icuData = mapper.fillFromCldr();
+            break;
+        }
+        case dayPeriods: {
             DayPeriodsMapper mapper = new DayPeriodsMapper(sourceDir);
             icuData = mapper.fillFromCldr();
-        } else {
+            break;
+        }
+        default: {
             SupplementalMapper mapper = SupplementalMapper.create(sourceDir);
             if (debugXPath != null) {
                 mapper.setDebugXPath(debugXPath);
             }
             icuData = mapper.fillFromCldr(type.toString());
+        }
         }
         writeIcuData(icuData, destinationDir);
     }

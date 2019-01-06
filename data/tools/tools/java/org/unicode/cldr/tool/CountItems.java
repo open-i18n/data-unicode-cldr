@@ -27,7 +27,7 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.unicode.cldr.unittest.TestAll.TestInfo;
+import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
@@ -235,6 +235,46 @@ public class CountItems {
     /**
      * 
      */
+    public static void generateSupplementalCurrencyItems() {
+        IsoCurrencyParser isoCurrencyParser = IsoCurrencyParser.getInstance();
+        Relation<String, Data> codeList = isoCurrencyParser.getCodeList();
+        Map<String, String> numericTocurrencyCode = new TreeMap<String, String>();
+        StringBuffer list = new StringBuffer();
+
+        for (Iterator<String> it = codeList.keySet().iterator(); it.hasNext();) {
+            String currencyCode = it.next();
+            int numericCode = -1;
+            Set<Data> dataSet = codeList.getAll(currencyCode);
+            boolean first = true;
+            for (Data data : dataSet) {
+                if (first) {
+                    first = false;
+                }
+                numericCode = data.getNumericCode();
+            }
+
+            String strNumCode = "" + numericCode;
+            String otherCode = numericTocurrencyCode.get(strNumCode);
+            if (otherCode != null) {
+                System.out.println("Warning: duplicate code " + otherCode +
+                    "for " + numericCode);
+            }
+            numericTocurrencyCode.put(strNumCode, currencyCode);
+            if (list.length() != 0)
+                list.append(" ");
+            String currencyLine = "<currencyCodes type=" + "\"" + currencyCode +
+                "\"" + " numeric=" + "\"" + numericCode + "\"/>";
+            list.append(currencyLine);
+            System.out.println(currencyLine);
+
+        }
+        System.out.println();
+
+    }
+
+    /**
+     * 
+     */
     public static void generateCurrencyItems() {
         IsoCurrencyParser isoCurrencyParser = IsoCurrencyParser.getInstance();
         Relation<String, Data> codeList = isoCurrencyParser.getCodeList();
@@ -386,7 +426,7 @@ public class CountItems {
     }
 
     public static void writeMetazonePrettyPath() {
-        TestInfo testInfo = TestInfo.getInstance();
+        CLDRConfig testInfo = ToolConfig.getToolInstance();
         Map<String, Map<String, String>> map = testInfo.getSupplementalDataInfo().getMetazoneToRegionToZone();
         Map zoneToCountry = testInfo.getStandardCodes().getZoneToCounty();
         Set<Pair<String, String>> results = new TreeSet<Pair<String, String>>();
@@ -596,6 +636,19 @@ public class CountItems {
             System.out.println("\t\t\t<languageAlias type=\"" + alpha3 + "\" replacement=\"" + targetAliased
                 + "\" reason=\"overlong\"/> <!-- " +
                 Iso639Data.getNames(target) + " -->");
+        }
+        System.out.println("\t\t\t<!-- Bibliographic -->");
+        TreeMap<String, String> sorted = new TreeMap<>();
+        for (String hasBiblio : Iso639Data.hasBiblio3()) {
+            String biblio = Iso639Data.toBiblio3(hasBiblio);
+            sorted.put(biblio, hasBiblio);
+        }
+        for (Entry<String, String> entry : sorted.entrySet()) {
+            String biblio = entry.getKey();
+            String hasBiblio = entry.getValue();
+            System.out.println("\t\t\t<languageAlias type=\"" + biblio + "\" replacement=\"" + hasBiblio
+                + "\" reason=\"bibliographic\"/> <!-- " +
+                Iso639Data.getNames(hasBiblio) + " -->");
         }
         System.out.println("<!-- end of Language alises generated with CountItems tool ...");
 

@@ -102,7 +102,7 @@ public class VerifyCompactNumbers {
 
             CLDRFile cldrFile = factory2.make(locale, true, DraftStatus.contributed);
 
-            showNumbers(cldrFile, showCurrency, currencyCode, out);
+            showNumbers(cldrFile, showCurrency, currencyCode, out, factory2);
 
             out.println("</body></html>");
             out.close();
@@ -112,7 +112,7 @@ public class VerifyCompactNumbers {
     }
 
     public static void showNumbers(CLDRFile cldrFile, boolean showCurrency,
-        String currencyCode, Appendable out) {
+        String currencyCode, Appendable out, Factory factory) {
         try {
             Set<String> debugCreationErrors = new LinkedHashSet<String>();
             Set<String> errors = new LinkedHashSet<String>();
@@ -248,15 +248,16 @@ public class VerifyCompactNumbers {
             }
             out.append("<p>To correct problems in compact numbers below, please go to "
                 + PathHeader.SECTION_LINK
-                + PathHeader.getPageUrl(surveyUrl, cldrFile.getLocaleID(), PageId.Compact_Decimal_Formatting)
+                + CLDRConfig.getInstance().urls().forPage(cldrFile.getLocaleID(), PageId.Compact_Decimal_Formatting)
                 + "'><em>" + PageId.Compact_Decimal_Formatting
                 + "</em></a>.</p>");
             out.append(tablePrinter1.toString() + "\n");
             out.append("<h3>Plural Rules</h3>");
             out.append("<p>To correct problems in plural rules below, please go to " +
                 "<a target='CLDR-ST-DOCS' href='http://cldr.unicode.org/index/cldr-spec/plural-rules'>Plural Rules</a>.</p>");
-            ShowPlurals.printPluralTable(cldrFile, locale, out);
-            ShowPlurals.appendBlanksForScrolling(out);
+            ShowPlurals showPlurals = new ShowPlurals(CLDRConfig.getInstance().getSupplementalDataInfo());
+            showPlurals.printPluralTable(cldrFile, locale, out, factory);
+            showPlurals.appendBlanksForScrolling(out);
             showErrors(errors, out);
             showErrors(debugCreationErrors, out);
         } catch (IOException e) {

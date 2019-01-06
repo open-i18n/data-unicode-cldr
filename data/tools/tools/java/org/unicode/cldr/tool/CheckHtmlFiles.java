@@ -8,18 +8,22 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.unicode.cldr.tool.Option.Options;
 import org.unicode.cldr.util.CLDRPaths;
+import org.unicode.cldr.util.CLDRTool;
 import org.unicode.cldr.util.Counter;
+import org.unicode.cldr.util.Pair;
 import org.unicode.cldr.util.RegexUtilities;
 import org.unicode.cldr.util.SimpleHtmlParser;
 import org.unicode.cldr.util.SimpleHtmlParser.Type;
@@ -29,20 +33,39 @@ import com.ibm.icu.text.BreakIterator;
 import com.ibm.icu.util.Output;
 import com.ibm.icu.util.ULocale;
 
+@CLDRTool(alias = "checkhtmlfiles", description = "Look for errors in CLDR documentation tools", hidden = "Used for CLDR process")
 public class CheckHtmlFiles {
+
+    static final Set<String> NOPOP = new HashSet(Arrays.asList("br", "img", "link", "meta", "!doctype", "hr", "col", "input"));
+
+    static final EnumSet<Type> SUPPRESS = EnumSet.of(
+        Type.ELEMENT, Type.ELEMENT_START, Type.ELEMENT_END, Type.ELEMENT_POP,
+        Type.ATTRIBUTE, Type.ATTRIBUTE_CONTENT);
 
     final static Options myOptions = new Options();
     final static Writer LOG = new OutputStreamWriter(System.out);
     static Pattern WELLFORMED_HEADER = Pattern.compile("\\s*(\\d+(\\.\\d+)*\\s*).*");
-    static Pattern SUPPRESS_SECTION_NUMBER = Pattern.compile("(Annex [A-Z]: .*)|Migration|References|Acknowledgments|Modifications|(Revision \\d+)");
-    static Pattern SUPPRESS_REVISION = Pattern.compile("Revision \\d+");
+    static Pattern SUPPRESS_SECTION_NUMBER = Pattern.compile(
+        "(Annex [A-Z]: .*)" +
+            "|(Appendix [A-Z].*)" +
+            "|Migration( Issues)?" +
+            "|Step \\d+.*" +
+            "|Example \\d+.*" +
+            "|D\\d+\\.\\s.*" +
+            "|References" +
+            "|Acknowledge?ments" +
+            "|Modifications" +
+            "|Migrating Persistent Data" +
+            "|Updating Required" +
+            "|(Revision \\d+\\.?)");
+    static Pattern SUPPRESS_REVISION = Pattern.compile("Revision \\d+\\.?");
     static Pattern SPACES = Pattern.compile("\\s+");
 
     enum MyOptions {
 //        old(".*", "/Users/markdavis/Google Drive/Backup-2012-10-09/Documents/indigo/cldr-archive/cldr-22.1/specs/ldml/tr35\\.html", "source data (regex)"),
-        target(".*", CLDRPaths.BASE_DIRECTORY + "specs/ldml/tr35(-.*)?\\.html", "target data (regex)"),
+        target(".*", CLDRPaths.BASE_DIRECTORY + "specs/ldml/tr35(-.*)?\\.html", "target data (regex); ucd for Unicode docs."),
         verbose(null, null, "verbose debugging messages"),
-//        contents(".*", CldrUtility.BASE_DIRECTORY + "specs/ldml/tr35(-.*)?\\.html", "generate contents"),
+//        contents(".*", CLDRPaths.BASE_DIRECTORY + "specs/ldml/tr35(-.*)?\\.html", "generate contents"),
         // /cldr-archive
         ;
 
@@ -65,15 +88,29 @@ public class CheckHtmlFiles {
         myOptions.parse(MyOptions.target, args, true);
         verbose = MyOptions.verbose.option.doesOccur();
 
-//        if (!MyOptions.target.option.doesOccur()) { // contents
-//            Data target = new Data().getSentences(MyOptions.contents.option.getValue());
-//            return;
-//        }
+        String targetString = MyOptions.target.option.getValue();
+        if (targetString.equalsIgnoreCase("ucd")) {
+            targetString = CLDRPaths.BASE_DIRECTORY + "../unicode-draft/reports/tr(\\d+)/tr(\\d+).html";
+        } else if (targetString.equalsIgnoreCase("security")) {
+            targetString = CLDRPaths.BASE_DIRECTORY + "../unicode-draft/reports/tr(3[69])/tr(3[69]).html";
+        }
+        Data target = new Data().getSentences(targetString);
+        if (target.count == 0) {
+            throw new IllegalArgumentException("No files matched with " + targetString);
+        } else {
+            System.out.println("*TOTAL COUNTS*  files:" + target.count + ", fatal errors:" + target.totalFatalCount + ", nonfatal errors:"
+                + target.totalErrorCount);
+            if (target.totalFatalCount > 0 || target.totalErrorCount > 0) {
+                System.exit(1); // give an error status
+            } else {
+                System.exit(0);
+            }
+        }
 //        Data source = new Data().getSentences(MyOptions.old.option.getValue());
 //        String file = MyOptions.target.option.getValue();
-
+//
 //        Data target = new Data().getSentences(file);
-
+//
 //        int missingCount = 0, extraCount = 0;
 //        int line = 0;
 //        for (String sentence : source) {
@@ -102,15 +139,14 @@ public class CheckHtmlFiles {
     static Pattern WHITESPACE = Pattern.compile("[\\s]+");
     static Pattern BADSECTION = Pattern.compile("^\\s*(\\d+\\s*)?Section\\s*\\d+\\s*[-:]\\s*");
 
-    static final Set<String> FORCEBREAK = new HashSet<String>();
-    static {
-        FORCEBREAK.addAll(Arrays.asList("table", "div", "blockquote",
-            "p", "br", "td", "th", "h1", "h2", "h3", "h4", "h5", "li"));
-    }
-    static final Set<String> DO_CONTENTS = new HashSet<String>();
-    static {
-        DO_CONTENTS.addAll(Arrays.asList("h1", "h2", "h3", "h4", "h5"));
-    }
+    static final Set<String> FORCEBREAK = new HashSet<String>(Arrays.asList(
+        "table", "div", "blockquote",
+        "p", "br", "td", "th", "h1", "h2", "h3", "h4", "h5", "li"));
+
+//    enum ContentsElements {h1, h2, h3, h4, h5, caption}
+
+    static final Set<String> DO_CONTENTS = new HashSet<String>(Arrays.asList(
+        "h1", "h2", "h3", "h4", "h5", "caption"));
 
     static class Levels implements Comparable<Levels> {
         final int[] levels = new int[10];
@@ -212,21 +248,23 @@ public class CheckHtmlFiles {
         private String text = "";
         private Set<String> ids = new LinkedHashSet<String>();
         private boolean suppressSection;
+        private boolean isHeader;
 
         // temporary
         private int level;
 
-        public void setLevel(String headingLabel) {
-            level = headingLabel.charAt(1) - '0';
+        public void setLevel(String headingLabel, HeadingInfo lastHeading) {
+            isHeader = !headingLabel.equals("caption");
+            level = isHeader ? headingLabel.charAt(1) - '0' : lastHeading.level;
         }
 
         @Override
         public String toString() {
             //   <h3><a name="Identity_Elements" href="#Identity_Elements">5.3 Identity Elements</a></h3>
             String id = ids.isEmpty() ? "NOID" : ids.iterator().next();
-            String result = "<h" + level + ">"
+            String result = "<" + getLabel()
                 + "<a name=\"" + id + "\" href=\"#" + id + "\">"
-                + (suppressSection ? "" : levels + " ")
+                + (!isHeader ? "" : suppressSection ? "" : levels + " ")
                 + TransliteratorUtilities.toHTML.transform(text)
                 + "</a>";
             if (ids.size() > 1) {
@@ -239,21 +277,35 @@ public class CheckHtmlFiles {
                     }
                 }
             }
-            return result + "</h" + level + ">";
+            return result + "</" + getLabel();
+        }
+
+        public String getLabel() {
+            return isHeader ? "h" + level + ">" : "caption>";
         }
 
         public String toHeader() {
             String id = ids.iterator().next();
             return ("<li>"
-                + (suppressSection ? "" : levels + " ")
+                + (!isHeader ? (text.contains("Table") ? "" : "Table: ") : suppressSection ? "" : levels + " ")
                 + "<a href=\"#" + id + "\">"
                 + TransliteratorUtilities.toHTML.transform(text)
                 + "</a>");
         }
 
         public void addText(String toAppend) {
-            text += toAppend;
-            text = SPACES.matcher(text).replaceAll(" ").trim(); // clean up all spaces; make more efficient later
+            String temp = TransliteratorUtilities.fromHTML.transform(toAppend);
+            if (text.isEmpty()) {
+                if (temp.startsWith(" ")) {
+                    text = temp.substring(1);
+                } else {
+                    text = temp;
+                }
+            } else {
+                text += temp;
+            }
+            text = SPACES.matcher(text).replaceAll(" "); // clean up all spaces; make more efficient later
+            // used to trim, but we need to retain space between elements. So only trim the start, and later, the end
         }
 
         public boolean isContents() {
@@ -271,19 +323,21 @@ public class CheckHtmlFiles {
                 text = text.substring(badSectionMatcher.end());
                 error += "Extra 'Section...' at start; ";
             }
-            if (!headerMatcher.reset(text).matches()) {
-                if (!SUPPRESS_SECTION_NUMBER.matcher(text).matches()) {
-                    error += "Missing section numbers; ";
-                }
-            } else {
-                text = text.substring(headerMatcher.end(1));
-                if (text.startsWith(".")) {
-                    text = text.substring(1).trim();
-                    error += "Extra . at start; ";
-                }
-                Levels parsedLevels = Levels.parse(headerMatcher.group(1));
-                if (levels.compareTo(parsedLevels) != 0) {
-                    error += "Section numbers mismatch, was " + parsedLevels + "; ";
+            if (isHeader) {
+                if (!headerMatcher.reset(text).matches()) {
+                    if (!SUPPRESS_SECTION_NUMBER.matcher(text).matches()) {
+                        error += "Missing section numbers; ";
+                    }
+                } else {
+                    text = text.substring(headerMatcher.end(1));
+                    if (text.startsWith(".")) {
+                        text = text.substring(1).trim();
+                        error += "Extra . at start; ";
+                    }
+                    Levels parsedLevels = Levels.parse(headerMatcher.group(1));
+                    if (levels.compareTo(parsedLevels) != 0) {
+                        error += "Section numbers mismatch, was " + parsedLevels + "; ";
+                    }
                 }
             }
             if (ids.isEmpty()) {
@@ -291,7 +345,7 @@ public class CheckHtmlFiles {
                 error += "Missing double link";
             }
             if (!error.isEmpty()) {
-                errors.add(this + "\t<!-- " + error + "-->");
+                errors.add(this + "\t<!-- " + error + " -->");
             }
             suppressSection = SUPPRESS_SECTION_NUMBER.matcher(text).matches();
         }
@@ -300,6 +354,13 @@ public class CheckHtmlFiles {
             for (String id : ids) {
                 idCounter.add(id, 1);
             }
+        }
+
+        public HeadingInfo fixText() {
+            if (text.endsWith(" ")) {
+                text = text.substring(0, text.length() - 1);
+            }
+            return this;
         }
     }
 
@@ -311,16 +372,23 @@ public class CheckHtmlFiles {
         Levels lastBuildLevel;
         private Set<String> errors = new LinkedHashSet<String>();
         Output<Boolean> missingLevel = new Output<Boolean>(false);
+        private String fileName;
 
-        public HeadingInfoList(int h2_START) {
+        public HeadingInfoList(String fileName, int h2_START) {
+            this.fileName = fileName;
             lastBuildLevel = new Levels(h2_START);
         }
 
         public boolean add(HeadingInfo h) {
+            h.fixText();
             if (SUPPRESS_REVISION.matcher(h.text).matches()) {
                 return false;
             }
-            h.setLevels(lastBuildLevel.next(h.level, missingLevel), errors);
+            if (h.isHeader) {
+                h.setLevels(lastBuildLevel.next(h.level, missingLevel), errors);
+            } else {
+                h.setLevels(lastBuildLevel, errors);
+            }
             if (missingLevel.value) {
                 errors.add("FATAL: Missing Level in: " + h);
             }
@@ -334,15 +402,15 @@ public class CheckHtmlFiles {
             System.out.println("\n*REVISED TOC*");
             Counter<String> idCounter = new Counter<String>();
 
-            Levels lastLevel = new Levels();
+            int lastLevel = new Levels().getDepth();
             String pad = PAD;
             int ulCount = 0;
             int liCount = 0;
             for (HeadingInfo h : this) {
                 h.addIds(idCounter);
-
-                int levelDiff = h.levels.getDepth() - lastLevel.getDepth();
-                lastLevel = h.levels;
+                final int depth = h.levels.getDepth() + (h.isHeader ? 0 : 1);
+                int levelDiff = depth - lastLevel;
+                lastLevel = depth;
                 if (levelDiff > 0) {
                     System.out.println();
                     for (int i = 0; i < levelDiff; ++i) {
@@ -384,7 +452,7 @@ public class CheckHtmlFiles {
 
             // finish up and make sure we are balances
 
-            int levelDiff = -lastLevel.getDepth();
+            int levelDiff = -lastLevel;
             System.out.println("</li>");
             --liCount;
             for (int i = 0; i > levelDiff; --i) {
@@ -409,19 +477,23 @@ public class CheckHtmlFiles {
             }
         }
 
+        /**
+         * Prints out errs
+         * @return fatal err count
+         */
         public int showErrors() {
             int fatalCount = 0;
             if (!errors.isEmpty()) {
                 System.out.println("\n*ERRORS*\n");
                 for (String error : errors) {
                     if (error.startsWith("FATAL:")) {
-                        System.out.println(error);
+                        System.out.println(fileName + "\t" + error);
                         fatalCount++;
                     }
                 }
                 if (fatalCount == 0) {
                     for (String error : errors) {
-                        System.out.println(error);
+                        System.out.println(fileName + "\t" + error);
                     }
                 }
             }
@@ -431,24 +503,59 @@ public class CheckHtmlFiles {
             }
             return fatalCount;
         }
+
+        /**
+         * @return total number of errors
+         */
+        public int totalErrorCount() {
+            return errors.size();
+        }
     }
 
     static class Data implements Iterable<String> {
         List<String> sentences = new ArrayList<String>();
         Counter<String> hashedSentences = new Counter<String>();
+        int count = 0;
+        int totalErrorCount = 0;
+        int totalFatalCount = 0;
 
         public Data getSentences(String fileRegex) throws IOException {
-            File sourceFile = new File(fileRegex);
-            File sourceDirectory = sourceFile.getParentFile();
+            String base;
+            String regex;
+            try {
+                int firstParen = fileRegex.indexOf('(');
+                if (firstParen < 0) {
+                    firstParen = fileRegex.length();
+                }
+                int lastSlash = fileRegex.lastIndexOf('/', firstParen);
+                base = fileRegex.substring(0, lastSlash);
+                regex = fileRegex.substring(lastSlash + 1);
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Target file must be in special format. " +
+                    "Up to the first path part /.../ containing a paragraph is constant, and the rest is a regex.");
+            }
+
+            //File sourceFile = new File(fileRegex);
+            File sourceDirectory = new File(base);
             if (!sourceDirectory.exists()) {
                 throw new IllegalArgumentException("Can't find " + sourceDirectory);
             }
+            String canonicalBase = sourceDirectory.getCanonicalPath();
+            Matcher m = Pattern.compile(canonicalBase + "/" + regex).matcher("");
+            System.out.println("Matcher: " + m);
 
-            int count = 0;
-            Matcher m = Pattern.compile(sourceFile.getName()).matcher("");
-            Matcher wsMatcher = WHITESPACE.matcher("");
+            return getSentences(sourceDirectory, m);
+        }
+
+        public Data getSentences(File sourceDirectory, Matcher m) throws IOException {
+            //System.out.println("Processing:\t" + sourceDirectory);
             for (File file : sourceDirectory.listFiles()) {
-                String fileString = file.getName().toString();
+                if (file.isDirectory()) {
+                    getSentences(file, m);
+                    continue;
+                }
+                String fileString = file.getCanonicalFile().toString();
+                File fileCanonical = new File(fileString);
                 if (!m.reset(fileString).matches()) {
                     if (verbose) {
                         System.out.println("Skipping: " + RegexUtilities.showMismatch(m, fileString)
@@ -456,118 +563,192 @@ public class CheckHtmlFiles {
                     }
                     continue;
                 }
-                int H2_START = fileString.contains("tr18") ? -1 : 0;
-                ++count;
 
                 System.out.println("\nProcessing:\t" + sourceDirectory + "/" + fileString + "\n");
 
-                Reader in = new FileReader(new File(sourceDirectory, fileString));
-                SimpleHtmlParser parser = new SimpleHtmlParser().setReader(in);
-                StringBuilder buffer = new StringBuilder();
-                StringBuilder content = new StringBuilder();
-                HeadingInfo heading = new HeadingInfo();
-                HeadingInfoList headingInfoList = new HeadingInfoList(H2_START);
-                String contentString;
-                boolean inHeading = false;
-                boolean inPop = false;
-                boolean inAnchor = false;
-                boolean haveContents = false;
-                main: while (true) {
-                    Type x = parser.next(content);
-                    if (verbose) {
-                        LOG.write(x + ":\t");
-                        SimpleHtmlParser.writeResult(x, content, LOG);
-                        LOG.write("\n");
-                        LOG.flush();
-                    }
-                    switch (x) {
-                    case ATTRIBUTE:
-                        contentString = content.toString().toLowerCase(Locale.ENGLISH);
-                        if (inHeading && (contentString.equals("name") || contentString.equals("id"))) {
-                            inAnchor = true;
-                        } else {
-                            inAnchor = false;
-                        }
-                        break;
-                    case ATTRIBUTE_CONTENT:
-                        contentString = content.toString().toLowerCase(Locale.ENGLISH);
-                        if (inAnchor) {
-                            heading.addId(content.toString());
-                        }
-                        break;
-                    case ELEMENT:
-                        contentString = content.toString().toLowerCase(Locale.ENGLISH);
-                        if (FORCEBREAK.contains(contentString)) {
-                            buffer.append("\n");
-                        }
-                        if (DO_CONTENTS.contains(contentString)) {
-                            if (inPop) {
-                                if (inHeading) {
-                                    inHeading = false;
-                                    if (heading.isContents()) {
-                                        haveContents = true;
-                                    } else if (haveContents) {
-                                        headingInfoList.add(heading);
-                                    }
-                                    heading = new HeadingInfo();
-                                }
-                            } else {
-                                heading.setLevel(contentString);
-                                inHeading = true;
-                            }
-                        }
-                        break;
-                    case ELEMENT_START:
-                    case ELEMENT_END:
-                        inPop = false;
-                        break;
-                    case ELEMENT_POP:
-                        inPop = true;
-                        break;
-                    case ELEMENT_CONTENT:
-                        contentString = wsMatcher.reset(content).replaceAll(" ").replace("&nbsp;", " ");
-                        buffer.append(contentString.indexOf('&') >= 0
-                            ? TransliteratorUtilities.fromHTML.transform(contentString)
-                            : contentString);
-                        if (inHeading) {
-                            heading.addText(contentString);
-                        }
-                        break;
-                    case DONE:
-                        break main;
-                    default:
-                        break; // skip everything else.
-                    }
+                int H2_START = fileString.contains("tr18") ? -1 : 0;
+                try (Reader in = new FileReader(fileCanonical)) {
+                    parseFile(fileCanonical, H2_START, in);
                 }
-
-                BreakIterator sentenceBreak = BreakIterator.getSentenceInstance(ULocale.ENGLISH);
-                String bufferString = normalizeWhitespace(buffer);
-                sentenceBreak.setText(bufferString);
-                int last = 0;
-                while (true) {
-                    int pos = sentenceBreak.next();
-                    if (pos == BreakIterator.DONE) {
-                        break;
-                    }
-                    String sentence = bufferString.substring(last, pos).trim();
-                    last = pos;
-                    if (sentence.isEmpty()) {
-                        continue;
-                    }
-                    hashedSentences.add(sentence, 1);
-                    sentences.add(sentence);
-                }
-                int fatalCount = headingInfoList.showErrors();
-                if (fatalCount == 0) {
-                    headingInfoList.listContents();
-                } else {
-                    System.out.println("\nFix fatal errors in " + fileString + " before contents can be generated");
-                }
-            }
-            if (count == 0) {
-                throw new IllegalArgumentException("No files matched with " + m.pattern() + " in " + sourceDirectory);
             }
             return this;
+        }
+
+        SimpleHtmlParser parser = new SimpleHtmlParser();
+
+        public void parseFile(File fileCanonical, int H2_START, Reader in) throws IOException {
+            Matcher wsMatcher = WHITESPACE.matcher("");
+            ++count;
+            // SimpleHtmlParser parser = new SimpleHtmlParser().setReader(in);
+            parser.setReader(in);
+            StringBuilder buffer = new StringBuilder();
+            StringBuilder content = new StringBuilder();
+            HeadingInfo heading = new HeadingInfo();
+            HeadingInfoList headingInfoList = new HeadingInfoList(fileCanonical.getName(), H2_START);
+            Stack<String> elementStack = new Stack<>();
+            Stack<Pair<String, String>> attributeStack = new Stack<>();
+            String contentString;
+            boolean inHeading = false;
+            boolean inPop = false;
+            boolean inAnchor = false;
+            boolean haveContents = false;
+            HeadingInfo lastHeading = null;
+
+            main: while (true) {
+                int lineCount = parser.getLineCount();
+                Type x = parser.next(content);
+                if (verbose && !SUPPRESS.contains(x)) {
+                    LOG.write(parser.getLineCount() + "\t" + x + ":\t«" + content + "»");
+                    //SimpleHtmlParser.writeResult(x, content, LOG);
+                    LOG.write("\n");
+                    LOG.flush();
+                }
+                switch (x) {
+                case ATTRIBUTE:
+                    contentString = content.toString().toLowerCase(Locale.ENGLISH);
+                    if (inHeading && (contentString.equals("name") || contentString.equals("id"))) {
+                        inAnchor = true;
+                    } else {
+                        inAnchor = false;
+                    }
+                    attributeStack.add(new Pair(contentString, null));
+                    break;
+                case ATTRIBUTE_CONTENT:
+                    contentString = content.toString().toLowerCase(Locale.ENGLISH);
+                    if (inAnchor) {
+                        heading.addId(content.toString());
+                    }
+                    Pair<String, String> lastAttribute = attributeStack.peek();
+                    if (lastAttribute.getSecond() != null) {
+                        System.out.println(lineCount + "\tDouble Attribute: " + contentString + ", peek=" + lastAttribute);
+                    } else {
+                        lastAttribute.setSecond(contentString);
+                    }
+                    break;
+                case ELEMENT:
+                    contentString = content.toString().toLowerCase(Locale.ENGLISH);
+                    if (inPop) {
+                        String peek;
+                        while (true) {
+                            peek = elementStack.peek();
+                            if (!NOPOP.contains(peek)) {
+                                break;
+                            }
+                            elementStack.pop();
+                        }
+                        if (!peek.equals(contentString)) {
+                            System.out.println(lineCount + "\tCouldn't pop: " + contentString + ", peek=" + peek);
+                        } else {
+                            elementStack.pop();
+                        }
+                    } else {
+                        elementStack.push(contentString);
+                    }
+                    if (verbose) {
+                        LOG.write(parser.getLineCount() + "\telem:\t" + showElementStack(elementStack) + "\n");
+                        LOG.flush();
+                    }
+                    if (FORCEBREAK.contains(contentString)) {
+                        buffer.append("\n");
+                    }
+                    if (DO_CONTENTS.contains(contentString)) {
+                        if (inPop) {
+                            if (inHeading) {
+                                inHeading = false;
+                                if (heading.isContents()) {
+                                    haveContents = true;
+                                } else if (haveContents) {
+                                    headingInfoList.add(heading);
+                                    lastHeading = heading;
+                                }
+                                heading = new HeadingInfo();
+                            }
+                        } else {
+                            heading.setLevel(contentString, lastHeading);
+                            inHeading = true;
+                        }
+                    }
+                    break;
+                case ELEMENT_START:
+                    inPop = false;
+                    break;
+                case ELEMENT_END:
+                    if (verbose && !attributeStack.isEmpty()) {
+                        LOG.write(parser.getLineCount() + "\tattr:\t" + showAttributeStack(attributeStack) + "\n");
+                        LOG.flush();
+                    }
+                    attributeStack.clear();
+                    inPop = false;
+                    break;
+                case ELEMENT_POP:
+                    inPop = true;
+                    break;
+                case ELEMENT_CONTENT:
+                    contentString = wsMatcher.reset(content).replaceAll(" ").replace("&nbsp;", " ");
+                    buffer.append(contentString.indexOf('&') >= 0
+                        ? TransliteratorUtilities.fromHTML.transform(contentString)
+                        : contentString);
+                    if (inHeading) {
+                        heading.addText(contentString);
+                    }
+                    break;
+                case DONE:
+                    break main;
+                default:
+                    break; // skip everything else.
+                }
+            }
+
+            BreakIterator sentenceBreak = BreakIterator.getSentenceInstance(ULocale.ENGLISH);
+            String bufferString = normalizeWhitespace(buffer);
+            sentenceBreak.setText(bufferString);
+            int last = 0;
+            while (true) {
+                int pos = sentenceBreak.next();
+                if (pos == BreakIterator.DONE) {
+                    break;
+                }
+                String sentence = bufferString.substring(last, pos).trim();
+                last = pos;
+                if (sentence.isEmpty()) {
+                    continue;
+                }
+                hashedSentences.add(sentence, 1);
+                sentences.add(sentence);
+            }
+            int fatalCount = headingInfoList.showErrors();
+            totalFatalCount += fatalCount;
+            totalErrorCount += headingInfoList.totalErrorCount();
+            if (fatalCount == 0) {
+                headingInfoList.listContents();
+            } else {
+                System.out.println("\nFix fatal errors in " + fileCanonical + " before contents can be generated");
+            }
+        }
+
+        private String showAttributeStack(Stack<Pair<String, String>> attributeStack) {
+            StringBuilder result = new StringBuilder();
+            for (Pair<String, String> s : attributeStack) {
+                result.append("[@");
+                result.append(s.getFirst());
+                final String second = s.getSecond();
+                if (second != null) {
+                    result.append("='");
+                    result.append(second);
+                    result.append("'");
+                }
+                result.append("]");
+            }
+            return result.toString();
+        }
+
+        private String showElementStack(Stack<String> elementStack) {
+            StringBuilder result = new StringBuilder();
+            for (String s : elementStack) {
+                result.append('/');
+                result.append(s);
+            }
+            return result.toString();
         }
 
         /**

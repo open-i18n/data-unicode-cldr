@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -556,6 +557,15 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
     }
 
     /**
+     * Get the Last-Change Date (if known) when the value was changed.
+     * SUBCLASSING: may be overridden. defaults to NULL.
+     * @return last change date (if known), else null
+     */
+    public Date getChangeDateAtDPath(String path) {
+        return null;
+    }
+
+    /**
      * Get the full path at the given distinguishing path
      * The caller will have processed the path, and only call this with the distinguishing path
      * SUBCLASSING: must be overridden
@@ -776,6 +786,19 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
             // getFullPathAtDPathCache.put(xpath, result);
             // }
             // }
+            return result;
+        }
+
+        @Override
+        public Date getChangeDateAtDPath(String xpath) {
+            Date result = currentSource.getChangeDateAtDPath(xpath);
+            if (result != null) {
+                return result;
+            }
+            AliasLocation fullStatus = getCachedFullStatus(xpath);
+            if (fullStatus != null) {
+                result = getSource(fullStatus).getChangeDateAtDPath(fullStatus.pathWhereFound);
+            }
             return result;
         }
 
@@ -1321,6 +1344,7 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
 
             addFallbackCode(CLDRFile.LANGUAGE_NAME, "en_GB", "en_GB", "short");
             addFallbackCode(CLDRFile.LANGUAGE_NAME, "en_US", "en_US", "short");
+            addFallbackCode(CLDRFile.LANGUAGE_NAME, "az", "az", "short");
 
             addFallbackCode(CLDRFile.SCRIPT_NAME, "Hans", "Hans", "stand-alone");
             addFallbackCode(CLDRFile.SCRIPT_NAME, "Hant", "Hant", "stand-alone");

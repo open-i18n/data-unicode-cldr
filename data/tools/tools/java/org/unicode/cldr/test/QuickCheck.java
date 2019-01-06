@@ -15,7 +15,8 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.unicode.cldr.unittest.TestAll.TestInfo;
+import org.unicode.cldr.tool.ToolConfig;
+import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.DtdType;
 import org.unicode.cldr.util.CLDRPaths;
@@ -27,6 +28,7 @@ import org.unicode.cldr.util.LanguageTagParser;
 import org.unicode.cldr.util.Level;
 import org.unicode.cldr.util.PrettyPath;
 import org.unicode.cldr.util.StandardCodes;
+import org.unicode.cldr.util.VoteResolver.Organization;
 import org.unicode.cldr.util.XMLFileReader;
 import org.unicode.cldr.util.XPathParts;
 import org.xml.sax.ErrorHandler;
@@ -64,7 +66,9 @@ public class QuickCheck {
     private static boolean verbose;
 
     public static void main(String[] args) throws IOException {
-        checkStock();
+        CLDRConfig testInfo = ToolConfig.getToolInstance();
+        Factory factory = testInfo.getCldrFactory();
+        checkStock(factory);
         if (true) return;
         verbose = CldrUtility.getProperty("verbose", "false", "true").matches("(?i)T|TRUE");
         localeRegex = CldrUtility.getProperty("locale", ".*");
@@ -128,17 +132,17 @@ public class QuickCheck {
 
     static class MyErrorHandler implements ErrorHandler {
         public void error(SAXParseException exception) throws SAXException {
-            System.out.println("\r\nerror: " + XMLFileReader.showSAX(exception));
+            System.out.println("\nerror: " + XMLFileReader.showSAX(exception));
             throw exception;
         }
 
         public void fatalError(SAXParseException exception) throws SAXException {
-            System.out.println("\r\nfatalError: " + XMLFileReader.showSAX(exception));
+            System.out.println("\nfatalError: " + XMLFileReader.showSAX(exception));
             throw exception;
         }
 
         public void warning(SAXParseException exception) throws SAXException {
-            System.out.println("\r\nwarning: " + XMLFileReader.showSAX(exception));
+            System.out.println("\nwarning: " + XMLFileReader.showSAX(exception));
             throw exception;
         }
     }
@@ -186,7 +190,7 @@ public class QuickCheck {
             try {
                 file = cldrFactory.make(locale, resolved);
             } catch (Exception e) {
-                System.out.println("\r\nfatalError: " + e.getMessage());
+                System.out.println("\nfatalError: " + e.getMessage());
                 continue;
             }
             if (file.isNonInheriting())
@@ -322,10 +326,7 @@ public class QuickCheck {
         }
     }
 
-    static void checkStock() {
-        TestInfo testInfo = TestInfo.getInstance();
-        Factory factory = testInfo.getCldrFactory();
-
+    static void checkStock(Factory factory) {
         String[][] items = {
             { "full", "yMMMMEEEEd", "jmmsszzzz" },
             { "long", "yMMMMd", "jmmssz" },
@@ -338,7 +339,8 @@ public class QuickCheck {
         int total = 0;
         int mismatch = 0;
         LanguageTagParser ltp = new LanguageTagParser();
-        for (String locale : StandardCodes.make().getLocaleCoverageLocales("google", EnumSet.of(Level.MODERN))) {
+        Iterable<String> locales = StandardCodes.make().getLocaleCoverageLocales(Organization.cldr.name(), EnumSet.of(Level.MODERN));
+        for (String locale : locales) {
             if (!ltp.set(locale).getRegion().isEmpty()) {
                 continue;
             }

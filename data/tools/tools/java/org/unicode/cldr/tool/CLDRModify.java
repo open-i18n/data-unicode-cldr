@@ -14,6 +14,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,6 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.unicode.cldr.draft.FileUtilities;
 import org.unicode.cldr.test.CLDRTest;
 import org.unicode.cldr.test.DisplayAndInputProcessor;
 import org.unicode.cldr.test.QuickCheck;
@@ -32,11 +32,13 @@ import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.DraftStatus;
 import org.unicode.cldr.util.CLDRFile.Status;
 import org.unicode.cldr.util.CLDRPaths;
+import org.unicode.cldr.util.CLDRTool;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.CldrUtility.SimpleLineComparator;
 import org.unicode.cldr.util.DateTimeCanonicalizer;
 import org.unicode.cldr.util.DateTimeCanonicalizer.DateTimePatternType;
 import org.unicode.cldr.util.Factory;
+import org.unicode.cldr.util.FileProcessor;
 import org.unicode.cldr.util.LocaleIDParser;
 import org.unicode.cldr.util.Log;
 import org.unicode.cldr.util.PathHeader;
@@ -70,6 +72,8 @@ import com.ibm.icu.util.ULocale;
  * There are some environment variables that can be used with the program <br>
  * -DSHOW_FILES=<anything> shows all create/open of files.
  */
+@CLDRTool(alias = "modify",
+    description = "Tool for applying modifications to the CLDR files. Use -h to see the options.")
 public class CLDRModify {
     private static final boolean DEBUG = false;
     static final String DEBUG_PATHS = null; // ".*currency.*";
@@ -96,10 +100,10 @@ public class CLDRModify {
          * Replace a path/value. Equals 'add' but tests selected paths
          */
         replace,
-        //        /**
-        //         * Add a a path/value. Equals 'add' but tests that path did NOT exist
-        //         */
-        //        add_new
+        /**
+         * Add a a path/value. Equals 'add' but tests that path did NOT exist
+         */
+        addNew,
     }
 
     static final class ConfigMatch {
@@ -1094,6 +1098,32 @@ public class CLDRModify {
             }
         });
 
+        fixList.add('n', "add unit displayName", new CLDRFilter() {
+            @Override
+            public void handlePath(String xpath) {
+                if (xpath.indexOf("/units/unitLength[@type=\"long\"]") < 0 || xpath.indexOf("/unitPattern[@count=\"other\"]") < 0 ||
+                    xpath.indexOf("[@draft=\"unconfirmed\"]") >= 0) {
+                    return;
+                }
+                String value = cldrFileToFilter.getStringValue(xpath);
+                String newValue = null;
+                if (value.startsWith("{0}")) {
+                    newValue = value.substring(3).trim();
+                } else if (value.endsWith("{0}")) {
+                    newValue = value.substring(0, value.length() - 3).trim();
+                } else {
+                    System.out.println("unitPattern-other does not start or end with \"{0}\": \"" + value + "\"");
+                    return;
+                }
+
+                String oldFullXPath = cldrFileToFilter.getFullXPath(xpath);
+                String newFullXPath = oldFullXPath.substring(0, oldFullXPath.indexOf("unitPattern")).concat("displayName[@draft=\"provisional\"]");
+                add(newFullXPath, newValue, "create unit displayName-long from unitPattern-long-other");
+                String newFullXPathShort = newFullXPath.replace("[@type=\"long\"]", "[@type=\"short\"]");
+                add(newFullXPathShort, newValue, "create unit displayName-short from unitPattern-long-other");
+            }
+        });
+
         fixList.add('x', "retain paths", new CLDRFilter() {
             Matcher m = null;
 
@@ -2016,6 +2046,7 @@ public class CLDRModify {
                         ConfigMatch newValue = entry.get(ConfigKeys.new_value);
                         switch (action.action) {
                         // we add all the values up front
+                        case addNew:
                         case add:
                             if (pathMatch != null || valueMatch != null || newPath == null || newValue == null) {
                                 throw new IllegalArgumentException(
@@ -2024,7 +2055,10 @@ public class CLDRModify {
                                         + entry);
                             }
                             String newPathString = newPath.getPath(cldrFileToFilter);
-                            replace(newPathString, newPathString, newValue.exactMatch, "config");
+                            if (action.action == ConfigAction.add
+                                || cldrFileToFilter.getStringValue(newPathString) == null) {
+                                replace(newPathString, newPathString, newValue.exactMatch, "config");
+                            }
                             break;
                         // we just check
                         case replace:
@@ -2050,18 +2084,26 @@ public class CLDRModify {
                 }
 
                 private void fillCache() {
-                    locale2keyValues = new HashMap<ConfigMatch, LinkedHashSet<Map<ConfigKeys, ConfigMatch>>>();
+                    locale2keyValues = new LinkedHashMap<ConfigMatch, LinkedHashSet<Map<ConfigKeys, ConfigMatch>>>();
                     String configFileName = options[KONFIG].value;
-                    FileUtilities.FileProcessor myReader = new FileUtilities.FileProcessor() {
+                    FileProcessor myReader = new FileProcessor() {
+                        {
+                            doHash = false;
+                        }
+
                         @Override
                         protected boolean handleLine(int lineCount, String line) {
-                            String[] lineParts = line.trim().split("\\s*;\\s*");
+                            line = line.trim();
+//                            if (line.isEmpty()) {
+//                                return true;
+//                            }
+                            String[] lineParts = line.split("\\s*;\\s*");
                             Map<ConfigKeys, ConfigMatch> keyValue = new EnumMap<ConfigKeys, ConfigMatch>(
                                 ConfigKeys.class);
                             for (String linePart : lineParts) {
                                 int pos = linePart.indexOf('=');
                                 if (pos < 0) {
-                                    throw new IllegalArgumentException();
+                                    throw new IllegalArgumentException("Bad line: «" + line + "»");
                                 }
                                 ConfigKeys key = ConfigKeys.valueOf(linePart.substring(0, pos).trim());
                                 if (keyValue.containsKey(key)) {

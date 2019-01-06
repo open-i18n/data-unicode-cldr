@@ -3,14 +3,15 @@ package org.unicode.cldr.tool;
 import java.util.EnumMap;
 import java.util.TreeSet;
 
-import org.unicode.cldr.unittest.TestAll.TestInfo;
+import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
+import org.unicode.cldr.util.CoverageInfo;
 import org.unicode.cldr.util.Level;
 
 import com.ibm.icu.dev.util.Relation;
 
 public class ShowCoverageLevels {
-    private static TestInfo testInfo = TestInfo.getInstance();
+    private static CLDRConfig testInfo = ToolConfig.getToolInstance();
 
     private static int count = 0;
 
@@ -24,6 +25,7 @@ public class ShowCoverageLevels {
         Relation<Level, String> values = new Relation(new EnumMap<Level, String>(Level.class), TreeSet.class);
         int oldSize = 0;
 
+        CoverageInfo coverageInfo = CLDRConfig.getInstance().getCoverageInfo();
         for (String locale : testInfo.getCldrFactory().getAvailable()) {
             CLDRFile cldrFileToCheck = testInfo.getCldrFactory().make(locale, true);
             for (String path : cldrFileToCheck) {
@@ -32,7 +34,8 @@ public class ShowCoverageLevels {
                     continue;
                 }
                 try {
-                    Level level = testInfo.getSupplementalDataInfo().getCoverageLevel(fullPath, locale);
+//                    Level level = testInfo.getSupplementalDataInfo().getCoverageLevel(fullPath, locale);
+                    Level level = coverageInfo.getCoverageLevel(fullPath, locale);
                     values.put(level, path);
                 } catch (Exception e) {
                     String value = cldrFileToCheck.getStringValue(path);

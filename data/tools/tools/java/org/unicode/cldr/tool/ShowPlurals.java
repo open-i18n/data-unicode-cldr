@@ -11,7 +11,10 @@ import org.unicode.cldr.tool.PluralRulesFactory.SamplePatterns;
 import org.unicode.cldr.tool.ShowLanguages.FormattedFileWriter;
 import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
+import org.unicode.cldr.util.CLDRURLS;
 import org.unicode.cldr.util.CldrUtility;
+import org.unicode.cldr.util.Factory;
+import org.unicode.cldr.util.LanguageTagCanonicalizer;
 import org.unicode.cldr.util.PluralSnapshot;
 import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo;
@@ -30,10 +33,19 @@ import com.ibm.icu.util.ULocale;
 public class ShowPlurals {
 
     private static final String NO_PLURAL_DIFFERENCES = "<i>no plural differences</i>";
-    private static final String NOT_AVAILABLE = "<i>Not available.<br>Please <a target='_blank' href='http://unicode.org/cldr/trac/newticket'>file a ticket</a> to supply.</i>";
-    static SupplementalDataInfo supplementalDataInfo = CLDRConfig.getInstance().getSupplementalDataInfo();
+    private static final String NOT_AVAILABLE = "<i>Not available.<br>Please <a target='_blank' href='" + CLDRURLS.CLDR_NEWTICKET_URL
+        + "'>file a ticket</a> to supply.</i>";
+    final SupplementalDataInfo supplementalDataInfo;
 
-    public static void printPlurals(CLDRFile english, String localeFilter, PrintWriter index) throws IOException {
+    public ShowPlurals() {
+        supplementalDataInfo = CLDRConfig.getInstance().getSupplementalDataInfo();
+    }
+
+    public ShowPlurals(SupplementalDataInfo supplementalDataInfo) {
+        this.supplementalDataInfo = supplementalDataInfo;
+    }
+
+    public void printPlurals(CLDRFile english, String localeFilter, PrintWriter index, Factory factory) throws IOException {
         String section1 = "Rules";
         String section2 = "Comparison";
 
@@ -42,7 +54,7 @@ public class ShowPlurals {
         ShowLanguages.showContents(pw, "rules", "Rules", "comparison", "Comparison");
 
         pw.append("<h2>" + CldrUtility.getDoubleLinkedText("rules", "1. " + section1) + "</h2>\n");
-        printPluralTable(english, localeFilter, pw);
+        printPluralTable(english, localeFilter, pw, factory);
 
         pw.append("<h2>" + CldrUtility.getDoubleLinkedText("comparison", "2. " + section2) + "</h2>\n");
         pw.append("<p style='text-align:left'>The plural forms are abbreviated by first letter, with 'x' for 'other'. "
@@ -54,7 +66,7 @@ public class ShowPlurals {
         pw.close();
     }
 
-    public static void appendBlanksForScrolling(final Appendable pw) {
+    public void appendBlanksForScrolling(final Appendable pw) {
         try {
             pw.append(Utility.repeat("<br>", 100)).append('\n');
         } catch (IOException e) {
@@ -62,7 +74,8 @@ public class ShowPlurals {
         }
     }
 
-    public static void printPluralTable(CLDRFile english, String localeFilter, Appendable appendable) throws IOException {
+    public void printPluralTable(CLDRFile english, String localeFilter,
+        Appendable appendable, Factory factory) throws IOException {
 
         final TablePrinter tablePrinter = new TablePrinter()
             .addColumn("Name", "class='source'", null, "class='source'", true).setSortPriority(0)
@@ -76,18 +89,35 @@ public class ShowPlurals {
             .addColumn("Minimal Pairs", "class='target'", null, "class='target'", true)
             .addColumn("Rules", "class='target'", null, "class='target' nowrap", true)
             .setSpanRows(false);
-
+        PluralRulesFactory prf = PluralRulesFactory.getInstance(supplementalDataInfo);
         //Map<ULocale, PluralRulesFactory.SamplePatterns> samples = PluralRulesFactory.getLocaleToSamplePatterns();
         Set<String> cardinalLocales = supplementalDataInfo.getPluralLocales(PluralType.cardinal);
         Set<String> ordinalLocales = supplementalDataInfo.getPluralLocales(PluralType.ordinal);
         Set<String> all = new LinkedHashSet<String>(cardinalLocales);
         all.addAll(ordinalLocales);
 
+        LanguageTagCanonicalizer canonicalizer = new LanguageTagCanonicalizer();
+
         for (String locale : supplementalDataInfo.getPluralLocales()) {
             if (localeFilter != null && !localeFilter.equals(locale) || locale.equals("root")) {
                 continue;
             }
             final String name = english.getName(locale);
+            String canonicalLocale = canonicalizer.transform(locale);
+            if (!locale.equals(canonicalLocale)) {
+                String redirect = "<i>=<a href='#" + canonicalLocale + "'>" + canonicalLocale + "</a></i>";
+                tablePrinter.addRow()
+                    .addCell(name)
+                    .addCell(locale)
+                    .addCell(redirect)
+                    .addCell(redirect)
+                    .addCell(redirect)
+                    .addCell(redirect)
+                    .addCell(redirect)
+                    .finishRow();
+                continue;
+            }
+
             for (PluralType pluralType : PluralType.values()) {
                 if (pluralType == PluralType.ordinal && !ordinalLocales.contains(locale)
                     || pluralType == PluralType.cardinal && !cardinalLocales.contains(locale)) {
@@ -95,7 +125,7 @@ public class ShowPlurals {
                 }
                 final PluralInfo plurals = supplementalDataInfo.getPlurals(pluralType, locale);
                 ULocale locale2 = new ULocale(locale);
-                final SamplePatterns samplePatterns = PluralRulesFactory.getSamplePatterns(locale2);
+                final SamplePatterns samplePatterns = prf.getSamplePatterns(locale2);
                 //                    pluralType == PluralType.ordinal ? null 
                 //                    : CldrUtility.get(samples, locale2);
                 NumberFormat nf = NumberFormat.getInstance(locale2);
@@ -149,7 +179,11 @@ public class ShowPlurals {
                         .finishRow();
                 }
             }
-            List<RangeSample> rangeInfoList = GeneratePluralRanges.getRangeInfo(locale);
+            List<RangeSample> rangeInfoList = null;
+            try {
+                rangeInfoList = new GeneratePluralRanges(supplementalDataInfo).getRangeInfo(factory.make(locale, true));
+            } catch (Exception e) {
+            }
             if (rangeInfoList != null) {
                 for (RangeSample item : rangeInfoList) {
                     tablePrinter.addRow()
@@ -178,11 +212,11 @@ public class ShowPlurals {
         appendable.append(tablePrinter.toTable()).append('\n');
     }
 
-    private static String getExamples(FixedDecimalSamples exampleList) {
+    private String getExamples(FixedDecimalSamples exampleList) {
         return CollectionUtilities.join(exampleList.getSamples(), ", ") + (exampleList.bounded ? "" : ", …");
     }
 
-    public static FixedDecimal getNonZeroSampleIfPossible(FixedDecimalSamples exampleList) {
+    public FixedDecimal getNonZeroSampleIfPossible(FixedDecimalSamples exampleList) {
         Set<FixedDecimalRange> sampleSet = exampleList.getSamples();
         FixedDecimal sampleDecimal = null;
         // skip 0 if possible
@@ -199,7 +233,7 @@ public class ShowPlurals {
         return sampleDecimal;
     }
 
-    private static String getSample(FixedDecimal numb, String samplePattern, NumberFormat nf) {
+    private String getSample(FixedDecimal numb, String samplePattern, NumberFormat nf) {
         String sample;
         nf.setMaximumFractionDigits(numb.getVisibleDecimalDigitCount());
         nf.setMinimumFractionDigits(numb.getVisibleDecimalDigitCount());

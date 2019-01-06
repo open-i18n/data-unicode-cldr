@@ -464,6 +464,19 @@ public final class XPathParts implements Freezable<XPathParts> {
     }
 
     /**
+     * Varargs version of addElement.
+     *  Usage:  xpp.addElements("ldml","localeDisplayNames")
+     * @param element
+     * @return this for chaining
+     */
+    public XPathParts addElements(String... element) {
+        for (String e : element) {
+            addElement(e);
+        }
+        return this;
+    }
+
+    /**
      * Add an attribute/value pair to the current last element.
      */
     public XPathParts addAttribute(String attribute, String value) {
@@ -1156,7 +1169,7 @@ public final class XPathParts implements Freezable<XPathParts> {
     public XPathParts freeze() {
         if (!frozen) {
             // ensure that it can't be modified. Later we can fix all the call sites to check frozen.
-            List temp = new ArrayList(elements.size());
+            List<Element> temp = new ArrayList<>(elements.size());
             for (Element element : elements) {
                 temp.add(element.freeze());
             }

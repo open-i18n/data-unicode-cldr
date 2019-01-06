@@ -26,15 +26,16 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.unicode.cldr.draft.FileUtilities;
 import org.unicode.cldr.tool.ShowData.DataShower;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.Status;
 import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Factory;
+import org.unicode.cldr.util.FileCopier;
 import org.unicode.cldr.util.LanguageTagParser;
 import org.unicode.cldr.util.LanguageTagParser.Fields;
+import org.unicode.cldr.util.LocaleIDParser;
 import org.unicode.cldr.util.PathHeader;
 import org.unicode.cldr.util.PathHeader.PageId;
 import org.unicode.cldr.util.PathHeader.SurveyToolStatus;
@@ -42,6 +43,7 @@ import org.unicode.cldr.util.StringId;
 import org.unicode.cldr.util.XPathParts;
 import org.xml.sax.SAXException;
 
+import com.google.common.collect.ImmutableMap;
 import com.ibm.icu.dev.tool.UOption;
 import com.ibm.icu.dev.util.BagFormatter;
 import com.ibm.icu.dev.util.Relation;
@@ -163,7 +165,7 @@ public class GenerateSidewaysView {
         english = cldrFactory.make("en", true);
         pathHeaderFactory = PathHeader.getFactory(english);
 
-        FileUtilities.copyFile(GenerateSidewaysView.class, "bytype-index.css", options[DESTDIR].value, "index.css");
+        FileCopier.copy(GenerateSidewaysView.class, "bytype-index.css", options[DESTDIR].value, "index.css");
 
         // now get the info
 
@@ -181,8 +183,10 @@ public class GenerateSidewaysView {
         // }
         // }
         String headerString = getHeader(path_value_locales.keySet());
-        FileUtilities.copyFile(GenerateSidewaysView.class, "bytype-index.html", options[DESTDIR].value, "index.html",
-            new String[] { "%header%", headerString });
+        FileCopier.copyAndReplace(GenerateSidewaysView.class, "bytype-index.html", options[DESTDIR].value, "index.html",
+            ImmutableMap.of("%header%", headerString));
+//        FileUtilities.copyFile(GenerateSidewaysView.class, "bytype-index.html", options[DESTDIR].value, "index.html",
+//            new String[] { "%header%", headerString });
 
         System.out.println("Printing files in " + new File(options[DESTDIR].value).getAbsolutePath());
         // Transliterator toLatin = Transliterator.getInstance("any-latin");
@@ -250,6 +254,14 @@ public class GenerateSidewaysView {
                         out.print("<i>\u00B7" + locale + "\u00B7</i>");
                     } else if (!containsRoot) {
                         out.print("\u00B7" + locale + "\u00B7");
+                    } else if (locale.contains("_")) {
+                        // not same as root, but need to test for parent
+                        // if the parent is not in the same list, then we include anyway.
+                        // Cf http://unicode.org/cldr/trac/ticket/7228
+                        String parent = LocaleIDParser.getParent(locale);
+                        if (!locales.contains(parent)) {
+                            out.print("<b>\u00B7" + locale + "\u00B7<b>");
+                        }
                     }
                 }
                 if (containsRoot) {
@@ -709,8 +721,7 @@ public class GenerateSidewaysView {
             .replace(" ", "_")
             .replace("/", "_")
             .replace("(", "_")
-            .replace(")", "_")
-            ;
+            .replace(")", "_");
         if (suffix != null) {
             result += "." + suffix;
         }

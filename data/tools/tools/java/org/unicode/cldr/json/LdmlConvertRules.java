@@ -95,6 +95,7 @@ class LdmlConvertRules {
         "calendar:calendarSystem:type",
         "codeMappings:territoryCodes:numeric",
         "codeMappings:territoryCodes:alpha3",
+        "codeMappings:currencyCodes:numeric",
 
         // common/supplemental/supplementalMetaData.xml
         "validity:variable:type",
@@ -310,7 +311,7 @@ class LdmlConvertRules {
             "|.*/windowsZones[^/]*/mapTimezones[^/]*/" +
             "|.*/metaZones[^/]*/mapTimezones[^/]*/" +
             "|.*/segmentation[^/]*/variables[^/]*/" +
-            "|.*/segmentation[^/]*/exceptions[^/]*/" +
+            "|.*/segmentation[^/]*/suppressions[^/]*/" +
             "|.*/transform[^/]*/tRules[^/]*/" +
             "|.*/region/region[^/]*/" +
             "|.*/keyword[^/]*/key[^/]*/" +

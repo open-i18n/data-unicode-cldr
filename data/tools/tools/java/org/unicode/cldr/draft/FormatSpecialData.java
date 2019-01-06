@@ -15,6 +15,7 @@ import java.util.TreeSet;
 import org.unicode.cldr.draft.ScriptCategories.RemapType;
 import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility.CollectionComparator;
+import org.unicode.cldr.util.FileReaders;
 
 import com.ibm.icu.dev.util.BagFormatter;
 import com.ibm.icu.dev.util.CollectionUtilities;
@@ -37,7 +38,7 @@ public class FormatSpecialData {
     public static final UnicodeSet specialIPA = new UnicodeSet("[βΒ θΘ χΧ]");
 
     public static void main(String[] args) throws IOException {
-        String resource = FileUtilities.getRelativeFileName(FormatSpecialData.class, "ScriptData.txt");
+        String resource = FileReaders.getRelativeFileName(FormatSpecialData.class, "ScriptData.txt");
         final UnicodeMap<Set<String>> pivot = new UnicodeMap<Set<String>>();
         ;
 
@@ -189,7 +190,7 @@ public class FormatSpecialData {
             throw (RuntimeException) new IllegalArgumentException("Bad file name: "
                 // + path + "\t" + externalForm + "\t" +
                 + file1.getCanonicalPath()
-                + "\r\n" + new File(".").getCanonicalFile() + " => "
+                + "\n" + new File(".").getCanonicalFile() + " => "
                 + Arrays.asList(new File(".").getCanonicalFile().list())).initCause(e);
         }
     }

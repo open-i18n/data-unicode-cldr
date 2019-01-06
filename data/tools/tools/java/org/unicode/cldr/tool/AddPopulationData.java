@@ -11,8 +11,8 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.unicode.cldr.draft.FileUtilities;
 import org.unicode.cldr.util.CldrUtility;
+import org.unicode.cldr.util.CldrUtility.LineHandler;
 import org.unicode.cldr.util.Counter2;
 import org.unicode.cldr.util.StandardCodes;
 
@@ -28,7 +28,7 @@ public class AddPopulationData {
         // "Afghanistan","AFG","GNI, PPP (current international $)","NY.GNP.MKTP.PP.CD","..","..","13144920451.3325","16509662130.816","18932631964.8727","22408872945.1924","25820670505.2627","30783369469.7509","32116190092.1429","..",
 
         Country_Name, Country_Code, Series_Name, Series_Code,
-        YR2000, YR2001, YR2002, YR2003, YR2004, YR2005, YR2006, YR2007, YR2008, YR2009, YR2010, YR2011, YR2012;
+        YR2000, YR2001, YR2002, YR2003, YR2004, YR2005, YR2006, YR2007, YR2008, YR2009, YR2010, YR2011, YR2012, YR2013;
         String get(String[] pieces) {
             return pieces[ordinal()];
         }
@@ -192,7 +192,7 @@ public class AddPopulationData {
     }
 
     private static void loadFactbookInfo(String filename, final Counter2<String> factbookGdp) throws IOException {
-        FileUtilities.handleFile(filename, new FileUtilities.LineHandler() {
+        CldrUtility.handleFile(filename, new LineHandler() {
             public boolean handle(String line) {
                 if (line.length() == 0 || line.startsWith("This tab") || line.startsWith("Rank")
                     || line.startsWith(" This file")) {
@@ -229,7 +229,7 @@ public class AddPopulationData {
     static final NumberFormat number = NumberFormat.getNumberInstance(ULocale.US);
     static final NumberFormat percent = NumberFormat.getPercentInstance(ULocale.US);
 
-    static class MyLineHandler implements FileUtilities.LineHandler {
+    static class MyLineHandler implements LineHandler {
         CountryData countryData;
 
         public MyLineHandler(CountryData countryData) {
@@ -288,7 +288,7 @@ public class AddPopulationData {
 
     private static void loadFactbookLiteracy() throws IOException {
         final String filename = "external/factbook_literacy.html";
-        FileUtilities.handleFile(filename, new FileUtilities.LineHandler() {
+        CldrUtility.handleFile(filename, new LineHandler() {
             Matcher m = Pattern.compile(
                 "<strong>total population:</strong>\\s*(?:above\\s*)?(?:[0-9]+-)?([0-9]*\\.?[0-9]*)%.*").matcher("");
             // Matcher m =
@@ -301,7 +301,7 @@ public class AddPopulationData {
             public boolean handle(String line) throws ParseException {
                 // <i>total population:</i> 43.1%
                 line = line.trim();
-                if (line.contains("fl_region")) {
+                if (line.contains("class=\"fl_region")) {
                     if (!codeMatcher.reset(line).find()) {
                         throw new IllegalArgumentException("bad regex match: file changed format");
                     }
@@ -366,7 +366,7 @@ public class AddPopulationData {
 
         // List<List<String>> data = SpreadSheet.convert(CldrUtility.getUTF8Data(filename));
 
-        FileUtilities.handleFile(filename, new FileUtilities.LineHandler() {
+        CldrUtility.handleFile(filename, new LineHandler() {
             public boolean handle(String line) {
                 if (line.contains("Series Code")) {
                     return false;
@@ -418,7 +418,7 @@ public class AddPopulationData {
     }
 
     private static void loadUnLiteracy() throws IOException {
-        FileUtilities.handleFile("external/un_literacy.csv", new FileUtilities.LineHandler() {
+        CldrUtility.handleFile("external/un_literacy.csv", new CldrUtility.LineHandler() {
             public boolean handle(String line) {
                 // Afghanistan,2000, ,28,43,13,,34,51,18
                 // "Country or area","Year",,"Adult (15+) literacy rate",,,,,,"         Youth (15-24) literacy rate",,,,
@@ -456,7 +456,7 @@ public class AddPopulationData {
 
             loadFactbookInfo("external/factbook_gdp_ppp.txt", factbook_gdp);
             loadFactbookInfo("external/factbook_population.txt", factbook_population);
-            FileUtilities.handleFile("external/other_country_data.txt", new MyLineHandler(other));
+            CldrUtility.handleFile("external/other_country_data.txt", new MyLineHandler(other));
 
             loadWorldBankInfo();
             StandardCodes sc = StandardCodes.make();

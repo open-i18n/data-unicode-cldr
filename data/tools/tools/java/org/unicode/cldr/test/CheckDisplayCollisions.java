@@ -1,6 +1,7 @@
 package org.unicode.cldr.test;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -12,12 +13,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.unicode.cldr.test.CheckCLDR.CheckStatus.Subtype;
+import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.PathHeader;
 import org.unicode.cldr.util.SimpleXMLSource;
-import org.unicode.cldr.util.StringId;
 import org.unicode.cldr.util.XMLSource;
 import org.unicode.cldr.util.XPathParts;
 
@@ -51,8 +52,10 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
         ZONE("//ldml/dates/timeZoneNames/zone", 5),
         METAZONE("//ldml/dates/timeZoneNames/metazone", 6),
         DECIMAL_FORMAT("//ldml/numbers/decimalFormats", 7),
-        UNITS_IGNORE("//ldml/units/unitLength[@type=\"narrow\"]", 8),
-        UNITS("//ldml/units/unitLength", 9);
+        UNITS_COMPOUND_LONG("//ldml/units/unitLength[@type=\"long\"]/compoundUnit", 8),
+        UNITS_COMPOUND_SHORT("//ldml/units/unitLength[@type=\"short\"]/compoundUnit", 9),
+        UNITS_IGNORE("//ldml/units/unitLength[@type=\"narrow\"]", 10),
+        UNITS("//ldml/units/unitLength", 11);
 
         private String basePrefix;
 
@@ -89,6 +92,72 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
     private final Matcher typePattern = Pattern.compile("\\[@type=\"([^\"]*+)\"]").matcher("");
     private final Matcher attributesToIgnore = Pattern.compile("\\[@(?:count|alt)=\"[^\"]*+\"]").matcher("");
     private final Matcher compactNumberAttributesToIgnore = Pattern.compile("\\[@(?:alt)=\"[^\"]*+\"]").matcher("");
+    private final Matcher compoundUnitPatterns = Pattern.compile("compoundUnitPattern").matcher("");
+
+    // map unique path fragment to set of unique fragments for other
+    // paths with which it is OK to have a value collision
+    private static final Map<String, Set<String>> mapPathPartsToSetsForDupOK = createMapPathPartsToSets();
+
+    private static Map<String, Set<String>> createMapPathPartsToSets() {
+        Map<String, Set<String>> mapPathPartsToSets = new HashMap<String, Set<String>>();
+
+        // Add OK collisions for /unit[@type=\"energy-calorie\"]     
+        Set<String> set1 = new HashSet<String>();
+        set1.add("/unit[@type=\"energy-foodcalorie\"]");
+        mapPathPartsToSets.put("/unit[@type=\"energy-calorie\"]", set1);
+
+        // Add OK collisions for /unit[@type=\"energy-foodcalorie\"]   
+        Set<String> set2 = new HashSet<String>();
+        set2.add("/unit[@type=\"energy-calorie\"]");
+        set2.add("/unit[@type=\"energy-kilocalorie\"]");
+        mapPathPartsToSets.put("/unit[@type=\"energy-foodcalorie\"]", set2);
+
+        // Add OK collisions for /unit[@type=\"energy-kilocalorie\"]     
+        Set<String> set3 = new HashSet<String>();
+        set3.add("/unit[@type=\"energy-foodcalorie\"]");
+        mapPathPartsToSets.put("/unit[@type=\"energy-kilocalorie\"]", set3);
+
+        // Add OK collisions for /unit[@type=\"mass-carat\"]      
+        Set<String> set4 = new HashSet<String>();
+        set4.add("/unit[@type=\"proportion-karat\"]");
+        mapPathPartsToSets.put("/unit[@type=\"mass-carat\"]", set4);
+
+        // Add OK collisions for /unit[@type=\"proportion-karat\"]     
+        Set<String> set5 = new HashSet<String>();
+        set5.add("/unit[@type=\"mass-carat\"]");
+        set5.add("/unit[@type=\"temperature-kelvin\"]");
+        mapPathPartsToSets.put("/unit[@type=\"proportion-karat\"]", set5);
+
+        // Add OK collisions for /unit[@type=\"digital-byte\"]     
+        Set<String> set6 = new HashSet<String>();
+        set6.add("/unit[@type=\"mass-metric-ton\"]");
+        mapPathPartsToSets.put("/unit[@type=\"digital-byte\"]", set6);
+
+        // Add OK collisions for /unit[@type=\"mass-metric-ton\"]     
+        Set<String> set7 = new HashSet<String>();
+        set7.add("/unit[@type=\"digital-byte\"]");
+        mapPathPartsToSets.put("/unit[@type=\"mass-metric-ton\"]", set7);
+
+        // delete the exceptions allowing acceleration-g-force and mass-gram to have the same symbol, see #7561
+
+        // Add OK collisions for /unit[@type=\"length-foot\"]     
+        Set<String> set10 = new HashSet<String>();
+        set10.add("/unit[@type=\"angle-arc-minute\"]");
+        mapPathPartsToSets.put("/unit[@type=\"length-foot\"]", set10);
+
+        // Add OK collisions for /unit[@type=\"angle-arc-minute\"]     
+        Set<String> set11 = new HashSet<String>();
+        set11.add("/unit[@type=\"length-foot\"]");
+        mapPathPartsToSets.put("/unit[@type=\"angle-arc-minute\"]", set11);
+
+        // Add OK collisions for /unit[@type=\"temperature-kelvin\"]     
+        Set<String> set12 = new HashSet<String>();
+        set12.add("/unit[@type=\"proportion-karat\"]");
+        mapPathPartsToSets.put("/unit[@type=\"temperature-kelvin\"]", set12);
+
+        // all done, return immutable version
+        return Collections.unmodifiableMap(mapPathPartsToSets);
+    }
 
     private transient final PathHeader.Factory pathHeaderFactory;
 
@@ -171,13 +240,17 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
 
         // Collisions between display names and symbols for the same currency are allowed.
         if (myType == Type.CURRENCY) {
+            if (path.contains("/decimal") || path.contains("/group")) {
+                return this;
+            }
             XPathParts parts = new XPathParts().set(path);
             String currency = parts.getAttributeValue(-2, "type");
             Iterator<String> iterator = paths.iterator();
             while (iterator.hasNext()) {
                 String curVal = iterator.next();
                 parts.set(curVal);
-                if (currency.equals(parts.getAttributeValue(-2, "type"))) {
+                if (currency.equals(parts.getAttributeValue(-2, "type")) ||
+                    curVal.contains("/decimal") || curVal.contains("/group")) {
                     iterator.remove();
                     log("Removed '" + curVal + "': COLLISON WITH CURRENCY " + currency);
                 }
@@ -196,11 +269,26 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
                 String curVal = iterator.next();
                 parts.set(curVal);
                 String unit = parts.getAttributeValue(3, "type");
-                // we also break the units into two groups: durations and others.
-                if (myUnit.equals(unit)
-                    || unit != null && isDuration != unit.startsWith("duration")) {
+                // we also break the units into two groups: durations and others. Also never collide with a compoundUnitPattern.
+                if (myUnit.equals(unit) || unit != null && isDuration != unit.startsWith("duration") ||
+                    compoundUnitPatterns.reset(curVal).find()) {
                     iterator.remove();
                     log("Removed '" + curVal + "': COLLISON WITH UNIT  " + unit);
+                } else {
+                    // Remove allowed collisions, such as between carats and karats (same in many languages) or
+                    // between foodcalories and either calories or kilocalories
+                    for (Map.Entry<String, Set<String>> mapPathPartToSet : mapPathPartsToSetsForDupOK.entrySet()) {
+                        if (path.contains(mapPathPartToSet.getKey())) {
+                            for (String pathPart : mapPathPartToSet.getValue()) {
+                                if (curVal.contains(pathPart)) {
+                                    iterator.remove();
+                                    log("Removed '" + curVal + "': COLLISON WITH UNIT  " + unit);
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -221,7 +309,7 @@ public class CheckDisplayCollisions extends FactoryCheckCLDR {
                 if (getPhase() == Phase.FINAL_TESTING) {
                     collidingTypes.add(pathHeader.getHeaderCode()); // later make this more readable.
                 } else {
-                    collidingTypes.add("<a href=\"v#/" + getCldrFileToCheck().getLocaleID() + "/" + pathHeader.getPageId() + "/" + StringId.getHexId(pathName)
+                    collidingTypes.add("<a href=\"" + CLDRConfig.getInstance().urls().forPathHeader(getCldrFileToCheck().getLocaleID(), pathHeader)
                         + "\">" +
                         pathHeader.getHeaderCode() + "</a>");
 

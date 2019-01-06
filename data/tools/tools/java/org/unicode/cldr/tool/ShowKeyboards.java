@@ -16,7 +16,6 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.unicode.cldr.draft.FileUtilities;
 import org.unicode.cldr.draft.Keyboard;
 import org.unicode.cldr.draft.Keyboard.Gesture;
 import org.unicode.cldr.draft.Keyboard.Iso;
@@ -27,13 +26,15 @@ import org.unicode.cldr.draft.Keyboard.TransformType;
 import org.unicode.cldr.draft.Keyboard.Transforms;
 import org.unicode.cldr.draft.KeyboardModifierSet;
 import org.unicode.cldr.tool.Option.Options;
-import org.unicode.cldr.unittest.TestAll.TestInfo;
+import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.WinningChoice;
 import org.unicode.cldr.util.CLDRPaths;
+import org.unicode.cldr.util.CLDRTool;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Counter;
 import org.unicode.cldr.util.Factory;
+import org.unicode.cldr.util.FileCopier;
 import org.unicode.cldr.util.LanguageTagCanonicalizer;
 import org.unicode.cldr.util.Log;
 import org.unicode.cldr.util.SupplementalDataInfo;
@@ -55,6 +56,7 @@ import com.ibm.icu.text.Transliterator;
 import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.util.ULocale;
 
+@CLDRTool(alias = "showkeyboards", description = "Generate keyboard charts")
 public class ShowKeyboards {
     // TODO - fix ' > xxx
     // TODO - check for bad locale ids
@@ -62,7 +64,7 @@ public class ShowKeyboards {
     private static final String ABOUT_KEYBOARD_CHARTS = "<p>For more information, see <a target='ABOUT_KB' href='http://cldr.unicode.org/index/charts/keyboards'>About Keyboard Charts</a>.</p>";
     private static String keyboardChartDir;
     private static String keyboardChartLayoutsDir;
-    static final TestInfo testInfo = TestInfo.getInstance();
+    static final CLDRConfig testInfo = ToolConfig.getToolInstance();
     static final Factory factory = testInfo.getCldrFactory();
 
     static final boolean SHOW_BACKGROUND = false;
@@ -94,7 +96,7 @@ public class ShowKeyboards {
         keyboardChartDir = MyOptions.targetDirectory.option.getValue();
         keyboardChartLayoutsDir = keyboardChartDir + "/layouts/";
 
-        FileUtilities.copyFile(ShowKeyboards.class, "keyboards-index.html", keyboardChartDir, "index.html");
+        FileCopier.copy(ShowKeyboards.class, "keyboards-index.html", keyboardChartDir, "index.html");
 
         Matcher idMatcher = Pattern.compile(idPattern).matcher("");
         try {
@@ -157,7 +159,7 @@ public class ShowKeyboards {
         }
         // logInfo.put(Row.of("k-cldr",common), keyboardId);
         try {
-            FileUtilities.copyFile(ShowKeyboards.class, "keyboards.css", keyboardChartDir, "index.css");
+            FileCopier.copy(ShowKeyboards.class, "keyboards.css", keyboardChartDir, "index.css");
             PrintWriter out = BagFormatter.openUTF8Writer(keyboardChartDir, "chars2keyboards.html");
             String[] headerAndFooter = new String[2];
 
@@ -221,7 +223,7 @@ public class ShowKeyboards {
             }
         }
 
-        FileUtilities.copyFile(ShowKeyboards.class, "keyboards.css", keyboardChartLayoutsDir, "index.css");
+        FileCopier.copy(ShowKeyboards.class, "keyboards.css", keyboardChartLayoutsDir, "index.css");
         PrintWriter index = BagFormatter.openUTF8Writer(keyboardChartLayoutsDir, "index.html");
         String[] headerAndFooter = new String[2];
         ShowData.getChartTemplate(

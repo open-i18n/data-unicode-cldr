@@ -253,8 +253,14 @@ public class SupplementalMapper {
         for (Pair<String, String> pair : contents) {
             Output<Finder> matcher = new Output<Finder>();
             String fullPath = parts.set(pair.getFirst()).toString();
+            // Only convert contributed or higher data
+            if (parts.containsAttributeValue("draft", "provisional") ||
+                parts.containsAttributeValue("draft", "unconfirmed")) {
+                continue;
+            }
             List<String> debugResults = isDebugXPath(fullPath) ? new ArrayList<String>() : null;
-            RegexResult regexResult = pathConverter.get(fullPath, null, null, matcher, debugResults);
+            Output<String[]> argInfo = new Output<>();
+            RegexResult regexResult = pathConverter.get(fullPath, null, argInfo, matcher, debugResults);
             if (regexResult == null) {
                 RegexManager.printLookupResults(fullPath, debugResults);
                 continue;
@@ -262,7 +268,8 @@ public class SupplementalMapper {
             if (debugResults != null) {
                 System.out.println(fullPath + " successfully matched");
             }
-            String[] arguments = matcher.value.getInfo();
+            // String[] arguments = matcher.value.getInfo();
+            String[] arguments = argInfo.value;
             String cldrValue = pair.getSecond();
             for (PathValueInfo info : regexResult) {
                 List<String> values = info.processValues(arguments, cldrValue);

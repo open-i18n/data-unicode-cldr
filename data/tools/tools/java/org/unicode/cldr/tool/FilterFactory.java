@@ -12,9 +12,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.unicode.cldr.tool.Option.Options;
+import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.DraftStatus;
 import org.unicode.cldr.util.CLDRPaths;
+import org.unicode.cldr.util.CoverageInfo;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.LocaleIDParser;
 import org.unicode.cldr.util.RegexFileParser;
@@ -22,6 +24,7 @@ import org.unicode.cldr.util.RegexFileParser.RegexLineParser;
 import org.unicode.cldr.util.RegexLookup;
 import org.unicode.cldr.util.StandardCodes;
 import org.unicode.cldr.util.SupplementalDataInfo;
+import org.unicode.cldr.util.VoteResolver.Organization;
 import org.unicode.cldr.util.XMLSource;
 import org.unicode.cldr.util.XPathParts;
 
@@ -131,9 +134,10 @@ public class FilterFactory extends Factory {
         int minLevel = StandardCodes.make()
             .getLocaleCoverageLevel(organization, rawFile.getLocaleID())
             .getLevel();
+        CoverageInfo covInfo = CLDRConfig.getInstance().getCoverageInfo();
         for (String xpath : rawFile) {
             // Locale metadata shouldn't be stripped.
-            int level = supplementalData.getCoverageValue(xpath, rawFile.getLocaleID());
+            int level = covInfo.getCoverageValue(xpath, rawFile.getLocaleID());
             if (level > minLevel) {
                 rawFile.remove(xpath);
             }
@@ -435,7 +439,8 @@ public class FilterFactory extends Factory {
     private static final Options options = new Options(
         "Filters CLDR XML files according to orgnizational coverage levels and an " +
             "input file of replacement values/xpaths.")
-        .add("org", 'o', ".*", "google", "The organization that the filtering is for. If set, also removes duplicate paths.")
+        //        .add("org", 'o', ".*", "google", "The organization that the filtering is for. If set, also removes duplicate paths.")
+        .add("org", 'o', ".*", Organization.cldr.name(), "The organization that the filtering is for. If set, also removes duplicate paths.")
         .add("locales", 'l', ".*", ".*", "A regular expression indicating the locales to be filtered");
 
     /**
@@ -451,9 +456,10 @@ public class FilterFactory extends Factory {
         FilterFactory filterFactory = FilterFactory.load(rawFactory, org, true);
         String outputDir = CLDRPaths.GEN_DIRECTORY + "/filter";
         for (String locale : rawFactory.getAvailable()) {
-            PrintWriter out = BagFormatter.openUTF8Writer(outputDir, locale + ".xml");
-            filterFactory.make(locale, false).write(out);
-            out.close();
+            try (PrintWriter out = BagFormatter.openUTF8Writer(outputDir, locale + ".xml");) {
+                filterFactory.make(locale, false).write(out);
+            }
+//            out.close();
         }
     }
 }
