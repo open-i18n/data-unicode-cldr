@@ -1,0 +1,72 @@
+section=languages ; path=//cldr/main/[^/]++/localeDisplayNames/languages/.* ; package=localenames
+section=scripts ; path=//cldr/main/[^/]++/localeDisplayNames/scripts/.* ; package=localenames
+section=territories ; path=//cldr/main/[^/]++/localeDisplayNames/territories/.* ; package=localenames
+section=variants ; path=//cldr/main/[^/]++/localeDisplayNames/variants/.* ; package=localenames
+section=transformNames ; path=//cldr/main/[^/]++/localeDisplayNames/transformNames/.* ; package=localenames
+section=measurementSystemNames ; path=//cldr/main/[^/]++/localeDisplayNames/measurementSystemNames/.* ; package=units
+section=localeDisplayNames ; path=//cldr/main/[^/]++/localeDisplayNames/.* ; package=localenames
+section=contextTransforms ; path=//cldr/main/[^/]++/contextTransforms/.* ; package=misc
+section=layout ; path=//cldr/main/[^/]++/layout/.* ; package=misc
+section=characters ; path=//cldr/main/[^/]++/characters/.* ; package=misc
+section=delimiters ; path=//cldr/main/[^/]++/delimiters/.* ; package=misc
+section=ca-buddhist ; path=//cldr/main/[^/]++/dates/calendars/buddhist/.* ; package=cal-buddhist
+section=ca-chinese ; path=//cldr/main/[^/]++/dates/calendars/chinese/.* ; package=cal-chinese
+section=ca-coptic ; path=//cldr/main/[^/]++/dates/calendars/coptic/.* ; package=cal-coptic
+section=ca-dangi ; path=//cldr/main/[^/]++/dates/calendars/dangi/.* ; package=cal-dangi
+section=ca-ethiopic ; path=//cldr/main/[^/]++/dates/calendars/ethiopic/.* ; package=cal-ethiopic
+section=ca-ethiopic-amete-alem ; path=//cldr/main/[^/]++/dates/calendars/ethiopic-amete-alem/.* ; package=cal-ethiopic
+section=ca-generic ; path=//cldr/main/[^/]++/dates/calendars/generic/.* ; package=dates
+section=ca-gregorian ; path=//cldr/main/[^/]++/dates/calendars/gregorian/.* ; package=dates
+section=ca-hebrew ; path=//cldr/main/[^/]++/dates/calendars/hebrew/.* ; package=cal-hebrew
+section=ca-indian ; path=//cldr/main/[^/]++/dates/calendars/indian/.* ; package=cal-indian
+section=ca-islamic ; path=//cldr/main/[^/]++/dates/calendars/islamic/.* ; package=cal-islamic
+section=ca-islamic-civil ; path=//cldr/main/[^/]++/dates/calendars/islamic-civil/.* ; package=cal-islamic
+section=ca-islamic-rgsa ; path=//cldr/main/[^/]++/dates/calendars/islamic-rgsa/.* ; package=cal-islamic
+section=ca-islamic-tbla ; path=//cldr/main/[^/]++/dates/calendars/islamic-tbla/.* ; package=cal-islamic
+section=ca-islamic-umalqura ; path=//cldr/main/[^/]++/dates/calendars/islamic-umalqura/.* ; package=cal-islamic
+section=ca-japanese ; path=//cldr/main/[^/]++/dates/calendars/japanese/.* ; package=cal-japanese
+section=ca-persian ; path=//cldr/main/[^/]++/dates/calendars/persian/.* ; package=cal-persian
+section=ca-roc ; path=//cldr/main/[^/]++/dates/calendars/roc/.* ; package=cal-roc
+section=dateFields ; path=//cldr/main/[^/]++/dates/fields/.* ; package=dates
+section=timeZoneNames ; path=//cldr/main/[^/]++/dates/timeZoneNames/.* ; package=dates
+section=currencies ; path=//cldr/main/[^/]++/numbers/currencies/.* ; package=numbers
+section=numbers ; path=//cldr/main/[^/]++/numbers/.* ; package=numbers
+section=units ; path=//cldr/main/[^/]++/units/.* ; package=units
+section=listPatterns ; path=//cldr/main/[^/]++/listPatterns/.* ; package=misc
+section=posix ; path=//cldr/main/[^/]++/posix/.* ; package=misc
+section=characterFallbacks ; path=//cldr/supplemental/characters/.* ; package=core
+section=dayPeriods ; path=//cldr/supplemental/dayPeriodRuleSet/.* ; package=core
+section=gender ; path=//cldr/supplemental/gender/.* ; package=core
+section=languageInfo ; path=//cldr/supplemental/languageInfo/.* ; package=core
+section=likelySubtags ; path=//cldr/supplemental/likelySubtags/.* ; package=core
+section=metaZones ; path=//cldr/supplemental/metaZones/.* ; package=core
+section=primaryZones ; path=//cldr/supplemental/primaryZones/.* ; package=core
+section=numberingSystems ; path=//cldr/supplemental/numberingSystems/.* ; package=core
+section=ordinals ; path=//cldr/supplemental/plurals\[@type="ordinal"\]/.* ; package=core
+section=plurals ; path=//cldr/supplemental/plurals\[@type="cardinal"\]/.* ; package=core
+section=postalCodeData ; path=//cldr/supplemental/postalCodeData/.* ; package=core
+section=currencyData ; path=//cldr/supplemental/currencyData/.* ; package=core
+section=territoryContainment ; path=//cldr/supplemental/territoryContainment/.* ; package=core
+section=languageData ; path=//cldr/supplemental/languageData/.* ; package=core
+section=languageMatching ; path=//cldr/supplemental/languageMatching/.* ; package=core
+section=territoryInfo ; path=//cldr/supplemental/territoryInfo/.* ; package=core
+section=calendarData ; path=//cldr/supplemental/calendarData/.* ; package=core
+section=calendarPreferenceData ; path=//cldr/supplemental/calendarPreferenceData/.* ; package=core
+section=weekData ; path=//cldr/supplemental/weekData/.* ; package=core
+section=timeData ; path=//cldr/supplemental/timeData/.* ; package=core
+section=measurementData ; path=//cldr/supplemental/measurementData/.* ; package=core
+section=codeMappings ; path=//cldr/supplemental/codeMappings/.* ; package=core
+section=parentLocales ; path=//cldr/supplemental/parentLocales/.* ; package=core
+section=references ; path=//cldr/supplemental/references/.* ; package=core
+section=telephoneCodeData ; path=//cldr/supplemental/telephoneCodeData/.* ; package=core
+section=windowsZones ; path=//cldr/supplemental/windowsZones/.* ; package=core
+section=aliases ; path=//cldr/supplemental/metadata/alias/(language|script|territory|variant|zone)Alias.* ; package=core
+section=suppressions ; path=//cldr/segments/segmentations/.* ; package=segments
+dependency=core ; package=dates
+dependency=core ; package=localenames
+dependency=core ; package=numbers
+dependency=core ; package=misc
+dependency=core ; package=segments
+dependency=core ; package=units
+dependency=numbers ; package=dates
+dependency=dates ; package=cal
