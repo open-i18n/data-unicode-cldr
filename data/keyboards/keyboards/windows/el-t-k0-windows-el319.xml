@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE keyboard SYSTEM "../dtd/ldmlKeyboard.dtd">
 <keyboard locale="el-t-k0-windows-el319">
-	<version platform="8" number="$Revision: 11914 $"/>
+	<version platform="10" number="$Revision: 13265 $"/>
 	<names>
 		<name value="Greek (319)"/>
 	</names>
@@ -247,4 +247,3 @@
 		<transform from="΅υ" to="ΰ"/>
 	</transforms>
 </keyboard>
-

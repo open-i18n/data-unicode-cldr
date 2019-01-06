@@ -13,7 +13,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.unicode.cldr.unittest.TestAll.TestInfo;
+import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.Status;
 import org.unicode.cldr.util.CLDRPaths;
@@ -39,7 +39,7 @@ import com.google.common.collect.ImmutableSet;
 import com.ibm.icu.dev.util.CollectionUtilities;
 
 public class TestPaths extends TestFmwkPlus {
-    static TestInfo testInfo = TestInfo.getInstance();
+    static CLDRConfig testInfo = CLDRConfig.getInstance();
 
     public static void main(String[] args) {
         new TestPaths().run(args);
@@ -239,9 +239,10 @@ public class TestPaths extends TestFmwkPlus {
             return false;
         }
 
-        public void show() {
+        public void show(int inclusion) {
             for (DtdType dtdType : DtdType.values()) {
-                if (dtdType == DtdType.ldmlICU) {
+                if (dtdType == DtdType.ldmlICU ||
+                    (inclusion <= 5 && dtdType == DtdType.platform)) { // keyboards/*/_platform.xml won't be in the list for non-exhaustive runs
                     continue;
                 }
                 M4<String, String, String, Boolean> infoEAV = data.get(dtdType);
@@ -296,7 +297,7 @@ public class TestPaths extends TestFmwkPlus {
             }
         }
     }
-
+    
     public void TestNonLdml() {
         int maxPerDirectory = getInclusion() <= 5 ? 20 : Integer.MAX_VALUE;
         CheckDeprecated checkDeprecated = new CheckDeprecated(this);
@@ -420,7 +421,7 @@ public class TestPaths extends TestFmwkPlus {
                 }
             }
         }
-        checkDeprecated.show();
+        checkDeprecated.show(getInclusion());
     }
 
     private void checkParts(String path, DtdData dtdData) {

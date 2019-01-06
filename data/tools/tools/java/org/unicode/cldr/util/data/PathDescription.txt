@@ -32,6 +32,8 @@
 ^//ldml/characters/exemplarCharacters$   ;   Defines the set of characters used in your language. You may not edit or vote on this item at this time. Before filing any tickets to request changes, be sure to read http://cldr.org/translation/characters#TOC-Exemplar-Characters.
 ^//ldml/characters/exemplarCharacters\[@type="([^"]*)"] ;   Defines the set of characters used in your language for the “{1}” category.  You may not edit or vote on this item at this time. Before filing any tickets to request changes, be sure to read http://cldr.org/translation/characters#TOC-Exemplar-Characters.
 
+^//ldml/characters/parseLenients ;   Defines sets of characters that are treated as equivalent in parsing.  You may not edit or vote on this item at this time. Before filing any tickets to request changes, be sure to read http://cldr.org/translation/characters#TOC-Lenient-Parsing.
+
 ^//ldml/characters/ellipsis\[@type="([^"]*)"]  ;   Supply the ellipsis pattern for when the {1} part of a string is omitted. Note: before translating, be sure to read http://cldr.org/translation/characters.
 ^//ldml/characters/moreInformation  ;   The character or short string used to indicate that more information is available. Note: before translating, be sure to read http://cldr.org/translation/characters.
 
@@ -66,6 +68,7 @@
 ^//ldml/units/unitLength\[@type="([^"]*)"]/unit\[@type="energy-calorie"]/displayName ; Display name ({1} form) for “energy-calorie”, calories as used in chemistry, not the same as food calorie. Note: before translating, be sure to read http://cldr.org/translation/plurals.
 ^//ldml/units/unitLength\[@type="([^"]*)"]/unit\[@type="energy-foodcalorie"]/displayName ; Display name ({1} form) for “energy-foodcalorie”, kilocalories for food energy; may have same translation as energy-kilocalorie. Note: before translating, be sure to read http://cldr.org/translation/plurals.
 ^//ldml/units/unitLength\[@type="([^"]*)"]/unit\[@type="energy-kilocalorie"]/displayName ; Display name ({1} form) for “energy-kilocalorie”, kilocalories for uses not specific to food energy, such as chemistry. Note: before translating, be sure to read http://cldr.org/translation/plurals.
+^//ldml/units/unitLength\[@type="([^"]*)"]/unit\[@type="length-point"]/displayName ; Display name ({1} form) for “length-point”, referring to a typographic point, 1/72 inch. Note: before translating, be sure to read http://cldr.org/translation/plurals.
 ^//ldml/units/unitLength\[@type="([^"]*)"]/unit\[@type="mass-stone"]/displayName ; Display name ({1} form) for “mass-stone”, used in UK/Ireland for body weight, equal to 14 pounds. Note: before translating, be sure to read http://cldr.org/translation/plurals.
 ^//ldml/units/unitLength\[@type="([^"]*)"]/unit\[@type="mass-ton"]/displayName ; Display name ({1} form) for “mass-ton”, meaning U.S. short ton, not U.K. long ton or metric ton. Note: before translating, be sure to read http://cldr.org/translation/plurals.
 ^//ldml/units/unitLength\[@type="([^"]*)"]/unit\[@type="([^"]*)"]/displayName ; Display name ({1} form) for “{2}”. Note: before translating, be sure to read http://cldr.org/translation/plurals.
@@ -82,6 +85,9 @@
 
 ^//ldml/numbers/miscPatterns\[@numberSystem="([^"]*)"]/pattern\[@type="range"] ; Format used to indicate a range of numbers. The '{'0'}' and '{'1'}' in the pattern represent the lowest and highest numbers in the range, respectively. For more information, please see http://cldr.org/translation/misc.
 ^//ldml/numbers/miscPatterns\[@numberSystem="([^"]*)"]/pattern\[@type="atLeast"] ; Format used to indicate a number is at least a certain value. For more information, please see http://cldr.org/translation/misc.
+
+^//ldml/numbers/minimalPairs/ordinalMinimalPairs\[@ordinal="([^"]*)"] ; Minimal pairs for ordinals. For more information, please see http://cldr.org/translation/plurals#TOC-Minimal-Pairs.
+^//ldml/numbers/minimalPairs/pluralMinimalPairs\[@count="([^"]*)"] ; Minimal pairs for plurals (cardinals). For more information, please see http://cldr.org/translation/plurals#TOC-Minimal-Pairs.
 
 ^//ldml/numbers/([a-z]*)Formats(\[@numberSystem="([^"]*)"])?/\1FormatLength/\1Format\[@type="standard"]/pattern\[@type="standard"]$    ;   Special pattern used to compose {1} numbers. Note: before translating, be sure to read http://cldr.org/translation/number-patterns.
 ^//ldml/numbers/currencyFormats\[@numberSystem="([^"]*)"]/currencyFormatLength/currencyFormat\[@type="accounting"]/pattern    ;   Special pattern used to compose currency values for accounting purposes. Note: before translating, be sure to read http://cldr.org/translation/number-patterns.

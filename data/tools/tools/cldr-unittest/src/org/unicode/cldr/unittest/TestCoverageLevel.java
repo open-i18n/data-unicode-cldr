@@ -12,7 +12,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
-import org.unicode.cldr.unittest.TestAll.TestInfo;
+import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.ChainedMap;
@@ -45,7 +45,7 @@ import com.ibm.icu.util.ULocale;
 
 public class TestCoverageLevel extends TestFmwkPlus {
 
-    private static TestInfo testInfo = TestInfo.getInstance();
+    private static CLDRConfig testInfo = CLDRConfig.getInstance();
     private static final StandardCodes STANDARD_CODES = testInfo.getStandardCodes();
     private static final CLDRFile ENGLISH = testInfo.getEnglish();
     private static final SupplementalDataInfo SDI = testInfo.getSupplementalDataInfo();
@@ -345,7 +345,7 @@ public class TestCoverageLevel extends TestFmwkPlus {
             + "Tagb|Takr|Tal[eu]|Tang|Tavt|Teng|Tfng|Tglg|Tirh|Ugar|Vaii|Visp|Wara|Wole|Xpeo|Xsux|Yiii|Zinh|Zmth)");
 
         final Pattern keys100 = PatternCache.get("(col(Alternate|Backwards|CaseFirst|CaseLevel|HiraganaQuaternary|"
-            + "Normalization|Numeric|Reorder|Strength)|kv|sd|timezone|va|variableTop|x|d0|m0)");
+            + "Normalization|Numeric|Reorder|Strength)|kv|sd|timezone|va|variableTop|x|d0|h0|i0|k0|m0|s0)");
 
         final Pattern numberingSystem100 = PatternCache.get("("
             + "finance|native|traditional|adlm|ahom|bali|bhks|brah|cakm|cham|cyrl|hanidays|hmng|java|kali|lana(tham)?|lepc|limb|"
@@ -359,12 +359,7 @@ public class TestCoverageLevel extends TestFmwkPlus {
         XPathParts xpp = new XPathParts();
 
         // Calculate date of the upcoming CLDR release, minus 5 years (deprecation policy)
-        String verString = CLDRFile.GEN_VERSION;
-        int periodPos = verString.indexOf('.');
-        if (periodPos > 0) {
-            verString = verString.substring(0,periodPos);
-        }
-        final int versionNumber = Integer.valueOf(verString);
+        final int versionNumber = Integer.valueOf(CLDRFile.GEN_VERSION);
         Calendar cal = Calendar.getInstance();
         cal.set(versionNumber / 2 + versionNumber % 2 + 2001, 8 - (versionNumber % 2) * 6, 15);
         Date cldrReleaseMinus5Years = cal.getTime();
@@ -416,7 +411,8 @@ public class TestCoverageLevel extends TestFmwkPlus {
             }
             else if (xpp.containsElement("zone")) {
                 String zoneType = xpp.findAttributeValue("zone", "type");
-                if (zoneType.startsWith("Etc/GMT") && path.endsWith("exemplarCity")) {
+                if ((zoneType.startsWith("Etc/GMT") || zoneType.equals("Etc/UTC"))
+                    && path.endsWith("exemplarCity")) {
                     continue;
                 }
                 // We don't survey for short timezone names

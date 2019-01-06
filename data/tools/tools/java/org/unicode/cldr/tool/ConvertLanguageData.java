@@ -55,6 +55,7 @@ import org.unicode.cldr.util.XPathParts;
 import org.unicode.cldr.util.XPathParts.Comments;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.math.DoubleMath;
 import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.impl.Relation;
 import com.ibm.icu.impl.Row;
@@ -71,6 +72,7 @@ import com.ibm.icu.util.ULocale;
  */
 public class ConvertLanguageData {
 
+    private static final boolean DEBUG = false;
     // change this if you need to override what is generated for the default contents.
     private static final List<String> defaultOverrides = Arrays.asList("es_ES".split("\\s+")); // und_ZZ
 
@@ -98,15 +100,15 @@ public class ConvertLanguageData {
     private static final ImmutableSet<String> scriptAssumedLocales = ImmutableSet.of(
         "bm_ML", "ha_GH", "ha_NE", "ha_NG", "kk_KZ", "ks_IN", "ky_KG", "mn_MN", "ms_BN", "ms_MY", "ms_SG", "tk_TM", "tzm_MA", "ug_CN");
 
-    static Map<String, String> defaultContent = new TreeMap<String, String>();
-
-    static Factory cldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
-    static CLDRFile english = cldrFactory.make("en", true);
-
     static Set<String> skipLocales = new HashSet<String>(
         Arrays
         .asList("sh sh_BA sh_CS sh_YU characters supplementalData supplementalData-old supplementalData-old2 supplementalData-old3 supplementalMetadata root"
             .split("\\s")));
+
+    static Map<String, String> defaultContent = new TreeMap<String, String>();
+
+    static Factory cldrFactory = Factory.make(CLDRPaths.MAIN_DIRECTORY, ".*");
+    static CLDRFile english = cldrFactory.make("en", true);
 
     static SupplementalDataInfo supplementalData = SupplementalDataInfo
         .getInstance(CLDRPaths.DEFAULT_SUPPLEMENTAL_DIRECTORY);
@@ -166,8 +168,13 @@ public class ConvertLanguageData {
                             BadItem.ERROR.show("missing language/population data for CLDR locale", locale + " = " + getLanguageCodeAndName(locale));
                         }
                     } else {
+                        // These exceptions are OK, because these locales by default use the non-default script
+                        Set<String> OKExceptions = ImmutableSet.of("sr_Cyrl_ME", "zh_Hans_HK", "zh_Hans_MO");
+                        if (OKExceptions.contains(locale)) {
+                            continue;
+                        }
                         BadItem.ERROR.show("missing language/population data for CLDR locale", locale + " = " + getLanguageCodeAndName(locale)
-                            + " but have data for " + getLanguageCodeAndName(withoutScript));
+                        + " but have data for " + getLanguageCodeAndName(withoutScript));
                     }
                 }
             }
@@ -797,12 +804,12 @@ public class ConvertLanguageData {
 
         public String toString(boolean b) {
             return "region:\t" + getCountryCodeAndName(countryCode)
-                + "\tpop:\t" + countryPopulation
-                + "\tgdp:\t" + countryGdp
-                + "\tlit:\t" + countryLiteracy
-                + "\tlang:\t" + getLanguageCodeAndName(languageCode)
-                + "\tpop:\t" + languagePopulation
-                + "\tlit:\t" + languageLiteracy;
+            + "\tpop:\t" + countryPopulation
+            + "\tgdp:\t" + countryGdp
+            + "\tlit:\t" + countryLiteracy
+            + "\tlang:\t" + getLanguageCodeAndName(languageCode)
+            + "\tpop:\t" + languagePopulation
+            + "\tlit:\t" + languageLiteracy;
         }
 
         static boolean MARK_OUTPUT = false;
@@ -822,7 +829,7 @@ public class ConvertLanguageData {
         }
 
         static Map<String,String> oldToFixed = new HashMap<>();
-        
+
         public String getRickLanguageName() {
             String cldrResult = getExcelQuote(english.getName(languageCode, true));
 //            String result = getRickLanguageName2();
@@ -833,7 +840,7 @@ public class ConvertLanguageData {
 //            }
             return cldrResult;
         }
-        
+
         public String getRickLanguageName2() {
             String result = new ULocale(languageCode).getDisplayName();
             if (!result.equals(languageCode)) return getExcelQuote(result);
@@ -970,15 +977,19 @@ public class ConvertLanguageData {
                     addBestScript(baseLanguage, ltp.set(languageCode).getScript(), languagePopulationRaw);
                 }
 
+                if (languageLiteracy != countryLiteracy) {
+                    int debug = 0;
+                }
                 Log.print("\t\t\t<languagePopulation type=\""
                     + languageCode
                     + "\""
-                    + (languageLiteracy != countryLiteracy ? " writingPercent=\""
-                        + formatPercent(languageLiteracy, 2, true) + "\"" : "")
-                        + " populationPercent=\"" + formatPercent(languagePopulationPercent, 2, true) + "\""
-                        + (row.officialStatus.isOfficial() ? " officialStatus=\"" + row.officialStatus + "\"" : "")
-                        + references.addReference(row.comment)
-                        + "/>");
+                    + (DoubleMath.fuzzyCompare(languageLiteracy, countryLiteracy, 0.0001) == 0 ? ""
+                        : (DoubleMath.fuzzyCompare(languageLiteracy, 0.05, 0.0001) == 0 ? " writingPercent=\"" : " literacyPercent=\"")
+                        + formatPercent(languageLiteracy, 2, true) + "\"")
+                    + " populationPercent=\"" + formatPercent(languagePopulationPercent, 2, true) + "\""
+                    + (row.officialStatus.isOfficial() ? " officialStatus=\"" + row.officialStatus + "\"" : "")
+                    + references.addReference(row.notes)
+                    + "/>");
                 Log.println("\t<!--" + getLanguageName(languageCode) + "-->");
             } else if (!row.countryCode.equals("ZZ")) {
                 failures.add(BadItem.ERROR.toString("too few speakers: suspect line", languageCode, row.toString(true)));
@@ -1474,8 +1485,8 @@ public class ConvertLanguageData {
             if (levels.contains(LocaleIDParser.Level.Variants) // no variants
                 || !(levels.contains(LocaleIDParser.Level.Script)
                     || levels.contains(LocaleIDParser.Level.Region))
-                    || deprecatedLanguages.contains(lidp.getLanguage())
-                    || deprecatedRegions.contains(lidp.getRegion())) {
+                || deprecatedLanguages.contains(lidp.getLanguage())
+                || deprecatedRegions.contains(lidp.getRegion())) {
                 // skip language-only locales, and ones with variants
                 needsADoin.remove(locale);
                 skippingItems.add(locale);
@@ -2199,9 +2210,10 @@ public class ConvertLanguageData {
     }
 
     static final LanguageTagCanonicalizer languageTagCanonicalizer = new LanguageTagCanonicalizer();
+
     private static String fixLanguageCode(String languageCodeRaw, List<String> row) {
         String languageCode = languageTagCanonicalizer.transform(languageCodeRaw);
-        if (!languageCode.equals(languageCodeRaw)) {
+        if (DEBUG && !languageCode.equals(languageCodeRaw)) {
             System.out.println("## " + languageCodeRaw + " => " + languageCode);
         }
         int bar = languageCode.indexOf('_');

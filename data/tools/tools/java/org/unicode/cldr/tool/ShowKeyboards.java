@@ -54,6 +54,7 @@ import com.ibm.icu.lang.UScript;
 import com.ibm.icu.text.Collator;
 import com.ibm.icu.text.Transliterator;
 import com.ibm.icu.text.UnicodeSet;
+import com.ibm.icu.util.ICUUncheckedIOException;
 import com.ibm.icu.util.ULocale;
 
 @CLDRTool(alias = "showkeyboards", description = "Generate keyboard charts")
@@ -96,13 +97,14 @@ public class ShowKeyboards {
         keyboardChartDir = MyOptions.targetDirectory.option.getValue();
         keyboardChartLayoutsDir = keyboardChartDir + "/layouts/";
 
+        FileCopier.ensureDirectoryExists(keyboardChartDir);
         FileCopier.copy(ShowKeyboards.class, "keyboards-index.html", keyboardChartDir, "index.html");
 
         Matcher idMatcher = PatternCache.get(idPattern).matcher("");
         try {
             Log.setLog(CLDRPaths.LOG_DIRECTORY + "keyboard-log.txt");
         } catch (IOException e) {
-            throw new IllegalArgumentException(e);
+            throw new ICUUncheckedIOException(e);
         }
         boolean layoutsOnly = MyOptions.layouts.option.doesOccur();
         boolean repertoireOnly = MyOptions.repertoire.option.doesOccur();
@@ -223,6 +225,7 @@ public class ShowKeyboards {
             }
         }
 
+        FileCopier.ensureDirectoryExists(keyboardChartLayoutsDir);
         FileCopier.copy(ShowKeyboards.class, "keyboards.css", keyboardChartLayoutsDir, "index.css");
         PrintWriter index = FileUtilities.openUTF8Writer(keyboardChartLayoutsDir, "index.html");
         String[] headerAndFooter = new String[2];

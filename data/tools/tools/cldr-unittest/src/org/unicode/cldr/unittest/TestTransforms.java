@@ -16,7 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.unicode.cldr.draft.FileUtilities;
-import org.unicode.cldr.unittest.TestAll.TestInfo;
+import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CLDRTransforms;
@@ -34,7 +34,7 @@ import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.util.ULocale;
 
 public class TestTransforms extends TestFmwkPlus {
-    TestInfo testInfo = TestInfo.getInstance();
+    CLDRConfig testInfo = CLDRConfig.getInstance();
 
     public static void main(String[] args) {
         new TestTransforms().run(args);
@@ -412,12 +412,6 @@ public class TestTransforms extends TestFmwkPlus {
                 }
                 logln("Testing file: " + file);
                 String transName = file.substring(0, file.length() - 4);
-                if (transName.startsWith("ur-t-und-")) {
-                  if (logKnownIssue("cldrbug:9737",
-                      "CLDR test suite is loading transforms non-deterministically")) {
-                    continue;
-                  }
-                }
 
                 Transliterator trans = getTransliterator(transName);
                 BufferedReader in = FileUtilities.openUTF8Reader(fileDirectoryName, file);
@@ -427,6 +421,7 @@ public class TestTransforms extends TestFmwkPlus {
                     if (line == null)
                         break;
                     line = line.trim();
+                    counter += 1;
                     if (line.startsWith("#")) {
                         continue;
                     }
@@ -434,7 +429,7 @@ public class TestTransforms extends TestFmwkPlus {
                     String source = parts[0];
                     String expected = parts[1];
                     String result = trans.transform(source);
-                    assertEquals(transName + " " + (++counter) + " Transform "
+                    assertEquals(transName + " " + counter + " Transform "
                         + source, expected, result);
                 }
                 in.close();

@@ -377,6 +377,7 @@ public class ConsoleCheckCLDR {
             english = backCldrFactory.make("en", true);
         }
         checkCldr.setDisplayInformation(english);
+        checkCldr.setEnglishFile(english);
         setExampleGenerator(new ExampleGenerator(english, english, CLDRPaths.SUPPLEMENTAL_DIRECTORY));
         PathShower pathShower = new PathShower();
 
@@ -425,7 +426,7 @@ public class ConsoleCheckCLDR {
                 level = Level.BASIC;
             }
             if (organization != null) {
-                Map<String, Level> locale_status = StandardCodes.make().getLocaleTypes().get(organization);
+                Map<String, Level> locale_status = StandardCodes.make().getLocaleToLevel(organization);
                 if (locale_status == null) continue;
                 level = locale_status.get(localeID);
                 if (level == null) continue;
@@ -996,7 +997,7 @@ public class ConsoleCheckCLDR {
             .setBreakSpans(true).setRepeatHeader(true).setHeaderCell(true)
             .addColumn("Locale").setCellAttributes("class=\"{1}\"")
             .setCellPattern("<a href=\"http://unicode.org/cldr/apps/survey?_={0}\">{0}</a>").setSortPriority(2)
-            .setSpanRows(true).setBreakSpans(true).setRepeatDivider(true)
+            .setSpanRows(true).setBreakSpans(true)//.setRepeatDivider(true)
             .addColumn("Name").setCellAttributes("class=\"{1}\"").setSpanRows(true)
             .setBreakSpans(true)
             // .addColumn("HIDDEN").setSortPriority(2).setHidden(true)
@@ -1112,7 +1113,7 @@ public class ConsoleCheckCLDR {
 
             TablePrinter indexTablePrinter = new TablePrinter().setCaption("Problem Summary")
                 .setTableAttributes("border='1' style='border-collapse: collapse' bordercolor='blue'")
-                .addColumn("BASE").setHidden(true).setRepeatDivider(true)
+                .addColumn("BASE").setHidden(true)//.setRepeatDivider(true)
                 .addColumn("Locale").setCellPattern("<a name=\"{0}\" href=\"{1}.html\">{0}</a>") // link to base, anchor
                 // with full
                 .addColumn("Name");
@@ -1199,7 +1200,7 @@ public class ConsoleCheckCLDR {
             Relation<Organization, String> orgToLocales = getOrgToLocales();
             TablePrinter indexTablePrinter = new TablePrinter().setCaption("Problem Summary")
                 .setTableAttributes("border='1' style='border-collapse: collapse' bordercolor='blue'")
-                .addColumn("Section").setSpanRows(true).setBreakSpans(true).setRepeatDivider(true)
+                .addColumn("Section").setSpanRows(true).setBreakSpans(true)//.setRepeatDivider(true)
                 .addColumn("Problems").setCellAttributes("style=\"text-align:left\" class=\"{2}\"").setSpanRows(true)
                 .addColumn("Subtype").setCellAttributes("style=\"text-align:left\" class=\"{2}\"").setSpanRows(true)
                 .addColumn("Locale").setCellAttributes("class=\"{2}\"")
@@ -1301,7 +1302,7 @@ public class ConsoleCheckCLDR {
                 "<p>The following errors have been detected in the locale"
                 +
                 (notLocaleSpecific
-                    ? "s. " + org.unicode.cldr.tool.ShowLanguages.getHelpHtml("error_index_header")
+                    ? "s. " + org.unicode.cldr.test.HelpMessages.getChartMessages("error_index_header")
                         : " " + ConsoleCheckCLDR.getNameAndLocale(localeID, false) + ". "
                         + ErrorFile.ERROR_CHART_HEADER
                     ));
@@ -1348,8 +1349,8 @@ public class ConsoleCheckCLDR {
         static PrintWriter errorFileWriter = null;
         private static String htmlOpenedFileLanguage = null;
         private static String htmlOpenedFileLocale = null;
-        private static final String ERROR_CHART_HEADER = org.unicode.cldr.tool.ShowLanguages
-            .getHelpHtml("error_locale_header");
+        private static final String ERROR_CHART_HEADER = org.unicode.cldr.test.HelpMessages
+            .getChartMessages("error_locale_header");
         // "Please review and correct them. " +
         // "Note that errors in <i>sublocales</i> are often fixed by fixing the main locale.</p>" +
         // Utility.LINE_SEPARATOR +

@@ -31,6 +31,7 @@ import org.unicode.cldr.util.XMLSource;
 import com.google.common.base.Objects;
 import com.ibm.icu.impl.Row;
 import com.ibm.icu.impl.Row.R5;
+import com.ibm.icu.util.ICUUncheckedIOException;
 
 public class GenerateChangeChart {
     private static final boolean QUICK_TEST = false;
@@ -54,6 +55,7 @@ public class GenerateChangeChart {
         String dir = CLDRPaths.CHART_DIRECTORY + "changes/";
         CoverageInfo coverage = CONFIG.getCoverageInfo();
         EnumSet<SectionId> sections = EnumSet.noneOf(SectionId.class);
+        FileCopier.ensureDirectoryExists(dir);
         FileCopier.copy(ShowLanguages.class, "index.css", dir);
 
         try (PrintWriter out = org.unicode.cldr.draft.FileUtilities.openUTF8Writer(dir, "summary.txt");) {
@@ -281,7 +283,7 @@ public class GenerateChangeChart {
             try {
                 out = new FormattedFileWriter(summary, dir, title.toString(), explanation, null);
             } catch (IOException e) {
-                throw new IllegalArgumentException(e);
+                throw new ICUUncheckedIOException(e);
             }
         }
 
@@ -290,7 +292,7 @@ public class GenerateChangeChart {
                 out.write(this.toTable());
                 out.close();
             } catch (IOException e) {
-                throw new IllegalArgumentException(e);
+                throw new ICUUncheckedIOException(e);
             }
         }
     }

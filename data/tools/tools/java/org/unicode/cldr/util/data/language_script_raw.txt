@@ -125,7 +125,7 @@ car	Carib	primary	Latn	Latin
 cay	Cayuga	primary	Latn	Latin
 cch	Atsam	primary	Latn	Latin
 ccp	Chakma	primary	Beng	Bengali
-ccp	Chakma	secondary	Cakm	Chakma
+ccp	Chakma	primary	Cakm	Chakma
 ce	Chechen	primary	Cyrl	Cyrillic
 ceb	Cebuano	primary	Latn	Latin
 cgg	Chiga	primary	Latn	Latin
@@ -326,6 +326,7 @@ iba	Iban	primary	Latn	Latin
 ibb	Ibibio	primary	Latn	Latin
 id	Indonesian	primary	Latn	Latin
 id	Indonesian	secondary	Arab	Arabic
+ife	Ifè	primary	Latn	Latin
 ig	Igbo	primary	Latn	Latin
 ii	Sichuan Yi	primary	Yiii	Yi
 ii	Sichuan Yi	secondary	Latn	Latin
@@ -620,7 +621,6 @@ pon	Pohnpeian	primary	Latn	Latin
 prd	Parsi-Dari	primary	Arab	Arabic
 prg	Prussian	secondary	Latn	Latin
 pro	Old Occitan	secondary	Latn	Latin
-prs	Dari	primary	Arab	Arabic
 ps	Pashto	primary	Arab	Arabic
 pt	Portuguese	primary	Latn	Latin
 puu	Punu	primary	Latn	Latin
@@ -747,7 +747,6 @@ sv	Swedish	primary	Latn	Latin
 sw	Swahili	primary	Latn	Latin
 swb	Comorian	primary	Arab	Arabic
 swb	Comorian	secondary	Latn	Latin
-swc	Congo Swahili	primary	Latn	Latin
 swg	Swabian	primary	Latn	Latin
 swv	Shekhawati	primary	Deva	Devanagari
 sxn	Sangir	primary	Latn	Latin

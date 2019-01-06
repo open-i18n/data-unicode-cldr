@@ -38,6 +38,7 @@ import org.unicode.cldr.util.ZoneParser.ZoneLine;
 import com.ibm.icu.impl.Relation;
 import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.text.UnicodeSet;
+import com.ibm.icu.util.ICUUncheckedIOException;
 import com.ibm.icu.util.Output;
 
 /**
@@ -190,7 +191,16 @@ public class StandardCodes {
      * @param data
      * @return
      */
+    @Deprecated
     public List<String> getCodes(String type, String data) {
+        return getCodes(CodeType.valueOf(type), data);
+    }
+    
+    /**
+     * Return the list of codes that have the same data. For example, returns all
+     * currency codes for a country. If there is a preferred one, it is first.
+     */
+    public List<String> getCodes(CodeType type, String data) {
         Map<String, List<String>> data_codes = type_name_codes.get(type);
         if (data_codes == null)
             return null;
@@ -200,7 +210,16 @@ public class StandardCodes {
     /**
      * Where there is a preferred code, return it.
      */
+    @Deprecated
     public String getPreferred(String type, String code) {
+        return getPreferred(CodeType.valueOf(type), code);
+    }
+    
+    /**
+     * Where there is a preferred code, return it.
+     */
+
+    public String getPreferred(CodeType type, String code) {
         Map<String, String> code_preferred = type_code_preferred.get(type);
         if (code_preferred == null)
             return code;
@@ -335,21 +354,21 @@ public class StandardCodes {
     private EnumMap<Organization, Relation<Level, String>> platform_level_locale = null;
     private Map<String, Map<String, String>> platform_locale_levelString = null;
 
-    /**
-     * Get rid of this
-     *
-     * @param type
-     * @return
-     * @throws IOException
-     * @deprecated
-     */
-    public String getEffectiveLocaleType(String type) throws IOException {
-        if ((type != null) && (getLocaleCoverageOrganizations().contains(type))) {
-            return type;
-        } else {
-            return null; // the default.. for now..
-        }
-    }
+//    /**
+//     * Get rid of this
+//     *
+//     * @param type
+//     * @return
+//     * @throws IOException
+//     * @deprecated
+//     */
+//    public String getEffectiveLocaleType(String type) throws IOException {
+//        if ((type != null) && (getLocaleCoverageOrganizations().contains(Organization.valueOf(type)))) {
+//            return type;
+//        } else {
+//            return null; // the default.. for now..
+//        }
+//    }
 
     static Comparator caseless = new Comparator() {
 
@@ -374,6 +393,15 @@ public class StandardCodes {
             }
         }
         return platform_locale_level;
+    }
+    
+    /**
+     * Return map of locales to levels
+     * @param org
+     * @return
+     */
+    public Map<String, Level> getLocaleToLevel(Organization org) {
+        return getLocaleTypes().get(org);
     }
 
     public Level getLocaleCoverageLevel(String organization, String desiredLocale) {
@@ -545,7 +573,7 @@ public class StandardCodes {
                 }
             }
         } catch (IOException e) {
-            throw (IllegalArgumentException) new IllegalArgumentException("Internal Error").initCause(e);
+            throw new ICUUncheckedIOException("Internal Error", e);
         }
 
         // now reset the parent to be the max of the children

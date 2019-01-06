@@ -19,14 +19,13 @@ import org.unicode.cldr.draft.ScriptMetadata;
 import org.unicode.cldr.draft.ScriptMetadata.Info;
 import org.unicode.cldr.tool.GenerateMaximalLocales;
 import org.unicode.cldr.tool.LikelySubtags;
-import org.unicode.cldr.unittest.TestAll.TestInfo;
 import org.unicode.cldr.util.Builder;
+import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRLocale;
 import org.unicode.cldr.util.ChainedMap;
 import org.unicode.cldr.util.ChainedMap.M3;
 import org.unicode.cldr.util.CldrUtility;
-import org.unicode.cldr.util.LanguageTagCanonicalizer;
 import org.unicode.cldr.util.LanguageTagParser;
 import org.unicode.cldr.util.LocaleIDParser;
 import org.unicode.cldr.util.PatternCache;
@@ -45,7 +44,7 @@ import com.ibm.icu.impl.Row.R2;
 
 public class TestInheritance extends TestFmwk {
 
-    static TestInfo testInfo = TestInfo.getInstance();
+    static CLDRConfig testInfo = CLDRConfig.getInstance();
 
     private static boolean DEBUG = CldrUtility.getProperty("DEBUG", false);
 
@@ -676,20 +675,6 @@ public class TestInheritance extends TestFmwk {
             + "; "
             + toLoc.toULocale().getDisplayCountry() + " }-->";
 
-    }
-
-    public void TestLanguageTagCanonicalizer() {
-        String[][] tests = {
-            { "en-POLYTONI-WHATEVER-ANYTHING-AALAND",
-            "en_AX_ANYTHING_POLYTON_WHATEVER" },
-            { "eng-840", "en" }, { "sh_ba", "sr_Latn_BA" },
-            { "iw-arab-010", "he_Arab_AQ" }, { "und", "und" },
-            { "und_us", "und_US" }, { "und_su", "und_RU" }, };
-        LanguageTagCanonicalizer canon = new LanguageTagCanonicalizer();
-        for (String[] inputExpected : tests) {
-            assertEquals("Canonicalize", inputExpected[1],
-                canon.transform(inputExpected[0]));
-        }
     }
 
     public void TestDeprecatedTerritoryDataLocaleIds() {

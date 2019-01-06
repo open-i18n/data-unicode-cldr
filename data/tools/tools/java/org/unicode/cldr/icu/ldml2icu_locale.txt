@@ -85,6 +85,13 @@
 //ldml/characters/moreInformation      ;   /MoreInformation
 //ldml/characters/special/icu:scripts/icu:script[@type="%N"]      ;   /LocaleScript
 
+//ldml/characters/parseLenients[@scope="(%A)"][@level="(%A)"]/parseLenient[@sample="(%A)"] ; /parse/$1/$2
+
+characters/parseLenients/parseLenient[@sample='%anyAttribute'][@scope='%anyAttribute']"/>
+characters/parseLenients/parseLenient[@sample='%anyAttribute'][@level='%anyAttribute']"/>
+characters/parseLenients/parseLenient[@sample='%anyAttribute'][@scope='%anyAttribute'][@level='%anyAttribute']"/>
+
+
 # Defaults
 
 //ldml/dates/calendars/calendar[@type="(%A)"]/(monthPattern)s/\2Context[@type="(%W)"]/\2Width[@type="(%W)"]/\2[@type="(%W)"]   ; /calendar/$1/$2s/$3/$4/$5
@@ -213,6 +220,8 @@
 //ldml/numbers/decimalFormats[@numberSystem="(%W)"]/decimalFormatLength[@type="long"]/decimalFormat[@type="standard"]/pattern[@type="(%N)"][@count="(%W)"] ; /NumberElements/$1/patternsLong/decimalFormat/$2/$3
 
 //ldml/numbers/miscPatterns[@numberSystem="(%W)"]/pattern[@type="(%W)"] ; /NumberElements/$1/miscPatterns/$2
+//ldml/numbers/minimalPairs/ordinalMinimalPairs[@ordinal="(%A)"] ; /NumberElements/minimalPairs/ordinal/$1
+//ldml/numbers/minimalPairs/pluralMinimalPairs[@count="(%A)"] ; /NumberElements/minimalPairs/plural/$1
 
 # Misc
 

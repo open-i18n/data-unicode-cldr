@@ -8,11 +8,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
-import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
@@ -21,6 +19,7 @@ import java.util.regex.Pattern;
 import org.unicode.cldr.draft.FileUtilities;
 import org.unicode.cldr.tool.FormattedFileWriter.Anchors;
 import org.unicode.cldr.tool.Option.Options;
+import org.unicode.cldr.tool.Option.Params;
 import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.Status;
@@ -55,6 +54,8 @@ import com.ibm.icu.text.NumberFormat;
 import com.ibm.icu.util.Output;
 
 public class ChartDelta extends Chart {
+    private static final boolean SKIP_REFORMAT_ANNOTATIONS = ToolConstants.PREVIOUS_CHART_VERSION.compareTo("30") >= 0;
+
     private static final PageId DEBUG_PAGE_ID = PageId.DayPeriod;
 
     private static final SupplementalDataInfo SUPPLEMENTAL_DATA_INFO = CLDRConfig.getInstance().getSupplementalDataInfo();
@@ -63,16 +64,24 @@ public class ChartDelta extends Chart {
     private static final String CURRENT_DIRECTORY = CLDRPaths.ARCHIVE_DIRECTORY + "cldr-" +
         ToolConstants.LAST_CHART_VERSION + "/";
 
-    final static Options myOptions = new Options();
-
     enum MyOptions {
-        fileFilter(".*", ".*", "filter by dir/locale, eg: ^main/en$ or .*/en"),
-        verbose(null, null, "verbose debugging messages");
-        // boilerplate
-        final Option option;
+        fileFilter(new Params().setHelp("filter by dir/locale, eg: ^main/en$ or .*/en").setDefault(".*").setMatch(".*")),
+        verbose(new Params().setHelp("verbose debugging messages")),
+        ;
 
-        MyOptions(String argumentPattern, String defaultArgument, String helpText) {
-            option = myOptions.add(this, argumentPattern, defaultArgument, helpText);
+        // BOILERPLATE TO COPY
+        final Option option;
+        private MyOptions(Params params) {
+            option = new Option(this, params);
+        }
+        private static Options myOptions = new Options();
+        static {
+            for (MyOptions option : MyOptions.values()) {
+                myOptions.add(option, option.option);
+            }
+        }
+        private static Set<String> parse(String[] args, boolean showArguments) {
+            return myOptions.parse(MyOptions.values()[0], args, true);
         }
     }
 
@@ -86,7 +95,7 @@ public class ChartDelta extends Chart {
 
     public static void main(String[] args) {
         System.out.println("use -DCHART_VERSION=28 to generate version 28.");
-        myOptions.parse(MyOptions.fileFilter, args, true);
+        MyOptions.parse(args, true);
         Matcher fileFilter = !MyOptions.fileFilter.option.doesOccur() ? null : PatternCache.get(MyOptions.fileFilter.option.getValue()).matcher("");
         boolean verbose = MyOptions.verbose.option.doesOccur();
         ChartDelta temp = new ChartDelta(fileFilter, verbose);
@@ -208,6 +217,7 @@ public class ChartDelta extends Chart {
             try {
                 oldFactories.add(Factory.make(past, ".*"));
             } catch (Exception e) {
+                System.out.println("Couldn't open factory: " + past);
                 past = null;
                 oldFactories.add(null);
             }
@@ -341,7 +351,7 @@ public class ChartDelta extends Chart {
     }
 
     private String getReformattedPath(Status oldStatus, CLDRFile old, String path, Output<String> value, Output<Boolean> hasReformattedValue) {
-        if (!path.startsWith("//ldml/annotations/")) {
+        if (SKIP_REFORMAT_ANNOTATIONS || !path.startsWith("//ldml/annotations/")) {
             hasReformattedValue.value = Boolean.FALSE;
             return old.getSourceLocaleID(path, oldStatus);
         }
@@ -508,42 +518,44 @@ public class ChartDelta extends Chart {
         return buf.toString();
     }
 
-    private void writeDiffs(Anchors anchors, String file, String title, SortedMap<PathHeader, String> bcp) {
+    private void writeDiffs(Anchors anchors, String file, String title, Multimap<PathHeader, String> bcp) {
         TablePrinter tablePrinter = new TablePrinter()
-        .addColumn("Section", "class='source'", null, "class='source'", true)
-        .addColumn("Page", "class='source'", null, "class='source'", true).setRepeatDivider(true)
-        .addColumn("Header", "class='source'", null, "class='source'", true)
-        .addColumn("Code", "class='source'", null, "class='source'", false)
-        .addColumn("Old", "class='target'", null, "class='target'", false) //  width='20%'
-        .addColumn("New", "class='target'", null, "class='target'", false); //  width='20%'
+            .addColumn("Section", "class='source'", CldrUtility.getDoubleLinkMsg(), "class='source'", true)
+            .addColumn("Page", "class='source'", CldrUtility.getDoubleLinkMsg(), "class='source'", true)//.setRepeatDivider(true)
+            .addColumn("Header", "class='source'", CldrUtility.getDoubleLinkMsg(), "class='source'", true)
+            .addColumn("Code", "class='source'", null, "class='source'", false)
+            .addColumn("Old", "class='target'", null, "class='target'", false) //  width='20%'
+            .addColumn("New", "class='target'", null, "class='target'", false); //  width='20%'
         PathHeader ph1 = phf.fromPath("//supplementalData/metadata/alias/subdivisionAlias[@type=\"TW-TXQ\"]/_reason");
         PathHeader ph2 = phf.fromPath("//supplementalData/metadata/alias/subdivisionAlias[@type=\"LA-XN\"]/_replacement");
         ph1.compareTo(ph2);
-        for (Entry<PathHeader, String> entry : bcp.entrySet()) {
+        for (Entry<PathHeader, Collection<String>> entry : bcp.asMap().entrySet()) {
             PathHeader ph = entry.getKey();
             if (ph.getPageId() == DEBUG_PAGE_ID) {
                 System.out.println(ph + "\t" + ph.getOriginalPath());
             }
-            String[] oldNew = entry.getValue().split(SEP);
-            tablePrinter.addRow()
-            .addCell(ph.getSectionId())
-            .addCell(ph.getPageId())
-            .addCell(ph.getHeader())
-            .addCell(ph.getCode())
-            .addCell(oldNew[0])
-            .addCell(oldNew[1])
-            .finishRow();
+            for (String value : entry.getValue()) {
+                String[] oldNew = value.split(SEP);
+                tablePrinter.addRow()
+                .addCell(ph.getSectionId())
+                .addCell(ph.getPageId())
+                .addCell(ph.getHeader())
+                .addCell(ph.getCode())
+                .addCell(oldNew[0])
+                .addCell(oldNew[1])
+                .finishRow();
+            }
         }
         writeTable(anchors, file, tablePrinter, title);
     }
 
     private void writeDiffs(Anchors anchors, Relation<PathHeader, String> diffAll) {
         TablePrinter tablePrinter = new TablePrinter()
-        .addColumn("Section", "class='source'", null, "class='source'", true)
-        .addColumn("Page", "class='source'", null, "class='source'", true)
-        .addColumn("Header", "class='source'", null, "class='source'", true)
-        .addColumn("Code", "class='source'", null, "class='source'", true)
-        .addColumn("Locales where different", "class='target'", null, "class='target'", true);
+            .addColumn("Section", "class='source'", CldrUtility.getDoubleLinkMsg(), "class='source'", true)
+            .addColumn("Page", "class='source'", CldrUtility.getDoubleLinkMsg(), "class='source'", true)
+            .addColumn("Header", "class='source'", CldrUtility.getDoubleLinkMsg(), "class='source'", true)
+            .addColumn("Code", "class='source'", null, "class='source'", true)
+            .addColumn("Locales where different", "class='target'", null, "class='target'", true);
         for (Entry<PathHeader, Set<String>> row : diffAll.keyValuesSet()) {
             PathHeader ph = row.getKey();
             Set<String> locales = row.getValue();
@@ -562,14 +574,14 @@ public class ChartDelta extends Chart {
             return;
         }
         TablePrinter tablePrinter = new TablePrinter()
-        .addColumn("Section", "class='source'", null, "class='source'", true)
-        .addColumn("Page", "class='source'", null, "class='source'", true)
-        .addColumn("Header", "class='source'", null, "class='source'", true)
-        .addColumn("Code", "class='source'", null, "class='source'", true)
-        .addColumn("Locale", "class='source'", null, "class='source'", true)
-        .addColumn("Old", "class='target'", null, "class='target'", true) //  width='20%'
-        .addColumn("New", "class='target'", null, "class='target'", true) //  width='20%'
-        .addColumn("Level", "class='target'", null, "class='target'", true);
+            .addColumn("Section", "class='source'", CldrUtility.getDoubleLinkMsg(), "class='source'", true)
+            .addColumn("Page", "class='source'", CldrUtility.getDoubleLinkMsg(), "class='source'", true)
+            .addColumn("Header", "class='source'", CldrUtility.getDoubleLinkMsg(), "class='source'", true)
+            .addColumn("Code", "class='source'", null, "class='source'", true)
+            .addColumn("Locale", "class='source'", null, "class='source'", true)
+            .addColumn("Old", "class='target'", null, "class='target'", true) //  width='20%'
+            .addColumn("New", "class='target'", null, "class='target'", true) //  width='20%'
+            .addColumn("Level", "class='target'", null, "class='target'", true);
 
         for (PathDiff row : diff) {
             PathHeaderSegment phs = row.get0();
@@ -660,9 +672,9 @@ public class ChartDelta extends Chart {
     }
 
     public void writeNonLdmlPlain(Anchors anchors, String directory) {
-        SortedMap<PathHeader, String> bcp = new TreeMap<>();
-        SortedMap<PathHeader, String> supplemental = new TreeMap<>();
-        SortedMap<PathHeader, String> transforms = new TreeMap<>();
+        Multimap<PathHeader, String> bcp = TreeMultimap.create();
+        Multimap<PathHeader, String> supplemental = TreeMultimap.create();
+        Multimap<PathHeader, String> transforms = TreeMultimap.create();
 
         for (String dir : new File(CLDRPaths.BASE_DIRECTORY + "common/").list()) {
             if (CLDRPaths.LDML_DIRECTORIES.contains(dir)
@@ -698,11 +710,15 @@ public class ChartDelta extends Chart {
                 keys.addAll(CldrUtility.ifNull(contents2.keySet(), Collections.<PathHeader> emptySet()));
                 DtdType dtdType = null;
                 for (PathHeader key : keys) {
-                    boolean isTransform = key.getOriginalPath().contains("/tRule");
-                    if (dtdType == null) {
-                        dtdType = DtdType.fromPath(key.getOriginalPath());
+                    String originalPath = key.getOriginalPath();
+                    if (originalPath.contains("/paradigmLocales")) {
+                        int debug = 0;
                     }
-                    Map<PathHeader, String> target = dtdType == DtdType.ldmlBCP47 ? bcp
+                    boolean isTransform = originalPath.contains("/tRule");
+                    if (dtdType == null) {
+                        dtdType = DtdType.fromPath(originalPath);
+                    }
+                    Multimap<PathHeader, String> target = dtdType == DtdType.ldmlBCP47 ? bcp
                         : isTransform ? transforms
                             : supplemental ;
                     Set<String> set1 = contents1.get(key);
@@ -762,7 +778,7 @@ public class ChartDelta extends Chart {
         writeDiffs(anchors, "transforms", "¤¤Transforms Delta", transforms);
     }
 
-    private void addRow(Map<PathHeader, String> target, PathHeader key, String oldItem, String newItem) {
+    private void addRow(Multimap<PathHeader, String> target, PathHeader key, String oldItem, String newItem) {
         if (oldItem.isEmpty() || newItem.isEmpty()) {
             throw new IllegalArgumentException();
         }

@@ -56,6 +56,8 @@ import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
 import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.impl.Relation;
 import com.ibm.icu.impl.Utility;
@@ -64,6 +66,7 @@ import com.ibm.icu.text.PluralRules;
 import com.ibm.icu.text.Transform;
 import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.util.Freezable;
+import com.ibm.icu.util.ICUUncheckedIOException;
 import com.ibm.icu.util.Output;
 import com.ibm.icu.util.ULocale;
 import com.ibm.icu.util.VersionInfo;
@@ -113,7 +116,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
     public static final String SUPPLEMENTAL_NAME = "supplementalData";
     public static final String SUPPLEMENTAL_METADATA = "supplementalMetadata";
     public static final String SUPPLEMENTAL_PREFIX = "supplemental";
-    public static final String GEN_VERSION = "30.0.3";
+    public static final String GEN_VERSION = "31";
     public static final List<String> SUPPLEMENTAL_NAMES = Arrays.asList("characters", "coverageLevels", "dayPeriods", "genderList", "languageInfo",
         "likelySubtags", "metaZones", "numberingSystems", "ordinals", "plurals", "postalCodeData", "rgScope", "supplementalData", "supplementalMetadata",
         "telephoneCodeData", "windowsZones");
@@ -218,7 +221,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
             sb.append(fullFileName);
             sb.append("': ");
             sb.append(e.getMessage());
-            throw new IllegalArgumentException(sb.toString(), e);
+            throw new ICUUncheckedIOException(sb.toString(), e);
 //            throw (IllegalArgumentException) new IllegalArgumentException("Can't read " + fullFileName + " - "
 //                + e.toString()).initCause(e);
         }
@@ -283,7 +286,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
         } catch (SAXException e) {
             throw (IllegalArgumentException) new IllegalArgumentException("Can't read " + localeName).initCause(e);
         } catch (IOException e) {
-            throw (IllegalArgumentException) new IllegalArgumentException("Can't read " + localeName).initCause(e);
+            throw new ICUUncheckedIOException("Can't read " + localeName, e);
         }
     }
 
@@ -480,7 +483,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
     }
 
     static final Splitter LINE_SPLITTER = Splitter.on('\n');
-    
+
     private String fixInitialComment(String initialComment) {
         if (initialComment == null || initialComment.isEmpty()) {
             return CldrUtility.getCopyrightString();
@@ -1705,10 +1708,10 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
             String distinguishing = CLDRFile.getDistinguishingXPath(formerPath, null, true);
             String distinguishing2 = CLDRFile.getDistinguishingXPath(currentFullXPath, null, true);
             System.out.println("\tERROR in " + target.getLocaleID()
-                + ";\toverriding old value <" + former + "> at path " + distinguishing +
-                "\twith\t<" + lastChars + ">" +
-                CldrUtility.LINE_SEPARATOR + "\told fullpath: " + formerPath +
-                CldrUtility.LINE_SEPARATOR + "\tnew fullpath: " + currentFullXPath);
+            + ";\toverriding old value <" + former + "> at path " + distinguishing +
+            "\twith\t<" + lastChars + ">" +
+            CldrUtility.LINE_SEPARATOR + "\told fullpath: " + formerPath +
+            CldrUtility.LINE_SEPARATOR + "\tnew fullpath: " + currentFullXPath);
             overrideCount += 1;
         }
 
@@ -2048,6 +2051,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
         TZ_LIMIT = 13,
         KEY_NAME = 13,
         KEY_TYPE_NAME = 14,
+        SUBDIVISION_NAME = 15,
         LIMIT_TYPES = 15;
 
     private static final String[][] NameTable = {
@@ -2066,6 +2070,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
         { "//ldml/dates/timeZoneNames/zone[@type=\"", "\"]/short/daylight", "tz-daylight-short" },
         { "//ldml/localeDisplayNames/keys/key[@type=\"", "\"]", "key" },
         { "//ldml/localeDisplayNames/types/type[@key=\"", "\"][@type=\"", "\"]", "key|type" },
+        { "//ldml/localeDisplayNames/subdivisions/subdivision[@type=\"", "\"]", "subdivision" },
 
         /**
          * <long>
@@ -2095,13 +2100,35 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
      * @return the key used to access data of a given type
      */
     public static String getKey(int type, String code) {
+        switch (type) {
+        case VARIANT_NAME:
+            code = code.toUpperCase(Locale.ROOT);
+            break;
+        case KEY_NAME:
+            code = fixKeyName(code);
+            break;
+        }
         String[] nameTableRow = NameTable[type];
         if (code.contains("|")) {
             String[] codes = code.split("\\|");
-            return nameTableRow[0] + codes[0] + nameTableRow[1] + codes[1] + nameTableRow[2];
+            return nameTableRow[0] + fixKeyName(codes[0]) + nameTableRow[1] + codes[1] + nameTableRow[2];
         } else {
             return nameTableRow[0] + code + nameTableRow[1];
         }
+    }
+
+    static final ImmutableMap<String,String> FIX_KEY_NAME; 
+    static {
+        Builder<String, String> temp = ImmutableMap.builder();
+        for (String s : Arrays.asList("colAlternate", "colBackwards","colCaseFirst","colCaseLevel","colNormalization","colNumeric","colReorder","colStrength")) {
+            temp.put(s.toLowerCase(Locale.ROOT), s);
+        }
+        FIX_KEY_NAME = temp.build();
+    }
+
+    private static String fixKeyName(String code) {
+        String result = FIX_KEY_NAME.get(code);
+        return result == null ? code : result;
     }
 
     /**
@@ -2616,7 +2643,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
 
     static final UnicodeSet HACK_CASE_CLOSURE_SET = new UnicodeSet(
         "[ſẛﬀẞ{i̇}\u1F71\u1F73\u1F75\u1F77\u1F79\u1F7B\u1F7D\u1FBB\u1FBE\u1FC9\u1FCB\u1FD3\u1FDB\u1FE3\u1FEB\u1FF9\u1FFB\u2126\u212A\u212B]")
-    .freeze();
+        .freeze();
 
     public UnicodeSet getExemplarSet(String type, WinningChoice winningChoice, int option) {
         if (type.length() != 0) type = "[@type=\"" + type + "\"]";
@@ -3275,7 +3302,9 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
             "Pacific/Honolulu\"]/short/standard",
             "Pacific/Honolulu\"]/short/daylight",
             "Europe/Dublin\"]/long/daylight",
-            "Europe/London\"]/long/daylight"
+            "Europe/London\"]/long/daylight",
+            "Etc/UTC\"]/long/standard",
+            "Etc/UTC\"]/short/standard"
         };
         for (String override : overrides) {
             toAddTo.add("//ldml/dates/timeZoneNames/zone[@type=\"" + override);

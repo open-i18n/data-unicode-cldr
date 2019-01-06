@@ -1,18 +1,23 @@
 package org.unicode.cldr.test;
 
 import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.unicode.cldr.test.CheckCLDR.CheckStatus.Subtype;
 import org.unicode.cldr.util.CLDRFile.DraftStatus;
+import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.LogicalGrouping;
 import org.unicode.cldr.util.PathHeader;
-import org.unicode.cldr.util.PathHeader.Factory;
 import org.unicode.cldr.util.XPathParts;
 
-public class CheckLogicalGroupings extends CheckCLDR {
+public class CheckLogicalGroupings extends FactoryCheckCLDR {
 
+    public CheckLogicalGroupings(Factory factory) {
+        super(factory);
+    }
+    
     // Change MINIMUM_DRAFT_STATUS to DraftStatus.contributed if you only care about
     // contributed or higher. This can help to reduce the error count when you have a lot of new data.
 
@@ -28,6 +33,12 @@ public class CheckLogicalGroupings extends CheckCLDR {
         // if (fullPath == null) return this; // skip paths that we don't have
         if (LogicalGrouping.isOptional(getCldrFileToCheck(), path)) return this;
         Set<String> paths = LogicalGrouping.getPaths(getCldrFileToCheck(), path);
+        Set<String> paths2 = new HashSet<String>(paths);
+        for (String p : paths2) {
+            if (LogicalGrouping.isOptional(getCldrFileToCheck(), p)) {
+                paths.remove(p);
+            }
+        }
         if (paths.size() < 2) return this; // skip if not part of a logical grouping
         int logicalGroupingCount = 0;
         for (String apath : paths) {
@@ -80,7 +91,6 @@ public class CheckLogicalGroupings extends CheckCLDR {
         //}
 
         //if (Phase.FINAL_TESTING.equals(this.getPhase())) {
-        Factory factory = PathHeader.getFactory(CheckCLDR.getDisplayInformation());
         DraftStatus myStatus = null;
         EnumMap<DraftStatus, PathHeader> draftStatuses = new EnumMap<DraftStatus, PathHeader>(DraftStatus.class);
         for (String apath : paths) {
@@ -101,7 +111,7 @@ public class CheckLogicalGroupings extends CheckCLDR {
             }
             PathHeader old = draftStatuses.get(draftStatus);
             if (old == null) { // take first or path itself
-                draftStatuses.put(draftStatus, factory.fromPath(apath));
+                draftStatuses.put(draftStatus, getPathHeaderFactory().fromPath(apath));
             }
         }
         if (draftStatuses.size() > 1 && myStatus != DraftStatus.approved) { // only show errors for the items that

@@ -2,7 +2,7 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 11914 $" />
+		<version number="$Revision: 13071 $" />
 		<language type="root" />
 	</identity>
 
@@ -22,9 +22,9 @@
 							<dayPeriod type="pm">PM</dayPeriod>
 						</dayPeriodWidth>
 					</dayPeriodContext>
-                    <dayPeriodContext type="stand-alone">
-                        <alias source="locale" path="../dayPeriodContext[@type='format']"/>
-                    </dayPeriodContext>
+					<dayPeriodContext type="stand-alone">
+						<alias source="locale" path="../dayPeriodContext[@type='format']" />
+					</dayPeriodContext>
 				</dayPeriods>
 			</calendar>
 		</calendars>

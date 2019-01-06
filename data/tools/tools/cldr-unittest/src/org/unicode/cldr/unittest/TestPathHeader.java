@@ -20,11 +20,11 @@ import java.util.regex.Matcher;
 
 import org.unicode.cldr.test.CoverageLevel2;
 import org.unicode.cldr.test.ExampleGenerator;
-import org.unicode.cldr.unittest.TestAll.TestInfo;
 import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.Status;
 import org.unicode.cldr.util.CLDRPaths;
+import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Containment;
 import org.unicode.cldr.util.Counter;
 import org.unicode.cldr.util.DtdData;
@@ -54,6 +54,7 @@ import org.unicode.cldr.util.XPathParts;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
 import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.impl.Relation;
 import com.ibm.icu.impl.Row;
@@ -68,7 +69,7 @@ public class TestPathHeader extends TestFmwkPlus {
         new TestPathHeader().run(args);
     }
 
-    static final TestInfo info = TestInfo.getInstance();
+    static final CLDRConfig info = CLDRConfig.getInstance();
     static final Factory factory = info.getCldrFactory();
     static final CLDRFile english = info.getEnglish();
     static final SupplementalDataInfo supplemental = info
@@ -140,6 +141,8 @@ public class TestPathHeader extends TestFmwkPlus {
         PathHeader.Factory pathHeaderFactory2 = PathHeader.getFactory(english);
         // List<String> failures = null;
         pathHeaderFactory2.clearCache();
+        Multimap<PathHeader.PageId, PathHeader.SectionId> pageUniqueness = TreeMultimap.create();
+        Multimap<String, Pair<PathHeader.SectionId, PathHeader.PageId>> headerUniqueness = TreeMultimap.create();
         for (String p : english.fullIterable()) {
             // if (p.contains("symbol[@alt") && failures == null) {
             // PathHeader result = pathHeaderFactory2.fromPath(p, failures = new
@@ -150,12 +153,31 @@ public class TestPathHeader extends TestFmwkPlus {
             // logln("\t" + failure);
             // }
             // }
-            pathHeaderFactory2.fromPath(p);
+            PathHeader ph = pathHeaderFactory2.fromPath(p);
+            final SectionId sectionId = ph.getSectionId();
+            if (sectionId != SectionId.Special) {
+                pageUniqueness.put(ph.getPageId(), sectionId);
+                headerUniqueness.put(ph.getHeader(), new Pair<>(sectionId,ph.getPageId()));
+            }
         }
         Set<String> missing = pathHeaderFactory2.getUnmatchedRegexes();
         if (missing.size() != 0) {
             for (String e : missing) {
                 logln("Path Regex never matched:\t" + e);
+            }
+        }
+
+        for (Entry<PageId, Collection<SectionId>> e : pageUniqueness.asMap().entrySet()) {
+            Collection<SectionId> values = e.getValue();
+            if (values.size() != 1) {
+                warnln("Duplicate page in section: " + CldrUtility.toString(e));
+            }
+        }
+
+        for (Entry<String, Collection<Pair<SectionId, PageId>>> e : headerUniqueness.asMap().entrySet()) {
+            Collection<Pair<SectionId, PageId>> values = e.getValue();
+            if (values.size() != 1) {
+                warnln("Duplicate header in (section,page): " + CldrUtility.toString(e));
             }
         }
     }
@@ -573,6 +595,13 @@ public class TestPathHeader extends TestFmwkPlus {
             if (old == null) {
                 headerToPath.put(p, path);
             } else if (!old.equals(path)) {
+                if (true) { // for debugging
+                    pathHeaderFactory.clearCache();
+                    List<String> failuresOld = new ArrayList<>();
+                    pathHeaderFactory.fromPath(old, failuresOld);
+                    List<String> failuresPath = new ArrayList<>();
+                    pathHeaderFactory.fromPath(path, failuresPath);
+                }
                 errln("Collision with path " + p + "\t" + old + "\t" + path);
             }
             final String visible = p.toString();
@@ -695,7 +724,8 @@ public class TestPathHeader extends TestFmwkPlus {
         PathDescription pathDescription = new PathDescription(supplemental,
             english, null, null, PathDescription.ErrorHandling.CONTINUE);
         Matcher normal = PatternCache.get(
-            "http://cldr.org/translation/[a-zA-Z0-9]").matcher("");
+            "http://cldr.org/translation/[a-zA-Z0-9_]").matcher("");
+        // http://cldr.unicode.org/translation/plurals#TOC-Minimal-Pairs
         Set<String> alreadySeen = new HashSet<String>();
         PathStarrer starrer = new PathStarrer();
 
@@ -742,7 +772,7 @@ public class TestPathHeader extends TestFmwkPlus {
     }
 
     public void TestTerritoryOrder() {
-        final Set<String> goodAvailableCodes = TestInfo.getInstance()
+        final Set<String> goodAvailableCodes = CLDRConfig.getInstance()
             .getStandardCodes().getGoodAvailableCodes("territory");
         Set<String> results = showContained("001", 0, new HashSet<String>(
             goodAvailableCodes));
@@ -1107,6 +1137,7 @@ public class TestPathHeader extends TestFmwkPlus {
                 checkSubpath(path);
             }
         }
+        
         public void checkSubpath(String path) {
             String message = ": Can't compute path header";
             PathHeader ph = null;
@@ -1128,8 +1159,12 @@ public class TestPathHeader extends TestFmwkPlus {
                         seenBad.add(ph);
                     }
                     return;
-                } 
-                message = ": Unknown path header";
+                }
+                // for debugging
+                phf.clearCache();
+                List<String> failures = new ArrayList<>();
+                ph = phf.fromPath(path, failures);
+                message = ": Unknown path header" + failures;
             } catch (Exception e) {
                 message = ": Exception in path header: " + e.getMessage();
             }

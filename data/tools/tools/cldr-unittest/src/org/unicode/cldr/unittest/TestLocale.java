@@ -13,7 +13,6 @@ import java.util.Set;
 import javax.xml.xpath.XPathException;
 
 import org.unicode.cldr.test.ExampleGenerator;
-import org.unicode.cldr.unittest.TestAll.TestInfo;
 import org.unicode.cldr.util.AttributeValueValidity;
 import org.unicode.cldr.util.AttributeValueValidity.MatcherPattern;
 import org.unicode.cldr.util.CLDRConfig;
@@ -32,7 +31,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 public class TestLocale extends TestFmwkPlus {
-    static TestInfo testInfo = TestInfo.getInstance();
+    static CLDRConfig testInfo = CLDRConfig.getInstance();
 
     public static void main(String[] args) {
         new TestLocale().run(args);
@@ -223,7 +222,8 @@ public class TestLocale extends TestFmwkPlus {
     }
 
     public void checkRegion(String file, String region) {
-        if (!region.isEmpty() && !region.equals("AN")) {
+        if (!region.isEmpty() && !region.equals("AN")
+            && !region.equals("XA") && !region.equals("XB")) {
             assertRelation("Region ok? " + region + " in " + file, true,
                 ALLOWED_REGIONS, TestFmwkPlus.CONTAINS, region);
         }
@@ -351,12 +351,9 @@ public class TestLocale extends TestFmwkPlus {
                 "Anglish [abc] (Latine [def], U.S. [ghi])",
             "〖❬Anglish [abc] (❭?U.S. [ghi]?❬)❭〗〖❬Anglish [abc] (Latine [def], ❭?U.S. [ghi]?❬)❭〗〖❬Territorie: ❭?U.S. (ghi)?〗" },
             { null, null, null, "en_US", "Anglish [abc] (U.S. [ghi])", null },
-            { "variant", "foobar", "foo (jkl)", "en_foobar",
-                "Anglish [abc] (foo [jkl])", null },
-                { "key", "co", "sort (mno)", "en_foobar@co=FOO",
-                    "Anglish [abc] (foo [jkl], sort [mno]=FOO)", null },
-                    { "key|type", "co|FII", "sortfii (mno)", "en_foobar@co=FII",
-                        "Anglish [abc] (foo [jkl], sortfii [mno])", null }, };
+            { "variant", "FOOBAR", "foo (jkl)", "en_foobar", "Anglish [abc] (foo [jkl])", null },
+            { "key", "co", "sort (mno)", "en_foobar@co=FOO", "Anglish [abc] (foo [jkl], sort [mno]=foo)", null },
+            { "key|type", "co|fii", "sortfii (mno)", "en_foobar@co=FII", "Anglish [abc] (foo [jkl], sortfii [mno])", null }, };
         // load up a dummy source
         SimpleXMLSource dxs = new SimpleXMLSource("xx");
         for (String[] row : tests) {
@@ -391,7 +388,10 @@ public class TestLocale extends TestFmwkPlus {
             if (row[0] != null) {
                 int typeCode = CLDRFile.typeNameToCode(row[0]);
                 String standAlone = f.getName(typeCode, row[1]);
-                assertEquals("stand-alone " + row[3], row[2], standAlone);
+                if (!assertEquals("stand-alone " + row[3], row[2], standAlone)) {
+                    typeCode = CLDRFile.typeNameToCode(row[0]);
+                    standAlone = f.getName(typeCode, row[1]);
+                };
                 if (row[5] != null) {
                     String path = CLDRFile.getKey(typeCode, row[1]);
                     String example = eg

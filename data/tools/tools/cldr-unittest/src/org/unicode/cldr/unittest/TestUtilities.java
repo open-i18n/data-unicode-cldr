@@ -15,7 +15,6 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 
 import org.unicode.cldr.tool.ConvertLanguageData.InverseComparator;
-import org.unicode.cldr.unittest.TestAll.TestInfo;
 import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRLocale;
@@ -25,7 +24,6 @@ import org.unicode.cldr.util.Counter;
 import org.unicode.cldr.util.DelegatingIterator;
 import org.unicode.cldr.util.EscapingUtilities;
 import org.unicode.cldr.util.Factory;
-import org.unicode.cldr.util.ICUPropertyFactory;
 import org.unicode.cldr.util.Organization;
 import org.unicode.cldr.util.PathHeader;
 import org.unicode.cldr.util.PathHeader.PageId;
@@ -42,6 +40,7 @@ import org.unicode.cldr.util.VoteResolver.CandidateInfo;
 import org.unicode.cldr.util.VoteResolver.Level;
 import org.unicode.cldr.util.VoteResolver.Status;
 import org.unicode.cldr.util.VoteResolver.VoterInfo;
+import org.unicode.cldr.util.props.ICUPropertyFactory;
 
 import com.google.common.collect.ImmutableMap;
 import com.ibm.icu.dev.util.UnicodeMap;
@@ -54,7 +53,7 @@ import com.ibm.icu.util.ULocale;
 
 public class TestUtilities extends TestFmwkPlus {
     private static final UnicodeSet DIGITS = new UnicodeSet("[0-9]");
-    static TestInfo testInfo = TestInfo.getInstance();
+    static CLDRConfig testInfo = CLDRConfig.getInstance();
     private static final SupplementalDataInfo SUPPLEMENTAL_DATA_INFO = testInfo
         .getSupplementalDataInfo();
     private static final int STRING_ID_TEST_COUNT = 1024 * 16;

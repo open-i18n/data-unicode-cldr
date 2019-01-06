@@ -10,6 +10,8 @@
 
 # Attribute value
 %A=[^"']++
+# Attribute value, no underscore
+%B=[^"'_]++
 # Word/Zone match
 %W=[\s\w\-/]++
 # Greedy word match
@@ -112,6 +114,17 @@
     ; /territoryInfo/$1/$5/writingShareF:int ; values=&exp($6,-2)
     ; /territoryInfo/$1/$5/populationShareF:int ; values=&exp($7,-2)
 
+//supplementalData/territoryInfo/territory[@type="(%W)"][@gdp="(%N)"][@literacyPercent="(%N)"][@population="(%N)"]/languagePopulation[@type="(%W)"][@literacyPercent="(%N)"][@populationPercent="(%N)"][@officialStatus="(%W)"]([@references="%W"])?
+    ; /territoryInfo/$1/territoryF:intvector ; values=&exp($2) &exp($3,-2) &exp($4) ; base_xpath=//supplementalData/territoryInfo/territory[@type="$1"]
+    ; /territoryInfo/$1/$5/literacyShareF:int ; values=&exp($6,-2)
+    ; /territoryInfo/$1/$5/populationShareF:int ; values=&exp($7,-2)
+    ; /territoryInfo/$1/$5/officialStatus ; values=$8
+
+//supplementalData/territoryInfo/territory[@type="(%W)"][@gdp="(%N)"][@literacyPercent="(%N)"][@population="(%N)"]/languagePopulation[@type="(%W)"][@literacyPercent="(%N)"][@populationPercent="(%N)"]([@references="%W"])?
+    ; /territoryInfo/$1/territoryF:intvector ; values=&exp($2) &exp($3,-2) &exp($4) ; base_xpath=//supplementalData/territoryInfo/territory[@type="$1"]
+    ; /territoryInfo/$1/$5/literacyShareF:int ; values=&exp($6,-2)
+    ; /territoryInfo/$1/$5/populationShareF:int ; values=&exp($7,-2)
+
 //supplementalData/territoryInfo/territory[@type="(%W)"][@gdp="(%N)"][@literacyPercent="(%N)"][@population="(%N)"]/languagePopulation[@type="(%W)"][@populationPercent="(%N)"][@officialStatus="(%W)"]([@references="%W"])?
     ; /territoryInfo/$1/territoryF:intvector ; values=&exp($2) &exp($3,-2) &exp($4) ; base_xpath=//supplementalData/territoryInfo/territory[@type="$1"]
     ; /territoryInfo/$1/$5/populationShareF:int ; values=&exp($6,-2)
@@ -132,8 +145,15 @@
 //supplementalData/telephoneCodeData/codesByTerritory[@territory="(%W)"]/telephoneCountryCode[@code="(%N)"] ; /telephoneCodeData/$1/<$2>/code ; values=$2
 
 # languageInfo.xml
-//supplementalData/languageMatching/languageMatches[@type="(%A)"]/languageMatch[@desired="(%A)"][@oneway="true"][@percent="(%N)"][@supported="(%A)"] ; /languageMatching/$1/<$2$4> ; values=$2 $4 $3 1
-//supplementalData/languageMatching/languageMatches[@type="(%A)"]/languageMatch[@desired="(%A)"][@percent="(%N)"][@supported="(%A)"] ; /languageMatching/$1/<$2$4> ; values=$2 $4 $3 0
+
+//supplementalData/languageMatching/languageMatches[@type="(%B)_new"]/paradigmLocales[@locales="(%A)"] ; /languageMatchingInfo/$1/paradigmLocales ; values=$2
+//supplementalData/languageMatching/languageMatches[@type="(%B)_new"]/matchVariable[@id="\$(%A)"][@value="(%A)"] ; /languageMatchingInfo/$1/matchVariable/$2 ; values=$3
+
+//supplementalData/languageMatching/languageMatches[@type="(%B)_new"]/languageMatch[@desired="(%A)"][@supported="(%A)"][@distance="(%N)"][@oneway="true"] ; /languageMatchingNew/$1/<FIFO> ; values=$2 $3 $4 1
+//supplementalData/languageMatching/languageMatches[@type="(%B)_new"]/languageMatch[@desired="(%A)"][@supported="(%A)"][@distance="(%N)"] ; /languageMatchingNew/$1/<FIFO> ; values=$2 $3 $4 0
+
+//supplementalData/languageMatching/languageMatches[@type="(%B)"]/languageMatch[@desired="(%A)"][@supported="(%A)"][@percent="(%N)"][@oneway="true"] ; /languageMatching/$1/<FIFO> ; values=$2 $3 $4 1
+//supplementalData/languageMatching/languageMatches[@type="(%B)"]/languageMatch[@desired="(%A)"][@supported="(%A)"][@percent="(%N)"] ; /languageMatching/$1/<FIFO> ; values=$2 $3 $4 0
 
 # likelySubtags.xml
 //supplementalData/likelySubtags/likelySubtag[@from="(%A)"][@to="(%A)"] ; /$1 ; values=$2

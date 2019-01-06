@@ -180,7 +180,7 @@ public class PathHeader implements Comparable<PathHeader> {
         Islamic(SectionId.DateTime),
         Japanese(SectionId.DateTime),
         Persian(SectionId.DateTime),
-        ROC(SectionId.DateTime),
+        Minguo(SectionId.DateTime),
         Timezone_Display_Patterns(SectionId.Timezones, "Timezone Display Patterns"),
         NAmerica(SectionId.Timezones, "North America"),
         SAmerica(SectionId.Timezones, "South America"),
@@ -198,6 +198,7 @@ public class PathHeader implements Comparable<PathHeader> {
         UnknownT(SectionId.Timezones, "Unknown Region"),
         Overrides(SectionId.Timezones),
         Symbols(SectionId.Numbers),
+        MinimalPairs(SectionId.Numbers, "Minimal Pairs"),
         Number_Formatting_Patterns(SectionId.Numbers, "Number Formatting Patterns"),
         Compact_Decimal_Formatting(SectionId.Numbers, "Compact Decimal Formatting"),
         Compact_Decimal_Formatting_Other(SectionId.Numbers, "Compact Decimal Formatting (Other Numbering Systems)"),
@@ -1096,7 +1097,7 @@ public class PathHeader implements Comparable<PathHeader> {
             functionMap.put("calendar", new Transform<String, String>() {
                 Map<String, String> fixNames = Builder.with(new HashMap<String, String>())
                         .put("islamicc", "Islamic Civil")
-                        .put("roc", "ROC")
+                        .put("roc", "Minguo")
                         .put("Ethioaa", "Ethiopic Amete Alem")
                         .put("Gregory", "Gregorian")
                         .put("iso8601", "ISO 8601")
@@ -1559,14 +1560,19 @@ public class PathHeader implements Comparable<PathHeader> {
 
             functionMap.put("datefield", new Transform<String, String>() {
                 private final String[] datefield = {
-                        "era",
+                        "era", "era-short", "era-narrow",
                         "century", "century-short", "century-narrow",
                         "year", "year-short", "year-narrow",
                         "quarter", "quarter-short", "quarter-narrow",
                         "month", "month-short", "month-narrow",
                         "week", "week-short", "week-narrow",
+                        "weekdayOfMonth", "weekdayOfMonth-short", "weekdayOfMonth-narrow",
                         "day", "day-short", "day-narrow",
-                        "weekday", "dayperiod", "zone",
+                        "dayOfYear", "dayOfYear-short", "dayOfYear-narrow",
+                        "weekday", "weekday-short", "weekday-narrow",
+                        "weekdayOfMonth", "weekdayOfMonth-short", "weekdayOfMonth-narrow",
+                        "dayperiod", "dayperiod-short", "dayperiod-narrow",
+                        "zone", "zone-short", "zone-narrow",
                         "hour", "hour-short", "hour-narrow",
                         "minute", "minute-short", "minute-narrow",
                         "second", "second-short", "second-narrow",
@@ -1593,9 +1599,12 @@ public class PathHeader implements Comparable<PathHeader> {
                         "minute", "minute-short", "minute-narrow",
                         "second", "second-short", "second-narrow",
                         "sun", "sun-short", "sun-narrow",
-                        "mon", "mon-short", "mon-narrow", "tue", "tue-short", "tue-narrow",
-                        "wed", "wed-short", "wed-narrow", "thu", "thu-short", "thu-narrow",
-                        "fri", "fri-short", "fri-narrow", "sat", "sat-short", "sat-narrow",
+                        "mon", "mon-short", "mon-narrow",
+                        "tue", "tue-short", "tue-narrow",
+                        "wed", "wed-short", "wed-narrow",
+                        "thu", "thu-short", "thu-narrow",
+                        "fri", "fri-short", "fri-narrow",
+                        "sat", "sat-short", "sat-narrow",
                 };
                 private final String[] longNames = {
                         "Year", "Year Short", "Year Narrow",

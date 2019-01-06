@@ -114,8 +114,8 @@
 ### Timezones
 
 # Hide Etc/GMT[+-]...
-//ldml/dates/timeZoneNames/zone[@type="Etc/GMT(.*)"]/exemplarCity ; Special  ; Suppress ; GMT ; $1 ; HIDE
-//ldml/dates/timeZoneNames/zone[@type="%B/%A"]/exemplarCity     ; Timezones ; &timeZonePage($1/$2) ; Cities and Regions ; $2
+//ldml/dates/timeZoneNames/zone[@type="Etc/(GMT|UTC)(.*)"]/exemplarCity ; Special  ; Suppress ; Etc/$1$2 ; exemplarCity ; HIDE
+//ldml/dates/timeZoneNames/zone[@type="%B/%A"]/exemplarCity             ; Timezones ; &timeZonePage($1/$2) ; Cities and Regions ; $2
 
 //ldml/dates/timeZoneNames/metazone[@type="%M"]/%E/%E       ; Special ; Deprecated ; $1 ; &timezoneSorting($3-$2) ; HIDE
 //ldml/dates/timeZoneNames/metazone[@type="%A"]/%E/%E       ; Timezones ; &metazone($1) ; $1 ; &timezoneSorting($3-$2)
@@ -134,6 +134,9 @@
 //ldml/numbers/%EFormats[@numberSystem="%A"]/%EFormatLength/%EFormat[@type="%A"]/pattern[@type="%A"]    ; Numbers ; Number Formatting Patterns ; Standard Patterns &numberingSystem($2) ; &numberFormat($5-$1) ; LTR_ALWAYS
 //ldml/numbers/currencyFormats[@numberSystem="%A"]/unitPattern[@count="%A"]                             ; Numbers ; Number Formatting Patterns ; Currency Unit Patterns &numberingSystem($1) ; &count(currencies-$2) ; LTR_ALWAYS
 //ldml/numbers/miscPatterns[@numberSystem="%A"]/pattern[@type=\"%A\"]                                   ; Numbers ; Number Formatting Patterns ; Miscellaneous Patterns &numberingSystem($1) ; $2 ; LTR_ALWAYS
+
+//ldml/numbers/minimalPairs/ordinalMinimalPairs[@ordinal=\"%A\"]     ; Numbers ; Minimal Pairs ; Ordinal ; $1 ; LTR_ALWAYS
+//ldml/numbers/minimalPairs/pluralMinimalPairs[@count=\"%A\"]        ; Numbers ; Minimal Pairs ; Plural ; $1 ; LTR_ALWAYS
 
 //ldml/numbers/(currency)Formats[@numberSystem="latn"]/%EFormatLength[@type="(short)"]/%EFormat[@type="%A"]/pattern[@type="%A"][@count="%A"] ; Numbers ; Compact Decimal Formatting ; Short Currency &numberingSystem(latn); &count2($6-digits-$3-$7)
 //ldml/numbers/(currency)Formats[@numberSystem="%A"]/%EFormatLength[@type="(short)"]/%EFormat[@type="%A"]/pattern[@type="%A"][@count="%A"] ; Numbers ; Compact Decimal Formatting (Other Numbering Systems) ; Short Currency &numberingSystem($2) ; &count2($7-digits-$4-$8) ; HIDE
@@ -215,6 +218,9 @@
 //ldml/listPatterns/listPattern[@type="unit-narrow"]/listPatternPart[@type="%A"] ; Misc ; Displaying Lists ; Narrow Unit Lists ; &listOrder($1)
 
 //ldml/characters/ellipsis[@type="%A"]                      ; Misc ; Linguistic Elements ; Ellipsis ; $1
+
+//ldml/characters/parseLenients[@scope="%A"][@level="%A"]/parseLenient[@sample="%A"] ; Misc ; Linguistic Elements ; Parse ; $1-$2($3)
+
 //ldml/delimiters/quotation%E                               ; Misc ; Linguistic Elements ; Quotation Marks ; $1
 //ldml/delimiters/alternateQuotation%E                      ; Misc ; Linguistic Elements ; Quotation Marks ; embedded-$1
 //ldml/characters/moreInformation                           ; Misc ; Linguistic Elements ; Symbols ; More Information
@@ -318,6 +324,8 @@
 
 //supplementalData/languageMatching/languageMatches[@type="%A"]/languageMatch[@desired="%A"][@supported="%A"]/_%E			; Supplemental ; LanguageMatch ; $1 ; $2-$3-$4 ; HIDE
 //supplementalData/languageMatching/languageMatches[@type="%A"]/languageMatch/_%E			; Supplemental ; LanguageMatch ; $1 ; $2 ; HIDE
+//supplementalData/languageMatching/languageMatches[@type="%A"]/paradigmLocales/_%E			; Supplemental ; LanguageMatch ; $1 ; paradigmLocales ; HIDE
+//supplementalData/languageMatching/languageMatches[@type="%A"]/matchVariable[@id="%A"]/_%E	; Supplemental ; LanguageMatch ; $1 ; matchVariable-$2 ; HIDE
 
 //supplementalData/languageData/language[@type="%A"]/_%E			; Supplemental ; Language ; $1 ; $2 ; HIDE
 //supplementalData/languageData/language[@type="%A"][@alt="%A"]/_%E			; Supplemental ; Language ; $1 ; $3-$2 ; HIDE

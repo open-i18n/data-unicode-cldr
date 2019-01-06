@@ -23,6 +23,36 @@ public class Option {
     //private final Enum<?> optionEnumValue;
     private boolean doesOccur;
     private String value;
+    
+    public static class Params {
+        private String match = "";
+        private String defaultArgument = "";
+        private String helpString = null;
+        
+        /**
+         * @param match the match to set
+         */
+        public Params setMatch(String match) {
+            this.match = match;
+            return this;
+        }
+
+        /**
+         * @param defaultArgument the defaultArgument to set
+         */
+        public Params setDefault(String defaultArgument) {
+            this.defaultArgument = defaultArgument;
+            return this;
+        }
+
+        /**
+         * @param helpString the helpString to set
+         */
+        public Params setHelp(String helpString) {
+            this.helpString = helpString;
+            return this;
+        }
+    }
 
     // private boolean implicitValue;
 
@@ -46,6 +76,10 @@ public class Option {
 
     public String getValue() {
         return value;
+    }
+    
+    public String getExplicitValue() {
+        return doesOccur ? value : null;
     }
 
     // public boolean getUsingImplicitValue() {
@@ -72,7 +106,10 @@ public class Option {
         this.tag = tag;
         this.flag = flag;
         this.defaultArgument = defaultArgument;
-        //optionEnumValue = null;
+    }
+    
+    public Option(Enum<?> optionEnumValue, Params optionList) {
+        this(optionEnumValue, optionList.match, optionList.defaultArgument, optionList.helpString);
     }
 
     public String toString() {
