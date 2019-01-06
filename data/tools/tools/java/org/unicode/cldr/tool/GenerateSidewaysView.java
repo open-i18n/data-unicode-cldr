@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -62,6 +63,7 @@ import com.ibm.icu.text.Transliterator;
 import com.ibm.icu.text.UTF16;
 import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.text.UnicodeSetIterator;
+import com.ibm.icu.util.Output;
 import com.ibm.icu.util.ULocale;
 
 /**
@@ -81,6 +83,7 @@ import com.ibm.icu.util.ULocale;
  * http://java.sun.com/j2se/1.4.2/docs/api/org/xml/sax/DTDHandler.html
  */
 public class GenerateSidewaysView {
+    private static final String DIR_NAME = "by_type";
     // debug flags
     static final boolean DEBUG = false;
     static final boolean DEBUG2 = false;
@@ -90,24 +93,23 @@ public class GenerateSidewaysView {
 
     static final boolean FIX_ZONE_ALIASES = true;
 
-    private static final int
-    HELP1 = 0,
-    HELP2 = 1,
-    SOURCEDIR = 2,
-    DESTDIR = 3,
-    MATCH = 4,
-    SKIP = 5,
-    TZADIR = 6,
-    NONVALIDATING = 7,
-    SHOW_DTD = 8,
-    TRANSLIT = 9,
-    PATH = 10;
+    private static final int HELP1 = 0,
+        HELP2 = 1,
+        SOURCEDIR = 2,
+        DESTDIR = 3,
+        MATCH = 4,
+        SKIP = 5,
+        TZADIR = 6,
+        NONVALIDATING = 7,
+        SHOW_DTD = 8,
+        TRANSLIT = 9,
+        PATH = 10;
 
     private static final UOption[] options = {
         UOption.HELP_H(),
         UOption.HELP_QUESTION_MARK(),
         UOption.SOURCEDIR().setDefault(CLDRPaths.MAIN_DIRECTORY),
-        UOption.DESTDIR().setDefault(CLDRPaths.CHART_DIRECTORY + "by_type/"), // C:/cvsdata/unicode/cldr/diff/by_type/
+        UOption.DESTDIR().setDefault(CLDRPaths.CHART_DIRECTORY + DIR_NAME + "/"), // C:/cvsdata/unicode/cldr/diff/by_type/
         UOption.create("match", 'm', UOption.REQUIRES_ARG).setDefault(".*"),
         UOption.create("skip", 'z', UOption.REQUIRES_ARG).setDefault("zh_(C|S|HK|M).*"),
         UOption.create("tzadir", 't', UOption.REQUIRES_ARG).setDefault(
@@ -163,11 +165,11 @@ public class GenerateSidewaysView {
         pathMatcher = options[PATH].value == null ? null : PatternCache.get(options[PATH].value).matcher("");
 
         File[] paths = {
-            new File(CLDRPaths.MAIN_DIRECTORY), 
+            new File(CLDRPaths.MAIN_DIRECTORY),
             new File(CLDRPaths.ANNOTATIONS_DIRECTORY),
-            new File(CLDRPaths.SUBDIVISIONS_DIRECTORY) 
+            new File(CLDRPaths.SUBDIVISIONS_DIRECTORY)
         };
-        Factory cldrFactory = SimpleFactory.make(paths, options[MATCH].value); 
+        Factory cldrFactory = SimpleFactory.make(paths, options[MATCH].value);
 
         // Factory cldrFactory = Factory.make(options[SOURCEDIR].value, options[MATCH].value);
         english = cldrFactory.make("en", true);
@@ -193,7 +195,11 @@ public class GenerateSidewaysView {
         // }
         String headerString = getHeader(path_value_locales.keySet());
         FileCopier.copyAndReplace(GenerateSidewaysView.class, "bytype-index.html", options[DESTDIR].value, "index.html",
-            ImmutableMap.of("%header%", headerString));
+            ImmutableMap.of(
+                "%header%", headerString,
+                "%version%", ToolConstants.CHART_DISPLAY_VERSION,
+                "%index-title%", "Main Charts Index",
+                "%date%", CldrUtility.isoFormatDateOnly(new Date())));
 //        FileUtilities.copyFile(GenerateSidewaysView.class, "bytype-index.html", options[DESTDIR].value, "index.html",
 //            new String[] { "%header%", headerString });
 
@@ -203,12 +209,13 @@ public class GenerateSidewaysView {
         // UnicodeSet BIDI_R = new UnicodeSet("[[:Bidi_Class=R:][:Bidi_Class=AL:]]");
 
         String oldHeader = "";
+        Output<PrintWriter> tsvFile = new Output<>();
 
         for (PathHeader path : path_value_locales.keySet()) {
             String main = getFileName2(path, null);
             if (!main.equals(oldMain)) {
                 oldMain = main;
-                out = start(out, main, headerString, path.getSection() + ":" + path.getPage());
+                out = start(out, main, headerString, path.getSection() + ":" + path.getPage(), tsvFile);
                 out.println("<table class='table'>");
                 oldHeader = "";
             }
@@ -226,7 +233,7 @@ public class GenerateSidewaysView {
             String header = path.getHeader();
             if (!header.equals(oldHeader) && !header.equals("null")) {
                 out.println("<tr><th colSpan='2' class='pathHeader'>" + CldrUtility.getDoubleLinkedText(header)
-                + "</th></tr>");
+                    + "</th></tr>");
                 oldHeader = header;
             }
             String anchorId = Long.toHexString(StringId.getId(path.getOriginalPath()));
@@ -250,6 +257,14 @@ public class GenerateSidewaysView {
                     valueClass = " class='rtl_value'";
                 }
                 out.println("<tr><th" + valueClass + ">" + DataShower.getPrettyValue(value) + "</th><td class='td'>");
+                tsvFile.value.print(
+                    path.getSection()
+                        + "\t" + path.getPage()
+                        + "\t" + path.getHeader()
+                        + "\t" + path.getCode()
+                        + "\t" + value
+                        + "\t");
+
                 Set<String> locales = value_locales.get(value);
                 boolean first = true;
                 boolean containsRoot = locales.contains("root");
@@ -261,8 +276,10 @@ public class GenerateSidewaysView {
                     if (locale.endsWith("*")) {
                         locale = locale.substring(0, locale.length() - 1);
                         out.print("<i>\u00B7" + locale + "\u00B7</i>");
+                        tsvFile.value.print("\u00B7" + locale + "\u00B7");
                     } else if (!containsRoot) {
                         out.print("\u00B7" + locale + "\u00B7");
+                        tsvFile.value.print("\u00B7" + locale + "\u00B7");
                     } else if (locale.contains("_")) {
                         // not same as root, but need to test for parent
                         // if the parent is not in the same list, then we include anyway.
@@ -270,19 +287,23 @@ public class GenerateSidewaysView {
                         String parent = LocaleIDParser.getParent(locale);
                         if (!locales.contains(parent)) {
                             out.print("<b>\u00B7" + locale + "\u00B7</b>");
+                            tsvFile.value.print("\u00B7" + locale + "\u00B7");
                         }
                     }
                 }
                 if (containsRoot) {
                     out.print("<b>\u00B7all\u00B7others\u00B7</b>");
+                    tsvFile.value.print("\u00B7all-others\u00B7");
                 }
                 out.println("</td></tr>");
+                tsvFile.value.println();
             }
         }
         for (String[] pair : EXEMPLARS) {
-            showExemplars(out, headerString, pair[0], pair[1], pair[2]);
+            showExemplars(out, headerString, pair[0], pair[1], pair[2], tsvFile);
         }
-        finish(out);
+        finish(out, tsvFile.value);
+        finishAll(out, tsvFile.value);
         System.out.println("Done in " + new RuleBasedNumberFormat(new ULocale("en"), RuleBasedNumberFormat.DURATION)
             .format((System.currentTimeMillis() - startTime) / 1000.0));
     }
@@ -299,13 +320,15 @@ public class GenerateSidewaysView {
         { "//ldml/characters/exemplarCharacters", "main", "Main Exemplars" },
         { "//ldml/characters/exemplarCharacters[@type=\"punctuation\"]", "punctuation", "Punctuation Exemplars" },
         { "//ldml/characters/exemplarCharacters[@type=\"index\"]", "index", "Index Exemplars" },
+        // TODO look at numbers, auxiliary
     };
 
-    private static PrintWriter showExemplars(PrintWriter out, String headerString, String pathName, String variant, String title)
+    private static PrintWriter showExemplars(PrintWriter out, String headerString, String pathName, String variant, String title,
+        Output<PrintWriter> tsvFile)
         throws IOException {
         PathHeader cleanPath = fixPath(pathName, null);
         String filename = getFileName2(cleanPath, variant);
-        out = start(out, filename, headerString, title);
+        out = start(out, filename, headerString, title, tsvFile);
         Map<String, Set<String>> value_locales = path_value_locales.get(cleanPath);
 
         // TODO change logic so that aux characters characters work well.
@@ -462,7 +485,8 @@ public class GenerateSidewaysView {
         return ("title='U+" +
             toHTML.transform(
                 Utility.hex(item, 4, ", U+", true, new StringBuilder())
-                + " " + UCharacter.getName(item, ", ")) + "'");
+                    + " " + UCharacter.getName(item, ", "))
+            + "'");
     }
 
     private static void exemplarHeader(PrintWriter out, Set<String> allChars) {
@@ -741,13 +765,14 @@ public class GenerateSidewaysView {
     private static Transliterator toHTML;
 
     /**
+     * @param tsvFile TODO
      * @param path2
      *
      */
-    private static PrintWriter start(PrintWriter out, String main, String headerString, String title)
+    private static PrintWriter start(PrintWriter out, String main, String headerString, String title, Output<PrintWriter> tsvFile)
         throws IOException {
-        finish(out);
-        out = writeHeader(main, title);
+        finish(out, tsvFile.value);
+        out = writeHeader(main, title, tsvFile);
         out.println(headerString);
         return out;
     }
@@ -785,9 +810,14 @@ public class GenerateSidewaysView {
         return out.append("</td></tr>" + System.lineSeparator() + "</table>").toString();
     }
 
-    private static PrintWriter writeHeader(String main, String title) throws IOException {
+    private static PrintWriter writeHeader(String main, String title, Output<PrintWriter> tsvFile) throws IOException {
         PrintWriter out;
         out = FileUtilities.openUTF8Writer(options[DESTDIR].value, main + ".html");
+        if (tsvFile.value == null) {
+            tsvFile.value = FileUtilities.openUTF8Writer(Chart.getTsvDir(options[DESTDIR].value, DIR_NAME), DIR_NAME + ".tsv");
+            tsvFile.value.println("# By-Type Data");
+            tsvFile.value.println("# Section\tPage\tHeader\tCode\tValue\tLocales");
+        }
 
         ShowData.getChartTemplate("By-Type Chart: " + title,
             ToolConstants.CHART_DISPLAY_VERSION,
@@ -802,13 +832,19 @@ public class GenerateSidewaysView {
     }
 
     /**
+     * @param tsvFile TODO
      *
      */
-    private static void finish(PrintWriter out) {
+    private static void finish(PrintWriter out, PrintWriter tsvFile) {
         if (out == null) return;
         out.println("</table>");
         out.println(headerAndFooter[1]);
         out.close();
     }
 
+    private static void finishAll(PrintWriter out, PrintWriter tsvFile) {
+        // TODO Auto-generated method stub
+        tsvFile.println("# EOF");
+        tsvFile.close();
+    }
 }

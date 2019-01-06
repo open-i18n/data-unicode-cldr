@@ -13,13 +13,10 @@ import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.util.ULocale;
 
 public enum LanguageGroup {
-    root("und"),
-    germanic("gem"), celtic("cel"), romance("roa"), slavic("sla"), baltic("bat"), indic("inc"), other_indo("ine_001"), dravidian("dra"),
-    uralic("urj"), cjk("und_Hani"), sino_tibetan("sit"), tai("tai"), austronesian("map"), turkic("trk"),
-    afroasiatic("afa"), austroasiatic("aav"), niger_congo("nic"), east_sudanic("sdv"),
-    songhay("son"), american("und_019"),
-    art("art"), other("und_001");
-    
+    root("und"), germanic("gem"), celtic("cel"), romance("roa"), slavic("sla"), baltic("bat"), indic("inc"), other_indo("ine_001"), dravidian("dra"), uralic(
+        "urj"), cjk("und_Hani"), sino_tibetan("sit"), tai("tai"), austronesian("map"), turkic("trk"), afroasiatic(
+            "afa"), austroasiatic("aav"), niger_congo("nic"), east_sudanic("sdv"), songhay("son"), american("und_019"), art("art"), other("und_001");
+
     public final String iso;
 
     LanguageGroup(String iso) {
@@ -31,7 +28,8 @@ public enum LanguageGroup {
         Integer.class);
 
     private static void add(Map<ULocale, LanguageGroup> map, LanguageGroup group, String... baseLanguages) {
-        int count = 0;
+        Map<ULocale, Integer> soFar = GROUP_LANGUAGE.get(group);
+        int count = soFar == null ? 0 : soFar.size();
         for (String s : baseLanguages) {
             ULocale loc = new ULocale(s);
             if (map.put(loc, group) != null) {
@@ -47,17 +45,17 @@ public enum LanguageGroup {
         LinkedHashMap<ULocale, LanguageGroup> temp = new LinkedHashMap<>();
         LANGUAGE_GROUP = Collections.unmodifiableMap(temp);
         add(temp, root, "root");
-        add(temp, germanic, "en", "fy", "af", "nl", "de", "gsw", "wae", "ksh", "lb", "fo", "da", "nb", "nn", "sv", "is", "yi");
-        add(temp, celtic, "gd", "ga", "cy", "gv", "kw", "br");
-        add(temp, romance, "pt", "gl", "ast", "es", "ca", "it", "rm", "ro", "fr");
-        add(temp, slavic, "ru", "be", "uk", "bg", "mk", "sr", "hr", "bs", "sl", "cs", "sk", "pl");
+        add(temp, germanic, "en", "fy", "nl", "af", "de", "gsw", "wae", "ksh", "lb", "sv", "da", "nb", "nn", "fo", "is", "yi");
+        add(temp, celtic, "ga", "gd", "cy", "gv", "kw", "br");
+        add(temp, romance, "fr", "pt", "gl", "es", "ca", "ast", "it", "rm", "ro");
+        add(temp, slavic, "pl", "cs", "sk", "sl", "hr", "bs", "mk", "sr", "bg", "ru", "be", "uk");
         add(temp, baltic, "lt", "lv");
         add(temp, other_indo, "el", "sq", "hy", "fa", "ps", "os");
-        add(temp, indic, "ur", "hi", "bn", "as", "gu", "or", "mr", "ne", "pa", "si");
+        add(temp, indic, "ur", "hi", "gu", "sd", "bn", "as", "ccp", "or", "mr", "ne", "pa", "si");
         add(temp, dravidian, "ta", "te", "ml", "kn");
-        add(temp, cjk, "zh", "ja", "ko");
-        add(temp, turkic, "tr", "az", "kk", "ky", "uz", "ug");
-        add(temp, uralic, "fi", "et", "se", "smn", "hu");
+        add(temp, cjk, "zh", "yue", "ja", "ko");
+        add(temp, turkic, "tr", "az", "tk", "kk", "ky", "uz", "ug");
+        add(temp, uralic, "hu", "fi", "et", "se", "smn");
         add(temp, afroasiatic, "ar", "mt", "he", "om", "so", "ha", "am", "tzm", "zgh");
         add(temp, tai, "th", "lo");
         add(temp, austronesian, "id", "ms", "fil", "haw");
@@ -147,21 +145,22 @@ public enum LanguageGroup {
             }
             prefix = "Other ";
             break;
-        case "": 
+        case "":
             break;
-        default: 
+        default:
             return cldrFile.getName(CLDRFile.TERRITORY_NAME, ltp.getRegion());
         }
         switch (ltp.getScript()) {
         case "Hani":
             return "CJK";
-        case "": 
+        case "":
             break;
-        default: 
+        default:
             throw new IllegalArgumentException("Need to fix code: " + ltp.getScript());
         }
         return prefix + cldrFile.getName(ltp.getLanguage()).replace(" [Other]", "").replace(" languages", "");
     }
+
     @Override
     public String toString() {
         return getName(CLDRConfig.getInstance().getEnglish());

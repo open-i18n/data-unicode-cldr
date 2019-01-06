@@ -45,7 +45,6 @@ import com.ibm.icu.impl.Row.R2;
 import com.ibm.icu.impl.Utility;
 import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.text.CaseMap;
-import com.ibm.icu.text.CaseMap.Title;
 import com.ibm.icu.text.Collator;
 import com.ibm.icu.text.LocaleDisplayNames;
 import com.ibm.icu.text.Normalizer2;
@@ -53,7 +52,7 @@ import com.ibm.icu.text.RuleBasedCollator;
 import com.ibm.icu.util.ULocale;
 
 public class GenerateSubdivisions {
-    private static final Title TO_TITLE_WHOLE_STRING_NO_LOWERCASE = CaseMap.toTitle().wholeString().noLowercase();
+    private static final CaseMap.Title TO_TITLE_WHOLE_STRING_NO_LOWERCASE = CaseMap.toTitle().wholeString().noLowercase();
 
     private static final String ISO_COUNTRY_CODES = CLDRPaths.CLDR_PRIVATE_DIRECTORY + "iso_country_codes/";
     private static final String ISO_SUBDIVISION_CODES = ISO_COUNTRY_CODES + "iso_country_codes.xml";
@@ -80,7 +79,7 @@ public class GenerateSubdivisions {
 
     private static final Validity VALIDITY_FORMER = Validity.getInstance();
 
-    private static final Relation<String,String> formerRegionToSubdivisions = Relation.of(new HashMap<String,Set<String>>(), TreeSet.class, ROOT_COL);
+    private static final Relation<String, String> formerRegionToSubdivisions = Relation.of(new HashMap<String, Set<String>>(), TreeSet.class, ROOT_COL);
     static {
         Map<Status, Set<String>> oldSubdivisionData = VALIDITY_FORMER.getStatusToCodes(LstrType.subdivision);
         for (Entry<Status, Set<String>> e : oldSubdivisionData.entrySet()) {
@@ -152,8 +151,7 @@ public class GenerateSubdivisions {
         static final M3<String, String, String> NAMES = ChainedMap.of(
             new TreeMap<String, Object>(),
             new TreeMap<String, Object>(),
-            String.class
-            );
+            String.class);
 
         static final Map<String, String> TO_COUNTRY_CODE = new TreeMap<String, String>();
         static final Relation<String, String> ID_SAMPLE = Relation.of(new TreeMap<String, Set<String>>(), TreeSet.class);
@@ -171,8 +169,8 @@ public class GenerateSubdivisions {
                 Error: (TestSubdivisions.java:66) : country SJ = subdivisionNO-21: expected "Svalbard & Jan Mayen", got "Svalbard"
                 Error: (TestSubdivisions.java:66) : country SJ = subdivisionNO-22: expected "Svalbard & Jan Mayen", got "Jan Mayen"
                  */
-                String paren = value.substring(value.length() - 3, value.length() - 1);
                 // OLD code to guess country from comment
+//              String paren = value.substring(value.length() - 3, value.length() - 1);
 //                if (!paren.equals("BQ") && !paren.equals("SJ")) {
 //                    String old = TO_COUNTRY_CODE.get(code);
 //                    if (old != null) {
@@ -235,12 +233,11 @@ public class GenerateSubdivisions {
                     output.append(
                         ENGLISH_ICU.regionDisplayName(countryCode)
 //                        + "\t" + WikiSubdivisionLanguages.WIKIDATA_TO_MID.get(value)
-                        + "\t" + cldrName
-                        + "\t" + value
-                        + "\t" + iso
-                        + "\t" + wiki
-                        + "\n"
-                        );
+                            + "\t" + cldrName
+                            + "\t" + value
+                            + "\t" + iso
+                            + "\t" + wiki
+                            + "\n");
                 }
             }
             if (countEqual.size() != 0) {
@@ -260,12 +257,11 @@ public class GenerateSubdivisions {
                     output.append(
                         ENGLISH_ICU.regionDisplayName(countryCode)
 //                        + "\t" + WikiSubdivisionLanguages.WIKIDATA_TO_MID.get(value)
-                        + "\t" + value
-                        + "\t" + cldrName
-                        + "\t" + iso
-                        + "\t" + wiki
-                        + "\n"
-                        );
+                            + "\t" + value
+                            + "\t" + cldrName
+                            + "\t" + iso
+                            + "\t" + wiki
+                            + "\n");
                 }
             }
         }
@@ -328,7 +324,7 @@ public class GenerateSubdivisions {
 //                    input = input.substring(0,pos) + input.substring(pos + cruft.length());
 //                }
 //            }
-            input.replace("  ", " ");
+            input = input.replace("  ", " ");
             if (input.endsWith(",")) {
                 input = input.substring(0, input.length() - 1);
             }
@@ -339,11 +335,10 @@ public class GenerateSubdivisions {
             TreeSet<String> allRegions = new TreeSet<>();
             allRegions.addAll(codeToData.keySet());
             allRegions.addAll(formerRegionToSubdivisions.keySet()); // override
-            
+
             Factory cldrFactorySubdivisions = Factory.make(CLDRPaths.SUBDIVISIONS_DIRECTORY, ".*");
             CLDRFile oldFileSubdivisions = cldrFactorySubdivisions.make("en", false);
             CLDRFile fileSubdivisions = oldFileSubdivisions.cloneAsThawed();
-
 
             // <subdivisions>
             // <subdivisiontype="NZ-AUK">Auckland</territory>
@@ -364,9 +359,8 @@ public class GenerateSubdivisions {
                     }
                     continue;
                 }
-                Set<String> codesIncluded = new HashSet<>(); // record the ones we did, so we can add others
                 Set<String> remainder = formerRegionToSubdivisions.get(regionCode);
-                remainder = remainder == null ? Collections.EMPTY_SET : new LinkedHashSet<>(remainder);
+                remainder = remainder == null ? Collections.emptySet() : new LinkedHashSet<>(remainder);
 
                 SubdivisionNode regionNode = ID_TO_NODE.get(regionCode);
 //                output.append("\t\t<!-- ")
@@ -385,7 +379,7 @@ public class GenerateSubdivisions {
                     final String sdCode = node.code;
                     String name = getBestName(sdCode, true);
                     String upper = UCharacter.toUpperCase(name);
-                    String title = TO_TITLE_WHOLE_STRING_NO_LOWERCASE.apply(Locale.ENGLISH, null, name, new StringBuilder(), null).toString();
+                    String title = TO_TITLE_WHOLE_STRING_NO_LOWERCASE.apply(Locale.ROOT, null, name);
                     if (name.equals(upper) || !name.equals(title)) {
                         System.out.println("Suspicious name: " + name);
                     }
@@ -456,8 +450,6 @@ public class GenerateSubdivisions {
                 }
             }
         }
-
-
 
         private static String getBestName(String value, boolean useIso) {
             String cldrName = null;
@@ -595,8 +587,8 @@ public class GenerateSubdivisions {
              */
             output.append(
                 DtdType.supplementalData.header(MethodHandles.lookup().lookupClass())
-                + "\t<version number=\"$Revision" /*hack to stop SVN changing this*/ + "$\"/>\n"
-                + "\t<subdivisionContainment>\n");
+                    + "\t<version number=\"$Revision" /*hack to stop SVN changing this*/ + "$\"/>\n"
+                    + "\t<subdivisionContainment>\n");
             printXml(output, BASE, 0);
             output.append("\t</subdivisionContainment>\n</supplementalData>\n");
         }
@@ -640,9 +632,6 @@ public class GenerateSubdivisions {
 
         private static void addAliases(Appendable output, Set<String> missing) throws IOException {
             for (String toReplace : missing) {
-                if (toReplace.startsWith("nl")) {
-                    int debug = 0;
-                }
                 List<String> replaceBy = null;
                 String reason = "deprecated";
                 R2<List<String>, String> aliasInfo = SUBDIVISION_ALIASES_FORMER.get(toReplace);
@@ -669,7 +658,7 @@ public class GenerateSubdivisions {
             }
             output.append("<subdivisionAlias"
                 + " type=\"" + toReplace + "\""
-                + " replacement=\"" + (replaceBy == null ? "??" : CollectionUtilities.join(replaceBy, " ")) + "\""
+                + " replacement=\"" + (replaceBy == null ? toReplace.substring(0, 2) + "?" : CollectionUtilities.join(replaceBy, " ")) + "\""
                 + " reason=\"" + reason + "\"/>"
                 + (replaceBy == null ? " <!- - " : " <!-- ")
                 + getBestName(toReplace, true) + " => " + (replaceBy == null ? "??" : getBestName(replaceBy, true)) + " -->"
@@ -718,7 +707,6 @@ public class GenerateSubdivisions {
             }
         }
 
-
         public static void addIdSample(String id, String value) {
             SUB_TO_CAT.put(value, id);
             ID_SAMPLE.put(getIsoName(id), value);
@@ -737,7 +725,7 @@ public class GenerateSubdivisions {
                     }
                     seen.add(region);
                     pw.append(";\t" + ENGLISH_ICU.regionDisplayName(region) + ": " + getIsoName(sample)
-                    + " (" + sample + ")");
+                        + " (" + sample + ")");
                     //if (--max < 0) break;
                 }
                 pw.append(System.lineSeparator());

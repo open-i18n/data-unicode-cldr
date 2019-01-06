@@ -54,14 +54,14 @@ public class DisplayAndInputProcessor {
     public static final boolean DEBUG_DAIP = CldrUtility.getProperty("DEBUG_DAIP", false);
 
     public static final UnicodeSet RTL = new UnicodeSet("[[:Bidi_Class=Arabic_Letter:][:Bidi_Class=Right_To_Left:]]")
-    .freeze();
+        .freeze();
 
     public static final UnicodeSet TO_QUOTE = (UnicodeSet) new UnicodeSet(
         "[[:Cn:]" +
             "[:Default_Ignorable_Code_Point:]" +
             "[:patternwhitespace:]" +
             "[:Me:][:Mn:]]" // add non-spacing marks
-        ).freeze();
+    ).freeze();
 
     public static final Pattern NUMBER_FORMAT_XPATH = Pattern
         .compile("//ldml/numbers/.*Format\\[@type=\"standard\"]/pattern.*");
@@ -100,8 +100,8 @@ public class DisplayAndInputProcessor {
     private static final CLDRLocale MYANMAR = CLDRLocale.getInstance("my");
     private static final CLDRLocale GERMAN_SWITZERLAND = CLDRLocale.getInstance("de_CH");
     private static final CLDRLocale SWISS_GERMAN = CLDRLocale.getInstance("gsw");
-    public static final Set<String> LANGUAGES_USING_MODIFIER_APOSTROPHE =
-        new HashSet<String>(Arrays.asList("br", "bss", "cch", "gn", "ha", "ha_Latn", "lkt", "mgo", "moh", "nnh", "qu", "quc", "uk", "uz", "uz_Latn"));
+    public static final Set<String> LANGUAGES_USING_MODIFIER_APOSTROPHE = new HashSet<String>(
+        Arrays.asList("br", "bss", "cch", "gn", "ha", "ha_Latn", "lkt", "mgo", "moh", "nnh", "qu", "quc", "uk", "uz", "uz_Latn"));
 
     // Ş ş Ţ ţ  =>  Ș ș Ț ț
     private static final char[][] ROMANIAN_CONVERSIONS = {
@@ -181,7 +181,7 @@ public class DisplayAndInputProcessor {
                 .setSpaceComparator(spaceCol);
         }
     }
-    
+
     public UnicodeSetPrettyPrinter getPrettyPrinter() {
         return pp;
     }
@@ -270,13 +270,14 @@ public class DisplayAndInputProcessor {
     }
 
     private boolean hasUnicodeSetValue(String path) {
-        return path.startsWith("//ldml/characters/exemplarCharacters")  || path.startsWith("//ldml/characters/parseLenients");
+        return path.startsWith("//ldml/characters/exemplarCharacters") || path.startsWith("//ldml/characters/parseLenients");
     }
 
     static final UnicodeSet WHITESPACE = new UnicodeSet("[:whitespace:]").freeze();
     static final DateTimeCanonicalizer dtc = new DateTimeCanonicalizer(FIX_YEARS);
 
     static final Splitter SPLIT_BAR = Splitter.on('|').trimResults().omitEmptyStrings();
+    static final Splitter SPLIT_SPACE = Splitter.on(' ').trimResults().omitEmptyStrings();
     static final Joiner JOIN_BAR = Joiner.on(" | ");
 
     /**
@@ -416,12 +417,14 @@ public class DisplayAndInputProcessor {
                 value = normalizeHyphens(value);
             }
 
-            if (path.startsWith("//ldml/annotations/annotation") && !path.contains(Emoji.TYPE_TTS)) {
-                TreeSet<String> sorted = new TreeSet<>(Collator.getInstance(ULocale.ROOT));
-                sorted.addAll(SPLIT_BAR.splitToList(value));
-                value = JOIN_BAR.join(sorted);
+            if (path.startsWith("//ldml/annotations/annotation")) {
+                if (path.contains(Emoji.TYPE_TTS)) {
+                    value = SPLIT_BAR.split(value).iterator().next();
+                } else {
+                    value = annotationsForDisplay(value);
+                }
             }
-            
+
             return value;
         } catch (RuntimeException e) {
             if (internalException != null) {
@@ -429,6 +432,34 @@ public class DisplayAndInputProcessor {
             }
             return original;
         }
+    }
+
+    private static final boolean REMOVE_COVERED_KEYWORDS = true;
+
+    private static String annotationsForDisplay(String value) {
+        TreeSet<String> sorted = new TreeSet<>(Collator.getInstance(ULocale.ROOT));
+        sorted.addAll(SPLIT_BAR.splitToList(value));
+        if (REMOVE_COVERED_KEYWORDS) {
+            filterCoveredKeywords(sorted);
+        }
+        value = JOIN_BAR.join(sorted);
+        return value;
+    }
+
+    public static void filterCoveredKeywords(TreeSet<String> sorted) {
+        // for now, just do single items
+        HashSet<String> toRemove = new HashSet<>();
+
+        for (String item : sorted) {
+            List<String> list = SPLIT_SPACE.splitToList(item);
+            if (list.size() < 2) {
+                continue;
+            }
+            if (sorted.containsAll(list)) {
+                toRemove.add(item);
+            }
+        }
+        sorted.removeAll(toRemove);
     }
 
     private String displayUnicodeSet(String value) {
@@ -517,7 +548,7 @@ public class DisplayAndInputProcessor {
             } else if (c == ')') {
                 inParentheses = false;
             }
-            if (inParentheses && c == '-' && Character.isDigit(value.charAt(i-1))) {
+            if (inParentheses && c == '-' && Character.isDigit(value.charAt(i - 1))) {
                 c = 0x2013; /* Replace hyphen-minus with dash for date ranges */
             }
             result.append(c);
@@ -686,8 +717,7 @@ public class DisplayAndInputProcessor {
     private static Pattern UNNORMALIZED_MALAYALAM = PatternCache.get(
         "(\u0D23|\u0D28|\u0D30|\u0D32|\u0D33|\u0D15)\u0D4D\u200D");
 
-    private static Map<Character, Character> NORMALIZING_MAP =
-        Builder.with(new HashMap<Character, Character>())
+    private static Map<Character, Character> NORMALIZING_MAP = Builder.with(new HashMap<Character, Character>())
         .put('\u0D23', '\u0D7A').put('\u0D28', '\u0D7B')
         .put('\u0D30', '\u0D7C').put('\u0D32', '\u0D7D')
         .put('\u0D33', '\u0D7E').put('\u0D15', '\u0D7F').get();
@@ -791,6 +821,8 @@ public class DisplayAndInputProcessor {
     /**
      * @return a canonical numeric pattern, based on the type, and the isPOSIX flag. The latter is set for en_US_POSIX.
      */
+    static final Splitter SEMI_SPLITTER = Splitter.on(';').trimResults();
+
     public static String getCanonicalPattern(String inpattern, NumericType type, boolean isPOSIX) {
         // TODO fix later to properly handle quoted ;
 
@@ -808,7 +840,14 @@ public class DisplayAndInputProcessor {
             df.setMaximumFractionDigits(digits[2]);
         }
         String pattern = df.toPattern();
-
+        List<String> parts = SEMI_SPLITTER.splitToList(pattern);
+        String pattern2 = parts.get(0);
+        if (parts.size() > 1) {
+            pattern2 += ";" + parts.get(1);
+        }
+        if (!pattern2.equals(pattern)) {
+            pattern = pattern2;
+        }
         // int pos = pattern.indexOf(';');
         // if (pos < 0) return pattern + ";-" + pattern;
         return pattern;
@@ -818,13 +857,9 @@ public class DisplayAndInputProcessor {
      * This tests what type a numeric pattern is.
      */
     public enum NumericType {
-        CURRENCY(new int[] { 1, 2, 2 }, new int[] { 1, 2, 2 }),
-        CURRENCY_ABBREVIATED(),
-        DECIMAL(new int[] { 1, 0, 3 }, new int[] { 1, 0, 6 }),
-        DECIMAL_ABBREVIATED(),
-        PERCENT(new int[] { 1, 0, 0 }, new int[] { 1, 0, 0 }),
-        SCIENTIFIC(new int[] { 0, 0, 0 }, new int[] { 1, 6, 6 }),
-        NOT_NUMERIC;
+        CURRENCY(new int[] { 1, 2, 2 }, new int[] { 1, 2, 2 }), CURRENCY_ABBREVIATED(), DECIMAL(new int[] { 1, 0, 3 },
+            new int[] { 1, 0, 6 }), DECIMAL_ABBREVIATED(), PERCENT(new int[] { 1, 0, 0 },
+                new int[] { 1, 0, 0 }), SCIENTIFIC(new int[] { 0, 0, 0 }, new int[] { 1, 6, 6 }), NOT_NUMERIC;
 
         private static final Pattern NUMBER_PATH = Pattern
             .compile("//ldml/numbers/((currency|decimal|percent|scientific)Formats|currencies/currency).*");

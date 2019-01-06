@@ -49,17 +49,24 @@ public class ShowPlurals {
 
         final String title = "Language Plural Rules";
         final PrintWriter pw = new PrintWriter(new FormattedFileWriter(null, title, null, ShowLanguages.SUPPLEMENTAL_INDEX_ANCHORS));
+
+        pw.append("<div style='margin-right:2em; margin-left:2em'>\n");
         ShowLanguages.showContents(pw, "rules", "Rules", "comparison", "Comparison");
 
         pw.append("<h2>" + CldrUtility.getDoubleLinkedText("rules", "1. " + section1) + "</h2>" + System.lineSeparator());
+        pw.append("<div style='margin-right:2em; margin-left:2em'>\n");
         printPluralTable(english, localeFilter, pw, factory);
+        pw.append("</div>\n");
 
         pw.append("<h2>" + CldrUtility.getDoubleLinkedText("comparison", "2. " + section2) + "</h2>" + System.lineSeparator());
         pw.append("<p style='text-align:left'>The plural forms are abbreviated by first letter, with 'x' for 'other'. "
             +
             "If values are made redundant by explicit 0 and 1, they are underlined. " +
             "The fractional and integral results are separated for clarity.</p>" + System.lineSeparator());
+        pw.append("<div style='margin-right:2em; margin-left:2em'>\n");
         PluralSnapshot.writeTables(english, pw);
+        pw.append("</div>\n");
+        pw.append("</div>\n");
         appendBlanksForScrolling(pw);
         pw.close();
     }
@@ -76,17 +83,20 @@ public class ShowPlurals {
         Appendable appendable, Factory factory) throws IOException {
 
         final TablePrinter tablePrinter = new TablePrinter()
-        .addColumn("Name", "class='source'", null, "class='source'", true).setSortPriority(0)
-        .setBreakSpans(true).setRepeatHeader(true)
-        .addColumn("Code", "class='source'", CldrUtility.getDoubleLinkMsg(), "class='source'", true)
-        .addColumn("Type", "class='source'", null, "class='source'", true)
-        .setBreakSpans(true)
-        .addColumn("Category", "class='target'", null, "class='target'", true)
-        .setSpanRows(false)
-        .addColumn("Examples", "class='target'", null, "class='target'", true)
-        .addColumn("Minimal Pairs", "class='target'", null, "class='target'", true)
-        .addColumn("Rules", "class='target'", null, "class='target' nowrap", true)
-        .setSpanRows(false);
+            .setTableAttributes("class='dtf-table'")
+            .addColumn("Name", "class='source'", null, "class='source'", true).setSortPriority(0).setHeaderAttributes("class='dtf-th'")
+            .setCellAttributes("class='dtf-s'")
+            .setBreakSpans(true).setRepeatHeader(true)
+            .addColumn("Code", "class='source'", CldrUtility.getDoubleLinkMsg(), "class='source'", true).setHeaderAttributes("class='dtf-th'")
+            .setCellAttributes("class='dtf-s'")
+            .addColumn("Type", "class='source'", null, "class='source'", true).setHeaderAttributes("class='dtf-th'").setCellAttributes("class='dtf-s'")
+            .setBreakSpans(true)
+            .addColumn("Category", "class='target'", null, "class='target'", true).setHeaderAttributes("class='dtf-th'").setCellAttributes("class='dtf-s'")
+            .setSpanRows(false)
+            .addColumn("Examples", "class='target'", null, "class='target'", true).setHeaderAttributes("class='dtf-th'").setCellAttributes("class='dtf-s'")
+            .addColumn("Minimal Pairs", "class='target'", null, "class='target'", true).setHeaderAttributes("class='dtf-th'").setCellAttributes("class='dtf-s'")
+            .addColumn("Rules", "class='target'", null, "class='target' nowrap", true).setHeaderAttributes("class='dtf-th'").setCellAttributes("class='dtf-s'")
+            .setSpanRows(false);
         PluralRulesFactory prf = PluralRulesFactory.getInstance(supplementalDataInfo);
         //Map<ULocale, PluralRulesFactory.SamplePatterns> samples = PluralRulesFactory.getLocaleToSamplePatterns();
         Set<String> cardinalLocales = supplementalDataInfo.getPluralLocales(PluralType.cardinal);
@@ -105,14 +115,14 @@ public class ShowPlurals {
             if (!locale.equals(canonicalLocale)) {
                 String redirect = "<i>=<a href='#" + canonicalLocale + "'>" + canonicalLocale + "</a></i>";
                 tablePrinter.addRow()
-                .addCell(name)
-                .addCell(locale)
-                .addCell(redirect)
-                .addCell(redirect)
-                .addCell(redirect)
-                .addCell(redirect)
-                .addCell(redirect)
-                .finishRow();
+                    .addCell(name)
+                    .addCell(locale)
+                    .addCell(redirect)
+                    .addCell(redirect)
+                    .addCell(redirect)
+                    .addCell(redirect)
+                    .addCell(redirect)
+                    .finishRow();
                 continue;
             }
 
@@ -154,19 +164,19 @@ public class ShowPlurals {
                         : counts.size() == 1 ? "<i>everything</i>"
                             : "<i>everything else</i>";
 
-                        String sample = counts.size() == 1 ? NO_PLURAL_DIFFERENCES : NOT_AVAILABLE;
-                        if (samplePatterns != null) {
-                            String samplePattern = samplePatterns.get(pluralType.standardType, Count.valueOf(keyword)); // CldrUtility.get(samplePatterns.keywordToPattern, Count.valueOf(keyword));
-                            if (samplePattern != null) {
-                                FixedDecimal sampleDecimal = PluralInfo.getNonZeroSampleIfPossible(exampleList);
-                                sample = getSample(sampleDecimal, samplePattern, nf);
-                                if (exampleList2 != null) {
-                                    sampleDecimal = PluralInfo.getNonZeroSampleIfPossible(exampleList2);
-                                    sample += "<br>" + getSample(sampleDecimal, samplePattern, nf);
-                                }
+                    String sample = counts.size() == 1 ? NO_PLURAL_DIFFERENCES : NOT_AVAILABLE;
+                    if (samplePatterns != null) {
+                        String samplePattern = samplePatterns.get(pluralType.standardType, Count.valueOf(keyword)); // CldrUtility.get(samplePatterns.keywordToPattern, Count.valueOf(keyword));
+                        if (samplePattern != null) {
+                            FixedDecimal sampleDecimal = PluralInfo.getNonZeroSampleIfPossible(exampleList);
+                            sample = getSample(sampleDecimal, samplePattern, nf);
+                            if (exampleList2 != null) {
+                                sampleDecimal = PluralInfo.getNonZeroSampleIfPossible(exampleList2);
+                                sample += "<br>" + getSample(sampleDecimal, samplePattern, nf);
                             }
                         }
-                        tablePrinter.addRow()
+                    }
+                    tablePrinter.addRow()
                         .addCell(name)
                         .addCell(locale)
                         .addCell(pluralType.toString())
@@ -185,26 +195,26 @@ public class ShowPlurals {
             if (rangeInfoList != null) {
                 for (RangeSample item : rangeInfoList) {
                     tablePrinter.addRow()
-                    .addCell(name)
-                    .addCell(locale)
-                    .addCell("range")
-                    .addCell(item.start + "+" + item.end)
-                    .addCell(item.min + "–" + item.max)
-                    .addCell(item.resultExample.replace(". ", ".<br>"))
-                    .addCell(item.start + " + " + item.end + " → " + item.result)
-                    .finishRow();
+                        .addCell(name)
+                        .addCell(locale)
+                        .addCell("range")
+                        .addCell(item.start + "+" + item.end)
+                        .addCell(item.min + "–" + item.max)
+                        .addCell(item.resultExample.replace(". ", ".<br>"))
+                        .addCell(item.start + " + " + item.end + " → " + item.result)
+                        .finishRow();
                 }
             } else {
                 String message = supplementalDataInfo.getPlurals(PluralType.cardinal, locale).getCounts().size() == 1 ? NO_PLURAL_DIFFERENCES : NOT_AVAILABLE;
                 tablePrinter.addRow()
-                .addCell(name)
-                .addCell(locale)
-                .addCell("range")
-                .addCell("<i>n/a</i>")
-                .addCell("<i>n/a</i>")
-                .addCell(message)
-                .addCell("<i>n/a</i>")
-                .finishRow();
+                    .addCell(name)
+                    .addCell(locale)
+                    .addCell("range")
+                    .addCell("<i>n/a</i>")
+                    .addCell("<i>n/a</i>")
+                    .addCell(message)
+                    .addCell("<i>n/a</i>")
+                    .finishRow();
             }
         }
         appendable.append(tablePrinter.toTable()).append(System.lineSeparator());

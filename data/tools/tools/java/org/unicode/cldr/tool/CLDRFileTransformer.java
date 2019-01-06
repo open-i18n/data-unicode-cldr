@@ -33,16 +33,18 @@ public class CLDRFileTransformer {
      * needed to convert each locale. Each enum value is named after the locale that results
      * from the conversion.
      */
-    enum PolicyIfExisting {RETAIN, DISCARD, MINIMIZE}
+    enum PolicyIfExisting {
+        RETAIN, DISCARD, MINIMIZE
+    }
 
     public enum LocaleTransform {
-        sr_Latn("sr", "Serbian-Latin-BGN.xml", Transliterator.FORWARD, "[:script=Cyrl:]", PolicyIfExisting.DISCARD),
-        sr_Latn_BA("sr_Cyrl_BA", "Serbian-Latin-BGN.xml", Transliterator.FORWARD, "[:script=Cyrl:]", PolicyIfExisting.DISCARD),
-        sr_Latn_ME("sr_Cyrl_ME", "Serbian-Latin-BGN.xml", Transliterator.FORWARD, "[:script=Cyrl:]", PolicyIfExisting.DISCARD),
-        sr_Latn_XK("sr_Cyrl_XK", "Serbian-Latin-BGN.xml", Transliterator.FORWARD, "[:script=Cyrl:]", PolicyIfExisting.DISCARD),
-        yo_BJ("yo", "yo-yo_BJ.xml", Transliterator.FORWARD, "[ẹ ọ ṣ Ẹ Ọ Ṣ]", PolicyIfExisting.DISCARD),
-        de_CH("de", "[ß] Casefold", Transliterator.FORWARD, "[ß]", PolicyIfExisting.MINIMIZE),
-        yue_Hans("yue", "Simplified-Traditional.xml", Transliterator.REVERSE, "[:script=Hant:]", PolicyIfExisting.RETAIN),
+        sr_Latn("sr", "Serbian-Latin-BGN.xml", Transliterator.FORWARD, "[:script=Cyrl:]", PolicyIfExisting.DISCARD), sr_Latn_BA("sr_Cyrl_BA",
+            "Serbian-Latin-BGN.xml", Transliterator.FORWARD, "[:script=Cyrl:]", PolicyIfExisting.DISCARD), sr_Latn_ME("sr_Cyrl_ME", "Serbian-Latin-BGN.xml",
+                Transliterator.FORWARD, "[:script=Cyrl:]", PolicyIfExisting.DISCARD), sr_Latn_XK("sr_Cyrl_XK", "Serbian-Latin-BGN.xml", Transliterator.FORWARD,
+                    "[:script=Cyrl:]", PolicyIfExisting.DISCARD), ha_NE("ha", "ha-ha_NE.xml", Transliterator.FORWARD, "[y Y ƴ Ƴ ʼ]",
+                        PolicyIfExisting.DISCARD), yo_BJ("yo", "yo-yo_BJ.xml", Transliterator.FORWARD, "[ẹ ọ ṣ Ẹ Ọ Ṣ]", PolicyIfExisting.DISCARD), de_CH("de",
+                            "[ß] Casefold", Transliterator.FORWARD, "[ß]", PolicyIfExisting.MINIMIZE), yue_Hans("yue", "Simplified-Traditional.xml",
+                                Transliterator.REVERSE, "[:script=Hant:]", PolicyIfExisting.RETAIN),
         // en_NZ("en_AU", "null", Transliterator.FORWARD, "[]", PolicyIfExisting.DISCARD), 
         // Needs work to fix currency symbols, handle Maori. See http://unicode.org/cldr/trac/ticket/9516#comment:6
         ;
@@ -194,7 +196,7 @@ public class CLDRFileTransformer {
 
         // allows us to change only new values
         switch (localeTransform.policy) {
-        case RETAIN: 
+        case RETAIN:
         case MINIMIZE:
             if (oldValue != null) {
                 return oldValue;
@@ -236,9 +238,10 @@ public class CLDRFileTransformer {
             if (dir.equals("casing") // skip, field contents are keywords, not localizable content
                 || dir.equals("collation") // skip, field contents are complex, and can't be simply remapped
                 || dir.equals("annotationsDerived") // skip, derived later
-                ) {
+            ) {
                 continue;
             }
+            System.out.println("\nDirectory: " + dir);
             Factory factory = Factory.make(CLDRPaths.COMMON_DIRECTORY + dir + "/", ".*");
             CLDRFileTransformer transformer = new CLDRFileTransformer(factory, CLDRPaths.COMMON_DIRECTORY + "transforms" + File.separator);
             for (LocaleTransform localeTransform : LocaleTransform.values()) {
@@ -251,11 +254,12 @@ public class CLDRFileTransformer {
                 String outputFile = output.getLocaleID() + ".xml";
                 PrintWriter out = FileUtilities.openUTF8Writer(outputDir, outputFile);
                 System.out.println("Generating locale file: " + outputDir + outputFile);
+                if (!transformer.unconverted.isEmpty()) {
+                    System.out.println("Untransformed characters: " + transformer.unconverted);
+                    transformer.unconverted.clear();
+                }
                 output.write(out);
                 out.close();
-            }
-            if (!transformer.unconverted.isEmpty()) {
-                System.out.println("Untransformed characters: " + transformer.unconverted);
             }
         }
     }

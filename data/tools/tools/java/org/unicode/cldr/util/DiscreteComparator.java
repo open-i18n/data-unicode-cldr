@@ -240,7 +240,15 @@ public class DiscreteComparator<T> implements Comparator<T> {
             Map<T, Integer> ordering = new LinkedHashMap<T, Integer>();
             for (Node<T> subNode : all.values()) {
                 if (!subNode.visited) {
-                    subNode.visit(ordering);
+                    try {
+                        subNode.visit(ordering);
+                    } catch (CycleException e) {
+                        throw new CycleException(
+                            "\n\tcycle:" + getCycle()
+                                + "\n\tall:" + all
+                                + "\n\tordering:" + ordering,
+                            e);
+                    }
                 }
             }
             // clean up, so another call doesn't mess things up
@@ -299,7 +307,7 @@ public class DiscreteComparator<T> implements Comparator<T> {
                 : order == Ordering.NATURAL ? new TreeSet<Node<T>>()
                     : new HashSet<Node<T>>();
 
-                me = a;
+            me = a;
         }
 
         private void visit(Map<T, Integer> resultOrdering) {
@@ -312,7 +320,7 @@ public class DiscreteComparator<T> implements Comparator<T> {
             currentNode.chained = true;
             for (Node<T> subNode : currentNode.less) {
                 if (subNode.chained) {
-                    throw new CycleException("Cycle in input data");
+                    throw new CycleException("Cycle in input data: " + subNode.toString());
                 }
                 if (subNode.visited) {
                     continue;
@@ -346,6 +354,10 @@ public class DiscreteComparator<T> implements Comparator<T> {
 
         public <T> CycleException(String message) {
             super(message);
+        }
+
+        public <T> CycleException(String message, Exception e) {
+            super(message, e);
         }
     }
 

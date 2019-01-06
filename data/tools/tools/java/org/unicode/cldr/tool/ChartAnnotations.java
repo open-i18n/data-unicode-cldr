@@ -2,6 +2,7 @@ package org.unicode.cldr.tool;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -19,11 +20,16 @@ import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.FileCopier;
 import org.unicode.cldr.util.LanguageGroup;
+import org.unicode.cldr.util.LanguageTagParser;
 import org.unicode.cldr.util.LocaleIDParser;
-import org.unicode.cldr.util.Pair;
 
+import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
 import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.impl.Relation;
+import com.ibm.icu.impl.Row;
+import com.ibm.icu.impl.Row.R3;
+import com.ibm.icu.impl.Utility;
 import com.ibm.icu.text.RuleBasedCollator;
 import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.util.ULocale;
@@ -76,11 +82,11 @@ public class ChartAnnotations extends Chart {
     }
 
     static final UnicodeSet EXTRAS = new UnicodeSet()
-    .addAll(Arrays.asList(
-        "🇪🇺", "🔟", "#️⃣", "👶🏽", "👩‍❤️‍💋‍👩", "👩‍❤️‍👩", "👩‍👩‍👧", "👨🏻‍⚕️", "👮🏿‍♂️", "👮🏽‍♀️", "👩‍❤️‍💋‍👩", "👮🏽‍♀️", 
-        "💏","👩‍❤️‍💋‍👩","💑","👩‍❤️‍👩","👪","👩‍👩‍👧",
-        "👦🏻","👩🏿","👨‍⚖","👨🏿‍⚖","👩‍⚖","👩🏼‍⚖","👮","👮‍♂️","👮🏼‍♂️","👮‍♀️","👮🏿‍♀️",
-        "🚴","🚴🏿","🚴‍♂️","🚴🏿‍♂️","🚴‍♀️","🚴🏿‍♀️"))
+        .addAll(Arrays.asList(
+            "🇪🇺", "🔟", "#️⃣", "👶🏽", "👩‍❤️‍💋‍👩", "👩‍❤️‍👩", "👩‍👩‍👧", "👨🏻‍⚕️", "👮🏿‍♂️", "👮🏽‍♀️", "👩‍❤️‍💋‍👩", "👮🏽‍♀️",
+            "💏", "👩‍❤️‍💋‍👩", "💑", "👩‍❤️‍👩", "👪", "👩‍👩‍👧",
+            "👦🏻", "👩🏿", "👨‍⚖", "👨🏿‍⚖", "👩‍⚖", "👩🏼‍⚖", "👮", "👮‍♂️", "👮🏼‍♂️", "👮‍♀️", "👮🏿‍♀️",
+            "🚴", "🚴🏿", "🚴‍♂️", "🚴🏿‍♂️", "🚴‍♀️", "🚴🏿‍♀️"))
         .freeze();
 
     public void writeSubcharts(Anchors anchors) throws IOException {
@@ -92,17 +98,27 @@ public class ChartAnnotations extends Chart {
         // set up right order for columns
 
         Map<String, String> nameToCode = new LinkedHashMap<String, String>();
-        Relation<LanguageGroup, Pair<String, String>> groupToNameAndCodeSorted = Relation.of(
-            new EnumMap<LanguageGroup, Set<Pair<String, String>>>(LanguageGroup.class),
+        Relation<LanguageGroup, R3<Integer, String, String>> groupToNameAndCodeSorted = Relation.of(
+            new EnumMap<LanguageGroup, Set<R3<Integer, String, String>>>(LanguageGroup.class),
             TreeSet.class);
 
+        Multimap<String, String> localeToSub = TreeMultimap.create();
+        LanguageTagParser ltp = new LanguageTagParser();
+
         for (String locale : locales) {
+            ltp.set(locale);
             if (locale.equals("root")) {
                 continue;
             }
             if (locale.equals("en")) { // make first
                 continue;
             }
+            String region = ltp.getRegion();
+            if (!region.isEmpty()) {
+                localeToSub.put(ltp.getLanguageScript(), locale);
+                continue;
+            }
+
             if (locale.startsWith("en")) {
                 int debug = 0;
             }
@@ -110,10 +126,11 @@ public class ChartAnnotations extends Chart {
             int baseEnd = locale.indexOf('_');
             ULocale loc = new ULocale(baseEnd < 0 ? locale : locale.substring(0, baseEnd));
             LanguageGroup group = LanguageGroup.get(loc);
-            groupToNameAndCodeSorted.put(group, Pair.of(name, locale));
+            int rank = LanguageGroup.rankInGroup(loc);
+            groupToNameAndCodeSorted.put(group, Row.of(rank, name, locale));
         }
 
-        for (Entry<LanguageGroup, Set<Pair<String, String>>> groupPairs : groupToNameAndCodeSorted.keyValuesSet()) {
+        for (Entry<LanguageGroup, Set<R3<Integer, String, String>>> groupPairs : groupToNameAndCodeSorted.keyValuesSet()) {
             LanguageGroup group = groupPairs.getKey();
             String ename = ENGLISH.getName("en", true);
             nameToCode.clear();
@@ -121,28 +138,29 @@ public class ChartAnnotations extends Chart {
 
             // add English variants if they exist
 
-            for (Pair<String, String> pair : groupPairs.getValue()) {
-                String name = pair.getFirst();
-                String locale = pair.getSecond();
+            for (R3<Integer, String, String> pair : groupPairs.getValue()) {
+                String name = pair.get1();
+                String locale = pair.get2();
                 if (locale.startsWith("en_")) {
                     nameToCode.put(name, locale);
                 }
             }
 
-            for (Pair<String, String> pair : groupPairs.getValue()) {
-                String name = pair.getFirst();
-                String locale = pair.getSecond();
+            for (R3<Integer, String, String> pair : groupPairs.getValue()) {
+                String name = pair.get1();
+                String locale = pair.get2();
 
                 nameToCode.put(name, locale);
+                System.out.println(pair);
             }
-
             // now build table with right order for columns
-            double width = ((int)((99.0 / (locales.size() + 1))*1000))/1000.0;
+            double width = ((int) ((99.0 / (locales.size() + 1)) * 1000)) / 1000.0;
             //String widthString = "class='source' width='"+ width + "%'";
             String widthStringTarget = "class='target' width='" + width + "%'";
 
             TablePrinter tablePrinter = new TablePrinter()
-            .addColumn("Char", "class='source' width='1%'", CldrUtility.getDoubleLinkMsg(), "class='source-image'", true)
+                .addColumn("Char", "class='source' width='1%'", CldrUtility.getDoubleLinkMsg(), "class='source-image'", true)
+                .addColumn("Hex", "class='source' width='1%'", null, "class='source'", true)
             //.addColumn("Formal Name", "class='source' width='" + width + "%'", null, "class='source'", true)
             ;
 
@@ -152,20 +170,41 @@ public class ChartAnnotations extends Chart {
             }
             // sort the characters
             Set<String> sorted = new TreeSet<>(RBC);
+            Multimap<String, String> valueToSub = TreeMultimap.create();
 
             for (String cp : s.addAllTo(sorted)) {
                 tablePrinter
-                .addRow()
-                .addCell(cp)
+                    .addRow()
+                    .addCell(cp)
+                    .addCell(Utility.hex(cp, 4, " "))
                 //.addCell(getName(cp))
                 ;
                 for (Entry<String, String> nameAndLocale : nameToCode.entrySet()) {
                     String name = nameAndLocale.getKey();
                     String locale = nameAndLocale.getValue();
+
                     AnnotationSet annotations = Annotations.getDataSet(locale);
                     AnnotationSet parentAnnotations = Annotations.getDataSet(LocaleIDParser.getParent(locale));
+                    String baseAnnotation = annotations.toString(cp, true, parentAnnotations);
+                    String baseAnnotationOriginal = baseAnnotation;
+
                     if (DEBUG) System.out.println(name + ":" + annotations.toString(cp, false, null));
-                    tablePrinter.addCell(annotations.toString(cp, true, parentAnnotations));
+                    Collection<String> subs = localeToSub.get(locale);
+                    if (!subs.isEmpty()) {
+                        valueToSub.clear();
+                        for (String sub : subs) {
+                            AnnotationSet subAnnotations = Annotations.getDataSet(sub);
+                            AnnotationSet subParentAnnotations = Annotations.getDataSet(LocaleIDParser.getParent(locale));
+                            String baseAnnotation2 = subAnnotations.toString(cp, true, subParentAnnotations);
+                            if (!baseAnnotation2.equals(baseAnnotationOriginal)) {
+                                valueToSub.put(baseAnnotation2, sub);
+                            }
+                        }
+                        for (Entry<String, Collection<String>> entry : valueToSub.asMap().entrySet()) {
+                            baseAnnotation += "<hr><i>" + CollectionUtilities.join(entry.getValue(), ", ") + "</i>: " + entry.getKey();
+                        }
+                    }
+                    tablePrinter.addCell(baseAnnotation);
                 }
                 tablePrinter.finishRow();
             }
