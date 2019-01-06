@@ -34,7 +34,7 @@ public class CheckExemplars extends FactoryCheckCLDR {
         "[[:Hangul_Syllable_Type=LVT:][:Hangul_Syllable_Type=LV:]]").freeze();
 
     public static final UnicodeSet AlwaysOK = new UnicodeSet(
-        "[[[:Nd:][:script=common:][:script=inherited:]-[:Default_Ignorable_Code_Point:]-[:C:] - [_]] [\u066A-\u066C]" +
+        "[[[:Nd:][:script=common:][:script=inherited:]-[:Default_Ignorable_Code_Point:]-[:C:] - [_]] [\u05BE \u05F3 \u066A-\u066C]" +
             "[[؉][་ །༌][ཱ]‎‎{য়}য়]" + // TODO Fix this Hack
             "]").freeze(); // [\\u200c-\\u200f] [:script=common:][:script=inherited:]
 
@@ -149,7 +149,7 @@ public class CheckExemplars extends FactoryCheckCLDR {
                 UnicodeSet combined = new UnicodeSet(mainSet).addAll(auxiliarySet);
                 checkMixedScripts("main+auxiliary", combined, result);
 
-                if (false && auxiliarySet.containsSome(mainSet)) {
+                if (auxiliarySet.containsSome(mainSet)) {
                     UnicodeSet overlap = new UnicodeSet(mainSet).retainAll(auxiliarySet).removeAll(HangulSyllables);
                     if (overlap.size() != 0) {
                         String fixedExemplar1 = new PrettyPrinter()
@@ -163,7 +163,7 @@ public class CheckExemplars extends FactoryCheckCLDR {
                                 .setCause(this)
                                 .setMainType(CheckStatus.warningType)
                                 .setSubtype(Subtype.auxiliaryExemplarsOverlap)
-                                .setMessage("Auxiliary overlaps with main \u200E{0}\u200E",
+                                .setMessage("Auxiliary characters also exist in main: \u200E{0}\u200E",
                                     new Object[] { fixedExemplar1 }));
                     }
                 }
@@ -190,6 +190,23 @@ public class CheckExemplars extends FactoryCheckCLDR {
                         .setSubtype(Subtype.missingPunctuationCharacters)
                         .setMessage("Punctuation exemplar characters are missing quotation marks for this locale: {0}",
                             characters);
+                    result.add(message);
+                }
+            } else if (type == ExemplarType.index) {
+                // Check that the index exemplar characters are in case-completed union of main and auxiliary exemplars
+                UnicodeSet auxiliarySet = getResolvedCldrFileToCheck().getExemplarSet("auxiliary", CLDRFile.WinningChoice.WINNING);
+                if (auxiliarySet == null) {
+                    auxiliarySet = new UnicodeSet();
+                }
+                UnicodeSet mainAndAuxAllCase = new UnicodeSet(mainSet).addAll(auxiliarySet).closeOver(UnicodeSet.ADD_CASE_MAPPINGS);
+                UnicodeSet indexBadChars = new UnicodeSet(value).removeAll(mainAndAuxAllCase);
+
+                if (!indexBadChars.isEmpty()) {
+                    CheckStatus message = new CheckStatus().setCause(this)
+                        .setMainType(CheckStatus.warningType)
+                        .setSubtype(Subtype.charactersNotInMainOrAuxiliaryExemplars)
+                        .setMessage("Index exemplars include characters not in main or auxiliary exemplars: {0}",
+                            indexBadChars.toPattern(false));
                     result.add(message);
                 }
             }

@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -21,10 +23,12 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.unicode.cldr.test.CoverageLevel2;
+import org.unicode.cldr.tool.LikelySubtags;
 import org.unicode.cldr.util.Builder.CBuilder;
 import org.unicode.cldr.util.CldrUtility.VariableReplacer;
 import org.unicode.cldr.util.DayPeriodInfo.DayPeriod;
@@ -34,6 +38,7 @@ import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo.Count;
 
 import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.dev.util.Relation;
+import com.ibm.icu.dev.util.XEquivalenceClass;
 import com.ibm.icu.impl.IterableComparator;
 import com.ibm.icu.impl.Row;
 import com.ibm.icu.impl.Row.R2;
@@ -42,9 +47,11 @@ import com.ibm.icu.text.DateFormat;
 import com.ibm.icu.text.MessageFormat;
 import com.ibm.icu.text.NumberFormat;
 import com.ibm.icu.text.PluralRules;
+import com.ibm.icu.text.PluralRules.FixedDecimal;
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.util.Freezable;
+import com.ibm.icu.util.Output;
 import com.ibm.icu.util.TimeZone;
 import com.ibm.icu.util.ULocale;
 
@@ -955,7 +962,10 @@ public class SupplementalDataInfo {
                     }
                 }
                 String name = file.toString();
-                if (!name.endsWith(".xml")) continue;
+                String shortName = file.getName();
+                if (!shortName.endsWith(".xml") || // skip non-XML
+                    shortName.startsWith("#") || // skip other junk files
+                    shortName.startsWith(".")) continue; // skip dot files (backups, etc)
                 xfr.read(name, -1, true);
                 myHandler.cleanup();
             }
@@ -1012,6 +1022,9 @@ public class SupplementalDataInfo {
         zone_aliases.freeze();
         languageToScriptVariants.freeze();
 
+        addDefaultScripts();
+        baseLanguageToDefaultScript = CldrUtility.protectCollection(baseLanguageToDefaultScript);
+
         numericTerritoryMapping.freeze();
         alpha3TerritoryMapping.freeze();
 
@@ -1063,6 +1076,33 @@ public class SupplementalDataInfo {
     // }
     // return Collections.unmodifiableMap(temp);
     // }
+
+    private void addDefaultScripts() {
+        // add scripts to mapping
+        for (Entry<String, Set<String>> entry : languageToScriptVariants.keyValuesSet()) {
+            String baseLanguage = entry.getKey();
+            Set<String> scriptVariants = entry.getValue();
+            String current = baseLanguageToDefaultScript.get(baseLanguage);
+            if (scriptVariants.size() == 1 && current == null) {
+                String scriptVariant = scriptVariants.iterator().next();
+                int pos = scriptVariant.indexOf('_');
+                if (!baseLanguage.equals(scriptVariant.substring(0, pos))) {
+                    throw new IllegalArgumentException("Bad script variant\t" + baseLanguage + "\t" + scriptVariant);
+                }
+                baseLanguageToDefaultScript.put(baseLanguage, scriptVariant.substring(pos + 1));
+            }
+        }
+        // HACK
+        String currentScript = null;
+        for (String s : "Latn aa af agq ak asa ast bas bem bez bm br ca cgg cs cy da dav de dje dua dyo ebu ee en eo es et eu ewo ff fi fil fo fr fur ga gd gl gsw guz gv haw hr hu ia id ig is it jgo jmc kab kam kde kea khq ki kkj kl kln ksb ksf ksh kw lag lg lkt ln lt lu luo luy lv mas mer mfe mg mgh mgo mt mua naq nb nd nl nmg nn nnh nr nso nus nyn om pl pt rm rn ro rof rw rwk saq sbp se seh ses sg sk sl sn so sq ss ssy st sv sw swc teo tn to tr ts twq ve vi vo vun wae xh xog yav yo zu Ethi am byn ti tig wal Arab ar fa ps ur Beng as bn Cyrl be bg ky mk os ru sah uk Tibt bo dz Deva brx hi kok mr ne Cher chr Grek el Gujr gu Hebr he Armn hy Yiii ii Jpan ja Geor ka Khmr km Knda kn Kore ko Laoo lo Mlym ml Mymr my Orya or Sinh si Taml ta Telu te Tfng zgh Thai th"
+            .split(" ")) {
+            if (s.length() == 4) {
+                currentScript = s;
+            } else {
+                baseLanguageToDefaultScript.put(s, currentScript);
+            }
+        }
+    }
 
     /**
      * Core function used to process each of the paths, and add the data to the appropriate data member.
@@ -1426,7 +1466,12 @@ public class SupplementalDataInfo {
                 String defContent = parts.getAttributeValue(-1, "locales").trim();
                 String[] defLocales = defContent.split("\\s+");
                 defaultContentLocales = Collections.unmodifiableSet(new TreeSet<String>(Arrays.asList(defLocales)));
-
+                for (String defaultContentLocale : defaultContentLocales) {
+                    int pos = LocaleIDParser.getScriptPosition(defaultContentLocale);
+                    if (pos >= 0) {
+                        baseLanguageToDefaultScript.put(defaultContentLocale.substring(0, pos), defaultContentLocale.substring(pos + 1));
+                    }
+                }
                 return true;
             }
             if (level2.equals("alias")) {
@@ -1771,6 +1816,7 @@ public class SupplementalDataInfo {
     public Map<CLDRLocale, CLDRLocale> defaultContentToBase; // wo_Arab_SN -> wo
     private Set<String> CLDRLanguageCodes;
     private Set<String> CLDRScriptCodes;
+    private Map<String, String> baseLanguageToDefaultScript = new HashMap<String, String>();
 
     /**
      * Get the population data for a language. Warning: if the language has script variants, cycle on those variants.
@@ -2018,7 +2064,7 @@ public class SupplementalDataInfo {
     }
 
     public Set<String> getNumericNumberingSystems() {
-        return numericSystems;
+        return Collections.unmodifiableSet(numericSystems);
     }
 
     public String getDigits(String numberingSystem) {
@@ -2034,6 +2080,30 @@ public class SupplementalDataInfo {
     }
 
     /**
+     * Used to get the coverage value for a path. This is generally the most
+     * efficient way for tools to get coverage.
+     * 
+     * @param xpath
+     * @param loc
+     * @return
+     */
+    public Level getCoverageLevel(String xpath, String loc) {
+        Level result = null;
+        result = coverageCache.get(loc + ":" + xpath);
+        if (result == null) {
+            CoverageLevel2 cov = localeToCoverageLevelInfo.get(loc);
+            if (cov == null) {
+                cov = CoverageLevel2.getInstance(this, loc);
+                localeToCoverageLevelInfo.put(loc, cov);
+            }
+
+            result = cov.getLevel(xpath);
+            coverageCache.put(loc + ":" + xpath, result);
+        }
+        return result;
+    }
+
+    /**
      * Used to get the coverage value for a path. Note, it is more efficient to create
      * a CoverageLevel2 for a language, and keep it around.
      * 
@@ -2041,14 +2111,8 @@ public class SupplementalDataInfo {
      * @param loc
      * @return
      */
-    public int getCoverageValue(String xpath, ULocale loc) {
-        CoverageLevel2 cov = localeToCoverageLevelInfo.get(loc);
-        if (cov == null) {
-            cov = CoverageLevel2.getInstance(this, loc.getBaseName());
-            localeToCoverageLevelInfo.put(loc, cov);
-        }
-
-        return cov.getIntLevel(xpath);
+    public int getCoverageValue(String xpath, String loc) {
+        return getCoverageLevel(xpath, loc).getLevel();
     }
 
     private RegexLookup<Level> coverageLookup = null;
@@ -2416,10 +2480,11 @@ public class SupplementalDataInfo {
     private Map<String, PluralInfo> localeToPluralInfo = new LinkedHashMap<String, PluralInfo>();
     private Map<String, PluralInfo> localeToOrdinalInfo = new LinkedHashMap<String, PluralInfo>();
     private Map<String, DayPeriodInfo> localeToDayPeriodInfo = new LinkedHashMap<String, DayPeriodInfo>();
-    private Map<ULocale, CoverageLevel2> localeToCoverageLevelInfo = new LinkedHashMap<ULocale, CoverageLevel2>();
+    private Map<String, CoverageLevel2> localeToCoverageLevelInfo = new ConcurrentHashMap<String, CoverageLevel2>();
+    private Map<String, Level> coverageCache = new ConcurrentHashMap<String, Level>();
     private transient String lastPluralLocales = "root";
     private transient boolean lastPluralWasOrdinal = false;
-    private transient Map<Count, String> lastPluralMap = new LinkedHashMap<Count, String>();
+    private transient Map<Count, String> lastPluralMap = new EnumMap<Count, String>(Count.class);
     private transient String lastDayPeriodLocales = null;
     private transient DayPeriodInfo.Builder dayPeriodBuilder = new DayPeriodInfo.Builder();
 
@@ -2427,8 +2492,8 @@ public class SupplementalDataInfo {
         // ldml/dates/calendars/calendar[@type="gregorian"]/dayPeriods/dayPeriodContext[@type="format"]/dayPeriodWidth[@type="wide"]/dayPeriod[@type="am"]
         /*
          * <supplementalData>
-         * <version number="$Revision: 8278 $"/>
-         * <generation date="$Date: 2013-03-06 17:19:38 -0600 (Wed, 06 Mar 2013) $"/>
+         * <version number="$Revision: 9342 $"/>
+         * <generation date="$Date: 2013-09-11 09:00:20 -0500 (Wed, 11 Sep 2013) $"/>
          * <dayPeriodRuleSet>
          * <dayPeriodRules locales = "en"> <!-- default for any locales not listed under other dayPeriods -->
          * <dayPeriodRule type = "am" from = "0:00" before="12:00"/>
@@ -2519,12 +2584,212 @@ public class SupplementalDataInfo {
         lastPluralMap.clear();
     }
 
+    public static class SampleList {
+        public static final SampleList EMPTY = new SampleList().freeze();
+
+        private UnicodeSet uset = new UnicodeSet();
+        private List<FixedDecimal> fractions = new ArrayList<FixedDecimal>(0);
+
+        public String toString() {
+            return toString(6, 3);
+        }
+
+        public String toString(int intLimit, int fractionLimit) {
+            StringBuilder b = new StringBuilder();
+            int intCount = 0;
+            int fractionCount = 0;
+            int limit = uset.getRangeCount();
+            for (int i = 0; i < limit; ++i) {
+                if (intCount >= intLimit) {
+                    b.append(", …");
+                    break;
+                }
+                if (b.length() != 0) {
+                    b.append(", ");
+                }
+                int start = uset.getRangeStart(i);
+                int end = uset.getRangeEnd(i);
+                if (start == end) {
+                    b.append(start);
+                    ++intCount;
+                } else if (start + 1 == end) {
+                    b.append(start).append(", ").append(end);
+                    intCount += 2;
+                } else {
+                    b.append(start).append('-').append(end);
+                    intCount += 2;
+                }
+            }
+            if (fractions.size() > 0) {
+                for (int i = 0; i < fractions.size(); ++i) {
+                    if (fractionCount >= fractionLimit) {
+                        break;
+                    }
+                    if (b.length() != 0) {
+                        b.append(", ");
+                    }
+                    b.append(fractions.get(i));
+                    ++fractionCount;
+                }
+                b.append(", …");
+            }
+            return b.toString();
+        }
+
+        public int getRangeCount() {
+            return uset.getRangeCount();
+        }
+
+        public int getRangeStart(int index) {
+            return uset.getRangeStart(index);
+        }
+
+        public int getRangeEnd(int index) {
+            return uset.getRangeEnd(index);
+        }
+
+        public List<FixedDecimal> getFractions() {
+            return fractions;
+        }
+
+        public int intSize() {
+            return uset.size();
+        }
+
+        public SampleList remove(int i) {
+            uset.remove(i);
+            return this;
+        }
+
+        public SampleList add(int i) {
+            uset.add(i);
+            return this;
+        }
+
+        public SampleList freeze() {
+            uset.freeze();
+            if (fractions instanceof ArrayList) {
+                fractions = Collections.unmodifiableList(fractions);
+            }
+            return this;
+        }
+
+        public void add(FixedDecimal i) {
+            fractions.add(i);
+        }
+
+        public int fractionSize() {
+            return fractions.size();
+        }
+    }
+
+    public static class CountSampleList {
+        private final Map<Count, SampleList> countToIntegerSamples9999;
+        private final Map<Count, SampleList[]> countToDigitToIntegerSamples9999;
+
+        CountSampleList(PluralRules pluralRules, Set<Count> keywords) {
+            // Create the integer counts
+            countToIntegerSamples9999 = new EnumMap<Count, SampleList>(Count.class);
+            countToDigitToIntegerSamples9999 = new EnumMap<Count, SampleList[]>(Count.class);
+            for (Count c : keywords) {
+                countToIntegerSamples9999.put(c, new SampleList());
+                SampleList[] row = new SampleList[5];
+                countToDigitToIntegerSamples9999.put(c, row);
+                for (int i = 1; i < 5; ++i) {
+                    row[i] = new SampleList();
+                }
+            }
+            for (int ii = 0; ii < 10000; ++ii) {
+                int i = ii;
+                int digit;
+                if (i > 999) {
+                    digit = 4;
+                } else if (i > 99) {
+                    digit = 3;
+                } else if (i > 9) {
+                    digit = 2;
+                } else {
+                    digit = 1;
+                }
+                Count count = Count.valueOf(pluralRules.select(i));
+                addSimple(countToIntegerSamples9999, i, count);
+                addDigit(countToDigitToIntegerSamples9999, i, count, digit);
+                if (haveFractions(keywords, digit)) {
+                    continue;
+                }
+                for (int f = 0; f < 30; ++f) {
+                    FixedDecimal ni = new FixedDecimal(i + f / 10.0d, f < 10 ? 1 : 2, f);
+                    count = Count.valueOf(pluralRules.select(ni));
+                    addSimple(countToIntegerSamples9999, ni, count);
+                    addDigit(countToDigitToIntegerSamples9999, ni, count, digit);
+                }
+            }
+            // HACK for Breton
+            addSimple(countToIntegerSamples9999, 1000000, Count.valueOf(pluralRules.select(1000000)));
+
+            for (Count count : keywords) {
+                SampleList uset = countToIntegerSamples9999.get(count);
+                uset.freeze();
+                SampleList[] map = countToDigitToIntegerSamples9999.get(count);
+                for (int i = 1; i < map.length; ++i) {
+                    map[i].freeze();
+                }
+            }
+        }
+
+        private boolean haveFractions(Set<Count> keywords, int digit) {
+            for (Count c : keywords) {
+                int size = countToDigitToIntegerSamples9999.get(c)[digit].fractionSize();
+                if (size < MAX_COLLECTED_FRACTION) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        static final int MAX_COLLECTED_FRACTION = 5;
+
+        private boolean addDigit(Map<Count, SampleList[]> countToDigitToIntegerSamples9999, FixedDecimal i, Count count, int digit) {
+            return addFraction(i, countToDigitToIntegerSamples9999.get(count)[digit]);
+        }
+
+        private boolean addFraction(FixedDecimal i, SampleList sampleList) {
+            if (sampleList.fractionSize() < MAX_COLLECTED_FRACTION) {
+                sampleList.add(i);
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        private boolean addSimple(Map<Count, SampleList> countToIntegerSamples9999, FixedDecimal i, Count count) {
+            return addFraction(i, countToIntegerSamples9999.get(count));
+        }
+
+        private void addDigit(Map<Count, SampleList[]> countToDigitToIntegerSamples9999, int i, Count count, int digit) {
+            countToDigitToIntegerSamples9999.get(count)[digit].add(i);
+        }
+
+        private void addSimple(Map<Count, SampleList> countToIntegerSamples9999, int i, Count count) {
+            countToIntegerSamples9999.get(count).add(i);
+        }
+
+        public SampleList get(Count type) {
+            return countToIntegerSamples9999.get(type);
+        }
+
+        public SampleList get(Count c, int digit) {
+            SampleList[] sampleLists = countToDigitToIntegerSamples9999.get(c);
+            return sampleLists == null ? null : sampleLists[digit];
+        }
+    }
+
     /**
      * Immutable class with plural info for different locales
      * 
      * @author markdavis
      */
-    public static class PluralInfo {
+    public static class PluralInfo implements Comparable<PluralInfo> {
         static final Set<Double> explicits = new HashSet<Double>();
         static {
             explicits.add(0.0d);
@@ -2545,8 +2810,15 @@ public class SupplementalDataInfo {
         private final PluralRules pluralRules;
         private final String pluralRulesString;
         private final Set<String> canonicalKeywords;
+        private final Set<Count> keywords;
+        private final CountSampleList countSampleList;
+        private final Map<Count, String> countToRule;
 
         private PluralInfo(Map<Count, String> countToRule) {
+            EnumMap<Count, String> tempCountToRule = new EnumMap<Count, String>(Count.class);
+            tempCountToRule.putAll(countToRule);
+            this.countToRule = Collections.unmodifiableMap(tempCountToRule);
+
             // now build rules
             NumberFormat nf = NumberFormat.getNumberInstance(ULocale.ENGLISH);
             nf.setMaximumFractionDigits(2);
@@ -2559,17 +2831,21 @@ public class SupplementalDataInfo {
             }
             pluralRulesString = pluralRuleBuilder.toString();
             pluralRules = PluralRules.createRules(pluralRulesString);
+            if (pluralRules == null) {
+                throw new IllegalArgumentException("Can't create plurals from <" + pluralRulesString + ">");
+            }
+            EnumSet<Count> _keywords = EnumSet.noneOf(Count.class);
+            for (String s : pluralRules.getKeywords()) {
+                _keywords.add(Count.valueOf(s));
+            }
+            keywords = Collections.unmodifiableSet(_keywords);
+            countSampleList = new CountSampleList(pluralRules, keywords);
 
             Map<Count, List<Double>> countToExampleListRaw = new TreeMap<Count, List<Double>>();
             Map<Integer, Count> exampleToCountRaw = new TreeMap<Integer, Count>();
-            Map<Count, UnicodeSet> typeToExamples2 = new TreeMap<Count, UnicodeSet>();
 
-            for (int i = 0; i < 1000; ++i) {
-                Count type = Count.valueOf(pluralRules.select(i));
-                UnicodeSet uset = typeToExamples2.get(type);
-                if (uset == null) typeToExamples2.put(type, uset = new UnicodeSet());
-                uset.add(i);
-            }
+            Output<Map<Count, SampleList[]>> output = new Output();
+
             // double check
             // if (!targetKeywords.equals(typeToExamples2.keySet())) {
             // throw new IllegalArgumentException ("Problem in plurals " + targetKeywords + ", " + this);
@@ -2581,76 +2857,11 @@ public class SupplementalDataInfo {
             // add fractional samples
             Map<Count, String> countToStringExampleRaw = new TreeMap<Count, String>();
             int fractionValue = fractStart + fractDecrement;
-            for (Count type : typeToExamples2.keySet()) {
-                UnicodeSet uset = typeToExamples2.get(type);
-                int sample = uset.getRangeStart(0);
-                if (sample == 0 && uset.size() > 1) { // pick non-zero if possible
-                    UnicodeSet temp = new UnicodeSet(uset);
-                    temp.remove(0);
-                    sample = temp.getRangeStart(0);
-                }
-                Integer sampleInteger = sample;
-                exampleToCountRaw.put(sampleInteger, type);
-
-                final ArrayList<Double> arrayList = new ArrayList<Double>();
-                arrayList.add((double) sample);
-
-                // add fractional examples
-                fractionValue -= fractDecrement;
-                if (fractionValue < 0) {
-                    fractionValue += 100;
-                }
-                final double fraction = (sample + (fractionValue / 100.0d));
-                Count fracType = Count.valueOf(pluralRules.select(fraction));
-                boolean addCurrentFractionalExample = false;
-
-                if (fracType == Count.other) {
-                    otherFractions.add(fraction);
-                    if (otherFractionalExamples.length() != 0) {
-                        otherFractionalExamples += ", ";
-                    }
-                    otherFractionalExamples += nf.format(fraction);
-                } else if (fracType == type) {
-                    arrayList.add(fraction);
-                    addCurrentFractionalExample = true;
-                } // else we ignore it
-
+            for (Count type : keywords) {
                 StringBuilder b = new StringBuilder();
-                int limit = uset.getRangeCount();
-                int count = 0;
-                boolean addEllipsis = false;
-                for (int i = 0; i < limit; ++i) {
-                    if (count > 5) {
-                        addEllipsis = true;
-                        break;
-                    }
-                    int start = uset.getRangeStart(i);
-                    int end = uset.getRangeEnd(i);
-                    if (b.length() != 0) {
-                        b.append(", ");
-                    }
-                    if (start == end) {
-                        b.append(start);
-                        ++count;
-                    } else if (start + 1 == end) {
-                        b.append(start).append(", ").append(end);
-                        count += 2;
-                    } else {
-                        b.append(start).append('-').append(end);
-                        count += 2;
-                    }
-                }
-                if (addCurrentFractionalExample) {
-                    if (b.length() != 0) {
-                        b.append(", ");
-                    }
-                    b.append(nf.format(fraction)).append("...");
-                } else if (addEllipsis) {
-                    b.append("...");
-                }
-
-                countToExampleListRaw.put(type, arrayList);
-                countToStringExampleRaw.put(type, b.toString());
+                final ArrayList<Double> arrayList = new ArrayList<Double>();
+                SampleList uset = countSampleList.get(type);
+                countToStringExampleRaw.put(type, uset.toString(5, 5));
             }
             final String baseOtherExamples = countToStringExampleRaw.get(Count.other);
             String otherExamples = (baseOtherExamples == null ? "" : baseOtherExamples + "; ")
@@ -2724,6 +2935,10 @@ public class SupplementalDataInfo {
             return Count.valueOf(pluralRules.select(exampleCount));
         }
 
+        public Count getCount(PluralRules.FixedDecimal exampleCount) {
+            return Count.valueOf(pluralRules.select(exampleCount));
+        }
+
         public PluralRules getPluralRules() {
             return pluralRules;
         }
@@ -2738,6 +2953,60 @@ public class SupplementalDataInfo {
 
         public Set<String> getCanonicalKeywords() {
             return canonicalKeywords;
+        }
+
+        public Set<Count> getCounts() {
+            return keywords;
+        }
+
+        /**
+         * Return the integer samples from 0 to 9999. For simplicity and compactness, this is a UnicodeSet, but
+         * the interpretation is simply as a list of integers. UnicodeSet.EMPTY is returned if there are none.
+         * @param c
+         * @return
+         */
+        public SampleList getSamples9999(Count c) {
+            return countSampleList.get(c);
+        }
+
+        /**
+         * Return the integer samples for the specified digit, eg 1 => 0..9. For simplicity and compactness, this is a UnicodeSet, but
+         * the interpretation is simply as a list of integers.
+         * @param c
+         * @return
+         */
+        public SampleList getSamples9999(Count c, int digit) {
+            return countSampleList.get(c, digit);
+        }
+
+        public boolean hasSamples(Count c, int digits) {
+            SampleList samples = countSampleList.get(c, digits);
+            return samples != null && (samples.fractionSize() > 0 || samples.intSize() > 0);
+        }
+
+        public String getRule(Count keyword) {
+            return countToRule.get(keyword);
+        }
+
+        @Override
+        public int compareTo(PluralInfo other) {
+            int size1 = this.countToRule.size();
+            int size2 = other.countToRule.size();
+            int diff = size1 - size2;
+            if (diff != 0) {
+                return diff;
+            }
+            Iterator<Count> it1 = countToRule.keySet().iterator();
+            Iterator<Count> it2 = other.countToRule.keySet().iterator();
+            while (it1.hasNext()) {
+                Count a1 = it1.next();
+                Count a2 = it2.next();
+                diff = a1.ordinal() - a2.ordinal();
+                if (diff != 0) {
+                    return diff;
+                }
+            }
+            return pluralRules.compareTo(other.pluralRules);
         }
     }
 
@@ -2832,6 +3101,40 @@ public class SupplementalDataInfo {
      */
     public Set<CurrencyDateInfo> getCurrencyDateInfo(String territory) {
         return territoryToCurrencyDateInfo.getAll(territory);
+    }
+
+    /**
+     * Returns the ISO4217 currency code of the default currency for a given
+     * territory. The default currency is the first one listed which is legal
+     * tender at the present moment. 
+     * 
+     * @param territory
+     * @return
+     */
+    public String getDefaultCurrency(String territory) {
+
+        Set<CurrencyDateInfo> targetCurrencyInfo = getCurrencyDateInfo(territory);
+        String result = "XXX";
+        Date now = new Date();
+        for (CurrencyDateInfo cdi : targetCurrencyInfo) {
+            if (cdi.getStart().before(now) && cdi.getEnd().after(now) && cdi.isLegalTender()) {
+                result = cdi.getCurrency();
+                break;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Returns the ISO4217 currency code of the default currency for a given
+     * CLDRLocale. The default currency is the first one listed which is legal
+     * tender at the present moment. 
+     * 
+     * @param territory
+     * @return
+     */
+    public String getDefaultCurrency(CLDRLocale loc) {
+        return getDefaultCurrency(loc.getCountry());
     }
 
     public Map<String, Set<TelephoneCodeInfo>> getTerritoryToTelephoneCodeInfo() {
@@ -3107,5 +3410,147 @@ public class SupplementalDataInfo {
 
     public Map<String, PreferredAndAllowedHour> getTimeData() {
         return timeData;
+    }
+
+    public String getDefaultScript(String baseLanguage) {
+        return baseLanguageToDefaultScript.get(baseLanguage);
+    }
+
+    private XEquivalenceClass<String, String> equivalentLocales = null;
+
+    public Set<String> getEquivalentsForLocale(String localeId) {
+        if (equivalentLocales == null) {
+            equivalentLocales = getEquivalentsForLocale();
+        }
+        Set<String> result = new TreeSet(LENGTH_FIRST);
+        result.add(localeId);
+        Set<String> equiv = equivalentLocales.getEquivalences(localeId);
+        //        if (equiv == null) {
+        //            result.add(localeId);
+        //            return result;
+        //        }
+        if (equiv != null) {
+            result.addAll(equivalentLocales.getEquivalences(localeId));
+        }
+        Map<String, String> likely = getLikelySubtags();
+        String newMax = LikelySubtags.maximize(localeId, likely);
+        if (newMax != null) {
+            result.add(newMax);
+            newMax = LikelySubtags.minimize(localeId, likely, true);
+            if (newMax != null) {
+                result.add(newMax);
+            }
+            newMax = LikelySubtags.minimize(localeId, likely, false);
+            if (newMax != null) {
+                result.add(newMax);
+            }
+        }
+
+        //        if (result.size() == 1) {
+        //            LanguageTagParser ltp = new LanguageTagParser().set(localeId);
+        //            if (ltp.getScript().isEmpty()) {
+        //                String ds = getDefaultScript(ltp.getLanguage());
+        //                if (ds != null) {
+        //                    ltp.setScript(ds);
+        //                    result.add(ltp.toString());
+        //                }
+        //            }
+        //        }
+        return result;
+    }
+
+    public final static class LengthFirstComparator<T> implements Comparator<T> {
+        public int compare(T a, T b) {
+            String as = a.toString();
+            String bs = b.toString();
+            if (as.length() < bs.length())
+                return -1;
+            if (as.length() > bs.length())
+                return 1;
+            return as.compareTo(bs);
+        }
+    }
+
+    public static final LengthFirstComparator LENGTH_FIRST = new LengthFirstComparator();
+
+    private synchronized XEquivalenceClass<String, String> getEquivalentsForLocale() {
+        SupplementalDataInfo sdi = this;
+        Relation<String, String> localeToDefaultContents = Relation.of(new HashMap<String, Set<String>>(),
+            LinkedHashSet.class);
+
+        Set<String> dcl = sdi.getDefaultContentLocales();
+        Map<String, String> likely = sdi.getLikelySubtags();
+        XEquivalenceClass<String, String> locales = new XEquivalenceClass<String, String>();
+        LanguageTagParser ltp = new LanguageTagParser();
+        Set<String> temp = new HashSet<String>();
+        for (Entry<String, String> entry : likely.entrySet()) {
+            String source = entry.getKey();
+            if (source.startsWith("und")) {
+                continue;
+            }
+            for (String s : getCombinations(source, ltp, likely, temp)) {
+                locales.add(source, s);
+            }
+            for (String s : getCombinations(entry.getValue(), ltp, likely, temp)) {
+                locales.add(source, s);
+            }
+        }
+        //        Set<String> sorted = new TreeSet(locales.getExplicitItems());
+        //        for (String s : sorted) {
+        //            System.out.println(locales.getEquivalences(s));
+        //        }
+        for (String defaultContentLocale : dcl) {
+            if (defaultContentLocale.startsWith("zh")) {
+                int x = 0;
+            }
+            Set<String> set = locales.getEquivalences(defaultContentLocale);
+
+            String parent = LocaleIDParser.getSimpleParent(defaultContentLocale);
+            if (!set.contains(parent)) {
+                localeToDefaultContents.put(parent, defaultContentLocale);
+                //System.out.println("Mismatch " + parent + ", " + set);
+            }
+            if (parent.contains("_")) {
+                continue;
+            }
+            // only base locales after this point
+            String ds = sdi.getDefaultScript(parent);
+            if (ds != null) {
+                ltp.set(parent);
+                ltp.setScript(ds);
+                String trial = ltp.toString();
+                if (!set.contains(trial)) {
+                    //System.out.println("Mismatch " + trial + ", " + set);
+                    localeToDefaultContents.put(parent, trial);
+                }
+            }
+        }
+        return locales;
+    }
+
+    private Set<String> getCombinations(String source, LanguageTagParser ltp, Map<String, String> likely,
+        Set<String> locales) {
+        locales.clear();
+
+        String max = LikelySubtags.maximize(source, likely);
+        locales.add(max);
+
+        ltp.set(source);
+        ltp.setScript("");
+        String trial = ltp.toString();
+        String newMax = LikelySubtags.maximize(trial, likely);
+        if (newMax.equals(max)) {
+            locales.add(trial);
+        }
+
+        ltp.set(source);
+        ltp.setRegion("");
+        trial = ltp.toString();
+        newMax = LikelySubtags.maximize(trial, likely);
+        if (newMax.equals(max)) {
+            locales.add(trial);
+        }
+
+        return locales;
     }
 }

@@ -17,14 +17,17 @@ import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -41,6 +44,7 @@ import com.ibm.icu.dev.util.TransliteratorUtilities;
 import com.ibm.icu.impl.Utility;
 import com.ibm.icu.text.DateFormat;
 import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.text.Transform;
 import com.ibm.icu.text.Transliterator;
 import com.ibm.icu.text.UTF16;
 import com.ibm.icu.text.UnicodeSet;
@@ -51,7 +55,9 @@ import com.ibm.icu.util.TimeZone;
 public class CldrUtility {
 
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
-    public static final String NO_INHERITANCE_MARKER = new String(new char [] {0x2205, 0x2205, 0x2205});
+    // Constant for "∅∅∅". Indicates that a child locale has no value for a
+    // path even though a parent does.
+    public static final String NO_INHERITANCE_MARKER = new String(new char[] { 0x2205, 0x2205, 0x2205 });
 
     /**
      * Very simple class, used to replace variables in a string. For example
@@ -147,12 +153,22 @@ public class CldrUtility {
     // external data
     public static final String EXTERNAL_DIRECTORY = getPath(CldrUtility.getProperty("UCD_DIR", BASE_DIRECTORY) + "/../");
     public static final String ARCHIVE_DIRECTORY = getPath(CldrUtility.getProperty("ARCHIVE", BASE_DIRECTORY));
+    public static final String LAST_DIRECTORY = ARCHIVE_DIRECTORY + "cldr-23.1/";
     public static final String UCD_DIRECTORY = getPath(EXTERNAL_DIRECTORY, "data/UCD/6.2.0-Update");
     public static final String GEN_DIRECTORY = getPath(CldrUtility.getProperty("CLDR_GEN_DIR",
         getPath(EXTERNAL_DIRECTORY, "Generated/cldr/")));
 
     public static final String ICU_DATA_DIR = CldrUtility.getPath(CldrUtility.getProperty("ICU_DATA_DIR", null)); // eg
                                                                                                                   // "/Users/markdavis/workspace/icu4c/source/data/";
+    public static final String ANALYTICS = "<script type=\"text/javascript\">\n"
+        + "var gaJsHost = ((\"https:\" == document.location.protocol) ? \"https://ssl.\" : \"http://www.\");\n"
+        + "document.write(unescape(\"%3Cscript src='\" + gaJsHost + \"google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E\"));\n"
+        + "</script>\n"
+        + "<script type=\"text/javascript\">\n"
+        + "try {\n"
+        + "var pageTracker = _gat._getTracker(\"UA-7672775-1\");\n"
+        + "pageTracker._trackPageview();\n"
+        + "} catch(err) {}</script>";
 
     /**
      * @deprecated please use XMLFile and CLDRFILE getSupplementalDirectory()
@@ -165,7 +181,7 @@ public class CldrUtility {
     public static final String DEFAULT_SUPPLEMENTAL_DIRECTORY = getPath(COMMON_DIRECTORY, "supplemental/");
 
     public static final boolean BETA = false;
-    public static final String CHART_DISPLAY_VERSION = "23.1";
+    public static final String CHART_DISPLAY_VERSION = "24";
     public static final String CHART_DIRECTORY = getPath(AUX_DIRECTORY + "charts/", CHART_DISPLAY_VERSION);
     public static final String LOG_DIRECTORY = getPath(TMP_DIRECTORY, "logs/");
 
@@ -255,8 +271,10 @@ public class CldrUtility {
         private String[] CVS_TAGS = { "Revision", "Date" };
 
         private String stripTags(String line) {
-            // $Revision: 8670 $
-            // $Date: 2013-05-03 13:46:21 -0500 (Fri, 03 May 2013) $
+            // $
+            // Revision: 8994 $
+            // $
+            // Date: 2013-07-03 21:31:17 +0200 (Wed, 03 Jul 2013) $
             int pos = line.indexOf('$');
             if (pos < 0) return line;
             pos++;
@@ -549,32 +567,30 @@ public class CldrUtility {
         return a;
     }
 
-    public static String join(Collection c, String separator) {
+    public static <T> String join(Collection<T> c, String separator) {
+        return join(c, separator, null);
+    }
+
+    public static String join(Object[] c, String separator) {
+        return join(c, separator, null);
+    }
+
+    public static <T> String join(Collection<T> c, String separator, Transform<T, String> transform) {
         StringBuffer output = new StringBuffer();
         boolean isFirst = true;
-        for (Object item : c) {
+        for (T item : c) {
             if (isFirst) {
                 isFirst = false;
             } else {
                 output.append(separator);
             }
-            output.append(item == null ? item : item.toString());
+            output.append(transform != null ? transform.transform(item) : item == null ? item : item.toString());
         }
         return output.toString();
     }
 
-    public static String join(Object[] c, String separator) {
-        StringBuffer output = new StringBuffer();
-        boolean isFirst = true;
-        for (Object item : c) {
-            if (isFirst) {
-                isFirst = false;
-            } else {
-                output.append(separator);
-            }
-            output.append(item == null ? item : item.toString());
-        }
-        return output.toString();
+    public static <T> String join(T[] c, String separator, Transform<T, String> transform) {
+        return join(Arrays.asList(c), separator, transform);
     }
 
     /**
@@ -796,20 +812,38 @@ public class CldrUtility {
         base.put(objects[objects.length - 2], objects[objects.length - 1]);
     }
 
-    public static abstract class Transform {
-        public abstract Object transform(Object source);
+    public static abstract class CollectionTransform<S, T> implements Transform<S, T> {
+        public abstract T transform(S source);
 
-        public Collection<Object> transform(Collection input, Collection<Object> output) {
-            for (Iterator it = input.iterator(); it.hasNext();) {
-                Object result = transform(it.next());
-                if (result != null) output.add(result);
+        public Collection<T> transform(Collection<S> input, Collection<T> output) {
+            return CldrUtility.transform(input, this, output);
+        }
+
+        public Collection<T> transform(Collection<S> input) {
+            return transform(input, new ArrayList<T>());
+        }
+    }
+
+    public static <S, T, SC extends Collection<S>, TC extends Collection<T>> TC transform(SC source, Transform<S, T> transform, TC target) {
+        for (S sourceItem : source) {
+            T targetItem = transform.transform(sourceItem);
+            if (targetItem != null) {
+                target.add(targetItem);
             }
-            return output;
         }
+        return target;
+    }
 
-        public Collection<Object> transform(Collection input) {
-            return transform(input, new ArrayList<Object>());
+    public static <SK, SV, TK, TV, SM extends Map<SK, SV>, TM extends Map<TK, TV>> TM transform(
+        SM source, Transform<SK, TK> transformKey, Transform<SV, TV> transformValue, TM target) {
+        for (Entry<SK, SV> sourceEntry : source.entrySet()) {
+            TK targetKey = transformKey.transform(sourceEntry.getKey());
+            TV targetValue = transformValue.transform(sourceEntry.getValue());
+            if (targetKey != null && targetValue != null) {
+                target.put(targetKey, targetValue);
+            }
         }
+        return target;
     }
 
     public static abstract class Apply<T> {
@@ -884,20 +918,6 @@ public class CldrUtility {
 
         public boolean contains(T o) {
             return matcher.reset(o.toString()).matches();
-        }
-    }
-
-    /**
-     * Simple struct-like class for output parameters.
-     * 
-     * @param <T>
-     *            The type of the parameter.
-     */
-    public static final class Output<T> {
-        public T value;
-
-        public String toString() {
-            return value == null ? "null" : value.toString();
         }
     }
 
@@ -1282,5 +1302,51 @@ public class CldrUtility {
 
     public static String getDoubleLinkMsg() {
         return "<a name=''{0}'' href=''#{0}''>{0}</a>";
+    }
+
+    public static String getCopyrightString() {
+        // now do the rest
+        return "Copyright \u00A9 1991-"
+            + Calendar.getInstance().get(Calendar.YEAR)
+            + " Unicode, Inc." + CldrUtility.LINE_SEPARATOR
+            + "CLDR data files are interpreted according to the LDML specification "
+            + "(http://unicode.org/reports/tr35/)" + CldrUtility.LINE_SEPARATOR
+            + "For terms of use, see http://www.unicode.org/copyright.html";
+    }
+
+    // TODO Move to collection utilities
+    /**
+     * Type-safe get
+     * @param map
+     * @param key
+     * @return value
+     */
+    public static <K, V, M extends Map<K, V>> V get(M map, K key) {
+        return map.get(key);
+    }
+
+    /**
+     * Type-safe contains
+     * @param map
+     * @param key
+     * @return value
+     */
+    public static <K, C extends Collection<K>> boolean contains(C collection, K key) {
+        return collection.contains(key);
+    }
+
+    public static <E extends Enum<E>> EnumSet<E> toEnumSet(Class classValue, Collection<String> stringValues) {
+        EnumSet result = EnumSet.noneOf(classValue);
+        for (String s : stringValues) {
+            result.add(Enum.valueOf(classValue, s));
+        }
+        return result;
+    }
+
+    public static <K, V, M extends Map<K, V>> M putNew(M map, K key, V value) {
+        if (!map.containsKey(key)) {
+            map.put(key, value);
+        }
+        return map;
     }
 }

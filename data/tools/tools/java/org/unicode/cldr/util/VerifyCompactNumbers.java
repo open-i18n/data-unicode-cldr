@@ -13,21 +13,21 @@ import java.util.regex.Pattern;
 
 import org.unicode.cldr.test.BuildIcuCompactDecimalFormat;
 import org.unicode.cldr.test.BuildIcuCompactDecimalFormat.CurrencyStyle;
-import org.unicode.cldr.test.CompactDecimalFormat;
-import org.unicode.cldr.test.CompactDecimalFormat.Style;
 import org.unicode.cldr.tool.Option;
 import org.unicode.cldr.tool.Option.Options;
+import org.unicode.cldr.tool.ShowPlurals;
 import org.unicode.cldr.tool.TablePrinter;
 import org.unicode.cldr.util.CLDRFile.DraftStatus;
+import org.unicode.cldr.util.PathHeader.PageId;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo;
 
 import com.ibm.icu.dev.util.BagFormatter;
+import com.ibm.icu.text.CompactDecimalFormat;
+import com.ibm.icu.text.CompactDecimalFormat.CompactStyle;
 import com.ibm.icu.text.NumberFormat;
 import com.ibm.icu.util.ULocale;
 
 public class VerifyCompactNumbers {
-
-    static final SupplementalDataInfo sdi = SupplementalDataInfo.getInstance();
 
     final static Options myOptions = new Options();
 
@@ -64,6 +64,7 @@ public class VerifyCompactNumbers {
         Factory factory2 = Factory.make(CldrUtility.MAIN_DIRECTORY, filter);
         CLDRFile englishCldrFile = factory2.make("en", true);
 
+        SupplementalDataInfo sdi = CLDRConfig.getInstance().getSupplementalDataInfo();
         Set<String> defaultContentLocales = sdi.getDefaultContentLocales();
         NumberFormat enf = NumberFormat.getIntegerInstance(ULocale.ENGLISH);
         enf.setGroupingUsed(false);
@@ -129,35 +130,41 @@ public class VerifyCompactNumbers {
                     .addColumn("Compact-Short<br>+Currency")
                     .setHeaderAttributes("class='dtf-th'")
                     .setCellAttributes("class='dtf-s'")
+                    .addColumn("Compact-Short<br>+Unit")
+                    .setHeaderAttributes("class='dtf-th'")
+                    .setCellAttributes("class='dtf-s'")
                     // .addColumn("Compact-Long<br>+Currency")
                     // .addColumn("Compact-Long<br>+Currency-Long")
                     .addColumn("Numeric Format").setHeaderCell(true).setHeaderAttributes("class='dtf-th'")
                     .setCellAttributes("class='dtf-s'");
             }
+            //            tablePrinter1.addColumn("View").setHeaderCell(true).setHeaderAttributes("class='dtf-th'").setCellAttributes("class='dtf-s'");
+
             ;
 
             ULocale locale2 = new ULocale(locale);
             NumberFormat nf = NumberFormat.getInstance(locale2);
             // nf.setMaximumFractionDigits(0);
+            SupplementalDataInfo sdi = CLDRConfig.getInstance().getSupplementalDataInfo();
             PluralInfo pluralInfo = sdi.getPlurals(locale);
             String[] debugOriginals = null;
             CompactDecimalFormat cdf = BuildIcuCompactDecimalFormat.build(cldrFile, debugCreationErrors,
-                debugOriginals, Style.SHORT, locale2, CurrencyStyle.PLAIN, currencyCode);
+                debugOriginals, CompactStyle.SHORT, locale2, CurrencyStyle.PLAIN, currencyCode);
             captureErrors(debugCreationErrors, errors, locale, "short");
             CompactDecimalFormat cdfs = BuildIcuCompactDecimalFormat.build(cldrFile, debugCreationErrors,
-                debugOriginals, Style.LONG, locale2, CurrencyStyle.PLAIN, currencyCode);
+                debugOriginals, CompactStyle.LONG, locale2, CurrencyStyle.PLAIN, currencyCode);
             captureErrors(debugCreationErrors, errors, locale, "long");
 
             CompactDecimalFormat cdfCurr = BuildIcuCompactDecimalFormat.build(cldrFile, debugCreationErrors,
-                debugOriginals, Style.SHORT, locale2, CurrencyStyle.CURRENCY, currencyCode);
+                debugOriginals, CompactStyle.SHORT, locale2, CurrencyStyle.CURRENCY, currencyCode);
             captureErrors(debugCreationErrors, errors, locale, "short-curr");
-            CompactDecimalFormat cdfsCurr = BuildIcuCompactDecimalFormat.build(cldrFile, debugCreationErrors,
-                debugOriginals, Style.LONG, locale2, CurrencyStyle.CURRENCY, currencyCode);
+            CompactDecimalFormat cdfU = BuildIcuCompactDecimalFormat.build(cldrFile, debugCreationErrors,
+                debugOriginals, CompactStyle.SHORT, locale2, CurrencyStyle.UNIT, null);
+            captureErrors(debugCreationErrors, errors, locale, "short-kg");
             // CompactDecimalFormat cdfsCurrLong = BuildIcuCompactDecimalFormat.build(cldrFile, debugCreationErrors,
             // debugOriginals, Style.LONG, locale2, CurrencyStyle.LONG_CURRENCY, currencyCode);
             // CompactDecimalFormat cdfsCurrISO = BuildIcuCompactDecimalFormat.build(cldrFile, debugCreationErrors,
             // debugOriginals, Style.LONG, locale2, CurrencyStyle.ISO_CURRENCY, "EUR");
-            captureErrors(debugCreationErrors, errors, locale, "long-curr");
 
             // Collect samples for display
             // one path for group-3, one for group-4
@@ -167,6 +174,7 @@ public class VerifyCompactNumbers {
             // we want to collect a sample of at least one sample for each plural category for each
             // power of ten
             Set<Double> samples = new TreeSet<Double>();
+            samples.add(1.1d);
             samples.add(1.5d);
             collectItems(pluralInfo, 1, 10, samples);
             collectItems(pluralInfo, 10, 100, samples);
@@ -179,7 +187,7 @@ public class VerifyCompactNumbers {
             cdf.setMaximumSignificantDigits(sigDigits);
             cdfs.setMaximumSignificantDigits(sigDigits);
             cdfCurr.setMaximumSignificantDigits(sigDigits);
-            cdfsCurr.setMaximumSignificantDigits(sigDigits);
+            cdfU.setMaximumSignificantDigits(sigDigits);
 
             // for (Entry<Count, List<Double>> entry : pluralInfo.getCountToExamplesMap().entrySet()) {
             // samples.add(entry.getValue().get(0));
@@ -222,24 +230,42 @@ public class VerifyCompactNumbers {
                     if (showCurrency) {
                         tablePrinter1
                             .addCell(cdfCurr.format(source))
+                            .addCell(cdfU.format(source))
                             // .addCell(cdfsCurr.format(source))
                             // .addCell(cdfsCurrLong.format(source))
                             // .addCell(cdfsCurrLong.format(source))
                             .addCell(formattedNumber);
                     }
+                    //                    String view = PathHeader.getLinkedView(surveyUrl, cldrFile, METAZONE_PREFIX + metazone + METAZONE_SUFFIX);
+                    //                    tablePrinter1.addCell(view == null 
+                    //                            ? "" 
+                    //                                    : view);
                     tablePrinter1
                         .finishRow();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            out.append("<p>To correct problems in compact numbers below, please go to "
+                + PathHeader.SECTION_LINK
+                + PathHeader.getPageUrl(surveyUrl, cldrFile.getLocaleID(), PageId.Compact_Decimal_Formatting)
+                + "'><em>" + PageId.Compact_Decimal_Formatting
+                + "</em></a>.</p>");
             out.append(tablePrinter1.toString() + "\n");
+            out.append("<h3>Plural Rules</h3>");
+            out.append("<p>To correct problems in plural rules below, please go to " +
+                "<a target='CLDR-ST-DOCS' href='http://cldr.unicode.org/index/cldr-spec/plural-rules'>Plural Rules</a>.</p>");
+            ShowPlurals.printPluralTable(cldrFile, locale, out);
+            ShowPlurals.appendBlanksForScrolling(out);
             showErrors(errors, out);
             showErrors(debugCreationErrors, out);
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }
     }
+
+    private static String surveyUrl = CLDRConfig.getInstance().getProperty("CLDR_SURVEY_URL",
+        "http://st.unicode.org/cldr-apps/survey");
 
     private static void showErrors(Set<String> errors, Appendable out) throws IOException {
         if (errors.size() != 0) {

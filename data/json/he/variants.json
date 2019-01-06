@@ -1,0 +1,83 @@
+{
+  "main": {
+    "he": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "24",
+          "_number": "$Revision: 9287 $"
+        },
+        "generation": {
+          "_date": "$Date: 2013-08-28 21:32:04 -0500 (Wed, 28 Aug 2013) $"
+        },
+        "language": "he"
+      },
+      "localeDisplayNames": {
+        "variants": {
+          "1901": "כתיב גרמני מסורתי",
+          "1994": "1994",
+          "1996": "1996",
+          "1606NICT": "1606NICT",
+          "1694ACAD": "1694ACAD",
+          "1959ACAD": "1959ACAD",
+          "ALALC97": "ALALC97",
+          "ALUKU": "ALUKU",
+          "AREVELA": "מזרח ארמנית",
+          "AREVMDA": "מערב ארמנית",
+          "BAKU1926": "BAKU1926",
+          "BAUDDHA": "BAUDDHA",
+          "BISCAYAN": "BISCAYAN",
+          "BISKE": "BISKE",
+          "BOHORIC": "BOHORIC",
+          "BOONT": "BOONT",
+          "DAJNKO": "DAJNKO",
+          "EMODENG": "EMODENG",
+          "FONIPA": "FONIPA",
+          "FONUPA": "FONUPA",
+          "FONXSAMP": "FONXSAMP",
+          "HEPBURN": "HEPBURN",
+          "HOGNORSK": "HOGNORSK",
+          "ITIHASA": "ITIHASA",
+          "JAUER": "JAUER",
+          "JYUTPING": "JYUTPING",
+          "KKCOR": "KKCOR",
+          "KSCOR": "KSCOR",
+          "LAUKIKA": "LAUKIKA",
+          "LIPAW": "LIPAW",
+          "LUNA1918": "LUNA1918",
+          "METELKO": "METELKO",
+          "MONOTON": "מונוטונית",
+          "NDYUKA": "NDYUKA",
+          "NEDIS": "NEDIS",
+          "NJIVA": "NJIVA",
+          "NULIK": "NULIK",
+          "OSOJS": "OSOJS",
+          "PAMAKA": "PAMAKA",
+          "PETR1708": "PETR1708",
+          "PINYIN": "פיניין, שיטת כתב סיני בתעתיק לטיני",
+          "POLYTON": "POLYTON",
+          "POSIX": "מחשב",
+          "PUTER": "PUTER",
+          "REVISED": "REVISED",
+          "RIGIK": "RIGIK",
+          "ROZAJ": "ROZAJ",
+          "RUMGR": "RUMGR",
+          "SAAHO": "SAAHO",
+          "SCOTLAND": "אנגלית סקוטית סטנדרטית",
+          "SCOUSE": "SCOUSE",
+          "SOLBA": "SOLBA",
+          "SURMIRAN": "SURMIRAN",
+          "SURSILV": "SURSILV",
+          "SUTSILV": "SUTSILV",
+          "TARASK": "TARASK",
+          "UCCOR": "UCCOR",
+          "UCRCOR": "UCRCOR",
+          "ULSTER": "ULSTER",
+          "VAIDIKA": "VAIDIKA",
+          "VALENCIA": "VALENCIA",
+          "VALLADER": "VALLADER",
+          "WADEGILE": "ווייד-גיילס, שיטה לתעתוק סינית לאותיות לטיניות"
+        }
+      }
+    }
+  }
+}

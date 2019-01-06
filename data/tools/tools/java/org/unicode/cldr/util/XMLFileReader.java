@@ -14,9 +14,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 import org.xml.sax.Attributes;
@@ -30,8 +29,6 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.ext.DeclHandler;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
-
-import com.ibm.icu.dev.util.Relation;
 
 /**
  * Convenience class to make reading XML data files easier. The main method is read();
@@ -62,6 +59,9 @@ public class XMLFileReader {
         };
 
         public void handleAttributeDecl(String eName, String aName, String type, String mode, String value) {
+        };
+
+        public void handleEndDtd() {
         };
     }
 
@@ -110,7 +110,10 @@ public class XMLFileReader {
             }
             InputSource is = new InputSource(reader);
             is.setSystemId(systemID);
-            xmlReader.parse(is);
+            try {
+                xmlReader.parse(is);
+            } catch (AbortException e) {
+            } // ok
             reader.close();
             return this;
         } catch (SAXParseException e) {
@@ -172,6 +175,7 @@ public class XMLFileReader {
 
         public void endDTD() throws SAXException {
             if (SHOW_ALL) Log.logln("endDTD");
+            simpleHandler.handleEndDtd();
         }
 
         public void comment(char[] ch, int start, int length) throws SAXException {
@@ -298,6 +302,10 @@ public class XMLFileReader {
         }
     }
 
+    static final class AbortException extends RuntimeException {
+        private static final long serialVersionUID = 1L;
+    }
+
     /**
      * Show a SAX exception in a readable form.
      */
@@ -364,28 +372,28 @@ public class XMLFileReader {
         }
     }
 
-    public static Relation<String, String> loadPathValues(String filename, Relation<String, String> data) {
+    public static List<Pair<String, String>> loadPathValues(String filename, List<Pair<String, String>> data, boolean validating) {
         try {
             new XMLFileReader()
-                .setHandler(new PathValueHandler(data))
-                .read(filename, -1, true);
+                .setHandler(new PathValueListHandler(data))
+                .read(filename, -1, validating);
             return data;
         } catch (Exception e) {
             throw new IllegalArgumentException(filename, e);
         }
     }
 
-    static final class PathValueHandler extends SimpleHandler {
-        Relation<String, String> data = Relation.of(new LinkedHashMap<String, Set<String>>(), LinkedHashSet.class);
+    static final class PathValueListHandler extends SimpleHandler {
+        List<Pair<String, String>> data = new ArrayList();
 
-        public PathValueHandler(Relation<String, String> data) {
+        public PathValueListHandler(List<Pair<String, String>> data) {
             super();
             this.data = data;
         }
 
         @Override
         public void handlePathValue(String path, String value) {
-            data.put(path, value);
+            data.add(Pair.of(path, value));
         }
     }
 }

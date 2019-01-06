@@ -1,0 +1,22 @@
+{
+  "main": {
+    "cs": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "24",
+          "_number": "$Revision: 9298 $"
+        },
+        "generation": {
+          "_date": "$Date: 2013-08-31 01:59:30 -0500 (Sat, 31 Aug 2013) $"
+        },
+        "language": "cs"
+      },
+      "layout": {
+        "orientation": {
+          "characterOrder": "left-to-right",
+          "lineOrder": "top-to-bottom"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "main": {
+    "th": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "24",
+          "_number": "$Revision: 9318 $"
+        },
+        "generation": {
+          "_date": "$Date: 2013-09-06 18:00:35 -0500 (Fri, 06 Sep 2013) $"
+        },
+        "language": "root"
+      },
+      "localeDisplayNames": {
+        "measurementSystemNames": {
+          "metric": "เมตริก",
+          "UK": "สหราชอาณาจักร",
+          "US": "อเมริกัน"
+        }
+      }
+    }
+  }
+}

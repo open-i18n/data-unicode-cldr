@@ -136,7 +136,8 @@ public class FindPreferredHours {
                     if (item instanceof VariableField) {
                         String itemString = item.toString();
                         char c = itemString.charAt(0);
-                        if (PreferredAndAllowedHour.HOURS.contains(c)) {
+
+                        if (PreferredAndAllowedHour.HourStyle.isHourCharacter(c)) {
                             lang2Hours.put(locale, new Hours(type, itemString));
                         }
                     }
@@ -270,8 +271,9 @@ public class FindPreferredHours {
                 + "preferred=\""
                 + preferredAndAllowedHour.preferred
                 + "\""
-                + (preferredAndAllowedHour.allowed == null ? "" : " allowed=\""
-                    + CollectionUtilities.join(preferredAndAllowedHour.allowed, " ") + "\"")
+                + " allowed=\""
+                + CollectionUtilities.join(preferredAndAllowedHour.allowed, " ")
+                + "\""
                 + " regions=\"" + CollectionUtilities.join(regions, " ") + "\""
                 + "/>");
         }

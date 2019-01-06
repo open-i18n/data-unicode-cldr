@@ -27,7 +27,7 @@ public class CheckWidths extends CheckCLDR {
     }
 
     private enum Special {
-        NONE, QUOTES, PLACEHOLDERS
+        NONE, QUOTES, PLACEHOLDERS, NUMBERSYMBOLS
     }
 
     private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\{\\d\\}");
@@ -40,8 +40,10 @@ public class CheckWidths extends CheckCLDR {
         final Special special;
         final String message;
         final Subtype subtype;
+        final boolean debug;
 
-        public Limit(double warningReference, double errorReference, Measure measure, LimitType limit, Special special) {
+        public Limit(double warningReference, double errorReference, Measure measure, LimitType limit, Special special, boolean debug) {
+            this.debug = debug;
             this.warningReference = warningReference;
             this.errorReference = errorReference;
             this.limit = limit;
@@ -65,6 +67,10 @@ public class CheckWidths extends CheckCLDR {
             }
         }
 
+        public Limit(double d, double e, Measure displayWidth, LimitType maximum, Special placeholders) {
+            this(d, e, displayWidth, maximum, placeholders, false);
+        }
+
         boolean hasProblem(String value, List<CheckStatus> result, CheckCLDR cause) {
             switch (special) {
             case QUOTES:
@@ -73,17 +79,18 @@ public class CheckWidths extends CheckCLDR {
             case PLACEHOLDERS:
                 value = PLACEHOLDER_PATTERN.matcher(value).replaceAll("");
                 break;
+            case NUMBERSYMBOLS:
+                value = value.replaceAll("[\u200E\u200F]", ""); // don't include LRM/RLM when checking length of number symbols
+                break;
             }
-            double valueMeasure = measure == Measure.CODE_POINTS
-                ? value.codePointCount(0, value.length())
-                : ApproximateWidth.getWidth(value);
+            double valueMeasure = measure == Measure.CODE_POINTS ? value.codePointCount(0, value.length()) : ApproximateWidth.getWidth(value);
             CheckStatus.Type errorType = CheckStatus.warningType;
             switch (limit) {
             case MINIMUM:
                 if (valueMeasure >= warningReference) {
                     return false;
                 }
-                if (valueMeasure < errorReference) {
+                if (valueMeasure < errorReference && cause.getPhase() != Phase.BUILD) {
                     errorType = CheckStatus.errorType;
                 }
                 break;
@@ -91,19 +98,43 @@ public class CheckWidths extends CheckCLDR {
                 if (valueMeasure <= warningReference) {
                     return false;
                 }
-                if (valueMeasure > errorReference) {
+                if (valueMeasure > errorReference && cause.getPhase() != Phase.BUILD) {
                     errorType = CheckStatus.errorType;
                 }
                 break;
             }
-            double percent = (int) (Math.abs(100 * ApproximateWidth.getWidth(value) / warningReference - 100.0d) + 0.49999d);
-            result.add(new CheckStatus().setCause(cause).setMainType(errorType).setSubtype(subtype)
+            // the 115 is so that we don't show small percentages
+            // the /10 ...*10 is to round to multiples of 10% percent
+            double percent = (int) (Math.abs(115 * valueMeasure / warningReference - 100.0d) / 10 + 0.49999d) * 10;
+            result.add(new CheckStatus().setCause(cause)
+                .setMainType(errorType)
+                .setSubtype(subtype)
                 .setMessage(message, warningReference, valueMeasure, percent));
             return true;
         }
     }
 
     // WARNING: errors must occur before warnings!!
+    // we allow unusual units and English units to be a little longer
+    static final String ALLOW_LONGER = "(area-acre" +
+        "|area-square-foot" +
+        "|area-square-mile" +
+        "|length-foot" +
+        "|length-inch" +
+        "|length-mile" +
+        "|length-light-year" +
+        "|length-yard" +
+        "|mass-ounce" +
+        "|mass-pound" +
+        "|power-horsepower" +
+        "|pressure-inch-hg" +
+        "|speed-mile-per-hour" +
+        "|temperature-fahrenheit" +
+        "|volume-cubic-mile" +
+        "|acceleration-g-force" +
+        "|speed-kilometer-per-hour" +
+        "|speed-meter-per-second" +
+        ")";
 
     static RegexLookup<Limit[]> lookup = new RegexLookup<Limit[]>()
         .setPatternTransform(RegexLookup.RegexFinderTransformPath)
@@ -115,7 +146,7 @@ public class CheckWidths extends CheckCLDR {
         // Numeric items should be no more than a single character
 
         .add("//ldml/numbers/symbols[@numberSystem=%A]/(decimal|group|minus|percent|perMille|plus)", new Limit[] {
-            new Limit(1, 1, Measure.CODE_POINTS, LimitType.MAXIMUM, Special.NONE)
+            new Limit(1, 1, Measure.CODE_POINTS, LimitType.MAXIMUM, Special.NUMBERSYMBOLS)
         })
 
         // Now widths
@@ -137,10 +168,8 @@ public class CheckWidths extends CheckCLDR {
             new Limit(2 * EM, 3 * EM, Measure.DISPLAY_WIDTH, LimitType.MAXIMUM, Special.PLACEHOLDERS)
         })
 
-        .add("//ldml/dates/timeZoneNames/(fallbackRegionFormat|regionFormat|hourFormat)", new Limit[] { // {1} Time
-                                                                                                        // ({0}), {0}
-                                                                                                        // Time,
-                                                                                                        // +HH:mm;-HH:mm
+        .add("//ldml/dates/timeZoneNames/(regionFormat|hourFormat)", new Limit[] { // {0} Time,
+            // +HH:mm;-HH:mm
             new Limit(10 * EM, 20 * EM, Measure.DISPLAY_WIDTH, LimitType.MAXIMUM, Special.PLACEHOLDERS)
         })
 
@@ -157,11 +186,31 @@ public class CheckWidths extends CheckCLDR {
 
         // Compact number formats
 
-        .add(
-            "//ldml/numbers/decimalFormats[@numberSystem=%A]/decimalFormatLength[@type=\"short\"]/decimalFormat[@type=%A]/pattern[@type=\"1",
+        .add("//ldml/numbers/decimalFormats[@numberSystem=%A]/decimalFormatLength[@type=\"short\"]/decimalFormat[@type=%A]/pattern[@type=\"1",
             new Limit[] {
             new Limit(4 * EM, 5 * EM, Measure.DISPLAY_WIDTH, LimitType.MAXIMUM, Special.QUOTES)
-            });
+            })
+        // Catch -future/past Narrow units  and allow much wider values
+        .add("//ldml/units/unitLength[@type=\"narrow\"]/unit[@type=\"[^\"]+-(future|past)\"]/unitPattern", new Limit[] {
+            new Limit(10 * EM, 15 * EM, Measure.DISPLAY_WIDTH, LimitType.MAXIMUM, Special.PLACEHOLDERS)
+        })
+        // Catch special units and allow a bit wider
+        .add("//ldml/units/unitLength[@type=\"narrow\"]/unit[@type=\"" + ALLOW_LONGER + "\"]/unitPattern", new Limit[] {
+            new Limit(4 * EM, 5 * EM, Measure.DISPLAY_WIDTH, LimitType.MAXIMUM, Special.PLACEHOLDERS)
+        })
+        // Narrow units
+        .add("//ldml/units/unitLength[@type=\"narrow\"]/unit[@type=%A]/unitPattern", new Limit[] {
+            new Limit(3 * EM, 4 * EM, Measure.DISPLAY_WIDTH, LimitType.MAXIMUM, Special.PLACEHOLDERS)
+        })
+        // Short units
+        .add("//ldml/units/unitLength[@type=\"short\"]/unit[@type=%A]/unitPattern", new Limit[] {
+            new Limit(5 * EM, 10 * EM, Measure.DISPLAY_WIDTH, LimitType.MAXIMUM, Special.PLACEHOLDERS)
+        })
+
+        // Currency Symbols
+        .add("//ldml/numbers/currencies/currency[@type=%A]/symbol", new Limit[] {
+            new Limit(3 * EM, 5 * EM, Measure.DISPLAY_WIDTH, LimitType.MAXIMUM, Special.PLACEHOLDERS)
+        });
 
     Set<Limit> found = new LinkedHashSet<Limit>();
 
@@ -170,6 +219,10 @@ public class CheckWidths extends CheckCLDR {
         if (value == null) {
             return this; // skip
         }
+        //        String testPrefix = "//ldml/units/unitLength[@type=\"narrow\"]";
+        //        if (path.startsWith(testPrefix)) {
+        //            int i = 0;
+        //        }
         // Limits item0 =
         // lookup.get("//ldml/numbers/decimalFormats[@numberSystem=\"latn\"]/decimalFormatLength[@type=\"short\"]/decimalFormat[@type=\"standard\"]/pattern[@type=\"1000000000\"][@count=\"other\"]");
         // item0.check("123456789", result, this);

@@ -1,3050 +1,3057 @@
 {
   "supplemental": {
     "version": {
-      "@cldrVersion": "23.1",
-      "@number": "$Revision: 8274 $"
+      "_cldrVersion": "24",
+      "_number": "$Revision: 9178 $"
     },
     "generation": {
-      "@date": "$Date: 2013-03-06 11:15:16 -0600 (Wed, 06 Mar 2013) $"
+      "_date": "$Date: 2013-08-08 13:59:22 -0500 (Thu, 08 Aug 2013) $"
     },
     "windowsZones": {
       "mapTimezones": [
         {
           "mapZone": {
-            "@other": "Greenwich Standard Time",
-            "@territory": "CI",
-            "@type": "Africa/Abidjan"
+            "_other": "Greenwich Standard Time",
+            "_territory": "CI",
+            "_type": "Africa/Abidjan"
           }
         },
         {
           "mapZone": {
-            "@other": "Greenwich Standard Time",
-            "@territory": "GH",
-            "@type": "Africa/Accra"
+            "_other": "Greenwich Standard Time",
+            "_territory": "GH",
+            "_type": "Africa/Accra"
           }
         },
         {
           "mapZone": {
-            "@other": "E. Africa Standard Time",
-            "@territory": "ET",
-            "@type": "Africa/Addis_Ababa"
+            "_other": "E. Africa Standard Time",
+            "_territory": "ET",
+            "_type": "Africa/Addis_Ababa"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Central Africa Standard Time",
-            "@territory": "DZ",
-            "@type": "Africa/Algiers"
+            "_other": "W. Central Africa Standard Time",
+            "_territory": "DZ",
+            "_type": "Africa/Algiers"
           }
         },
         {
           "mapZone": {
-            "@other": "E. Africa Standard Time",
-            "@territory": "ER",
-            "@type": "Africa/Asmera"
+            "_other": "E. Africa Standard Time",
+            "_territory": "ER",
+            "_type": "Africa/Asmera"
           }
         },
         {
           "mapZone": {
-            "@other": "Greenwich Standard Time",
-            "@territory": "ML",
-            "@type": "Africa/Bamako"
+            "_other": "Greenwich Standard Time",
+            "_territory": "ML",
+            "_type": "Africa/Bamako"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Central Africa Standard Time",
-            "@territory": "CF",
-            "@type": "Africa/Bangui"
+            "_other": "W. Central Africa Standard Time",
+            "_territory": "CF",
+            "_type": "Africa/Bangui"
           }
         },
         {
           "mapZone": {
-            "@other": "Greenwich Standard Time",
-            "@territory": "GM",
-            "@type": "Africa/Banjul"
+            "_other": "Greenwich Standard Time",
+            "_territory": "GM",
+            "_type": "Africa/Banjul"
           }
         },
         {
           "mapZone": {
-            "@other": "Greenwich Standard Time",
-            "@territory": "GW",
-            "@type": "Africa/Bissau"
+            "_other": "Greenwich Standard Time",
+            "_territory": "GW",
+            "_type": "Africa/Bissau"
           }
         },
         {
           "mapZone": {
-            "@other": "South Africa Standard Time",
-            "@territory": "MW",
-            "@type": "Africa/Blantyre"
+            "_other": "South Africa Standard Time",
+            "_territory": "MW",
+            "_type": "Africa/Blantyre"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Central Africa Standard Time",
-            "@territory": "CG",
-            "@type": "Africa/Brazzaville"
+            "_other": "W. Central Africa Standard Time",
+            "_territory": "CG",
+            "_type": "Africa/Brazzaville"
           }
         },
         {
           "mapZone": {
-            "@other": "South Africa Standard Time",
-            "@territory": "BI",
-            "@type": "Africa/Bujumbura"
+            "_other": "South Africa Standard Time",
+            "_territory": "BI",
+            "_type": "Africa/Bujumbura"
           }
         },
         {
           "mapZone": {
-            "@other": "Egypt Standard Time",
-            "@territory": "001",
-            "@type": "Africa/Cairo"
+            "_other": "Egypt Standard Time",
+            "_territory": "001",
+            "_type": "Africa/Cairo"
           }
         },
         {
           "mapZone": {
-            "@other": "Egypt Standard Time",
-            "@territory": "EG",
-            "@type": "Africa/Cairo"
+            "_other": "Egypt Standard Time",
+            "_territory": "EG",
+            "_type": "Africa/Cairo"
           }
         },
         {
           "mapZone": {
-            "@other": "Morocco Standard Time",
-            "@territory": "001",
-            "@type": "Africa/Casablanca"
+            "_other": "Morocco Standard Time",
+            "_territory": "001",
+            "_type": "Africa/Casablanca"
           }
         },
         {
           "mapZone": {
-            "@other": "Morocco Standard Time",
-            "@territory": "MA",
-            "@type": "Africa/Casablanca"
+            "_other": "Morocco Standard Time",
+            "_territory": "MA",
+            "_type": "Africa/Casablanca"
           }
         },
         {
           "mapZone": {
-            "@other": "Greenwich Standard Time",
-            "@territory": "GN",
-            "@type": "Africa/Conakry"
+            "_other": "Greenwich Standard Time",
+            "_territory": "GN",
+            "_type": "Africa/Conakry"
           }
         },
         {
           "mapZone": {
-            "@other": "Greenwich Standard Time",
-            "@territory": "SN",
-            "@type": "Africa/Dakar"
+            "_other": "Greenwich Standard Time",
+            "_territory": "SN",
+            "_type": "Africa/Dakar"
           }
         },
         {
           "mapZone": {
-            "@other": "E. Africa Standard Time",
-            "@territory": "TZ",
-            "@type": "Africa/Dar_es_Salaam"
+            "_other": "E. Africa Standard Time",
+            "_territory": "TZ",
+            "_type": "Africa/Dar_es_Salaam"
           }
         },
         {
           "mapZone": {
-            "@other": "E. Africa Standard Time",
-            "@territory": "DJ",
-            "@type": "Africa/Djibouti"
+            "_other": "E. Africa Standard Time",
+            "_territory": "DJ",
+            "_type": "Africa/Djibouti"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Central Africa Standard Time",
-            "@territory": "CM",
-            "@type": "Africa/Douala"
+            "_other": "W. Central Africa Standard Time",
+            "_territory": "CM",
+            "_type": "Africa/Douala"
           }
         },
         {
           "mapZone": {
-            "@other": "Greenwich Standard Time",
-            "@territory": "EH",
-            "@type": "Africa/El_Aaiun"
+            "_other": "Greenwich Standard Time",
+            "_territory": "EH",
+            "_type": "Africa/El_Aaiun"
           }
         },
         {
           "mapZone": {
-            "@other": "Greenwich Standard Time",
-            "@territory": "SL",
-            "@type": "Africa/Freetown"
+            "_other": "Greenwich Standard Time",
+            "_territory": "SL",
+            "_type": "Africa/Freetown"
           }
         },
         {
           "mapZone": {
-            "@other": "South Africa Standard Time",
-            "@territory": "BW",
-            "@type": "Africa/Gaborone"
+            "_other": "South Africa Standard Time",
+            "_territory": "BW",
+            "_type": "Africa/Gaborone"
           }
         },
         {
           "mapZone": {
-            "@other": "South Africa Standard Time",
-            "@territory": "ZW",
-            "@type": "Africa/Harare"
+            "_other": "South Africa Standard Time",
+            "_territory": "ZW",
+            "_type": "Africa/Harare"
           }
         },
         {
           "mapZone": {
-            "@other": "South Africa Standard Time",
-            "@territory": "001",
-            "@type": "Africa/Johannesburg"
+            "_other": "South Africa Standard Time",
+            "_territory": "001",
+            "_type": "Africa/Johannesburg"
           }
         },
         {
           "mapZone": {
-            "@other": "South Africa Standard Time",
-            "@territory": "ZA",
-            "@type": "Africa/Johannesburg"
+            "_other": "South Africa Standard Time",
+            "_territory": "ZA",
+            "_type": "Africa/Johannesburg"
           }
         },
         {
           "mapZone": {
-            "@other": "E. Africa Standard Time",
-            "@territory": "SS",
-            "@type": "Africa/Juba"
+            "_other": "E. Africa Standard Time",
+            "_territory": "SS",
+            "_type": "Africa/Juba"
           }
         },
         {
           "mapZone": {
-            "@other": "E. Africa Standard Time",
-            "@territory": "UG",
-            "@type": "Africa/Kampala"
+            "_other": "E. Africa Standard Time",
+            "_territory": "UG",
+            "_type": "Africa/Kampala"
           }
         },
         {
           "mapZone": {
-            "@other": "E. Africa Standard Time",
-            "@territory": "SD",
-            "@type": "Africa/Khartoum"
+            "_other": "E. Africa Standard Time",
+            "_territory": "SD",
+            "_type": "Africa/Khartoum"
           }
         },
         {
           "mapZone": {
-            "@other": "South Africa Standard Time",
-            "@territory": "RW",
-            "@type": "Africa/Kigali"
+            "_other": "South Africa Standard Time",
+            "_territory": "RW",
+            "_type": "Africa/Kigali"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Central Africa Standard Time",
-            "@territory": "CD",
-            "@type": "Africa/Kinshasa"
+            "_other": "W. Central Africa Standard Time",
+            "_territory": "CD",
+            "_type": "Africa/Kinshasa"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Central Africa Standard Time",
-            "@territory": "001",
-            "@type": "Africa/Lagos"
+            "_other": "W. Central Africa Standard Time",
+            "_territory": "001",
+            "_type": "Africa/Lagos"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Central Africa Standard Time",
-            "@territory": "NG",
-            "@type": "Africa/Lagos"
+            "_other": "W. Central Africa Standard Time",
+            "_territory": "NG",
+            "_type": "Africa/Lagos"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Central Africa Standard Time",
-            "@territory": "GA",
-            "@type": "Africa/Libreville"
+            "_other": "W. Central Africa Standard Time",
+            "_territory": "GA",
+            "_type": "Africa/Libreville"
           }
         },
         {
           "mapZone": {
-            "@other": "Greenwich Standard Time",
-            "@territory": "TG",
-            "@type": "Africa/Lome"
+            "_other": "Greenwich Standard Time",
+            "_territory": "TG",
+            "_type": "Africa/Lome"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Central Africa Standard Time",
-            "@territory": "AO",
-            "@type": "Africa/Luanda"
+            "_other": "W. Central Africa Standard Time",
+            "_territory": "AO",
+            "_type": "Africa/Luanda"
           }
         },
         {
           "mapZone": {
-            "@other": "South Africa Standard Time",
-            "@territory": "CD",
-            "@type": "Africa/Lubumbashi"
+            "_other": "South Africa Standard Time",
+            "_territory": "CD",
+            "_type": "Africa/Lubumbashi"
           }
         },
         {
           "mapZone": {
-            "@other": "South Africa Standard Time",
-            "@territory": "ZM",
-            "@type": "Africa/Lusaka"
+            "_other": "South Africa Standard Time",
+            "_territory": "ZM",
+            "_type": "Africa/Lusaka"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Central Africa Standard Time",
-            "@territory": "GQ",
-            "@type": "Africa/Malabo"
+            "_other": "W. Central Africa Standard Time",
+            "_territory": "GQ",
+            "_type": "Africa/Malabo"
           }
         },
         {
           "mapZone": {
-            "@other": "South Africa Standard Time",
-            "@territory": "MZ",
-            "@type": "Africa/Maputo"
+            "_other": "South Africa Standard Time",
+            "_territory": "MZ",
+            "_type": "Africa/Maputo"
           }
         },
         {
           "mapZone": {
-            "@other": "South Africa Standard Time",
-            "@territory": "LS",
-            "@type": "Africa/Maseru"
+            "_other": "South Africa Standard Time",
+            "_territory": "LS",
+            "_type": "Africa/Maseru"
           }
         },
         {
           "mapZone": {
-            "@other": "South Africa Standard Time",
-            "@territory": "SZ",
-            "@type": "Africa/Mbabane"
+            "_other": "South Africa Standard Time",
+            "_territory": "SZ",
+            "_type": "Africa/Mbabane"
           }
         },
         {
           "mapZone": {
-            "@other": "E. Africa Standard Time",
-            "@territory": "SO",
-            "@type": "Africa/Mogadishu"
+            "_other": "E. Africa Standard Time",
+            "_territory": "SO",
+            "_type": "Africa/Mogadishu"
           }
         },
         {
           "mapZone": {
-            "@other": "Greenwich Standard Time",
-            "@territory": "LR",
-            "@type": "Africa/Monrovia"
+            "_other": "Greenwich Standard Time",
+            "_territory": "LR",
+            "_type": "Africa/Monrovia"
           }
         },
         {
           "mapZone": {
-            "@other": "E. Africa Standard Time",
-            "@territory": "001",
-            "@type": "Africa/Nairobi"
+            "_other": "E. Africa Standard Time",
+            "_territory": "001",
+            "_type": "Africa/Nairobi"
           }
         },
         {
           "mapZone": {
-            "@other": "E. Africa Standard Time",
-            "@territory": "KE",
-            "@type": "Africa/Nairobi"
+            "_other": "E. Africa Standard Time",
+            "_territory": "KE",
+            "_type": "Africa/Nairobi"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Central Africa Standard Time",
-            "@territory": "TD",
-            "@type": "Africa/Ndjamena"
+            "_other": "W. Central Africa Standard Time",
+            "_territory": "TD",
+            "_type": "Africa/Ndjamena"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Central Africa Standard Time",
-            "@territory": "NE",
-            "@type": "Africa/Niamey"
+            "_other": "W. Central Africa Standard Time",
+            "_territory": "NE",
+            "_type": "Africa/Niamey"
           }
         },
         {
           "mapZone": {
-            "@other": "Greenwich Standard Time",
-            "@territory": "MR",
-            "@type": "Africa/Nouakchott"
+            "_other": "Greenwich Standard Time",
+            "_territory": "MR",
+            "_type": "Africa/Nouakchott"
           }
         },
         {
           "mapZone": {
-            "@other": "Greenwich Standard Time",
-            "@territory": "BF",
-            "@type": "Africa/Ouagadougou"
+            "_other": "Greenwich Standard Time",
+            "_territory": "BF",
+            "_type": "Africa/Ouagadougou"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Central Africa Standard Time",
-            "@territory": "BJ",
-            "@type": "Africa/Porto-Novo"
+            "_other": "W. Central Africa Standard Time",
+            "_territory": "BJ",
+            "_type": "Africa/Porto-Novo"
           }
         },
         {
           "mapZone": {
-            "@other": "Greenwich Standard Time",
-            "@territory": "ST",
-            "@type": "Africa/Sao_Tome"
+            "_other": "Greenwich Standard Time",
+            "_territory": "ST",
+            "_type": "Africa/Sao_Tome"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Europe Standard Time",
-            "@territory": "LY",
-            "@type": "Africa/Tripoli"
+            "_other": "Libya Standard Time",
+            "_territory": "001",
+            "_type": "Africa/Tripoli"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Central Africa Standard Time",
-            "@territory": "TN",
-            "@type": "Africa/Tunis"
+            "_other": "Libya Standard Time",
+            "_territory": "LY",
+            "_type": "Africa/Tripoli"
           }
         },
         {
           "mapZone": {
-            "@other": "Namibia Standard Time",
-            "@territory": "001",
-            "@type": "Africa/Windhoek"
+            "_other": "W. Central Africa Standard Time",
+            "_territory": "TN",
+            "_type": "Africa/Tunis"
           }
         },
         {
           "mapZone": {
-            "@other": "Namibia Standard Time",
-            "@territory": "NA",
-            "@type": "Africa/Windhoek"
+            "_other": "Namibia Standard Time",
+            "_territory": "001",
+            "_type": "Africa/Windhoek"
           }
         },
         {
           "mapZone": {
-            "@other": "Alaskan Standard Time",
-            "@territory": "001",
-            "@type": "America/Anchorage"
+            "_other": "Namibia Standard Time",
+            "_territory": "NA",
+            "_type": "Africa/Windhoek"
           }
         },
         {
           "mapZone": {
-            "@other": "Alaskan Standard Time",
-            "@territory": "US",
-            "@type": "America/Anchorage America/Juneau America/Nome America/Sitka America/Yakutat"
+            "_other": "Alaskan Standard Time",
+            "_territory": "001",
+            "_type": "America/Anchorage"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "AI",
-            "@type": "America/Anguilla"
+            "_other": "Alaskan Standard Time",
+            "_territory": "US",
+            "_type": "America/Anchorage America/Juneau America/Nome America/Sitka America/Yakutat"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "AG",
-            "@type": "America/Antigua"
+            "_other": "SA Western Standard Time",
+            "_territory": "AI",
+            "_type": "America/Anguilla"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "AW",
-            "@type": "America/Aruba"
+            "_other": "SA Western Standard Time",
+            "_territory": "AG",
+            "_type": "America/Antigua"
           }
         },
         {
           "mapZone": {
-            "@other": "Paraguay Standard Time",
-            "@territory": "001",
-            "@type": "America/Asuncion"
+            "_other": "SA Western Standard Time",
+            "_territory": "AW",
+            "_type": "America/Aruba"
           }
         },
         {
           "mapZone": {
-            "@other": "Paraguay Standard Time",
-            "@territory": "PY",
-            "@type": "America/Asuncion"
+            "_other": "Paraguay Standard Time",
+            "_territory": "001",
+            "_type": "America/Asuncion"
           }
         },
         {
           "mapZone": {
-            "@other": "Bahia Standard Time",
-            "@territory": "001",
-            "@type": "America/Bahia"
+            "_other": "Paraguay Standard Time",
+            "_territory": "PY",
+            "_type": "America/Asuncion"
           }
         },
         {
           "mapZone": {
-            "@other": "Bahia Standard Time",
-            "@territory": "BR",
-            "@type": "America/Bahia"
+            "_other": "Bahia Standard Time",
+            "_territory": "001",
+            "_type": "America/Bahia"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "BB",
-            "@type": "America/Barbados"
+            "_other": "Bahia Standard Time",
+            "_territory": "BR",
+            "_type": "America/Bahia"
           }
         },
         {
           "mapZone": {
-            "@other": "Central America Standard Time",
-            "@territory": "BZ",
-            "@type": "America/Belize"
+            "_other": "SA Western Standard Time",
+            "_territory": "BB",
+            "_type": "America/Barbados"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "CA",
-            "@type": "America/Blanc-Sablon"
+            "_other": "Central America Standard Time",
+            "_territory": "BZ",
+            "_type": "America/Belize"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Pacific Standard Time",
-            "@territory": "001",
-            "@type": "America/Bogota"
+            "_other": "SA Western Standard Time",
+            "_territory": "CA",
+            "_type": "America/Blanc-Sablon"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Pacific Standard Time",
-            "@territory": "CO",
-            "@type": "America/Bogota"
+            "_other": "SA Pacific Standard Time",
+            "_territory": "001",
+            "_type": "America/Bogota"
           }
         },
         {
           "mapZone": {
-            "@other": "Argentina Standard Time",
-            "@territory": "001",
-            "@type": "America/Buenos_Aires"
+            "_other": "SA Pacific Standard Time",
+            "_territory": "CO",
+            "_type": "America/Bogota"
           }
         },
         {
           "mapZone": {
-            "@other": "Argentina Standard Time",
-            "@territory": "AR",
-            "@type": "America/Buenos_Aires America/Argentina/La_Rioja America/Argentina/Rio_Gallegos America/Argentina/Salta America/Argentina/San_Juan America/Argentina/San_Luis America/Argentina/Tucuman America/Argentina/Ushuaia America/Catamarca America/Cordoba America/Jujuy America/Mendoza"
+            "_other": "Argentina Standard Time",
+            "_territory": "001",
+            "_type": "America/Buenos_Aires"
           }
         },
         {
           "mapZone": {
-            "@other": "Venezuela Standard Time",
-            "@territory": "001",
-            "@type": "America/Caracas"
+            "_other": "Argentina Standard Time",
+            "_territory": "AR",
+            "_type": "America/Buenos_Aires America/Argentina/La_Rioja America/Argentina/Rio_Gallegos America/Argentina/Salta America/Argentina/San_Juan America/Argentina/San_Luis America/Argentina/Tucuman America/Argentina/Ushuaia America/Catamarca America/Cordoba America/Jujuy America/Mendoza"
           }
         },
         {
           "mapZone": {
-            "@other": "Venezuela Standard Time",
-            "@territory": "VE",
-            "@type": "America/Caracas"
+            "_other": "Venezuela Standard Time",
+            "_territory": "001",
+            "_type": "America/Caracas"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Eastern Standard Time",
-            "@territory": "001",
-            "@type": "America/Cayenne"
+            "_other": "Venezuela Standard Time",
+            "_territory": "VE",
+            "_type": "America/Caracas"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Eastern Standard Time",
-            "@territory": "GF",
-            "@type": "America/Cayenne"
+            "_other": "SA Eastern Standard Time",
+            "_territory": "001",
+            "_type": "America/Cayenne"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Pacific Standard Time",
-            "@territory": "KY",
-            "@type": "America/Cayman"
+            "_other": "SA Eastern Standard Time",
+            "_territory": "GF",
+            "_type": "America/Cayenne"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Standard Time",
-            "@territory": "001",
-            "@type": "America/Chicago"
+            "_other": "SA Pacific Standard Time",
+            "_territory": "KY",
+            "_type": "America/Cayman"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Standard Time",
-            "@territory": "US",
-            "@type": "America/Chicago America/Indiana/Knox America/Indiana/Tell_City America/Menominee America/North_Dakota/Beulah America/North_Dakota/Center America/North_Dakota/New_Salem"
+            "_other": "Central Standard Time",
+            "_territory": "001",
+            "_type": "America/Chicago"
           }
         },
         {
           "mapZone": {
-            "@other": "Mountain Standard Time (Mexico)",
-            "@territory": "001",
-            "@type": "America/Chihuahua"
+            "_other": "Central Standard Time",
+            "_territory": "US",
+            "_type": "America/Chicago America/Indiana/Knox America/Indiana/Tell_City America/Menominee America/North_Dakota/Beulah America/North_Dakota/Center America/North_Dakota/New_Salem"
           }
         },
         {
           "mapZone": {
-            "@other": "Mountain Standard Time (Mexico)",
-            "@territory": "MX",
-            "@type": "America/Chihuahua America/Mazatlan"
+            "_other": "Mountain Standard Time (Mexico)",
+            "_territory": "001",
+            "_type": "America/Chihuahua"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Pacific Standard Time",
-            "@territory": "CA",
-            "@type": "America/Coral_Harbour"
+            "_other": "Mountain Standard Time (Mexico)",
+            "_territory": "MX",
+            "_type": "America/Chihuahua America/Mazatlan"
           }
         },
         {
           "mapZone": {
-            "@other": "Central America Standard Time",
-            "@territory": "CR",
-            "@type": "America/Costa_Rica"
+            "_other": "SA Pacific Standard Time",
+            "_territory": "CA",
+            "_type": "America/Coral_Harbour"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Brazilian Standard Time",
-            "@territory": "001",
-            "@type": "America/Cuiaba"
+            "_other": "Central America Standard Time",
+            "_territory": "CR",
+            "_type": "America/Costa_Rica"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Brazilian Standard Time",
-            "@territory": "BR",
-            "@type": "America/Cuiaba America/Campo_Grande"
+            "_other": "Central Brazilian Standard Time",
+            "_territory": "001",
+            "_type": "America/Cuiaba"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "CW",
-            "@type": "America/Curacao"
+            "_other": "Central Brazilian Standard Time",
+            "_territory": "BR",
+            "_type": "America/Cuiaba America/Campo_Grande"
           }
         },
         {
           "mapZone": {
-            "@other": "UTC",
-            "@territory": "GL",
-            "@type": "America/Danmarkshavn"
+            "_other": "SA Western Standard Time",
+            "_territory": "CW",
+            "_type": "America/Curacao"
           }
         },
         {
           "mapZone": {
-            "@other": "US Mountain Standard Time",
-            "@territory": "CA",
-            "@type": "America/Dawson_Creek America/Creston"
+            "_other": "UTC",
+            "_territory": "GL",
+            "_type": "America/Danmarkshavn"
           }
         },
         {
           "mapZone": {
-            "@other": "Mountain Standard Time",
-            "@territory": "001",
-            "@type": "America/Denver"
+            "_other": "US Mountain Standard Time",
+            "_territory": "CA",
+            "_type": "America/Dawson_Creek America/Creston"
           }
         },
         {
           "mapZone": {
-            "@other": "Mountain Standard Time",
-            "@territory": "US",
-            "@type": "America/Denver America/Boise America/Shiprock"
+            "_other": "Mountain Standard Time",
+            "_territory": "001",
+            "_type": "America/Denver"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "DM",
-            "@type": "America/Dominica"
+            "_other": "Mountain Standard Time",
+            "_territory": "US",
+            "_type": "America/Denver America/Boise America/Shiprock"
           }
         },
         {
           "mapZone": {
-            "@other": "Mountain Standard Time",
-            "@territory": "CA",
-            "@type": "America/Edmonton America/Cambridge_Bay America/Inuvik America/Yellowknife"
+            "_other": "SA Western Standard Time",
+            "_territory": "DM",
+            "_type": "America/Dominica"
           }
         },
         {
           "mapZone": {
-            "@other": "Central America Standard Time",
-            "@territory": "SV",
-            "@type": "America/El_Salvador"
+            "_other": "Mountain Standard Time",
+            "_territory": "CA",
+            "_type": "America/Edmonton America/Cambridge_Bay America/Inuvik America/Yellowknife"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Eastern Standard Time",
-            "@territory": "BR",
-            "@type": "America/Fortaleza America/Belem America/Maceio America/Recife America/Santarem"
+            "_other": "Central America Standard Time",
+            "_territory": "SV",
+            "_type": "America/El_Salvador"
           }
         },
         {
           "mapZone": {
-            "@other": "Greenland Standard Time",
-            "@territory": "001",
-            "@type": "America/Godthab"
+            "_other": "SA Eastern Standard Time",
+            "_territory": "BR",
+            "_type": "America/Fortaleza America/Belem America/Maceio America/Recife America/Santarem"
           }
         },
         {
           "mapZone": {
-            "@other": "Greenland Standard Time",
-            "@territory": "GL",
-            "@type": "America/Godthab"
+            "_other": "Greenland Standard Time",
+            "_territory": "001",
+            "_type": "America/Godthab"
           }
         },
         {
           "mapZone": {
-            "@other": "Eastern Standard Time",
-            "@territory": "TC",
-            "@type": "America/Grand_Turk"
+            "_other": "Greenland Standard Time",
+            "_territory": "GL",
+            "_type": "America/Godthab"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "GD",
-            "@type": "America/Grenada"
+            "_other": "Eastern Standard Time",
+            "_territory": "TC",
+            "_type": "America/Grand_Turk"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "GP",
-            "@type": "America/Guadeloupe"
+            "_other": "SA Western Standard Time",
+            "_territory": "GD",
+            "_type": "America/Grenada"
           }
         },
         {
           "mapZone": {
-            "@other": "Central America Standard Time",
-            "@territory": "001",
-            "@type": "America/Guatemala"
+            "_other": "SA Western Standard Time",
+            "_territory": "GP",
+            "_type": "America/Guadeloupe"
           }
         },
         {
           "mapZone": {
-            "@other": "Central America Standard Time",
-            "@territory": "GT",
-            "@type": "America/Guatemala"
+            "_other": "Central America Standard Time",
+            "_territory": "001",
+            "_type": "America/Guatemala"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Pacific Standard Time",
-            "@territory": "EC",
-            "@type": "America/Guayaquil"
+            "_other": "Central America Standard Time",
+            "_territory": "GT",
+            "_type": "America/Guatemala"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "GY",
-            "@type": "America/Guyana"
+            "_other": "SA Pacific Standard Time",
+            "_territory": "EC",
+            "_type": "America/Guayaquil"
           }
         },
         {
           "mapZone": {
-            "@other": "Atlantic Standard Time",
-            "@territory": "001",
-            "@type": "America/Halifax"
+            "_other": "SA Western Standard Time",
+            "_territory": "GY",
+            "_type": "America/Guyana"
           }
         },
         {
           "mapZone": {
-            "@other": "Atlantic Standard Time",
-            "@territory": "CA",
-            "@type": "America/Halifax America/Glace_Bay America/Goose_Bay America/Moncton"
+            "_other": "Atlantic Standard Time",
+            "_territory": "001",
+            "_type": "America/Halifax"
           }
         },
         {
           "mapZone": {
-            "@other": "US Mountain Standard Time",
-            "@territory": "MX",
-            "@type": "America/Hermosillo"
+            "_other": "Atlantic Standard Time",
+            "_territory": "CA",
+            "_type": "America/Halifax America/Glace_Bay America/Goose_Bay America/Moncton"
           }
         },
         {
           "mapZone": {
-            "@other": "US Eastern Standard Time",
-            "@territory": "001",
-            "@type": "America/Indianapolis"
+            "_other": "Eastern Standard Time",
+            "_territory": "CU",
+            "_type": "America/Havana"
           }
         },
         {
           "mapZone": {
-            "@other": "US Eastern Standard Time",
-            "@territory": "US",
-            "@type": "America/Indianapolis America/Indiana/Marengo America/Indiana/Vevay"
+            "_other": "US Mountain Standard Time",
+            "_territory": "MX",
+            "_type": "America/Hermosillo"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Pacific Standard Time",
-            "@territory": "JM",
-            "@type": "America/Jamaica"
+            "_other": "US Eastern Standard Time",
+            "_territory": "001",
+            "_type": "America/Indianapolis"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "BQ",
-            "@type": "America/Kralendijk"
+            "_other": "US Eastern Standard Time",
+            "_territory": "US",
+            "_type": "America/Indianapolis America/Indiana/Marengo America/Indiana/Vevay"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "001",
-            "@type": "America/La_Paz"
+            "_other": "SA Pacific Standard Time",
+            "_territory": "JM",
+            "_type": "America/Jamaica"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "BO",
-            "@type": "America/La_Paz"
+            "_other": "SA Western Standard Time",
+            "_territory": "BQ",
+            "_type": "America/Kralendijk"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Pacific Standard Time",
-            "@territory": "PE",
-            "@type": "America/Lima"
+            "_other": "SA Western Standard Time",
+            "_territory": "001",
+            "_type": "America/La_Paz"
           }
         },
         {
           "mapZone": {
-            "@other": "Pacific Standard Time",
-            "@territory": "001",
-            "@type": "America/Los_Angeles"
+            "_other": "SA Western Standard Time",
+            "_territory": "BO",
+            "_type": "America/La_Paz"
           }
         },
         {
           "mapZone": {
-            "@other": "Pacific Standard Time",
-            "@territory": "US",
-            "@type": "America/Los_Angeles"
+            "_other": "SA Pacific Standard Time",
+            "_territory": "PE",
+            "_type": "America/Lima"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "SX",
-            "@type": "America/Lower_Princes"
+            "_other": "Pacific Standard Time",
+            "_territory": "001",
+            "_type": "America/Los_Angeles"
           }
         },
         {
           "mapZone": {
-            "@other": "Central America Standard Time",
-            "@territory": "NI",
-            "@type": "America/Managua"
+            "_other": "Pacific Standard Time",
+            "_territory": "US",
+            "_type": "America/Los_Angeles"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "BR",
-            "@type": "America/Manaus America/Boa_Vista America/Eirunepe America/Porto_Velho America/Rio_Branco"
+            "_other": "SA Western Standard Time",
+            "_territory": "SX",
+            "_type": "America/Lower_Princes"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "MF",
-            "@type": "America/Marigot"
+            "_other": "Central America Standard Time",
+            "_territory": "NI",
+            "_type": "America/Managua"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "MQ",
-            "@type": "America/Martinique"
+            "_other": "SA Western Standard Time",
+            "_territory": "BR",
+            "_type": "America/Manaus America/Boa_Vista America/Eirunepe America/Porto_Velho America/Rio_Branco"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Standard Time",
-            "@territory": "MX",
-            "@type": "America/Matamoros"
+            "_other": "SA Western Standard Time",
+            "_territory": "MF",
+            "_type": "America/Marigot"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Standard Time (Mexico)",
-            "@territory": "001",
-            "@type": "America/Mexico_City"
+            "_other": "SA Western Standard Time",
+            "_territory": "MQ",
+            "_type": "America/Martinique"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Standard Time (Mexico)",
-            "@territory": "MX",
-            "@type": "America/Mexico_City America/Bahia_Banderas America/Cancun America/Merida America/Monterrey"
+            "_other": "Central Standard Time",
+            "_territory": "MX",
+            "_type": "America/Matamoros"
           }
         },
         {
           "mapZone": {
-            "@other": "Montevideo Standard Time",
-            "@territory": "001",
-            "@type": "America/Montevideo"
+            "_other": "Central Standard Time (Mexico)",
+            "_territory": "001",
+            "_type": "America/Mexico_City"
           }
         },
         {
           "mapZone": {
-            "@other": "Montevideo Standard Time",
-            "@territory": "UY",
-            "@type": "America/Montevideo"
+            "_other": "Central Standard Time (Mexico)",
+            "_territory": "MX",
+            "_type": "America/Mexico_City America/Bahia_Banderas America/Cancun America/Merida America/Monterrey"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "MS",
-            "@type": "America/Montserrat"
+            "_other": "Montevideo Standard Time",
+            "_territory": "001",
+            "_type": "America/Montevideo"
           }
         },
         {
           "mapZone": {
-            "@other": "Eastern Standard Time",
-            "@territory": "BS",
-            "@type": "America/Nassau"
+            "_other": "Montevideo Standard Time",
+            "_territory": "UY",
+            "_type": "America/Montevideo"
           }
         },
         {
           "mapZone": {
-            "@other": "Eastern Standard Time",
-            "@territory": "001",
-            "@type": "America/New_York"
+            "_other": "SA Western Standard Time",
+            "_territory": "MS",
+            "_type": "America/Montserrat"
           }
         },
         {
           "mapZone": {
-            "@other": "Eastern Standard Time",
-            "@territory": "US",
-            "@type": "America/New_York America/Detroit America/Indiana/Petersburg America/Indiana/Vincennes America/Indiana/Winamac America/Kentucky/Monticello America/Louisville"
+            "_other": "Eastern Standard Time",
+            "_territory": "BS",
+            "_type": "America/Nassau"
           }
         },
         {
           "mapZone": {
-            "@other": "UTC-02",
-            "@territory": "BR",
-            "@type": "America/Noronha"
+            "_other": "Eastern Standard Time",
+            "_territory": "001",
+            "_type": "America/New_York"
           }
         },
         {
           "mapZone": {
-            "@other": "Mountain Standard Time",
-            "@territory": "MX",
-            "@type": "America/Ojinaga"
+            "_other": "Eastern Standard Time",
+            "_territory": "US",
+            "_type": "America/New_York America/Detroit America/Indiana/Petersburg America/Indiana/Vincennes America/Indiana/Winamac America/Kentucky/Monticello America/Louisville"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Pacific Standard Time",
-            "@territory": "PA",
-            "@type": "America/Panama"
+            "_other": "UTC-02",
+            "_territory": "BR",
+            "_type": "America/Noronha"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Eastern Standard Time",
-            "@territory": "SR",
-            "@type": "America/Paramaribo"
+            "_other": "Mountain Standard Time",
+            "_territory": "MX",
+            "_type": "America/Ojinaga"
           }
         },
         {
           "mapZone": {
-            "@other": "US Mountain Standard Time",
-            "@territory": "001",
-            "@type": "America/Phoenix"
+            "_other": "SA Pacific Standard Time",
+            "_territory": "PA",
+            "_type": "America/Panama"
           }
         },
         {
           "mapZone": {
-            "@other": "US Mountain Standard Time",
-            "@territory": "US",
-            "@type": "America/Phoenix"
+            "_other": "SA Eastern Standard Time",
+            "_territory": "SR",
+            "_type": "America/Paramaribo"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "TT",
-            "@type": "America/Port_of_Spain"
+            "_other": "US Mountain Standard Time",
+            "_territory": "001",
+            "_type": "America/Phoenix"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Pacific Standard Time",
-            "@territory": "HT",
-            "@type": "America/Port-au-Prince"
+            "_other": "US Mountain Standard Time",
+            "_territory": "US",
+            "_type": "America/Phoenix"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "PR",
-            "@type": "America/Puerto_Rico"
+            "_other": "SA Western Standard Time",
+            "_territory": "TT",
+            "_type": "America/Port_of_Spain"
           }
         },
         {
           "mapZone": {
-            "@other": "Canada Central Standard Time",
-            "@territory": "001",
-            "@type": "America/Regina"
+            "_other": "Eastern Standard Time",
+            "_territory": "HT",
+            "_type": "America/Port-au-Prince"
           }
         },
         {
           "mapZone": {
-            "@other": "Canada Central Standard Time",
-            "@territory": "CA",
-            "@type": "America/Regina America/Swift_Current"
+            "_other": "SA Western Standard Time",
+            "_territory": "PR",
+            "_type": "America/Puerto_Rico"
           }
         },
         {
           "mapZone": {
-            "@other": "Pacific Standard Time (Mexico)",
-            "@territory": "001",
-            "@type": "America/Santa_Isabel"
+            "_other": "Canada Central Standard Time",
+            "_territory": "001",
+            "_type": "America/Regina"
           }
         },
         {
           "mapZone": {
-            "@other": "Pacific Standard Time (Mexico)",
-            "@territory": "MX",
-            "@type": "America/Santa_Isabel"
+            "_other": "Canada Central Standard Time",
+            "_territory": "CA",
+            "_type": "America/Regina America/Swift_Current"
           }
         },
         {
           "mapZone": {
-            "@other": "Pacific SA Standard Time",
-            "@territory": "001",
-            "@type": "America/Santiago"
+            "_other": "Pacific Standard Time (Mexico)",
+            "_territory": "001",
+            "_type": "America/Santa_Isabel"
           }
         },
         {
           "mapZone": {
-            "@other": "Pacific SA Standard Time",
-            "@territory": "CL",
-            "@type": "America/Santiago"
+            "_other": "Pacific Standard Time (Mexico)",
+            "_territory": "MX",
+            "_type": "America/Santa_Isabel"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "DO",
-            "@type": "America/Santo_Domingo"
+            "_other": "Pacific SA Standard Time",
+            "_territory": "001",
+            "_type": "America/Santiago"
           }
         },
         {
           "mapZone": {
-            "@other": "E. South America Standard Time",
-            "@territory": "001",
-            "@type": "America/Sao_Paulo"
+            "_other": "Pacific SA Standard Time",
+            "_territory": "CL",
+            "_type": "America/Santiago"
           }
         },
         {
           "mapZone": {
-            "@other": "E. South America Standard Time",
-            "@territory": "BR",
-            "@type": "America/Sao_Paulo America/Araguaina"
+            "_other": "SA Western Standard Time",
+            "_territory": "DO",
+            "_type": "America/Santo_Domingo"
           }
         },
         {
           "mapZone": {
-            "@other": "Azores Standard Time",
-            "@territory": "GL",
-            "@type": "America/Scoresbysund"
+            "_other": "E. South America Standard Time",
+            "_territory": "001",
+            "_type": "America/Sao_Paulo"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "BL",
-            "@type": "America/St_Barthelemy"
+            "_other": "E. South America Standard Time",
+            "_territory": "BR",
+            "_type": "America/Sao_Paulo America/Araguaina"
           }
         },
         {
           "mapZone": {
-            "@other": "Newfoundland Standard Time",
-            "@territory": "001",
-            "@type": "America/St_Johns"
+            "_other": "Azores Standard Time",
+            "_territory": "GL",
+            "_type": "America/Scoresbysund"
           }
         },
         {
           "mapZone": {
-            "@other": "Newfoundland Standard Time",
-            "@territory": "CA",
-            "@type": "America/St_Johns"
+            "_other": "SA Western Standard Time",
+            "_territory": "BL",
+            "_type": "America/St_Barthelemy"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "KN",
-            "@type": "America/St_Kitts"
+            "_other": "Newfoundland Standard Time",
+            "_territory": "001",
+            "_type": "America/St_Johns"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "LC",
-            "@type": "America/St_Lucia"
+            "_other": "Newfoundland Standard Time",
+            "_territory": "CA",
+            "_type": "America/St_Johns"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "VI",
-            "@type": "America/St_Thomas"
+            "_other": "SA Western Standard Time",
+            "_territory": "KN",
+            "_type": "America/St_Kitts"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "VC",
-            "@type": "America/St_Vincent"
+            "_other": "SA Western Standard Time",
+            "_territory": "LC",
+            "_type": "America/St_Lucia"
           }
         },
         {
           "mapZone": {
-            "@other": "Central America Standard Time",
-            "@territory": "HN",
-            "@type": "America/Tegucigalpa"
+            "_other": "SA Western Standard Time",
+            "_territory": "VI",
+            "_type": "America/St_Thomas"
           }
         },
         {
           "mapZone": {
-            "@other": "Atlantic Standard Time",
-            "@territory": "GL",
-            "@type": "America/Thule"
+            "_other": "SA Western Standard Time",
+            "_territory": "VC",
+            "_type": "America/St_Vincent"
           }
         },
         {
           "mapZone": {
-            "@other": "Pacific Standard Time",
-            "@territory": "MX",
-            "@type": "America/Tijuana"
+            "_other": "Central America Standard Time",
+            "_territory": "HN",
+            "_type": "America/Tegucigalpa"
           }
         },
         {
           "mapZone": {
-            "@other": "Eastern Standard Time",
-            "@territory": "CA",
-            "@type": "America/Toronto America/Iqaluit America/Montreal America/Nipigon America/Pangnirtung America/Thunder_Bay"
+            "_other": "Atlantic Standard Time",
+            "_territory": "GL",
+            "_type": "America/Thule"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "VG",
-            "@type": "America/Tortola"
+            "_other": "Pacific Standard Time",
+            "_territory": "MX",
+            "_type": "America/Tijuana"
           }
         },
         {
           "mapZone": {
-            "@other": "Pacific Standard Time",
-            "@territory": "CA",
-            "@type": "America/Vancouver America/Dawson America/Whitehorse"
+            "_other": "Eastern Standard Time",
+            "_territory": "CA",
+            "_type": "America/Toronto America/Iqaluit America/Montreal America/Nipigon America/Pangnirtung America/Thunder_Bay"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Standard Time",
-            "@territory": "CA",
-            "@type": "America/Winnipeg America/Rainy_River America/Rankin_Inlet America/Resolute"
+            "_other": "SA Western Standard Time",
+            "_territory": "VG",
+            "_type": "America/Tortola"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Australia Standard Time",
-            "@territory": "AQ",
-            "@type": "Antarctica/Casey"
+            "_other": "Pacific Standard Time",
+            "_territory": "CA",
+            "_type": "America/Vancouver America/Dawson America/Whitehorse"
           }
         },
         {
           "mapZone": {
-            "@other": "SE Asia Standard Time",
-            "@territory": "AQ",
-            "@type": "Antarctica/Davis"
+            "_other": "Central Standard Time",
+            "_territory": "CA",
+            "_type": "America/Winnipeg America/Rainy_River America/Rankin_Inlet America/Resolute"
           }
         },
         {
           "mapZone": {
-            "@other": "West Pacific Standard Time",
-            "@territory": "AQ",
-            "@type": "Antarctica/DumontDUrville"
+            "_other": "W. Australia Standard Time",
+            "_territory": "AQ",
+            "_type": "Antarctica/Casey"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Pacific Standard Time",
-            "@territory": "AQ",
-            "@type": "Antarctica/Macquarie"
+            "_other": "SE Asia Standard Time",
+            "_territory": "AQ",
+            "_type": "Antarctica/Davis"
           }
         },
         {
           "mapZone": {
-            "@other": "West Asia Standard Time",
-            "@territory": "AQ",
-            "@type": "Antarctica/Mawson"
+            "_other": "West Pacific Standard Time",
+            "_territory": "AQ",
+            "_type": "Antarctica/DumontDUrville"
           }
         },
         {
           "mapZone": {
-            "@other": "Pacific SA Standard Time",
-            "@territory": "AQ",
-            "@type": "Antarctica/Palmer"
+            "_other": "Central Pacific Standard Time",
+            "_territory": "AU",
+            "_type": "Antarctica/Macquarie"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Eastern Standard Time",
-            "@territory": "AQ",
-            "@type": "Antarctica/Rothera"
+            "_other": "West Asia Standard Time",
+            "_territory": "AQ",
+            "_type": "Antarctica/Mawson"
           }
         },
         {
           "mapZone": {
-            "@other": "New Zealand Standard Time",
-            "@territory": "AQ",
-            "@type": "Antarctica/South_Pole Antarctica/McMurdo"
+            "_other": "Pacific SA Standard Time",
+            "_territory": "AQ",
+            "_type": "Antarctica/Palmer"
           }
         },
         {
           "mapZone": {
-            "@other": "E. Africa Standard Time",
-            "@territory": "AQ",
-            "@type": "Antarctica/Syowa"
+            "_other": "SA Eastern Standard Time",
+            "_territory": "AQ",
+            "_type": "Antarctica/Rothera"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Asia Standard Time",
-            "@territory": "AQ",
-            "@type": "Antarctica/Vostok"
+            "_other": "New Zealand Standard Time",
+            "_territory": "AQ",
+            "_type": "Antarctica/South_Pole Antarctica/McMurdo"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Europe Standard Time",
-            "@territory": "SJ",
-            "@type": "Arctic/Longyearbyen"
+            "_other": "E. Africa Standard Time",
+            "_territory": "AQ",
+            "_type": "Antarctica/Syowa"
           }
         },
         {
           "mapZone": {
-            "@other": "Arab Standard Time",
-            "@territory": "YE",
-            "@type": "Asia/Aden"
+            "_other": "Central Asia Standard Time",
+            "_territory": "AQ",
+            "_type": "Antarctica/Vostok"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Asia Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Almaty"
+            "_other": "W. Europe Standard Time",
+            "_territory": "SJ",
+            "_type": "Arctic/Longyearbyen"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Asia Standard Time",
-            "@territory": "KZ",
-            "@type": "Asia/Almaty Asia/Qyzylorda"
+            "_other": "Arab Standard Time",
+            "_territory": "YE",
+            "_type": "Asia/Aden"
           }
         },
         {
           "mapZone": {
-            "@other": "Jordan Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Amman"
+            "_other": "Central Asia Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Almaty"
           }
         },
         {
           "mapZone": {
-            "@other": "Jordan Standard Time",
-            "@territory": "JO",
-            "@type": "Asia/Amman"
+            "_other": "Central Asia Standard Time",
+            "_territory": "KZ",
+            "_type": "Asia/Almaty Asia/Qyzylorda"
           }
         },
         {
           "mapZone": {
-            "@other": "West Asia Standard Time",
-            "@territory": "TM",
-            "@type": "Asia/Ashgabat"
+            "_other": "Jordan Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Amman"
           }
         },
         {
           "mapZone": {
-            "@other": "Arabic Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Baghdad"
+            "_other": "Jordan Standard Time",
+            "_territory": "JO",
+            "_type": "Asia/Amman"
           }
         },
         {
           "mapZone": {
-            "@other": "Arabic Standard Time",
-            "@territory": "IQ",
-            "@type": "Asia/Baghdad"
+            "_other": "West Asia Standard Time",
+            "_territory": "TM",
+            "_type": "Asia/Ashgabat"
           }
         },
         {
           "mapZone": {
-            "@other": "Arab Standard Time",
-            "@territory": "BH",
-            "@type": "Asia/Bahrain"
+            "_other": "Arabic Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Baghdad"
           }
         },
         {
           "mapZone": {
-            "@other": "Azerbaijan Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Baku"
+            "_other": "Arabic Standard Time",
+            "_territory": "IQ",
+            "_type": "Asia/Baghdad"
           }
         },
         {
           "mapZone": {
-            "@other": "Azerbaijan Standard Time",
-            "@territory": "AZ",
-            "@type": "Asia/Baku"
+            "_other": "Arab Standard Time",
+            "_territory": "BH",
+            "_type": "Asia/Bahrain"
           }
         },
         {
           "mapZone": {
-            "@other": "SE Asia Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Bangkok"
+            "_other": "Azerbaijan Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Baku"
           }
         },
         {
           "mapZone": {
-            "@other": "SE Asia Standard Time",
-            "@territory": "TH",
-            "@type": "Asia/Bangkok"
+            "_other": "Azerbaijan Standard Time",
+            "_territory": "AZ",
+            "_type": "Asia/Baku"
           }
         },
         {
           "mapZone": {
-            "@other": "Middle East Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Beirut"
+            "_other": "SE Asia Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Bangkok"
           }
         },
         {
           "mapZone": {
-            "@other": "Middle East Standard Time",
-            "@territory": "LB",
-            "@type": "Asia/Beirut"
+            "_other": "SE Asia Standard Time",
+            "_territory": "TH",
+            "_type": "Asia/Bangkok"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Asia Standard Time",
-            "@territory": "KG",
-            "@type": "Asia/Bishkek"
+            "_other": "Middle East Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Beirut"
           }
         },
         {
           "mapZone": {
-            "@other": "Singapore Standard Time",
-            "@territory": "BN",
-            "@type": "Asia/Brunei"
+            "_other": "Middle East Standard Time",
+            "_territory": "LB",
+            "_type": "Asia/Beirut"
           }
         },
         {
           "mapZone": {
-            "@other": "India Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Calcutta"
+            "_other": "Central Asia Standard Time",
+            "_territory": "KG",
+            "_type": "Asia/Bishkek"
           }
         },
         {
           "mapZone": {
-            "@other": "India Standard Time",
-            "@territory": "IN",
-            "@type": "Asia/Calcutta"
+            "_other": "Singapore Standard Time",
+            "_territory": "BN",
+            "_type": "Asia/Brunei"
           }
         },
         {
           "mapZone": {
-            "@other": "Sri Lanka Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Colombo"
+            "_other": "India Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Calcutta"
           }
         },
         {
           "mapZone": {
-            "@other": "Sri Lanka Standard Time",
-            "@territory": "LK",
-            "@type": "Asia/Colombo"
+            "_other": "India Standard Time",
+            "_territory": "IN",
+            "_type": "Asia/Calcutta"
           }
         },
         {
           "mapZone": {
-            "@other": "Syria Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Damascus"
+            "_other": "Sri Lanka Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Colombo"
           }
         },
         {
           "mapZone": {
-            "@other": "Syria Standard Time",
-            "@territory": "SY",
-            "@type": "Asia/Damascus"
+            "_other": "Sri Lanka Standard Time",
+            "_territory": "LK",
+            "_type": "Asia/Colombo"
           }
         },
         {
           "mapZone": {
-            "@other": "Bangladesh Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Dhaka"
+            "_other": "Syria Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Damascus"
           }
         },
         {
           "mapZone": {
-            "@other": "Bangladesh Standard Time",
-            "@territory": "BD",
-            "@type": "Asia/Dhaka"
+            "_other": "Syria Standard Time",
+            "_territory": "SY",
+            "_type": "Asia/Damascus"
           }
         },
         {
           "mapZone": {
-            "@other": "Tokyo Standard Time",
-            "@territory": "TL",
-            "@type": "Asia/Dili"
+            "_other": "Bangladesh Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Dhaka"
           }
         },
         {
           "mapZone": {
-            "@other": "Arabian Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Dubai"
+            "_other": "Bangladesh Standard Time",
+            "_territory": "BD",
+            "_type": "Asia/Dhaka"
           }
         },
         {
           "mapZone": {
-            "@other": "Arabian Standard Time",
-            "@territory": "AE",
-            "@type": "Asia/Dubai"
+            "_other": "Tokyo Standard Time",
+            "_territory": "TL",
+            "_type": "Asia/Dili"
           }
         },
         {
           "mapZone": {
-            "@other": "West Asia Standard Time",
-            "@territory": "TJ",
-            "@type": "Asia/Dushanbe"
+            "_other": "Arabian Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Dubai"
           }
         },
         {
           "mapZone": {
-            "@other": "Egypt Standard Time",
-            "@territory": "PS",
-            "@type": "Asia/Gaza Asia/Hebron"
+            "_other": "Arabian Standard Time",
+            "_territory": "AE",
+            "_type": "Asia/Dubai"
           }
         },
         {
           "mapZone": {
-            "@other": "China Standard Time",
-            "@territory": "HK",
-            "@type": "Asia/Hong_Kong"
+            "_other": "West Asia Standard Time",
+            "_territory": "TJ",
+            "_type": "Asia/Dushanbe"
           }
         },
         {
           "mapZone": {
-            "@other": "SE Asia Standard Time",
-            "@territory": "MN",
-            "@type": "Asia/Hovd"
+            "_other": "China Standard Time",
+            "_territory": "HK",
+            "_type": "Asia/Hong_Kong"
           }
         },
         {
           "mapZone": {
-            "@other": "North Asia East Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Irkutsk"
+            "_other": "SE Asia Standard Time",
+            "_territory": "MN",
+            "_type": "Asia/Hovd"
           }
         },
         {
           "mapZone": {
-            "@other": "North Asia East Standard Time",
-            "@territory": "RU",
-            "@type": "Asia/Irkutsk"
+            "_other": "North Asia East Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Irkutsk"
           }
         },
         {
           "mapZone": {
-            "@other": "SE Asia Standard Time",
-            "@territory": "ID",
-            "@type": "Asia/Jakarta Asia/Pontianak"
+            "_other": "North Asia East Standard Time",
+            "_territory": "RU",
+            "_type": "Asia/Irkutsk"
           }
         },
         {
           "mapZone": {
-            "@other": "Tokyo Standard Time",
-            "@territory": "ID",
-            "@type": "Asia/Jayapura"
+            "_other": "SE Asia Standard Time",
+            "_territory": "ID",
+            "_type": "Asia/Jakarta Asia/Pontianak"
           }
         },
         {
           "mapZone": {
-            "@other": "Israel Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Jerusalem"
+            "_other": "Tokyo Standard Time",
+            "_territory": "ID",
+            "_type": "Asia/Jayapura"
           }
         },
         {
           "mapZone": {
-            "@other": "Israel Standard Time",
-            "@territory": "IL",
-            "@type": "Asia/Jerusalem"
+            "_other": "Israel Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Jerusalem"
           }
         },
         {
           "mapZone": {
-            "@other": "Afghanistan Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Kabul"
+            "_other": "Israel Standard Time",
+            "_territory": "IL",
+            "_type": "Asia/Jerusalem"
           }
         },
         {
           "mapZone": {
-            "@other": "Afghanistan Standard Time",
-            "@territory": "AF",
-            "@type": "Asia/Kabul"
+            "_other": "Afghanistan Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Kabul"
           }
         },
         {
           "mapZone": {
-            "@other": "Pakistan Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Karachi"
+            "_other": "Afghanistan Standard Time",
+            "_territory": "AF",
+            "_type": "Asia/Kabul"
           }
         },
         {
           "mapZone": {
-            "@other": "Pakistan Standard Time",
-            "@territory": "PK",
-            "@type": "Asia/Karachi"
+            "_other": "Pakistan Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Karachi"
           }
         },
         {
           "mapZone": {
-            "@other": "Nepal Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Katmandu"
+            "_other": "Pakistan Standard Time",
+            "_territory": "PK",
+            "_type": "Asia/Karachi"
           }
         },
         {
           "mapZone": {
-            "@other": "Nepal Standard Time",
-            "@territory": "NP",
-            "@type": "Asia/Katmandu"
+            "_other": "Nepal Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Katmandu"
           }
         },
         {
           "mapZone": {
-            "@other": "North Asia Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Krasnoyarsk"
+            "_other": "Nepal Standard Time",
+            "_territory": "NP",
+            "_type": "Asia/Katmandu"
           }
         },
         {
           "mapZone": {
-            "@other": "North Asia Standard Time",
-            "@territory": "RU",
-            "@type": "Asia/Krasnoyarsk"
+            "_other": "North Asia Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Krasnoyarsk"
           }
         },
         {
           "mapZone": {
-            "@other": "Singapore Standard Time",
-            "@territory": "MY",
-            "@type": "Asia/Kuala_Lumpur Asia/Kuching"
+            "_other": "North Asia Standard Time",
+            "_territory": "RU",
+            "_type": "Asia/Krasnoyarsk"
           }
         },
         {
           "mapZone": {
-            "@other": "Arab Standard Time",
-            "@territory": "KW",
-            "@type": "Asia/Kuwait"
+            "_other": "Singapore Standard Time",
+            "_territory": "MY",
+            "_type": "Asia/Kuala_Lumpur Asia/Kuching"
           }
         },
         {
           "mapZone": {
-            "@other": "China Standard Time",
-            "@territory": "MO",
-            "@type": "Asia/Macau"
+            "_other": "Arab Standard Time",
+            "_territory": "KW",
+            "_type": "Asia/Kuwait"
           }
         },
         {
           "mapZone": {
-            "@other": "Magadan Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Magadan"
+            "_other": "China Standard Time",
+            "_territory": "MO",
+            "_type": "Asia/Macau"
           }
         },
         {
           "mapZone": {
-            "@other": "Magadan Standard Time",
-            "@territory": "RU",
-            "@type": "Asia/Magadan Asia/Anadyr Asia/Kamchatka"
+            "_other": "Magadan Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Magadan"
           }
         },
         {
           "mapZone": {
-            "@other": "Singapore Standard Time",
-            "@territory": "ID",
-            "@type": "Asia/Makassar"
+            "_other": "Magadan Standard Time",
+            "_territory": "RU",
+            "_type": "Asia/Magadan Asia/Anadyr Asia/Kamchatka"
           }
         },
         {
           "mapZone": {
-            "@other": "Singapore Standard Time",
-            "@territory": "PH",
-            "@type": "Asia/Manila"
+            "_other": "Singapore Standard Time",
+            "_territory": "ID",
+            "_type": "Asia/Makassar"
           }
         },
         {
           "mapZone": {
-            "@other": "Arabian Standard Time",
-            "@territory": "OM",
-            "@type": "Asia/Muscat"
+            "_other": "Singapore Standard Time",
+            "_territory": "PH",
+            "_type": "Asia/Manila"
           }
         },
         {
           "mapZone": {
-            "@other": "E. Europe Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Nicosia"
+            "_other": "Arabian Standard Time",
+            "_territory": "OM",
+            "_type": "Asia/Muscat"
           }
         },
         {
           "mapZone": {
-            "@other": "E. Europe Standard Time",
-            "@territory": "CY",
-            "@type": "Asia/Nicosia"
+            "_other": "E. Europe Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Nicosia"
           }
         },
         {
           "mapZone": {
-            "@other": "N. Central Asia Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Novosibirsk"
+            "_other": "E. Europe Standard Time",
+            "_territory": "CY",
+            "_type": "Asia/Nicosia"
           }
         },
         {
           "mapZone": {
-            "@other": "N. Central Asia Standard Time",
-            "@territory": "RU",
-            "@type": "Asia/Novosibirsk Asia/Novokuznetsk Asia/Omsk"
+            "_other": "N. Central Asia Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Novosibirsk"
           }
         },
         {
           "mapZone": {
-            "@other": "West Asia Standard Time",
-            "@territory": "KZ",
-            "@type": "Asia/Oral Asia/Aqtau Asia/Aqtobe"
+            "_other": "N. Central Asia Standard Time",
+            "_territory": "RU",
+            "_type": "Asia/Novosibirsk Asia/Novokuznetsk Asia/Omsk"
           }
         },
         {
           "mapZone": {
-            "@other": "SE Asia Standard Time",
-            "@territory": "KH",
-            "@type": "Asia/Phnom_Penh"
+            "_other": "West Asia Standard Time",
+            "_territory": "KZ",
+            "_type": "Asia/Oral Asia/Aqtau Asia/Aqtobe"
           }
         },
         {
           "mapZone": {
-            "@other": "Korea Standard Time",
-            "@territory": "KP",
-            "@type": "Asia/Pyongyang"
+            "_other": "SE Asia Standard Time",
+            "_territory": "KH",
+            "_type": "Asia/Phnom_Penh"
           }
         },
         {
           "mapZone": {
-            "@other": "Arab Standard Time",
-            "@territory": "QA",
-            "@type": "Asia/Qatar"
+            "_other": "Korea Standard Time",
+            "_territory": "KP",
+            "_type": "Asia/Pyongyang"
           }
         },
         {
           "mapZone": {
-            "@other": "Myanmar Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Rangoon"
+            "_other": "Arab Standard Time",
+            "_territory": "QA",
+            "_type": "Asia/Qatar"
           }
         },
         {
           "mapZone": {
-            "@other": "Myanmar Standard Time",
-            "@territory": "MM",
-            "@type": "Asia/Rangoon"
+            "_other": "Myanmar Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Rangoon"
           }
         },
         {
           "mapZone": {
-            "@other": "Arab Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Riyadh"
+            "_other": "Myanmar Standard Time",
+            "_territory": "MM",
+            "_type": "Asia/Rangoon"
           }
         },
         {
           "mapZone": {
-            "@other": "Arab Standard Time",
-            "@territory": "SA",
-            "@type": "Asia/Riyadh"
+            "_other": "Arab Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Riyadh"
           }
         },
         {
           "mapZone": {
-            "@other": "SE Asia Standard Time",
-            "@territory": "VN",
-            "@type": "Asia/Saigon"
+            "_other": "Arab Standard Time",
+            "_territory": "SA",
+            "_type": "Asia/Riyadh"
           }
         },
         {
           "mapZone": {
-            "@other": "Korea Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Seoul"
+            "_other": "SE Asia Standard Time",
+            "_territory": "VN",
+            "_type": "Asia/Saigon"
           }
         },
         {
           "mapZone": {
-            "@other": "Korea Standard Time",
-            "@territory": "KR",
-            "@type": "Asia/Seoul"
+            "_other": "Korea Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Seoul"
           }
         },
         {
           "mapZone": {
-            "@other": "China Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Shanghai"
+            "_other": "Korea Standard Time",
+            "_territory": "KR",
+            "_type": "Asia/Seoul"
           }
         },
         {
           "mapZone": {
-            "@other": "China Standard Time",
-            "@territory": "CN",
-            "@type": "Asia/Shanghai Asia/Chongqing Asia/Harbin Asia/Kashgar Asia/Urumqi"
+            "_other": "China Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Shanghai"
           }
         },
         {
           "mapZone": {
-            "@other": "Singapore Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Singapore"
+            "_other": "China Standard Time",
+            "_territory": "CN",
+            "_type": "Asia/Shanghai Asia/Chongqing Asia/Harbin Asia/Kashgar Asia/Urumqi"
           }
         },
         {
           "mapZone": {
-            "@other": "Singapore Standard Time",
-            "@territory": "SG",
-            "@type": "Asia/Singapore"
+            "_other": "Singapore Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Singapore"
           }
         },
         {
           "mapZone": {
-            "@other": "Taipei Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Taipei"
+            "_other": "Singapore Standard Time",
+            "_territory": "SG",
+            "_type": "Asia/Singapore"
           }
         },
         {
           "mapZone": {
-            "@other": "Taipei Standard Time",
-            "@territory": "TW",
-            "@type": "Asia/Taipei"
+            "_other": "Taipei Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Taipei"
           }
         },
         {
           "mapZone": {
-            "@other": "West Asia Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Tashkent"
+            "_other": "Taipei Standard Time",
+            "_territory": "TW",
+            "_type": "Asia/Taipei"
           }
         },
         {
           "mapZone": {
-            "@other": "West Asia Standard Time",
-            "@territory": "UZ",
-            "@type": "Asia/Tashkent Asia/Samarkand"
+            "_other": "West Asia Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Tashkent"
           }
         },
         {
           "mapZone": {
-            "@other": "Georgian Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Tbilisi"
+            "_other": "West Asia Standard Time",
+            "_territory": "UZ",
+            "_type": "Asia/Tashkent Asia/Samarkand"
           }
         },
         {
           "mapZone": {
-            "@other": "Georgian Standard Time",
-            "@territory": "GE",
-            "@type": "Asia/Tbilisi"
+            "_other": "Georgian Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Tbilisi"
           }
         },
         {
           "mapZone": {
-            "@other": "Iran Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Tehran"
+            "_other": "Georgian Standard Time",
+            "_territory": "GE",
+            "_type": "Asia/Tbilisi"
           }
         },
         {
           "mapZone": {
-            "@other": "Iran Standard Time",
-            "@territory": "IR",
-            "@type": "Asia/Tehran"
+            "_other": "Iran Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Tehran"
           }
         },
         {
           "mapZone": {
-            "@other": "Bangladesh Standard Time",
-            "@territory": "BT",
-            "@type": "Asia/Thimphu"
+            "_other": "Iran Standard Time",
+            "_territory": "IR",
+            "_type": "Asia/Tehran"
           }
         },
         {
           "mapZone": {
-            "@other": "Tokyo Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Tokyo"
+            "_other": "Bangladesh Standard Time",
+            "_territory": "BT",
+            "_type": "Asia/Thimphu"
           }
         },
         {
           "mapZone": {
-            "@other": "Tokyo Standard Time",
-            "@territory": "JP",
-            "@type": "Asia/Tokyo"
+            "_other": "Tokyo Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Tokyo"
           }
         },
         {
           "mapZone": {
-            "@other": "Ulaanbaatar Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Ulaanbaatar"
+            "_other": "Tokyo Standard Time",
+            "_territory": "JP",
+            "_type": "Asia/Tokyo"
           }
         },
         {
           "mapZone": {
-            "@other": "Ulaanbaatar Standard Time",
-            "@territory": "MN",
-            "@type": "Asia/Ulaanbaatar Asia/Choibalsan"
+            "_other": "Ulaanbaatar Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Ulaanbaatar"
           }
         },
         {
           "mapZone": {
-            "@other": "SE Asia Standard Time",
-            "@territory": "LA",
-            "@type": "Asia/Vientiane"
+            "_other": "Ulaanbaatar Standard Time",
+            "_territory": "MN",
+            "_type": "Asia/Ulaanbaatar Asia/Choibalsan"
           }
         },
         {
           "mapZone": {
-            "@other": "Vladivostok Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Vladivostok"
+            "_other": "SE Asia Standard Time",
+            "_territory": "LA",
+            "_type": "Asia/Vientiane"
           }
         },
         {
           "mapZone": {
-            "@other": "Vladivostok Standard Time",
-            "@territory": "RU",
-            "@type": "Asia/Vladivostok Asia/Sakhalin Asia/Ust-Nera"
+            "_other": "Vladivostok Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Vladivostok"
           }
         },
         {
           "mapZone": {
-            "@other": "Yakutsk Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Yakutsk"
+            "_other": "Vladivostok Standard Time",
+            "_territory": "RU",
+            "_type": "Asia/Vladivostok Asia/Sakhalin Asia/Ust-Nera"
           }
         },
         {
           "mapZone": {
-            "@other": "Yakutsk Standard Time",
-            "@territory": "RU",
-            "@type": "Asia/Yakutsk Asia/Khandyga"
+            "_other": "Yakutsk Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Yakutsk"
           }
         },
         {
           "mapZone": {
-            "@other": "Ekaterinburg Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Yekaterinburg"
+            "_other": "Yakutsk Standard Time",
+            "_territory": "RU",
+            "_type": "Asia/Yakutsk Asia/Khandyga"
           }
         },
         {
           "mapZone": {
-            "@other": "Ekaterinburg Standard Time",
-            "@territory": "RU",
-            "@type": "Asia/Yekaterinburg"
+            "_other": "Ekaterinburg Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Yekaterinburg"
           }
         },
         {
           "mapZone": {
-            "@other": "Caucasus Standard Time",
-            "@territory": "001",
-            "@type": "Asia/Yerevan"
+            "_other": "Ekaterinburg Standard Time",
+            "_territory": "RU",
+            "_type": "Asia/Yekaterinburg"
           }
         },
         {
           "mapZone": {
-            "@other": "Caucasus Standard Time",
-            "@territory": "AM",
-            "@type": "Asia/Yerevan"
+            "_other": "Caucasus Standard Time",
+            "_territory": "001",
+            "_type": "Asia/Yerevan"
           }
         },
         {
           "mapZone": {
-            "@other": "Azores Standard Time",
-            "@territory": "001",
-            "@type": "Atlantic/Azores"
+            "_other": "Caucasus Standard Time",
+            "_territory": "AM",
+            "_type": "Asia/Yerevan"
           }
         },
         {
           "mapZone": {
-            "@other": "Azores Standard Time",
-            "@territory": "PT",
-            "@type": "Atlantic/Azores"
+            "_other": "Azores Standard Time",
+            "_territory": "001",
+            "_type": "Atlantic/Azores"
           }
         },
         {
           "mapZone": {
-            "@other": "Atlantic Standard Time",
-            "@territory": "BM",
-            "@type": "Atlantic/Bermuda"
+            "_other": "Azores Standard Time",
+            "_territory": "PT",
+            "_type": "Atlantic/Azores"
           }
         },
         {
           "mapZone": {
-            "@other": "GMT Standard Time",
-            "@territory": "ES",
-            "@type": "Atlantic/Canary"
+            "_other": "Atlantic Standard Time",
+            "_territory": "BM",
+            "_type": "Atlantic/Bermuda"
           }
         },
         {
           "mapZone": {
-            "@other": "Cape Verde Standard Time",
-            "@territory": "001",
-            "@type": "Atlantic/Cape_Verde"
+            "_other": "GMT Standard Time",
+            "_territory": "ES",
+            "_type": "Atlantic/Canary"
           }
         },
         {
           "mapZone": {
-            "@other": "Cape Verde Standard Time",
-            "@territory": "CV",
-            "@type": "Atlantic/Cape_Verde"
+            "_other": "Cape Verde Standard Time",
+            "_territory": "001",
+            "_type": "Atlantic/Cape_Verde"
           }
         },
         {
           "mapZone": {
-            "@other": "GMT Standard Time",
-            "@territory": "FO",
-            "@type": "Atlantic/Faeroe"
+            "_other": "Cape Verde Standard Time",
+            "_territory": "CV",
+            "_type": "Atlantic/Cape_Verde"
           }
         },
         {
           "mapZone": {
-            "@other": "Greenwich Standard Time",
-            "@territory": "001",
-            "@type": "Atlantic/Reykjavik"
+            "_other": "GMT Standard Time",
+            "_territory": "FO",
+            "_type": "Atlantic/Faeroe"
           }
         },
         {
           "mapZone": {
-            "@other": "Greenwich Standard Time",
-            "@territory": "IS",
-            "@type": "Atlantic/Reykjavik"
+            "_other": "Greenwich Standard Time",
+            "_territory": "001",
+            "_type": "Atlantic/Reykjavik"
           }
         },
         {
           "mapZone": {
-            "@other": "UTC-02",
-            "@territory": "GS",
-            "@type": "Atlantic/South_Georgia"
+            "_other": "Greenwich Standard Time",
+            "_territory": "IS",
+            "_type": "Atlantic/Reykjavik"
           }
         },
         {
           "mapZone": {
-            "@other": "Greenwich Standard Time",
-            "@territory": "SH",
-            "@type": "Atlantic/St_Helena"
+            "_other": "UTC-02",
+            "_territory": "GS",
+            "_type": "Atlantic/South_Georgia"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Eastern Standard Time",
-            "@territory": "FK",
-            "@type": "Atlantic/Stanley"
+            "_other": "Greenwich Standard Time",
+            "_territory": "SH",
+            "_type": "Atlantic/St_Helena"
           }
         },
         {
           "mapZone": {
-            "@other": "Cen. Australia Standard Time",
-            "@territory": "001",
-            "@type": "Australia/Adelaide"
+            "_other": "SA Eastern Standard Time",
+            "_territory": "FK",
+            "_type": "Atlantic/Stanley"
           }
         },
         {
           "mapZone": {
-            "@other": "Cen. Australia Standard Time",
-            "@territory": "AU",
-            "@type": "Australia/Adelaide Australia/Broken_Hill"
+            "_other": "Cen. Australia Standard Time",
+            "_territory": "001",
+            "_type": "Australia/Adelaide"
           }
         },
         {
           "mapZone": {
-            "@other": "E. Australia Standard Time",
-            "@territory": "001",
-            "@type": "Australia/Brisbane"
+            "_other": "Cen. Australia Standard Time",
+            "_territory": "AU",
+            "_type": "Australia/Adelaide Australia/Broken_Hill"
           }
         },
         {
           "mapZone": {
-            "@other": "E. Australia Standard Time",
-            "@territory": "AU",
-            "@type": "Australia/Brisbane Australia/Lindeman"
+            "_other": "E. Australia Standard Time",
+            "_territory": "001",
+            "_type": "Australia/Brisbane"
           }
         },
         {
           "mapZone": {
-            "@other": "AUS Central Standard Time",
-            "@territory": "001",
-            "@type": "Australia/Darwin"
+            "_other": "E. Australia Standard Time",
+            "_territory": "AU",
+            "_type": "Australia/Brisbane Australia/Lindeman"
           }
         },
         {
           "mapZone": {
-            "@other": "AUS Central Standard Time",
-            "@territory": "AU",
-            "@type": "Australia/Darwin"
+            "_other": "AUS Central Standard Time",
+            "_territory": "001",
+            "_type": "Australia/Darwin"
           }
         },
         {
           "mapZone": {
-            "@other": "Tasmania Standard Time",
-            "@territory": "001",
-            "@type": "Australia/Hobart"
+            "_other": "AUS Central Standard Time",
+            "_territory": "AU",
+            "_type": "Australia/Darwin"
           }
         },
         {
           "mapZone": {
-            "@other": "Tasmania Standard Time",
-            "@territory": "AU",
-            "@type": "Australia/Hobart Australia/Currie"
+            "_other": "Tasmania Standard Time",
+            "_territory": "001",
+            "_type": "Australia/Hobart"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Australia Standard Time",
-            "@territory": "001",
-            "@type": "Australia/Perth"
+            "_other": "Tasmania Standard Time",
+            "_territory": "AU",
+            "_type": "Australia/Hobart Australia/Currie"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Australia Standard Time",
-            "@territory": "AU",
-            "@type": "Australia/Perth"
+            "_other": "W. Australia Standard Time",
+            "_territory": "001",
+            "_type": "Australia/Perth"
           }
         },
         {
           "mapZone": {
-            "@other": "AUS Eastern Standard Time",
-            "@territory": "001",
-            "@type": "Australia/Sydney"
+            "_other": "W. Australia Standard Time",
+            "_territory": "AU",
+            "_type": "Australia/Perth"
           }
         },
         {
           "mapZone": {
-            "@other": "AUS Eastern Standard Time",
-            "@territory": "AU",
-            "@type": "Australia/Sydney Australia/Melbourne"
+            "_other": "AUS Eastern Standard Time",
+            "_territory": "001",
+            "_type": "Australia/Sydney"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Standard Time",
-            "@territory": "ZZ",
-            "@type": "CST6CDT"
+            "_other": "AUS Eastern Standard Time",
+            "_territory": "AU",
+            "_type": "Australia/Sydney Australia/Melbourne"
           }
         },
         {
           "mapZone": {
-            "@other": "Eastern Standard Time",
-            "@territory": "ZZ",
-            "@type": "EST5EDT"
+            "_other": "Central Standard Time",
+            "_territory": "ZZ",
+            "_type": "CST6CDT"
           }
         },
         {
           "mapZone": {
-            "@other": "UTC",
-            "@territory": "001",
-            "@type": "Etc/GMT"
+            "_other": "Eastern Standard Time",
+            "_territory": "ZZ",
+            "_type": "EST5EDT"
           }
         },
         {
           "mapZone": {
-            "@other": "UTC",
-            "@territory": "ZZ",
-            "@type": "Etc/GMT"
+            "_other": "UTC",
+            "_territory": "001",
+            "_type": "Etc/GMT"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Central Africa Standard Time",
-            "@territory": "ZZ",
-            "@type": "Etc/GMT-1"
+            "_other": "UTC",
+            "_territory": "ZZ",
+            "_type": "Etc/GMT"
           }
         },
         {
           "mapZone": {
-            "@other": "South Africa Standard Time",
-            "@territory": "ZZ",
-            "@type": "Etc/GMT-2"
+            "_other": "W. Central Africa Standard Time",
+            "_territory": "ZZ",
+            "_type": "Etc/GMT-1"
           }
         },
         {
           "mapZone": {
-            "@other": "E. Africa Standard Time",
-            "@territory": "ZZ",
-            "@type": "Etc/GMT-3"
+            "_other": "South Africa Standard Time",
+            "_territory": "ZZ",
+            "_type": "Etc/GMT-2"
           }
         },
         {
           "mapZone": {
-            "@other": "Arabian Standard Time",
-            "@territory": "ZZ",
-            "@type": "Etc/GMT-4"
+            "_other": "E. Africa Standard Time",
+            "_territory": "ZZ",
+            "_type": "Etc/GMT-3"
           }
         },
         {
           "mapZone": {
-            "@other": "West Asia Standard Time",
-            "@territory": "ZZ",
-            "@type": "Etc/GMT-5"
+            "_other": "Arabian Standard Time",
+            "_territory": "ZZ",
+            "_type": "Etc/GMT-4"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Asia Standard Time",
-            "@territory": "ZZ",
-            "@type": "Etc/GMT-6"
+            "_other": "West Asia Standard Time",
+            "_territory": "ZZ",
+            "_type": "Etc/GMT-5"
           }
         },
         {
           "mapZone": {
-            "@other": "SE Asia Standard Time",
-            "@territory": "ZZ",
-            "@type": "Etc/GMT-7"
+            "_other": "Central Asia Standard Time",
+            "_territory": "ZZ",
+            "_type": "Etc/GMT-6"
           }
         },
         {
           "mapZone": {
-            "@other": "Singapore Standard Time",
-            "@territory": "ZZ",
-            "@type": "Etc/GMT-8"
+            "_other": "SE Asia Standard Time",
+            "_territory": "ZZ",
+            "_type": "Etc/GMT-7"
           }
         },
         {
           "mapZone": {
-            "@other": "Tokyo Standard Time",
-            "@territory": "ZZ",
-            "@type": "Etc/GMT-9"
+            "_other": "Singapore Standard Time",
+            "_territory": "ZZ",
+            "_type": "Etc/GMT-8"
           }
         },
         {
           "mapZone": {
-            "@other": "West Pacific Standard Time",
-            "@territory": "ZZ",
-            "@type": "Etc/GMT-10"
+            "_other": "Tokyo Standard Time",
+            "_territory": "ZZ",
+            "_type": "Etc/GMT-9"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Pacific Standard Time",
-            "@territory": "ZZ",
-            "@type": "Etc/GMT-11"
+            "_other": "West Pacific Standard Time",
+            "_territory": "ZZ",
+            "_type": "Etc/GMT-10"
           }
         },
         {
           "mapZone": {
-            "@other": "UTC+12",
-            "@territory": "001",
-            "@type": "Etc/GMT-12"
+            "_other": "Central Pacific Standard Time",
+            "_territory": "ZZ",
+            "_type": "Etc/GMT-11"
           }
         },
         {
           "mapZone": {
-            "@other": "UTC+12",
-            "@territory": "ZZ",
-            "@type": "Etc/GMT-12"
+            "_other": "UTC+12",
+            "_territory": "001",
+            "_type": "Etc/GMT-12"
           }
         },
         {
           "mapZone": {
-            "@other": "Tonga Standard Time",
-            "@territory": "ZZ",
-            "@type": "Etc/GMT-13"
+            "_other": "UTC+12",
+            "_territory": "ZZ",
+            "_type": "Etc/GMT-12"
           }
         },
         {
           "mapZone": {
-            "@other": "Cape Verde Standard Time",
-            "@territory": "ZZ",
-            "@type": "Etc/GMT+1"
+            "_other": "Tonga Standard Time",
+            "_territory": "ZZ",
+            "_type": "Etc/GMT-13"
           }
         },
         {
           "mapZone": {
-            "@other": "UTC-02",
-            "@territory": "001",
-            "@type": "Etc/GMT+2"
+            "_other": "Cape Verde Standard Time",
+            "_territory": "ZZ",
+            "_type": "Etc/GMT+1"
           }
         },
         {
           "mapZone": {
-            "@other": "UTC-02",
-            "@territory": "ZZ",
-            "@type": "Etc/GMT+2"
+            "_other": "UTC-02",
+            "_territory": "001",
+            "_type": "Etc/GMT+2"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Eastern Standard Time",
-            "@territory": "ZZ",
-            "@type": "Etc/GMT+3"
+            "_other": "UTC-02",
+            "_territory": "ZZ",
+            "_type": "Etc/GMT+2"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Western Standard Time",
-            "@territory": "ZZ",
-            "@type": "Etc/GMT+4"
+            "_other": "SA Eastern Standard Time",
+            "_territory": "ZZ",
+            "_type": "Etc/GMT+3"
           }
         },
         {
           "mapZone": {
-            "@other": "SA Pacific Standard Time",
-            "@territory": "ZZ",
-            "@type": "Etc/GMT+5"
+            "_other": "SA Western Standard Time",
+            "_territory": "ZZ",
+            "_type": "Etc/GMT+4"
           }
         },
         {
           "mapZone": {
-            "@other": "Central America Standard Time",
-            "@territory": "ZZ",
-            "@type": "Etc/GMT+6"
+            "_other": "SA Pacific Standard Time",
+            "_territory": "ZZ",
+            "_type": "Etc/GMT+5"
           }
         },
         {
           "mapZone": {
-            "@other": "US Mountain Standard Time",
-            "@territory": "ZZ",
-            "@type": "Etc/GMT+7"
+            "_other": "Central America Standard Time",
+            "_territory": "ZZ",
+            "_type": "Etc/GMT+6"
           }
         },
         {
           "mapZone": {
-            "@other": "Hawaiian Standard Time",
-            "@territory": "ZZ",
-            "@type": "Etc/GMT+10"
+            "_other": "US Mountain Standard Time",
+            "_territory": "ZZ",
+            "_type": "Etc/GMT+7"
           }
         },
         {
           "mapZone": {
-            "@other": "UTC-11",
-            "@territory": "001",
-            "@type": "Etc/GMT+11"
+            "_other": "Hawaiian Standard Time",
+            "_territory": "ZZ",
+            "_type": "Etc/GMT+10"
           }
         },
         {
           "mapZone": {
-            "@other": "UTC-11",
-            "@territory": "ZZ",
-            "@type": "Etc/GMT+11"
+            "_other": "UTC-11",
+            "_territory": "001",
+            "_type": "Etc/GMT+11"
           }
         },
         {
           "mapZone": {
-            "@other": "Dateline Standard Time",
-            "@territory": "001",
-            "@type": "Etc/GMT+12"
+            "_other": "UTC-11",
+            "_territory": "ZZ",
+            "_type": "Etc/GMT+11"
           }
         },
         {
           "mapZone": {
-            "@other": "Dateline Standard Time",
-            "@territory": "ZZ",
-            "@type": "Etc/GMT+12"
+            "_other": "Dateline Standard Time",
+            "_territory": "001",
+            "_type": "Etc/GMT+12"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Europe Standard Time",
-            "@territory": "NL",
-            "@type": "Europe/Amsterdam"
+            "_other": "Dateline Standard Time",
+            "_territory": "ZZ",
+            "_type": "Etc/GMT+12"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Europe Standard Time",
-            "@territory": "AD",
-            "@type": "Europe/Andorra"
+            "_other": "W. Europe Standard Time",
+            "_territory": "NL",
+            "_type": "Europe/Amsterdam"
           }
         },
         {
           "mapZone": {
-            "@other": "GTB Standard Time",
-            "@territory": "GR",
-            "@type": "Europe/Athens"
+            "_other": "W. Europe Standard Time",
+            "_territory": "AD",
+            "_type": "Europe/Andorra"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Europe Standard Time",
-            "@territory": "RS",
-            "@type": "Europe/Belgrade"
+            "_other": "GTB Standard Time",
+            "_territory": "GR",
+            "_type": "Europe/Athens"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Europe Standard Time",
-            "@territory": "001",
-            "@type": "Europe/Berlin"
+            "_other": "Central Europe Standard Time",
+            "_territory": "RS",
+            "_type": "Europe/Belgrade"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Europe Standard Time",
-            "@territory": "DE",
-            "@type": "Europe/Berlin Europe/Busingen"
+            "_other": "W. Europe Standard Time",
+            "_territory": "001",
+            "_type": "Europe/Berlin"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Europe Standard Time",
-            "@territory": "SK",
-            "@type": "Europe/Bratislava"
+            "_other": "W. Europe Standard Time",
+            "_territory": "DE",
+            "_type": "Europe/Berlin Europe/Busingen"
           }
         },
         {
           "mapZone": {
-            "@other": "Romance Standard Time",
-            "@territory": "BE",
-            "@type": "Europe/Brussels"
+            "_other": "Central Europe Standard Time",
+            "_territory": "SK",
+            "_type": "Europe/Bratislava"
           }
         },
         {
           "mapZone": {
-            "@other": "GTB Standard Time",
-            "@territory": "001",
-            "@type": "Europe/Bucharest"
+            "_other": "Romance Standard Time",
+            "_territory": "BE",
+            "_type": "Europe/Brussels"
           }
         },
         {
           "mapZone": {
-            "@other": "GTB Standard Time",
-            "@territory": "RO",
-            "@type": "Europe/Bucharest"
+            "_other": "GTB Standard Time",
+            "_territory": "001",
+            "_type": "Europe/Bucharest"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Europe Standard Time",
-            "@territory": "001",
-            "@type": "Europe/Budapest"
+            "_other": "GTB Standard Time",
+            "_territory": "RO",
+            "_type": "Europe/Bucharest"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Europe Standard Time",
-            "@territory": "HU",
-            "@type": "Europe/Budapest"
+            "_other": "Central Europe Standard Time",
+            "_territory": "001",
+            "_type": "Europe/Budapest"
           }
         },
         {
           "mapZone": {
-            "@other": "GTB Standard Time",
-            "@territory": "MD",
-            "@type": "Europe/Chisinau"
+            "_other": "Central Europe Standard Time",
+            "_territory": "HU",
+            "_type": "Europe/Budapest"
           }
         },
         {
           "mapZone": {
-            "@other": "Romance Standard Time",
-            "@territory": "DK",
-            "@type": "Europe/Copenhagen"
+            "_other": "GTB Standard Time",
+            "_territory": "MD",
+            "_type": "Europe/Chisinau"
           }
         },
         {
           "mapZone": {
-            "@other": "GMT Standard Time",
-            "@territory": "IE",
-            "@type": "Europe/Dublin"
+            "_other": "Romance Standard Time",
+            "_territory": "DK",
+            "_type": "Europe/Copenhagen"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Europe Standard Time",
-            "@territory": "GI",
-            "@type": "Europe/Gibraltar"
+            "_other": "GMT Standard Time",
+            "_territory": "IE",
+            "_type": "Europe/Dublin"
           }
         },
         {
           "mapZone": {
-            "@other": "GMT Standard Time",
-            "@territory": "GG",
-            "@type": "Europe/Guernsey"
+            "_other": "W. Europe Standard Time",
+            "_territory": "GI",
+            "_type": "Europe/Gibraltar"
           }
         },
         {
           "mapZone": {
-            "@other": "FLE Standard Time",
-            "@territory": "FI",
-            "@type": "Europe/Helsinki"
+            "_other": "GMT Standard Time",
+            "_territory": "GG",
+            "_type": "Europe/Guernsey"
           }
         },
         {
           "mapZone": {
-            "@other": "GMT Standard Time",
-            "@territory": "IM",
-            "@type": "Europe/Isle_of_Man"
+            "_other": "FLE Standard Time",
+            "_territory": "FI",
+            "_type": "Europe/Helsinki"
           }
         },
         {
           "mapZone": {
-            "@other": "Turkey Standard Time",
-            "@territory": "001",
-            "@type": "Europe/Istanbul"
+            "_other": "GMT Standard Time",
+            "_territory": "IM",
+            "_type": "Europe/Isle_of_Man"
           }
         },
         {
           "mapZone": {
-            "@other": "Turkey Standard Time",
-            "@territory": "TR",
-            "@type": "Europe/Istanbul"
+            "_other": "Turkey Standard Time",
+            "_territory": "001",
+            "_type": "Europe/Istanbul"
           }
         },
         {
           "mapZone": {
-            "@other": "GMT Standard Time",
-            "@territory": "JE",
-            "@type": "Europe/Jersey"
+            "_other": "Turkey Standard Time",
+            "_territory": "TR",
+            "_type": "Europe/Istanbul"
           }
         },
         {
           "mapZone": {
-            "@other": "Kaliningrad Standard Time",
-            "@territory": "001",
-            "@type": "Europe/Kaliningrad"
+            "_other": "GMT Standard Time",
+            "_territory": "JE",
+            "_type": "Europe/Jersey"
           }
         },
         {
           "mapZone": {
-            "@other": "Kaliningrad Standard Time",
-            "@territory": "RU",
-            "@type": "Europe/Kaliningrad"
+            "_other": "Kaliningrad Standard Time",
+            "_territory": "001",
+            "_type": "Europe/Kaliningrad"
           }
         },
         {
           "mapZone": {
-            "@other": "FLE Standard Time",
-            "@territory": "001",
-            "@type": "Europe/Kiev"
+            "_other": "Kaliningrad Standard Time",
+            "_territory": "RU",
+            "_type": "Europe/Kaliningrad"
           }
         },
         {
           "mapZone": {
-            "@other": "FLE Standard Time",
-            "@territory": "UA",
-            "@type": "Europe/Kiev Europe/Simferopol Europe/Uzhgorod Europe/Zaporozhye"
+            "_other": "FLE Standard Time",
+            "_territory": "001",
+            "_type": "Europe/Kiev"
           }
         },
         {
           "mapZone": {
-            "@other": "GMT Standard Time",
-            "@territory": "PT",
-            "@type": "Europe/Lisbon Atlantic/Madeira"
+            "_other": "FLE Standard Time",
+            "_territory": "UA",
+            "_type": "Europe/Kiev Europe/Simferopol Europe/Uzhgorod Europe/Zaporozhye"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Europe Standard Time",
-            "@territory": "SI",
-            "@type": "Europe/Ljubljana"
+            "_other": "GMT Standard Time",
+            "_territory": "PT",
+            "_type": "Europe/Lisbon Atlantic/Madeira"
           }
         },
         {
           "mapZone": {
-            "@other": "GMT Standard Time",
-            "@territory": "001",
-            "@type": "Europe/London"
+            "_other": "Central Europe Standard Time",
+            "_territory": "SI",
+            "_type": "Europe/Ljubljana"
           }
         },
         {
           "mapZone": {
-            "@other": "GMT Standard Time",
-            "@territory": "GB",
-            "@type": "Europe/London"
+            "_other": "GMT Standard Time",
+            "_territory": "001",
+            "_type": "Europe/London"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Europe Standard Time",
-            "@territory": "LU",
-            "@type": "Europe/Luxembourg"
+            "_other": "GMT Standard Time",
+            "_territory": "GB",
+            "_type": "Europe/London"
           }
         },
         {
           "mapZone": {
-            "@other": "Romance Standard Time",
-            "@territory": "ES",
-            "@type": "Europe/Madrid Africa/Ceuta"
+            "_other": "W. Europe Standard Time",
+            "_territory": "LU",
+            "_type": "Europe/Luxembourg"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Europe Standard Time",
-            "@territory": "MT",
-            "@type": "Europe/Malta"
+            "_other": "Romance Standard Time",
+            "_territory": "ES",
+            "_type": "Europe/Madrid Africa/Ceuta"
           }
         },
         {
           "mapZone": {
-            "@other": "FLE Standard Time",
-            "@territory": "AX",
-            "@type": "Europe/Mariehamn"
+            "_other": "W. Europe Standard Time",
+            "_territory": "MT",
+            "_type": "Europe/Malta"
           }
         },
         {
           "mapZone": {
-            "@other": "Kaliningrad Standard Time",
-            "@territory": "BY",
-            "@type": "Europe/Minsk"
+            "_other": "FLE Standard Time",
+            "_territory": "AX",
+            "_type": "Europe/Mariehamn"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Europe Standard Time",
-            "@territory": "MC",
-            "@type": "Europe/Monaco"
+            "_other": "Kaliningrad Standard Time",
+            "_territory": "BY",
+            "_type": "Europe/Minsk"
           }
         },
         {
           "mapZone": {
-            "@other": "Russian Standard Time",
-            "@territory": "001",
-            "@type": "Europe/Moscow"
+            "_other": "W. Europe Standard Time",
+            "_territory": "MC",
+            "_type": "Europe/Monaco"
           }
         },
         {
           "mapZone": {
-            "@other": "Russian Standard Time",
-            "@territory": "RU",
-            "@type": "Europe/Moscow Europe/Samara Europe/Volgograd"
+            "_other": "Russian Standard Time",
+            "_territory": "001",
+            "_type": "Europe/Moscow"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Europe Standard Time",
-            "@territory": "NO",
-            "@type": "Europe/Oslo"
+            "_other": "Russian Standard Time",
+            "_territory": "RU",
+            "_type": "Europe/Moscow Europe/Samara Europe/Volgograd"
           }
         },
         {
           "mapZone": {
-            "@other": "Romance Standard Time",
-            "@territory": "001",
-            "@type": "Europe/Paris"
+            "_other": "W. Europe Standard Time",
+            "_territory": "NO",
+            "_type": "Europe/Oslo"
           }
         },
         {
           "mapZone": {
-            "@other": "Romance Standard Time",
-            "@territory": "FR",
-            "@type": "Europe/Paris"
+            "_other": "Romance Standard Time",
+            "_territory": "001",
+            "_type": "Europe/Paris"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Europe Standard Time",
-            "@territory": "ME",
-            "@type": "Europe/Podgorica"
+            "_other": "Romance Standard Time",
+            "_territory": "FR",
+            "_type": "Europe/Paris"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Europe Standard Time",
-            "@territory": "CZ",
-            "@type": "Europe/Prague"
+            "_other": "Central Europe Standard Time",
+            "_territory": "ME",
+            "_type": "Europe/Podgorica"
           }
         },
         {
           "mapZone": {
-            "@other": "FLE Standard Time",
-            "@territory": "LV",
-            "@type": "Europe/Riga"
+            "_other": "Central Europe Standard Time",
+            "_territory": "CZ",
+            "_type": "Europe/Prague"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Europe Standard Time",
-            "@territory": "IT",
-            "@type": "Europe/Rome"
+            "_other": "FLE Standard Time",
+            "_territory": "LV",
+            "_type": "Europe/Riga"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Europe Standard Time",
-            "@territory": "SM",
-            "@type": "Europe/San_Marino"
+            "_other": "W. Europe Standard Time",
+            "_territory": "IT",
+            "_type": "Europe/Rome"
           }
         },
         {
           "mapZone": {
-            "@other": "Central European Standard Time",
-            "@territory": "BA",
-            "@type": "Europe/Sarajevo"
+            "_other": "W. Europe Standard Time",
+            "_territory": "SM",
+            "_type": "Europe/San_Marino"
           }
         },
         {
           "mapZone": {
-            "@other": "Central European Standard Time",
-            "@territory": "MK",
-            "@type": "Europe/Skopje"
+            "_other": "Central European Standard Time",
+            "_territory": "BA",
+            "_type": "Europe/Sarajevo"
           }
         },
         {
           "mapZone": {
-            "@other": "FLE Standard Time",
-            "@territory": "BG",
-            "@type": "Europe/Sofia"
+            "_other": "Central European Standard Time",
+            "_territory": "MK",
+            "_type": "Europe/Skopje"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Europe Standard Time",
-            "@territory": "SE",
-            "@type": "Europe/Stockholm"
+            "_other": "FLE Standard Time",
+            "_territory": "BG",
+            "_type": "Europe/Sofia"
           }
         },
         {
           "mapZone": {
-            "@other": "FLE Standard Time",
-            "@territory": "EE",
-            "@type": "Europe/Tallinn"
+            "_other": "W. Europe Standard Time",
+            "_territory": "SE",
+            "_type": "Europe/Stockholm"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Europe Standard Time",
-            "@territory": "AL",
-            "@type": "Europe/Tirane"
+            "_other": "FLE Standard Time",
+            "_territory": "EE",
+            "_type": "Europe/Tallinn"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Europe Standard Time",
-            "@territory": "LI",
-            "@type": "Europe/Vaduz"
+            "_other": "Central Europe Standard Time",
+            "_territory": "AL",
+            "_type": "Europe/Tirane"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Europe Standard Time",
-            "@territory": "VA",
-            "@type": "Europe/Vatican"
+            "_other": "W. Europe Standard Time",
+            "_territory": "LI",
+            "_type": "Europe/Vaduz"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Europe Standard Time",
-            "@territory": "AT",
-            "@type": "Europe/Vienna"
+            "_other": "W. Europe Standard Time",
+            "_territory": "VA",
+            "_type": "Europe/Vatican"
           }
         },
         {
           "mapZone": {
-            "@other": "FLE Standard Time",
-            "@territory": "LT",
-            "@type": "Europe/Vilnius"
+            "_other": "W. Europe Standard Time",
+            "_territory": "AT",
+            "_type": "Europe/Vienna"
           }
         },
         {
           "mapZone": {
-            "@other": "Central European Standard Time",
-            "@territory": "001",
-            "@type": "Europe/Warsaw"
+            "_other": "FLE Standard Time",
+            "_territory": "LT",
+            "_type": "Europe/Vilnius"
           }
         },
         {
           "mapZone": {
-            "@other": "Central European Standard Time",
-            "@territory": "PL",
-            "@type": "Europe/Warsaw"
+            "_other": "Central European Standard Time",
+            "_territory": "001",
+            "_type": "Europe/Warsaw"
           }
         },
         {
           "mapZone": {
-            "@other": "Central European Standard Time",
-            "@territory": "HR",
-            "@type": "Europe/Zagreb"
+            "_other": "Central European Standard Time",
+            "_territory": "PL",
+            "_type": "Europe/Warsaw"
           }
         },
         {
           "mapZone": {
-            "@other": "W. Europe Standard Time",
-            "@territory": "CH",
-            "@type": "Europe/Zurich"
+            "_other": "Central European Standard Time",
+            "_territory": "HR",
+            "_type": "Europe/Zagreb"
           }
         },
         {
           "mapZone": {
-            "@other": "E. Africa Standard Time",
-            "@territory": "MG",
-            "@type": "Indian/Antananarivo"
+            "_other": "W. Europe Standard Time",
+            "_territory": "CH",
+            "_type": "Europe/Zurich"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Asia Standard Time",
-            "@territory": "IO",
-            "@type": "Indian/Chagos"
+            "_other": "E. Africa Standard Time",
+            "_territory": "MG",
+            "_type": "Indian/Antananarivo"
           }
         },
         {
           "mapZone": {
-            "@other": "SE Asia Standard Time",
-            "@territory": "CX",
-            "@type": "Indian/Christmas"
+            "_other": "Central Asia Standard Time",
+            "_territory": "IO",
+            "_type": "Indian/Chagos"
           }
         },
         {
           "mapZone": {
-            "@other": "Myanmar Standard Time",
-            "@territory": "CC",
-            "@type": "Indian/Cocos"
+            "_other": "SE Asia Standard Time",
+            "_territory": "CX",
+            "_type": "Indian/Christmas"
           }
         },
         {
           "mapZone": {
-            "@other": "E. Africa Standard Time",
-            "@territory": "KM",
-            "@type": "Indian/Comoro"
+            "_other": "Myanmar Standard Time",
+            "_territory": "CC",
+            "_type": "Indian/Cocos"
           }
         },
         {
           "mapZone": {
-            "@other": "West Asia Standard Time",
-            "@territory": "TF",
-            "@type": "Indian/Kerguelen"
+            "_other": "E. Africa Standard Time",
+            "_territory": "KM",
+            "_type": "Indian/Comoro"
           }
         },
         {
           "mapZone": {
-            "@other": "Mauritius Standard Time",
-            "@territory": "SC",
-            "@type": "Indian/Mahe"
+            "_other": "West Asia Standard Time",
+            "_territory": "TF",
+            "_type": "Indian/Kerguelen"
           }
         },
         {
           "mapZone": {
-            "@other": "West Asia Standard Time",
-            "@territory": "MV",
-            "@type": "Indian/Maldives"
+            "_other": "Mauritius Standard Time",
+            "_territory": "SC",
+            "_type": "Indian/Mahe"
           }
         },
         {
           "mapZone": {
-            "@other": "Mauritius Standard Time",
-            "@territory": "001",
-            "@type": "Indian/Mauritius"
+            "_other": "West Asia Standard Time",
+            "_territory": "MV",
+            "_type": "Indian/Maldives"
           }
         },
         {
           "mapZone": {
-            "@other": "Mauritius Standard Time",
-            "@territory": "MU",
-            "@type": "Indian/Mauritius"
+            "_other": "Mauritius Standard Time",
+            "_territory": "001",
+            "_type": "Indian/Mauritius"
           }
         },
         {
           "mapZone": {
-            "@other": "E. Africa Standard Time",
-            "@territory": "YT",
-            "@type": "Indian/Mayotte"
+            "_other": "Mauritius Standard Time",
+            "_territory": "MU",
+            "_type": "Indian/Mauritius"
           }
         },
         {
           "mapZone": {
-            "@other": "Mauritius Standard Time",
-            "@territory": "RE",
-            "@type": "Indian/Reunion"
+            "_other": "E. Africa Standard Time",
+            "_territory": "YT",
+            "_type": "Indian/Mayotte"
           }
         },
         {
           "mapZone": {
-            "@other": "Mountain Standard Time",
-            "@territory": "ZZ",
-            "@type": "MST7MDT"
+            "_other": "Mauritius Standard Time",
+            "_territory": "RE",
+            "_type": "Indian/Reunion"
           }
         },
         {
           "mapZone": {
-            "@other": "Samoa Standard Time",
-            "@territory": "001",
-            "@type": "Pacific/Apia"
+            "_other": "Mountain Standard Time",
+            "_territory": "ZZ",
+            "_type": "MST7MDT"
           }
         },
         {
           "mapZone": {
-            "@other": "Samoa Standard Time",
-            "@territory": "WS",
-            "@type": "Pacific/Apia"
+            "_other": "Samoa Standard Time",
+            "_territory": "001",
+            "_type": "Pacific/Apia"
           }
         },
         {
           "mapZone": {
-            "@other": "New Zealand Standard Time",
-            "@territory": "001",
-            "@type": "Pacific/Auckland"
+            "_other": "Samoa Standard Time",
+            "_territory": "WS",
+            "_type": "Pacific/Apia"
           }
         },
         {
           "mapZone": {
-            "@other": "New Zealand Standard Time",
-            "@territory": "NZ",
-            "@type": "Pacific/Auckland"
+            "_other": "New Zealand Standard Time",
+            "_territory": "001",
+            "_type": "Pacific/Auckland"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Pacific Standard Time",
-            "@territory": "VU",
-            "@type": "Pacific/Efate"
+            "_other": "New Zealand Standard Time",
+            "_territory": "NZ",
+            "_type": "Pacific/Auckland"
           }
         },
         {
           "mapZone": {
-            "@other": "Tonga Standard Time",
-            "@territory": "KI",
-            "@type": "Pacific/Enderbury"
+            "_other": "Central Pacific Standard Time",
+            "_territory": "VU",
+            "_type": "Pacific/Efate"
           }
         },
         {
           "mapZone": {
-            "@other": "Tonga Standard Time",
-            "@territory": "TK",
-            "@type": "Pacific/Fakaofo"
+            "_other": "Tonga Standard Time",
+            "_territory": "KI",
+            "_type": "Pacific/Enderbury"
           }
         },
         {
           "mapZone": {
-            "@other": "Fiji Standard Time",
-            "@territory": "001",
-            "@type": "Pacific/Fiji"
+            "_other": "Tonga Standard Time",
+            "_territory": "TK",
+            "_type": "Pacific/Fakaofo"
           }
         },
         {
           "mapZone": {
-            "@other": "Fiji Standard Time",
-            "@territory": "FJ",
-            "@type": "Pacific/Fiji"
+            "_other": "Fiji Standard Time",
+            "_territory": "001",
+            "_type": "Pacific/Fiji"
           }
         },
         {
           "mapZone": {
-            "@other": "UTC+12",
-            "@territory": "TV",
-            "@type": "Pacific/Funafuti"
+            "_other": "Fiji Standard Time",
+            "_territory": "FJ",
+            "_type": "Pacific/Fiji"
           }
         },
         {
           "mapZone": {
-            "@other": "Central America Standard Time",
-            "@territory": "EC",
-            "@type": "Pacific/Galapagos"
+            "_other": "UTC+12",
+            "_territory": "TV",
+            "_type": "Pacific/Funafuti"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Pacific Standard Time",
-            "@territory": "001",
-            "@type": "Pacific/Guadalcanal"
+            "_other": "Central America Standard Time",
+            "_territory": "EC",
+            "_type": "Pacific/Galapagos"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Pacific Standard Time",
-            "@territory": "SB",
-            "@type": "Pacific/Guadalcanal"
+            "_other": "Central Pacific Standard Time",
+            "_territory": "001",
+            "_type": "Pacific/Guadalcanal"
           }
         },
         {
           "mapZone": {
-            "@other": "West Pacific Standard Time",
-            "@territory": "GU",
-            "@type": "Pacific/Guam"
+            "_other": "Central Pacific Standard Time",
+            "_territory": "SB",
+            "_type": "Pacific/Guadalcanal"
           }
         },
         {
           "mapZone": {
-            "@other": "Hawaiian Standard Time",
-            "@territory": "001",
-            "@type": "Pacific/Honolulu"
+            "_other": "West Pacific Standard Time",
+            "_territory": "GU",
+            "_type": "Pacific/Guam"
           }
         },
         {
           "mapZone": {
-            "@other": "Hawaiian Standard Time",
-            "@territory": "US",
-            "@type": "Pacific/Honolulu"
+            "_other": "Hawaiian Standard Time",
+            "_territory": "001",
+            "_type": "Pacific/Honolulu"
           }
         },
         {
           "mapZone": {
-            "@other": "Hawaiian Standard Time",
-            "@territory": "UM",
-            "@type": "Pacific/Johnston"
+            "_other": "Hawaiian Standard Time",
+            "_territory": "US",
+            "_type": "Pacific/Honolulu"
           }
         },
         {
           "mapZone": {
-            "@other": "UTC+12",
-            "@territory": "MH",
-            "@type": "Pacific/Majuro Pacific/Kwajalein"
+            "_other": "Hawaiian Standard Time",
+            "_territory": "UM",
+            "_type": "Pacific/Johnston"
           }
         },
         {
           "mapZone": {
-            "@other": "UTC-11",
-            "@territory": "UM",
-            "@type": "Pacific/Midway"
+            "_other": "UTC+12",
+            "_territory": "MH",
+            "_type": "Pacific/Majuro Pacific/Kwajalein"
           }
         },
         {
           "mapZone": {
-            "@other": "UTC+12",
-            "@territory": "NR",
-            "@type": "Pacific/Nauru"
+            "_other": "UTC-11",
+            "_territory": "UM",
+            "_type": "Pacific/Midway"
           }
         },
         {
           "mapZone": {
-            "@other": "UTC-11",
-            "@territory": "NU",
-            "@type": "Pacific/Niue"
+            "_other": "UTC+12",
+            "_territory": "NR",
+            "_type": "Pacific/Nauru"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Pacific Standard Time",
-            "@territory": "NC",
-            "@type": "Pacific/Noumea"
+            "_other": "UTC-11",
+            "_territory": "NU",
+            "_type": "Pacific/Niue"
           }
         },
         {
           "mapZone": {
-            "@other": "UTC-11",
-            "@territory": "AS",
-            "@type": "Pacific/Pago_Pago"
+            "_other": "Central Pacific Standard Time",
+            "_territory": "NC",
+            "_type": "Pacific/Noumea"
           }
         },
         {
           "mapZone": {
-            "@other": "Tokyo Standard Time",
-            "@territory": "PW",
-            "@type": "Pacific/Palau"
+            "_other": "UTC-11",
+            "_territory": "AS",
+            "_type": "Pacific/Pago_Pago"
           }
         },
         {
           "mapZone": {
-            "@other": "Central Pacific Standard Time",
-            "@territory": "FM",
-            "@type": "Pacific/Ponape Pacific/Kosrae"
+            "_other": "Tokyo Standard Time",
+            "_territory": "PW",
+            "_type": "Pacific/Palau"
           }
         },
         {
           "mapZone": {
-            "@other": "West Pacific Standard Time",
-            "@territory": "001",
-            "@type": "Pacific/Port_Moresby"
+            "_other": "Central Pacific Standard Time",
+            "_territory": "FM",
+            "_type": "Pacific/Ponape Pacific/Kosrae"
           }
         },
         {
           "mapZone": {
-            "@other": "West Pacific Standard Time",
-            "@territory": "PG",
-            "@type": "Pacific/Port_Moresby"
+            "_other": "West Pacific Standard Time",
+            "_territory": "001",
+            "_type": "Pacific/Port_Moresby"
           }
         },
         {
           "mapZone": {
-            "@other": "Hawaiian Standard Time",
-            "@territory": "CK",
-            "@type": "Pacific/Rarotonga"
+            "_other": "West Pacific Standard Time",
+            "_territory": "PG",
+            "_type": "Pacific/Port_Moresby"
           }
         },
         {
           "mapZone": {
-            "@other": "West Pacific Standard Time",
-            "@territory": "MP",
-            "@type": "Pacific/Saipan"
+            "_other": "Hawaiian Standard Time",
+            "_territory": "CK",
+            "_type": "Pacific/Rarotonga"
           }
         },
         {
           "mapZone": {
-            "@other": "Hawaiian Standard Time",
-            "@territory": "PF",
-            "@type": "Pacific/Tahiti"
+            "_other": "West Pacific Standard Time",
+            "_territory": "MP",
+            "_type": "Pacific/Saipan"
           }
         },
         {
           "mapZone": {
-            "@other": "UTC+12",
-            "@territory": "KI",
-            "@type": "Pacific/Tarawa"
+            "_other": "Hawaiian Standard Time",
+            "_territory": "PF",
+            "_type": "Pacific/Tahiti"
           }
         },
         {
           "mapZone": {
-            "@other": "Tonga Standard Time",
-            "@territory": "001",
-            "@type": "Pacific/Tongatapu"
+            "_other": "UTC+12",
+            "_territory": "KI",
+            "_type": "Pacific/Tarawa"
           }
         },
         {
           "mapZone": {
-            "@other": "Tonga Standard Time",
-            "@territory": "TO",
-            "@type": "Pacific/Tongatapu"
+            "_other": "Tonga Standard Time",
+            "_territory": "001",
+            "_type": "Pacific/Tongatapu"
           }
         },
         {
           "mapZone": {
-            "@other": "West Pacific Standard Time",
-            "@territory": "FM",
-            "@type": "Pacific/Truk"
+            "_other": "Tonga Standard Time",
+            "_territory": "TO",
+            "_type": "Pacific/Tongatapu"
           }
         },
         {
           "mapZone": {
-            "@other": "UTC+12",
-            "@territory": "UM",
-            "@type": "Pacific/Wake"
+            "_other": "West Pacific Standard Time",
+            "_territory": "FM",
+            "_type": "Pacific/Truk"
           }
         },
         {
           "mapZone": {
-            "@other": "UTC+12",
-            "@territory": "WF",
-            "@type": "Pacific/Wallis"
+            "_other": "UTC+12",
+            "_territory": "UM",
+            "_type": "Pacific/Wake"
           }
         },
         {
           "mapZone": {
-            "@other": "Pacific Standard Time",
-            "@territory": "ZZ",
-            "@type": "PST8PDT"
+            "_other": "UTC+12",
+            "_territory": "WF",
+            "_type": "Pacific/Wallis"
+          }
+        },
+        {
+          "mapZone": {
+            "_other": "Pacific Standard Time",
+            "_territory": "ZZ",
+            "_type": "PST8PDT"
           }
         }
       ]

@@ -2,39 +2,40 @@ package org.unicode.cldr.icu;
 
 import java.io.File;
 import java.text.ParseException;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.unicode.cldr.icu.RegexManager.CldrArray;
+import org.unicode.cldr.icu.RegexManager.Function;
+import org.unicode.cldr.icu.RegexManager.PathValueInfo;
+import org.unicode.cldr.icu.RegexManager.RegexResult;
 import org.unicode.cldr.util.Builder;
 import org.unicode.cldr.util.CLDRFile;
-import org.unicode.cldr.util.CLDRFile.DraftStatus;
-import org.unicode.cldr.util.CldrUtility.Output;
+import org.unicode.cldr.util.Pair;
 import org.unicode.cldr.util.RegexLookup;
 import org.unicode.cldr.util.RegexLookup.Finder;
-import org.unicode.cldr.util.SimpleXMLSource;
-import org.unicode.cldr.util.XMLSource;
-import org.unicode.cldr.util.XPathParts.Comments;
+import org.unicode.cldr.util.XMLFileReader;
+import org.unicode.cldr.util.XPathParts;
 
 import com.ibm.icu.text.NumberFormat;
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.Calendar;
 import com.ibm.icu.util.GregorianCalendar;
+import com.ibm.icu.util.Output;
 import com.ibm.icu.util.TimeZone;
 
 /**
  * A mapper that converts supplemental LDML data from CLDR to the ICU data
  * structure.
  */
-public class SupplementalMapper extends LdmlMapper {
+public class SupplementalMapper {
+    private static final Pattern ARRAY_INDEX = Pattern.compile("(/[^\\[]++)(?:\\[(\\d++)\\])?$");
     private static final Map<String, String> enumMap = Builder.with(new HashMap<String, String>())
         .put("sun", "1").put("mon", "2").put("tues", "3").put("wed", "4")
         .put("thu", "5").put("fri", "6").put("sat", "7").get();
@@ -45,10 +46,22 @@ public class SupplementalMapper extends LdmlMapper {
 
     private int fifoCounter;
     private String inputDir;
-    private String cldrVersion;
+    private RegexManager regexMapper;
+    private String debugXPath;
 
     private enum DateFieldType {
-        from, to
+        from, to;
+
+        public static DateFieldType toEnum(String value) {
+            value = value.toLowerCase();
+            if (value.equals("from") || value.equals("start")) {
+                return from;
+            } else if (value.equals("to") || value.equals("end")) {
+                return to;
+            } else {
+                throw new IllegalArgumentException(value + " is not a valid date field type");
+            }
+        }
     };
 
     /**
@@ -74,7 +87,7 @@ public class SupplementalMapper extends LdmlMapper {
                     // dates correctly, so use a regular string comparison.
                     return arg0.compareTo(arg1);
                 }
-            } else if (matches(WEEKDATA, arg0, arg1, matchers)) {
+            } else if (RegexManager.matches(WEEKDATA, arg0, arg1, matchers)) {
                 // Sort weekData elements ourselves because ldmlComparator
                 // sorts firstDay after minDays.
                 String elem0 = matchers[0].group(1);
@@ -97,31 +110,27 @@ public class SupplementalMapper extends LdmlMapper {
      * 
      * @param inputDir
      *            the directory that the input files are in
-     * @param cldrVersion
-     *            the version of CLDR for output purposes. Only used
-     *            in supplementalData conversion.
      */
-    private SupplementalMapper(String inputDir, String cldrVersion) {
-        super("ldml2icu_supplemental.txt");
+    private SupplementalMapper(String inputDir) {
         this.inputDir = inputDir;
-        this.cldrVersion = cldrVersion;
     }
 
-    public static SupplementalMapper create(String inputDir, String cldrVersion) {
-        SupplementalMapper mapper = new SupplementalMapper(inputDir, cldrVersion);
+    public static SupplementalMapper create(String inputDir) {
+        SupplementalMapper mapper = new SupplementalMapper(inputDir);
         // Handlers for functions in regex file.
-        mapper.addFunction("date", new Function(2) {
+        RegexManager manager = new RegexManager("ldml2icu_supplemental.txt");
+        manager.addFunction("date", new Function(2) {
             /**
              * args[0] = value
              * args[1] = type (i.e. from/to)
              */
             @Override
             protected String run(String... args) {
-                DateFieldType dft = args[1].contains("from") ? DateFieldType.from : DateFieldType.to;
+                DateFieldType dft = DateFieldType.toEnum(args[1].trim());
                 return getSeconds(args[0], dft);
             }
         });
-        mapper.addFunction("algorithm", new Function(1) {
+        manager.addFunction("algorithm", new Function(1) {
             @Override
             protected String run(String... args) {
                 // Insert % into numberingSystems descriptions.
@@ -140,7 +149,7 @@ public class SupplementalMapper extends LdmlMapper {
         // args[0] = number to be converted
         // args[2] = an (optional) additional exponent offset,
         // e.g. -2 for converting percentages into fractions.
-        mapper.addFunction("exp", new Function(2) {
+        manager.addFunction("exp", new Function(2) {
             @Override
             protected String run(String... args) {
                 double value = Double.parseDouble(args[0]);
@@ -167,6 +176,7 @@ public class SupplementalMapper extends LdmlMapper {
                 return sign + exponent + Math.round(value * 100000);
             }
         });
+        mapper.regexMapper = manager;
         return mapper;
     }
 
@@ -189,15 +199,38 @@ public class SupplementalMapper extends LdmlMapper {
             if (outputName.equals("metadata")) category = "supplementalMetadata";
             loadValues(category, pathValueMap);
         }
-        addFallbackValues(pathValueMap);
+        regexMapper.addFallbackValues(pathValueMap);
         IcuData icuData = new IcuData(category + ".xml", outputName, false, enumMap);
         for (String rbPath : pathValueMap.keySet()) {
             CldrArray values = pathValueMap.get(rbPath);
             icuData.addAll(rbPath, values.sortValues(supplementalComparator));
         }
+        // Final pass through IcuData object to clean up any fallback rbpaths
+        // in the values.
+        // Assume one value per fallback path.
+        for (String rbPath : icuData) {
+            List<String[]> values = icuData.get(rbPath);
+            for (int i = 0, len = values.size(); i < len; i++) {
+                String[] valueArray = values.get(i);
+                if (valueArray.length != 1) continue;
+                String value = valueArray[0];
+                Matcher matcher = ARRAY_INDEX.matcher(value);
+                if (!matcher.matches()) continue;
+                String replacePath = matcher.group(1);
+                List<String[]> replaceValues = icuData.get(replacePath);
+                if (replaceValues == null) {
+                    throw new RuntimeException(replacePath + " is missing from IcuData object.");
+                }
+                int replaceIndex = matcher.groupCount() > 1 ? Integer.valueOf(matcher.group(2)) : 0;
+                if (replaceIndex >= replaceValues.size()) {
+                    throw new RuntimeException(replaceIndex + " out of range of values in " + replacePath);
+                }
+                values.set(i, replaceValues.get(replaceIndex));
+            }
+        }
         // Hack to add the CLDR version
         if (outputName.equals("supplementalData")) {
-            icuData.add("/cldrVersion", cldrVersion);
+            icuData.add("/cldrVersion", CLDRFile.GEN_VERSION);
         }
         return icuData;
     }
@@ -210,20 +243,28 @@ public class SupplementalMapper extends LdmlMapper {
      *            the output map
      */
     private void loadValues(String category, Map<String, CldrArray> pathValueMap) {
-        String inputFile = category + ".xml";
-        XMLSource source = new LinkedXMLSource();
-        CLDRFile cldrFile = CLDRFile.loadFromFile(new File(inputDir, inputFile),
-            category, DraftStatus.contributed, source);
-        RegexLookup<RegexResult> pathConverter = getPathConverter();
+        String inputFile = new File(inputDir, category + ".xml").getAbsolutePath();
+        List<Pair<String, String>> contents = new ArrayList<Pair<String, String>>();
+        XMLFileReader.loadPathValues(inputFile, contents, true);
+        RegexLookup<RegexResult> pathConverter = regexMapper.getPathConverter();
         fifoCounter = 0; // Helps to keep unsorted rb paths in order.
-        for (String xpath : cldrFile) {
+        XPathParts parts = new XPathParts();
+        for (Pair<String, String> pair : contents) {
             Output<Finder> matcher = new Output<Finder>();
-            String fullPath = cldrFile.getFullXPath(xpath);
-            RegexResult regexResult = pathConverter.get(fullPath, null, null, matcher, null);
-            if (regexResult == null) continue;
+            String fullPath = parts.set(pair.getFirst()).toString();
+            List<String> debugResults = isDebugXPath(fullPath) ? new ArrayList<String>() : null;
+            RegexResult regexResult = pathConverter.get(fullPath, null, null, matcher, debugResults);
+            if (regexResult == null) {
+                RegexManager.printLookupResults(fullPath, debugResults);
+                continue;
+            }
+            if (debugResults != null) {
+                System.out.println(fullPath + " successfully matched");
+            }
             String[] arguments = matcher.value.getInfo();
+            String cldrValue = pair.getSecond();
             for (PathValueInfo info : regexResult) {
-                List<String> values = info.processValues(arguments, cldrFile, xpath);
+                List<String> values = info.processValues(arguments, cldrValue);
                 // Check if there are any arguments that need splitting for the rbPath.
                 String groupKey = info.processGroupKey(arguments);
                 String baseXPath = info.processXPath(arguments, fullPath);
@@ -272,7 +313,7 @@ public class SupplementalMapper extends LdmlMapper {
         if (rbPath.contains("<FIFO>")) {
             rbPath = rbPath.replace("<FIFO>", '<' + numberFormat.format(fifoCounter) + '>');
         }
-        CldrArray cldrArray = getCldrArray(rbPath, pathValueMap);
+        CldrArray cldrArray = RegexManager.getCldrArray(rbPath, pathValueMap);
         cldrArray.put(xpath, values, groupKey);
     }
 
@@ -322,10 +363,8 @@ public class SupplementalMapper extends LdmlMapper {
         SimpleDateFormat format = new SimpleDateFormat();
         if (count == 2) {
             format.applyPattern("yyyy-MM-dd");
-        } else if (count == 1) {
-            format.applyPattern("yyyy-MM");
         } else {
-            format.applyPattern("yyyy");
+            throw new RuntimeException("Tried to parse invalid date: " + dateStr);
         }
         TimeZone timezone = TimeZone.getTimeZone("GMT");
         format.setTimeZone(timezone);
@@ -333,14 +372,6 @@ public class SupplementalMapper extends LdmlMapper {
         Calendar calendar = new GregorianCalendar();
         calendar.setTimeZone(timezone);
         calendar.setTime(date);
-        // Fix dates with the month or day missing.
-        if (count < 2) {
-            if (count == 0) { // yyyy
-                setDateField(calendar, Calendar.MONTH, type);
-            }
-            setDateField(calendar, Calendar.DAY_OF_MONTH, type);
-        }
-        String finalPattern = "yyyy-MM-dd HH:mm:ss.SSS";
         switch (type) {
         case from: {
             // Set the times for to fields to the beginning of the day.
@@ -359,32 +390,7 @@ public class SupplementalMapper extends LdmlMapper {
             break;
         }
         }
-        format.applyPattern(finalPattern);
         return calendar.getTimeInMillis();
-    }
-
-    /**
-     * Sets a field in a calendar to either the first or last value of the field.
-     * 
-     * @param calendar
-     * @param field
-     *            the calendar field to be set
-     * @param type
-     *            from/to date field type
-     */
-    private static void setDateField(Calendar calendar, int field, DateFieldType type) {
-        int value;
-        switch (type) {
-        case to: {
-            value = calendar.getActualMaximum(field);
-            break;
-        }
-        default: {
-            value = calendar.getActualMinimum(field);
-            break;
-        }
-        }
-        calendar.set(field, value);
     }
 
     /**
@@ -394,6 +400,7 @@ public class SupplementalMapper extends LdmlMapper {
      * @return
      */
     private static int countHyphens(String str) {
+        // Hyphens in front are actually minus signs.
         int lastPos = 0;
         int numHyphens = 0;
         while ((lastPos = str.indexOf('-', lastPos + 1)) > -1) {
@@ -403,73 +410,18 @@ public class SupplementalMapper extends LdmlMapper {
     }
 
     /**
-     * Iterating through this XMLSource will return the xpaths in the order
-     * that they were parsed from the XML file.
+     * Sets xpath to monitor for debugging purposes.
+     * @param debugXPath
      */
-    private class LinkedXMLSource extends SimpleXMLSource {
-        private Map<String, String> xpath_value;
-        private Map<String, String> xpath_fullXPath;
-        private Comments comments;
+    public void setDebugXPath(String debugXPath) {
+        this.debugXPath = debugXPath;
+    }
 
-        public LinkedXMLSource() {
-            super("");
-            xpath_value = new LinkedHashMap<String, String>();
-            xpath_fullXPath = new HashMap<String, String>();
-            comments = new Comments();
-        }
-
-        @Override
-        public Object freeze() {
-            locked = true;
-            return this;
-        }
-
-        @Override
-        public void putFullPathAtDPath(String distinguishingXPath, String fullxpath) {
-            xpath_fullXPath.put(distinguishingXPath, fullxpath);
-        }
-
-        @Override
-        public void putValueAtDPath(String distinguishingXPath, String value) {
-            xpath_value.put(distinguishingXPath, value);
-        }
-
-        @Override
-        public void removeValueAtDPath(String distinguishingXPath) {
-            xpath_value.remove(distinguishingXPath);
-        }
-
-        @Override
-        public String getValueAtDPath(String path) {
-            return xpath_value.get(path);
-        }
-
-        @Override
-        public String getFullPathAtDPath(String xpath) {
-            String result = (String) xpath_fullXPath.get(xpath);
-            if (result != null) return result;
-            if (xpath_value.get(xpath) != null) return xpath; // we don't store duplicates
-            return null;
-        }
-
-        @Override
-        public Comments getXpathComments() {
-            return comments;
-        }
-
-        @Override
-        public void setXpathComments(Comments comments) {
-            this.comments = comments;
-        }
-
-        @Override
-        public Iterator<String> iterator() {
-            return Collections.unmodifiableSet(xpath_value.keySet()).iterator();
-        }
-
-        @Override
-        public void getPathsWithValue(String valueToMatch, String pathPrefix, Set<String> result) {
-            throw new UnsupportedOperationException();
-        }
+    /**
+     * @param xpath
+     * @return true if the xpath is to be debugged
+     */
+    boolean isDebugXPath(String xpath) {
+        return debugXPath == null ? false : xpath.startsWith(debugXPath);
     }
 }

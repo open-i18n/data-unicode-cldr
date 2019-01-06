@@ -19,9 +19,11 @@ import java.util.regex.Pattern;
 
 import org.unicode.cldr.test.CheckCLDR;
 import org.unicode.cldr.test.CoverageLevel2;
+import org.unicode.cldr.test.ExampleGenerator;
 import org.unicode.cldr.unittest.TestAll.TestInfo;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.Status;
+import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Containment;
 import org.unicode.cldr.util.Counter;
 import org.unicode.cldr.util.Factory;
@@ -33,18 +35,21 @@ import org.unicode.cldr.util.PathHeader.PageId;
 import org.unicode.cldr.util.PathHeader.SectionId;
 import org.unicode.cldr.util.PathHeader.SurveyToolStatus;
 import org.unicode.cldr.util.PathStarrer;
+import org.unicode.cldr.util.PatternPlaceholders;
+import org.unicode.cldr.util.PatternPlaceholders.PlaceholderInfo;
+import org.unicode.cldr.util.PatternPlaceholders.PlaceholderStatus;
 import org.unicode.cldr.util.PrettyPath;
 import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo;
+import org.unicode.cldr.util.SupplementalDataInfo.PluralType;
 import org.unicode.cldr.util.XPathParts;
 
-import com.ibm.icu.dev.test.TestFmwk;
 import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.dev.util.Relation;
 import com.ibm.icu.impl.Row;
 import com.ibm.icu.impl.Row.R2;
 
-public class TestPathHeader extends TestFmwk {
+public class TestPathHeader extends TestFmwkPlus {
     public static void main(String[] args) {
         new TestPathHeader().run(args);
     }
@@ -55,6 +60,38 @@ public class TestPathHeader extends TestFmwk {
     static final SupplementalDataInfo supplemental = info.getSupplementalDataInfo();
     static PathHeader.Factory pathHeaderFactory = PathHeader.getFactory(english);
     private EnumSet<PageId> badZonePages = EnumSet.of(PageId.UnknownT);
+
+    public void TestCompleteness() {
+        PathHeader.Factory pathHeaderFactory2 = PathHeader.getFactory(english);
+        //            List<String> failures = null;
+        pathHeaderFactory2.clearCache();
+        for (String p : english.fullIterable()) {
+            //                if (p.contains("symbol[@alt") && failures == null) {
+            //                    PathHeader result = pathHeaderFactory2.fromPath(p, failures = new ArrayList<String>());
+            //                    logln("Matching " + p + ": " + result + "\t" + result.getSurveyToolStatus());
+            //                    for (String failure : failures) {
+            //                        logln("\t" + failure);
+            //                    }
+            //                }
+            pathHeaderFactory2.fromPath(p);
+        }
+        Set<String> missing = pathHeaderFactory2.getUnmatchedRegexes();
+        if (missing.size() != 0) {
+            for (String e : missing) {
+                logln("Path Regex never matched:\t" + e);
+            }
+        }
+    }
+
+    public void Test6170Exception() {
+        String p1 = "//ldml/units/unitLength[@type=\"narrow\"]/unit[@type=\"speed-kilometer-per-hour\"]/unitPattern[@count=\"other\"]";
+        String p2 = "//ldml/units/unitLength[@type=\"narrow\"]/unit[@type=\"area-square-meter\"]/unitPattern[@count=\"other\"]";
+        PathHeader ph1 = pathHeaderFactory.fromPath(p1);
+        PathHeader ph2 = pathHeaderFactory.fromPath(p2);
+        int comp12 = ph1.compareTo(ph2);
+        int comp21 = ph2.compareTo(ph1);
+        assertEquals("comp ph", comp12, -comp21);
+    }
 
     public void TestVariant() {
         PathHeader p1 = pathHeaderFactory
@@ -73,6 +110,13 @@ public class TestPathHeader extends TestFmwk {
         } else {
             logln(ph + "\t" + test);
         }
+    }
+
+    public void TestMiscPatterns() {
+        String test = "//ldml/numbers/miscPatterns[@numberSystem=\"arab\"]/pattern[@type=\"atLeast\"]";
+        PathHeader ph = pathHeaderFactory.fromPath(test);
+        assertNotNull("MiscPatterns path not found", ph);
+        if (false) System.out.println(english.getStringValue(test));
     }
 
     public void TestPluralOrder() {
@@ -96,6 +140,45 @@ public class TestPathHeader extends TestFmwk {
                 logln(locale + "\t" + p + "\t" + p.getOriginalPath());
             }
         }
+    }
+
+    static final String APPEND_TIMEZONE = "//ldml/dates/calendars/calendar[@type=\"gregorian\"]/dateTimeFormats/appendItems/appendItem[@request=\"Timezone\"]";
+    static final String APPEND_TIMEZONE_END = "/dateTimeFormats/appendItems/appendItem[@request=\"Timezone\"]";
+    static final String BEFORE_PH = "//ldml/dates/calendars/calendar[@type=\"gregorian\"]/dateTimeFormats/availableFormats/dateFormatItem[@id=\"ms\"]";
+    static final String AFTER_PH = "//ldml/dates/calendars/calendar[@type=\"gregorian\"]/dateTimeFormats/intervalFormats/intervalFormatItem[@id=\"d\"]/greatestDifference[@id=\"d\"]";
+
+    public void TestAppendTimezone() {
+        CLDRFile cldrFile = info.getEnglish();
+        CoverageLevel2 coverageLevel = CoverageLevel2.getInstance("en");
+        assertEquals("appendItem:Timezone", Level.MODERATE, coverageLevel.getLevel(APPEND_TIMEZONE));
+
+        PathHeader ph = pathHeaderFactory.fromPath(APPEND_TIMEZONE);
+        assertEquals("appendItem:Timezone pathheader", "Timezone", ph.getCode());
+        // check that they are in the right place (they weren't before!)
+        PathHeader phBefore = pathHeaderFactory.fromPath(BEFORE_PH);
+        PathHeader phAfter = pathHeaderFactory.fromPath(AFTER_PH);
+        assertTrue(phBefore, LEQ, ph);
+        assertTrue(ph, LEQ, phAfter);
+
+        PathDescription pathDescription = new PathDescription(supplemental, english, null, null,
+            PathDescription.ErrorHandling.CONTINUE);
+        String description = pathDescription.getDescription(APPEND_TIMEZONE, "tempvalue", null, null);
+        assertTrue("appendItem:Timezone pathDescription", description.contains("“Timezone”"));
+
+        PatternPlaceholders patternPlaceholders = PatternPlaceholders.getInstance();
+        PlaceholderStatus status = patternPlaceholders.getStatus(APPEND_TIMEZONE);
+        assertEquals("appendItem:Timezone placeholders", PlaceholderStatus.REQUIRED, status);
+
+        Map<String, PlaceholderInfo> placeholderInfo = patternPlaceholders.get(APPEND_TIMEZONE);
+        PlaceholderInfo placeholderInfo2 = placeholderInfo.get("{1}");
+        if (assertNotNull("appendItem:Timezone placeholders", placeholderInfo2)) {
+            assertEquals("appendItem:Timezone placeholders", "APPEND_FIELD_FORMAT", placeholderInfo2.name);
+            assertEquals("appendItem:Timezone placeholders", "Pacific Time", placeholderInfo2.example);
+        }
+        ExampleGenerator eg = new ExampleGenerator(cldrFile, cldrFile, CldrUtility.SUPPLEMENTAL_DIRECTORY);
+        String example = eg.getExampleHtml(APPEND_TIMEZONE, cldrFile.getStringValue(APPEND_TIMEZONE));
+        String result = ExampleGenerator.simplify(example, false);
+        assertEquals("", "〖❬6:25:59 PM❭ ❬GMT❭〗", result);
     }
 
     public void TestOptional() {
@@ -156,7 +239,7 @@ public class TestPathHeader extends TestFmwk {
             if (locale.contains("_")) {
                 continue;
             }
-            PluralInfo info = supplemental.getPlurals(locale);
+            PluralInfo info = supplemental.getPlurals(PluralType.cardinal, locale);
             Set<String> keywords = info.getCanonicalKeywords();
             data.put(keywords.toString(), locale);
         }
@@ -171,23 +254,39 @@ public class TestPathHeader extends TestFmwk {
 
         // check that English doesn't contain few or many
         verifyContains(PageId.Currencies, filePaths, "many", false);
-        verifyContains(PageId.Patterns_for_Units, filePaths, "few", false);
+        verifyContains(PageId.Duration, filePaths, "few", false);
 
         // check that Arabic does contain few and many
         filePaths = pathHeaderFactory.pathsForFile(info.getCldrFactory().make("ar", true));
 
         verifyContains(PageId.Currencies, filePaths, "many", true);
-        verifyContains(PageId.Patterns_for_Units, filePaths, "few", true);
+        verifyContains(PageId.Duration, filePaths, "few", true);
     }
 
     public void TestCoverage() {
-        Map<Row.R2<SectionId, PageId>, Counter<Level>> data = new TreeMap();
-        String locale = "af";
-        CLDRFile cldrFile = info.getCldrFactory().make(locale, true);
-        CoverageLevel2 coverageLevel = CoverageLevel2.getInstance(locale);
+        Map<Row.R2<SectionId, PageId>, Counter<Level>> data = new TreeMap<Row.R2<SectionId, PageId>, Counter<Level>>();
+        CLDRFile cldrFile = english;
+        XPathParts parts = new XPathParts();
         for (String path : cldrFile.fullIterable()) {
+            boolean deprecated = supplemental.hasDeprecatedItem("ldml", parts.set(path));
+            if (deprecated) {
+                errln("Deprecated path in English: " + path);
+                continue;
+            }
+            Level level = supplemental.getCoverageLevel(path, cldrFile.getLocaleID());
             PathHeader p = pathHeaderFactory.fromPath(path);
-            Level level = coverageLevel.getLevel(path);
+            SurveyToolStatus status = p.getSurveyToolStatus();
+
+            boolean hideCoverage = level == Level.OPTIONAL;
+            boolean hidePathHeader = status == SurveyToolStatus.DEPRECATED || status == SurveyToolStatus.HIDE;
+            if (hidePathHeader != hideCoverage) {
+                String message = "PathHeader: " + status + ", Coverage: " + level + ": " + path;
+                if (hidePathHeader && !hideCoverage) {
+                    errln(message);
+                } else if (!hidePathHeader && hideCoverage) {
+                    logln(message);
+                }
+            }
             final R2<SectionId, PageId> key = Row.of(p.getSectionId(), p.getPageId());
             Counter<Level> counter = data.get(key);
             if (counter == null) {
@@ -213,12 +312,11 @@ public class TestPathHeader extends TestFmwk {
         }
     }
 
-    public void TestAFile() {
+    public void Test00AFile() {
         final String localeId = "en";
-        CoverageLevel2 coverageLevel = CoverageLevel2.getInstance(localeId);
-        Counter<Level> counter = new Counter();
-        Map<String, PathHeader> uniqueness = new HashMap();
-        Set<String> alreadySeen = new HashSet();
+        Counter<Level> counter = new Counter<Level>();
+        Map<String, PathHeader> uniqueness = new HashMap<String, PathHeader>();
+        Set<String> alreadySeen = new HashSet<String>();
         check(localeId, true, uniqueness, alreadySeen);
         // check paths
         for (Entry<SectionId, Set<PageId>> sectionAndPages : PathHeader.Factory
@@ -231,14 +329,19 @@ public class TestPathHeader extends TestFmwk {
                     if (!badZonePages.contains(page) && page != PageId.Unknown) {
                         errln("Null pages for: " + section + "\t" + page);
                     }
+                } else if (section == SectionId.Special && page == PageId.Unknown) {
+                    // skip
+                } else if (section == SectionId.Timezones && page == PageId.UnknownT) {
+                    // skip
                 } else {
+
                     int count2 = cachedPaths.size();
                     if (count2 == 0) {
                         errln("Missing pages for: " + section + "\t" + page);
                     } else {
                         counter.clear();
                         for (String s : cachedPaths) {
-                            Level coverage = coverageLevel.getLevel(s);
+                            Level coverage = supplemental.getCoverageLevel(s, localeId);
                             counter.add(coverage, 1);
                         }
                         String countString = "";
@@ -363,6 +466,11 @@ public class TestPathHeader extends TestFmwk {
 
             PathHeader p = pathHeaderFactory.fromPath(path);
             final SurveyToolStatus surveyToolStatus = p.getSurveyToolStatus();
+
+            if (p.getSectionId() == SectionId.Special && surveyToolStatus == SurveyToolStatus.READ_WRITE) {
+                errln("SurveyToolStatus should not be " + surveyToolStatus + ": " + p);
+            }
+
             final SurveyToolStatus tempSTS = surveyToolStatus == SurveyToolStatus.DEPRECATED ? SurveyToolStatus.HIDE
                 : surveyToolStatus;
             String starred = starrer.set(path);
@@ -383,9 +491,9 @@ public class TestPathHeader extends TestFmwk {
                 oldStatus = SurveyToolStatus.HIDE;
             }
 
-            if (tempSTS != oldStatus && oldStatus != SurveyToolStatus.READ_WRITE) {
+            if (tempSTS != oldStatus && oldStatus != SurveyToolStatus.READ_WRITE && !path.endsWith(APPEND_TIMEZONE_END)) {
                 if (!differentStar.contains(starred)) {
-                    errln("Different from old:\t" + oldStatus + "\t" + surveyToolStatus + "\t"
+                    errln("Different from old:\t" + oldStatus + "\tnew:\t" + surveyToolStatus + "\t"
                         + path);
                     differentStar.add(starred);
                 }

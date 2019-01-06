@@ -1,11 +1,11 @@
 {
   "supplemental": {
     "version": {
-      "@cldrVersion": "23.1",
-      "@number": "$Revision: 8242 $"
+      "_cldrVersion": "24",
+      "_number": "$Revision: 9034 $"
     },
     "generation": {
-      "@date": "$Date: 2013-02-24 21:06:02 -0600 (Sun, 24 Feb 2013) $"
+      "_date": "$Date: 2013-07-15 13:48:35 -0500 (Mon, 15 Jul 2013) $"
     },
     "telephoneCodeData": {
       "001": [
@@ -93,11 +93,6 @@
       "AM": [
         {
           "telephoneCountryCode": "374"
-        }
-      ],
-      "AN": [
-        {
-          "telephoneCountryCode": "599"
         }
       ],
       "AO": [
@@ -210,6 +205,11 @@
           "telephoneCountryCode": "591"
         }
       ],
+      "BQ": [
+        {
+          "telephoneCountryCode": "599"
+        }
+      ],
       "BR": [
         {
           "telephoneCountryCode": "55"
@@ -315,6 +315,11 @@
           "telephoneCountryCode": "238"
         }
       ],
+      "CW": [
+        {
+          "telephoneCountryCode": "599"
+        }
+      ],
       "CX": [
         {
           "telephoneCountryCode": "61"
@@ -373,6 +378,11 @@
       "EG": [
         {
           "telephoneCountryCode": "20"
+        }
+      ],
+      "EH": [
+        {
+          "telephoneCountryCode": "212"
         }
       ],
       "ER": [
@@ -488,6 +498,11 @@
       "GR": [
         {
           "telephoneCountryCode": "30"
+        }
+      ],
+      "GS": [
+        {
+          "telephoneCountryCode": "500"
         }
       ],
       "GT": [
@@ -735,6 +750,11 @@
           "telephoneCountryCode": "382"
         }
       ],
+      "MF": [
+        {
+          "telephoneCountryCode": "590"
+        }
+      ],
       "MG": [
         {
           "telephoneCountryCode": "261"
@@ -930,6 +950,11 @@
           "telephoneCountryCode": "508"
         }
       ],
+      "PN": [
+        {
+          "telephoneCountryCode": "870"
+        }
+      ],
       "PR": [
         {
           "telephoneCountryCode": "1"
@@ -1078,6 +1103,11 @@
           "telephoneCountryCode": "503"
         }
       ],
+      "SX": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
       "SY": [
         {
           "telephoneCountryCode": "963"
@@ -1178,6 +1208,11 @@
           "telephoneCountryCode": "256"
         }
       ],
+      "UM": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
       "US": [
         {
           "telephoneCountryCode": "1"
@@ -1236,6 +1271,17 @@
       "WS": [
         {
           "telephoneCountryCode": "685"
+        }
+      ],
+      "XK": [
+        {
+          "telephoneCountryCode": "377"
+        },
+        {
+          "telephoneCountryCode": "381"
+        },
+        {
+          "telephoneCountryCode": "386"
         }
       ],
       "YE": [

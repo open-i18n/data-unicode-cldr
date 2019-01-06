@@ -1,11 +1,11 @@
 {
   "supplemental": {
     "version": {
-      "@cldrVersion": "23.1",
-      "@number": "$Revision: 8274 $"
+      "_cldrVersion": "24",
+      "_number": "$Revision: 8817 $"
     },
     "generation": {
-      "@date": "$Date: 2013-03-06 11:15:16 -0600 (Wed, 06 Mar 2013) $"
+      "_date": "$Date: 2013-05-30 17:53:09 -0500 (Thu, 30 May 2013) $"
     },
     "primaryZones": {
       "CL": "America/Santiago",

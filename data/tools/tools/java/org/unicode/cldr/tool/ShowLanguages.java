@@ -45,7 +45,6 @@ import org.unicode.cldr.util.Level;
 import org.unicode.cldr.util.LocaleIDParser;
 import org.unicode.cldr.util.Log;
 import org.unicode.cldr.util.Pair;
-import org.unicode.cldr.util.PluralSnapshot;
 import org.unicode.cldr.util.StandardCodes;
 import org.unicode.cldr.util.StandardCodes.CodeType;
 import org.unicode.cldr.util.SupplementalDataInfo;
@@ -53,8 +52,6 @@ import org.unicode.cldr.util.SupplementalDataInfo.BasicLanguageData;
 import org.unicode.cldr.util.SupplementalDataInfo.CurrencyDateInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.CurrencyNumberInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.OfficialStatus;
-import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo;
-import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo.Count;
 import org.unicode.cldr.util.SupplementalDataInfo.PopulationData;
 import org.unicode.cldr.util.XPathParts;
 
@@ -65,7 +62,6 @@ import com.ibm.icu.dev.util.FileUtilities;
 import com.ibm.icu.dev.util.Relation;
 import com.ibm.icu.dev.util.TransliteratorUtilities;
 import com.ibm.icu.impl.Row.R2;
-import com.ibm.icu.impl.Utility;
 import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.text.Collator;
 import com.ibm.icu.text.DecimalFormat;
@@ -92,11 +88,12 @@ public class ShowLanguages {
     static CLDRFile english = cldrFactory.make("en", true);
 
     public static void main(String[] args) throws IOException {
+        System.out.println("Writing into " + CHART_TARGET_DIR);
         org.unicode.cldr.draft.FileUtilities.copyFile(ShowLanguages.class, "index.css", CHART_TARGET_DIR);
         printLanguageData(cldrFactory, "index.html");
         // cldrFactory = Factory.make(Utility.COMMON_DIRECTORY + "../dropbox/extra2/", ".*");
         // printLanguageData(cldrFactory, "language_info2.txt");
-        System.out.println("Done");
+        System.out.println("Done - wrote into " + CHART_TARGET_DIR);
     }
 
     /**
@@ -114,7 +111,7 @@ public class ShowLanguages {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
 
-        linfo.printPlurals(pw);
+        ShowPlurals.printPlurals(english, null, pw);
 
         linfo.printLikelySubtags(pw);
 
@@ -619,7 +616,7 @@ public class ShowLanguages {
         }
     }
 
-    static class FormattedFileWriter extends java.io.Writer {
+    public static class FormattedFileWriter extends java.io.Writer {
 
         private StringWriter out = new StringWriter();
 
@@ -2058,18 +2055,6 @@ public class ShowLanguages {
             // }
         }
 
-        private void showContents(PrintWriter pw, String... items) {
-            pw.println("</div>");
-            pw.println("<h3>Contents</h3>");
-            pw.println("<ol>");
-            for (int i = 0; i < items.length; i += 2) {
-                pw.println("<li><a href='#" + items[i] + "'>" + items[i + 1] + "</a></li>");
-            }
-            pw.println("</ol><hr>");
-
-            pw.println("<div align='center'>");
-        }
-
         private String getTerritoryName(String territory) {
             String name;
             name = english.getName("territory", territory);
@@ -2207,55 +2192,6 @@ public class ShowLanguages {
                 }
             }
             currentRow.remove(len);
-        }
-
-        public void printPlurals(PrintWriter index) throws IOException {
-            final String title = "Language Plural Rules";
-
-            final PrintWriter pw = new PrintWriter(new FormattedFileWriter(index, title, null, false));
-
-            String section1 = "Rules";
-            String section2 = "Comparison";
-            showContents(pw, "rules", "Rules", "comparison", "Comparison");
-
-            pw.println("<h2>" + CldrUtility.getDoubleLinkedText("rules", "1. " + section1) + "</h2>");
-
-            final TablePrinter tablePrinter = new TablePrinter()
-                .addColumn("Language Name", "class='source'", null, "class='source'", true).setSortPriority(0)
-                .setBreakSpans(true).setRepeatHeader(true)
-                .addColumn("Code", "class='source'", CldrUtility.getDoubleLinkMsg(), "class='source'", true)
-                .addColumn("Category", "class='target'", null, "class='target'", true).setBreakSpans(true)
-                .addColumn("Examples", "class='target'", null, "class='target'", true)
-                .addColumn("Rules", "class='target'", null, "class='target'", true);
-
-            for (String locale : supplementalDataInfo.getPluralLocales()) {
-                final PluralInfo plurals = supplementalDataInfo.getPlurals(locale);
-                String rules = plurals.getRules();
-                rules += rules.length() == 0 ? "other:<i>everything</i>" : ";other:<i>everything else</i>";
-                rules = rules.replace(":", " → ").replace(";", ";<br>");
-                final String name = english.getName(locale);
-                final Map<PluralInfo.Count, String> typeToExamples = plurals.getCountToStringExamplesMap();
-                for (Count type : typeToExamples.keySet()) {
-                    final String examples = typeToExamples.get(type).toString().replace(";", ";<br>");
-                    tablePrinter.addRow()
-                        .addCell(name)
-                        .addCell(locale)
-                        .addCell(type)
-                        .addCell(examples)
-                        .addCell(rules)
-                        .finishRow();
-                }
-            }
-            pw.println(tablePrinter.toTable());
-
-            pw.println("<h2>" + CldrUtility.getDoubleLinkedText("comparison", "2. " + section2) + "</h2>");
-            pw.println("<p style='text-align:left'>The plural forms are abbreviated by first letter, with 'x' for 'other'. "
-                +
-                "If values are made redundant by explicit 0 and 1, they are underlined. " +
-                "The fractional and integral results are separated for clarity.</p>");
-            PluralSnapshot.writeTables(english, pw);
-            pw.println(Utility.repeat("<br>", 100));
-            pw.close();
         }
 
         public void printCharacters(PrintWriter index) throws IOException {
@@ -2584,4 +2520,19 @@ public class ShowLanguages {
 
     static HelpMessages helpMessages;
 
+    public static void showContents(Appendable pw, String... items) {
+        try {
+            pw.append("</div>\n");
+            pw.append("<h3>Contents</h3>\n");
+            pw.append("<ol>\n");
+            for (int i = 0; i < items.length; i += 2) {
+                pw.append("<li><a href='#" + items[i] + "'>" + items[i + 1] + "</a></li>\n");
+            }
+            pw.append("</ol><hr>\n");
+
+            pw.append("<div align='center'>\n");
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
 }

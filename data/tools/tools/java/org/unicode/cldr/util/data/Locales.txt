@@ -243,7 +243,6 @@ Google	;	fa	;	modern	;	T2.1	Persian
 							
 #Google	Tier	3					
 Google	;	af	;	modern	;	T3	Afrikaans
-Google	;	am	;	modern	;	T3	Amharic
 Google	;	bn	;	modern	;	T3	Bengali
 Google	;	et	;	modern	;	T3	Estonian
 Google	;	is	;	modern	;	T3	Icelandic
@@ -251,8 +250,19 @@ Google	;	ms	;	modern	;	T3	Malay
 Google	;	mr	;	modern	;	T3	Marathi
 Google	;	sw	;	modern	;	T3	Swahili 
 Google	;	ta	;	modern	;	T3	Tamil
-Google	;	zu	;	modern	;	T3	Zulu													
-							
+Google	;	km	;	modern	;	T3.1	Khmer
+Google	;	lo	;	modern	;	T3.1	Lao
+Google	;	ne	;	modern	;	T3.1	Nepali
+Google	;	si	;	modern	;	T3.1	Sinhala
+Google	;	ka	;	modern	;	T3.1	Georgian
+Google	;	hy	;	modern	;	T3.1	Armenian
+Google	;	mn	;	modern	;	T3.1	Mongolian
+Google	;	kk	;	modern	;	T3.1	Kazakh
+Google	;	az	;	modern	;	T3.1	Azerbaijani
+Google	;	mk	;	modern	;	T3.1	Macedonian
+Google	;	sq	;	modern	;	T3.1	Albanian
+Google	;	my	;	modern	;	T3.1	Burmese (Myanmar)
+
 #Google	Tier	4					
 Google	;	te	;	modern	;	T4	Telugu
 Google	;	ur	;	modern	;	T4	Urdu
@@ -260,33 +270,23 @@ Google	;	ml	;	modern	;	T4	Malayalam
 Google	;	kn	;	modern	;	T4	Kannada
 Google	;	gu	;	modern	;	T4	Gujarati
 Google	;	eu	;	modern	;	T4	Basque
-Google	;	gl	;	modern	;	T4	Galician
+Google	;	am	;	modern	;	T4	Amharic
 Google	;	fr_CA	;	modern	;	T4	Canadian French
 Google	;	zh_Hant_HK	;	modern	;	T4	Hong Kong Chinese (T)
-							
-#Google	Tier	5	tentative				
-Google	;	cy	;	modern	;	T5	Welsh
-Google	;	si	;	modern	;	T5	Sinhala
-Google	;	km	;	modern	;	T5	Khmer
-Google	;	lo	;	modern	;	T5	Lao
-Google	;	ne	;	modern	;	T5	Nepali
-Google	;	ka	;	modern	;	T5	Georgian
-Google	;	hy	;	modern	;	T5	Armenian
-Google	;	mn	;	modern	;	T5	Mongolian
-							
-#Google	;	az	;	n/a	;	n/a	Azerbaijani
-#Google	;	sq	;	n/a	;	n/a	Albanian
-#Google	;	be	;	n/a	;	n/a	Belarusian
-#Google	;	mk	;	n/a	;	n/a	Macedonian
-#Google	;	kk	;	n/a	;	n/a	Kazakh
-#Google	;	mt	;	n/a	;	n/a	Maltese
-#Google	;	uz	;	n/a	;	n/a	Uzbek
-#Google	;	ku	;	n/a	;	n/a	Kurdish
-#Google	;	oc	;	n/a	;	n/a	Occitan
-							
+Google	;	ky	;	modern	;	T4.1	Kirghiz																
+Google	;	pa	;	modern	;	T4.1	Punjabi
+Google	;	uz	;	modern		;	T4.1	Uzbek	(Latin)															
+															
+#Google	Tier	5	
+Google	;	uz_Cyrl	;	modern	;	T5	Uzbek	(Cyrillic)														
+Google	;	zu	;	moderate	;	T5	Zulu										
+Google	;	gl	;	moderate	;	T5	Galician
+Google	;	cy	;	moderate	;	T5	Welsh
+														
 Google	;	*	;	moderate	;	n/a	All others										
 
 Apple	;	en	;	comprehensive
+Apple	;	ar	;	modern
 Apple	;	da	;	modern
 Apple	;	de	;	modern
 Apple	;	es	;	modern
@@ -300,54 +300,52 @@ Apple	;	nl	;	modern
 Apple	;	pl	;	modern
 Apple	;	pt	;	modern
 Apple	;	pt_PT	;	modern
-Apple	;	pt	;	modern
 Apple	;	ru	;	modern
 Apple	;	sv	;	modern
+Apple	;	th	;	modern
+Apple	;	tr	;	modern
 Apple	;	zh	;	modern
 Apple	;	zh_Hant	;	modern
-Apple	;	ar	;	moderate
-Apple	;	bg	;	moderate
-Apple	;	ca	;	moderate
-Apple	;	cs	;	moderate
-Apple	;	el	;	moderate
-Apple	;	he	;	moderate
-Apple	;	hr	;	moderate
-Apple	;	hu	;	moderate
-Apple	;	is	;	moderate
-Apple	;	ro	;	moderate
-Apple	;	sk	;	moderate
-Apple	;	sl	;	moderate
-Apple	;	sr	;	moderate
-Apple	;	th	;	moderate
-#Apple	;	tl	;	moderate ; Tagalog
-Apple	;	tr	;	moderate
-Apple	;	uk	;	moderate
-Apple	;	vi	;	moderate
+Apple	;	bg	;	modern
+Apple	;	ca	;	modern
+Apple	;	cs	;	modern
+Apple	;	el	;	modern
+Apple	;	et	;	modern
+Apple	;	he	;	modern
+Apple	;	hi	;	modern
+Apple	;	hr	;	modern
+Apple	;	hu	;	modern
+Apple	;	id	;	modern
+Apple	;	is	;	modern
+Apple	;	lt	;	modern
+Apple	;	lv	;	modern
+Apple	;	mk	;	modern
+Apple	;	ms	;	modern
+Apple	;	ro	;	modern
+Apple	;	sk	;	modern
+Apple	;	sl	;	modern
+Apple	;	sr	;	modern
+Apple	;	sr_Latn	;	modern
+Apple	;	uk	;	modern
+Apple	;	vi	;	modern
 Apple	;	as	;	basic
 Apple	;	az	;	basic
 Apple	;	be	;	basic
 Apple	;	bn	;	basic
 Apple	;	bs	;	basic
 Apple	;	cy	;	basic
-Apple	;	et	;	basic
 Apple	;	fa	;	basic
 Apple	;	fil	;	basic
 Apple	;	gu	;	basic
-Apple	;	hi	;	basic
 Apple	;	hy	;	basic
-Apple	;	id	;	basic
 Apple	;	ii	;	basic
 Apple	;	kk	;	basic
 Apple	;	km	;	basic
 Apple	;	kn	;	basic
 Apple	;	lo	;	basic
-Apple	;	lt	;	basic
-Apple	;	lv	;	basic
-Apple	;	mk	;	basic
 Apple	;	ml	;	basic
 Apple	;	mn	;	basic
 Apple	;	mr	;	basic
-Apple	;	ms	;	basic
 Apple	;	mt	;	basic
 Apple	;	nn	;	basic
 Apple	;	or	;	basic
@@ -357,6 +355,7 @@ Apple	;	ta	;	basic
 Apple	;	te	;	basic
 Apple	;	ug	;	basic
 Apple	;	ur	;	basic
+Apple	;	yi	;	basic
 
 Adobe	;	ar	;	basic
 Adobe	;	az	;	basic
@@ -488,9 +487,21 @@ Utilika	;	tr	;	modern	;	Turkish
 Utilika	;	fr	;	modern	;	French
 Utilika	;	*	;	moderate	;	All others
 
+welsh_lc	;	cy	;	modern	;	Welsh
+welsh_lc	;	*	;	moderate	; All others
+
 Wikimedia	;	*	;	modern	;	All others
 
 Yahoo	;	*	;	modern	;	All others
 
 Lao_DPT	;	lo	;	modern	;	Lao
 Lao_DPT	;	*	;	moderate	;	All others
+
+Afghan_CSA	;	ps	;	modern	;	Pashto
+Afghan_CSA	;	*	;	moderate	;	All others
+
+Afghan_MCIT	;	ps	;	modern	;	Pashto
+Afghan_MCIT	;	*	;	moderate	;	All others
+
+Lakota_LC	;	lkt	;	modern	;	Lakota
+Lakota_LC	;	*	;	moderate	;	All others

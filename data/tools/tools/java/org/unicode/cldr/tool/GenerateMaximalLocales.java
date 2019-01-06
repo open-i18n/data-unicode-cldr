@@ -1,6 +1,7 @@
 package org.unicode.cldr.tool;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.BitSet;
@@ -27,6 +28,7 @@ import org.unicode.cldr.util.Iso639Data.Scope;
 import org.unicode.cldr.util.LanguageTagParser;
 import org.unicode.cldr.util.LocaleIDParser;
 import org.unicode.cldr.util.Log;
+import org.unicode.cldr.util.SimpleFactory;
 import org.unicode.cldr.util.StandardCodes;
 import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.BasicLanguageData;
@@ -62,6 +64,7 @@ public class GenerateMaximalLocales {
     private static final String DEBUG_ADD_KEY = "und_Latn_ZA";
 
     private static final boolean SHOW_ADD = CldrUtility.getProperty("GenerateMaximalLocalesDebug", false);
+    private static final boolean SUPPRESS_CHANGES = CldrUtility.getProperty("GenerateMaximalLocalesSuppress", false);
 
     enum OutputStyle {
         PLAINTEXT, C, C_ALT, XML
@@ -78,7 +81,9 @@ public class GenerateMaximalLocales {
 
     private static final boolean tryDifferent = true;
 
-    private static Factory factory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
+    private static final File list[] = { new File(CldrUtility.MAIN_DIRECTORY), new File(CldrUtility.SEED_DIRECTORY) };
+
+    private static Factory factory = SimpleFactory.make(list, ".*");
     private static SupplementalDataInfo supplementalData = SupplementalDataInfo
         .getInstance(CldrUtility.SUPPLEMENTAL_DIRECTORY);
     private static StandardCodes standardCodes = StandardCodes.make();
@@ -351,7 +356,7 @@ public class GenerateMaximalLocales {
 
         // now list them
 
-        Set<String> others = new TreeSet();
+        Set<String> others = new TreeSet<String>();
         others.addAll(standardCodes.getGoodAvailableCodes("language"));
         others.removeAll(languageToReason.keySet());
         System.out.println("\nIncluded Languages:\t" + languageToReason.keySet().size());
@@ -361,7 +366,7 @@ public class GenerateMaximalLocales {
     }
 
     private static void showLanguages(Set<String> others, Map<String, Set<RowData>> languageToReason) {
-        Set<String> sorted = new TreeSet(Collator.getInstance(ULocale.ENGLISH));
+        Set<String> sorted = new TreeSet<String>(Collator.getInstance(ULocale.ENGLISH));
         for (String language : others) {
             sorted.add(getLanguageName(language, languageToReason));
         }
@@ -483,6 +488,8 @@ public class GenerateMaximalLocales {
                 + "\tin\t" + debugStuff);
         }
 
+        defaultLocaleContent.remove("und_ZZ"); // und_ZZ isn't ever a real locale.
+
         showDefaultContentDifferencesAndFix(defaultLocaleContent);
 
         Log.setLogNoBOM(CldrUtility.GEN_DIRECTORY + "/supplemental", "supplementalMetadata.xml");
@@ -601,117 +608,59 @@ public class GenerateMaximalLocales {
 
     // Many of the overrides below can be removed once the language/pop/country data is updated.
     private static final Map<String, String> LANGUAGE_OVERRIDES = CldrUtility.asMap(new String[][] {
-        { "agq", "agq_Latn_CM" },
-        { "az", "az_Latn_AZ" },
-        { "bas", "bas_Latn_CM" },
-        { "br", "br_Latn_FR" },
-        { "byn", "byn_Ethi_ER" },
-        { "cch", "cch_Latn_NG" },
-        { "chr", "chr_Cher_US" },
-        { "dav", "dav_Latn_KE" },
-        { "dua", "dua_Latn_CM" },
         { "dyo", "dyo_Latn_SN" },
-        { "ebu", "ebu_Latn_KE" },
-        { "ewo", "ewo_Latn_CM" },
+        { "eo", "eo_Latn_001" },
+        { "eo_Latn", "eo_Latn_001" },
         { "es", "es_Latn_ES" },
         { "es_Latn", "es_Latn_ES" },
-        { "fur", "fur_Latn_IT" },
-        { "gv", "gv_Latn_GB" },
-        { "kcg", "kcg_Latn_NG" },
-        { "khq", "khq_Latn_ML" },
-        { "kpe", "kpe_Latn_LR" },
-        { "ksf", "ksf_Latn_CM" },
-        { "kw", "kw_Latn_GB" },
+        { "ia", "ia_Latn_FR" },
+        { "ia_Latn", "ia_Latn_FR" },
+        { "jgo", "jgo_Latn_CM" },
+        { "ku_Arab", "ku_Arab_IQ" },
+        { "man", "man_Latn_GM" },
+        { "man_Latn", "man_Latn_GM" },
+        { "mas", "mas_Latn_KE" },
+        { "mas_Latn", "mas_Latn_KE" },
         { "mgh", "mgh_Latn_MZ" },
+        { "mgo", "mgo_Latn_CM" },
         { "mn", "mn_Cyrl_MN" },
         { "mn_Cyrl", "mn_Cyrl_MN" },
-        { "mua", "mua_Latn_CM" },
-        { "nmg", "nmg_Latn_CM" },
+        { "ms_Arab", "ms_Arab_MY" },
         { "nus", "nus_Latn_SD" },
-        { "ny", "ny_Latn_MW" },
-        { "pa", "pa_Guru_IN" },
-        { "ps", "ps_Arab_AF" },
-        { "ps_Arab", "ps_Arab_AF" },
-        { "rwk", "rwk_Latn_TZ" },
-        { "saq", "saq_Latn_KE" },
+        { "pap", "pap_Latn_AW" },
+        { "pap_Latn", "pap_Latn_AW" },
         { "sbp", "sbp_Latn_TZ" },
+        { "shi", "shi_Tfng_MA" },
+        { "shi_Tfng", "shi_Tfng_MA" },
+        { "shi_MA", "shi_Tfng_MA" },
         { "sr_Latn", "sr_Latn_RS" },
         { "ss", "ss_Latn_ZA" },
         { "ss_Latn", "ss_Latn_ZA" },
-        { "ssy", "ssy_Latn_ER" },
-        { "sw", "sw_Latn_TZ" },
-        { "sw_Latn", "sw_Latn_TZ" },
         { "swc", "swc_Latn_CD" },
+        { "ti", "ti_Ethi_ET" },
+        { "ti_Ethi", "ti_Ethi_ET" },
         { "und", "en_Latn_US" },
         { "und_Arab", "ar_Arab_EG" },
         { "und_Arab_PK", "ur_Arab_PK" },
-        { "und_Cher", "chr_Cher_US" },
-        { "und_CV", "pt_Latn_CV" },
-        { "und_Hani", "zh_Hans_CN" },
-        { "und_Hani_CN", "zh_Hans_CN" },
-        { "und_Latn_CV", "pt_Latn_CV" },
-        { "und_Latn_PH", "fil_Latn_PH" },
-        { "und_Latn_RS", "sr_Latn_RS" },
-        { "und_Latn_SY", "fr_Latn_SY" },
-        { "und_LR", "en_Latn_LR" },
-        { "und_PH", "fil_Latn_PH" },
-        { "und_SS", "en_Latn_SS" },
-        { "und_Vaii", "vai_Vaii_LR" },
-        { "trv", "trv_Latn_TW" },
-        { "twq", "twq_Latn_NE" },
-        { "tzm", "tzm_Latn_MA" },
-        { "vai", "vai_Vaii_LR" },
-        { "wae", "wae_Latn_CH" },
-        { "yav", "yav_Latn_CM" },
-        { "zh_Hani", "zh_Hans_CN" },
         { "und_Bopo", "zh_Bopo_TW" },
-        { "und_Copt", "cop_Copt_EG" },
-        { "und_Dsrt", "en_Dsrt_US" },
+        { "und_Hani", "zh_Hani_CN" },
+        { "und_Hani_CN", "zh_Hani_CN" },
         { "und_Latn", "en_Latn_US" },
-        { "az", "az_Latn_AZ" },
-        { "az_Arab", "az_Arab_IR" },
-        { "az_IR", "az_Arab_IR" },
-        { "ckb", "ckb_Arab_IQ" },
-        { "ckb_Arab", "ckb_Arab_IQ" },
-        { "ckb_IQ", "ckb_Arab_IQ" },
-        { "ckb_IR", "ckb_Arab_IR" },
-        { "es", "es_Latn_ES" },
-        { "gsw", "gsw_Latn_CH" },
-        { "ku", "ku_Latn_TR" },
-        { "ku_Arab", "ku_Arab_IQ" },
-        { "ku_Latn", "ku_Latn_TR" },
-        { "ku_SY", "ku_Latn_SY" },
-        { "ku_TR", "ku_Latn_TR" },
-        { "nds", "nds_Latn_DE" },
-        { "oc", "oc_Latn_FR" },
-        { "pap", "pap_Latn_AN" },
-        { "shi", "shi_Tfng_MA" },
-        { "sid", "sid_Latn_ET" },
-        { "und_Arab_PK", "ur_Arab_PK" },
-        { "und_LR", "en_Latn_LR" },
-        { "kaj", "kaj_Latn_NG" },
-        { "kv", "kv_Cyrl_RU" },
-        { "und_AN", "pap_Latn_AN" },
-        { "und_Arab_PK", "ur_Arab_PK" },
-        { "und_LR", "en_Latn_LR" },
+        { "und_Latn_NE", "ha_Latn_NE" },
+        { "und_Latn_PH", "fil_Latn_PH" },
+        { "und_ML", "bm_Latn_ML" },
+        { "und_Latn_ML", "bm_Latn_ML" },
+        { "und_MU", "mfe_Latn_MU" },
+        { "und_NE", "ha_Latn_NE" },
+        { "und_PH", "fil_Latn_PH" },
+        { "und_PK", "ur_Arab_PK" },
+        { "und_SO", "so_Latn_SO" },
         { "und_SS", "en_Latn_SS" },
-        { "yi", "yi_Hebr_IL" },
-        { "eo", "eo_Latn_001" },
+        { "und_TK", "tkl_Latn_TK" },
         { "vo", "vo_Latn_001" },
-        { "ia", "ia_Latn_001" },
-        { "jgo", "jgo_Latn_CM" },
-        { "kkj", "kkj_Latn_CM" },
-        { "mgo", "mgo_Latn_CM" },
-        { "nnh", "nnh_Latn_CM" },
-        { "ms_Arab", "ms_Arab_MY" },
+        { "vo_Latn", "vo_Latn_001" },
+        { "zh_Hani", "zh_Hani_CN" },
     });
-
-    // private static final Map<String,String> LANGUAGE_SEGMENT_OVERRIDES = Utility.asMap(new String[][]{
-    // {"es_Latn_ES", "1e10"},
-    // {"en_Latn_US", "1e10"},
-    // {"trv_Latn_TW", "1e10"},
-    // //"pa_Arab_PK"
-    // });
 
     private static NumberFormat percent = NumberFormat.getPercentInstance();
     private static NumberFormat number = NumberFormat.getIntegerInstance();
@@ -783,6 +732,7 @@ public class GenerateMaximalLocales {
             { "gez", "Ethi", "ET" },
             { "ken", "Latn", "CM" },
             { "syr", "Syrc", "SY" },
+            { "und", "Arab", "PK" },
             { "wa", "Latn", "BE" }
         }) {
             maxData.add(additions[0], additions[1], additions[2], 1.0);
@@ -793,14 +743,6 @@ public class GenerateMaximalLocales {
             if (region.length() == 3) continue; // FIX ONCE WE ADD REGIONS
             maxData.add("en", "Latn", region, 1.0);
         }
-
-        // add override segments
-        // double higherThanAny = -1e12;
-        // for (String locale : LANGUAGE_SEGMENT_OVERRIDES) {
-        // String[] parts = locale.split("_");
-        // maxData.add(parts[0], parts[1], parts[2], higherThanAny);
-        // higherThanAny += 1; // lower slightly for next one
-        // }
 
         // get a reverse mapping, so that we can add the aliases
 
@@ -1080,7 +1022,7 @@ public class GenerateMaximalLocales {
         String oldValue = toAdd.get(key);
         if (oldValue == null) {
             if (showAction) {
-                System.out.println("Adding:\t" + key + "\t=>\t" + value + "\t\t\t\t" + kind);
+                System.out.println("Adding:\t\t" + key + "\t=>\t" + value + "\t\t\t\t" + kind);
             }
         } else if (override == Override.KEEP_EXISTING || value.equals(oldValue)) {
             // if (showAction) {
@@ -1292,6 +1234,12 @@ public class GenerateMaximalLocales {
             : "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" + CldrUtility.LINE_SEPARATOR
                 + "<!DOCTYPE supplementalData SYSTEM \"../../common/dtd/ldmlSupplemental.dtd\">"
                 + CldrUtility.LINE_SEPARATOR
+                + "<!--"
+                + CldrUtility.LINE_SEPARATOR
+                + CldrUtility.getCopyrightString()
+                + CldrUtility.LINE_SEPARATOR
+                + "-->"
+                + CldrUtility.LINE_SEPARATOR
                 + "<supplementalData>" + CldrUtility.LINE_SEPARATOR
                 + "    <version number=\"$" +
                 "Revision$\"/>" + CldrUtility.LINE_SEPARATOR
@@ -1313,7 +1261,7 @@ public class GenerateMaximalLocales {
             if (OUTPUT_STYLE == OutputStyle.XML) {
                 out.println("\t\t<likelySubtag from=\"" + printingLocale +
                     "\" to=\"" + printingTarget + "\"" +
-                    "/>" + "\n\t\t" + "<!--" + comment + "-->");
+                    "/>" + CldrUtility.LINE_SEPARATOR + "\t\t" + "<!--" + comment + "-->");
             } else {
                 if (first) {
                     first = false;
@@ -1802,7 +1750,7 @@ public class GenerateMaximalLocales {
             errors.clear();
         }
         Set<String> changes = compareMapsAndFixNew("*WARNING* Default Content: ", oldDefaultContent, newDefaultContent,
-            "ms_Arab", "ms_Arab_ID");
+            "ar", "ar_001");
         System.out.println(CollectionUtilities.join(changes, "\n"));
         defaultLocaleContent.clear();
         defaultLocaleContent.addAll(newDefaultContent.values());
@@ -1825,29 +1773,46 @@ public class GenerateMaximalLocales {
             .addAll(oldContent.keySet()).get()) {
             String oldValue = oldContent.get(parent);
             String newValue = newContent.get(parent);
-            if (CldrUtility.equals(oldValue, newValue)) {
-                continue;
-            }
             String overrideValue = allowedOverrideValuesTest.get(parent);
             if (overrideValue != null) {
-                oldValue = overrideValue;
+                newValue = overrideValue;
+            }
+            if (CldrUtility.equals(oldValue, newValue)) {
+                continue;
             }
             String message;
             if (oldValue == null) {
                 message = "Adding " + ConvertLanguageData.getLanguageCodeAndName(parent) + " => "
                     + ConvertLanguageData.getLanguageCodeAndName(newValue);
+                newContent.put(parent, newValue);
             } else if (newValue == null) {
-                message = "Suppressing removal of "
-                    + ConvertLanguageData.getLanguageCodeAndName(parent) + " => "
-                    + ConvertLanguageData.getLanguageCodeAndName(oldValue);
-                newContent.put(parent, oldValue);
+                if (SUPPRESS_CHANGES) {
+                    message = "Suppressing removal of "
+                        + ConvertLanguageData.getLanguageCodeAndName(parent) + " => "
+                        + ConvertLanguageData.getLanguageCodeAndName(oldValue);
+                    newContent.put(parent, oldValue);
+                } else {
+                    message = "Removing "
+                        + ConvertLanguageData.getLanguageCodeAndName(parent) + " => "
+                        + ConvertLanguageData.getLanguageCodeAndName(oldValue);
+                    newContent.remove(oldValue);
+                }
             } else {
-                message = "Suppressing change of "
-                    + ConvertLanguageData.getLanguageCodeAndName(parent) + " => "
-                    + ConvertLanguageData.getLanguageCodeAndName(oldValue) + " to "
-                    + ConvertLanguageData.getLanguageCodeAndName(newValue);
-                newContent.remove(newValue);
-                newContent.put(parent, oldValue);
+                if (SUPPRESS_CHANGES) {
+                    message = "Suppressing change of "
+                        + ConvertLanguageData.getLanguageCodeAndName(parent) + " => "
+                        + ConvertLanguageData.getLanguageCodeAndName(oldValue) + " to "
+                        + ConvertLanguageData.getLanguageCodeAndName(newValue);
+                    newContent.remove(newValue);
+                    newContent.put(parent, oldValue);
+                } else {
+                    message = "Changing "
+                        + ConvertLanguageData.getLanguageCodeAndName(parent) + " => "
+                        + ConvertLanguageData.getLanguageCodeAndName(oldValue) + " to "
+                        + ConvertLanguageData.getLanguageCodeAndName(newValue);
+                    newContent.remove(oldValue);
+                    newContent.put(parent, newValue);
+                }
             }
             changes.add(title + message);
         }

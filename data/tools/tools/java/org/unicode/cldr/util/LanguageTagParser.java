@@ -179,7 +179,12 @@ public class LanguageTagParser {
 
         // each time we fetch a token, we check for length from 1..8, and all alphanum
         StringTokenizer st = new StringTokenizer(languageTag, separator);
-        String subtag = getSubtag(st);
+        String subtag;
+        try {
+            subtag = getSubtag(st);
+        } catch (Exception e1) {
+            throw new IllegalArgumentException("Illegal language tag: " + languageTag, e1);
+        }
 
         // check for private use (x-...) and return if so
         if (subtag.equalsIgnoreCase("x")) {

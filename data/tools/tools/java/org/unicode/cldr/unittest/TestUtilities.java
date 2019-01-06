@@ -7,6 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -21,6 +22,10 @@ import org.unicode.cldr.util.Counter;
 import org.unicode.cldr.util.DelegatingIterator;
 import org.unicode.cldr.util.EscapingUtilities;
 import org.unicode.cldr.util.Factory;
+import org.unicode.cldr.util.PluralSamples;
+import org.unicode.cldr.util.StringId;
+import org.unicode.cldr.util.SupplementalDataInfo;
+import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo.Count;
 import org.unicode.cldr.util.VettingViewer.VoteStatus;
 import org.unicode.cldr.util.VoteResolver;
 import org.unicode.cldr.util.VoteResolver.CandidateInfo;
@@ -37,9 +42,80 @@ import com.ibm.icu.util.ULocale;
 public class TestUtilities extends TestFmwk {
     private static final UnicodeSet DIGITS = new UnicodeSet("[0-9]");
     static TestInfo testInfo = TestInfo.getInstance();
+    private static final SupplementalDataInfo SUPPLEMENTAL_DATA_INFO = testInfo.getSupplementalDataInfo();
+    private static final int STRING_ID_TEST_COUNT = 1024 * 16;
 
     public static void main(String[] args) {
         new TestUtilities().run(args);
+    }
+
+    public void TestPluralSamples() {
+        checkPluralSamples("en");
+        checkPluralSamples("cs");
+        checkPluralSamples("ar");
+    }
+
+    private void checkPluralSamples(String locale) {
+        PluralSamples pluralSamples = PluralSamples.getInstance(locale);
+        Set<Count> counts = SUPPLEMENTAL_DATA_INFO.getPlurals(locale).getCounts();
+        for (int i = 1; i < 5; ++i) {
+            Map<Count, Double> samplesForDigits = pluralSamples.getSamples(i);
+            if (!counts.containsAll(samplesForDigits.keySet())) {
+                errln(locale + ": mismatch in samples, expected " + counts + ", got: " + samplesForDigits);
+            } else if (samplesForDigits.size() == 0) {
+                errln(locale + ": no sample for digit " + i);
+            } else {
+                logln(locale + " plural samples: " + samplesForDigits);
+            }
+        }
+    }
+
+    public static class StringIdException extends RuntimeException {
+        private static final long serialVersionUID = 1L;
+    }
+
+    public class StringIdThread extends Thread {
+        final private Random r = new Random();
+        final private int id;
+
+        StringIdThread(int i) {
+            super("Demo Thread");
+            id = i;
+        }
+
+        public void run() {
+            logln("Starting thread: " + this);
+            for (int i = 0; i < STRING_ID_TEST_COUNT; ++i) {
+                String s = String.valueOf(r.nextInt());
+                long l = StringId.getId(s);
+                String s2 = StringId.getStringFromId(l);
+                if (!s.equals(s2)) {
+                    throw new StringIdException();
+                }
+            }
+            logln("Ending thread: " + this);
+        }
+
+        public String toString() {
+            return "StringIdThread " + id;
+        }
+    }
+
+    public void TestStringId() {
+        ArrayList<StringIdThread> threads = new ArrayList<StringIdThread>();
+
+        for (int i = 0; i < 8; i++) {
+            StringIdThread thread = new StringIdThread(i);
+            threads.add(thread);
+            thread.start();
+        }
+        for (StringIdThread thread : threads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                errln(e.toString());
+            }
+        }
     }
 
     public void TestUrlEscape() {
@@ -141,8 +217,19 @@ public class TestUtilities extends TestFmwk {
         }
         List<Organization> reordered = new ArrayList<Organization>(stringToOrg.values());
         List<Organization> plain = Arrays.asList(Organization.values());
-        if (!plain.equals(reordered)) {
-            errln("Items not in alphabetical order: use " + reordered);
+        for (int i = 0; i < reordered.size(); ++i) {
+            assertEquals("Items not in alphabetical order", reordered.get(i), plain.get(i));
+        }
+    }
+
+    public void TestOrganizationNames() {
+        UnicodeSet uppercase = new UnicodeSet("[:uppercase:]");
+        for (Organization org : Organization.values()) {
+            if (!uppercase.contains(org.getDisplayName().codePointAt(0))) {
+                errln("Organization name isn't titlecased: " + org + ", " + org.getDisplayName());
+            }
+            assertEquals("Organization from enum name", org, Organization.fromString(org.toString()));
+            assertEquals("Organization from display name", org, Organization.fromString(org.getDisplayName()));
         }
     }
 

@@ -1,920 +1,608 @@
 {
   "supplemental": {
     "version": {
-      "@cldrVersion": "23.1",
-      "@number": "$Revision: 8721 $"
+      "_cldrVersion": "24",
+      "_number": "$Revision: 9270 $"
     },
     "generation": {
-      "@date": "$Date: 2013-05-15 14:50:20 -0500 (Wed, 15 May 2013) $"
+      "_date": "$Date: 2013-08-25 16:44:03 -0500 (Sun, 25 Aug 2013) $"
     },
     "timeData": {
       "001": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "H"
       },
       "AD": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "AE": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "AF": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "AG": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "AL": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "AM": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "AO": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "AR": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "AS": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "AT": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "AU": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "AW": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "AX": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "AZ": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "BA": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "BB": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "BD": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "BE": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "BF": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "BG": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "BH": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "BI": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "BJ": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "BL": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "BM": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "BN": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "BO": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "BR": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "BS": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "BT": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "BW": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "BY": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "BZ": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "CA": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "CD": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "CF": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "CG": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "CH": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "CI": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "CL": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "CM": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "CN": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "CO": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
-      "CR": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "CU": {
-        "@allowed": "H h",
-        "@preferred": "H"
+      "CP": {
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "CV": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "CW": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "CY": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "CZ": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "DE": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "DJ": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "DK": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "DM": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "DO": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "DZ": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "EA": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "EC": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "EE": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "EG": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "EH": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "ER": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "ES": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "ET": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "FI": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "FJ": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "FM": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "FO": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "FR": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "GA": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "GB": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "GD": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "GE": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "GF": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "GG": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "GH": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "GI": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "GL": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "GM": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "GN": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "GP": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "GQ": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "GR": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "GT": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "GU": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "GW": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "GY": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "HK": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "HN": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "HR": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "HT": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "HU": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "IC": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "ID": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "IE": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "IL": {
-        "@allowed": "H",
-        "@preferred": "H"
-      },
-      "IM": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "IN": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "IQ": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "IR": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "IS": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "IT": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "JE": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "JM": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "JO": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "JP": {
-        "@allowed": "H K h",
-        "@preferred": "H"
-      },
-      "KE": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "KG": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H K h",
+        "_preferred": "H"
       },
       "KH": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "KI": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "KM": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "KN": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "KP": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "KR": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "KW": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "KY": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "KZ": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "LA": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "LB": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "LC": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "LI": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "LK": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "LR": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "LS": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "LT": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "LU": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "LV": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "LY": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "MA": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "MC": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "MD": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "ME": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "MF": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "MG": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "MH": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "MK": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "ML": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "MM": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "MN": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "MO": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "MP": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "MQ": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "MR": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "MT": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "MU": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "MW": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "MX": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "MY": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "MZ": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "NA": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "NC": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "NE": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "NG": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "NI": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "NL": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "NO": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "NP": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "NZ": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "OM": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "PA": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "PE": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "PF": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "PG": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "PH": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "PK": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
-      "PL": {
-        "@allowed": "H h",
-        "@preferred": "H"
+      "PM": {
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "PR": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "PS": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "PT": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "PW": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "PY": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "QA": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "RE": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "RO": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "RS": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "RU": {
-        "@allowed": "H",
-        "@preferred": "H"
-      },
-      "RW": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "SA": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "SB": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "SC": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "SD": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "SE": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "SG": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "SI": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
+      },
+      "SJ": {
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "SK": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "SL": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "SM": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "SN": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "SO": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "SR": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "SS": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "ST": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "SV": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "SX": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "SY": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "SZ": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "TC": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "TD": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "TG": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "TH": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "TJ": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "TL": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "TN": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "TO": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "TR": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "TT": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "TW": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "TZ": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "UA": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "UG": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "UM": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "US": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "UY": {
-        "@allowed": "H h",
-        "@preferred": "H"
-      },
-      "UZ": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "VC": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "VE": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "VG": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "VI": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "VN": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "VU": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
+      },
+      "WF": {
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "WS": {
-        "@allowed": "H h",
-        "@preferred": "h"
-      },
-      "XK": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "YE": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "YT": {
-        "@allowed": "H h",
-        "@preferred": "H"
+        "_allowed": "H",
+        "_preferred": "H"
       },
       "ZA": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "ZM": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       },
       "ZW": {
-        "@allowed": "H h",
-        "@preferred": "h"
+        "_allowed": "H h",
+        "_preferred": "h"
       }
     }
   }

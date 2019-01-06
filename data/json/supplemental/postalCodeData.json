@@ -1,11 +1,11 @@
 {
   "supplemental": {
     "version": {
-      "@cldrVersion": "23.1",
-      "@number": "$Revision: 8242 $"
+      "_cldrVersion": "24",
+      "_number": "$Revision: 8817 $"
     },
     "generation": {
-      "@date": "$Date: 2013-02-24 21:06:02 -0600 (Sun, 24 Feb 2013) $"
+      "_date": "$Date: 2013-05-30 17:53:09 -0500 (Thu, 30 May 2013) $"
     },
     "postalCodeData": {
       "AD": "AD\\d{3}",
@@ -70,7 +70,6 @@
       "HT": "\\d{4}",
       "HU": "\\d{4}",
       "ID": "\\d{5}",
-      "IE": "((D|DUBLIN)?([1-9]|6[wW]|1[0-8]|2[024]))?",
       "IL": "\\d{5}",
       "IM": "IM\\d[\\dA-Z]?[ ]?\\d[ABD-HJLN-UW-Z]{2}",
       "IN": "\\d{6}",
@@ -162,6 +161,7 @@
       "VE": "\\d{4}",
       "VI": "008(([0-4]\\d)|(5[01]))([ \\-]\\d{4})?",
       "WF": "986\\d{2}",
+      "XK": "\\d{5}",
       "YT": "976\\d{2}",
       "YU": "\\d{5}",
       "ZA": "\\d{4}",

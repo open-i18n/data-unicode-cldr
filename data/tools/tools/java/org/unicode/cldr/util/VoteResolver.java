@@ -75,7 +75,7 @@ public class VoteResolver<T> {
         .unmodifiableSet(new HashSet(
             Arrays
                 .asList(
-                "ar bg bn ca cs da de el es fi fr he hi hr hu it ja ko ml nb nl pl pt pt_PT ro ru sk sl sr sv th tu uk vi zh zh_Hant"
+                "ar ca cs da de el es fi fr he hi hr hu it ja ko nb nl pl pt pt_PT ro ru sk sl sr sv th tr uk vi zh zh_Hant"
                     .split(" "))));
 
     /**
@@ -83,27 +83,65 @@ public class VoteResolver<T> {
      * so that we know when new ones show up.
      */
     public enum Organization {
-        // adobe, afrigen, apple, bangor_univ, bhutan, breton, cherokee, georgia_isi, gnome, google, guest, ibm, india,
-        // iran_hci, kendra,
-        // kotoistus, lao_dpt, openinstitute, openoffice_org, oracle, pakistan, sil, srilanka, sun, surveytool, utilika,
-        // wikimedia, yahoo;
-        adobe, afrigen, apple, bangor_univ, bhutan, breton, cherokee, georgia_isi, gnome, google, guest, ibm, india, iran_hci, kendra, kotoistus, lao_dpt, openinstitute, openoffice_org, oracle, pakistan, sil, srilanka, sun, surveytool, utilika, wikimedia, yahoo;
         // Not used (but keep in to avoid breakage): sun
         // Please update Locales.txt for default coverage when adding an organization here.
 
+        adobe("Adobe"),
+        afghan_csa("Afghan CSA"),
+        afghan_mcit("Afghan MCIT"),
+        afrigen("Afrigen"),
+        apple("Apple"),
+        bangor_univ("Bangor Univ."),
+        bhutan("Bhutan DDC"),
+        breton("Office of Breton Lang"),
+        cherokee("Cherokee Nation"),
+        georgia_isi("Georgia ISI"),
+        gnome("Gnome Foundation"),
+        google("Google"),
+        guest("Guest (Unicode)"),
+        ibm("IBM"),
+        india("India MIT"),
+        iran_hci("Iran HCI"),
+        kendra("Kendra (Nepal)"),
+        kotoistus("Kotoistus (Finnish IT Ctr)"),
+        lakota_lc("Lakota LC"),
+        lao_dpt("Lao Posts/Telecom??"),
+        openinstitute("Open Inst (Cambodia)"),
+        openoffice_org("Open Office"),
+        oracle("Oracle"),
+        pakistan("Pakistan"),
+        sil("SIL"),
+        srilanka("Sri Lanka ICTA", "Sri Lanka"),
+        sun("Sun Micro"),
+        surveytool("Survey Tool"),
+        utilika("Utilika Foundation", "Utilika"),
+        welsh_lc("Welsh LC"),
+        wikimedia("Wikimedia Foundation"),
+        yahoo("Yahoo"), ;
+
+        public final String displayName;
+
         public static Organization fromString(String name) {
             name = name.toLowerCase().replace('-', '_').replace('.', '_');
-            if (name.contains("pakistan")) {
-                name = "pakistan";
-            } else if (name.contains("utilika foundation")) {
-                name = "utilika";
-            } else if (name.contains("sri lanka")) {
-                name = "srilanka";
-            }
-            Organization org = Organization.valueOf(name);
+            Organization org = OrganizationNameMap.get(name);
             return org;
         }
+
+        public String getDisplayName() {
+            return displayName;
+        }
+
+        private Organization(String displayName, String... names) {
+            OrganizationNameMap.put(displayName.toLowerCase().replace('-', '_').replace('.', '_'), this);
+            this.displayName = displayName;
+            for (String name : names) {
+                OrganizationNameMap.put(name.toLowerCase().replace('-', '_').replace('.', '_'), this);
+            }
+            OrganizationNameMap.put(name().toLowerCase().replace('-', '_').replace('.', '_'), this);
+        }
     };
+
+    static final Map<String, Organization> OrganizationNameMap = new HashMap<String, Organization>();
 
     /**
      * This is the level at which a vote counts. Each level also contains the

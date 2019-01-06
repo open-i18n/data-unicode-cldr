@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import com.ibm.icu.text.LocaleDisplayNames;
+import com.ibm.icu.text.Transform;
 import com.ibm.icu.util.ULocale;
 
 /**
@@ -22,6 +23,8 @@ import com.ibm.icu.util.ULocale;
 public final class CLDRLocale implements Comparable<CLDRLocale> {
     public interface NameFormatter {
         String getDisplayName(CLDRLocale cldrLocale);
+
+        String getDisplayName(CLDRLocale cldrLocale, boolean onlyConstructCompound, Transform<String, String> altPicker);
 
         String getDisplayLanguage(CLDRLocale cldrLocale);
 
@@ -97,22 +100,32 @@ public final class CLDRLocale implements Comparable<CLDRLocale> {
         public String getDisplayLanguage(CLDRLocale cldrLocale) {
             return ldn.languageDisplayName(cldrLocale.getLanguage());
         }
+
+        @Override
+        public String getDisplayName(CLDRLocale cldrLocale, boolean onlyConstructCompound, Transform<String, String> altPicker) {
+            return getDisplayName(cldrLocale);
+        }
     }
 
     /**
      * @author srl
      * 
+     * This formatter will delegate to CLDRFile.getName if a CLDRFile is given, otherwise StandardCodes
      */
     public static class CLDRFormatter extends SimpleFormatter {
         private FormatBehavior behavior = FormatBehavior.extend;
 
+        private CLDRFile file = null;
+
         public CLDRFormatter(CLDRFile fromFile) {
             super(CLDRLocale.getInstance(fromFile.getLocaleID()).toULocale());
+            file = fromFile;
         }
 
         public CLDRFormatter(CLDRFile fromFile, FormatBehavior behavior) {
             super(CLDRLocale.getInstance(fromFile.getLocaleID()).toULocale());
             this.behavior = behavior;
+            file = fromFile;
         }
 
         public CLDRFormatter() {
@@ -125,10 +138,47 @@ public final class CLDRLocale implements Comparable<CLDRLocale> {
         }
 
         @Override
+        public String getDisplayVariant(CLDRLocale cldrLocale) {
+            if (file != null) return file.getName("variant", cldrLocale.getVariant());
+            return tryForBetter(super.getDisplayVariant(cldrLocale),
+                cldrLocale.getVariant(),
+                "variant");
+        }
+
+        @Override
+        public String getDisplayName(CLDRLocale cldrLocale) {
+            if (file != null) return file.getName(cldrLocale.toLanguageTag(), true, null);
+            return super.getDisplayName(cldrLocale);
+        }
+
+        @Override
+        public String getDisplayName(CLDRLocale cldrLocale, boolean onlyConstructCompound, Transform<String, String> altPicker) {
+            if (file != null) return file.getName(cldrLocale.toLanguageTag(), onlyConstructCompound, altPicker);
+            return super.getDisplayName(cldrLocale);
+        }
+
+        @Override
+        public String getDisplayScript(CLDRLocale cldrLocale) {
+            if (file != null) return file.getName("script", cldrLocale.getScript());
+            return tryForBetter(super.getDisplayScript(cldrLocale),
+                cldrLocale.getScript(),
+                "language");
+        }
+
+        @Override
         public String getDisplayLanguage(CLDRLocale cldrLocale) {
+            if (file != null) return file.getName("language", cldrLocale.getLanguage());
             return tryForBetter(super.getDisplayLanguage(cldrLocale),
                 cldrLocale.getLanguage(),
                 "language");
+        }
+
+        @Override
+        public String getDisplayCountry(CLDRLocale cldrLocale) {
+            if (file != null) return file.getName("territory", cldrLocale.getCountry());
+            return tryForBetter(super.getDisplayLanguage(cldrLocale),
+                cldrLocale.getLanguage(),
+                "territory");
         }
 
         private String tryForBetter(String superString, String code, String type) {
@@ -180,6 +230,14 @@ public final class CLDRLocale implements Comparable<CLDRLocale> {
      */
     private CLDRLocale(ULocale loc) {
         init(loc);
+    }
+
+    /**
+     * Return BCP47 language tag
+     * @return
+     */
+    public String toLanguageTag() {
+        return ulocale.toLanguageTag();
     }
 
     /**
@@ -426,6 +484,10 @@ public final class CLDRLocale implements Comparable<CLDRLocale> {
         return getDisplayName(getDefaultFormatter());
     }
 
+    public String getDisplayName(boolean combined, Transform<String, String> picker) {
+        return getDisplayName(getDefaultFormatter(), combined, picker);
+    }
+
     /**
      * These functions wrap calls to the displayLocale, but are provided to supply an interface that looks similar to
      * ULocale.getDisplay___(displayLocale)
@@ -502,5 +564,9 @@ public final class CLDRLocale implements Comparable<CLDRLocale> {
 
     public interface SublocaleProvider {
         public Set<CLDRLocale> subLocalesOf(CLDRLocale forLocale);
+    }
+
+    public String getDisplayName(NameFormatter engFormat, boolean combined, Transform<String, String> picker) {
+        return engFormat.getDisplayName(this, combined, picker);
     }
 }

@@ -1,0 +1,185 @@
+{
+  "main": {
+    "da": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "24",
+          "_number": "$Revision: 9287 $"
+        },
+        "generation": {
+          "_date": "$Date: 2013-08-28 21:32:04 -0500 (Wed, 28 Aug 2013) $"
+        },
+        "language": "da"
+      },
+      "localeDisplayNames": {
+        "localeDisplayPattern": {
+          "localePattern": "{0} ({1})",
+          "localeSeparator": "{0}, {1}",
+          "localeKeyTypePattern": "{0}: {1}"
+        },
+        "keys": {
+          "calendar": "Kalender",
+          "colAlternate": "Ignorer symboler under sortering",
+          "colBackwards": "Omvendt sortering efter accenter",
+          "colCaseFirst": "Sortering efter store/små bogstaver",
+          "colCaseLevel": "Sortering med forskel på små og store bogstaver",
+          "colHiraganaQuaternary": "Sortering efter kana",
+          "collation": "Sortering",
+          "colNormalization": "Normaliseret sortering",
+          "colNumeric": "Numerisk sortering",
+          "colStrength": "Sorteringsstyrke",
+          "currency": "Valuta",
+          "numbers": "Tal",
+          "timezone": "Tidszone",
+          "va": "Sprogvariant",
+          "variableTop": "Sortér som symboler",
+          "x": "Privatbrug"
+        },
+        "types": {
+          "calendar": {
+            "buddhist": "buddhistisk kalender",
+            "chinese": "kinesisk kalender",
+            "coptic": "koptisk kalender",
+            "dangi": "dangi-kalender",
+            "ethiopic": "etiopisk kalender",
+            "ethiopic-amete-alem": "etiopisk amete-alem-kalender",
+            "gregorian": "gregoriansk kalender",
+            "hebrew": "jødisk kalender",
+            "indian": "indisk nationalkalender",
+            "islamic": "islamisk kalender",
+            "islamic-civil": "verdslig islamisk kalender",
+            "islamic-rgsa": "islamisk kalender (Saudi-Arabien, observation)",
+            "islamic-tbla": "islamisk kalender (tabellarisk, astronomisk epoke)",
+            "islamic-umalqura": "islamisk kalender (Umm al-Qura)",
+            "iso8601": "ISO-8601-kalender",
+            "japanese": "japansk kalender",
+            "persian": "persisk kalender",
+            "roc": "kalender for Republikken Kina"
+          },
+          "collation": {
+            "standard": "standardsorteringsrækkefølge",
+            "traditional": "traditionel sorteringsrækkefølge",
+            "big5han": "sorteringsrækkefølge uforkortet kinesisk - Big5",
+            "dictionary": "sorteringsrækkefølge for ordbog",
+            "ducet": "Unicode-standardsortering",
+            "eor": "europæisk sorteringsrækkefølge",
+            "gb2312han": "sorteringsrækkefølge forkortet kinesisk - GB2312",
+            "phonebook": "sorteringsrækkefølge i telefonbøger",
+            "phonetic": "fonetisk sorteringsrækkefølge",
+            "pinyin": "pinyin-baseret sorteringsrækkefølge",
+            "reformed": "ny sorteringsrækkefølge",
+            "search": "generel søgning",
+            "searchjl": "sortér efter den første konsonant i hangul",
+            "stroke": "stregbaseret sorteringsrækkefølge",
+            "unihan": "sortering efter streger i rodtegn",
+            "zhuyin": "zhuyin-sorteringsrækkefølge"
+          },
+          "numbers": {
+            "native": "Nationale cifre",
+            "traditional": "Traditionelle tal",
+            "finance": "Finansielle tal",
+            "arab": "Hindu-arabiske tal",
+            "arabext": "Udvidede hindu-arabiske tal",
+            "armn": "Armenske tal",
+            "armnlow": "Armenske tal i små bogstaver",
+            "bali": "Balinesiske tal",
+            "beng": "Bengalske tal",
+            "brah": "Brahmi-tal",
+            "cakm": "Chakma-tal",
+            "cham": "Cham-tal",
+            "deva": "Devanagariske tal",
+            "ethi": "Etiopiske tal",
+            "fullwide": "Tal i fuld bredde",
+            "geor": "Georgiske tal",
+            "grek": "Græske tal",
+            "greklow": "Græske tal i små bogstaver",
+            "gujr": "Gujarati tal",
+            "guru": "Gurmukhi tal",
+            "hanidec": "Kinesiske decimaltal",
+            "hans": "Forenklede kinesiske tal",
+            "hansfin": "Forenklede kinesiske financielle tal",
+            "hant": "Traditionelle kinesiske tal",
+            "hantfin": "Traditionelle kinesiske finansielle tal",
+            "hebr": "Hebræiske tal",
+            "java": "Javanesiske tal",
+            "jpan": "Japanske tal",
+            "jpanfin": "Japanske financielle tal",
+            "kali": "Kayah Li-tal",
+            "khmr": "Khmerske tal",
+            "knda": "Kannada tal",
+            "lana": "Tai Tham Hora-tal",
+            "lanatham": "Tai Tham Tahm-tal",
+            "laoo": "Laotiske tal",
+            "latn": "Arabertal",
+            "lepc": "Lepcha-tal",
+            "limb": "Limbu-tal",
+            "mlym": "Malayalamske tal",
+            "mong": "Mongolske tal",
+            "mtei": "Meetei Mayek-tal",
+            "mymr": "Myanmar tal",
+            "mymrshan": "Myanmar Shan-tal",
+            "nkoo": "N'Ko-tal",
+            "olck": "Ol Chiki-tal",
+            "orya": "Oriya tal",
+            "osma": "Osmanya-tal",
+            "roman": "Romertal",
+            "romanlow": "Romertal i små bogstaver",
+            "saur": "Saurashtra-tal",
+            "shrd": "Sharada-tal",
+            "sora": "Sora Sompeng-tal",
+            "sund": "Sundanesiske tal",
+            "takr": "Takri-tal",
+            "talu": "Nye Tai Lue-tal",
+            "taml": "Traditionelle tamilske tal",
+            "tamldec": "Tamilske tal",
+            "telu": "Telugu tal",
+            "thai": "Thailandske tal",
+            "tibt": "Tibetanske tal",
+            "vaii": "Vai-tal"
+          },
+          "colAlternate": {
+            "non-ignorable": "Sortér efter symboler",
+            "shifted": "Sortér, og ignorer symboler"
+          },
+          "colBackwards": {
+            "no": "Sortér efter accenter i normal rækkefølge",
+            "yes": "Sortér efter accenter i omvendt rækkefølge"
+          },
+          "colCaseFirst": {
+            "lower": "Sortér med små bogstaver først",
+            "no": "Sortér efter store og små bogstaver i almindelig rækkefølge",
+            "upper": "Sortér med store bogstaver først"
+          },
+          "colCaseLevel": {
+            "no": "Sortér uden forskel på store og små bogstaver",
+            "yes": "Sortér med skelnen mellem store og små bogstaver"
+          },
+          "colHiraganaQuaternary": {
+            "no": "Sortér kana separat",
+            "yes": "Sortér kana med forskel på varianter"
+          },
+          "colNormalization": {
+            "no": "Sortér uden normalisering",
+            "yes": "Sortér Unicode efter første normalisering"
+          },
+          "colNumeric": {
+            "no": "Sortér efter individuelle cifre",
+            "yes": "Sortér tal numerisk"
+          },
+          "colStrength": {
+            "identical": "Sortér alt",
+            "primary": "Sortér kun efter basisbogstaver",
+            "quaternary": "Sortér efter accenter/små og store bogstaver/bredde/kana",
+            "secondary": "Sortér efter accenter",
+            "tertiary": "Sortér efter accenter/store og små bogstaver/bredde"
+          }
+        },
+        "codePatterns": {
+          "language": "Sprog: {0}",
+          "script": "Instruks: {0}",
+          "territory": "Område: {0}"
+        }
+      }
+    }
+  }
+}

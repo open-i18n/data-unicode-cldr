@@ -1,15 +1,18 @@
 package org.unicode.cldr.util;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 
 import org.unicode.cldr.util.XPathParts.Comments;
 
 import com.ibm.icu.dev.util.Relation;
+import com.ibm.icu.text.Normalizer2;
+import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.util.VersionInfo;
 
 public class SimpleXMLSource extends XMLSource {
@@ -77,12 +80,12 @@ public class SimpleXMLSource extends XMLSource {
         return Collections.unmodifiableSet(xpath_value.keySet()).iterator();
     }
 
-    public Object freeze() {
+    public XMLSource freeze() {
         locked = true;
         return this;
     }
 
-    public Object cloneAsThawed() {
+    public XMLSource cloneAsThawed() {
         SimpleXMLSource result = (SimpleXMLSource) super.cloneAsThawed();
         result.xpath_comments = (Comments) result.xpath_comments.clone();
         result.xpath_fullXPath = CldrUtility.newConcurrentHashMap(result.xpath_fullXPath);
@@ -104,10 +107,10 @@ public class SimpleXMLSource extends XMLSource {
         synchronized (VALUE_TO_PATH_MUTEX) {
             if (VALUE_TO_PATH != null) {
                 if (oldValue != null) {
-                    VALUE_TO_PATH.remove(oldValue, distinguishingXPath);
+                    VALUE_TO_PATH.remove(normalize(oldValue), distinguishingXPath);
                 }
                 if (newValue != null) {
-                    VALUE_TO_PATH.put(newValue, distinguishingXPath);
+                    VALUE_TO_PATH.put(normalize(newValue), distinguishingXPath);
                 }
             }
         }
@@ -118,14 +121,14 @@ public class SimpleXMLSource extends XMLSource {
         // build a Relation mapping value to paths, if needed
         synchronized (VALUE_TO_PATH_MUTEX) {
             if (VALUE_TO_PATH == null) {
-                VALUE_TO_PATH = new Relation(new ConcurrentHashMap(), HashSet.class);
+                VALUE_TO_PATH = new Relation(new HashMap(), HashSet.class);
                 for (Iterator<String> it = iterator(); it.hasNext();) {
                     String path = it.next();
-                    String value = getValueAtDPath(path);
+                    String value = normalize(getValueAtDPath(path));
                     VALUE_TO_PATH.put(value, path);
                 }
             }
-            Set<String> paths = VALUE_TO_PATH.getAll(valueToMatch);
+            Set<String> paths = VALUE_TO_PATH.getAll(normalize(valueToMatch));
             if (paths == null) {
                 return;
             }
@@ -134,13 +137,58 @@ public class SimpleXMLSource extends XMLSource {
                 return;
             }
             for (String path : paths) {
-                if (path.contains(pathPrefix)) {
+                if (path.startsWith(pathPrefix)) {
                     // if (altPath.originalPath.startsWith(altPrefix.originalPath)) {
                     result.add(path);
                 }
             }
         }
     }
+
+    static final Normalizer2 NFKCCF = Normalizer2.getNFKCCasefoldInstance();
+    static final Normalizer2 NFKC = Normalizer2.getNFKCInstance();
+
+    // The following includes letters, marks, numbers, currencies, and *selected* symbols/punctuation
+    static final UnicodeSet NON_ALPHANUM = new UnicodeSet("[^[:L:][:M:][:N:][:Sc:]/+\\-°′″−]").freeze();
+
+    public static String normalize(String valueToMatch) {
+        return replace(NON_ALPHANUM, NFKCCF.normalize(valueToMatch), "");
+    }
+
+    public static String normalizeCaseSensitive(String valueToMatch) {
+        return replace(NON_ALPHANUM, NFKC.normalize(valueToMatch), "");
+    }
+
+    public static String replace(UnicodeSet unicodeSet, String valueToMatch, String substitute) {
+        StringBuilder b = null; // delay creating until needed
+        // handle patterns
+        if (valueToMatch.contains("{")) {
+            valueToMatch = PLACEHOLDER.matcher(valueToMatch).replaceAll("").trim();
+        }
+        for (int i = 0; i < valueToMatch.length(); ++i) {
+            int cp = valueToMatch.codePointAt(i);
+            if (unicodeSet.contains(cp)) {
+                if (b == null) {
+                    b = new StringBuilder();
+                    b.append(valueToMatch.substring(0, i)); // copy the start
+                }
+                if (substitute.length() != 0) {
+                    b.append(substitute);
+                }
+            } else if (b != null) {
+                b.appendCodePoint(cp);
+            }
+            if (cp > 0xFFFF) { // skip end of supplemental character
+                ++i;
+            }
+        }
+        if (b != null) {
+            valueToMatch = b.toString();
+        }
+        return valueToMatch;
+    }
+
+    static final Pattern PLACEHOLDER = Pattern.compile("\\{\\d\\}");
 
     public void setDtdVersionInfo(VersionInfo dtdVersionInfo) {
         this.dtdVersionInfo = dtdVersionInfo;

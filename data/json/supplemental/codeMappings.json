@@ -1,1388 +1,1391 @@
 {
   "supplemental": {
     "version": {
-      "@cldrVersion": "23.1",
-      "@number": "$Revision: 8721 $"
+      "_cldrVersion": "24",
+      "_number": "$Revision: 9270 $"
     },
     "generation": {
-      "@date": "$Date: 2013-05-15 14:50:20 -0500 (Wed, 15 May 2013) $"
+      "_date": "$Date: 2013-08-25 16:44:03 -0500 (Sun, 25 Aug 2013) $"
     },
     "codeMappings": {
       "AA": {
-        "@numeric": "958",
-        "@alpha3": "AAA"
+        "_numeric": "958",
+        "_alpha3": "AAA"
       },
       "AC": {
-        "@alpha3": "ASC"
+        "_alpha3": "ASC"
       },
       "AD": {
-        "@numeric": "020",
-        "@alpha3": "AND",
-        "@fips10": "AN"
+        "_numeric": "020",
+        "_alpha3": "AND",
+        "_fips10": "AN"
       },
       "AE": {
-        "@numeric": "784",
-        "@alpha3": "ARE"
+        "_numeric": "784",
+        "_alpha3": "ARE"
       },
       "AF": {
-        "@numeric": "004",
-        "@alpha3": "AFG"
+        "_numeric": "004",
+        "_alpha3": "AFG"
       },
       "AG": {
-        "@numeric": "028",
-        "@alpha3": "ATG",
-        "@fips10": "AC"
+        "_numeric": "028",
+        "_alpha3": "ATG",
+        "_fips10": "AC"
       },
       "AI": {
-        "@numeric": "660",
-        "@alpha3": "AIA",
-        "@fips10": "AV"
+        "_numeric": "660",
+        "_alpha3": "AIA",
+        "_fips10": "AV"
       },
       "AL": {
-        "@numeric": "008",
-        "@alpha3": "ALB"
+        "_numeric": "008",
+        "_alpha3": "ALB"
       },
       "AM": {
-        "@numeric": "051",
-        "@alpha3": "ARM"
+        "_numeric": "051",
+        "_alpha3": "ARM"
       },
       "AN": {
-        "@numeric": "530",
-        "@alpha3": "ANT",
-        "@fips10": "NT"
+        "_numeric": "530",
+        "_alpha3": "ANT",
+        "_fips10": "NT"
       },
       "AO": {
-        "@numeric": "024",
-        "@alpha3": "AGO"
+        "_numeric": "024",
+        "_alpha3": "AGO"
       },
       "AQ": {
-        "@numeric": "010",
-        "@alpha3": "ATA",
-        "@fips10": "AY"
+        "_numeric": "010",
+        "_alpha3": "ATA",
+        "_fips10": "AY"
       },
       "AR": {
-        "@numeric": "032",
-        "@alpha3": "ARG"
+        "_numeric": "032",
+        "_alpha3": "ARG"
       },
       "AS": {
-        "@numeric": "016",
-        "@alpha3": "ASM",
-        "@fips10": "AQ"
+        "_numeric": "016",
+        "_alpha3": "ASM",
+        "_fips10": "AQ"
       },
       "AT": {
-        "@numeric": "040",
-        "@alpha3": "AUT",
-        "@fips10": "AU"
+        "_numeric": "040",
+        "_alpha3": "AUT",
+        "_fips10": "AU"
       },
       "AU": {
-        "@numeric": "036",
-        "@alpha3": "AUS",
-        "@fips10": "AS"
+        "_numeric": "036",
+        "_alpha3": "AUS",
+        "_fips10": "AS"
       },
       "AW": {
-        "@numeric": "533",
-        "@alpha3": "ABW",
-        "@fips10": "AA"
+        "_numeric": "533",
+        "_alpha3": "ABW",
+        "_fips10": "AA"
       },
       "AX": {
-        "@numeric": "248",
-        "@alpha3": "ALA"
+        "_numeric": "248",
+        "_alpha3": "ALA"
       },
       "AZ": {
-        "@numeric": "031",
-        "@alpha3": "AZE",
-        "@fips10": "AJ"
+        "_numeric": "031",
+        "_alpha3": "AZE",
+        "_fips10": "AJ"
       },
       "BA": {
-        "@numeric": "070",
-        "@alpha3": "BIH",
-        "@fips10": "BK"
+        "_numeric": "070",
+        "_alpha3": "BIH",
+        "_fips10": "BK"
       },
       "BB": {
-        "@numeric": "052",
-        "@alpha3": "BRB"
+        "_numeric": "052",
+        "_alpha3": "BRB"
       },
       "BD": {
-        "@numeric": "050",
-        "@alpha3": "BGD",
-        "@fips10": "BG"
+        "_numeric": "050",
+        "_alpha3": "BGD",
+        "_fips10": "BG"
       },
       "BE": {
-        "@numeric": "056",
-        "@alpha3": "BEL"
+        "_numeric": "056",
+        "_alpha3": "BEL"
       },
       "BF": {
-        "@numeric": "854",
-        "@alpha3": "BFA",
-        "@fips10": "UV"
+        "_numeric": "854",
+        "_alpha3": "BFA",
+        "_fips10": "UV"
       },
       "BG": {
-        "@numeric": "100",
-        "@alpha3": "BGR",
-        "@fips10": "BU"
+        "_numeric": "100",
+        "_alpha3": "BGR",
+        "_fips10": "BU"
       },
       "BH": {
-        "@numeric": "048",
-        "@alpha3": "BHR",
-        "@fips10": "BA"
+        "_numeric": "048",
+        "_alpha3": "BHR",
+        "_fips10": "BA"
       },
       "BI": {
-        "@numeric": "108",
-        "@alpha3": "BDI",
-        "@fips10": "BY"
+        "_numeric": "108",
+        "_alpha3": "BDI",
+        "_fips10": "BY"
       },
       "BJ": {
-        "@numeric": "204",
-        "@alpha3": "BEN",
-        "@fips10": "BN"
+        "_numeric": "204",
+        "_alpha3": "BEN",
+        "_fips10": "BN"
       },
       "BL": {
-        "@numeric": "652",
-        "@alpha3": "BLM",
-        "@fips10": "TB"
+        "_numeric": "652",
+        "_alpha3": "BLM",
+        "_fips10": "TB"
       },
       "BM": {
-        "@numeric": "060",
-        "@alpha3": "BMU",
-        "@fips10": "BD"
+        "_numeric": "060",
+        "_alpha3": "BMU",
+        "_fips10": "BD"
       },
       "BN": {
-        "@numeric": "096",
-        "@alpha3": "BRN",
-        "@fips10": "BX"
+        "_numeric": "096",
+        "_alpha3": "BRN",
+        "_fips10": "BX"
       },
       "BO": {
-        "@numeric": "068",
-        "@alpha3": "BOL",
-        "@fips10": "BL"
+        "_numeric": "068",
+        "_alpha3": "BOL",
+        "_fips10": "BL"
       },
       "BQ": {
-        "@numeric": "535",
-        "@alpha3": "BES"
+        "_numeric": "535",
+        "_alpha3": "BES"
       },
       "BR": {
-        "@numeric": "076",
-        "@alpha3": "BRA"
+        "_numeric": "076",
+        "_alpha3": "BRA"
       },
       "BS": {
-        "@numeric": "044",
-        "@alpha3": "BHS",
-        "@fips10": "BF"
+        "_numeric": "044",
+        "_alpha3": "BHS",
+        "_fips10": "BF"
       },
       "BT": {
-        "@numeric": "064",
-        "@alpha3": "BTN"
+        "_numeric": "064",
+        "_alpha3": "BTN"
       },
       "BU": {
-        "@numeric": "104",
-        "@alpha3": "BUR"
+        "_numeric": "104",
+        "_alpha3": "BUR"
       },
       "BV": {
-        "@numeric": "074",
-        "@alpha3": "BVT"
+        "_numeric": "074",
+        "_alpha3": "BVT"
       },
       "BW": {
-        "@numeric": "072",
-        "@alpha3": "BWA",
-        "@fips10": "BC"
+        "_numeric": "072",
+        "_alpha3": "BWA",
+        "_fips10": "BC"
       },
       "BY": {
-        "@numeric": "112",
-        "@alpha3": "BLR",
-        "@fips10": "BO"
+        "_numeric": "112",
+        "_alpha3": "BLR",
+        "_fips10": "BO"
       },
       "BZ": {
-        "@numeric": "084",
-        "@alpha3": "BLZ",
-        "@fips10": "BH"
+        "_numeric": "084",
+        "_alpha3": "BLZ",
+        "_fips10": "BH"
       },
       "CA": {
-        "@numeric": "124",
-        "@alpha3": "CAN"
+        "_numeric": "124",
+        "_alpha3": "CAN"
       },
       "CC": {
-        "@numeric": "166",
-        "@alpha3": "CCK",
-        "@fips10": "CK"
+        "_numeric": "166",
+        "_alpha3": "CCK",
+        "_fips10": "CK"
       },
       "CD": {
-        "@numeric": "180",
-        "@alpha3": "COD",
-        "@fips10": "CG"
+        "_numeric": "180",
+        "_alpha3": "COD",
+        "_fips10": "CG"
       },
       "CF": {
-        "@numeric": "140",
-        "@alpha3": "CAF",
-        "@fips10": "CT"
+        "_numeric": "140",
+        "_alpha3": "CAF",
+        "_fips10": "CT"
       },
       "CG": {
-        "@numeric": "178",
-        "@alpha3": "COG",
-        "@fips10": "CF"
+        "_numeric": "178",
+        "_alpha3": "COG",
+        "_fips10": "CF"
       },
       "CH": {
-        "@numeric": "756",
-        "@alpha3": "CHE",
-        "@fips10": "SZ"
+        "_numeric": "756",
+        "_alpha3": "CHE",
+        "_fips10": "SZ"
       },
       "CI": {
-        "@numeric": "384",
-        "@alpha3": "CIV",
-        "@fips10": "IV"
+        "_numeric": "384",
+        "_alpha3": "CIV",
+        "_fips10": "IV"
       },
       "CK": {
-        "@numeric": "184",
-        "@alpha3": "COK",
-        "@fips10": "CW"
+        "_numeric": "184",
+        "_alpha3": "COK",
+        "_fips10": "CW"
       },
       "CL": {
-        "@numeric": "152",
-        "@alpha3": "CHL",
-        "@fips10": "CI"
+        "_numeric": "152",
+        "_alpha3": "CHL",
+        "_fips10": "CI"
       },
       "CM": {
-        "@numeric": "120",
-        "@alpha3": "CMR"
+        "_numeric": "120",
+        "_alpha3": "CMR"
       },
       "CN": {
-        "@numeric": "156",
-        "@alpha3": "CHN",
-        "@fips10": "CH"
+        "_numeric": "156",
+        "_alpha3": "CHN",
+        "_fips10": "CH"
       },
       "CO": {
-        "@numeric": "170",
-        "@alpha3": "COL"
+        "_numeric": "170",
+        "_alpha3": "COL"
       },
       "CP": {
-        "@alpha3": "CPT"
+        "_alpha3": "CPT"
       },
       "CR": {
-        "@numeric": "188",
-        "@alpha3": "CRI",
-        "@fips10": "CS"
+        "_numeric": "188",
+        "_alpha3": "CRI",
+        "_fips10": "CS"
       },
       "CS": {
-        "@numeric": "891",
-        "@alpha3": "SCG",
-        "@fips10": "YI",
-        "@internet": "CS YU"
+        "_numeric": "891",
+        "_alpha3": "SCG",
+        "_fips10": "YI"
       },
       "CU": {
-        "@numeric": "192",
-        "@alpha3": "CUB"
+        "_numeric": "192",
+        "_alpha3": "CUB"
       },
       "CV": {
-        "@numeric": "132",
-        "@alpha3": "CPV"
+        "_numeric": "132",
+        "_alpha3": "CPV"
       },
       "CW": {
-        "@numeric": "531",
-        "@alpha3": "CUW"
+        "_numeric": "531",
+        "_alpha3": "CUW"
       },
       "CX": {
-        "@numeric": "162",
-        "@alpha3": "CXR",
-        "@fips10": "KT"
+        "_numeric": "162",
+        "_alpha3": "CXR",
+        "_fips10": "KT"
       },
       "CY": {
-        "@numeric": "196",
-        "@alpha3": "CYP"
+        "_numeric": "196",
+        "_alpha3": "CYP"
       },
       "CZ": {
-        "@numeric": "203",
-        "@alpha3": "CZE",
-        "@fips10": "EZ"
+        "_numeric": "203",
+        "_alpha3": "CZE",
+        "_fips10": "EZ"
       },
       "DD": {
-        "@numeric": "278",
-        "@alpha3": "DDR"
+        "_numeric": "278",
+        "_alpha3": "DDR"
       },
       "DE": {
-        "@numeric": "276",
-        "@alpha3": "DEU",
-        "@fips10": "GM"
+        "_numeric": "276",
+        "_alpha3": "DEU",
+        "_fips10": "GM"
       },
       "DG": {
-        "@alpha3": "DGA"
+        "_alpha3": "DGA"
       },
       "DJ": {
-        "@numeric": "262",
-        "@alpha3": "DJI"
+        "_numeric": "262",
+        "_alpha3": "DJI"
       },
       "DK": {
-        "@numeric": "208",
-        "@alpha3": "DNK",
-        "@fips10": "DA"
+        "_numeric": "208",
+        "_alpha3": "DNK",
+        "_fips10": "DA"
       },
       "DM": {
-        "@numeric": "212",
-        "@alpha3": "DMA",
-        "@fips10": "DO"
+        "_numeric": "212",
+        "_alpha3": "DMA",
+        "_fips10": "DO"
       },
       "DO": {
-        "@numeric": "214",
-        "@alpha3": "DOM",
-        "@fips10": "DR"
+        "_numeric": "214",
+        "_alpha3": "DOM",
+        "_fips10": "DR"
       },
       "DZ": {
-        "@numeric": "012",
-        "@alpha3": "DZA",
-        "@fips10": "AG"
+        "_numeric": "012",
+        "_alpha3": "DZA",
+        "_fips10": "AG"
       },
       "EA": {},
       "EC": {
-        "@numeric": "218",
-        "@alpha3": "ECU"
+        "_numeric": "218",
+        "_alpha3": "ECU"
       },
       "EE": {
-        "@numeric": "233",
-        "@alpha3": "EST",
-        "@fips10": "EN"
+        "_numeric": "233",
+        "_alpha3": "EST",
+        "_fips10": "EN"
       },
       "EG": {
-        "@numeric": "818",
-        "@alpha3": "EGY"
+        "_numeric": "818",
+        "_alpha3": "EGY"
       },
       "EH": {
-        "@numeric": "732",
-        "@alpha3": "ESH",
-        "@fips10": "WI"
+        "_numeric": "732",
+        "_alpha3": "ESH",
+        "_fips10": "WI"
       },
       "ER": {
-        "@numeric": "232",
-        "@alpha3": "ERI"
+        "_numeric": "232",
+        "_alpha3": "ERI"
       },
       "ES": {
-        "@numeric": "724",
-        "@alpha3": "ESP",
-        "@fips10": "SP"
+        "_numeric": "724",
+        "_alpha3": "ESP",
+        "_fips10": "SP"
       },
       "ET": {
-        "@numeric": "231",
-        "@alpha3": "ETH"
+        "_numeric": "231",
+        "_alpha3": "ETH"
       },
       "EU": {
-        "@numeric": "967",
-        "@alpha3": "QUU"
+        "_numeric": "967",
+        "_alpha3": "QUU"
       },
       "FI": {
-        "@numeric": "246",
-        "@alpha3": "FIN"
+        "_numeric": "246",
+        "_alpha3": "FIN"
       },
       "FJ": {
-        "@numeric": "242",
-        "@alpha3": "FJI"
+        "_numeric": "242",
+        "_alpha3": "FJI"
       },
       "FK": {
-        "@numeric": "238",
-        "@alpha3": "FLK"
+        "_numeric": "238",
+        "_alpha3": "FLK"
       },
       "FM": {
-        "@numeric": "583",
-        "@alpha3": "FSM"
+        "_numeric": "583",
+        "_alpha3": "FSM"
       },
       "FO": {
-        "@numeric": "234",
-        "@alpha3": "FRO"
+        "_numeric": "234",
+        "_alpha3": "FRO"
       },
       "FR": {
-        "@numeric": "250",
-        "@alpha3": "FRA"
+        "_numeric": "250",
+        "_alpha3": "FRA"
       },
       "FX": {
-        "@numeric": "249",
-        "@alpha3": "FXX"
+        "_numeric": "249",
+        "_alpha3": "FXX"
       },
       "GA": {
-        "@numeric": "266",
-        "@alpha3": "GAB",
-        "@fips10": "GB"
+        "_numeric": "266",
+        "_alpha3": "GAB",
+        "_fips10": "GB"
       },
       "GB": {
-        "@numeric": "826",
-        "@alpha3": "GBR",
-        "@fips10": "UK",
-        "@internet": "UK GB"
+        "_numeric": "826",
+        "_alpha3": "GBR",
+        "_fips10": "UK",
+        "_internet": "UK GB"
       },
       "GD": {
-        "@numeric": "308",
-        "@alpha3": "GRD",
-        "@fips10": "GJ"
+        "_numeric": "308",
+        "_alpha3": "GRD",
+        "_fips10": "GJ"
       },
       "GE": {
-        "@numeric": "268",
-        "@alpha3": "GEO",
-        "@fips10": "GG"
+        "_numeric": "268",
+        "_alpha3": "GEO",
+        "_fips10": "GG"
       },
       "GF": {
-        "@numeric": "254",
-        "@alpha3": "GUF",
-        "@fips10": "FG"
+        "_numeric": "254",
+        "_alpha3": "GUF",
+        "_fips10": "FG"
       },
       "GG": {
-        "@numeric": "831",
-        "@alpha3": "GGY",
-        "@fips10": "GK"
+        "_numeric": "831",
+        "_alpha3": "GGY",
+        "_fips10": "GK"
       },
       "GH": {
-        "@numeric": "288",
-        "@alpha3": "GHA"
+        "_numeric": "288",
+        "_alpha3": "GHA"
       },
       "GI": {
-        "@numeric": "292",
-        "@alpha3": "GIB"
+        "_numeric": "292",
+        "_alpha3": "GIB"
       },
       "GL": {
-        "@numeric": "304",
-        "@alpha3": "GRL"
+        "_numeric": "304",
+        "_alpha3": "GRL"
       },
       "GM": {
-        "@numeric": "270",
-        "@alpha3": "GMB",
-        "@fips10": "GA"
+        "_numeric": "270",
+        "_alpha3": "GMB",
+        "_fips10": "GA"
       },
       "GN": {
-        "@numeric": "324",
-        "@alpha3": "GIN",
-        "@fips10": "GV"
+        "_numeric": "324",
+        "_alpha3": "GIN",
+        "_fips10": "GV"
       },
       "GP": {
-        "@numeric": "312",
-        "@alpha3": "GLP"
+        "_numeric": "312",
+        "_alpha3": "GLP"
       },
       "GQ": {
-        "@numeric": "226",
-        "@alpha3": "GNQ",
-        "@fips10": "EK"
+        "_numeric": "226",
+        "_alpha3": "GNQ",
+        "_fips10": "EK"
       },
       "GR": {
-        "@numeric": "300",
-        "@alpha3": "GRC"
+        "_numeric": "300",
+        "_alpha3": "GRC"
       },
       "GS": {
-        "@numeric": "239",
-        "@alpha3": "SGS",
-        "@fips10": "SX"
+        "_numeric": "239",
+        "_alpha3": "SGS",
+        "_fips10": "SX"
       },
       "GT": {
-        "@numeric": "320",
-        "@alpha3": "GTM"
+        "_numeric": "320",
+        "_alpha3": "GTM"
       },
       "GU": {
-        "@numeric": "316",
-        "@alpha3": "GUM",
-        "@fips10": "GQ"
+        "_numeric": "316",
+        "_alpha3": "GUM",
+        "_fips10": "GQ"
       },
       "GW": {
-        "@numeric": "624",
-        "@alpha3": "GNB",
-        "@fips10": "PU"
+        "_numeric": "624",
+        "_alpha3": "GNB",
+        "_fips10": "PU"
       },
       "GY": {
-        "@numeric": "328",
-        "@alpha3": "GUY"
+        "_numeric": "328",
+        "_alpha3": "GUY"
       },
       "HK": {
-        "@numeric": "344",
-        "@alpha3": "HKG"
+        "_numeric": "344",
+        "_alpha3": "HKG"
       },
       "HM": {
-        "@numeric": "334",
-        "@alpha3": "HMD"
+        "_numeric": "334",
+        "_alpha3": "HMD"
       },
       "HN": {
-        "@numeric": "340",
-        "@alpha3": "HND",
-        "@fips10": "HO"
+        "_numeric": "340",
+        "_alpha3": "HND",
+        "_fips10": "HO"
       },
       "HR": {
-        "@numeric": "191",
-        "@alpha3": "HRV"
+        "_numeric": "191",
+        "_alpha3": "HRV"
       },
       "HT": {
-        "@numeric": "332",
-        "@alpha3": "HTI",
-        "@fips10": "HA"
+        "_numeric": "332",
+        "_alpha3": "HTI",
+        "_fips10": "HA"
       },
       "HU": {
-        "@numeric": "348",
-        "@alpha3": "HUN"
+        "_numeric": "348",
+        "_alpha3": "HUN"
       },
       "IC": {},
       "ID": {
-        "@numeric": "360",
-        "@alpha3": "IDN"
+        "_numeric": "360",
+        "_alpha3": "IDN"
       },
       "IE": {
-        "@numeric": "372",
-        "@alpha3": "IRL",
-        "@fips10": "EI"
+        "_numeric": "372",
+        "_alpha3": "IRL",
+        "_fips10": "EI"
       },
       "IL": {
-        "@numeric": "376",
-        "@alpha3": "ISR",
-        "@fips10": "IS"
+        "_numeric": "376",
+        "_alpha3": "ISR",
+        "_fips10": "IS"
       },
       "IM": {
-        "@numeric": "833",
-        "@alpha3": "IMN"
+        "_numeric": "833",
+        "_alpha3": "IMN"
       },
       "IN": {
-        "@numeric": "356",
-        "@alpha3": "IND"
+        "_numeric": "356",
+        "_alpha3": "IND"
       },
       "IO": {
-        "@numeric": "086",
-        "@alpha3": "IOT"
+        "_numeric": "086",
+        "_alpha3": "IOT"
       },
       "IQ": {
-        "@numeric": "368",
-        "@alpha3": "IRQ",
-        "@fips10": "IZ"
+        "_numeric": "368",
+        "_alpha3": "IRQ",
+        "_fips10": "IZ"
       },
       "IR": {
-        "@numeric": "364",
-        "@alpha3": "IRN"
+        "_numeric": "364",
+        "_alpha3": "IRN"
       },
       "IS": {
-        "@numeric": "352",
-        "@alpha3": "ISL",
-        "@fips10": "IC"
+        "_numeric": "352",
+        "_alpha3": "ISL",
+        "_fips10": "IC"
       },
       "IT": {
-        "@numeric": "380",
-        "@alpha3": "ITA"
+        "_numeric": "380",
+        "_alpha3": "ITA"
       },
       "JE": {
-        "@numeric": "832",
-        "@alpha3": "JEY"
+        "_numeric": "832",
+        "_alpha3": "JEY"
       },
       "JM": {
-        "@numeric": "388",
-        "@alpha3": "JAM"
+        "_numeric": "388",
+        "_alpha3": "JAM"
       },
       "JO": {
-        "@numeric": "400",
-        "@alpha3": "JOR"
+        "_numeric": "400",
+        "_alpha3": "JOR"
       },
       "JP": {
-        "@numeric": "392",
-        "@alpha3": "JPN",
-        "@fips10": "JA"
+        "_numeric": "392",
+        "_alpha3": "JPN",
+        "_fips10": "JA"
       },
       "KE": {
-        "@numeric": "404",
-        "@alpha3": "KEN"
+        "_numeric": "404",
+        "_alpha3": "KEN"
       },
       "KG": {
-        "@numeric": "417",
-        "@alpha3": "KGZ"
+        "_numeric": "417",
+        "_alpha3": "KGZ"
       },
       "KH": {
-        "@numeric": "116",
-        "@alpha3": "KHM",
-        "@fips10": "CB"
+        "_numeric": "116",
+        "_alpha3": "KHM",
+        "_fips10": "CB"
       },
       "KI": {
-        "@numeric": "296",
-        "@alpha3": "KIR",
-        "@fips10": "KR"
+        "_numeric": "296",
+        "_alpha3": "KIR",
+        "_fips10": "KR"
       },
       "KM": {
-        "@numeric": "174",
-        "@alpha3": "COM",
-        "@fips10": "CN"
+        "_numeric": "174",
+        "_alpha3": "COM",
+        "_fips10": "CN"
       },
       "KN": {
-        "@numeric": "659",
-        "@alpha3": "KNA",
-        "@fips10": "SC"
+        "_numeric": "659",
+        "_alpha3": "KNA",
+        "_fips10": "SC"
       },
       "KP": {
-        "@numeric": "408",
-        "@alpha3": "PRK",
-        "@fips10": "KN"
+        "_numeric": "408",
+        "_alpha3": "PRK",
+        "_fips10": "KN"
       },
       "KR": {
-        "@numeric": "410",
-        "@alpha3": "KOR",
-        "@fips10": "KS"
+        "_numeric": "410",
+        "_alpha3": "KOR",
+        "_fips10": "KS"
       },
       "KW": {
-        "@numeric": "414",
-        "@alpha3": "KWT",
-        "@fips10": "KU"
+        "_numeric": "414",
+        "_alpha3": "KWT",
+        "_fips10": "KU"
       },
       "KY": {
-        "@numeric": "136",
-        "@alpha3": "CYM",
-        "@fips10": "CJ"
+        "_numeric": "136",
+        "_alpha3": "CYM",
+        "_fips10": "CJ"
       },
       "KZ": {
-        "@numeric": "398",
-        "@alpha3": "KAZ"
+        "_numeric": "398",
+        "_alpha3": "KAZ"
       },
       "LA": {
-        "@numeric": "418",
-        "@alpha3": "LAO"
+        "_numeric": "418",
+        "_alpha3": "LAO"
       },
       "LB": {
-        "@numeric": "422",
-        "@alpha3": "LBN",
-        "@fips10": "LE"
+        "_numeric": "422",
+        "_alpha3": "LBN",
+        "_fips10": "LE"
       },
       "LC": {
-        "@numeric": "662",
-        "@alpha3": "LCA",
-        "@fips10": "ST"
+        "_numeric": "662",
+        "_alpha3": "LCA",
+        "_fips10": "ST"
       },
       "LI": {
-        "@numeric": "438",
-        "@alpha3": "LIE",
-        "@fips10": "LS"
+        "_numeric": "438",
+        "_alpha3": "LIE",
+        "_fips10": "LS"
       },
       "LK": {
-        "@numeric": "144",
-        "@alpha3": "LKA",
-        "@fips10": "CE"
+        "_numeric": "144",
+        "_alpha3": "LKA",
+        "_fips10": "CE"
       },
       "LR": {
-        "@numeric": "430",
-        "@alpha3": "LBR",
-        "@fips10": "LI"
+        "_numeric": "430",
+        "_alpha3": "LBR",
+        "_fips10": "LI"
       },
       "LS": {
-        "@numeric": "426",
-        "@alpha3": "LSO",
-        "@fips10": "LT"
+        "_numeric": "426",
+        "_alpha3": "LSO",
+        "_fips10": "LT"
       },
       "LT": {
-        "@numeric": "440",
-        "@alpha3": "LTU",
-        "@fips10": "LH"
+        "_numeric": "440",
+        "_alpha3": "LTU",
+        "_fips10": "LH"
       },
       "LU": {
-        "@numeric": "442",
-        "@alpha3": "LUX"
+        "_numeric": "442",
+        "_alpha3": "LUX"
       },
       "LV": {
-        "@numeric": "428",
-        "@alpha3": "LVA",
-        "@fips10": "LG"
+        "_numeric": "428",
+        "_alpha3": "LVA",
+        "_fips10": "LG"
       },
       "LY": {
-        "@numeric": "434",
-        "@alpha3": "LBY"
+        "_numeric": "434",
+        "_alpha3": "LBY"
       },
       "MA": {
-        "@numeric": "504",
-        "@alpha3": "MAR",
-        "@fips10": "MO"
+        "_numeric": "504",
+        "_alpha3": "MAR",
+        "_fips10": "MO"
       },
       "MC": {
-        "@numeric": "492",
-        "@alpha3": "MCO",
-        "@fips10": "MN"
+        "_numeric": "492",
+        "_alpha3": "MCO",
+        "_fips10": "MN"
       },
       "MD": {
-        "@numeric": "498",
-        "@alpha3": "MDA"
+        "_numeric": "498",
+        "_alpha3": "MDA"
       },
       "ME": {
-        "@numeric": "499",
-        "@alpha3": "MNE",
-        "@fips10": "MJ"
+        "_numeric": "499",
+        "_alpha3": "MNE",
+        "_fips10": "MJ"
       },
       "MF": {
-        "@numeric": "663",
-        "@alpha3": "MAF",
-        "@fips10": "RN"
+        "_numeric": "663",
+        "_alpha3": "MAF",
+        "_fips10": "RN"
       },
       "MG": {
-        "@numeric": "450",
-        "@alpha3": "MDG",
-        "@fips10": "MA"
+        "_numeric": "450",
+        "_alpha3": "MDG",
+        "_fips10": "MA"
       },
       "MH": {
-        "@numeric": "584",
-        "@alpha3": "MHL",
-        "@fips10": "RM"
+        "_numeric": "584",
+        "_alpha3": "MHL",
+        "_fips10": "RM"
       },
       "MK": {
-        "@numeric": "807",
-        "@alpha3": "MKD"
+        "_numeric": "807",
+        "_alpha3": "MKD"
       },
       "ML": {
-        "@numeric": "466",
-        "@alpha3": "MLI"
+        "_numeric": "466",
+        "_alpha3": "MLI"
       },
       "MM": {
-        "@numeric": "104",
-        "@alpha3": "MMR",
-        "@fips10": "BM"
+        "_numeric": "104",
+        "_alpha3": "MMR",
+        "_fips10": "BM"
       },
       "MN": {
-        "@numeric": "496",
-        "@alpha3": "MNG",
-        "@fips10": "MG"
+        "_numeric": "496",
+        "_alpha3": "MNG",
+        "_fips10": "MG"
       },
       "MO": {
-        "@numeric": "446",
-        "@alpha3": "MAC",
-        "@fips10": "MC"
+        "_numeric": "446",
+        "_alpha3": "MAC",
+        "_fips10": "MC"
       },
       "MP": {
-        "@numeric": "580",
-        "@alpha3": "MNP",
-        "@fips10": "CQ"
+        "_numeric": "580",
+        "_alpha3": "MNP",
+        "_fips10": "CQ"
       },
       "MQ": {
-        "@numeric": "474",
-        "@alpha3": "MTQ",
-        "@fips10": "MB"
+        "_numeric": "474",
+        "_alpha3": "MTQ",
+        "_fips10": "MB"
       },
       "MR": {
-        "@numeric": "478",
-        "@alpha3": "MRT"
+        "_numeric": "478",
+        "_alpha3": "MRT"
       },
       "MS": {
-        "@numeric": "500",
-        "@alpha3": "MSR",
-        "@fips10": "MH"
+        "_numeric": "500",
+        "_alpha3": "MSR",
+        "_fips10": "MH"
       },
       "MT": {
-        "@numeric": "470",
-        "@alpha3": "MLT"
+        "_numeric": "470",
+        "_alpha3": "MLT"
       },
       "MU": {
-        "@numeric": "480",
-        "@alpha3": "MUS",
-        "@fips10": "MP"
+        "_numeric": "480",
+        "_alpha3": "MUS",
+        "_fips10": "MP"
       },
       "MV": {
-        "@numeric": "462",
-        "@alpha3": "MDV"
+        "_numeric": "462",
+        "_alpha3": "MDV"
       },
       "MW": {
-        "@numeric": "454",
-        "@alpha3": "MWI",
-        "@fips10": "MI"
+        "_numeric": "454",
+        "_alpha3": "MWI",
+        "_fips10": "MI"
       },
       "MX": {
-        "@numeric": "484",
-        "@alpha3": "MEX"
+        "_numeric": "484",
+        "_alpha3": "MEX"
       },
       "MY": {
-        "@numeric": "458",
-        "@alpha3": "MYS"
+        "_numeric": "458",
+        "_alpha3": "MYS"
       },
       "MZ": {
-        "@numeric": "508",
-        "@alpha3": "MOZ"
+        "_numeric": "508",
+        "_alpha3": "MOZ"
       },
       "NA": {
-        "@numeric": "516",
-        "@alpha3": "NAM",
-        "@fips10": "WA"
+        "_numeric": "516",
+        "_alpha3": "NAM",
+        "_fips10": "WA"
       },
       "NC": {
-        "@numeric": "540",
-        "@alpha3": "NCL"
+        "_numeric": "540",
+        "_alpha3": "NCL"
       },
       "NE": {
-        "@numeric": "562",
-        "@alpha3": "NER",
-        "@fips10": "NG"
+        "_numeric": "562",
+        "_alpha3": "NER",
+        "_fips10": "NG"
       },
       "NF": {
-        "@numeric": "574",
-        "@alpha3": "NFK"
+        "_numeric": "574",
+        "_alpha3": "NFK"
       },
       "NG": {
-        "@numeric": "566",
-        "@alpha3": "NGA",
-        "@fips10": "NI"
+        "_numeric": "566",
+        "_alpha3": "NGA",
+        "_fips10": "NI"
       },
       "NI": {
-        "@numeric": "558",
-        "@alpha3": "NIC",
-        "@fips10": "NU"
+        "_numeric": "558",
+        "_alpha3": "NIC",
+        "_fips10": "NU"
       },
       "NL": {
-        "@numeric": "528",
-        "@alpha3": "NLD"
+        "_numeric": "528",
+        "_alpha3": "NLD"
       },
       "NO": {
-        "@numeric": "578",
-        "@alpha3": "NOR"
+        "_numeric": "578",
+        "_alpha3": "NOR"
       },
       "NP": {
-        "@numeric": "524",
-        "@alpha3": "NPL"
+        "_numeric": "524",
+        "_alpha3": "NPL"
       },
       "NR": {
-        "@numeric": "520",
-        "@alpha3": "NRU"
+        "_numeric": "520",
+        "_alpha3": "NRU"
       },
       "NT": {
-        "@numeric": "536",
-        "@alpha3": "NTZ"
+        "_numeric": "536",
+        "_alpha3": "NTZ"
       },
       "NU": {
-        "@numeric": "570",
-        "@alpha3": "NIU",
-        "@fips10": "NE"
+        "_numeric": "570",
+        "_alpha3": "NIU",
+        "_fips10": "NE"
       },
       "NZ": {
-        "@numeric": "554",
-        "@alpha3": "NZL"
+        "_numeric": "554",
+        "_alpha3": "NZL"
       },
       "OM": {
-        "@numeric": "512",
-        "@alpha3": "OMN",
-        "@fips10": "MU"
+        "_numeric": "512",
+        "_alpha3": "OMN",
+        "_fips10": "MU"
       },
       "PA": {
-        "@numeric": "591",
-        "@alpha3": "PAN",
-        "@fips10": "PM"
+        "_numeric": "591",
+        "_alpha3": "PAN",
+        "_fips10": "PM"
       },
       "PE": {
-        "@numeric": "604",
-        "@alpha3": "PER"
+        "_numeric": "604",
+        "_alpha3": "PER"
       },
       "PF": {
-        "@numeric": "258",
-        "@alpha3": "PYF",
-        "@fips10": "FP"
+        "_numeric": "258",
+        "_alpha3": "PYF",
+        "_fips10": "FP"
       },
       "PG": {
-        "@numeric": "598",
-        "@alpha3": "PNG",
-        "@fips10": "PP"
+        "_numeric": "598",
+        "_alpha3": "PNG",
+        "_fips10": "PP"
       },
       "PH": {
-        "@numeric": "608",
-        "@alpha3": "PHL",
-        "@fips10": "RP"
+        "_numeric": "608",
+        "_alpha3": "PHL",
+        "_fips10": "RP"
       },
       "PK": {
-        "@numeric": "586",
-        "@alpha3": "PAK"
+        "_numeric": "586",
+        "_alpha3": "PAK"
       },
       "PL": {
-        "@numeric": "616",
-        "@alpha3": "POL"
+        "_numeric": "616",
+        "_alpha3": "POL"
       },
       "PM": {
-        "@numeric": "666",
-        "@alpha3": "SPM",
-        "@fips10": "SB"
+        "_numeric": "666",
+        "_alpha3": "SPM",
+        "_fips10": "SB"
       },
       "PN": {
-        "@numeric": "612",
-        "@alpha3": "PCN",
-        "@fips10": "PC"
+        "_numeric": "612",
+        "_alpha3": "PCN",
+        "_fips10": "PC"
       },
       "PR": {
-        "@numeric": "630",
-        "@alpha3": "PRI",
-        "@fips10": "RQ"
+        "_numeric": "630",
+        "_alpha3": "PRI",
+        "_fips10": "RQ"
       },
       "PS": {
-        "@numeric": "275",
-        "@alpha3": "PSE",
-        "@fips10": "GZ"
+        "_numeric": "275",
+        "_alpha3": "PSE",
+        "_fips10": "GZ"
       },
       "PT": {
-        "@numeric": "620",
-        "@alpha3": "PRT",
-        "@fips10": "PO"
+        "_numeric": "620",
+        "_alpha3": "PRT",
+        "_fips10": "PO"
       },
       "PW": {
-        "@numeric": "585",
-        "@alpha3": "PLW",
-        "@fips10": "PS"
+        "_numeric": "585",
+        "_alpha3": "PLW",
+        "_fips10": "PS"
       },
       "PY": {
-        "@numeric": "600",
-        "@alpha3": "PRY",
-        "@fips10": "PA"
+        "_numeric": "600",
+        "_alpha3": "PRY",
+        "_fips10": "PA"
       },
       "QA": {
-        "@numeric": "634",
-        "@alpha3": "QAT"
+        "_numeric": "634",
+        "_alpha3": "QAT"
       },
       "QM": {
-        "@numeric": "959",
-        "@alpha3": "QMM"
+        "_numeric": "959",
+        "_alpha3": "QMM"
       },
       "QN": {
-        "@numeric": "960",
-        "@alpha3": "QNN"
+        "_numeric": "960",
+        "_alpha3": "QNN"
       },
       "QO": {
-        "@numeric": "961",
-        "@alpha3": "QOO"
+        "_numeric": "961",
+        "_alpha3": "QOO"
       },
       "QP": {
-        "@numeric": "962",
-        "@alpha3": "QPP"
+        "_numeric": "962",
+        "_alpha3": "QPP"
       },
       "QQ": {
-        "@numeric": "963",
-        "@alpha3": "QQQ"
+        "_numeric": "963",
+        "_alpha3": "QQQ"
       },
       "QR": {
-        "@numeric": "964",
-        "@alpha3": "QRR"
+        "_numeric": "964",
+        "_alpha3": "QRR"
       },
       "QS": {
-        "@numeric": "965",
-        "@alpha3": "QSS"
+        "_numeric": "965",
+        "_alpha3": "QSS"
       },
       "QT": {
-        "@numeric": "966",
-        "@alpha3": "QTT"
+        "_numeric": "966",
+        "_alpha3": "QTT"
+      },
+      "QU": {
+        "_numeric": "967",
+        "_alpha3": "QUU"
       },
       "QV": {
-        "@numeric": "968",
-        "@alpha3": "QVV"
+        "_numeric": "968",
+        "_alpha3": "QVV"
       },
       "QW": {
-        "@numeric": "969",
-        "@alpha3": "QWW"
+        "_numeric": "969",
+        "_alpha3": "QWW"
       },
       "QX": {
-        "@numeric": "970",
-        "@alpha3": "QXX"
+        "_numeric": "970",
+        "_alpha3": "QXX"
       },
       "QY": {
-        "@numeric": "971",
-        "@alpha3": "QYY"
+        "_numeric": "971",
+        "_alpha3": "QYY"
       },
       "QZ": {
-        "@numeric": "972",
-        "@alpha3": "QZZ"
+        "_numeric": "972",
+        "_alpha3": "QZZ"
       },
       "RE": {
-        "@numeric": "638",
-        "@alpha3": "REU"
+        "_numeric": "638",
+        "_alpha3": "REU"
       },
       "RO": {
-        "@numeric": "642",
-        "@alpha3": "ROU"
+        "_numeric": "642",
+        "_alpha3": "ROU"
       },
       "RS": {
-        "@numeric": "688",
-        "@alpha3": "SRB",
-        "@fips10": "RB"
+        "_numeric": "688",
+        "_alpha3": "SRB",
+        "_fips10": "RB"
       },
       "RU": {
-        "@numeric": "643",
-        "@alpha3": "RUS",
-        "@fips10": "RS",
-        "@internet": "RU SU"
+        "_numeric": "643",
+        "_alpha3": "RUS",
+        "_fips10": "RS",
+        "_internet": "RU SU"
       },
       "RW": {
-        "@numeric": "646",
-        "@alpha3": "RWA"
+        "_numeric": "646",
+        "_alpha3": "RWA"
       },
       "SA": {
-        "@numeric": "682",
-        "@alpha3": "SAU"
+        "_numeric": "682",
+        "_alpha3": "SAU"
       },
       "SB": {
-        "@numeric": "090",
-        "@alpha3": "SLB",
-        "@fips10": "BP"
+        "_numeric": "090",
+        "_alpha3": "SLB",
+        "_fips10": "BP"
       },
       "SC": {
-        "@numeric": "690",
-        "@alpha3": "SYC",
-        "@fips10": "SE"
+        "_numeric": "690",
+        "_alpha3": "SYC",
+        "_fips10": "SE"
       },
       "SD": {
-        "@numeric": "729",
-        "@alpha3": "SDN",
-        "@fips10": "SU"
+        "_numeric": "729",
+        "_alpha3": "SDN",
+        "_fips10": "SU"
       },
       "SE": {
-        "@numeric": "752",
-        "@alpha3": "SWE",
-        "@fips10": "SW"
+        "_numeric": "752",
+        "_alpha3": "SWE",
+        "_fips10": "SW"
       },
       "SG": {
-        "@numeric": "702",
-        "@alpha3": "SGP",
-        "@fips10": "SN"
+        "_numeric": "702",
+        "_alpha3": "SGP",
+        "_fips10": "SN"
       },
       "SH": {
-        "@numeric": "654",
-        "@alpha3": "SHN"
+        "_numeric": "654",
+        "_alpha3": "SHN"
       },
       "SI": {
-        "@numeric": "705",
-        "@alpha3": "SVN"
+        "_numeric": "705",
+        "_alpha3": "SVN"
       },
       "SJ": {
-        "@numeric": "744",
-        "@alpha3": "SJM",
-        "@fips10": "SV"
+        "_numeric": "744",
+        "_alpha3": "SJM",
+        "_fips10": "SV"
       },
       "SK": {
-        "@numeric": "703",
-        "@alpha3": "SVK",
-        "@fips10": "LO"
+        "_numeric": "703",
+        "_alpha3": "SVK",
+        "_fips10": "LO"
       },
       "SL": {
-        "@numeric": "694",
-        "@alpha3": "SLE"
+        "_numeric": "694",
+        "_alpha3": "SLE"
       },
       "SM": {
-        "@numeric": "674",
-        "@alpha3": "SMR"
+        "_numeric": "674",
+        "_alpha3": "SMR"
       },
       "SN": {
-        "@numeric": "686",
-        "@alpha3": "SEN",
-        "@fips10": "SG"
+        "_numeric": "686",
+        "_alpha3": "SEN",
+        "_fips10": "SG"
       },
       "SO": {
-        "@numeric": "706",
-        "@alpha3": "SOM"
+        "_numeric": "706",
+        "_alpha3": "SOM"
       },
       "SR": {
-        "@numeric": "740",
-        "@alpha3": "SUR",
-        "@fips10": "NS"
+        "_numeric": "740",
+        "_alpha3": "SUR",
+        "_fips10": "NS"
       },
       "SS": {
-        "@numeric": "728",
-        "@alpha3": "SSD"
+        "_numeric": "728",
+        "_alpha3": "SSD"
       },
       "ST": {
-        "@numeric": "678",
-        "@alpha3": "STP",
-        "@fips10": "TP"
+        "_numeric": "678",
+        "_alpha3": "STP",
+        "_fips10": "TP"
       },
       "SU": {
-        "@numeric": "810",
-        "@alpha3": "SUN"
+        "_numeric": "810",
+        "_alpha3": "SUN"
       },
       "SV": {
-        "@numeric": "222",
-        "@alpha3": "SLV",
-        "@fips10": "ES"
+        "_numeric": "222",
+        "_alpha3": "SLV",
+        "_fips10": "ES"
       },
       "SX": {
-        "@numeric": "534",
-        "@alpha3": "SXM"
+        "_numeric": "534",
+        "_alpha3": "SXM"
       },
       "SY": {
-        "@numeric": "760",
-        "@alpha3": "SYR"
+        "_numeric": "760",
+        "_alpha3": "SYR"
       },
       "SZ": {
-        "@numeric": "748",
-        "@alpha3": "SWZ",
-        "@fips10": "WZ"
+        "_numeric": "748",
+        "_alpha3": "SWZ",
+        "_fips10": "WZ"
       },
       "TA": {
-        "@alpha3": "TAA"
+        "_alpha3": "TAA"
       },
       "TC": {
-        "@numeric": "796",
-        "@alpha3": "TCA",
-        "@fips10": "TK"
+        "_numeric": "796",
+        "_alpha3": "TCA",
+        "_fips10": "TK"
       },
       "TD": {
-        "@numeric": "148",
-        "@alpha3": "TCD",
-        "@fips10": "CD"
+        "_numeric": "148",
+        "_alpha3": "TCD",
+        "_fips10": "CD"
       },
       "TF": {
-        "@numeric": "260",
-        "@alpha3": "ATF",
-        "@fips10": "FS"
+        "_numeric": "260",
+        "_alpha3": "ATF",
+        "_fips10": "FS"
       },
       "TG": {
-        "@numeric": "768",
-        "@alpha3": "TGO",
-        "@fips10": "TO"
+        "_numeric": "768",
+        "_alpha3": "TGO",
+        "_fips10": "TO"
       },
       "TH": {
-        "@numeric": "764",
-        "@alpha3": "THA"
+        "_numeric": "764",
+        "_alpha3": "THA"
       },
       "TJ": {
-        "@numeric": "762",
-        "@alpha3": "TJK",
-        "@fips10": "TI"
+        "_numeric": "762",
+        "_alpha3": "TJK",
+        "_fips10": "TI"
       },
       "TK": {
-        "@numeric": "772",
-        "@alpha3": "TKL",
-        "@fips10": "TL"
+        "_numeric": "772",
+        "_alpha3": "TKL",
+        "_fips10": "TL"
       },
       "TL": {
-        "@numeric": "626",
-        "@alpha3": "TLS",
-        "@fips10": "TT",
-        "@internet": "TL TP"
+        "_numeric": "626",
+        "_alpha3": "TLS",
+        "_fips10": "TT",
+        "_internet": "TL TP"
       },
       "TM": {
-        "@numeric": "795",
-        "@alpha3": "TKM",
-        "@fips10": "TX"
+        "_numeric": "795",
+        "_alpha3": "TKM",
+        "_fips10": "TX"
       },
       "TN": {
-        "@numeric": "788",
-        "@alpha3": "TUN",
-        "@fips10": "TS"
+        "_numeric": "788",
+        "_alpha3": "TUN",
+        "_fips10": "TS"
       },
       "TO": {
-        "@numeric": "776",
-        "@alpha3": "TON",
-        "@fips10": "TN"
+        "_numeric": "776",
+        "_alpha3": "TON",
+        "_fips10": "TN"
       },
       "TP": {
-        "@numeric": "626",
-        "@alpha3": "TMP"
+        "_numeric": "626",
+        "_alpha3": "TMP"
       },
       "TR": {
-        "@numeric": "792",
-        "@alpha3": "TUR",
-        "@fips10": "TU"
+        "_numeric": "792",
+        "_alpha3": "TUR",
+        "_fips10": "TU"
       },
       "TT": {
-        "@numeric": "780",
-        "@alpha3": "TTO",
-        "@fips10": "TD"
+        "_numeric": "780",
+        "_alpha3": "TTO",
+        "_fips10": "TD"
       },
       "TV": {
-        "@numeric": "798",
-        "@alpha3": "TUV"
+        "_numeric": "798",
+        "_alpha3": "TUV"
       },
       "TW": {
-        "@numeric": "158",
-        "@alpha3": "TWN"
+        "_numeric": "158",
+        "_alpha3": "TWN"
       },
       "TZ": {
-        "@numeric": "834",
-        "@alpha3": "TZA"
+        "_numeric": "834",
+        "_alpha3": "TZA"
       },
       "UA": {
-        "@numeric": "804",
-        "@alpha3": "UKR",
-        "@fips10": "UP"
+        "_numeric": "804",
+        "_alpha3": "UKR",
+        "_fips10": "UP"
       },
       "UG": {
-        "@numeric": "800",
-        "@alpha3": "UGA"
+        "_numeric": "800",
+        "_alpha3": "UGA"
       },
       "UM": {
-        "@numeric": "581",
-        "@alpha3": "UMI"
+        "_numeric": "581",
+        "_alpha3": "UMI"
       },
       "US": {
-        "@numeric": "840",
-        "@alpha3": "USA"
+        "_numeric": "840",
+        "_alpha3": "USA"
       },
       "UY": {
-        "@numeric": "858",
-        "@alpha3": "URY"
+        "_numeric": "858",
+        "_alpha3": "URY"
       },
       "UZ": {
-        "@numeric": "860",
-        "@alpha3": "UZB"
+        "_numeric": "860",
+        "_alpha3": "UZB"
       },
       "VA": {
-        "@numeric": "336",
-        "@alpha3": "VAT",
-        "@fips10": "VT"
+        "_numeric": "336",
+        "_alpha3": "VAT",
+        "_fips10": "VT"
       },
       "VC": {
-        "@numeric": "670",
-        "@alpha3": "VCT"
+        "_numeric": "670",
+        "_alpha3": "VCT"
       },
       "VE": {
-        "@numeric": "862",
-        "@alpha3": "VEN"
+        "_numeric": "862",
+        "_alpha3": "VEN"
       },
       "VG": {
-        "@numeric": "092",
-        "@alpha3": "VGB",
-        "@fips10": "VI"
+        "_numeric": "092",
+        "_alpha3": "VGB",
+        "_fips10": "VI"
       },
       "VI": {
-        "@numeric": "850",
-        "@alpha3": "VIR",
-        "@fips10": "VQ"
+        "_numeric": "850",
+        "_alpha3": "VIR",
+        "_fips10": "VQ"
       },
       "VN": {
-        "@numeric": "704",
-        "@alpha3": "VNM",
-        "@fips10": "VM"
+        "_numeric": "704",
+        "_alpha3": "VNM",
+        "_fips10": "VM"
       },
       "VU": {
-        "@numeric": "548",
-        "@alpha3": "VUT",
-        "@fips10": "NH"
+        "_numeric": "548",
+        "_alpha3": "VUT",
+        "_fips10": "NH"
       },
       "WF": {
-        "@numeric": "876",
-        "@alpha3": "WLF"
+        "_numeric": "876",
+        "_alpha3": "WLF"
       },
       "WS": {
-        "@numeric": "882",
-        "@alpha3": "WSM"
+        "_numeric": "882",
+        "_alpha3": "WSM"
       },
       "XA": {
-        "@numeric": "973",
-        "@alpha3": "XAA"
+        "_numeric": "973",
+        "_alpha3": "XAA"
       },
       "XB": {
-        "@numeric": "974",
-        "@alpha3": "XBB"
+        "_numeric": "974",
+        "_alpha3": "XBB"
       },
       "XC": {
-        "@numeric": "975",
-        "@alpha3": "XCC"
+        "_numeric": "975",
+        "_alpha3": "XCC"
       },
       "XD": {
-        "@numeric": "976",
-        "@alpha3": "XDD"
+        "_numeric": "976",
+        "_alpha3": "XDD"
       },
       "XE": {
-        "@numeric": "977",
-        "@alpha3": "XEE"
+        "_numeric": "977",
+        "_alpha3": "XEE"
       },
       "XF": {
-        "@numeric": "978",
-        "@alpha3": "XFF"
+        "_numeric": "978",
+        "_alpha3": "XFF"
       },
       "XG": {
-        "@numeric": "979",
-        "@alpha3": "XGG"
+        "_numeric": "979",
+        "_alpha3": "XGG"
       },
       "XH": {
-        "@numeric": "980",
-        "@alpha3": "XHH"
+        "_numeric": "980",
+        "_alpha3": "XHH"
       },
       "XI": {
-        "@numeric": "981",
-        "@alpha3": "XII"
+        "_numeric": "981",
+        "_alpha3": "XII"
       },
       "XJ": {
-        "@numeric": "982",
-        "@alpha3": "XJJ"
+        "_numeric": "982",
+        "_alpha3": "XJJ"
       },
       "XK": {
-        "@numeric": "983",
-        "@alpha3": "XKK"
+        "_numeric": "983",
+        "_alpha3": "XKK"
       },
       "XL": {
-        "@numeric": "984",
-        "@alpha3": "XLL"
+        "_numeric": "984",
+        "_alpha3": "XLL"
       },
       "XM": {
-        "@numeric": "985",
-        "@alpha3": "XMM"
+        "_numeric": "985",
+        "_alpha3": "XMM"
       },
       "XN": {
-        "@numeric": "986",
-        "@alpha3": "XNN"
+        "_numeric": "986",
+        "_alpha3": "XNN"
       },
       "XO": {
-        "@numeric": "987",
-        "@alpha3": "XOO"
+        "_numeric": "987",
+        "_alpha3": "XOO"
       },
       "XP": {
-        "@numeric": "988",
-        "@alpha3": "XPP"
+        "_numeric": "988",
+        "_alpha3": "XPP"
       },
       "XQ": {
-        "@numeric": "989",
-        "@alpha3": "XQQ"
+        "_numeric": "989",
+        "_alpha3": "XQQ"
       },
       "XR": {
-        "@numeric": "990",
-        "@alpha3": "XRR"
+        "_numeric": "990",
+        "_alpha3": "XRR"
       },
       "XS": {
-        "@numeric": "991",
-        "@alpha3": "XSS"
+        "_numeric": "991",
+        "_alpha3": "XSS"
       },
       "XT": {
-        "@numeric": "992",
-        "@alpha3": "XTT"
+        "_numeric": "992",
+        "_alpha3": "XTT"
       },
       "XU": {
-        "@numeric": "993",
-        "@alpha3": "XUU"
+        "_numeric": "993",
+        "_alpha3": "XUU"
       },
       "XV": {
-        "@numeric": "994",
-        "@alpha3": "XVV"
+        "_numeric": "994",
+        "_alpha3": "XVV"
       },
       "XW": {
-        "@numeric": "995",
-        "@alpha3": "XWW"
+        "_numeric": "995",
+        "_alpha3": "XWW"
       },
       "XX": {
-        "@numeric": "996",
-        "@alpha3": "XXX"
+        "_numeric": "996",
+        "_alpha3": "XXX"
       },
       "XY": {
-        "@numeric": "997",
-        "@alpha3": "XYY"
+        "_numeric": "997",
+        "_alpha3": "XYY"
       },
       "XZ": {
-        "@numeric": "998",
-        "@alpha3": "XZZ"
+        "_numeric": "998",
+        "_alpha3": "XZZ"
       },
       "YD": {
-        "@numeric": "720",
-        "@alpha3": "YMD"
+        "_numeric": "720",
+        "_alpha3": "YMD"
       },
       "YE": {
-        "@numeric": "887",
-        "@alpha3": "YEM",
-        "@fips10": "YM"
+        "_numeric": "887",
+        "_alpha3": "YEM",
+        "_fips10": "YM"
       },
       "YT": {
-        "@numeric": "175",
-        "@alpha3": "MYT",
-        "@fips10": "MF"
+        "_numeric": "175",
+        "_alpha3": "MYT",
+        "_fips10": "MF"
       },
       "YU": {
-        "@numeric": "891",
-        "@alpha3": "YUG"
+        "_numeric": "891",
+        "_alpha3": "YUG"
       },
       "ZA": {
-        "@numeric": "710",
-        "@alpha3": "ZAF",
-        "@fips10": "SF"
+        "_numeric": "710",
+        "_alpha3": "ZAF",
+        "_fips10": "SF"
       },
       "ZM": {
-        "@numeric": "894",
-        "@alpha3": "ZMB",
-        "@fips10": "ZA"
+        "_numeric": "894",
+        "_alpha3": "ZMB",
+        "_fips10": "ZA"
       },
       "ZR": {
-        "@numeric": "180",
-        "@alpha3": "ZAR"
+        "_numeric": "180",
+        "_alpha3": "ZAR"
       },
       "ZW": {
-        "@numeric": "716",
-        "@alpha3": "ZWE",
-        "@fips10": "ZI"
+        "_numeric": "716",
+        "_alpha3": "ZWE",
+        "_fips10": "ZI"
       },
       "ZZ": {
-        "@numeric": "999",
-        "@alpha3": "ZZZ",
-        "@internet": "AERO ARPA ASIA BIZ CAT COM COOP EDU GOV INFO INT JOBS MIL MOBI MUSEUM NAME NET ORG PRO TEL TRAVEL XN--0ZWM56D XN--11B5BS3A9AJ6G XN--3E0B707E XN--45BRJ9C XN--80AKHBYKNJ4F XN--90A3AC XN--9T4B11YI5A XN--CLCHC0EA0B2G2A9GCD XN--DEBA0AD XN--FIQS8S XN--FIQZ9S XN--FPCRJ9C3D XN--FZC2C9E2C XN--G6W251D XN--GECRJ9C XN--H2BRJ9C XN--HGBK6AJ7F53BBA XN--HLCJ6AYA9ESC7A XN--J6W193G XN--JXALPDLP XN--KGBECHTV XN--KPRW13D XN--KPRY57D XN--LGBBAT1AD8J XN--MGBAAM7A8H XN--MGBAYH7GPA XN--MGBBH1A71E XN--MGBC0A9AZCG XN--MGBERP4A5D4AR XN--O3CW4H XN--OGBPF8FL XN--P1AI XN--PGBS0DH XN--S9BRJ9C XN--WGBH1C XN--WGBL6A XN--XKC2AL3HYE2A XN--XKC2DL3A5EE0H XN--YFRO4I67O XN--YGBI2AMMX XN--ZCKZAH XXX"
+        "_numeric": "999",
+        "_alpha3": "ZZZ",
+        "_internet": "AERO ARPA ASIA BIZ CAT COM COOP EDU GOV INFO INT JOBS MIL MOBI MUSEUM NAME NET ORG POST PRO TEL TRAVEL XN--0ZWM56D XN--11B5BS3A9AJ6G XN--3E0B707E XN--45BRJ9C XN--80AKHBYKNJ4F XN--80AO21A XN--90A3AC XN--9T4B11YI5A XN--CLCHC0EA0B2G2A9GCD XN--DEBA0AD XN--FIQS8S XN--FIQZ9S XN--FPCRJ9C3D XN--FZC2C9E2C XN--G6W251D XN--GECRJ9C XN--H2BRJ9C XN--HGBK6AJ7F53BBA XN--HLCJ6AYA9ESC7A XN--J1AMH XN--J6W193G XN--JXALPDLP XN--KGBECHTV XN--KPRW13D XN--KPRY57D XN--L1ACC XN--LGBBAT1AD8J XN--MGB9AWBF XN--MGBAAM7A8H XN--MGBAYH7GPA XN--MGBBH1A71E XN--MGBC0A9AZCG XN--MGBERP4A5D4AR XN--MGBX4CD0AB XN--O3CW4H XN--OGBPF8FL XN--P1AI XN--PGBS0DH XN--S9BRJ9C XN--WGBH1C XN--WGBL6A XN--XKC2AL3HYE2A XN--XKC2DL3A5EE0H XN--YFRO4I67O XN--YGBI2AMMX XN--ZCKZAH XXX"
       }
     }
   }

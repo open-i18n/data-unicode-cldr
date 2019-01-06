@@ -4,8 +4,8 @@
  * and others. All Rights Reserved.                                           *
  ******************************************************************************
  * $Source$
- * $Date: 2012-10-17 16:49:46 -0500 (Wed, 17 Oct 2012) $
- * $Revision: 7859 $
+ * $Date: 2013-09-11 09:00:20 -0500 (Wed, 11 Sep 2013) $
+ * $Revision: 9342 $
  ******************************************************************************
  */
 package org.unicode.cldr.test;
@@ -189,19 +189,30 @@ class FlexibleDateFromCLDR {
         } catch (RuntimeException e) {
             failureMap.put(path, e.getMessage());
         }
-        String skeleton = (String) parts.set(path).findAttributeValue("dateFormatItem", "id"); // the skeleton
-        String strippedPattern = gen.getSkeleton(value); // the pattern stripped of literals
-        if (skeleton != null) {
-            if (skeleton.indexOf('H') >= 0 || skeleton.indexOf('k') >= 0) { // if skeleton uses 24-hour time
-                if (strippedPattern.indexOf('h') >= 0 || strippedPattern.indexOf('K') >= 0) { // but pattern uses 12...
-                    failureMap.put(path, "Skeleton uses 24-hour cycle (H,k) but pattern uses 12-hour (h,K)");
-                }
-            } else if (skeleton.indexOf('h') >= 0 || skeleton.indexOf('K') >= 0) { // if skeleton uses 12-hour time
-                if (strippedPattern.indexOf('H') >= 0 || strippedPattern.indexOf('k') >= 0) { // but pattern uses 24...
-                    failureMap.put(path, "Skeleton uses 12-hour cycle (h,K) but pattern uses 24-hour (H,k)");
+        String failure = checkValueAgainstSkeleton(path, value);
+        if (failure != null) {
+            failureMap.put(path, failure);
+        }
+    }
+
+    public String checkValueAgainstSkeleton(String path, String value) {
+        String failure = null;
+        if (path.contains("dateFormatItem")) {
+            String skeleton = (String) parts.set(path).findAttributeValue("dateFormatItem", "id"); // the skeleton
+            if (skeleton != null) {
+                String strippedPattern = gen.getSkeleton(value); // the pattern stripped of literals
+                if (skeleton.indexOf('H') >= 0 || skeleton.indexOf('k') >= 0) { // if skeleton uses 24-hour time
+                    if (strippedPattern.indexOf('h') >= 0 || strippedPattern.indexOf('K') >= 0) { // but pattern uses 12...
+                        failure = "Skeleton uses 24-hour cycle (H,k) but pattern uses 12-hour (h,K)";
+                    }
+                } else if (skeleton.indexOf('h') >= 0 || skeleton.indexOf('K') >= 0) { // if skeleton uses 12-hour time
+                    if (strippedPattern.indexOf('H') >= 0 || strippedPattern.indexOf('k') >= 0) { // but pattern uses 24...
+                        failure = "Skeleton uses 12-hour cycle (h,K) but pattern uses 24-hour (H,k)";
+                    }
                 }
             }
         }
+        return failure;
     }
 
     DateTimePatternGenerator.FormatParser fp = new DateTimePatternGenerator.FormatParser();

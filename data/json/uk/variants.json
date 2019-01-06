@@ -1,0 +1,83 @@
+{
+  "main": {
+    "uk": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "24",
+          "_number": "$Revision: 9287 $"
+        },
+        "generation": {
+          "_date": "$Date: 2013-08-28 21:32:04 -0500 (Wed, 28 Aug 2013) $"
+        },
+        "language": "root"
+      },
+      "localeDisplayNames": {
+        "variants": {
+          "1901": "Традиційна німецька орфографія",
+          "1994": "Стандартизована резьянська орфографія",
+          "1996": "Нова німецька орфографія з 1996 р.",
+          "1606NICT": "Пізньосередньофранцузська до 1606",
+          "1694ACAD": "Класична французька",
+          "1959ACAD": "Академічний",
+          "ALALC97": "ALALC97",
+          "ALUKU": "ALUKU",
+          "AREVELA": "Східновірменський",
+          "AREVMDA": "Західновірменський",
+          "BAKU1926": "Уніфікований турецький латинський алфавіт",
+          "BAUDDHA": "BAUDDHA",
+          "BISCAYAN": "BISCAYAN",
+          "BISKE": "Діалект Сан-Джорджіо/Біла",
+          "BOHORIC": "BOHORIC",
+          "BOONT": "Бунтлінг",
+          "DAJNKO": "DAJNKO",
+          "EMODENG": "EMODENG",
+          "FONIPA": "Міжнародний фонетичний алфавіт",
+          "FONUPA": "Уральський фонетичний алфавіт",
+          "FONXSAMP": "FONXSAMP",
+          "HEPBURN": "HEPBURN",
+          "HOGNORSK": "HOGNORSK",
+          "ITIHASA": "ITIHASA",
+          "JAUER": "JAUER",
+          "JYUTPING": "JYUTPING",
+          "KKCOR": "Загальна орфографія",
+          "KSCOR": "KSCOR",
+          "LAUKIKA": "LAUKIKA",
+          "LIPAW": "Ліповазський діалект резьянської мови",
+          "LUNA1918": "LUNA1918",
+          "METELKO": "METELKO",
+          "MONOTON": "Монотонічний",
+          "NDYUKA": "NDYUKA",
+          "NEDIS": "Натісонський діалект",
+          "NJIVA": "Діалект Нджіва",
+          "NULIK": "NULIK",
+          "OSOJS": "Осоянський діалект",
+          "PAMAKA": "PAMAKA",
+          "PETR1708": "PETR1708",
+          "PINYIN": "Романізація піньїн",
+          "POLYTON": "Політонічний",
+          "POSIX": "Комп'ютерний",
+          "PUTER": "PUTER",
+          "REVISED": "Нова орфографія",
+          "RIGIK": "RIGIK",
+          "ROZAJ": "Резьянський",
+          "RUMGR": "RUMGR",
+          "SAAHO": "Сахо",
+          "SCOTLAND": "Шотландська англійська",
+          "SCOUSE": "Ліверпульський діалект",
+          "SOLBA": "Діалект Столвіца/Солбіка",
+          "SURMIRAN": "SURMIRAN",
+          "SURSILV": "SURSILV",
+          "SUTSILV": "SUTSILV",
+          "TARASK": "Орфографія Тараскевича",
+          "UCCOR": "Уніфікована орфографія",
+          "UCRCOR": "Уніфікована переглянута орфографія",
+          "ULSTER": "ULSTER",
+          "VAIDIKA": "VAIDIKA",
+          "VALENCIA": "Валенсійська",
+          "VALLADER": "VALLADER",
+          "WADEGILE": "Романізація Вейда-Джайлза"
+        }
+      }
+    }
+  }
+}

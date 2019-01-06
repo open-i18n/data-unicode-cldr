@@ -1,11 +1,11 @@
 {
   "supplemental": {
     "version": {
-      "@cldrVersion": "23.1",
-      "@number": "$Revision: 8721 $"
+      "_cldrVersion": "24",
+      "_number": "$Revision: 9270 $"
     },
     "generation": {
-      "@date": "$Date: 2013-05-15 14:50:20 -0500 (Wed, 15 May 2013) $"
+      "_date": "$Date: 2013-08-25 16:44:03 -0500 (Sun, 25 Aug 2013) $"
     },
     "weekData": {
       "minDays": {
@@ -28,12 +28,17 @@
         "FR": "4",
         "GB": "4",
         "GF": "4",
+        "GG": "4",
+        "GI": "4",
         "GP": "4",
         "GR": "4",
         "GU": "1",
+        "HU": "4",
         "IE": "4",
+        "IM": "4",
         "IS": "4",
         "IT": "4",
+        "JE": "4",
         "LI": "4",
         "LT": "4",
         "LU": "4",
@@ -45,6 +50,7 @@
         "PT": "4",
         "RE": "4",
         "SE": "4",
+        "SJ": "4",
         "SK": "4",
         "SM": "4",
         "UM": "1",
@@ -175,7 +181,7 @@
         "RO": "mon",
         "RS": "mon",
         "RU": "mon",
-        "SA": "sat",
+        "SA": "sun",
         "SD": "sat",
         "SE": "mon",
         "SG": "sun",
@@ -202,7 +208,7 @@
         "VN": "mon",
         "WS": "sun",
         "XK": "mon",
-        "YE": "sat",
+        "YE": "sun",
         "ZA": "sun",
         "ZW": "sun"
       },
@@ -226,11 +232,11 @@
         "MA": "fri",
         "OM": "thu",
         "QA": "fri",
-        "SA": "thu",
+        "SA": "fri",
         "SD": "fri",
         "SY": "fri",
         "TN": "fri",
-        "YE": "thu"
+        "YE": "fri"
       },
       "weekendEnd": {
         "001": "sun",
@@ -248,11 +254,11 @@
         "MA": "sat",
         "OM": "fri",
         "QA": "sat",
-        "SA": "fri",
+        "SA": "sat",
         "SD": "sat",
         "SY": "sat",
         "TN": "sat",
-        "YE": "fri"
+        "YE": "sat"
       }
     }
   }

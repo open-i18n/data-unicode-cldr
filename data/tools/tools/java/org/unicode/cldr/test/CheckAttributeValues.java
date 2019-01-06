@@ -2,6 +2,7 @@ package org.unicode.cldr.test;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -84,17 +85,46 @@ public class CheckAttributeValues extends FactoryCheckCLDR {
                         // ok, keep going
                     } else {
                         final Count countValue = PluralInfo.Count.valueOf(attributeValue);
-                        if (!pluralInfo.getCountToExamplesMap().keySet().contains(countValue)) {
+                        if (!pluralInfo.getCounts().contains(countValue)
+                            && !isPluralException(countValue, locale)) {
                             result.add(new CheckStatus()
                                 .setCause(this).setMainType(CheckStatus.errorType).setSubtype(Subtype.illegalPlural)
                                 .setMessage("Illegal plural value {0}; must be one of: {1}",
-                                    new Object[] { countValue, pluralInfo.getCountToExamplesMap().keySet() }));
+                                    new Object[] { countValue, pluralInfo.getCounts() }));
                         }
                     }
                 }
             }
         }
         return this;
+    }
+
+    static final Relation<PluralInfo.Count, String> PLURAL_EXCEPTIONS = Relation.of(
+        new EnumMap<PluralInfo.Count, Set<String>>(PluralInfo.Count.class), HashSet.class);
+    static {
+        PLURAL_EXCEPTIONS.put(PluralInfo.Count.many, "hr");
+        PLURAL_EXCEPTIONS.put(PluralInfo.Count.many, "sr");
+        PLURAL_EXCEPTIONS.put(PluralInfo.Count.many, "sh");
+        PLURAL_EXCEPTIONS.put(PluralInfo.Count.many, "bs");
+        PLURAL_EXCEPTIONS.put(PluralInfo.Count.few, "ru");
+    }
+
+    static boolean isPluralException(Count countValue, String locale) {
+        Set<String> exceptions = PLURAL_EXCEPTIONS.get(countValue);
+        if (exceptions == null) {
+            return false;
+        }
+        if (exceptions.contains(locale)) {
+            return true;
+        }
+        int bar = locale.indexOf('_'); // catch bs_Cyrl, etc.
+        if (bar > 0) {
+            String base = locale.substring(0, bar);
+            if (exceptions.contains(base)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void check(Map<String, MatcherPattern> attribute_validity, String attribute, String attributeValue,
@@ -149,7 +179,7 @@ public class CheckAttributeValues extends FactoryCheckCLDR {
     public CheckCLDR setCldrFileToCheck(CLDRFile cldrFileToCheck, Map<String, String> options,
         List<CheckStatus> possibleErrors) {
         if (cldrFileToCheck == null) return this;
-        if (Phase.FINAL_TESTING == getPhase()) {
+        if (Phase.FINAL_TESTING == getPhase() || Phase.BUILD == getPhase()) {
             setSkipTest(false); // ok
         } else {
             setSkipTest(true);

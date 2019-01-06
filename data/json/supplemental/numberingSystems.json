@@ -1,244 +1,244 @@
 {
   "supplemental": {
     "version": {
-      "@cldrVersion": "23.1",
-      "@number": "$Revision: 8663 $"
+      "_cldrVersion": "24",
+      "_number": "$Revision: 8352 $"
     },
     "generation": {
-      "@date": "$Date: 2013-05-02 15:03:19 -0500 (Thu, 02 May 2013) $"
+      "_date": "$Date: 2013-03-18 12:26:06 -0500 (Mon, 18 Mar 2013) $"
     },
     "numberingSystems": {
       "armn": {
-        "@type": "algorithmic",
-        "@rules": "armenian-upper"
+        "_type": "algorithmic",
+        "_rules": "armenian-upper"
       },
       "armnlow": {
-        "@type": "algorithmic",
-        "@rules": "armenian-lower"
+        "_type": "algorithmic",
+        "_rules": "armenian-lower"
       },
       "ethi": {
-        "@type": "algorithmic",
-        "@rules": "ethiopic"
+        "_type": "algorithmic",
+        "_rules": "ethiopic"
       },
       "geor": {
-        "@type": "algorithmic",
-        "@rules": "georgian"
+        "_type": "algorithmic",
+        "_rules": "georgian"
       },
       "grek": {
-        "@type": "algorithmic",
-        "@rules": "greek-upper"
+        "_type": "algorithmic",
+        "_rules": "greek-upper"
       },
       "greklow": {
-        "@type": "algorithmic",
-        "@rules": "greek-lower"
+        "_type": "algorithmic",
+        "_rules": "greek-lower"
       },
       "hans": {
-        "@type": "algorithmic",
-        "@rules": "zh/SpelloutRules/spellout-cardinal"
+        "_type": "algorithmic",
+        "_rules": "zh/SpelloutRules/spellout-cardinal"
       },
       "hansfin": {
-        "@type": "algorithmic",
-        "@rules": "zh/SpelloutRules/spellout-cardinal-financial"
+        "_type": "algorithmic",
+        "_rules": "zh/SpelloutRules/spellout-cardinal-financial"
       },
       "hant": {
-        "@type": "algorithmic",
-        "@rules": "zh_Hant/SpelloutRules/spellout-cardinal"
+        "_type": "algorithmic",
+        "_rules": "zh_Hant/SpelloutRules/spellout-cardinal"
       },
       "hantfin": {
-        "@type": "algorithmic",
-        "@rules": "zh_Hant/SpelloutRules/spellout-cardinal-financial"
+        "_type": "algorithmic",
+        "_rules": "zh_Hant/SpelloutRules/spellout-cardinal-financial"
       },
       "hebr": {
-        "@type": "algorithmic",
-        "@rules": "hebrew"
+        "_type": "algorithmic",
+        "_rules": "hebrew"
       },
       "jpan": {
-        "@type": "algorithmic",
-        "@rules": "ja/SpelloutRules/spellout-cardinal"
+        "_type": "algorithmic",
+        "_rules": "ja/SpelloutRules/spellout-cardinal"
       },
       "jpanfin": {
-        "@type": "algorithmic",
-        "@rules": "ja/SpelloutRules/spellout-cardinal-financial"
+        "_type": "algorithmic",
+        "_rules": "ja/SpelloutRules/spellout-cardinal-financial"
       },
       "roman": {
-        "@type": "algorithmic",
-        "@rules": "roman-upper"
+        "_type": "algorithmic",
+        "_rules": "roman-upper"
       },
       "romanlow": {
-        "@type": "algorithmic",
-        "@rules": "roman-lower"
+        "_type": "algorithmic",
+        "_rules": "roman-lower"
       },
       "taml": {
-        "@type": "algorithmic",
-        "@rules": "tamil"
+        "_type": "algorithmic",
+        "_rules": "tamil"
       },
       "arab": {
-        "@digits": "٠١٢٣٤٥٦٧٨٩",
-        "@type": "numeric"
+        "_digits": "٠١٢٣٤٥٦٧٨٩",
+        "_type": "numeric"
       },
       "arabext": {
-        "@digits": "۰۱۲۳۴۵۶۷۸۹",
-        "@type": "numeric"
+        "_digits": "۰۱۲۳۴۵۶۷۸۹",
+        "_type": "numeric"
       },
       "bali": {
-        "@digits": "᭐᭑᭒᭓᭔᭕᭖᭗᭘᭙",
-        "@type": "numeric"
+        "_digits": "᭐᭑᭒᭓᭔᭕᭖᭗᭘᭙",
+        "_type": "numeric"
       },
       "beng": {
-        "@digits": "০১২৩৪৫৬৭৮৯",
-        "@type": "numeric"
+        "_digits": "০১২৩৪৫৬৭৮৯",
+        "_type": "numeric"
       },
       "brah": {
-        "@digits": "𑁦𑁦𑁧𑁦𑁧𑁨𑁦𑁧𑁨𑁩𑁦𑁧𑁨𑁩𑁪𑁦𑁧𑁨𑁩𑁪𑁫𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯",
-        "@type": "numeric"
+        "_digits": "𑁦𑁦𑁧𑁦𑁧𑁨𑁦𑁧𑁨𑁩𑁦𑁧𑁨𑁩𑁪𑁦𑁧𑁨𑁩𑁪𑁫𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯",
+        "_type": "numeric"
       },
       "cakm": {
-        "@digits": "𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿",
-        "@type": "numeric"
+        "_digits": "𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿",
+        "_type": "numeric"
       },
       "cham": {
-        "@digits": "꩐꩑꩒꩓꩔꩕꩖꩗꩘꩙",
-        "@type": "numeric"
+        "_digits": "꩐꩑꩒꩓꩔꩕꩖꩗꩘꩙",
+        "_type": "numeric"
       },
       "deva": {
-        "@digits": "०१२३४५६७८९",
-        "@type": "numeric"
+        "_digits": "०१२३४५६७८९",
+        "_type": "numeric"
       },
       "fullwide": {
-        "@digits": "０１２３４５６７８９",
-        "@type": "numeric"
+        "_digits": "０１２３４５６７８９",
+        "_type": "numeric"
       },
       "gujr": {
-        "@digits": "૦૧૨૩૪૫૬૭૮૯",
-        "@type": "numeric"
+        "_digits": "૦૧૨૩૪૫૬૭૮૯",
+        "_type": "numeric"
       },
       "guru": {
-        "@digits": "੦੧੨੩੪੫੬੭੮੯",
-        "@type": "numeric"
+        "_digits": "੦੧੨੩੪੫੬੭੮੯",
+        "_type": "numeric"
       },
       "hanidec": {
-        "@digits": "〇一二三四五六七八九",
-        "@type": "numeric"
+        "_digits": "〇一二三四五六七八九",
+        "_type": "numeric"
       },
       "java": {
-        "@digits": "꧐꧑꧒꧓꧔꧕꧖꧗꧘꧙",
-        "@type": "numeric"
+        "_digits": "꧐꧑꧒꧓꧔꧕꧖꧗꧘꧙",
+        "_type": "numeric"
       },
       "kali": {
-        "@digits": "꤀꤁꤂꤃꤄꤅꤆꤇꤈꤉",
-        "@type": "numeric"
+        "_digits": "꤀꤁꤂꤃꤄꤅꤆꤇꤈꤉",
+        "_type": "numeric"
       },
       "khmr": {
-        "@digits": "០១២៣៤៥៦៧៨៩",
-        "@type": "numeric"
+        "_digits": "០១២៣៤៥៦៧៨៩",
+        "_type": "numeric"
       },
       "knda": {
-        "@digits": "೦೧೨೩೪೫೬೭೮೯",
-        "@type": "numeric"
+        "_digits": "೦೧೨೩೪೫೬೭೮೯",
+        "_type": "numeric"
       },
       "lana": {
-        "@digits": "᪀᪁᪂᪃᪄᪅᪆᪇᪈᪉",
-        "@type": "numeric"
+        "_digits": "᪀᪁᪂᪃᪄᪅᪆᪇᪈᪉",
+        "_type": "numeric"
       },
       "lanatham": {
-        "@digits": "᪐᪑᪒᪓᪔᪕᪖᪗᪘᪙",
-        "@type": "numeric"
+        "_digits": "᪐᪑᪒᪓᪔᪕᪖᪗᪘᪙",
+        "_type": "numeric"
       },
       "laoo": {
-        "@digits": "໐໑໒໓໔໕໖໗໘໙",
-        "@type": "numeric"
+        "_digits": "໐໑໒໓໔໕໖໗໘໙",
+        "_type": "numeric"
       },
       "latn": {
-        "@digits": "0123456789",
-        "@type": "numeric"
+        "_digits": "0123456789",
+        "_type": "numeric"
       },
       "lepc": {
-        "@digits": "᱀᱁᱂᱃᱄᱅᱆᱇᱈᱉",
-        "@type": "numeric"
+        "_digits": "᱀᱁᱂᱃᱄᱅᱆᱇᱈᱉",
+        "_type": "numeric"
       },
       "limb": {
-        "@digits": "᥆᥇᥈᥉᥊᥋᥌᥍᥎᥏",
-        "@type": "numeric"
+        "_digits": "᥆᥇᥈᥉᥊᥋᥌᥍᥎᥏",
+        "_type": "numeric"
       },
       "mlym": {
-        "@digits": "൦൧൨൩൪൫൬൭൮൯",
-        "@type": "numeric"
+        "_digits": "൦൧൨൩൪൫൬൭൮൯",
+        "_type": "numeric"
       },
       "mong": {
-        "@digits": "᠐᠑᠒᠓᠔᠕᠖᠗᠘᠙",
-        "@type": "numeric"
+        "_digits": "᠐᠑᠒᠓᠔᠕᠖᠗᠘᠙",
+        "_type": "numeric"
       },
       "mtei": {
-        "@digits": "꯰꯱꯲꯳꯴꯵꯶꯷꯸꯹",
-        "@type": "numeric"
+        "_digits": "꯰꯱꯲꯳꯴꯵꯶꯷꯸꯹",
+        "_type": "numeric"
       },
       "mymr": {
-        "@digits": "၀၁၂၃၄၅၆၇၈၉",
-        "@type": "numeric"
+        "_digits": "၀၁၂၃၄၅၆၇၈၉",
+        "_type": "numeric"
       },
       "mymrshan": {
-        "@digits": "႐႑႒႓႔႕႖႗႘႙",
-        "@type": "numeric"
+        "_digits": "႐႑႒႓႔႕႖႗႘႙",
+        "_type": "numeric"
       },
       "nkoo": {
-        "@digits": "߀߁߂߃߄߅߆߇߈߉",
-        "@type": "numeric"
+        "_digits": "߀߁߂߃߄߅߆߇߈߉",
+        "_type": "numeric"
       },
       "olck": {
-        "@digits": "᱐᱑᱒᱓᱔᱕᱖᱗᱘᱙",
-        "@type": "numeric"
+        "_digits": "᱐᱑᱒᱓᱔᱕᱖᱗᱘᱙",
+        "_type": "numeric"
       },
       "orya": {
-        "@digits": "୦୧୨୩୪୫୬୭୮୯",
-        "@type": "numeric"
+        "_digits": "୦୧୨୩୪୫୬୭୮୯",
+        "_type": "numeric"
       },
       "osma": {
-        "@digits": "𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩",
-        "@type": "numeric"
+        "_digits": "𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩",
+        "_type": "numeric"
       },
       "saur": {
-        "@digits": "꣐꣑꣒꣓꣔꣕꣖꣗꣘꣙",
-        "@type": "numeric"
+        "_digits": "꣐꣑꣒꣓꣔꣕꣖꣗꣘꣙",
+        "_type": "numeric"
       },
       "shrd": {
-        "@digits": "𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙",
-        "@type": "numeric"
+        "_digits": "𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙",
+        "_type": "numeric"
       },
       "sora": {
-        "@digits": "𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑃸𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑃸𑃹",
-        "@type": "numeric"
+        "_digits": "𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑃸𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑃸𑃹",
+        "_type": "numeric"
       },
       "sund": {
-        "@digits": "᮰᮱᮲᮳᮴᮵᮶᮷᮸᮹",
-        "@type": "numeric"
+        "_digits": "᮰᮱᮲᮳᮴᮵᮶᮷᮸᮹",
+        "_type": "numeric"
       },
       "takr": {
-        "@digits": "𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑃸𑃹𑛀𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑃸𑃹𑛀𑛁𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑃸𑃹𑛀𑛁𑛂𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑃸𑃹𑛀𑛁𑛂𑛃𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑃸𑃹𑛀𑛁𑛂𑛃𑛄𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑃸𑃹𑛀𑛁𑛂𑛃𑛄𑛅𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑃸𑃹𑛀𑛁𑛂𑛃𑛄𑛅𑛆𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑃸𑃹𑛀𑛁𑛂𑛃𑛄𑛅𑛆𑛇𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑃸𑃹𑛀𑛁𑛂𑛃𑛄𑛅𑛆𑛇𑛈𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑃸𑃹𑛀𑛁𑛂𑛃𑛄𑛅𑛆𑛇𑛈𑛉",
-        "@type": "numeric"
+        "_digits": "𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑃸𑃹𑛀𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑃸𑃹𑛀𑛁𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑃸𑃹𑛀𑛁𑛂𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑃸𑃹𑛀𑛁𑛂𑛃𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑃸𑃹𑛀𑛁𑛂𑛃𑛄𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑃸𑃹𑛀𑛁𑛂𑛃𑛄𑛅𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑃸𑃹𑛀𑛁𑛂𑛃𑛄𑛅𑛆𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑃸𑃹𑛀𑛁𑛂𑛃𑛄𑛅𑛆𑛇𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑃸𑃹𑛀𑛁𑛂𑛃𑛄𑛅𑛆𑛇𑛈𑁦𑁧𑁨𑁩𑁪𑁫𑁬𑁭𑁮𑁯𑄶𑄷𑄸𑄹𑄺𑄻𑄼𑄽𑄾𑄿𐒠𐒡𐒢𐒣𐒤𐒥𐒦𐒧𐒨𐒩𑇐𑇑𑇒𑇓𑇔𑇕𑇖𑇗𑇘𑇙𑃰𑃱𑃲𑃳𑃴𑃵𑃶𑃷𑃸𑃹𑛀𑛁𑛂𑛃𑛄𑛅𑛆𑛇𑛈𑛉",
+        "_type": "numeric"
       },
       "talu": {
-        "@digits": "᧐᧑᧒᧓᧔᧕᧖᧗᧘᧙",
-        "@type": "numeric"
+        "_digits": "᧐᧑᧒᧓᧔᧕᧖᧗᧘᧙",
+        "_type": "numeric"
       },
       "tamldec": {
-        "@digits": "௦௧௨௩௪௫௬௭௮௯",
-        "@type": "numeric"
+        "_digits": "௦௧௨௩௪௫௬௭௮௯",
+        "_type": "numeric"
       },
       "telu": {
-        "@digits": "౦౧౨౩౪౫౬౭౮౯",
-        "@type": "numeric"
+        "_digits": "౦౧౨౩౪౫౬౭౮౯",
+        "_type": "numeric"
       },
       "thai": {
-        "@digits": "๐๑๒๓๔๕๖๗๘๙",
-        "@type": "numeric"
+        "_digits": "๐๑๒๓๔๕๖๗๘๙",
+        "_type": "numeric"
       },
       "tibt": {
-        "@digits": "༠༡༢༣༤༥༦༧༨༩",
-        "@type": "numeric"
+        "_digits": "༠༡༢༣༤༥༦༧༨༩",
+        "_type": "numeric"
       },
       "vaii": {
-        "@digits": "꘠꘡꘢꘣꘤꘥꘦꘧꘨꘩",
-        "@type": "numeric"
+        "_digits": "꘠꘡꘢꘣꘤꘥꘦꘧꘨꘩",
+        "_type": "numeric"
       }
     }
   }

@@ -28,13 +28,19 @@ import org.unicode.cldr.test.CheckCoverage;
 import org.unicode.cldr.test.CheckNew;
 import org.unicode.cldr.test.CoverageLevel2;
 import org.unicode.cldr.test.OutdatedPaths;
+import org.unicode.cldr.tool.Option;
+import org.unicode.cldr.tool.Option.Options;
 import org.unicode.cldr.util.CLDRFile.Status;
 import org.unicode.cldr.util.CLDRFile.WinningChoice;
 import org.unicode.cldr.util.PathHeader.PageId;
 import org.unicode.cldr.util.PathHeader.SectionId;
+import org.unicode.cldr.util.StandardCodes.LocaleCoverageType;
+import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo;
+import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo.Count;
 import org.unicode.cldr.util.VoteResolver.Organization;
 
 import com.ibm.icu.dev.util.BagFormatter;
+import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.dev.util.Relation;
 import com.ibm.icu.dev.util.TransliteratorUtilities;
 import com.ibm.icu.impl.Row;
@@ -45,6 +51,7 @@ import com.ibm.icu.text.Collator;
 import com.ibm.icu.text.NumberFormat;
 import com.ibm.icu.text.Transform;
 import com.ibm.icu.text.UnicodeSet;
+import com.ibm.icu.util.Output;
 import com.ibm.icu.util.ULocale;
 
 /**
@@ -56,15 +63,21 @@ import com.ibm.icu.util.ULocale;
  */
 public class VettingViewer<T> {
 
+    private static boolean SHOW_SUBTYPES = true; // CldrUtility.getProperty("SHOW_SUBTYPES", "false").equals("true");
+
+    private static final String CONNECT_PREFIX = "₍_";
+    private static final String CONNECT_SUFFIX = "₎";
+
+    private static final String TH_AND_STYLES = "<th class='tv-th' style='text-align:left'>";
+
+    private static final String SPLIT_CHAR = "\uFFFE";
+
     private static final boolean SUPPRESS = true;
 
     private static final String TEST_PATH = "//ldml/localeDisplayNames/territories/territory[@type=\"SX\"]";
     private static final double NANOSECS = 1000000000.0;
     private static final boolean TESTING = CldrUtility.getProperty("TEST", false);
     private static final boolean SHOW_ALL = CldrUtility.getProperty("SHOW", true);
-    private static final String LOCALE = CldrUtility.getProperty("LOCALE", "af");
-    private static final String CURRENT_MAIN = CldrUtility.getProperty("MAIN",
-        "/Users/markdavis/workspace/cldr/common/main");
 
     public static final Pattern ALT_PROPOSED = Pattern.compile("\\[@alt=\"[^\"]*proposed");
 
@@ -392,14 +405,14 @@ public class VettingViewer<T> {
                     if (outputSubtypes != null) {
                         outputSubtypes.add(checkStatus.getSubtype());
                     }
-                    appendToMessage(checkStatus.getMessage(), errorMessage);
+                    appendToMessage(checkStatus.getMessage(), checkStatus.getSubtype(), errorMessage);
                 } else if (result0 != Status.error && statusType.equals(CheckStatus.warningType)) {
                     result0 = Status.warning;
                     // accumulate all the warning messages
                     if (outputSubtypes != null) {
                         outputSubtypes.add(checkStatus.getSubtype());
                     }
-                    appendToMessage(checkStatus.getMessage(), errorMessage);
+                    appendToMessage(checkStatus.getMessage(), checkStatus.getSubtype(), errorMessage);
                 }
             }
             if (result0 != Status.ok) {
@@ -419,6 +432,8 @@ public class VettingViewer<T> {
     private final String currentWinningTitle;
     private final PathDescription pathDescription;
     private ErrorChecker errorChecker; // new
+
+    private final Set<String> defaultContentLocales;
 
     // NoErrorStatus();
     // //
@@ -449,6 +464,8 @@ public class VettingViewer<T> {
         oldEnglishFile = cldrFactoryOld.make("en", true);
         this.userVoteStatus = userVoteStatus;
         this.supplementalDataInfo = supplementalDataInfo;
+        this.defaultContentLocales = supplementalDataInfo.getDefaultContentLocales();
+
         this.lastVersionTitle = lastVersionTitle;
         this.currentWinningTitle = currentWinningTitle;
         Map<String, List<Set<String>>> starredPaths = new HashMap();
@@ -477,10 +494,11 @@ public class VettingViewer<T> {
         }
 
         public String getUrl(String locale) {
-            return baseUrl + "?_="
-                + locale
-                + "&strid="
-                + Long.toHexString(StringId.getId(codeOutput.getOriginalPath()));
+            return codeOutput.getUrl(baseUrl, locale);
+            //            return baseUrl + "?_="
+            //            + locale
+            //            + "&strid="
+            //            + StringId.getHexId(codeOutput.getOriginalPath());
             // String menu = PathUtilities.xpathToMenu(path);
             // String url = baseUrl + "?_=" + locale + "&amp;=" + menu;
             // return url;
@@ -722,7 +740,6 @@ public class VettingViewer<T> {
         // each one will be marked with the choice that it triggered.
         Relation<R2<SectionId, PageId>, WritingInfo> sorted = Relation.of(
             new TreeMap<R2<SectionId, PageId>, Set<WritingInfo>>(), TreeSet.class);
-        Counter<Choice> problemCounter = new Counter<Choice>();
 
         CLDRFile sourceFile = cldrFactory.make(localeID, true);
 
@@ -733,175 +750,213 @@ public class VettingViewer<T> {
         } catch (Exception e) {
         }
 
-        getFileInfo(sourceFile, lastSourceFile, sorted, problemCounter, choices, localeID, nonVettingPhase, user,
-            usersLevel);
+        FileInfo fileInfo = new FileInfo().
+            getFileInfo(sourceFile, lastSourceFile, sorted, choices, localeID, nonVettingPhase, user,
+                usersLevel);
 
         // now write the results out
-        writeTables(output, sourceFile, lastSourceFile, sorted, problemCounter, choices, localeID, nonVettingPhase);
+        writeTables(output, sourceFile, lastSourceFile, sorted, choices, localeID, nonVettingPhase, fileInfo);
     }
 
-    private void getFileInfo(CLDRFile sourceFile, CLDRFile lastSourceFile, Relation<R2<SectionId, PageId>,
-        WritingInfo> sorted, Counter<Choice> problemCounter,
-        EnumSet<Choice> choices, String localeID, boolean nonVettingPhase,
-        T user, Level usersLevel) {
+    private class FileInfo {
+        Counter<Choice> problemCounter = new Counter<Choice>();
+        Counter<Subtype> errorSubtypeCounter = new Counter<Subtype>();
+        Counter<Subtype> warningSubtypeCounter = new Counter<Subtype>();
 
-        CoverageLevel2 coverage = CoverageLevel2.getInstance(supplementalDataInfo, localeID);
-        Status status = new Status();
-        errorChecker.initErrorStatus(sourceFile);
-        Matcher altProposed = ALT_PROPOSED.matcher("");
-        EnumSet<Choice> problems = EnumSet.noneOf(Choice.class);
+        public void addAll(FileInfo other) {
+            problemCounter.addAll(other.problemCounter);
+            errorSubtypeCounter.addAll(other.errorSubtypeCounter);
+            warningSubtypeCounter.addAll(other.warningSubtypeCounter);
+        }
 
-        // now look through the paths
+        private FileInfo getFileInfo(CLDRFile sourceFile, CLDRFile lastSourceFile,
+            Relation<R2<SectionId, PageId>, WritingInfo> sorted,
+            EnumSet<Choice> choices, String localeID, boolean nonVettingPhase,
+            T user, Level usersLevel) {
 
-        StringBuilder htmlMessage = new StringBuilder();
-        StringBuilder statusMessage = new StringBuilder();
-        EnumSet<Subtype> subtypes = EnumSet.noneOf(Subtype.class);
-        Set<String> seenSoFar = new HashSet<String>();
+            Status status = new Status();
+            errorChecker.initErrorStatus(sourceFile);
+            Matcher altProposed = ALT_PROPOSED.matcher("");
+            EnumSet<Choice> problems = EnumSet.noneOf(Choice.class);
 
-        boolean latin = VettingViewer.isLatinScriptLocale(sourceFile);
+            // now look through the paths
 
-        for (String path : sourceFile.fullIterable()) {
-            if (seenSoFar.contains(path)) {
-                continue;
-            }
-            seenSoFar.add(path);
-            progressCallback.nudge(); // Let the user know we're moving along.
+            StringBuilder htmlMessage = new StringBuilder();
+            StringBuilder statusMessage = new StringBuilder();
+            EnumSet<Subtype> subtypes = EnumSet.noneOf(Subtype.class);
+            Set<String> seenSoFar = new HashSet<String>();
 
-            PathHeader pretty = pathTransform.fromPath(path);
-            if (pretty.getSurveyToolStatus() == PathHeader.SurveyToolStatus.HIDE) {
-                continue;
-            }
+            boolean latin = VettingViewer.isLatinScriptLocale(sourceFile);
 
-            // note that the value might be missing!
-
-            // make sure we only look at the real values
-            if (altProposed.reset(path).find()) {
-                continue;
-            }
-
-            if (path.contains("/references")) {
-                continue;
-            }
-
-            Level level = coverage.getLevel(path);
-
-            // skip anything above the requested level
-            if (level.compareTo(usersLevel) > 0) {
-                continue;
-            }
-
-            String value = sourceFile.getWinningValue(path);
-
-            problems.clear();
-            htmlMessage.setLength(0);
-            boolean haveError = false;
-
-            String oldValue = lastSourceFile == null ? null : lastSourceFile.getWinningValue(path);
-            if (oldValue != null && !oldValue.equals(value)) {
-                problems.add(Choice.changedOldValue);
-                problemCounter.increment(Choice.changedOldValue);
-            }
-
-            VoteStatus voteStatus = userVoteStatus.getStatusForUsersOrganization(sourceFile, path, user);
-
-            MissingStatus missingStatus = getMissingStatus(sourceFile, path, status, latin);
-            if (missingStatus == MissingStatus.ABSENT) {
-                problems.add(Choice.missingCoverage);
-                problemCounter.increment(Choice.missingCoverage);
-            }
-
-            boolean itemsOkIfVoted = SUPPRESS
-                && voteStatus == VoteStatus.ok;
-
-            if (!itemsOkIfVoted
-                && outdatedPaths.isOutdated(localeID, path)) {
-                // the outdated paths compares the base value, before
-                // data submission,
-                // so see if the value changed.
-                // String lastValue = lastSourceFile == null ? null : lastSourceFile.getWinningValue(path);
-                if (CharSequences.equals(value, oldValue)) {
-                    // check to see if we voted
-                    problems.add(Choice.englishChanged);
-                    problemCounter.increment(Choice.englishChanged);
+            for (String path : sourceFile.fullIterable()) {
+                if (seenSoFar.contains(path)) {
+                    continue;
                 }
-            }
+                seenSoFar.add(path);
+                progressCallback.nudge(); // Let the user know we're moving along.
 
-            statusMessage.setLength(0);
-            subtypes.clear();
-            ErrorChecker.Status errorStatus = errorChecker.getErrorStatus(path, value, statusMessage, subtypes);
-            Choice choice = errorStatus == ErrorChecker.Status.error ? Choice.error
-                : errorStatus == ErrorChecker.Status.warning ? Choice.warning
-                    : null;
-            if (choice == Choice.error
-                || choice == Choice.warning
-                && (!itemsOkIfVoted
-                || !OK_IF_VOTED.containsAll(subtypes))) {
-                problems.add(choice);
-                appendToMessage(statusMessage, htmlMessage);
-                problemCounter.increment(choice);
-                haveError = true;
-            }
-
-            if (path.contains("Urumqi")) {
-                int x = 3;
-            }
-            switch (voteStatus) {
-            case losing:
-                problems.add(Choice.weLost);
-                problemCounter.increment(Choice.weLost);
-                // String usersValue = userVoteStatus.getWinningValueForUsersOrganization(sourceFile, path, user);
-                // appendToMessage(usersValue, testMessage);
-                break;
-            case disputed:
-                problems.add(Choice.hasDispute);
-                problemCounter.increment(Choice.hasDispute);
-                break;
-            case provisionalOrWorse:
-                if (missingStatus == MissingStatus.PRESENT) {
-                    MissingStatus debug = getMissingStatus(sourceFile, path, status, false);
-                    problems.add(Choice.notApproved);
-                    problemCounter.increment(Choice.notApproved);
+                PathHeader pretty = pathTransform.fromPath(path);
+                if (pretty.getSurveyToolStatus() == PathHeader.SurveyToolStatus.HIDE) {
+                    continue;
                 }
-                break;
-            }
 
-            if (!problems.isEmpty()) {
-                if (problems.size() > 1) {
-                    int x = 1;
+                // note that the value might be missing!
+
+                // make sure we only look at the real values
+                if (altProposed.reset(path).find()) {
+                    continue;
                 }
-                // showAll ||
-                // if (showAll && problems.isEmpty()) {
-                // problems.add(Choice.other);
-                // problemCounter.increment(Choice.other);
-                // }
-                if (sorted != null) {
-                    reasonsToPaths.clear();
-                    // final String prettyPath = pathTransform.getPrettyPath(path);
 
-                    // String[] pathParts = breaks.split(pretty);
-                    // String sectionOutput = pathParts.length == 3 ? pathParts[0] : "Unknown";
-                    // String subsectionOutput = pathParts.length == 3 ? pathParts[1] : "Unknown";
-                    // String codeOutput = pathParts.length == 3 ? pathParts[2] : pretty;
-
-                    R2<SectionId, PageId> group = Row.of(pretty.getSectionId(), pretty.getPageId());
-
-                    sorted.put(group, new WritingInfo(pretty, problems, htmlMessage));
+                if (path.contains("/references")) {
+                    continue;
                 }
-            }
 
+                Level level = supplementalDataInfo.getCoverageLevel(path, sourceFile.getLocaleID());
+
+                // skip anything above the requested level
+                if (level.compareTo(usersLevel) > 0) {
+                    continue;
+                }
+
+                String value = sourceFile.getWinningValue(path);
+
+                problems.clear();
+                htmlMessage.setLength(0);
+                String oldValue = lastSourceFile == null ? null : lastSourceFile.getWinningValue(path);
+
+                if (choices.contains(Choice.changedOldValue)) {
+                    if (oldValue != null && !oldValue.equals(value)) {
+                        problems.add(Choice.changedOldValue);
+                        problemCounter.increment(Choice.changedOldValue);
+                    }
+                }
+                VoteStatus voteStatus = userVoteStatus.getStatusForUsersOrganization(sourceFile, path, user);
+
+                MissingStatus missingStatus = getMissingStatus(sourceFile, path, status, latin);
+                if (choices.contains(Choice.missingCoverage) && missingStatus == MissingStatus.ABSENT) {
+                    problems.add(Choice.missingCoverage);
+                    problemCounter.increment(Choice.missingCoverage);
+                }
+                boolean itemsOkIfVoted = SUPPRESS
+                    && voteStatus == VoteStatus.ok;
+
+                if (!itemsOkIfVoted
+                    && outdatedPaths.isOutdated(localeID, path)) {
+                    // the outdated paths compares the base value, before
+                    // data submission,
+                    // so see if the value changed.
+                    // String lastValue = lastSourceFile == null ? null : lastSourceFile.getWinningValue(path);
+                    if (CharSequences.equals(value, oldValue) && choices.contains(Choice.englishChanged)) {
+                        // check to see if we voted
+                        problems.add(Choice.englishChanged);
+                        problemCounter.increment(Choice.englishChanged);
+                    }
+                }
+
+                statusMessage.setLength(0);
+                subtypes.clear();
+                ErrorChecker.Status errorStatus = errorChecker.getErrorStatus(path, value, statusMessage, subtypes);
+                Choice choice = errorStatus == ErrorChecker.Status.error ? Choice.error
+                    : errorStatus == ErrorChecker.Status.warning ? Choice.warning
+                        : null;
+                if (choice == Choice.error && choices.contains(Choice.error)
+                    && (!itemsOkIfVoted
+                    || !OK_IF_VOTED.containsAll(subtypes))) {
+                    problems.add(choice);
+                    appendToMessage(statusMessage, htmlMessage);
+                    problemCounter.increment(choice);
+                    for (Subtype subtype : subtypes) {
+                        errorSubtypeCounter.increment(subtype);
+                    }
+                } else if (choice == Choice.warning && choices.contains(Choice.warning)
+                    && (!itemsOkIfVoted
+                    || !OK_IF_VOTED.containsAll(subtypes))) {
+                    problems.add(choice);
+                    appendToMessage(statusMessage, htmlMessage);
+                    problemCounter.increment(choice);
+                    for (Subtype subtype : subtypes) {
+                        warningSubtypeCounter.increment(subtype);
+                    }
+                }
+
+                switch (voteStatus) {
+                case losing:
+                    if (choices.contains(Choice.weLost)) {
+                        problems.add(Choice.weLost);
+                        problemCounter.increment(Choice.weLost);
+                    }
+                    String usersValue = userVoteStatus.getWinningValueForUsersOrganization(sourceFile, path, user);
+                    if (usersValue != null) {
+                        usersValue = "Losing value: <" + TransliteratorUtilities.toHTML.transform(usersValue) + ">";
+                        appendToMessage(usersValue, htmlMessage);
+                    }
+                    break;
+                case disputed:
+                    if (choices.contains(Choice.hasDispute)) {
+                        problems.add(Choice.hasDispute);
+                        problemCounter.increment(Choice.hasDispute);
+                    }
+                    break;
+                case provisionalOrWorse:
+                    if (missingStatus == MissingStatus.PRESENT && choices.contains(Choice.notApproved)) {
+                        problems.add(Choice.notApproved);
+                        problemCounter.increment(Choice.notApproved);
+                    }
+                    break;
+                }
+
+                if (!problems.isEmpty()) {
+                    // showAll ||
+                    // if (showAll && problems.isEmpty()) {
+                    // problems.add(Choice.other);
+                    // problemCounter.increment(Choice.other);
+                    // }
+                    if (sorted != null) {
+                        reasonsToPaths.clear();
+                        // final String prettyPath = pathTransform.getPrettyPath(path);
+
+                        // String[] pathParts = breaks.split(pretty);
+                        // String sectionOutput = pathParts.length == 3 ? pathParts[0] : "Unknown";
+                        // String subsectionOutput = pathParts.length == 3 ? pathParts[1] : "Unknown";
+                        // String codeOutput = pathParts.length == 3 ? pathParts[2] : pretty;
+
+                        R2<SectionId, PageId> group = Row.of(pretty.getSectionId(), pretty.getPageId());
+
+                        sorted.put(group, new WritingInfo(pretty, problems, htmlMessage));
+                    }
+                }
+
+            }
+            return this;
         }
     }
 
-    public static final Predicate<String> HackIncludeLocalesWithVotes = new Predicate<String>() {
-        Set<String> hackHasVotes = new HashSet(Arrays.asList(
-            "da de el en en_GB es es_419 ja kn kovi zh zh_Hant zh_Hant_HK ee zh_Hans_SG zh_Hans_MO zh_Hans_HK"
-                // "af am ar bg bn ca cs da de el en en_GB es es_419 et eu fa fi fil fr fr_CA gl gu he hi hr hu id is it ja kn ko lt lv ml mr ms nb nl pl pt pt_PT ro ru sk sl sr sv sw ta te th tr uk ur vi zh zh_Hant zh_Hant_HK ee zh_Hans_SG zh_Hans_MO zh_Hans_HK kk wae kea cy ku si br"
-                // "af am ar ar_AE ar_JO bg bn bo br ca cs cy da de de_AT ee el en_GB en_HK en_SG es es_419 es_AR es_PY es_UY et eu fa fi fil fr fr_CA fur gl gu he hi hr hu id is it kea kk kn ko ksh ku lt lv mk ml mr ms nb nl nn pa pl pt pt_PT ro ru sah si sk sl sr sv sw ta te th to tr uk ur vi wae zh zh_Hans_HK zh_Hans_MO zh_Hans_SG zh_Hant zh_Hant_HK zh_Hant_MO"
-                .split("\\s")));
+    public static final class LocalesWithExplicitLevel implements Predicate<String> {
+        private final String org;
+        private final Level desiredLevel;
+
+        public LocalesWithExplicitLevel(Organization org, Level level) {
+            this.org = org.toString();
+            this.desiredLevel = level;
+        }
 
         @Override
         public boolean is(String localeId) {
-            return hackHasVotes.contains(localeId);
+            Output<LocaleCoverageType> output = new Output<LocaleCoverageType>();
+            // For admin - return true if SOME organization has explicit coverage for the locale
+            // TODO: Make admin pick up any locale that has a vote
+            if (org.equals(Organization.surveytool.toString())) {
+                for (Organization checkorg : Organization.values()) {
+                    StandardCodes.make().getLocaleCoverageLevel(checkorg.toString(), localeId, output);
+                    if (output.value == StandardCodes.LocaleCoverageType.explicit) {
+                        return true;
+                    }
+                }
+                return false;
+            } else {
+                Level level = StandardCodes.make().getLocaleCoverageLevel(org, localeId, output);
+                return desiredLevel == level && output.value == StandardCodes.LocaleCoverageType.explicit;
+            }
         }
     };
 
@@ -910,16 +965,19 @@ public class VettingViewer<T> {
         try {
 
             output
-                .append("<p>The following summarizes the Priority Items across locales, using the default coverage level for your organization for each locale. Before using, please read the instructions at <a target='CLDR_ST_DOCS' href='http://cldr.unicode.org/translation/vetting-summary'>Priority Items Summary</a>.</p>\n");
-            // Gather the relevant paths
-            // each one will be marked with the choice that it triggered.
-            Counter<Choice> problemCounter = new Counter<Choice>();
-
-            output.append("<table class='tvs-table'>\n");
+                .append("<p>The following summarizes the Priority Items across locales, " +
+                    "using the default coverage levels for your organization for each locale. " +
+                    "Before using, please read the instructions at " +
+                    "<a target='CLDR_ST_DOCS' href='http://cldr.unicode.org/translation/vetting-summary'>Priority " +
+                    "Items Summary</a>.</p>\n");
 
             StringBuilder headerRow = new StringBuilder();
-            headerRow.append("<tr class='tvs-tr'>");
-            headerRow.append("<th class='tv-th' style='text-align:left'>Locale</th>");
+            headerRow
+                .append("<tr class='tvs-tr'>")
+                .append(TH_AND_STYLES)
+                .append("Locale</th>")
+                .append(TH_AND_STYLES)
+                .append("Codes</th>");
             for (Choice choice : choices) {
                 headerRow.append("<th class='tv-th'>");
                 choice.appendDisplay("", headerRow);
@@ -928,141 +986,341 @@ public class VettingViewer<T> {
             headerRow.append("</tr>\n");
             String header = headerRow.toString();
 
-            Map<String, String> sortedNames = new TreeMap(Collator.getInstance());
-            Set<String> defaultContentLocales = supplementalDataInfo.getDefaultContentLocales();
-
-            Relation<String, String> localeToDefaultContents = Relation.of(new HashMap<String, Set<String>>(),
-                LinkedHashSet.class);
-
-            for (String defaultContentLocale : defaultContentLocales) {
-                localeToDefaultContents.put(LocaleIDParser.getParent(defaultContentLocale), defaultContentLocale);
-            }
-
-            for (String localeID : cldrFactory.getAvailable()) {
-                if (defaultContentLocales.contains(localeID)
-                    || localeID.equals("en")
-                    || !includeLocale.is(localeID)) {
-                    continue;
-                }
-
-                sortedNames.put(getName(localeID, localeToDefaultContents), localeID);
-            }
-
-            char lastChar = ' ';
-            for (Entry<String, String> entry : sortedNames.entrySet()) {
-                System.out.println(entry);
-                String name = entry.getKey();
-                String localeID = entry.getValue();
-                // Initialize
-
-                CLDRFile sourceFile = cldrFactory.make(localeID, true);
-
-                CLDRFile lastSourceFile = null;
-                try {
-                    lastSourceFile = cldrFactoryOld.make(localeID, true);
-                } catch (Exception e) {
-                }
-
-                problemCounter.clear();
-                Level level = Level.MODERN;
-                if (organization != null) {
-                    level = StandardCodes.make().getLocaleCoverageLevel(organization.toString(), localeID);
-                }
-                getFileInfo(sourceFile, lastSourceFile, null, problemCounter, choices, localeID, true, organization,
-                    level);
-
-                char nextChar = name.charAt(0);
-                if (lastChar != nextChar) {
-                    output.append(header);
-                    lastChar = nextChar;
-                }
-
-                output.append("<tr>");
-                output.append("<th class='tv-th' style='text-align:left'>" +
-                    "<a target='CLDR-ST-LOCALE' href='" + baseUrl + "?_=")
-                    .append(localeID)
-                    .append("&x=r_vetting&p_covlev=default'>")
-                    .append(TransliteratorUtilities.toHTML.transform(name.replace('\uFFFE', ' ')))
-                    .append("</a></th>\n");
-                for (Choice choice : choices) {
-                    long count = problemCounter.get(choice);
-                    output.append("<td class='tvs-count'>");
-                    // if (choice == Choice.weLost) {
-                    // output.append("<i>n/a</i>");
-                    // } else {
-                    output.append(nf.format(count));
-                    // }
-                    output.append("</td>\n");
-                }
-                output.append("</tr>\n");
-
-                if (output instanceof Writer) {
-                    ((Writer) output).flush();
+            if (organization.equals(Organization.surveytool)) {
+                writeSummaryTable(output, header, Level.COMPREHENSIVE, choices, organization);
+            } else {
+                for (Level level : Level.values()) {
+                    writeSummaryTable(output, header, level, choices, organization);
                 }
             }
-            output.append(header);
-            output.append("</table>");
         } catch (IOException e) {
             throw new IllegalArgumentException(e); // dang'ed checked exceptions
         }
 
     }
 
+    private void writeSummaryTable(Appendable output, String header, Level desiredLevel,
+        EnumSet<Choice> choices, T organization) throws IOException {
+
+        Map<String, String> sortedNames = new TreeMap(Collator.getInstance());
+
+        // Gather the relevant paths
+        // Each one will be marked with the choice that it triggered.
+
+        // TODO Fix HACK
+        // We are going to ignore the predicate for now, just using the locales that have explicit coverage.
+        // in that locale, or allow all locales for admin@
+        LocalesWithExplicitLevel includeLocale = new LocalesWithExplicitLevel((Organization) organization, desiredLevel);
+
+        for (String localeID : cldrFactory.getAvailable()) {
+            if (defaultContentLocales.contains(localeID)
+                || localeID.equals("en")
+                || !includeLocale.is(localeID)) {
+                continue;
+            }
+
+            sortedNames.put(getName(localeID), localeID);
+        }
+        if (sortedNames.isEmpty()) {
+            return;
+        }
+
+        EnumSet<Choice> thingsThatRequireOldFile = EnumSet.of(Choice.englishChanged, Choice.missingCoverage, Choice.changedOldValue);
+        EnumSet<Choice> ourChoicesThatRequireOldFile = choices.clone();
+        ourChoicesThatRequireOldFile.retainAll(thingsThatRequireOldFile);
+        output.append("<h2>Level: ").append(desiredLevel.toString()).append("</h2>");
+        output.append("<table class='tvs-table'>\n");
+        char lastChar = ' ';
+        Map<String, FileInfo> localeNameToFileInfo = new TreeMap();
+        FileInfo totals = new FileInfo();
+
+        for (Entry<String, String> entry : sortedNames.entrySet()) {
+            String name = entry.getKey();
+            String localeID = entry.getValue();
+            // Initialize
+
+            CLDRFile sourceFile = cldrFactory.make(localeID, true);
+
+            CLDRFile lastSourceFile = null;
+            if (!ourChoicesThatRequireOldFile.isEmpty()) {
+                try {
+                    lastSourceFile = cldrFactoryOld.make(localeID, true);
+                } catch (Exception e) {
+                }
+            }
+            Level level = Level.MODERN;
+            if (organization != null) {
+                level = StandardCodes.make().getLocaleCoverageLevel(organization.toString(), localeID);
+            }
+            FileInfo fileInfo = new FileInfo().
+                getFileInfo(sourceFile, lastSourceFile, null, choices, localeID, true, organization, level);
+            localeNameToFileInfo.put(name, fileInfo);
+            totals.addAll(fileInfo);
+
+            char nextChar = name.charAt(0);
+            if (lastChar != nextChar) {
+                output.append(header);
+                lastChar = nextChar;
+            }
+
+            writeSummaryRow(output, choices, fileInfo.problemCounter, name, localeID);
+
+            if (output instanceof Writer) {
+                ((Writer) output).flush();
+            }
+        }
+        output.append(header);
+        writeSummaryRow(output, choices, totals.problemCounter, "Total", null);
+        output.append("</table>");
+        if (SHOW_SUBTYPES) {
+            showSubtypes(output, sortedNames, localeNameToFileInfo, totals, true);
+            showSubtypes(output, sortedNames, localeNameToFileInfo, totals, false);
+        }
+    }
+
+    private void showSubtypes(Appendable output, Map<String, String> sortedNames,
+        Map<String, FileInfo> localeNameToFileInfo,
+        FileInfo totals,
+        boolean errors) throws IOException {
+        output.append("<h3>Details: ").append(errors ? "Error Types" : "Warning Types").append("</h3>");
+        output.append("<table class='tvs-table'>");
+        Counter<Subtype> subtypeCounterTotals = errors ? totals.errorSubtypeCounter : totals.warningSubtypeCounter;
+        Set<Subtype> sortedBySize = subtypeCounterTotals.getKeysetSortedByCount(false);
+
+        // header
+        writeDetailHeader(subtypeCounterTotals, sortedBySize, output);
+
+        // items
+        for (Entry<String, FileInfo> entry : localeNameToFileInfo.entrySet()) {
+            Counter<Subtype> counter = errors ? entry.getValue().errorSubtypeCounter : entry.getValue().warningSubtypeCounter;
+            if (counter.getTotal() == 0) {
+                continue;
+            }
+            String name = entry.getKey();
+            String[] names = name.split(SPLIT_CHAR);
+            String localeID = sortedNames.get(name);
+            output.append("<tr>").append(TH_AND_STYLES);
+            appendNameAndCode(name, localeID, output);
+            output.append("</th>");
+            for (Subtype subtype : sortedBySize) {
+                long count = counter.get(subtype);
+                output.append("<td class='tvs-count'>");
+                if (count != 0) {
+                    output.append(nf.format(count));
+                }
+                output.append("</td>");
+            }
+        }
+
+        // subtotals
+        writeDetailHeader(subtypeCounterTotals, sortedBySize, output);
+        output.append("<tr>").append(TH_AND_STYLES).append("<i>Total</i>").append("</th>").append(TH_AND_STYLES).append("</th>");
+        for (Subtype subtype : sortedBySize) {
+            long count = subtypeCounterTotals.get(subtype);
+            output.append("<td class='tvs-count'>");
+            if (count != 0) {
+                output.append("<b>").append(nf.format(count)).append("</b>");
+            }
+            output.append("</td>");
+        }
+        output.append("</table>");
+    }
+
+    private void writeDetailHeader(Counter<Subtype> subtypeCounterTotals, Set<Subtype> sortedBySize, Appendable output) throws IOException {
+        output.append("<tr>")
+            .append(TH_AND_STYLES).append("Name").append("</th>")
+            .append(TH_AND_STYLES).append("ID").append("</th>");
+        for (Subtype subtype : sortedBySize) {
+            output.append(TH_AND_STYLES).append(subtype.toString()).append("</th>");
+        }
+    }
+
+    private void writeSummaryRow(Appendable output, EnumSet<Choice> choices, Counter<Choice> problemCounter,
+        String name, String localeID) throws IOException {
+        output
+            .append("<tr>")
+            .append(TH_AND_STYLES);
+        if (localeID == null) {
+            output
+                .append("<i>")
+                .append(name)
+                .append("</i>")
+                .append("</th>")
+                .append(TH_AND_STYLES);
+        } else {
+            appendNameAndCode(name, localeID, output);
+        }
+        output.append("</th>\n");
+        for (Choice choice : choices) {
+            long count = problemCounter.get(choice);
+            output.append("<td class='tvs-count'>");
+            if (localeID == null) {
+                output.append("<b>");
+            }
+            output.append(nf.format(count));
+            if (localeID == null) {
+                output.append("</b>");
+            }
+            output.append("</td>\n");
+        }
+        output.append("</tr>\n");
+    }
+
+    private void appendNameAndCode(String name, String localeID, Appendable output) throws IOException {
+        String[] names = name.split(SPLIT_CHAR);
+        output
+            .append("<a target='CLDR-ST-LOCALE' href='" + baseUrl + "?_=")
+            .append(localeID)
+            .append("&x=r_vetting&p_covlev=default'>")
+            .append(TransliteratorUtilities.toHTML.transform(names[0]))
+            .append("</a>")
+            .append("</th>")
+            .append(TH_AND_STYLES)
+            .append("<code>")
+            .append(names[1])
+            .append("</code>");
+    }
+
     LanguageTagParser ltp = new LanguageTagParser();
 
-    private String getName(String localeID, Relation<String, String> localeToDefaultContents) {
-        String localeIDs = localeID;
-        Set<String> contents = localeToDefaultContents.get(localeID);
-        if (contents != null) {
-            for (String item : contents) {
-                localeIDs += ", " + item;
-            }
-        }
-        ltp.set(localeID);
-        String name = oldEnglishFile.getName(CLDRFile.LANGUAGE_NAME, ltp.getLanguage());
-        String script = ltp.getScript();
-        String region = ltp.getRegion();
-        if (script.isEmpty()) {
-            if (region.isEmpty()) {
-                // nothing
-            } else {
-                name += " (" + oldEnglishFile.getName(CLDRFile.TERRITORY_NAME, region) + ")";
-            }
-        } else {
-            if (region.isEmpty()) {
-                name += " (" + oldEnglishFile.getName(CLDRFile.SCRIPT_NAME, script) + ")";
-            } else {
-                name += " (" + oldEnglishFile.getName(CLDRFile.SCRIPT_NAME, script)
-                    + ", " + oldEnglishFile.getName(CLDRFile.TERRITORY_NAME, region) + ")";
-            }
-        }
-
-        name += "\uFFFE[" + localeIDs + "]";
+    private String getName(String localeID) {
+        Set<String> contents = supplementalDataInfo.getEquivalentsForLocale(localeID);
+        // put in special character that can be split on later
+        String name = englishFile.getName(localeID, true, CLDRFile.SHORT_ALTS) + SPLIT_CHAR + gatherCodes(contents);
         return name;
     }
 
-    static final RegexLookup<String> missingOk = new RegexLookup<String>()
-        .setPatternTransform(
-            RegexLookup.RegexFinderTransformPath)
+    /**
+     * Collapse the names
+     {en_Cyrl, en_Cyrl_US} => en_Cyrl(_US)
+     {en_GB, en_Latn_GB} => en(_Latn)_GB
+     {en, en_US, en_Latn, en_Latn_US} => en(_Latn)(_US)
+     {az_IR, az_Arab, az_Arab_IR} => az_IR, az_Arab(_IR)
+     */
+    public static String gatherCodes(Set<String> contents) {
+        Set<Set<String>> source = new LinkedHashSet<Set<String>>();
+        for (String s : contents) {
+            source.add(new LinkedHashSet<String>(Arrays.asList(s.split("_"))));
+        }
+        Set<Set<String>> oldSource = new LinkedHashSet<Set<String>>();
+
+        do {
+            // exchange source/target
+            oldSource.clear();
+            oldSource.addAll(source);
+            source.clear();
+            Set<String> last = null;
+            for (Set<String> ss : oldSource) {
+                if (last == null) {
+                    last = ss;
+                } else {
+                    if (ss.containsAll(last)) {
+                        last = combine(last, ss);
+                    } else {
+                        source.add(last);
+                        last = ss;
+                    }
+                }
+            }
+            source.add(last);
+        } while (oldSource.size() != source.size());
+
+        StringBuilder b = new StringBuilder();
+        for (Set<String> stringSet : source) {
+            if (b.length() != 0) {
+                b.append(", ");
+            }
+            String sep = "";
+            for (String string : stringSet) {
+                if (string.startsWith(CONNECT_PREFIX)) {
+                    b.append(string + CONNECT_SUFFIX);
+                } else {
+                    b.append(sep + string);
+                }
+                sep = "_";
+            }
+        }
+        return b.toString();
+    }
+
+    private static Set<String> combine(Set<String> last, Set<String> ss) {
+        LinkedHashSet<String> result = new LinkedHashSet<String>();
+        for (String s : ss) {
+            if (last.contains(s)) {
+                result.add(s);
+            } else {
+                result.add(CONNECT_PREFIX + s);
+            }
+        }
+        return result;
+    }
+
+    public enum MissingOK {
+        ok, latin, alias, compact
+    }
+
+    public static Transform<String, MissingOK> MISSING_STATUS_TRANSFORM = new Transform<String, MissingOK>() {
+        public MissingOK transform(String source) {
+            return MissingOK.valueOf(source);
+        }
+    };
+
+    static final RegexLookup<MissingOK> missingOk = new RegexLookup<MissingOK>()
+        .setPatternTransform(RegexLookup.RegexFinderTransformPath)
+        .setValueTransform(MISSING_STATUS_TRANSFORM)
         .loadFromFile(
             VettingViewer.class,
             "data/paths/missingOk.txt");
 
-    private static boolean isMissingOk(String path, boolean latin, boolean aliased) {
-        String value = missingOk.get(path);
+    private static boolean isMissingOk(CLDRFile sourceFile, String path, boolean latin, boolean aliased) {
+        Output<String[]> arguments = new Output();
+        MissingOK value = missingOk.get(path, null, arguments);
         if (value == null) {
             return false;
         }
-        if (value.equals("ok")) {
+        switch (value) {
+        case ok:
             return true;
-        }
-        if (value.equals("latin")) {
+        case latin:
             return latin;
-        }
-        if (value.equals("alias")) {
+        case alias:
             return aliased;
+        case compact:
+            // special processing for compact numbers
+            if (path.contains("[@count=\"other\"]")) {
+                return false; // the 'other' class always counts as missing
+            }
+            String otherPath = "//ldml/numbers/decimalFormats[@numberSystem=\"" + arguments.value[1]
+                + "\"]/decimalFormatLength[@type=\"" + arguments.value[2]
+                + "\"]/decimalFormat[@type=\"standard\"]/pattern[@type=\"" + arguments.value[3]
+                + "\"][@count=\"other\"]";
+            String otherValue = sourceFile.getWinningValue(otherPath);
+            if (otherValue == null) {
+                return false; // something's wrong, bail
+            }
+            int digits = countZeros(otherValue);
+            if (digits > 4) { // we can only handle to 4 digits
+                return false;
+            }
+            // if there are no possible Count values for this many digits, then it is ok to be missing.
+            Count c = Count.valueOf(arguments.value[4]);
+            SupplementalDataInfo supplementalDataInfo2 = SupplementalDataInfo.getInstance(sourceFile.getSupplementalDirectory());
+            PluralInfo plurals = supplementalDataInfo2.getPlurals(sourceFile.getLocaleID());
+            return !plurals.hasSamples(c, digits); // ok if no samples
+            // TODO: handle fractions
+        default:
+            throw new IllegalArgumentException();
         }
-        throw new IllegalArgumentException();
+    }
+
+    private static int countZeros(String otherValue) {
+        int result = 0;
+        for (int i = 0; i < otherValue.length(); ++i) {
+            if (otherValue.charAt(i) == '0') {
+                ++result;
+            }
+        }
+        return result;
     }
 
     public enum MissingStatus {
@@ -1073,7 +1331,7 @@ public class VettingViewer<T> {
         if (sourceFile == null) {
             return MissingStatus.ABSENT;
         }
-        if ("root".equals(sourceFile.getLocaleID())) {
+        if ("root".equals(sourceFile.getLocaleID()) || path.startsWith("//ldml/layout/orientation/")) {
             return MissingStatus.MISSING_OK;
         }
         if (path.equals(TEST_PATH)) {
@@ -1085,7 +1343,7 @@ public class VettingViewer<T> {
         boolean isAliased = path.equals(status.pathWhereFound);
 
         if (value == null) {
-            result = isMissingOk(path, latin, isAliased) ? MissingStatus.MISSING_OK : MissingStatus.ABSENT;
+            result = isMissingOk(sourceFile, path, latin, isAliased) ? MissingStatus.MISSING_OK : MissingStatus.ABSENT;
         } else {
             String localeFound = sourceFile.getSourceLocaleID(path, status);
 
@@ -1095,7 +1353,8 @@ public class VettingViewer<T> {
                 || localeFound.equals(XMLSource.CODE_FALLBACK_ID)
             // || voteStatus == VoteStatus.provisionalOrWorse
             ) {
-                result = isMissingOk(path, latin, isAliased) ? MissingStatus.ROOT_OK : MissingStatus.ABSENT;
+                result = isMissingOk(sourceFile, path, latin, isAliased)
+                    || sourceFile.getLocaleID().equals("en") ? MissingStatus.ROOT_OK : MissingStatus.ABSENT;
             } else if (isAliased) {
                 result = MissingStatus.PRESENT;
                 // } else if (path.contains("decimalFormatLength[@type=\"long\"]") &&
@@ -1116,6 +1375,20 @@ public class VettingViewer<T> {
     public static boolean isLatinScriptLocale(CLDRFile sourceFile) {
         UnicodeSet main = sourceFile.getExemplarSet("", WinningChoice.WINNING);
         return LATIN.containsSome(main);
+    }
+
+    private static StringBuilder appendToMessage(CharSequence usersValue, EnumSet<Subtype> subtypes, StringBuilder testMessage) {
+        if (subtypes != null) {
+            usersValue = "&lt;" + CollectionUtilities.join(subtypes, ", ") + "&gt; " + usersValue;
+        }
+        return appendToMessage(usersValue, testMessage);
+    }
+
+    private static StringBuilder appendToMessage(CharSequence usersValue, Subtype subtype, StringBuilder testMessage) {
+        if (subtype != null) {
+            usersValue = "&lt;" + subtype + "&gt; " + usersValue;
+        }
+        return appendToMessage(usersValue, testMessage);
     }
 
     private static StringBuilder appendToMessage(CharSequence usersValue, StringBuilder testMessage) {
@@ -1221,10 +1494,11 @@ public class VettingViewer<T> {
 
     private void writeTables(Appendable output, CLDRFile sourceFile, CLDRFile lastSourceFile,
         Relation<R2<SectionId, PageId>, WritingInfo> sorted,
-        Counter<Choice> problemCounter,
         EnumSet<Choice> choices,
         String localeID,
-        boolean nonVettingPhase) {
+        boolean nonVettingPhase,
+        FileInfo outputFileInfo
+        ) {
         try {
             boolean latin = VettingViewer.isLatinScriptLocale(sourceFile);
 
@@ -1250,7 +1524,7 @@ public class VettingViewer<T> {
             // }
 
             for (Choice choice : choices) {
-                long count = problemCounter.get(choice);
+                long count = outputFileInfo.problemCounter.get(choice);
                 output.append("<tr><td class='tvs-count'>")
                     .append(nf.format(count))
                     .append("</td>\n\t<td nowrap class='tvs-abb'>")
@@ -1301,7 +1575,7 @@ public class VettingViewer<T> {
                 PageId subsection = entry0.getKey().get1();
                 final Set<WritingInfo> rows = entry0.getValue();
 
-                String url = rows.iterator().next().getUrl(localeId);
+                rows.iterator().next().getUrl(localeId);
                 // http://kwanyin.unicode.org/cldr-apps/survey?_=ur&x=scripts
                 // http://unicode.org/cldr-apps/survey?_=ur&x=scripts
 
@@ -1396,7 +1670,7 @@ public class VettingViewer<T> {
     }
 
     private String getPageUrl(String localeId, PageId subsection) {
-        return baseUrl + "?_=" + localeId + "&x=" + subsection;
+        return PathHeader.getPageUrl(baseUrl, localeId, subsection);
     }
 
     private void startTable(Set<Choice> choices, Appendable output) throws IOException {
@@ -1436,24 +1710,131 @@ public class VettingViewer<T> {
     }
 
     /**
+     * Find the status of the items in the file.
+     * @param file the source. Must be a resolved file, made with minimalDraftStatus = unconfirmed
+     * @param pathHeaderFactory PathHeaderFactory.
+     * @param foundCounter output counter of the number of paths with values having contributed or approved status
+     * @param unconfirmedCounter output counter of the number of paths with values, but neither contributed nor approved status
+     * @param missingCounter output counter of the number of paths without values
+     * @param missingPaths output if not null, the specific paths that are missing.
+     * @param unconfirmedPaths TODO
+     */
+    public static void getStatus(CLDRFile file, PathHeader.Factory pathHeaderFactory,
+        Counter<Level> foundCounter, Counter<Level> unconfirmedCounter,
+        Counter<Level> missingCounter,
+        Relation<MissingStatus, String> missingPaths,
+        Set<String> unconfirmedPaths) {
+        getStatus(file.fullIterable(), file, pathHeaderFactory, foundCounter, unconfirmedCounter, missingCounter, missingPaths, unconfirmedPaths);
+    }
+
+    /**
+     * Find the status of the items in the file.
+     * @param allPaths manual list of paths
+     * @param file the source. Must be a resolved file, made with minimalDraftStatus = unconfirmed
+     * @param pathHeaderFactory PathHeaderFactory.
+     * @param foundCounter output counter of the number of paths with values having contributed or approved status
+     * @param unconfirmedCounter output counter of the number of paths with values, but neither contributed nor approved status
+     * @param missingCounter output counter of the number of paths without values
+     * @param missingPaths output if not null, the specific paths that are missing.
+     * @param unconfirmedPaths TODO
+     */
+    public static void getStatus(Iterable<String> allPaths, CLDRFile file,
+        PathHeader.Factory pathHeaderFactory, Counter<Level> foundCounter,
+        Counter<Level> unconfirmedCounter,
+        Counter<Level> missingCounter,
+        Relation<MissingStatus, String> missingPaths, Set<String> unconfirmedPaths) {
+
+        if (!file.isResolved()) {
+            throw new IllegalArgumentException("File must be resolved, no minimal draft status");
+        }
+        foundCounter.clear();
+        unconfirmedCounter.clear();
+        missingCounter.clear();
+
+        Status status = new Status();
+        boolean latin = VettingViewer.isLatinScriptLocale(file);
+        CoverageLevel2 coverageLevel2 = CoverageLevel2.getInstance(file.getLocaleID());
+
+        for (String path : allPaths) {
+
+            PathHeader ph = pathHeaderFactory.fromPath(path);
+            if (ph.getSectionId() == SectionId.Special) {
+                continue;
+            }
+
+            Level level = coverageLevel2.getLevel(path);
+            String localeFound = file.getSourceLocaleID(path, status);
+            // String value = file.getSourceLocaleID(path, status);
+            MissingStatus missingStatus = VettingViewer.getMissingStatus(file, path, status, latin);
+
+            switch (missingStatus) {
+            case ABSENT:
+                missingCounter.add(level, 1);
+                if (missingPaths != null && level.compareTo(Level.MODERN) <= 0) {
+                    missingPaths.put(missingStatus, path);
+                }
+                break;
+            case ALIASED:
+            case PRESENT:
+                String fullPath = file.getFullXPath(path);
+                if (fullPath.contains("unconfirmed")
+                    || fullPath.contains("provisional")) {
+                    unconfirmedCounter.add(level, 1);
+                    if (unconfirmedPaths != null && level.compareTo(Level.MODERN) <= 0) {
+                        unconfirmedPaths.add(path);
+                    }
+                } else {
+                    foundCounter.add(level, 1);
+                }
+                break;
+            case MISSING_OK:
+            case ROOT_OK:
+                break;
+            default:
+                throw new IllegalArgumentException();
+            }
+        }
+    }
+
+    /**
      * Simple example of usage
      * 
      * @param args
      * @throws IOException
      */
-    static final String myOutputDir = CldrUtility.TMP_DIRECTORY + "dropbox/mark/vetting/";
+    final static Options myOptions = new Options();
+
+    enum MyOptions {
+        filter(".*", ".*", "Filter files"),
+        locale(".*", "af", "Single locale for testing"),
+        source(".*", CldrUtility.TMP2_DIRECTORY + "/vxml/common/main",
+            "if summary, creates filtered version (eg -d main): does a find in the name, which is of the form dir/file"),
+        verbose(null, null, "verbose debugging messages"),
+        output(".*", CldrUtility.TMP_DIRECTORY + "dropbox/mark/vetting/", "filter the raw files (non-summary, mostly for debugging)"), ;
+        // boilerplate
+        final Option option;
+
+        MyOptions(String argumentPattern, String defaultArgument, String helpText) {
+            option = myOptions.add(this, argumentPattern, defaultArgument, helpText);
+        }
+    }
 
     public static void main(String[] args) throws IOException {
+        SHOW_SUBTYPES = true;
+        myOptions.parse(MyOptions.source, args, true);
+        String fileFilter = MyOptions.filter.option.getValue();
+        String myOutputDir = MyOptions.output.option.getValue();
+        String LOCALE = MyOptions.locale.option.getValue();
+        String CURRENT_MAIN = MyOptions.source.option.getValue();
         Timer timer = new Timer();
         timer.start();
-        final String version = "2.0.1";
+        final String version = "23.0";
         final String lastMain = "/Users/markdavis/Google Drive/Backup-2012-10-09/Documents/indigo/cldr-archive/cldr-" +
-            version +
-            "/common/main";
+            version + "/common/main";
 
-        Factory cldrFactory = Factory.make(CURRENT_MAIN, ".*");
+        Factory cldrFactory = Factory.make(CURRENT_MAIN, fileFilter);
         cldrFactory.setSupplementalDirectory(new File(CldrUtility.SUPPLEMENTAL_DIRECTORY));
-        Factory cldrFactoryOld = Factory.make(lastMain, ".*");
+        Factory cldrFactoryOld = Factory.make(lastMain, fileFilter);
         SupplementalDataInfo supplementalDataInfo = SupplementalDataInfo
             .getInstance(CldrUtility.SUPPLEMENTAL_DIRECTORY);
         CheckCLDR.setDisplayInformation(cldrFactory.make("en", true));
@@ -1463,8 +1844,8 @@ public class VettingViewer<T> {
         UsersChoice<Organization> usersChoice = new UsersChoice<Organization>() {
             // Fake values for now
             public String getWinningValueForUsersOrganization(CLDRFile cldrFile, String path, Organization user) {
-                if (path.contains("AFN")) {
-                    return "dummy ‘losing’ value";
+                if (path.contains("USD")) {
+                    return "&dummy ‘losing’ value";
                 }
                 return null; // assume we didn't vote on anything else.
             }
@@ -1473,8 +1854,8 @@ public class VettingViewer<T> {
             public VoteStatus getStatusForUsersOrganization(CLDRFile cldrFile, String path, Organization user) {
                 String usersValue = getWinningValueForUsersOrganization(cldrFile, path, user);
                 String winningValue = cldrFile.getWinningValue(path);
-                if (CharSequences.equals(usersValue, winningValue)) {
-                    return VoteStatus.ok;
+                if (usersValue != null && !CharSequences.equals(usersValue, winningValue)) {
+                    return VoteStatus.losing;
                 }
                 String fullPath = cldrFile.getFullXPath(path);
                 if (fullPath.contains("AMD") || fullPath.contains("unconfirmed") || fullPath.contains("provisional")) {
@@ -1514,18 +1895,18 @@ public class VettingViewer<T> {
         // System.out.println(timer.getDuration() / NANOSECS + " secs");
 
         timer.start();
-        writeFile(tableView, choiceSet, "", localeStringID, userNumericID, usersLevel, CodeChoice.newCode, null);
+        writeFile(myOutputDir, tableView, choiceSet, "", localeStringID, userNumericID, usersLevel, CodeChoice.newCode, null);
         System.out.println(timer.getDuration() / NANOSECS + " secs");
 
         timer.start();
-        writeFile(tableView, choiceSet, "", localeStringID, userNumericID, usersLevel, CodeChoice.summary,
+        writeFile(myOutputDir, tableView, choiceSet, "", localeStringID, userNumericID, usersLevel, CodeChoice.summary,
             Organization.google);
         System.out.println(timer.getDuration() / NANOSECS + " secs");
 
-        timer.start();
-        writeFile(tableView, choiceSet, "", localeStringID, userNumericID, usersLevel, CodeChoice.summary,
-            Organization.ibm);
-        System.out.println(timer.getDuration() / NANOSECS + " secs");
+        //        timer.start();
+        //        writeFile(tableView, choiceSet, "", localeStringID, userNumericID, usersLevel, CodeChoice.summary,
+        //                Organization.ibm);
+        //        System.out.println(timer.getDuration() / NANOSECS + " secs");
 
         // // check that the choices work.
         // for (Choice choice : choiceSet) {
@@ -1545,14 +1926,13 @@ public class VettingViewer<T> {
         summary
     }
 
-    private static void writeFile(VettingViewer<Organization> tableView, final EnumSet<Choice> choiceSet,
+    private static void writeFile(String myOutputDir, VettingViewer<Organization> tableView, final EnumSet<Choice> choiceSet,
         String name, String localeStringID, int userNumericID,
         Level usersLevel,
         CodeChoice newCode, Organization organization)
         throws IOException {
         // open up a file, and output some of the styles to control the table
         // appearance
-
         PrintWriter out = BagFormatter.openUTF8Writer(myOutputDir, "vettingView"
             + name
             + (newCode == CodeChoice.newCode ? "" : newCode == CodeChoice.summary ? "-summary" : "")
@@ -1590,7 +1970,8 @@ public class VettingViewer<T> {
         // tableView.generateHtmlErrorTablesOld(out, choiceSet, localeStringID, userNumericID, usersLevel, SHOW_ALL);
         // break;
         case summary:
-            tableView.generateSummaryHtmlErrorTables(out, choiceSet, HackIncludeLocalesWithVotes, organization);
+            //System.out.println(tableView.getName("zh_Hant_HK"));
+            tableView.generateSummaryHtmlErrorTables(out, choiceSet, null, organization);
             break;
         }
         out.println("</body>\n</html>\n");

@@ -10,6 +10,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo;
+import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo.Count;
 
 import com.ibm.icu.dev.util.BagFormatter;
 import com.ibm.icu.dev.util.TransliteratorUtilities;
@@ -20,6 +25,8 @@ import com.ibm.icu.text.DateTimePatternGenerator;
 import com.ibm.icu.text.DateTimePatternGenerator.FormatParser;
 import com.ibm.icu.text.DateTimePatternGenerator.PatternInfo;
 import com.ibm.icu.text.DateTimePatternGenerator.VariableField;
+import com.ibm.icu.text.DecimalFormat;
+import com.ibm.icu.text.MessageFormat;
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.Calendar;
 import com.ibm.icu.util.DateInterval;
@@ -27,8 +34,11 @@ import com.ibm.icu.util.TimeZone;
 import com.ibm.icu.util.ULocale;
 
 public class DateTimeFormats {
+    private static SupplementalDataInfo sdi = SupplementalDataInfo.getInstance();
+    private static Map<String, PreferredAndAllowedHour> timeData = sdi.getTimeData();
+
     private static final String TIMES_24H_TITLE = "Times 24h";
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private static final String DEBUG_SKELETON = "y";
     private static final ULocale DEBUG_LIST_PATTERNS = ULocale.JAPANESE; // or null;
 
@@ -141,8 +151,8 @@ public class DateTimeFormats {
         }
 
         // field names result.setAppendItemName(i, value);
-        // ldml/dates/calendars/calendar[@type="gregorian"]/fields/field[@type="day"]/displayName
-        for (String path : With.in(file.iterator("//ldml/dates/calendars/calendar[@type=\"gregorian\"]/fields/field"))) {
+        // ldml/dates/fields/field[@type="day"]/displayName
+        for (String path : With.in(file.iterator("//ldml/dates/fields/field"))) {
             if (!path.contains("displayName")) {
                 continue;
             }
@@ -213,89 +223,89 @@ public class DateTimeFormats {
     private static final String[][] NAME_AND_PATTERN = {
         { "-", "Full Month" },
         { "year month", "yMMMM" },
-        { "&nbsp;&nbsp;&nbsp;to  month+1", "yMMMM/M" },
-        { "&nbsp;&nbsp;&nbsp;to  year+1", "yMMMM/y" },
+        { " to  month+1", "yMMMM/M" },
+        { " to  year+1", "yMMMM/y" },
         { "year month day", "yMMMMd" },
-        { "&nbsp;&nbsp;&nbsp;to  day+1", "yMMMMd/d" },
-        { "&nbsp;&nbsp;&nbsp;to  month+1", "yMMMMd/M" },
-        { "&nbsp;&nbsp;&nbsp;to  year+1", "yMMMMd/y" },
+        { " to  day+1", "yMMMMd/d" },
+        { " to  month+1", "yMMMMd/M" },
+        { " to  year+1", "yMMMMd/y" },
         { "year month day weekday", "yMMMMEEEEd" },
-        { "&nbsp;&nbsp;&nbsp;to  day+1", "yMMMMEEEEd/d" },
-        { "&nbsp;&nbsp;&nbsp;to  month+1", "yMMMMEEEEd/M" },
-        { "&nbsp;&nbsp;&nbsp;to  year+1", "yMMMMEEEEd/y" },
+        { " to  day+1", "yMMMMEEEEd/d" },
+        { " to  month+1", "yMMMMEEEEd/M" },
+        { " to  year+1", "yMMMMEEEEd/y" },
         { "month day", "MMMMd" },
-        { "&nbsp;&nbsp;&nbsp;to  day+1", "MMMMd/d" },
-        { "&nbsp;&nbsp;&nbsp;to  month+1", "MMMMd/M" },
+        { " to  day+1", "MMMMd/d" },
+        { " to  month+1", "MMMMd/M" },
         { "month day weekday", "MMMMEEEEd" },
-        { "&nbsp;&nbsp;&nbsp;to  day+1", "MMMMEEEEd/d" },
-        { "&nbsp;&nbsp;&nbsp;to  month+1", "MMMMEEEEd/M" },
+        { " to  day+1", "MMMMEEEEd/d" },
+        { " to  month+1", "MMMMEEEEd/M" },
 
         { "-", "Abbreviated Month" },
         { "year month<sub>a</sub>", "yMMM" },
-        { "&nbsp;&nbsp;&nbsp;to  month+1", "yMMM/M" },
-        { "&nbsp;&nbsp;&nbsp;to  year+1", "yMMM/y" },
+        { " to  month+1", "yMMM/M" },
+        { " to  year+1", "yMMM/y" },
         { "year month<sub>a</sub> day", "yMMMd" },
-        { "&nbsp;&nbsp;&nbsp;to  day+1", "yMMMd/d" },
-        { "&nbsp;&nbsp;&nbsp;to  month+1", "yMMMd/M" },
-        { "&nbsp;&nbsp;&nbsp;to  year+1", "yMMMd/y" },
+        { " to  day+1", "yMMMd/d" },
+        { " to  month+1", "yMMMd/M" },
+        { " to  year+1", "yMMMd/y" },
         { "year month<sub>a</sub> day weekday", "yMMMEd" },
-        { "&nbsp;&nbsp;&nbsp;to  day+1", "yMMMEd/d" },
-        { "&nbsp;&nbsp;&nbsp;to  month+1", "yMMMEd/M" },
-        { "&nbsp;&nbsp;&nbsp;to  year+1", "yMMMEd/y" },
+        { " to  day+1", "yMMMEd/d" },
+        { " to  month+1", "yMMMEd/M" },
+        { " to  year+1", "yMMMEd/y" },
         { "month<sub>a</sub> day", "MMMd" },
-        { "&nbsp;&nbsp;&nbsp;to  day+1", "MMMd/d" },
-        { "&nbsp;&nbsp;&nbsp;to  month+1", "MMMd/M" },
+        { " to  day+1", "MMMd/d" },
+        { " to  month+1", "MMMd/M" },
         { "month<sub>a</sub> day weekday", "MMMEd" },
-        { "&nbsp;&nbsp;&nbsp;to  day+1", "MMMEd/d" },
-        { "&nbsp;&nbsp;&nbsp;to  month+1", "MMMEd/M" },
+        { " to  day+1", "MMMEd/d" },
+        { " to  month+1", "MMMEd/M" },
 
         { "-", "Numeric Month" },
         { "year month<sub>n</sub>", "yM" },
-        { "&nbsp;&nbsp;&nbsp;to  month+1", "yM/M" },
-        { "&nbsp;&nbsp;&nbsp;to  year+1", "yM/y" },
+        { " to  month+1", "yM/M" },
+        { " to  year+1", "yM/y" },
         { "year month<sub>n</sub> day", "yMd" },
-        { "&nbsp;&nbsp;&nbsp;to  day+1", "yMd/d" },
-        { "&nbsp;&nbsp;&nbsp;to  month+1", "yMd/M" },
-        { "&nbsp;&nbsp;&nbsp;to  year+1", "yMd/y" },
+        { " to  day+1", "yMd/d" },
+        { " to  month+1", "yMd/M" },
+        { " to  year+1", "yMd/y" },
         { "year month<sub>n</sub> day weekday", "yMEd" },
-        { "&nbsp;&nbsp;&nbsp;to  day+1", "yMEd/d" },
-        { "&nbsp;&nbsp;&nbsp;to  month+1", "yMEd/M" },
-        { "&nbsp;&nbsp;&nbsp;to  year+1", "yMEd/y" },
+        { " to  day+1", "yMEd/d" },
+        { " to  month+1", "yMEd/M" },
+        { " to  year+1", "yMEd/y" },
         { "month<sub>n</sub> day", "Md" },
-        { "&nbsp;&nbsp;&nbsp;to  day+1", "Md/d" },
-        { "&nbsp;&nbsp;&nbsp;to  month+1", "Md/M" },
+        { " to  day+1", "Md/d" },
+        { " to  month+1", "Md/M" },
         { "month<sub>n</sub> day weekday", "MEd" },
-        { "&nbsp;&nbsp;&nbsp;to  day+1", "MEd/d" },
-        { "&nbsp;&nbsp;&nbsp;to  month+1", "MEd/M" },
+        { " to  day+1", "MEd/d" },
+        { " to  month+1", "MEd/M" },
 
         { "-", "Other Dates" },
         { "year", "y" },
-        { "&nbsp;&nbsp;&nbsp;to  year+1", "y/y" },
+        { " to  year+1", "y/y" },
         { "year quarter", "yQQQQ" },
         { "year quarter<sub>a</sub>", "yQQQ" },
         { "quarter", "QQQQ" },
         { "quarter<sub>a</sub>", "QQQ" },
         { "month", "MMMM" },
-        { "&nbsp;&nbsp;&nbsp;to  month+1", "MMMM/M" },
+        { " to  month+1", "MMMM/M" },
         { "month<sub>a</sub>", "MMM" },
-        { "&nbsp;&nbsp;&nbsp;to  month+1", "MMM/M" },
+        { " to  month+1", "MMM/M" },
         { "month<sub>n</sub>", "M" },
-        { "&nbsp;&nbsp;&nbsp;to  month+1", "M/M" },
+        { " to  month+1", "M/M" },
         { "day", "d" },
-        { "&nbsp;&nbsp;&nbsp;to  day+1", "d/d" },
+        { " to  day+1", "d/d" },
         { "day weekday", "Ed" },
-        { "&nbsp;&nbsp;&nbsp;to  day+1", "Ed/d" },
+        { " to  day+1", "Ed/d" },
         { "weekday", "EEEE" },
-        { "&nbsp;&nbsp;&nbsp;to  weekday+1", "EEEE/E" },
+        { " to  weekday+1", "EEEE/E" },
         { "weekday<sub>a</sub>", "E" },
-        { "&nbsp;&nbsp;&nbsp;to  weekday+1", "E/E" },
+        { " to  weekday+1", "E/E" },
 
         { "-", "Times" },
         { "hour", "j" },
-        { "&nbsp;&nbsp;&nbsp;to  hour+1", "j/j" },
+        { " to  hour+1", "j/j" },
         { "hour minute", "jm" },
-        { "&nbsp;&nbsp;&nbsp;to  minute+1", "jm/m" },
-        { "&nbsp;&nbsp;&nbsp;to  hour+1", "jm/j" },
+        { " to  minute+1", "jm/m" },
+        { " to  hour+1", "jm/j" },
         { "hour minute second", "jms" },
         { "minute second", "ms" },
         { "minute", "m" },
@@ -303,19 +313,62 @@ public class DateTimeFormats {
 
         { "-", TIMES_24H_TITLE },
         { "hour<sub>24</sub>", "H" },
-        { "&nbsp;&nbsp;&nbsp;to  hour+1", "H/H" },
+        { " to  hour+1", "H/H" },
         { "hour<sub>24</sub> minute", "Hm" },
-        { "&nbsp;&nbsp;&nbsp;to  minute+1", "Hm/m" },
-        { "&nbsp;&nbsp;&nbsp;to  hour+1", "Hm/H" },
+        { " to  minute+1", "Hm/m" },
+        { " to  hour+1", "Hm/H" },
         { "hour<sub>24</sub> minute second", "Hms" },
 
-        // { "-", "Timezones (used alone or with Time)" },
-        // { "location", "VVVV" },
-        // { "generic", "vvvv" },
-        // { "generic<sub>a</sub>", "v" },
-        // { "specific", "zzzz" },
-        // { "specific<sub>a</sub>", "z" },
-        // { "gmt", "ZZZZ" },
+        { "-", "Dates and Times" },
+        { "month, day, hour, minute", "Mdjm" },
+        { "month, day, hour, minute", "MMMdjm" },
+        { "month, day, hour, minute", "MMMMdjm" },
+        { "year month, day, hour, minute", "yMdjms" },
+        { "year month, day, hour, minute", "yMMMdjms" },
+        { "year month, day, hour, minute", "yMMMMdjms" },
+        { "year month, day, hour, minute, zone", "yMMMMdjmsv" },
+        { "year month, day, hour, minute, zone (long)", "yMMMMdjmsvvvv" },
+
+        { "-", "Relative Dates" },
+        { "3 years ago", "®year-past-long-3" },
+        { "2 years ago", "®year-past-long-2" },
+        { "Last year", "®year-1" },
+        { "This year", "®year0" },
+        { "Next year", "®year1" },
+        { "2 years from now", "®year-future-long-2" },
+        { "3 years from now", "®year-future-long-3" },
+
+        { "3 months ago", "®month-past-long-3" },
+        { "Last month", "®month-1" },
+        { "This month", "®month0" },
+        { "Next month", "®month1" },
+        { "3 months from now", "®month-future-long-3" },
+
+        { "6 weeks ago", "®week-past-long-3" },
+        { "Last week", "®week-1" },
+        { "This week", "®week0" },
+        { "Next week", "®week1" },
+        { "6 weeks from now", "®week-future-long-3" },
+
+        { "Last Sunday", "®sun-1" },
+        { "This Sunday", "®sun0" },
+        { "Next Sunday", "®sun1" },
+
+        { "Last Sunday + time", "®sun-1jm" },
+        { "This Sunday + time", "®sun0jm" },
+        { "Next Sunday + time", "®sun1jm" },
+
+        { "3 days ago", "®day-past-long-3" },
+        { "Yesterday", "®day-1" },
+        { "This day", "®day0" },
+        { "Tomorrow", "®day1" },
+        { "3 days from now", "®day-future-long-3" },
+
+        { "3 days ago + time", "®day-past-long-3jm" },
+        { "Last day + time", "®day-1jm" },
+        { "This day + time", "®day0jm" },
+        { "Next day + time", "®day1jm" },
+        { "3 days from now + time", "®day-future-long-3jm" },
     };
 
     private class Diff {
@@ -360,8 +413,7 @@ public class DateTimeFormats {
                     if (is24h && skeleton.contains("H")) {
                         continue;
                     }
-                    showRow(output, RowStyle.normal, name, skeleton,
-                        comparison.getExample(skeleton), getExample(skeleton), diff.isPresent(skeleton));
+                    showRow(output, RowStyle.normal, name, skeleton, comparison.getExample(skeleton), getExample(skeleton), diff.isPresent(skeleton));
                 }
             }
             if (!diff.availablePatterns.isEmpty()) {
@@ -382,8 +434,7 @@ public class DateTimeFormats {
                         || skeleton.equals("W") || skeleton.equals("w")) {
                         continue;
                     }
-                    showRow(output, RowStyle.normal, skeleton, skeleton,
-                        comparison.getExample(skeleton), getExample(skeleton), true);
+                    showRow(output, RowStyle.normal, skeleton, skeleton, comparison.getExample(skeleton), getExample(skeleton), true);
                 }
             }
             output.append("</table>");
@@ -400,31 +451,114 @@ public class DateTimeFormats {
      */
     private String getExample(String skeleton) {
         String example;
-        int slashPos = skeleton.indexOf('/');
-        if (slashPos >= 0) {
-            String mainSkeleton = skeleton.substring(0, slashPos);
-            DateIntervalFormat dateIntervalFormat = new DateIntervalFormat(mainSkeleton, dateIntervalInfo,
-                icuServiceBuilder.getDateFormat(calendarID, generator.getBestPattern(mainSkeleton)));
-            String diffString = skeleton.substring(slashPos + 1).replace('j', 'H');
-            int diffNumber = find(CALENDAR_FIELD_TO_PATTERN_LETTER, diffString);
-            Date endDate = SAMPLE_DATE_END[diffNumber];
-            try {
-                example = dateIntervalFormat.format(new DateInterval(SAMPLE_DATE.getTime(), endDate.getTime()));
-            } catch (Exception e) {
-                throw new IllegalArgumentException(skeleton + ", " + endDate, e);
-            }
+        if (skeleton.contains("®")) {
+            return getRelativeExampleFromSkeleton(skeleton);
         } else {
-            if (skeleton.equals(DEBUG_SKELETON)) {
-                int debug = 0;
+            int slashPos = skeleton.indexOf('/');
+            if (slashPos >= 0) {
+                String mainSkeleton = skeleton.substring(0, slashPos);
+                DateIntervalFormat dateIntervalFormat = new DateIntervalFormat(mainSkeleton, dateIntervalInfo,
+                    icuServiceBuilder.getDateFormat(calendarID, generator.getBestPattern(mainSkeleton)));
+                String diffString = skeleton.substring(slashPos + 1).replace('j', 'H');
+                int diffNumber = find(CALENDAR_FIELD_TO_PATTERN_LETTER, diffString);
+                Date endDate = SAMPLE_DATE_END[diffNumber];
+                try {
+                    example = dateIntervalFormat.format(new DateInterval(SAMPLE_DATE.getTime(), endDate.getTime()));
+                } catch (Exception e) {
+                    throw new IllegalArgumentException(skeleton + ", " + endDate, e);
+                }
+            } else {
+                if (skeleton.equals(DEBUG_SKELETON)) {
+                    int debug = 0;
+                }
+                SimpleDateFormat format = getDateFormatFromSkeleton(skeleton);
+                format.setTimeZone(TimeZone.getTimeZone("Europe/Paris"));
+                example = format.format(SAMPLE_DATE);
             }
-            SimpleDateFormat format = getDateFormat(skeleton);
-            example = format.format(SAMPLE_DATE);
         }
         return TransliteratorUtilities.toHTML.transform(example);
     }
 
-    public SimpleDateFormat getDateFormat(String skeleton) {
+    static final Pattern RELATIVE_DATE = Pattern.compile("®([a-z]+(?:-[a-z]+)?)+(-[a-z]+)?([+-]?\\d+)([a-zA-Z]+)?");
+
+    class RelativePattern {
+        private static final String UNIT_PREFIX = "//ldml/units/unitLength[@type=\"long\"]/unit[@type=\"duration-";
+        final String type;
+        final int offset;
+        final String time;
+        final String path;
+        final String value;
+
+        public RelativePattern(CLDRFile file, String skeleton) {
+            Matcher m = RELATIVE_DATE.matcher(skeleton);
+            if (m.matches()) {
+                type = m.group(1);
+                String length = m.group(2);
+                offset = Integer.parseInt(m.group(3));
+                String temp = m.group(4);
+                time = temp == null ? null : temp.replace('j', generator.getDefaultHourFormatChar());
+
+                if (-1 <= offset && offset <= 1) {
+                    //ldml/dates/fields/field[@type="year"]/relative[@type="-1"]
+                    path = "//ldml/dates/fields/field[@type=\"" + type + "\"]/relative[@type=\"" + offset + "\"]";
+                    value = file.getStringValue(path);
+                } else {
+                    // //ldml/units/unit[@type="hour"]/unitPattern[@count="other"]
+                    PluralInfo plurals = sdi.getPlurals(file.getLocaleID());
+                    String base = UNIT_PREFIX + type + "\"]/unitPattern[@count=\"";
+                    String tempPath = base + plurals.getCount(offset) + "\"]";
+                    String tempValue = file.getStringValue(tempPath);
+                    if (tempValue == null) {
+                        tempPath = base + Count.other + "\"]";
+                        tempValue = file.getStringValue(tempPath);
+                    }
+                    path = tempPath;
+                    value = tempValue;
+                }
+            } else {
+                throw new IllegalArgumentException(skeleton);
+            }
+        }
+    }
+
+    private String getRelativeExampleFromSkeleton(String skeleton) {
+        RelativePattern rp = new RelativePattern(file, skeleton);
+        String value = rp.value;
+        if (value == null) {
+            value = "unavailable";
+        } else {
+            DecimalFormat format = icuServiceBuilder.getNumberFormat(0);
+            value = value.replace("{0}", format.format(Math.abs(rp.offset)).replace("'", "''"));
+        }
+        if (rp.time == null) {
+            return value;
+        } else {
+            SimpleDateFormat format2 = getDateFormatFromSkeleton(rp.time);
+            format2.setTimeZone(GMT);
+            String formattedTime = format2.format(SAMPLE_DATE);
+            //                String length = skeleton.contains("MMMM") ? skeleton.contains("E") ? "full" : "long"
+            //                    : skeleton.contains("MMM") ? "medium" : "short";
+            String path2 = getDTSeparator("full");
+            String datetimePattern = file.getStringValue(path2).replace("'", "");
+            return MessageFormat.format(datetimePattern, formattedTime, value);
+        }
+    }
+
+    private String getDTSeparator(String length) {
+        String path = "//ldml/dates/calendars/calendar[@type=\"" +
+            calendarID +
+            "\"]/dateTimeFormats/dateTimeFormatLength[@type=\"" +
+            length +
+            "\"]/dateTimeFormat[@type=\"standard\"]/pattern[@type=\"standard\"]";
+        return path;
+    }
+
+    public SimpleDateFormat getDateFormatFromSkeleton(String skeleton) {
         String pattern = getBestPattern(skeleton);
+        return getDateFormat(pattern);
+    }
+
+    private SimpleDateFormat getDateFormat(String pattern) {
         SimpleDateFormat format = icuServiceBuilder.getDateFormat(calendarID, pattern);
         format.setTimeZone(GMT);
         return format;
@@ -469,12 +603,18 @@ public class DateTimeFormats {
             if (name.equals(FIELDS_TITLE)) {
                 output.append("<th class='dtf-th'>").append(name).append("</a></th>");
             } else {
-                output.append("<th class='dtf-left'>" + CldrUtility.getDoubleLinkedText(skeleton, name) + "</th>");
+                String indent = "";
+                if (name.startsWith(" ")) {
+                    indent = "&nbsp;&nbsp;&nbsp;";
+                    name = name.trim();
+                }
+                output.append("<th class='dtf-left'>" + indent + CldrUtility.getDoubleLinkedText(skeleton, name) + "</th>");
             }
             // .append(startCell).append(skeleton).append(endCell)
             output.append(startCell).append(english).append(endCell)
                 .append(startCell).append(example).append(endCell)
-                .append(startCell).append(isPresent ? "&nbsp;" : "c").append(endCell);
+            //.append(startCell).append(isPresent ? " " : "c").append(endCell)
+            ;
             if (rowStyle != RowStyle.header) {
                 String fix = getFix(skeleton);
                 if (fix != null) {
@@ -487,21 +627,26 @@ public class DateTimeFormats {
 
     private String getFix(String skeleton) {
         String path;
-        skeleton = skeleton.replace('j', generator.getDefaultHourFormatChar());
-        int slashPos = skeleton.indexOf('/');
-        if (slashPos >= 0) {
-            String mainSkeleton = skeleton.substring(0, slashPos);
-            String diff = skeleton.substring(slashPos + 1);
-            path = "//ldml/dates/calendars/calendar[@type=\"" + calendarID +
-                "\"]/dateTimeFormats/intervalFormats/intervalFormatItem[@id=\"" + mainSkeleton +
-                "\"]/greatestDifference[@id=\"" + diff +
-                "\"]";
+        String value;
+        if (skeleton.contains("®")) {
+            RelativePattern rp = new RelativePattern(file, skeleton);
+            path = rp.path;
+            value = rp.value;
         } else {
-            path = "//ldml/dates/calendars/calendar[@type=\"" + calendarID +
-                "\"]/dateTimeFormats/availableFormats/dateFormatItem[@id=\"" + skeleton +
-                "\"]";
+            skeleton = skeleton.replace('j', generator.getDefaultHourFormatChar());
+            int slashPos = skeleton.indexOf('/');
+            if (slashPos >= 0) {
+                String mainSkeleton = skeleton.substring(0, slashPos);
+                String diff = skeleton.substring(slashPos + 1);
+                path = "//ldml/dates/calendars/calendar[@type=\"" + calendarID +
+                    "\"]/dateTimeFormats/intervalFormats/intervalFormatItem[@id=\"" + mainSkeleton +
+                    "\"]/greatestDifference[@id=\"" + diff +
+                    "\"]";
+            } else {
+                path = getAvailableFormatPath(skeleton);
+            }
+            value = file.getStringValue(path);
         }
-        String value = file.getStringValue(path);
         if (value == null) {
             String skeleton2 = skeleton.replace("MMMM", "MMM").replace("EEEE", "E").replace("QQQQ", "QQQ");
             if (!skeleton.equals(skeleton2)) {
@@ -515,14 +660,15 @@ public class DateTimeFormats {
         return getFixFromPath(path);
     }
 
+    private String getAvailableFormatPath(String skeleton) {
+        String path = "//ldml/dates/calendars/calendar[@type=\"" + calendarID +
+            "\"]/dateTimeFormats/availableFormats/dateFormatItem[@id=\"" + skeleton +
+            "\"]";
+        return path;
+    }
+
     public String getFixFromPath(String path) {
-        String value = file.getStringValue(path);
-        if (value == null) {
-            return null;
-        }
-        String strid = Long.toHexString(StringId.getId(path));
-        return "<a href='" + surveyUrl + "?_=" + file.getLocaleID() +
-            "&strid=" + strid + "'><i>fix</i></a>";
+        return PathHeader.getLinkedView(surveyUrl, file, path);
     }
 
     /**
@@ -548,10 +694,17 @@ public class DateTimeFormats {
             addDateSubtable(
                 "//ldml/dates/calendars/calendar[@type=\"CALENDAR\"]/quarters/quarterContext[@type=\"FORMAT\"]/quarterWidth[@type=\"WIDTH\"]/quarter[@type=\"TYPE\"]",
                 english, output, "1", "2", "3", "4");
+            //            add24HourInfo();
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }
     }
+
+    //    private void add24HourInfo() {
+    //        PreferredAndAllowedHour timeInfo = timeData.get(locale);
+    //        
+    //        for (String loc : fac)
+    //    }
 
     private void addDateSubtable(String path, CLDRFile english, Appendable output, String... types) throws IOException {
         path = path.replace("CALENDAR", calendarID);
@@ -605,7 +758,7 @@ public class DateTimeFormats {
     }
 
     private static final boolean RETIRE = false;
-    private static final String LOCALES = "ja";
+    private static final String LOCALES = "en";
 
     /**
      * Produce a set of static tables from the vxml data. Only a stopgap until the above is integrated into ST.
@@ -711,7 +864,7 @@ public class DateTimeFormats {
                     +
                     "<p>The following chart shows typical usage of date and time formatting with the Gregorian calendar. "
                     +
-                    "<i>There is important information on <a href='http://cldr.unicode.org/translation/date-time-review'>Date/Time Review</a>, "
+                    "<i>There is important information on <a target='CLDR_ST_DOCS' href='http://cldr.unicode.org/translation/date-time-review'>Date/Time Review</a>, "
                     +
                     "so please read that page before starting!</i></p>\n");
             formats.addTable(english, out);
@@ -726,7 +879,7 @@ public class DateTimeFormats {
                 index.append("<hr>");
                 oldFirst = first;
             } else {
-                index.append(" &nbsp;");
+                index.append("  ");
             }
             index.append("<a href='").append(filename).append("'>").append(name).append("</a>\n");
             index.flush();

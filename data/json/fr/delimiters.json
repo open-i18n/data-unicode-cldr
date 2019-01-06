@@ -1,0 +1,22 @@
+{
+  "main": {
+    "fr": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "24",
+          "_number": "$Revision: 9310 $"
+        },
+        "generation": {
+          "_date": "$Date: 2013-09-04 17:31:00 -0500 (Wed, 04 Sep 2013) $"
+        },
+        "language": "fr"
+      },
+      "delimiters": {
+        "quotationStart": "«",
+        "quotationEnd": "»",
+        "alternateQuotationStart": "«",
+        "alternateQuotationEnd": "»"
+      }
+    }
+  }
+}

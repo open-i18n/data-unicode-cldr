@@ -11,7 +11,6 @@ import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.SupplementalDataInfo;
 
 import com.ibm.icu.dev.util.BagFormatter;
-import com.ibm.icu.util.ULocale;
 
 public class DumpCoverage {
 
@@ -25,13 +24,12 @@ public class DumpCoverage {
         Set<String> languages = cldrFactory.getAvailableLanguages();
         PrintWriter out = BagFormatter.openUTF8Writer(CldrUtility.GEN_DIRECTORY, "coverageDump.txt");
         for (String lang : languages) {
-            ULocale loc = new ULocale(lang);
             CLDRFile cf = cldrFactory.makeWithFallback(lang);
             Set<String> paths = new TreeSet<String>();
             cf.getPaths("//ldml", null, paths);
-            System.out.println("Dumping coverage for locale --> " + loc);
+            System.out.println("Dumping coverage for locale --> " + lang);
             for (String path : paths) {
-                int cov = sdi.getCoverageValue(path, loc);
+                int cov = sdi.getCoverageValue(path, lang);
                 out.println(lang + " [" + cov + "] --> " + path);
 
             }

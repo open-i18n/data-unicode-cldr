@@ -1,15 +1,15 @@
 {
   "supplemental": {
     "version": {
-      "@cldrVersion": "23.1",
-      "@number": "$Revision: 8721 $"
+      "_cldrVersion": "24",
+      "_number": "$Revision: 9270 $"
     },
     "generation": {
-      "@date": "$Date: 2013-05-15 14:50:20 -0500 (Wed, 15 May 2013) $"
+      "_date": "$Date: 2013-08-25 16:44:03 -0500 (Sun, 25 Aug 2013) $"
     },
     "territoryContainment": {
       "001": {
-        "@contains": [
+        "_contains": [
           "019",
           "002",
           "150",
@@ -18,7 +18,7 @@
         ]
       },
       "002": {
-        "@contains": [
+        "_contains": [
           "015",
           "011",
           "017",
@@ -27,15 +27,15 @@
         ]
       },
       "003": {
-        "@grouping": "true",
-        "@contains": [
+        "_grouping": "true",
+        "_contains": [
           "021",
           "013",
           "029"
         ]
       },
       "005": {
-        "@contains": [
+        "_contains": [
           "AR",
           "BO",
           "BR",
@@ -53,7 +53,7 @@
         ]
       },
       "009": {
-        "@contains": [
+        "_contains": [
           "053",
           "054",
           "057",
@@ -62,7 +62,7 @@
         ]
       },
       "011": {
-        "@contains": [
+        "_contains": [
           "BF",
           "BJ",
           "CI",
@@ -83,7 +83,7 @@
         ]
       },
       "013": {
-        "@contains": [
+        "_contains": [
           "BZ",
           "CR",
           "GT",
@@ -95,7 +95,7 @@
         ]
       },
       "014": {
-        "@contains": [
+        "_contains": [
           "BI",
           "DJ",
           "ER",
@@ -118,7 +118,7 @@
         ]
       },
       "015": {
-        "@contains": [
+        "_contains": [
           "DZ",
           "EG",
           "EH",
@@ -132,7 +132,7 @@
         ]
       },
       "017": {
-        "@contains": [
+        "_contains": [
           "AO",
           "CD",
           "CF",
@@ -145,12 +145,12 @@
         ]
       },
       "017-status-deprecated": {
-        "@contains": [
+        "_contains": [
           "ZR"
         ]
       },
       "018": {
-        "@contains": [
+        "_contains": [
           "BW",
           "LS",
           "NA",
@@ -159,7 +159,7 @@
         ]
       },
       "019": {
-        "@contains": [
+        "_contains": [
           "021",
           "013",
           "029",
@@ -167,13 +167,13 @@
         ]
       },
       "019-status-grouping": {
-        "@contains": [
+        "_contains": [
           "003",
           "419"
         ]
       },
       "021": {
-        "@contains": [
+        "_contains": [
           "BM",
           "CA",
           "GL",
@@ -182,7 +182,7 @@
         ]
       },
       "029": {
-        "@contains": [
+        "_contains": [
           "AG",
           "AI",
           "AW",
@@ -214,12 +214,12 @@
         ]
       },
       "029-status-deprecated": {
-        "@contains": [
+        "_contains": [
           "AN"
         ]
       },
       "030": {
-        "@contains": [
+        "_contains": [
           "CN",
           "HK",
           "JP",
@@ -231,7 +231,7 @@
         ]
       },
       "034": {
-        "@contains": [
+        "_contains": [
           "AF",
           "BD",
           "BT",
@@ -244,7 +244,7 @@
         ]
       },
       "035": {
-        "@contains": [
+        "_contains": [
           "BN",
           "ID",
           "KH",
@@ -259,13 +259,13 @@
         ]
       },
       "035-status-deprecated": {
-        "@contains": [
+        "_contains": [
           "BU",
           "TP"
         ]
       },
       "039": {
-        "@contains": [
+        "_contains": [
           "AD",
           "AL",
           "BA",
@@ -286,20 +286,20 @@
         ]
       },
       "039-status-deprecated": {
-        "@contains": [
+        "_contains": [
           "CS",
           "YU"
         ]
       },
       "053": {
-        "@contains": [
+        "_contains": [
           "AU",
           "NF",
           "NZ"
         ]
       },
       "054": {
-        "@contains": [
+        "_contains": [
           "FJ",
           "NC",
           "PG",
@@ -308,7 +308,7 @@
         ]
       },
       "057": {
-        "@contains": [
+        "_contains": [
           "FM",
           "GU",
           "KI",
@@ -319,7 +319,7 @@
         ]
       },
       "061": {
-        "@contains": [
+        "_contains": [
           "AS",
           "CK",
           "NU",
@@ -333,7 +333,7 @@
         ]
       },
       "142": {
-        "@contains": [
+        "_contains": [
           "145",
           "143",
           "030",
@@ -342,7 +342,7 @@
         ]
       },
       "143": {
-        "@contains": [
+        "_contains": [
           "TM",
           "TJ",
           "KG",
@@ -351,7 +351,7 @@
         ]
       },
       "145": {
-        "@contains": [
+        "_contains": [
           "AE",
           "AM",
           "AZ",
@@ -373,13 +373,13 @@
         ]
       },
       "145-status-deprecated": {
-        "@contains": [
+        "_contains": [
           "NT",
           "YD"
         ]
       },
       "150": {
-        "@contains": [
+        "_contains": [
           "154",
           "155",
           "151",
@@ -387,17 +387,17 @@
         ]
       },
       "150-status-deprecated": {
-        "@contains": [
+        "_contains": [
           "QU"
         ]
       },
       "150-status-grouping": {
-        "@contains": [
+        "_contains": [
           "EU"
         ]
       },
       "151": {
-        "@contains": [
+        "_contains": [
           "BG",
           "BY",
           "CZ",
@@ -411,12 +411,12 @@
         ]
       },
       "151-status-deprecated": {
-        "@contains": [
+        "_contains": [
           "SU"
         ]
       },
       "154": {
-        "@contains": [
+        "_contains": [
           "GG",
           "IM",
           "JE",
@@ -436,7 +436,7 @@
         ]
       },
       "155": {
-        "@contains": [
+        "_contains": [
           "AT",
           "BE",
           "CH",
@@ -449,22 +449,22 @@
         ]
       },
       "155-status-deprecated": {
-        "@contains": [
+        "_contains": [
           "DD",
           "FX"
         ]
       },
       "419": {
-        "@grouping": "true",
-        "@contains": [
+        "_grouping": "true",
+        "_contains": [
           "013",
           "029",
           "005"
         ]
       },
       "EU": {
-        "@grouping": "true",
-        "@contains": [
+        "_grouping": "true",
+        "_contains": [
           "AT",
           "BE",
           "CY",
@@ -495,7 +495,7 @@
         ]
       },
       "QO": {
-        "@contains": [
+        "_contains": [
           "AQ",
           "BV",
           "CC",

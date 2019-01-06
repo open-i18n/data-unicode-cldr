@@ -20,7 +20,6 @@ import java.util.regex.Pattern;
 import org.unicode.cldr.draft.ScriptMetadata;
 import org.unicode.cldr.draft.ScriptMetadata.Info;
 import org.unicode.cldr.tool.LikelySubtags;
-import org.unicode.cldr.util.CldrUtility.Output;
 import org.unicode.cldr.util.RegexLookup.Finder;
 import org.unicode.cldr.util.With.SimpleIterator;
 
@@ -32,16 +31,20 @@ import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.text.Collator;
 import com.ibm.icu.text.RuleBasedCollator;
 import com.ibm.icu.text.Transform;
+import com.ibm.icu.util.Output;
 import com.ibm.icu.util.ULocale;
 
 /**
- * Provides a mechanism for dividing up LDML paths into understandable categories, eg for the Survey tool.
+ * Provides a mechanism for dividing up LDML paths into understandable
+ * categories, eg for the Survey tool.
  */
 public class PathHeader implements Comparable<PathHeader> {
+    public static final String SECTION_LINK = "<a target='CLDR_ST-SECTION' href='";
     static boolean UNIFORM_CONTINENTS = true;
 
     /**
-     * What status the survey tool should use. Can be overriden in Phase.getAction()
+     * What status the survey tool should use. Can be overriden in
+     * Phase.getAction()
      */
     public enum SurveyToolStatus {
         /**
@@ -49,16 +52,16 @@ public class PathHeader implements Comparable<PathHeader> {
          */
         DEPRECATED,
         /**
-         * Hide. Can be overriden in Phase.getAction()
+         * Hide. Can be overridden in Phase.getAction()
          */
         HIDE,
         /**
-         * Don't allow Change box (except TC), instead show ticket. But allow votes. Can be overriden in
-         * Phase.getAction()
+         * Don't allow Change box (except TC), instead show ticket. But allow
+         * votes. Can be overridden in Phase.getAction()
          */
         READ_ONLY,
         /**
-         * Allow change box and votes. Can be overriden in Phase.getAction()
+         * Allow change box and votes. Can be overridden in Phase.getAction()
          */
         READ_WRITE
     }
@@ -66,14 +69,19 @@ public class PathHeader implements Comparable<PathHeader> {
     private static EnumNames<SectionId> SectionIdNames = new EnumNames<SectionId>();
 
     /**
-     * The Section for a path. Don't change these without committee buy-in.
+     * The Section for a path. Don't change these without committee buy-in. The
+     * 'name' may be 'Core_Data' and the toString is 'Core Data' toString gives
+     * the human name
      */
     public enum SectionId {
-        Code_Lists("Code Lists"),
-        Calendars,
+        Core_Data("Core Data"),
+        Locale_Display_Names("Locale Display Names"),
+        DateTime("Date & Time"),
         Timezones,
-        Misc("Patterns"),
-        Special("Suppressed");
+        Numbers,
+        Units,
+        Misc("Miscellaneous"),
+        Special;
 
         private SectionId(String... alternateNames) {
             SectionIdNames.add(this, alternateNames);
@@ -96,7 +104,7 @@ public class PathHeader implements Comparable<PathHeader> {
         final String mainOrder;
         final int order;
 
-        public SubstringOrder(String source, int topLevelCompare) {
+        public SubstringOrder(String source) {
             int pos = source.lastIndexOf('-') + 1;
             int ordering = COUNTS.indexOf(source.substring(pos));
             // account for digits, and "some" future proofing.
@@ -113,7 +121,7 @@ public class PathHeader implements Comparable<PathHeader> {
 
         @Override
         public int compareTo(SubstringOrder other) {
-            int diff = alphabetic.compare(mainOrder, other.mainOrder);
+            int diff = alphabeticCompare(mainOrder, other.mainOrder);
             if (diff != 0) {
                 return diff;
             }
@@ -122,33 +130,40 @@ public class PathHeader implements Comparable<PathHeader> {
     }
 
     /**
-     * The Page for a path (within a Section). Don't change these without committee buy-in.
+     * The Page for a path (within a Section). Don't change these without
+     * committee buy-in. the name is for example WAsia where toString gives
+     * Western Asia
      */
     public enum PageId {
-        Languages(SectionId.Code_Lists),
-        Scripts(SectionId.Code_Lists),
-        Territories(SectionId.Code_Lists),
-        Timezone_Cities(SectionId.Code_Lists, "Timezone Cities"),
-        Locale_Variants(SectionId.Code_Lists, "Locale Variants"),
-        Keys(SectionId.Code_Lists),
-        Measurement_Systems(SectionId.Code_Lists, "Measurement Systems"),
-        Transforms(SectionId.Code_Lists),
-        Currencies(SectionId.Code_Lists),
-        Gregorian(SectionId.Calendars),
-        Generic(SectionId.Calendars),
-        Buddhist(SectionId.Calendars),
-        Chinese(SectionId.Calendars),
-        Coptic(SectionId.Calendars),
-        Dangi(SectionId.Calendars),
-        Ethiopic(SectionId.Calendars),
-        Ethiopic_Amete_Alem(SectionId.Calendars, "Ethiopic-Amete-Alem"),
-        Hebrew(SectionId.Calendars),
-        Indian(SectionId.Calendars),
-        Islamic(SectionId.Calendars),
-        Islamic_Civil(SectionId.Calendars, "Islamic-Civil"),
-        Japanese(SectionId.Calendars),
-        Persian(SectionId.Calendars),
-        ROC(SectionId.Calendars),
+        Alphabetic_Information(SectionId.Core_Data, "Alphabetic Information"),
+        Numbering_Systems(SectionId.Core_Data, "Numbering Systems"),
+        Locale_Name_Patterns(SectionId.Locale_Display_Names, "Locale Name Patterns"),
+        Languages(SectionId.Locale_Display_Names),
+        Scripts(SectionId.Locale_Display_Names),
+        Territories(SectionId.Locale_Display_Names),
+        Locale_Variants(SectionId.Locale_Display_Names, "Locale Variants"),
+        Keys(SectionId.Locale_Display_Names),
+        Fields(SectionId.DateTime),
+        Gregorian(SectionId.DateTime),
+        Generic(SectionId.DateTime),
+        Buddhist(SectionId.DateTime),
+        Chinese(SectionId.DateTime),
+        Coptic(SectionId.DateTime),
+        Dangi(SectionId.DateTime),
+        Ethiopic(SectionId.DateTime),
+        Ethiopic_Amete_Alem(SectionId.DateTime, "Ethiopic-Amete-Alem"),
+        Hebrew(SectionId.DateTime),
+        Indian(SectionId.DateTime),
+        Islamic(SectionId.DateTime),
+        Islamic_Civil(SectionId.DateTime, "Islamic-Civil"),
+        Islamic_Rgsa(SectionId.DateTime, "Islamic-Rgsa"),
+        Islamic_Tbla(SectionId.DateTime, "Islamic-Tbla"),
+        Islamic_Umalqura(SectionId.DateTime, "Islamic-Umalqura"),
+        Japanese(SectionId.DateTime),
+        Persian(SectionId.DateTime),
+        ROC(SectionId.DateTime),
+        Timezone_Display_Patterns(SectionId.Timezones, "Timezone Display Patterns"),
+        Timezone_Cities(SectionId.Timezones, "Timezone Cities"),
         NAmerica(SectionId.Timezones, "North America"),
         SAmerica(SectionId.Timezones, "South America"),
         Africa(SectionId.Timezones),
@@ -164,18 +179,23 @@ public class PathHeader implements Comparable<PathHeader> {
         Oceania(SectionId.Timezones),
         UnknownT(SectionId.Timezones, "Unknown Region"),
         Overrides(SectionId.Timezones),
-        Patterns_for_Locale_Names(SectionId.Misc, "Locale Names"),
-        Patterns_for_Displaying_Lists(SectionId.Misc, "Displaying Lists"),
-        Patterns_for_Timezones(SectionId.Misc, "Timezones"),
-        Patterns_for_Numbers(SectionId.Misc, "Numbers"),
-        Patterns_for_Units(SectionId.Misc, "Units"),
-        Characters(SectionId.Misc),
-        Labels(SectionId.Misc),
-        Posix(SectionId.Misc),
+        Symbols(SectionId.Numbers),
+        Number_Formatting_Patterns(SectionId.Numbers, "Number Formatting Patterns"),
+        Compact_Decimal_Formatting(SectionId.Numbers, "Compact Decimal Formatting"),
+        Currencies(SectionId.Numbers),
+        Measurement_Systems(SectionId.Units, "Measurement Systems"),
+        Duration(SectionId.Units),
+        Length(SectionId.Units),
+        MassWeight(SectionId.Units, "Mass and Weight"),
+        Weather(SectionId.Units),
+        OtherUnits(SectionId.Units, "Other Units"),
+        CompoundUnits(SectionId.Units, "Compound Units"),
+        Displaying_Lists(SectionId.Misc, "Displaying Lists"),
+        LinguisticElements(SectionId.Misc, "Linguistic Elements"),
+        Transforms(SectionId.Misc),
         Identity(SectionId.Special),
         Version(SectionId.Special),
         Suppress(SectionId.Special),
-        Patterns_for_Numbers2(SectionId.Special, "No Numbering System"),
         Deprecated(SectionId.Special),
         Unknown(SectionId.Special), ;
 
@@ -187,14 +207,30 @@ public class PathHeader implements Comparable<PathHeader> {
             PageIdNames.add(this, alternateNames);
         }
 
+        /**
+         * Construct a pageId given a string
+         * 
+         * @param name
+         * @return
+         */
         public static PageId forString(String name) {
             return PageIdNames.forString(name);
         }
 
+        /**
+         * Returns the page id
+         * 
+         * @return a page ID, such as 'Languages'
+         */
         public String toString() {
             return PageIdNames.toString(this);
         }
 
+        /**
+         * Get the containing section id, such as 'Code Lists'
+         * 
+         * @return the containing section ID
+         */
         public SectionId getSectionId() {
             return sectionId;
         }
@@ -286,7 +322,8 @@ public class PathHeader implements Comparable<PathHeader> {
 
     /**
      * Return a factory for use in creating the headers. This should be cached.
-     * The calls are thread-safe. The englishFile sets a static for now; after the first time, null can be passed.
+     * The calls are thread-safe. The englishFile sets a static for now; after
+     * the first time, null can be passed.
      * 
      * @param englishFile
      */
@@ -363,7 +400,7 @@ public class PathHeader implements Comparable<PathHeader> {
             if (0 != (result = headerOrder - other.headerOrder)) {
                 return result;
             }
-            if (0 != (result = alphabetic.compare(header, other.header))) {
+            if (0 != (result = alphabeticCompare(header, other.header))) {
                 return result;
             }
             if (0 != (result = codeOrder - other.codeOrder)) {
@@ -375,15 +412,17 @@ public class PathHeader implements Comparable<PathHeader> {
                         return result;
                     }
                 } else {
-                    return 1; // if codeSuborder != null (and other.codeSuborder == null), it is greater
+                    return 1; // if codeSuborder != null (and other.codeSuborder
+                    // == null), it is greater
                 }
             } else if (other.codeSuborder != null) {
-                return -1; // if codeSuborder == null (and other.codeSuborder != null), it is greater
+                return -1; // if codeSuborder == null (and other.codeSuborder !=
+                // null), it is greater
             }
-            if (0 != (result = alphabetic.compare(code, other.code))) {
+            if (0 != (result = alphabeticCompare(code, other.code))) {
                 return result;
             }
-            if (0 != (result = alphabetic.compare(originalPath, other.originalPath))) {
+            if (0 != (result = alphabeticCompare(originalPath, other.originalPath))) {
                 return result;
             }
             return 0;
@@ -410,7 +449,7 @@ public class PathHeader implements Comparable<PathHeader> {
         return originalPath.hashCode();
     }
 
-    public static class Factory {
+    public static class Factory implements Transform<String, PathHeader> {
         static final RegexLookup<RawData> lookup = RegexLookup
             .of(new PathHeaderTransform())
             .setPatternTransform(
@@ -436,6 +475,7 @@ public class PathHeader implements Comparable<PathHeader> {
             .of(new TreeMap<SectionPage, Set<String>>(),
                 HashSet.class);
         private static CLDRFile englishFile;
+        private Set<String> matchersFound = new HashSet<String>();
 
         /**
          * Create a factory for creating PathHeaders.
@@ -464,9 +504,33 @@ public class PathHeader implements Comparable<PathHeader> {
         }
 
         /**
+         * Use only when trying to find unmatched patterns
+         */
+        public void clearCache() {
+            synchronized (cache) {
+                cache.clear();
+            }
+        }
+
+        /**
          * Return the PathHeader for a given path. Thread-safe.
          */
         public PathHeader fromPath(String path) {
+            return fromPath(path, null);
+        }
+
+        /**
+         * Return the PathHeader for a given path. Thread-safe.
+         */
+        public PathHeader transform(String path) {
+            return fromPath(path, null);
+        }
+
+        /**
+         * Return the PathHeader for a given path. Thread-safe.
+         * @param failures a list of failures to add to.
+         */
+        public PathHeader fromPath(String path, List<String> failures) {
             if (path == null) {
                 throw new NullPointerException("Path cannot be null");
             }
@@ -481,11 +545,11 @@ public class PathHeader implements Comparable<PathHeader> {
                 // special handling for alt
                 String alt = null;
                 int altPos = cleanPath.indexOf("[@alt=");
-                if (altPos >= 0) {
+                if (altPos >= 0 && !cleanPath.endsWith("/symbol[@alt=\"narrow\"]")) {
                     if (ALT_MATCHER.reset(cleanPath).find()) {
+                        alt = ALT_MATCHER.group(1);
                         cleanPath = cleanPath.substring(0, ALT_MATCHER.start())
                             + cleanPath.substring(ALT_MATCHER.end());
-                        alt = ALT_MATCHER.group(1);
                         int pos = alt.indexOf("proposed");
                         if (pos >= 0) {
                             alt = pos == 0 ? null : alt.substring(0, pos - 1);
@@ -496,10 +560,12 @@ public class PathHeader implements Comparable<PathHeader> {
                         throw new IllegalArgumentException();
                     }
                 }
-                RawData data = lookup.get(cleanPath, null, args);
+                Output<Finder> matcherFound = new Output<Finder>();
+                RawData data = lookup.get(cleanPath, null, args, matcherFound, failures);
                 if (data == null) {
                     return null;
                 }
+                matchersFound.add(matcherFound.value.toString());
                 counter.add(data, 1);
                 if (!samples.containsKey(data)) {
                     samples.put(data, cleanPath);
@@ -509,7 +575,8 @@ public class PathHeader implements Comparable<PathHeader> {
                         SectionId.forString(fix(data.section, 0)),
                         PageId.forString(fix(data.page, 0)),
                         fix(data.header, data.headerOrder),
-                        order, // only valid after call to fix. TODO, make this cleaner
+                        order, // only valid after call to fix. TODO, make
+                        // this cleaner
                         fix(data.code + (alt == null ? "" : "-" + alt), data.codeOrder),
                         order, // only valid after call to fix
                         suborder,
@@ -592,9 +659,11 @@ public class PathHeader implements Comparable<PathHeader> {
          * <p>
          * <b>Warning:</b>
          * <ol>
-         * <li>The set may not be complete for a cldrFile unless all of paths in the file have had fromPath called. And
-         * this includes getExtraPaths().</li>
-         * <li>The set may include paths that have no value in the current cldrFile.</li>
+         * <li>The set may not be complete for a cldrFile unless all of paths in
+         * the file have had fromPath called. And this includes getExtraPaths().
+         * </li>
+         * <li>The set may include paths that have no value in the current
+         * cldrFile.</li>
          * <li>The set may be empty, if the section/page aren't valid.</li>
          * </ol>
          * Thread-safe.
@@ -607,11 +676,11 @@ public class PathHeader implements Comparable<PathHeader> {
                 Map<PageId, SectionPage> pageToSectionPage = sectionToPageToSectionPage
                     .get(sectionId);
                 if (pageToSectionPage == null) {
-                    return null;
+                    return target;
                 }
                 SectionPage sectionPage = pageToSectionPage.get(page);
                 if (sectionPage == null) {
-                    return null;
+                    return target;
                 }
                 Set<String> set = sectionPageToPaths.getAll(sectionPage);
                 target.addAll(set);
@@ -620,8 +689,8 @@ public class PathHeader implements Comparable<PathHeader> {
         }
 
         /**
-         * Return the Sections and Pages that are in defined, for display in menus.
-         * Both are ordered.
+         * Return the Sections and Pages that are in defined, for display in
+         * menus. Both are ordered.
          */
         public static Relation<SectionId, PageId> getSectionIdsToPageIds() {
             SectionIdToPageIds.freeze(); // just in case
@@ -640,8 +709,8 @@ public class PathHeader implements Comparable<PathHeader> {
         }
 
         /**
-         * Return the names for Sections and Pages that are defined, for display in menus.
-         * Both are ordered.
+         * Return the names for Sections and Pages that are defined, for display
+         * in menus. Both are ordered.
          * 
          * @deprecated Use getSectionIdsToPageIds
          */
@@ -832,6 +901,9 @@ public class PathHeader implements Comparable<PathHeader> {
         static Transform<String, String> catFromTerritory;
         static Transform<String, String> catFromTimezone;
         static {
+            // Put any new functions used in PathHeader.txt in here.
+            // To change the order of items within a section or heading, set
+            // order/suborder to be the relative position of the current item.
             functionMap.put("month", new Transform<String, String>() {
                 public String transform(String source) {
                     int m = Integer.parseInt(source);
@@ -841,7 +913,7 @@ public class PathHeader implements Comparable<PathHeader> {
             });
             functionMap.put("count", new Transform<String, String>() {
                 public String transform(String source) {
-                    suborder = new SubstringOrder(source, 1);
+                    suborder = new SubstringOrder(source);
                     return source;
                 }
             });
@@ -849,7 +921,22 @@ public class PathHeader implements Comparable<PathHeader> {
                 public String transform(String source) {
                     int pos = source.indexOf('-');
                     source = pos + source.substring(pos);
-                    suborder = new SubstringOrder(source, pos); // make 10000-... into 5-
+                    suborder = new SubstringOrder(source); // make 10000-...
+                    // into 5-
+                    return source;
+                }
+            });
+            functionMap.put("unitCount", new Transform<String, String>() {
+                public String transform(String source) {
+                    String[] unitLengths = { "long", "short", "narrow" };
+                    int pos = 9;
+                    for (int i = 0; i < unitLengths.length; i++) {
+                        if (source.startsWith(unitLengths[i])) {
+                            pos = i;
+                            continue;
+                        }
+                    }
+                    suborder = new SubstringOrder(pos + "-" + source); //
                     return source;
                 }
             });
@@ -874,6 +961,86 @@ public class PathHeader implements Comparable<PathHeader> {
                     return result != null ? result : UCharacter.toTitleCase(source, null);
                 }
             });
+
+            functionMap.put("calField", new Transform<String, String>() {
+                public String transform(String source) {
+                    String[] fields = source.split(":", 3);
+                    order = 0;
+                    final List<String> widthValues = Arrays.asList(
+                        "wide", "abbreviated", "short", "narrow");
+                    final List<String> calendarFieldValues = Arrays.asList(
+                        "Eras",
+                        "Quarters",
+                        "Months",
+                        "Days",
+                        "DayPeriods",
+                        "Formats");
+                    final List<String> calendarFormatTypes = Arrays.asList(
+                        "Standard",
+                        "Flexible",
+                        "Intervals");
+                    final List<String> calendarContextTypes = Arrays.asList(
+                        "none",
+                        "format",
+                        "stand-alone");
+                    final List<String> calendarFormatSubtypes = Arrays.asList(
+                        "date",
+                        "time",
+                        "dateTime",
+                        "fallback");
+
+                    Map<String, String> fixNames = Builder.with(new HashMap<String, String>())
+                        .put("DayPeriods", "Day Periods")
+                        .put("format", "Formatting Context")
+                        .put("stand-alone", "Standalone Context")
+                        .put("none", "")
+                        .put("date", "Date Formats")
+                        .put("time", "Time Formats")
+                        .put("dateTime", "Date & Time Combination Formats")
+                        .freeze();
+
+                    if (calendarFieldValues.contains(fields[0])) {
+                        order = calendarFieldValues.indexOf(fields[0]) * 100;
+                    } else {
+                        order = calendarFieldValues.size() * 100;
+                    }
+
+                    if (fields[0].equals("Formats")) {
+                        if (calendarFormatTypes.contains(fields[1])) {
+                            order += calendarFormatTypes.indexOf(fields[1]) * 10;
+                        } else {
+                            order += calendarFormatTypes.size() * 10;
+                        }
+                        if (calendarFormatSubtypes.contains(fields[2])) {
+                            order += calendarFormatSubtypes.indexOf(fields[2]);
+                        } else {
+                            order += calendarFormatSubtypes.size();
+                        }
+                    } else {
+                        if (widthValues.contains(fields[1])) {
+                            order += widthValues.indexOf(fields[1]) * 10;
+                        } else {
+                            order += widthValues.size() * 10;
+                        }
+                        if (calendarContextTypes.contains(fields[2])) {
+                            order += calendarContextTypes.indexOf(fields[2]);
+                        } else {
+                            order += calendarContextTypes.size();
+                        }
+                    }
+
+                    String[] fixedFields = new String[fields.length];
+                    for (int i = 0; i < fields.length; i++) {
+                        String s = fixNames.get(fields[i]);
+                        fixedFields[i] = s != null ? s : fields[i];
+                    }
+
+                    return fixedFields[0] +
+                        " - " + fixedFields[1] +
+                        (fixedFields[2].length() > 0 ? " - " + fixedFields[2] : "");
+                }
+            });
+
             functionMap.put("titlecase", new Transform<String, String>() {
                 public String transform(String source) {
                     return UCharacter.toTitleCase(source, null);
@@ -898,9 +1065,9 @@ public class PathHeader implements Comparable<PathHeader> {
                         script = likelySubtags.getLikelyScript(language);
                     }
                     String scriptName = englishFile.getName(CLDRFile.SCRIPT_NAME, script);
-                    return script.equals("Hans") || script.equals("Hant") ? "Han Script"
+                    return "Languages Using " + (script.equals("Hans") || script.equals("Hant") ? "Han Script"
                         : scriptName.endsWith(" Script") ? scriptName
-                            : scriptName + " Script";
+                            : scriptName + " Script");
                 }
             });
             functionMap.put("categoryFromTerritory",
@@ -922,6 +1089,64 @@ public class PathHeader implements Comparable<PathHeader> {
                         return catFromTerritory.transform(territory);
                     }
                 });
+            functionMap.put("timezoneSorting", new Transform<String, String>() {
+                public String transform(String source) {
+                    final List<String> codeValues = Arrays.asList(
+                        "generic-long",
+                        "generic-short",
+                        "standard-long",
+                        "standard-short",
+                        "daylight-long",
+                        "daylight-short");
+                    if (codeValues.contains(source)) {
+                        order = codeValues.indexOf(source);
+                    } else {
+                        order = codeValues.size();
+                    }
+                    return source;
+                }
+            });
+
+            functionMap.put("tzdpField", new Transform<String, String>() {
+                public String transform(String source) {
+                    Map<String, String> fieldNames = Builder.with(new HashMap<String, String>())
+                        .put("regionFormat", "Region Format - Generic")
+                        .put("regionFormat-standard", "Region Format - Standard")
+                        .put("regionFormat-daylight", "Region Format - Daylight")
+                        .put("gmtFormat", "GMT Format")
+                        .put("hourFormat", "GMT Hours/Minutes Format")
+                        .put("gmtZeroFormat", "GMT Zero Format")
+                        .put("fallbackFormat", "Location Fallback Format")
+                        .freeze();
+                    final List<String> fieldOrder = Arrays.asList(
+                        "regionFormat",
+                        "regionFormat-standard",
+                        "regionFormat-daylight",
+                        "gmtFormat",
+                        "hourFormat",
+                        "gmtZeroFormat",
+                        "fallbackFormat");
+
+                    if (fieldOrder.contains(source)) {
+                        order = fieldOrder.indexOf(source);
+                    } else {
+                        order = fieldOrder.size();
+                    }
+
+                    String result = fieldNames.get(source);
+                    return result == null ? source : result;
+                }
+            });
+
+            functionMap.put("numericSort", new Transform<String, String>() {
+                // Probably only works well for small values, like -5 through +4.
+                public String transform(String source) {
+                    Integer pos = Integer.valueOf(source) + 5;
+                    suborder = new SubstringOrder(pos.toString());
+                    return source;
+                }
+            });
+
             functionMap.put("metazone", new Transform<String, String>() {
 
                 public String transform(String source) {
@@ -938,17 +1163,66 @@ public class PathHeader implements Comparable<PathHeader> {
                     }
                 }
             });
+
+            Object[][] ctto = {
+                { "BUK", "MM" },
+                { "CSD", "RS" },
+                { "CSK", "CZ" },
+                { "DDM", "DE" },
+                { "EUR", "EU" },
+                { "RHD", "ZW" },
+                { "SUR", "RU" },
+                { "TPE", "TL" },
+                { "XAG", "ZZ" },
+                { "XAU", "ZZ" },
+                { "XBA", "ZZ" },
+                { "XBB", "ZZ" },
+                { "XBC", "ZZ" },
+                { "XBD", "ZZ" },
+                { "XDR", "ZZ" },
+                { "XEU", "EU" },
+                { "XFO", "ZZ" },
+                { "XFU", "ZZ" },
+                { "XPD", "ZZ" },
+                { "XPT", "ZZ" },
+                { "XRE", "ZZ" },
+                { "XSU", "ZZ" },
+                { "XTS", "ZZ" },
+                { "XUA", "ZZ" },
+                { "XXX", "ZZ" },
+                { "YDD", "YE" },
+                { "YUD", "RS" },
+                { "YUM", "RS" },
+                { "YUN", "RS" },
+                { "YUR", "RS" },
+                { "ZRN", "CD" },
+                { "ZRZ", "CD" },
+            };
+
+            final Map<String, String> currencyToTerritoryOverrides = CldrUtility.asMap(ctto);
+            // TODO: Put this into supplementalDataInfo ?
+
             functionMap.put("categoryFromCurrency", new Transform<String, String>() {
                 public String transform(String source0) {
+                    String tenderOrNot = "";
                     String territory = likelySubtags.getLikelyTerritoryFromCurrency(source0);
-                    if (territory == null || territory.equals("ZZ")) {
-                        order = 999;
-                        return "Not Current Tender";
+                    if (territory == null) {
+                        tenderOrNot = ": " + source0 + " (Not Current Tender)";
                     }
-                    return catFromTerritory.transform(territory)
-                        + ": "
-                        + englishFile
-                            .getName(CLDRFile.TERRITORY_NAME, territory);
+                    if (currencyToTerritoryOverrides.keySet().contains(source0)) {
+                        territory = currencyToTerritoryOverrides.get(source0);
+                    } else if (territory == null) {
+                        territory = source0.substring(0, 2);
+                    }
+
+                    if (territory.equals("ZZ")) {
+                        order = 999;
+                        return englishFile.getName(CLDRFile.TERRITORY_NAME, territory) + ": " + source0;
+                    } else {
+                        return catFromTerritory.transform(territory) + ": "
+                            + englishFile.getName(CLDRFile.TERRITORY_NAME, territory)
+                            + tenderOrNot;
+                    }
                 }
             });
             functionMap.put("numberingSystem", new Transform<String, String>() {
@@ -960,6 +1234,99 @@ public class PathHeader implements Comparable<PathHeader> {
                 }
             });
             // //ldml/localeDisplayNames/types/type[@type="%A"][@key="%A"]
+            functionMap.put("datefield", new Transform<String, String>() {
+                private final String[] datefield = {
+                    "era", "year", "month", "week", "day", "weekday",
+                    "hour", "dayperiod", "minute", "second", "zone"
+                };
+
+                public String transform(String source) {
+                    String field = source.split("-")[0];
+                    order = getIndex(field, datefield);
+                    return source;
+                }
+            });
+            // //ldml/dates/fields/field[@type="%A"]/relative[@type="%A"]
+            functionMap.put("relativeDate", new Transform<String, String>() {
+                private final String[] relativeDateField = {
+                    "year", "month", "week", "day", "hour", "minute", "second",
+                    "sun", "mon", "tue", "wed", "thu", "fri", "sat"
+                };
+                private final String[] longNames = {
+                    "Year", "Month", "Week", "Day", "Hour", "Minute", "Second",
+                    "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+                };
+
+                public String transform(String source) {
+                    order = getIndex(source, relativeDateField) + 100;
+                    return "Relative " + longNames[getIndex(source, relativeDateField)];
+                }
+            });
+            // Sorts numberSystem items (except for decimal formats).
+            functionMap.put("number", new Transform<String, String>() {
+                private final String[] symbols = { "decimal", "group",
+                    "plusSign", "minusSign", "percentSign", "perMille",
+                    "exponential", "superscriptingExponent",
+                    "infinity", "nan", "list", "currencies"
+                };
+
+                public String transform(String source) {
+                    String[] parts = source.split("-");
+                    order = getIndex(parts[0], symbols);
+                    // e.g. "currencies-one"
+                    if (parts.length > 1) {
+                        suborder = new SubstringOrder(parts[1]);
+                    }
+                    return source;
+                }
+            });
+            functionMap.put("numberFormat", new Transform<String, String>() {
+                public String transform(String source) {
+                    final List<String> fieldOrder = Arrays.asList(
+                        "standard-decimal",
+                        "standard-currency",
+                        "standard-currency-accounting",
+                        "standard-percent",
+                        "standard-scientific");
+
+                    if (fieldOrder.contains(source)) {
+                        order = fieldOrder.indexOf(source);
+                    } else {
+                        order = fieldOrder.size();
+                    }
+
+                    return source;
+                }
+            });
+
+            functionMap.put("localePattern", new Transform<String, String>() {
+                public String transform(String source) {
+                    // Put localeKeyTypePattern behind localePattern and
+                    // localeSeparator.
+                    if (source.equals("localeKeyTypePattern")) {
+                        order = 10;
+                    }
+                    return source;
+                }
+            });
+            functionMap.put("listOrder", new Transform<String, String>() {
+                private String[] listParts = { "2", "start", "middle", "end" };
+
+                @Override
+                public String transform(String source) {
+                    order = getIndex(source, listParts);
+                    return source;
+                }
+            });
+        }
+
+        private static int getIndex(String item, String[] array) {
+            for (int i = 0; i < array.length; i++) {
+                if (item.equals(array[i])) {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         static class HyphenSplitter {
@@ -1007,7 +1374,8 @@ public class PathHeader implements Comparable<PathHeader> {
         }
 
         /**
-         * Collect all the paths for a CLDRFile, and make sure that they have cached PathHeaders
+         * Collect all the paths for a CLDRFile, and make sure that they have
+         * cached PathHeaders
          * 
          * @param file
          * @return immutable set of paths in the file
@@ -1024,10 +1392,21 @@ public class PathHeader implements Comparable<PathHeader> {
             }
             return Collections.unmodifiableSet(filePaths);
         }
+
+        /**
+         * Returns those regexes that were never matched.
+         * @return
+         */
+        public Set<String> getUnmatchedRegexes() {
+            Map<String, RawData> outputUnmatched = new LinkedHashMap<String, RawData>();
+            lookup.getUnmatchedPatterns(matchersFound, outputUnmatched);
+            return outputUnmatched.keySet();
+        }
     }
 
     /**
-     * Return the territory used for the title of the Metazone page in the Survey Tool.
+     * Return the territory used for the title of the Metazone page in the
+     * Survey Tool.
      * 
      * @param source
      * @return
@@ -1038,4 +1417,51 @@ public class PathHeader implements Comparable<PathHeader> {
     }
 
     private static final List<String> COUNTS = Arrays.asList("zero", "one", "two", "few", "many", "other");
+
+    private static int alphabeticCompare(String aa, String bb) {
+        // workaround for ICU threading issue http://bugs.icu-project.org/trac/ticket/10215
+        while (true) {
+            try {
+                return alphabetic.compare(aa, bb);
+            } catch (ArrayIndexOutOfBoundsException e) {
+            }
+        }
+    }
+
+    public enum BaseUrl {
+        //http://st.unicode.org/smoketest/survey?_=af&strid=55053dffac611328
+        //http://st.unicode.org/cldr-apps/survey?_=en&strid=3cd31261bf6738e1
+        SMOKE("http://st.unicode.org/smoketest/survey"),
+        PRODUCTION("http://st.unicode.org/cldr-apps/survey");
+        final String base;
+
+        private BaseUrl(String url) {
+            base = url;
+        }
+    }
+
+    public String getUrl(BaseUrl baseUrl, String locale) {
+        return getUrl(baseUrl.base, locale);
+    }
+
+    public String getUrl(String baseUrl, String locale) {
+        return getUrl(baseUrl, locale, getOriginalPath());
+    }
+
+    public static String getUrl(String baseUrl, String locale, String path) {
+        return baseUrl + "?_=" + locale + "&strid=" + StringId.getHexId(path);
+    }
+
+    // eg http://st.unicode.org/cldr-apps/survey?_=fr&x=Locale%20Name%20Patterns
+    public static String getPageUrl(String baseUrl, String localeId, PageId subsection) {
+        return baseUrl + "?_=" + localeId + "&x=" + subsection;
+    }
+
+    public static String getLinkedView(String baseUrl, CLDRFile file, String path) {
+        String value = file.getStringValue(path);
+        if (value == null) {
+            return null;
+        }
+        return SECTION_LINK + PathHeader.getUrl(baseUrl, file.getLocaleID(), path) + "'><em>view</em></a>";
+    }
 }

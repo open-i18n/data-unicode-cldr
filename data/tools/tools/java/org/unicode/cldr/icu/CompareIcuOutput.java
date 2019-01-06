@@ -8,7 +8,6 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -49,12 +48,12 @@ public class CompareIcuOutput {
     private static boolean shouldSort = false;
 
     public static void main(String[] args) throws IOException {
-        // TODO: change output of Options.parse() to a List.
-        Set<String> extraArgs = options.parse(args, true);
-        Iterator<String> iterator = extraArgs.iterator();
-        String dir1 = iterator.next();
-        String dir2 = iterator.next();
-        String regex = iterator.next();
+        String dir1 = args[0];
+        String dir2 = args[1];
+        String regex = args[2];
+        System.out.println("dir1 " + dir1);
+        System.out.println("dir2 " + dir2);
+        System.out.println("regex " + regex);
         shouldSort = options.get("sort").doesOccur();
         long totaltime = System.currentTimeMillis();
         System.out.println("Comparing the contents of text files...");
@@ -71,7 +70,7 @@ public class CompareIcuOutput {
      * @throws IOException
      */
     private static void compareTextFiles(String dir1, String dir2, String regex) throws IOException {
-        File localeDir = new File(dir1 + "/locales");
+        File localeDir = new File(dir1);
         if (!localeDir.exists()) localeDir = new File(dir1);
         String[] filenames = localeDir.list();
         int same = 0, different = 0;
@@ -193,7 +192,8 @@ public class CompareIcuOutput {
                 break;
             }
             for (int j = 0; j < oldArray.length; j++) {
-                if (!oldArray[j].equals(newArray[j])) {
+                // Ignore whitespace.
+                if (!oldArray[j].replace(" ", "").equals(newArray[j].replace(" ", ""))) {
                     differ = true;
                     break;
                 }

@@ -1,205 +1,205 @@
 {
   "supplemental": {
     "version": {
-      "@cldrVersion": "23.1",
-      "@number": "$Revision: 8242 $"
+      "_cldrVersion": "24",
+      "_number": "$Revision: 9140 $"
     },
     "generation": {
-      "@date": "$Date: 2013-02-24 21:06:02 -0600 (Sun, 24 Feb 2013) $"
+      "_date": "$Date: 2013-08-06 20:58:02 -0500 (Tue, 06 Aug 2013) $"
     },
     "languageMatching": {
       "written": [
         {
           "languageMatch": {
-            "@percent": "100",
-            "@supported": "nb",
-            "@desired": "no"
+            "_percent": "100",
+            "_supported": "nb",
+            "_desired": "no"
           }
         },
         {
           "languageMatch": {
-            "@percent": "96",
-            "@supported": "nb",
-            "@desired": "nn"
+            "_percent": "96",
+            "_supported": "nb",
+            "_desired": "nn"
           }
         },
         {
           "languageMatch": {
-            "@percent": "96",
-            "@supported": "no",
-            "@desired": "nn"
+            "_percent": "96",
+            "_supported": "no",
+            "_desired": "nn"
           }
         },
         {
           "languageMatch": {
-            "@percent": "90",
-            "@supported": "no",
-            "@desired": "da"
+            "_percent": "90",
+            "_supported": "no",
+            "_desired": "da"
           }
         },
         {
           "languageMatch": {
-            "@percent": "90",
-            "@supported": "nb",
-            "@desired": "da"
+            "_percent": "90",
+            "_supported": "nb",
+            "_desired": "da"
           }
         },
         {
           "languageMatch": {
-            "@percent": "96",
-            "@supported": "bs",
-            "@desired": "hr"
+            "_percent": "96",
+            "_supported": "bs",
+            "_desired": "hr"
           }
         },
         {
           "languageMatch": {
-            "@percent": "96",
-            "@supported": "bs",
-            "@desired": "sh"
+            "_percent": "96",
+            "_supported": "bs",
+            "_desired": "sh"
           }
         },
         {
           "languageMatch": {
-            "@percent": "96",
-            "@supported": "bs",
-            "@desired": "sr"
+            "_percent": "96",
+            "_supported": "bs",
+            "_desired": "sr"
           }
         },
         {
           "languageMatch": {
-            "@percent": "96",
-            "@supported": "hr",
-            "@desired": "sh"
+            "_percent": "96",
+            "_supported": "hr",
+            "_desired": "sh"
           }
         },
         {
           "languageMatch": {
-            "@percent": "96",
-            "@supported": "hr",
-            "@desired": "sr"
+            "_percent": "96",
+            "_supported": "hr",
+            "_desired": "sr"
           }
         },
         {
           "languageMatch": {
-            "@percent": "96",
-            "@supported": "sr",
-            "@desired": "sh"
+            "_percent": "96",
+            "_supported": "sr",
+            "_desired": "sh"
           }
         },
         {
           "languageMatch": {
-            "@percent": "90",
-            "@supported": "id",
-            "@desired": "ms"
+            "_percent": "90",
+            "_supported": "id",
+            "_desired": "ms"
           }
         },
         {
           "languageMatch": {
-            "@percent": "96",
-            "@supported": "aa",
-            "@desired": "ssy"
+            "_percent": "96",
+            "_supported": "aa",
+            "_desired": "ssy"
           }
         },
         {
           "languageMatch": {
-            "@percent": "90",
-            "@supported": "sr-Cyrl",
-            "@desired": "sr-Latn"
+            "_percent": "90",
+            "_supported": "sr_Cyrl",
+            "_desired": "sr_Latn"
           }
         },
         {
           "languageMatch": {
-            "@percent": "85",
-            "@supported": "*-Hant",
-            "@oneway": "true",
-            "@desired": "*-Hans"
+            "_percent": "85",
+            "_supported": "*_Hant",
+            "_oneway": "true",
+            "_desired": "*_Hans"
           }
         },
         {
           "languageMatch": {
-            "@percent": "75",
-            "@supported": "*-Hans",
-            "@oneway": "true",
-            "@desired": "*-Hant"
+            "_percent": "75",
+            "_supported": "*_Hans",
+            "_oneway": "true",
+            "_desired": "*_Hant"
           }
         },
         {
           "languageMatch": {
-            "@percent": "85",
-            "@supported": "de-CH",
-            "@oneway": "true",
-            "@desired": "gsw"
+            "_percent": "85",
+            "_supported": "de_CH",
+            "_oneway": "true",
+            "_desired": "gsw"
           }
         },
         {
           "languageMatch": {
-            "@percent": "80",
-            "@supported": "de",
-            "@oneway": "true",
-            "@desired": "gsw"
+            "_percent": "80",
+            "_supported": "de",
+            "_oneway": "true",
+            "_desired": "gsw"
           }
         },
         {
           "languageMatch": {
-            "@percent": "98",
-            "@supported": "en-*-CA",
-            "@desired": "en-*-US"
+            "_percent": "98",
+            "_supported": "en_*_CA",
+            "_desired": "en_*_US"
           }
         },
         {
           "languageMatch": {
-            "@percent": "97",
-            "@supported": "en-*-*",
-            "@desired": "en-*-US"
+            "_percent": "97",
+            "_supported": "en_*_*",
+            "_desired": "en_*_US"
           }
         },
         {
           "languageMatch": {
-            "@percent": "98",
-            "@supported": "en-*-*",
-            "@desired": "en-*-CA"
+            "_percent": "98",
+            "_supported": "en_*_*",
+            "_desired": "en_*_CA"
           }
         },
         {
           "languageMatch": {
-            "@percent": "99",
-            "@supported": "en-*-*",
-            "@desired": "en-*-*"
+            "_percent": "99",
+            "_supported": "en_*_*",
+            "_desired": "en_*_*"
           }
         },
         {
           "languageMatch": {
-            "@percent": "100",
-            "@supported": "es-*-ES",
-            "@desired": "es-*-ES"
+            "_percent": "100",
+            "_supported": "es_*_ES",
+            "_desired": "es_*_ES"
           }
         },
         {
           "languageMatch": {
-            "@percent": "93",
-            "@supported": "es-*-*",
-            "@desired": "es-*-ES"
+            "_percent": "93",
+            "_supported": "es_*_*",
+            "_desired": "es_*_ES"
           }
         },
         {
           "languageMatch": {
-            "@percent": "1",
-            "@supported": "*",
-            "@desired": "*"
+            "_percent": "1",
+            "_supported": "*",
+            "_desired": "*"
           }
         },
         {
           "languageMatch": {
-            "@percent": "20",
-            "@supported": "*-*",
-            "@desired": "*-*"
+            "_percent": "20",
+            "_supported": "*_*",
+            "_desired": "*_*"
           }
         },
         {
           "languageMatch": {
-            "@percent": "96",
-            "@supported": "*-*-*",
-            "@desired": "*-*-*"
+            "_percent": "96",
+            "_supported": "*_*_*",
+            "_desired": "*_*_*"
           }
         }
       ]

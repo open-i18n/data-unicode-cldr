@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -18,9 +20,15 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.unicode.cldr.draft.ScriptMetadata;
+import org.unicode.cldr.tool.LikelySubtags;
+import org.unicode.cldr.tool.PluralRulesFactory;
 import org.unicode.cldr.unittest.TestAll.TestInfo;
 import org.unicode.cldr.util.Builder;
 import org.unicode.cldr.util.CLDRFile;
+import org.unicode.cldr.util.CLDRFile.WinningChoice;
+import org.unicode.cldr.util.CLDRLocale;
+import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.DayPeriodInfo;
 import org.unicode.cldr.util.Iso639Data;
 import org.unicode.cldr.util.Iso639Data.Scope;
@@ -28,11 +36,19 @@ import org.unicode.cldr.util.IsoCurrencyParser;
 import org.unicode.cldr.util.LanguageTagParser;
 import org.unicode.cldr.util.Pair;
 import org.unicode.cldr.util.PreferredAndAllowedHour;
+import org.unicode.cldr.util.PreferredAndAllowedHour.HourStyle;
 import org.unicode.cldr.util.StandardCodes;
+import org.unicode.cldr.util.StandardCodes.CodeType;
 import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.BasicLanguageData;
 import org.unicode.cldr.util.SupplementalDataInfo.BasicLanguageData.Type;
 import org.unicode.cldr.util.SupplementalDataInfo.CurrencyDateInfo;
+import org.unicode.cldr.util.SupplementalDataInfo.OfficialStatus;
+import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo;
+import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo.Count;
+import org.unicode.cldr.util.SupplementalDataInfo.PluralType;
+import org.unicode.cldr.util.SupplementalDataInfo.PopulationData;
+import org.unicode.cldr.util.SupplementalDataInfo.SampleList;
 
 import com.ibm.icu.dev.test.TestFmwk;
 import com.ibm.icu.dev.util.CollectionUtilities;
@@ -41,37 +57,481 @@ import com.ibm.icu.impl.Row;
 import com.ibm.icu.impl.Row.R2;
 import com.ibm.icu.impl.Row.R3;
 import com.ibm.icu.impl.Utility;
+import com.ibm.icu.lang.UScript;
+import com.ibm.icu.text.PluralRules;
+import com.ibm.icu.text.PluralRules.FixedDecimal;
+import com.ibm.icu.text.StringTransform;
+import com.ibm.icu.text.UnicodeSet;
+import com.ibm.icu.util.ULocale;
 
 public class TestSupplementalInfo extends TestFmwk {
     static TestInfo testInfo = TestInfo.getInstance();
+
+    private static final StandardCodes STANDARD_CODES = testInfo.getStandardCodes();
+
+    private static final SupplementalDataInfo SUPPLEMENTAL = testInfo.getSupplementalDataInfo();
 
     public static void main(String[] args) {
         new TestSupplementalInfo().run(args);
     }
 
+    public void TestPluralSamples() {
+        String[][] test = {
+            { "en", "ordinal", "1", "one" },
+            { "en", "ordinal", "2", "two" },
+            { "en", "ordinal", "3", "few" },
+            { "en", "ordinal", "4", "other" },
+            { "sl", "cardinal", "2", "two" },
+        };
+        for (String[] row : test) {
+            checkPluralSamples(row);
+        }
+    }
+
+    public void checkPluralSamples(String... row) {
+        PluralInfo pluralInfo = SUPPLEMENTAL.getPlurals(PluralType.valueOf(row[1]), row[0]);
+        Count count = pluralInfo.getCount(new FixedDecimal(row[2]));
+        assertEquals(CollectionUtilities.join(row, ", "), Count.valueOf(row[3]), count);
+    }
+
+    public void TestPluralLocales() {
+        // get the unique rules
+        for (PluralType type : PluralType.values()) {
+            Relation<PluralInfo, String> pluralsToLocale = new Relation(new HashMap(), TreeSet.class);
+            for (String locale : new TreeSet<String>(SUPPLEMENTAL.getPluralLocales(type))) {
+                PluralInfo pluralInfo = SUPPLEMENTAL.getPlurals(type, locale);
+                pluralsToLocale.put(pluralInfo, locale);
+            }
+
+            String[][] equivalents = {
+                { "mo", "ro" },
+                { "tl", "fil" },
+                { "he", "iw" },
+                { "in", "id" },
+                { "jw", "jv" },
+                { "ji", "yi" },
+                { "sh", "sr" },
+            };
+            for (Entry<PluralInfo, Set<String>> pluralInfoEntry : pluralsToLocale.keyValuesSet()) {
+                PluralInfo pluralInfo2 = pluralInfoEntry.getKey();
+                Set<String> locales = pluralInfoEntry.getValue();
+                // check that equivalent locales are either both in or both out
+                for (String[] row : equivalents) {
+                    assertEquals(type + " must be equivalent: " + Arrays.asList(row),
+                        locales.contains(row[0]),
+                        locales.contains(row[1]));
+                }
+                // check that no rules contain 'within'
+                for (Count count : pluralInfo2.getCounts()) {
+                    String rule = pluralInfo2.getRule(count);
+                    if (rule == null) {
+                        continue;
+                    }
+                    assertFalse("Rule '" + rule + "' for " + Arrays.asList(locales) +
+                        " doesn't contain 'within'", rule.contains("within"));
+                }
+            }
+        }
+    }
+
+    public void TestDigitPluralCases() {
+        String[][] tests = {
+            { "en", "one", "1", "1" },
+            { "en", "one", "2", "" },
+            { "en", "one", "3", "" },
+            { "en", "one", "4", "" },
+            { "en", "other", "1", "0, 2-9, 0.0, 0.1, 0.2, …" },
+            { "en", "other", "2", "10-99, 10.0, 10.1, 10.2, …" },
+            { "en", "other", "3", "100-999, 100.0, 100.1, 100.2, …" },
+            { "en", "other", "4", "1000-9999, 1000.0, 1000.1, 1000.2, …" },
+            { "hr", "one", "1", "1, 0.1, 2.10, 1.1, …" },
+            { "hr", "one", "2", "21, 31, 41, 51, 61, 71, …, 10.1, 12.10, 11.1, …" },
+            { "hr", "one", "3", "101, 121, 131, 141, 151, 161, …, 100.1, 102.10, 101.1, …" },
+            { "hr", "one", "4", "1001, 1021, 1031, 1041, 1051, 1061, …, 1000.1, 1002.10, 1001.1, …" },
+            { "hr", "few", "1", "2-4, 0.2, 0.3, 0.4, …" },
+            { "hr", "few", "2", "22-24, 32-34, 42-44, …, 10.2, 10.3, 10.4, …" },
+            { "hr", "few", "3", "102-104, 122-124, 132-134, …, 100.2, 100.3, 100.4, …" },
+            { "hr", "few", "4", "1002-1004, 1022-1024, 1032-1034, …, 1000.2, 1000.3, 1000.4, …" },
+            { "hr", "other", "1", "0, 5-9, 0.0, 0.5, 0.6, …" },
+            { "hr", "other", "2", "10-20, 25-30, 35-40, …, 10.0, 10.5, 10.6, …" },
+            { "hr", "other", "3", "100, 105-120, 125-130, 135-140, …, 100.0, 100.5, 100.6, …" },
+            { "hr", "other", "4", "1000, 1005-1020, 1025-1030, 1035-1040, …, 1000.0, 1000.5, 1000.6, …" },
+        };
+        for (String[] row : tests) {
+            PluralInfo plurals = SUPPLEMENTAL.getPlurals(row[0]);
+            SampleList uset = plurals.getSamples9999(Count.valueOf(row[1]), Integer.parseInt(row[2]));
+            assertEquals(row[0] + ", " + row[1] + ", " + row[2], row[3], uset.toString());
+        }
+    }
+
+    public void TestDigitPluralCompleteness() {
+        String[][] exceptionStrings = {
+            // defaults
+            { "*", "zero", "0,00,000,0000" },
+            { "*", "one", "0" },
+            { "*", "two", "0,00,000,0000" },
+            { "*", "few", "0,00,000,0000" },
+            { "*", "many", "0,00,000,0000" },
+            { "*", "other", "0,00,000,0000" },
+            // others
+            { "mo", "other", "00,000,0000" }, // 
+            { "ro", "other", "00,000,0000" }, // 
+            { "cs", "few", "0" }, // j in 2..4
+            { "sk", "few", "0" }, // j in 2..4
+            { "da", "one", "0" }, // j is 1 or t is not 0 and n within 0..2
+            { "is", "one", "0,00,000,0000" }, // j is 1 or f is 1
+            { "sv", "one", "0" }, // j is 1
+            { "he", "two", "0" }, // j is 2
+            { "ru", "one", "0,00,000,0000" }, // j mod 10 is 1 and j mod 100 is not 11
+            { "uk", "one", "0,00,000,0000" }, // j mod 10 is 1 and j mod 100 is not 11
+            { "bs", "one", "0,00,000,0000" }, // j mod 10 is 1 and j mod 100 is not 11 or f mod 10 is 1 and f mod 100 is not 11
+            { "hr", "one", "0,00,000,0000" }, // j mod 10 is 1 and j mod 100 is not 11 or f mod 10 is 1 and f mod 100 is not 11
+            { "sh", "one", "0,00,000,0000" }, // j mod 10 is 1 and j mod 100 is not 11 or f mod 10 is 1 and f mod 100 is not 11
+            { "sr", "one", "0,00,000,0000" }, // j mod 10 is 1 and j mod 100 is not 11 or f mod 10 is 1 and f mod 100 is not 11
+            { "mk", "one", "0,00,000,0000" }, // j mod 10 is 1 or f mod 10 is 1
+            { "sl", "one", "0,000,0000" }, // j mod 100 is 1
+            { "sl", "two", "0,000,0000" }, // j mod 100 is 2
+            { "he", "many", "00,000,0000" }, // j not in 0..10 and j mod 10 is 0
+            { "tzm", "one", "0,00" }, // n in 0..1 or n in 11..99
+            { "gd", "one", "0,00" }, // n in 1,11
+            { "gd", "two", "0,00" }, // n in 2,12
+            { "shi", "few", "0,00" }, // n in 2..10
+            { "gd", "few", "0,00" }, // n in 3..10,13..19
+            { "ga", "few", "0" }, // n in 3..6
+            { "ga", "many", "0,00" }, // n in 7..10
+            { "ar", "zero", "0" }, // n is 0
+            { "cy", "zero", "0" }, // n is 0
+            { "ksh", "zero", "0" }, // n is 0
+            { "lag", "zero", "0" }, // n is 0
+            { "pt", "one", "0"}, // i = 1 and v = 0 or i = 0 and t = 1
+            { "pt_PT", "one", "0"},  // n = 1 and v = 0 
+            { "ar", "two", "0" }, // n is 2
+            { "cy", "two", "0" }, // n is 2
+            { "ga", "two", "0" }, // n is 2
+            { "iu", "two", "0" }, // n is 2
+            { "kw", "two", "0" }, // n is 2
+            { "naq", "two", "0" }, // n is 2
+            { "se", "two", "0" }, // n is 2
+            { "sma", "two", "0" }, // n is 2
+            { "smi", "two", "0" }, // n is 2
+            { "smj", "two", "0" }, // n is 2
+            { "smn", "two", "0" }, // n is 2
+            { "sms", "two", "0" }, // n is 2
+            { "cy", "few", "0" }, // n is 3
+            { "cy", "many", "0" }, // n is 6
+            { "br", "many", "" }, // n is not 0 and n mod 1000000 is 0
+            { "gv", "one", "0,00,000,0000" }, // n mod 10 is 1
+            { "be", "one", "0,00,000,0000" }, // n mod 10 is 1 and n mod 100 is not 11
+            { "lv", "one", "0,00,000,0000" }, // n mod 10 is 1 and n mod 100 is not 11 or v is 2 and f mod 10 is 1 and f mod 100 is not 11 or v is not 2 and f mod 10 is 1
+            { "br", "one", "0,00,000,0000" }, // n mod 10 is 1 and n mod 100 not in 11,71,91
+            { "lt", "one", "0,00,000,0000" }, // n mod 10 is 1 and n mod 100 not in 11..19
+        };
+        // parse out the exceptions
+        Map<PluralInfo, Relation<Count, Integer>> exceptions = new HashMap();
+        Relation<Count, Integer> fallback = Relation.of(new EnumMap<Count, Set<Integer>>(Count.class), TreeSet.class);
+        for (String[] row : exceptionStrings) {
+            Relation<Count, Integer> countToDigits;
+            if (row[0].equals("*")) {
+                countToDigits = fallback;
+            } else {
+                PluralInfo plurals = SUPPLEMENTAL.getPlurals(row[0]);
+                countToDigits = exceptions.get(plurals);
+                if (countToDigits == null) {
+                    exceptions.put(plurals, countToDigits = Relation.of(new EnumMap<Count, Set<Integer>>(Count.class), TreeSet.class));
+                }
+            }
+            Count c = Count.valueOf(row[1]);
+            for (String digit : row[2].split(",")) {
+                // "99" is special, just to have the result be non-empty
+                countToDigits.put(c, digit.length());
+            }
+        }
+        Set<PluralInfo> seen = new HashSet();
+        Set<String> sorted = new TreeSet(SUPPLEMENTAL.getPluralLocales(PluralType.cardinal));
+        Relation<String, String> ruleToExceptions = Relation.of(new TreeMap<String, Set<String>>(), TreeSet.class);
+
+        for (String locale : sorted) {
+            PluralInfo plurals = SUPPLEMENTAL.getPlurals(locale);
+            if (seen.contains(plurals)) { // skip identicals
+                continue;
+            }
+            Relation<Count, Integer> countToDigits = exceptions.get(plurals);
+            if (countToDigits == null) {
+                countToDigits = fallback;
+            }
+            for (Count c : plurals.getCounts()) {
+                List<String> compose = new ArrayList<String>();
+                boolean needLine = false;
+                Set<Integer> digitSet = countToDigits.get(c);
+                if (digitSet == null) {
+                    digitSet = fallback.get(c);
+                }
+                for (int digits = 1; digits < 5; ++digits) {
+                    boolean expected = digitSet.contains(digits);
+                    boolean hasSamples = plurals.hasSamples(c, digits);
+                    if (hasSamples) {
+                        compose.add(Utility.repeat("0", digits));
+                    }
+                    if (!assertEquals(locale + ", " + digits + ", " + c, expected, hasSamples)) {
+                        needLine = true;
+                    }
+                }
+                if (needLine) {
+                    String countRules = plurals.getPluralRules().getRules(c.toString());
+                    ruleToExceptions.put(
+                        countRules == null ? "" : countRules,
+                        "{\"" + locale + "\", \"" + c + "\", \"" + CollectionUtilities.join(compose, ",") + "\"},");
+                }
+            }
+        }
+        if (!ruleToExceptions.isEmpty()) {
+            System.out.println("To fix the above, review the following, then replace in TestDigitPluralCompleteness");
+            for (Entry<String, String> entry : ruleToExceptions.entrySet()) {
+                System.out.println(entry.getValue() + "\t// " + entry.getKey());
+            }
+        }
+    }
+
+    public void TestLikelyCode() {
+        Map<String, String> likely = SUPPLEMENTAL.getLikelySubtags();
+        String[][] tests = {
+            { "it_AQ", "it_Latn_AQ" },
+            { "it_Arab", "it_Arab_IT" },
+            { "az_Cyrl", "az_Cyrl_AZ" },
+        };
+        for (String[] pair : tests) {
+            String newMax = LikelySubtags.maximize(pair[0], likely);
+            assertEquals("Likely", pair[1], newMax);
+        }
+
+    }
+
+    public void TestLikelySubtagCompleteness() {
+        Map<String, String> likely = SUPPLEMENTAL.getLikelySubtags();
+
+        for (String language : SUPPLEMENTAL.getCLDRLanguageCodes()) {
+            if (!likely.containsKey(language)) {
+                logln("WARNING: No likely subtag for CLDR language code (" + language + ")");
+            }
+        }
+        for (String script : SUPPLEMENTAL.getCLDRScriptCodes()) {
+            if (!likely.containsKey("und_" + script) &&
+                !script.equals("Latn") &&
+                ScriptMetadata.getInfo(script) != null &&
+                ScriptMetadata.getInfo(script).idUsage != ScriptMetadata.IdUsage.EXCLUSION &&
+                ScriptMetadata.getInfo(script).idUsage != ScriptMetadata.IdUsage.UNKNOWN) {
+                errln("No likely subtag for CLDR script code (und_" + script + ")");
+            }
+        }
+
+    }
+
+    public void TestEquivalentLocales() {
+        Set<Set<String>> seen = new HashSet();
+        Set<String> toTest = new TreeSet(testInfo.getCldrFactory().getAvailable());
+        toTest.addAll(SUPPLEMENTAL.getLikelySubtags().keySet());
+        toTest.addAll(SUPPLEMENTAL.getLikelySubtags().values());
+        toTest.addAll(SUPPLEMENTAL.getDefaultContentLocales());
+        LanguageTagParser ltp = new LanguageTagParser();
+        main: for (String locale : toTest) {
+            if (locale.startsWith("und") || locale.equals("root")) {
+                continue;
+            }
+            Set<String> s = SUPPLEMENTAL.getEquivalentsForLocale(locale);
+            if (seen.contains(s)) {
+                continue;
+            }
+            //System.out.println(s + " => " + VettingViewer.gatherCodes(s));
+
+            List<String> ss = new ArrayList<String>(s);
+            String last = ss.get(ss.size() - 1);
+            String language = ltp.set(last).getLanguage();
+            String script = ltp.set(last).getScript();
+            String region = ltp.set(last).getRegion();
+            if (!script.isEmpty() && !region.isEmpty()) {
+                String noScript = ltp.setScript("").toString();
+                String noRegion = ltp.setScript(script).setRegion("").toString();
+                switch (s.size()) {
+                case 1: // ok if already maximized and strange script/country, eg it_Arab_JA
+                    continue main;
+                case 2: // ok if adds default country/script, eg {en_Cyrl, en_Cyrl_US} or {en_GB, en_Latn_GB}
+                    String first = ss.get(0);
+                    if (first.equals(noScript) || first.equals(noRegion)) {
+                        continue main;
+                    }
+                    break;
+                case 3: // ok if different script in different country, eg {az_IR, az_Arab, az_Arab_IR}
+                    if (noScript.equals(ss.get(0)) && noRegion.equals(ss.get(1))) {
+                        continue main;
+                    }
+                    break;
+                case 4: // ok if all combinations, eg {en, en_US, en_Latn, en_Latn_US}
+                    if (language.equals(ss.get(0)) && noScript.equals(ss.get(1)) && noRegion.equals(ss.get(2))) {
+                        continue main;
+                    }
+                    break;
+                }
+            }
+            errln("Strange size or composition:\t" + s + " \t" + showLocaleParts(s));
+            seen.add(s);
+        }
+    }
+
+    private String showLocaleParts(Set<String> s) {
+        LanguageTagParser ltp = new LanguageTagParser();
+        Set<String> b = new LinkedHashSet<String>();
+        for (String ss : s) {
+            ltp.set(ss);
+            addName(CLDRFile.LANGUAGE_NAME, ltp.getLanguage(), b);
+            addName(CLDRFile.SCRIPT_NAME, ltp.getScript(), b);
+            addName(CLDRFile.TERRITORY_NAME, ltp.getRegion(), b);
+        }
+        return CollectionUtilities.join(b, "; ");
+    }
+
+    private void addName(int languageName, String code, Set<String> b) {
+        if (code.isEmpty()) {
+            return;
+        }
+        String name = testInfo.getEnglish().getName(languageName, code);
+        if (!code.equals(name)) {
+            b.add(code + "=" + name);
+        }
+    }
+
+    public void TestDefaultScriptCompleteness() {
+        Relation<String, String> scriptToBase = Relation.of(new LinkedHashMap<String, Set<String>>(), TreeSet.class);
+        main: for (String locale : testInfo.getCldrFactory().getAvailableLanguages()) {
+            if (!locale.contains("_") && !"root".equals(locale)) {
+                String defaultScript = SUPPLEMENTAL.getDefaultScript(locale);
+                if (defaultScript != null) {
+                    continue;
+                }
+                CLDRFile cldrFile = testInfo.getCldrFactory().make(locale, false);
+                UnicodeSet set = cldrFile.getExemplarSet("", WinningChoice.NORMAL);
+                for (String s : set) {
+                    int script = UScript.getScript(s.codePointAt(0));
+                    if (script != UScript.UNKNOWN && script != UScript.COMMON && script != UScript.INHERITED) {
+                        scriptToBase.put(UScript.getShortName(script), locale);
+                        continue main;
+                    }
+                }
+                scriptToBase.put(UScript.getShortName(UScript.UNKNOWN), locale);
+            }
+        }
+        if (scriptToBase.size() != 0) {
+            for (Entry<String, Set<String>> entry : scriptToBase.keyValuesSet()) {
+                errln("Default Scripts missing:\t" + entry.getKey() + "\t" + entry.getValue());
+            }
+        }
+    }
+
     public void TestTimeData() {
-        Map<String, PreferredAndAllowedHour> timeData = testInfo.getSupplementalDataInfo().getTimeData();
+        Map<String, PreferredAndAllowedHour> timeData = SUPPLEMENTAL.getTimeData();
         Set<String> regionsSoFar = new HashSet<String>();
+        Set<String> current24only = new HashSet<String>();
+        Set<String> current12preferred = new HashSet<String>();
+
+        boolean haveWorld = false;
         for (Entry<String, PreferredAndAllowedHour> e : timeData.entrySet()) {
             String region = e.getKey();
+            if (region.equals("001")) {
+                haveWorld = true;
+            }
+            regionsSoFar.add(region);
             PreferredAndAllowedHour preferredAndAllowedHour = e.getValue();
             if (!preferredAndAllowedHour.allowed.contains(preferredAndAllowedHour.preferred)) {
                 errln(region + ": " + preferredAndAllowedHour.allowed + "must contain"
                     + preferredAndAllowedHour.preferred);
             }
-            for (Character c : preferredAndAllowedHour.allowed) {
-                if (!PreferredAndAllowedHour.HOURS.contains(c)) {
-                    errln(region + ": illegal character in " + preferredAndAllowedHour.allowed + ". It contains " + c
-                        + " which is not in " + PreferredAndAllowedHour.HOURS);
+            //            for (HourStyle c : preferredAndAllowedHour.allowed) {
+            //                if (!PreferredAndAllowedHour.HOURS.contains(c)) {
+            //                    errln(region + ": illegal character in " + preferredAndAllowedHour.allowed + ". It contains " + c
+            //                            + " which is not in " + PreferredAndAllowedHour.HOURS);
+            //                }
+            //            }
+            if (preferredAndAllowedHour.allowed.size() == 1
+                && preferredAndAllowedHour.allowed.contains(HourStyle.H)) {
+                current24only.add(region);
+            }
+            if (preferredAndAllowedHour.preferred == HourStyle.h) {
+                current12preferred.add(region);
+            }
+        }
+        Set<String> missing = new TreeSet<String>(STANDARD_CODES.getGoodAvailableCodes(CodeType.territory));
+        missing.removeAll(regionsSoFar);
+        for (Iterator<String> it = missing.iterator(); it.hasNext();) {
+            if (!StandardCodes.isCountry(it.next())) {
+                it.remove();
+            }
+        }
+
+        // if we don't have 001, then we can't miss any regions
+        if (!missing.isEmpty()) {
+            if (haveWorld) {
+                logln("Missing regions: " + missing);
+            } else {
+                errln("Missing regions: " + missing);
+            }
+        }
+
+        // The feedback gathered from our translators is that the following use 24 hour time ONLY:
+        Set<String> only24lang = new TreeSet<String>(Arrays.asList(("sq, br, bu, ca, hr, cs, da, de, nl, et, eu, fi, " +
+            "fr, gl, he, is, id, it, nb, pt, ro, ru, sr, sk, sl, sv, tr, hy").split(",\\s*")));
+        Set<String> only24region = new TreeSet();
+        Set<String> either24or12region = new TreeSet();
+
+        // get all countries where official or de-facto official
+        // add them two one of two lists, based on the above list of languages
+        for (String language : SUPPLEMENTAL.getLanguagesForTerritoriesPopulationData()) {
+            boolean a24lang = only24lang.contains(language);
+            for (String region : SUPPLEMENTAL.getTerritoriesForPopulationData(language)) {
+                PopulationData pop = SUPPLEMENTAL.getLanguageAndTerritoryPopulationData(language, region);
+                if (pop.getOfficialStatus().compareTo(OfficialStatus.de_facto_official) < 0) {
+                    continue;
+                }
+                if (a24lang) {
+                    only24region.add(region);
+                } else {
+                    either24or12region.add(region);
                 }
             }
+        }
+        // if we have a case like CA, where en uses 12/24 but fr uses 24, remove it for safety
+        only24region.removeAll(either24or12region);
+        // also remove all the regions where 'h' is preferred
+        only24region.removeAll(current12preferred);
+        // now verify
+        if (!current24only.containsAll(only24region)) {
+            Set<String> missing24only = new TreeSet(only24region);
+            missing24only.removeAll(current24only);
+
+            errln("24-hour-only doesn't include needed items:\n"
+                + " add " + CldrUtility.join(missing24only, " ")
+                + "\n\t\t"
+                + CldrUtility.join(missing24only, "\n\t\t", new NameCodeTransform(testInfo.getEnglish(), CLDRFile.TERRITORY_NAME)));
+        }
+    }
+
+    public static class NameCodeTransform implements StringTransform {
+        private final CLDRFile file;
+        private final int codeType;
+
+        public NameCodeTransform(CLDRFile file, int code) {
+            this.file = file;
+            this.codeType = code;
+        }
+
+        @Override
+        public String transform(String code) {
+            return file.getName(codeType, code) + " [" + code + "]";
         }
     }
 
     public void TestAliases() {
         testInfo.getStandardCodes();
         Map<String, Map<String, Map<String, String>>> bcp47Data = StandardCodes.getLStreg();
-        Map<String, Map<String, R2<List<String>, String>>> aliases = testInfo.getSupplementalDataInfo()
+        Map<String, Map<String, R2<List<String>, String>>> aliases = SUPPLEMENTAL
             .getLocaleAliasInfo();
 
         for (Entry<String, Map<String, R2<List<String>, String>>> typeMap : aliases.entrySet()) {
@@ -92,7 +552,7 @@ public class TestSupplementalInfo extends TestFmwk {
                     }
                     Map<String, String> data = codeData.getValue();
                     if (data.containsKey("Deprecated")
-                        && testInfo.getSupplementalDataInfo().getCLDRLanguageCodes().contains(code)) {
+                        && SUPPLEMENTAL.getCLDRLanguageCodes().contains(code)) {
                         errln("supplementalMetadata.xml: alias is missing <languageAlias type=\"" + code + "\" ... /> "
                             + "\t" + data);
                     }
@@ -123,6 +583,7 @@ public class TestSupplementalInfo extends TestFmwk {
                 List<String> fixedList = new ArrayList<String>(fixedReplacements);
                 if (!replacements.equals(fixedList)) {
                     R3<String, List<String>, List<String>> row = Row.of(code, replacements, fixedList);
+                    System.out.println(row.toString());
                     failures.add(row);
                 }
             }
@@ -145,8 +606,8 @@ public class TestSupplementalInfo extends TestFmwk {
     }
 
     public void TestTerritoryContainment() {
-        Relation<String, String> map = testInfo.getSupplementalDataInfo().getTerritoryToContained(false);
-        Relation<String, String> mapCore = testInfo.getSupplementalDataInfo().getContainmentCore();
+        Relation<String, String> map = SUPPLEMENTAL.getTerritoryToContained(false);
+        Relation<String, String> mapCore = SUPPLEMENTAL.getContainmentCore();
         Set<String> mapItems = new LinkedHashSet<String>();
         // get all the items
         for (String item : map.keySet()) {
@@ -227,8 +688,8 @@ public class TestSupplementalInfo extends TestFmwk {
     }
 
     public void TestMacrolanguages() {
-        Set<String> languageCodes = testInfo.getStandardCodes().getAvailableCodes("language");
-        Map<String, Map<String, R2<List<String>, String>>> typeToTagToReplacement = testInfo.getSupplementalDataInfo()
+        Set<String> languageCodes = STANDARD_CODES.getAvailableCodes("language");
+        Map<String, Map<String, R2<List<String>, String>>> typeToTagToReplacement = SUPPLEMENTAL
             .getLocaleAliasInfo();
         Map<String, R2<List<String>, String>> tagToReplacement = typeToTagToReplacement.get("language");
 
@@ -313,7 +774,7 @@ public class TestSupplementalInfo extends TestFmwk {
     }
 
     public void TestPopulation() {
-        Set<String> languages = testInfo.getSupplementalDataInfo().getLanguagesForTerritoriesPopulationData();
+        Set<String> languages = SUPPLEMENTAL.getLanguagesForTerritoriesPopulationData();
         Relation<String, String> baseToLanguages = Relation.of(new TreeMap<String, Set<String>>(), TreeSet.class);
         LanguageTagParser ltp = new LanguageTagParser();
         for (String language : languages) {
@@ -324,7 +785,7 @@ public class TestSupplementalInfo extends TestFmwk {
             // add basic data, basically just for wo!
             // if there are primary scripts, they must include script (if not empty)
             Set<String> primaryScripts = Collections.emptySet();
-            Map<Type, BasicLanguageData> basicData = testInfo.getSupplementalDataInfo().getBasicLanguageDataMap(base);
+            Map<Type, BasicLanguageData> basicData = SUPPLEMENTAL.getBasicLanguageDataMap(base);
             if (basicData != null) {
                 BasicLanguageData s = basicData.get(BasicLanguageData.Type.primary);
                 if (s != null) {
@@ -363,9 +824,9 @@ public class TestSupplementalInfo extends TestFmwk {
     }
 
     public void TestCompleteness() {
-        if (testInfo.getSupplementalDataInfo().getSkippedElements().size() > 0) {
+        if (SUPPLEMENTAL.getSkippedElements().size() > 0) {
             logln("SupplementalDataInfo API doesn't support: "
-                + testInfo.getSupplementalDataInfo().getSkippedElements().toString());
+                + SUPPLEMENTAL.getSkippedElements().toString());
         }
     }
 
@@ -393,27 +854,27 @@ public class TestSupplementalInfo extends TestFmwk {
      */
     public void TestCurrency() {
         IsoCurrencyParser isoCodes = IsoCurrencyParser.getInstance();
-        Set<String> currencyCodes = testInfo.getStandardCodes().getGoodAvailableCodes("currency");
+        Set<String> currencyCodes = STANDARD_CODES.getGoodAvailableCodes("currency");
         Relation<String, Pair<String, CurrencyDateInfo>> nonModernCurrencyCodes = Relation.of(
             new TreeMap<String, Set<Pair<String, CurrencyDateInfo>>>(),
             TreeSet.class);
         Relation<String, Pair<String, CurrencyDateInfo>> modernCurrencyCodes = Relation.of(
             new TreeMap<String, Set<Pair<String, CurrencyDateInfo>>>(),
             TreeSet.class);
-        Set<String> territoriesWithoutModernCurrencies = new TreeSet<String>(testInfo.getStandardCodes()
+        Set<String> territoriesWithoutModernCurrencies = new TreeSet<String>(STANDARD_CODES
             .getGoodAvailableCodes(
-                "territory"));
+            "territory"));
         Map<String, Date> currencyFirstValid = new TreeMap<String, Date>();
         Map<String, Date> currencyLastValid = new TreeMap<String, Date>();
         territoriesWithoutModernCurrencies.remove("ZZ");
 
-        for (String territory : testInfo.getStandardCodes().getGoodAvailableCodes("territory")) {
+        for (String territory : STANDARD_CODES.getGoodAvailableCodes("territory")) {
             /* "EU" behaves like a country for purposes of this test */
-            if ((testInfo.getSupplementalDataInfo().getContained(territory) != null) && !territory.equals("EU")) {
+            if ((SUPPLEMENTAL.getContained(territory) != null) && !territory.equals("EU")) {
                 territoriesWithoutModernCurrencies.remove(territory);
                 continue;
             }
-            Set<CurrencyDateInfo> currencyInfo = testInfo.getSupplementalDataInfo().getCurrencyDateInfo(territory);
+            Set<CurrencyDateInfo> currencyInfo = SUPPLEMENTAL.getCurrencyDateInfo(territory);
             if (currencyInfo == null) {
                 continue; // error, but will pick up below.
             }
@@ -422,7 +883,7 @@ public class TestSupplementalInfo extends TestFmwk {
                 final Date start = dateInfo.getStart();
                 final Date end = dateInfo.getEnd();
                 if (dateInfo.getErrors().length() != 0) {
-                    warnln("parsing " + territory + "\t" + dateInfo.toString() + "\t" + dateInfo.getErrors());
+                    logln("parsing " + territory + "\t" + dateInfo.toString() + "\t" + dateInfo.getErrors());
                 }
                 Date firstValue = currencyFirstValid.get(currency);
                 if (firstValue == null || firstValue.compareTo(start) < 0) {
@@ -432,7 +893,7 @@ public class TestSupplementalInfo extends TestFmwk {
                 if (lastValue == null || lastValue.compareTo(end) > 0) {
                     currencyLastValid.put(currency, end);
                 }
-                if (end.compareTo(NOW) >= 0) { // Non-tender is OK...
+                if (start.compareTo(NOW) < 0 && end.compareTo(NOW) >= 0) { // Non-tender is OK...
                     modernCurrencyCodes.put(currency, new Pair<String, CurrencyDateInfo>(territory, dateInfo));
                     territoriesWithoutModernCurrencies.remove(territory);
                 } else {
@@ -505,7 +966,7 @@ public class TestSupplementalInfo extends TestFmwk {
                     + "\t" + currency + "\t" + name + "\t" + nonModernCurrencyCodes.getAll(currency));
                 for (Pair<String, CurrencyDateInfo> pair : nonModernCurrencyCodes.getAll(currency)) {
                     final String territory = pair.getFirst();
-                    Set<CurrencyDateInfo> currencyInfo = testInfo.getSupplementalDataInfo().getCurrencyDateInfo(
+                    Set<CurrencyDateInfo> currencyInfo = SUPPLEMENTAL.getCurrencyDateInfo(
                         territory);
                     for (CurrencyDateInfo dateInfo : currencyInfo) {
                         if (dateInfo.getEnd().compareTo(NOW) < 0) {
@@ -541,8 +1002,8 @@ public class TestSupplementalInfo extends TestFmwk {
 
     public void TestDayPeriods() {
         int count = 0;
-        for (String locale : testInfo.getSupplementalDataInfo().getDayPeriodLocales()) {
-            DayPeriodInfo dayPeriod = testInfo.getSupplementalDataInfo().getDayPeriods(locale);
+        for (String locale : SUPPLEMENTAL.getDayPeriodLocales()) {
+            DayPeriodInfo dayPeriod = SUPPLEMENTAL.getDayPeriods(locale);
             logln(locale + "\t" + testInfo.getEnglish().getName(locale) + "\t" + dayPeriod);
             count += dayPeriod.getPeriodCount();
         }
@@ -569,6 +1030,145 @@ public class TestSupplementalInfo extends TestFmwk {
             dayPeriods.getDayPeriod((16 * 60 + 5) * 60 * 1000));
         assertEquals("11pm = night ", DayPeriodInfo.DayPeriod.night,
             dayPeriods.getDayPeriod(23 * 60 * 60 * 1000));
+    }
+
+    /**
+     * Verify that we have a default script for every CLDR base language
+     */
+    public void TestDefaultScripts() {
+        SupplementalDataInfo supp = SUPPLEMENTAL;
+        Map<String, String> likelyData = supp.getLikelySubtags();
+        Map<String, String> baseToDefaultContentScript = new HashMap<String, String>();
+        for (CLDRLocale locale : supp.getDefaultContentCLDRLocales()) {
+            String script = locale.getScript();
+            if (!script.isEmpty() && locale.getCountry().isEmpty()) {
+                baseToDefaultContentScript.put(locale.getLanguage(), script);
+            }
+        }
+        for (String locale : testInfo.getCldrFactory().getAvailableLanguages()) {
+            if ("root".equals(locale)) {
+                continue;
+            }
+            CLDRLocale loc = CLDRLocale.getInstance(locale);
+            String baseLanguage = loc.getLanguage();
+            String defaultScript = supp.getDefaultScript(baseLanguage);
+
+            String defaultContentScript = baseToDefaultContentScript.get(baseLanguage);
+            if (defaultContentScript != null) {
+                assertEquals(loc + " defaultContentScript = default", defaultScript, defaultContentScript);
+            }
+            String likely = likelyData.get(baseLanguage);
+            String likelyScript = likely == null ? null : CLDRLocale.getInstance(likely).getScript();
+            Map<Type, BasicLanguageData> scriptInfo = supp.getBasicLanguageDataMap(baseLanguage);
+            if (scriptInfo == null) {
+                if (!logKnownIssue("cldrbug:6114", "Use of scripts in locales")) {
+                    errln(loc + ": has no BasicLanguageData");
+                }
+            } else {
+                BasicLanguageData data = scriptInfo.get(Type.primary);
+                if (data == null) {
+                    data = scriptInfo.get(Type.secondary);
+                }
+                if (data == null) {
+                    errln(loc + ": has no scripts in BasicLanguageData");
+                } else if (!data.getScripts().contains(defaultScript)) {
+                    if (!logKnownIssue("cldrbug:6114", "Use of scripts in locales")) {
+                        errln(loc + ": " + defaultScript + " not in BasicLanguageData " + data.getScripts());
+                    }
+                }
+            }
+
+            assertEquals(loc + " likely = default", defaultScript, likelyScript);
+
+            assertNotNull(loc + ": needs default script", defaultScript);
+
+            if (!loc.getScript().isEmpty()) {
+                if (!loc.getScript().equals(defaultScript)) {
+                    if (!logKnownIssue("cldrbug:6114", "Use of scripts in locales")) {
+                        assertNotEquals(locale + ": only include script if not default", loc.getScript(), defaultScript);
+                    }
+                }
+            }
+
+        }
+    }
+
+    public void TestPluralCompleteness() {
+        Set<String> cardinalLocales = new TreeSet(SUPPLEMENTAL.getPluralLocales(PluralType.cardinal));
+        Set<String> ordinalLocales = new TreeSet(SUPPLEMENTAL.getPluralLocales(PluralType.ordinal));
+        Map<ULocale, PluralRulesFactory.SamplePatterns> sampleCardinals = PluralRulesFactory.getLocaleToSamplePatterns();
+        Set<ULocale> sampleCardinalLocales = new HashSet(sampleCardinals.keySet());
+        Map<ULocale, PluralRules> overrideCardinals = PluralRulesFactory.getPluralOverrides();
+        Set<ULocale> overrideCardinalLocales = new HashSet(overrideCardinals.keySet());
+
+        Set<String> testLocales = STANDARD_CODES.getLocaleCoverageLocales("google");
+        Set<String> allLocales = testInfo.getCldrFactory().getAvailable();
+        LanguageTagParser ltp = new LanguageTagParser();
+        for (boolean test : Arrays.asList(true, false)) {
+            for (String locale : allLocales) {
+                // the only known case where plural rules depend on region or script is pt_PT
+                if (locale.equals("root")) {
+                    continue;
+                }
+                ltp.set(locale);
+                if (!ltp.getRegion().isEmpty() || !ltp.getScript().isEmpty()) {
+                    continue;
+                }
+                if (test != testLocales.contains(locale)) {
+                    continue;
+                }
+                ULocale ulocale = new ULocale(locale);
+                PluralRules overrideRules = overrideCardinals.get(ulocale);
+                PluralRules cardinalRules = SUPPLEMENTAL.getPlurals(locale).getPluralRules();
+                boolean hasSamples = sampleCardinalLocales.contains(ulocale);
+                boolean hasCardinalRules = cardinalLocales.contains(locale);
+                boolean hasOrdinals = ordinalLocales.contains(locale);
+                if (test) {
+                    if (!hasSamples || !hasCardinalRules) {
+                        errln("Plurals for " + locale + ", Missing samples or cardinal rules");
+                    }
+                    if (!hasOrdinals) {
+                        logln("Plurals for " + locale + ", Missing ordinal rules");
+                    }
+                }
+                logln(test
+                    + "\t" + locale
+                    + "\t" + (hasCardinalRules ? "card" : "NO-card")
+                    + "\t" + (hasOrdinals ? "ord" : "NO-ord")
+                    + "\t" + (hasSamples ? "samp" : "NO-samp")
+                    + (!overrideCardinalLocales.contains(ulocale) ? ""
+                        : overrideRules.equals(cardinalRules) ? ""
+                            : "\t" + cardinalRules + "\t" + overrideRules));
+
+            }
+        }
+    }
+
+    public void TestNumberingSystemDigits() {
+
+        // Don't worry about digits from supplemental planes yet ( ICU can't handle them anyways )
+        // hanidec is the only known non codepoint order numbering system
+        // TODO: Fix so that it works properly on non-BMP digit strings.
+        String[] knownExceptions = { "brah", "cakm", "hanidec", "osma", "shrd", "sora", "takr" };
+        List<String> knownExceptionList = Arrays.asList(knownExceptions);
+        for (String ns : SUPPLEMENTAL.getNumericNumberingSystems()) {
+            if (knownExceptionList.contains(ns)) {
+                continue;
+            }
+            String digits = SUPPLEMENTAL.getDigits(ns);
+            int previousChar = 0;
+            int ch;
+
+            for (int i = 0; i < digits.length(); i += Character.charCount(ch)) {
+                ch = digits.codePointAt(i);
+                if (i > 0 && ch != previousChar + 1) {
+                    errln("Digits for numbering system " + ns + " are not in code point order. Previous char = U+" + Utility.hex(previousChar, 4)
+                        + " Current char = U+" + Utility.hex(ch, 4));
+                    break;
+                }
+                previousChar = ch;
+            }
+        }
     }
 
 }

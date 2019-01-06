@@ -49,7 +49,7 @@ public class OutdatedPaths {
     /**
      * Creates a new OutdatedPaths, using the data file "outdated.data" in the same directory as this class.
      * 
-     * @param directory
+     * @param version
      */
     public OutdatedPaths() {
         this(null);
@@ -127,6 +127,7 @@ public class OutdatedPaths {
         return result;
     }
 
+    @SuppressWarnings("resource")
     private DataInputStream openDataInput(String directory, String filename) throws FileNotFoundException {
         String dataFileName = filename;
         InputStream fileInputStream = directory == null

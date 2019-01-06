@@ -1,6 +1,6 @@
 # IDNA CONTEXT RULES (including BIDI)
 # Mark Davis
-# $Date: 2012-08-29 18:09:25 -0500 (Wed, 29 Aug 2012) $
+# $Date: 2013-08-18 23:26:52 -0500 (Sun, 18 Aug 2013) $
 # Provides a table-based mechanism for determining whether a label is a U-Label or not.
 
 # For testing, this turns on a Verbose mode, that displays the resolved sets and rules.

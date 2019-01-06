@@ -1,11 +1,11 @@
 {
   "supplemental": {
     "version": {
-      "@cldrVersion": "23.1",
-      "@number": "$Revision: 8721 $"
+      "_cldrVersion": "24",
+      "_number": "$Revision: 9270 $"
     },
     "generation": {
-      "@date": "$Date: 2013-05-15 14:50:20 -0500 (Wed, 15 May 2013) $"
+      "_date": "$Date: 2013-08-25 16:44:03 -0500 (Sun, 25 Aug 2013) $"
     },
     "measurementData": {
       "measurementSystem": {

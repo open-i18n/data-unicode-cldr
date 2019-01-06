@@ -18,10 +18,12 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -34,6 +36,7 @@ import org.unicode.cldr.util.Iso639Data.Type;
 import com.ibm.icu.dev.util.TransliteratorUtilities;
 import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.text.UnicodeSet;
+import com.ibm.icu.util.Output;
 
 /**
  * Provides access to various codes used by CLDR: RFC 3066, ISO 4217, Olson
@@ -56,7 +59,7 @@ public class StandardCodes {
     private static final Set<String> TypeStringSet;
     static {
         LinkedHashSet<String> foo = new LinkedHashSet<String>();
-        for (Type x : Type.values()) {
+        for (CodeType x : CodeType.values()) {
             foo.add(x.toString());
         }
         TypeStringSet = Collections.unmodifiableSet(foo);
@@ -370,27 +373,47 @@ public class StandardCodes {
         return platform_locale_level;
     }
 
+    public Level getLocaleCoverageLevel(String organization, String desiredLocale) {
+        return getLocaleCoverageLevel(organization, desiredLocale, new Output<LocaleCoverageType>());
+    }
+
+    public enum LocaleCoverageType {
+        explicit, parent, star, undetermined
+    }
+
     /**
      * Returns coverage level of locale according to organization. Returns Level.UNDETERMINED if information is missing.
      * A locale of "*" in the data means "everything else".
      */
-    public Level getLocaleCoverageLevel(String organization, String desiredLocale) {
+    public Level getLocaleCoverageLevel(String organization, String desiredLocale, Output<LocaleCoverageType> coverageType) {
         synchronized (StandardCodes.class) {
             if (platform_locale_level == null) {
                 loadPlatformLocaleStatus();
             }
         }
-        if (organization == null) return Level.UNDETERMINED;
+        coverageType.value = LocaleCoverageType.undetermined;
+        if (organization == null) {
+            return Level.UNDETERMINED;
+        }
         Map<String, Level> locale_status = platform_locale_level.get(organization);
-        if (locale_status == null) return Level.UNDETERMINED;
+        if (locale_status == null) {
+            return Level.UNDETERMINED;
+        }
         // see if there is a parent
+        String originalLocale = desiredLocale;
         while (desiredLocale != null) {
             Level status = locale_status.get(desiredLocale);
-            if (status != null && status != Level.UNDETERMINED) return status;
+            if (status != null && status != Level.UNDETERMINED) {
+                coverageType.value = originalLocale == desiredLocale ? LocaleCoverageType.explicit : LocaleCoverageType.parent;
+                return status;
+            }
             desiredLocale = LocaleIDParser.getParent(desiredLocale);
         }
         Level status = locale_status.get("*");
-        if (status != null && status != Level.UNDETERMINED) return status;
+        if (status != null && status != Level.UNDETERMINED) {
+            coverageType.value = LocaleCoverageType.star;
+            return status;
+        }
         return Level.UNDETERMINED;
     }
 
@@ -473,12 +496,14 @@ public class StandardCodes {
                     platform_locale_level.put(organization, locale_status = new TreeMap());
                 }
                 locale_status.put(locale, status);
-                String scriptLoc = parser.getLanguageScript();
-                if (locale_status.get(scriptLoc) == null)
-                    locale_status.put(scriptLoc, status);
-                String lang = parser.getLanguage();
-                if (locale_status.get(lang) == null)
-                    locale_status.put(lang, status);
+                if (!locale.equals("*")) {
+                    String scriptLoc = parser.getLanguageScript();
+                    if (locale_status.get(scriptLoc) == null)
+                        locale_status.put(scriptLoc, status);
+                    String lang = parser.getLanguage();
+                    if (locale_status.get(lang) == null)
+                        locale_status.put(lang, status);
+                }
             }
         } catch (IOException e) {
             throw (IllegalArgumentException) new IllegalArgumentException("Internal Error").initCause(e);
@@ -878,7 +903,7 @@ public class StandardCodes {
         // { "region", "172", "Description", "Commonwealth of Independent States", "CLDR", "True" },
         // { "region", "062", "Description", "South-Central Asia", "CLDR", "True" },
         // { "region", "003", "Description", "North America", "CLDR", "True" },
-        { "variant", "POLYTONI", "Description", "Polytonic Greek", "CLDR", "True", "Preferred-Value", "POLYTON" },
+        //        { "variant", "POLYTONI", "Description", "Polytonic Greek", "CLDR", "True", "Preferred-Value", "POLYTON" },
         { "variant", "REVISED", "Description", "Revised Orthography", "CLDR", "True" },
         { "variant", "SAAHO", "Description", "Dialect", "CLDR", "True" },
         { "variant", "POSIX", "Description", "Computer-Style", "CLDR", "True" },
@@ -887,7 +912,7 @@ public class StandardCodes {
         // { "region", "", "Description", "European Union", "CLDR", "True" },
         { "region", "ZZ", "Description", "Unknown or Invalid Region", "CLDR", "True" },
         { "region", "QO", "Description", "Outlying Oceania", "CLDR", "True" },
-        { "region", "XK", "Description", "KOSOVO", "CLDR", "True" },
+        { "region", "XK", "Description", "Kosovo", "CLDR", "True" },
         { "script", "Qaai", "Description", "Inherited", "CLDR", "True" },
         // {"region", "003", "Description", "North America", "CLDR", "True"},
         // {"region", "062", "Description", "South-central Asia", "CLDR", "True"},
@@ -926,7 +951,20 @@ public class StandardCodes {
 
     static final String registryName = CldrUtility.getProperty("registry", "language-subtag-registry");
 
+    public enum LstrType {
+        language, script, region, extlang, variant, grandfathered, redundant
+    }
+
+    public enum LstrField {
+        Type, Subtag, Description, Added, Scope, Tag, Suppress_Script,
+        Macrolanguage, Deprecated, Preferred_Value, Comments, Prefix, CLDR;
+        public static LstrField from(String s) {
+            return LstrField.valueOf(s.trim().replace("-", "_"));
+        }
+    }
+
     static Map<String, Map<String, Map<String, String>>> LSTREG;
+    static Map<LstrType, Map<String, Map<LstrField, String>>> LSTREG_ENUM;
 
     /**
      * Returns a map like {extlang={aao={Added=2009-07-29, Description=Algerian Saharan Arabic, ...<br>
@@ -936,25 +974,40 @@ public class StandardCodes {
      * @return
      */
     public static Map<String, Map<String, Map<String, String>>> getLStreg() {
-
-        if (LSTREG != null) {
-            return LSTREG;
+        if (LSTREG == null) {
+            initLstr();
         }
+        return LSTREG;
+    }
 
-        Map<String, Map<String, Map<String, String>>> result = new TreeMap();
+    /**
+     * Returns a map like {extlang={aao={Added=2009-07-29, Description=Algerian Saharan Arabic, ...<br>
+     * That is, type => subtype => map<tag,value>. Descriptions are concatenated together, separated by
+     * DESCRIPTION_SEPARATOR.
+     * 
+     * @return
+     */
+    public static Map<LstrType, Map<String, Map<LstrField, String>>> getEnumLstreg() {
+        if (LSTREG_ENUM == null) {
+            initLstr();
+        }
+        return LSTREG_ENUM;
+    }
+
+    private static void initLstr() {
+        Map<LstrType, Map<String, Map<LstrField, String>>> result2 = new TreeMap<LstrType, Map<String, Map<LstrField, String>>>();
 
         int lineNumber = 1;
 
-        Set funnyTags = new TreeSet();
+        Set<String> funnyTags = new TreeSet<String>();
         String line;
         try {
             BufferedReader lstreg = CldrUtility.getUTF8Data(registryName);
-            boolean started = false;
-            String lastType = null;
+            LstrType lastType = null;
             String lastTag = null;
-            Map<String, Map<String, String>> subtagData = null;
-            Map<String, String> currentData = null;
-            String lastLabel = null;
+            Map<String, Map<LstrField, String>> subtagData = null;
+            Map<LstrField, String> currentData = null;
+            LstrField lastLabel = null;
             String lastRest = null;
             boolean inRealContent = false;
             for (;; ++lineNumber) {
@@ -998,22 +1051,24 @@ public class StandardCodes {
                  * Suppress-Script: Latn
                  */
                 int pos2 = line.indexOf(':');
-                String label = line.substring(0, pos2).trim();
+                LstrField label = LstrField.from(line.substring(0, pos2));
                 String rest = line.substring(pos2 + 1).trim();
-                if (label.equalsIgnoreCase("Type")) {
-                    subtagData = (Map) result.get(lastType = rest);
-                    if (subtagData == null)
-                        result.put(rest, subtagData = new TreeMap());
-                } else if (label.equalsIgnoreCase("Subtag")
-                    || label.equalsIgnoreCase("Tag")) {
+                if (label == LstrField.Type) {
+                    subtagData = CldrUtility.get(result2, lastType = LstrType.valueOf(rest));
+                    if (subtagData == null) {
+                        result2.put(LstrType.valueOf(rest), subtagData = new TreeMap<String, Map<LstrField, String>>());
+                    }
+                } else if (label == LstrField.Subtag
+                    || label == LstrField.Tag) {
                     lastTag = rest;
                     String endTag = null;
+                    // Subtag: qaa..qtz
                     int pos = lastTag.indexOf("..");
                     if (pos >= 0) {
                         endTag = lastTag.substring(pos + 2);
                         lastTag = lastTag.substring(0, pos);
                     }
-                    currentData = new TreeMap();
+                    currentData = new TreeMap<LstrField, String>();
                     if (endTag == null) {
                         putSubtagData(lastTag, subtagData, currentData);
                         languageCount.add(lastType, 1);
@@ -1032,9 +1087,9 @@ public class StandardCodes {
                     // } else if (pieces.length < 2) {
                     // System.out.println("Odd Line: " + lastType + "\t" + lastTag + "\t" + line);
                 } else {
-                    lastLabel = label.intern();
+                    lastLabel = label;
                     lastRest = TransliteratorUtilities.fromXML.transliterate(rest);
-                    String oldValue = (String) currentData.get(lastLabel);
+                    String oldValue = (String) CldrUtility.get(currentData, lastLabel);
                     if (oldValue != null) {
                         lastRest = oldValue + DESCRIPTION_SEPARATOR + lastRest;
                     }
@@ -1053,31 +1108,46 @@ public class StandardCodes {
         }
         // add extras
         for (int i = 0; i < extras.length; ++i) {
-            Map subtagData = (Map) result.get(extras[i][0]);
+            Map<String, Map<LstrField, String>> subtagData = CldrUtility.get(result2, LstrType.valueOf(extras[i][0]));
             if (subtagData == null) {
-                result.put(extras[i][0], subtagData = new TreeMap());
+                result2.put(LstrType.valueOf(extras[i][0]), subtagData = new TreeMap<String, Map<LstrField, String>>());
             }
-            Map labelData = new TreeMap();
+            Map<LstrField, String> labelData = new TreeMap<LstrField, String>();
             for (int j = 2; j < extras[i].length; j += 2) {
-                labelData.put(extras[i][j], extras[i][j + 1]);
+                labelData.put(LstrField.from(extras[i][j]), extras[i][j + 1]);
             }
-            Map<String, String> old = (Map<String, String>) subtagData.get(extras[i][1]);
+            Map<LstrField, String> old = CldrUtility.get(subtagData, extras[i][1]);
             if (old != null) {
-                if (!"Private use".equals(old.get("Description"))) {
+                if (!"Private use".equals(CldrUtility.get(old, LstrField.Description))) {
                     throw new IllegalArgumentException("REPLACING data for " + extras[i][1] + "\t" + old + "\twith"
                         + labelData);
                 }
             }
-            if (false) System.out.println((old != null ? "REPLACING" + "\t" + old : "ADDING") +
-                " data for " + extras[i][1] + "\twith" + labelData);
+            if (false) {
+                System.out.println((old != null ? "REPLACING" + "\t" + old : "ADDING") +
+                    " data for " + extras[i][1] + "\twith" + labelData);
+            }
             subtagData.put(extras[i][1], labelData);
         }
+        // build compatibility map
+        Map<String, Map<String, Map<String, String>>> result = new LinkedHashMap<String, Map<String, Map<String, String>>>();
+        for (Entry<LstrType, Map<String, Map<LstrField, String>>> entry : result2.entrySet()) {
+            Map<String, Map<String, String>> copy2 = new LinkedHashMap<String, Map<String, String>>();
+            result.put(entry.getKey().toString(), copy2);
+            for (Entry<String, Map<LstrField, String>> entry2 : entry.getValue().entrySet()) {
+                Map<String, String> copy3 = new LinkedHashMap<String, String>();
+                copy2.put(entry2.getKey(), copy3);
+                for (Entry<LstrField, String> entry3 : entry2.getValue().entrySet()) {
+                    copy3.put(entry3.getKey().toString(), entry3.getValue());
+                }
+            }
+        }
         LSTREG = CldrUtility.protectCollection(result);
-        return LSTREG;
+        LSTREG_ENUM = CldrUtility.protectCollection(result2);
     }
 
-    private static Object putSubtagData(String lastTag, Map subtagData, Map currentData) {
-        Map oldData = (Map) subtagData.get(lastTag);
+    private static <K, K2, V> Map<K2, V> putSubtagData(K lastTag, Map<K, Map<K2, V>> subtagData, Map<K2, V> currentData) {
+        Map<K2, V> oldData = subtagData.get(lastTag);
         if (oldData != null) {
             if (oldData.get("CLDR") != null) {
                 System.out.println("overriding: " + lastTag + ", " + oldData);
@@ -1088,9 +1158,9 @@ public class StandardCodes {
         return subtagData.put(lastTag, currentData);
     }
 
-    static Counter languageCount = new Counter();
+    static Counter<LstrType> languageCount = new Counter<LstrType>();
 
-    public static Counter getLanguageCount() {
+    public static Counter<LstrType> getLanguageCount() {
         return languageCount;
     }
 
@@ -1211,7 +1281,12 @@ public class StandardCodes {
     }
 
     public static boolean isScriptModern(String script) {
-        IdUsage idUsage = ScriptMetadata.getInfo(script).idUsage;
+        ScriptMetadata.Info info = ScriptMetadata.getInfo(script);
+        if (info == null) {
+            if (false) throw new IllegalArgumentException("No script metadata for: " + script);
+            return false;
+        }
+        IdUsage idUsage = info.idUsage;
         return idUsage != IdUsage.EXCLUSION && idUsage != idUsage.UNKNOWN;
     }
 

@@ -18,6 +18,7 @@ import org.unicode.cldr.test.CheckCLDR.CheckStatus.Subtype;
 import org.unicode.cldr.test.CheckConsistentCasing;
 import org.unicode.cldr.test.CheckForExemplars;
 import org.unicode.cldr.test.CheckNames;
+import org.unicode.cldr.test.CheckNew;
 import org.unicode.cldr.unittest.TestAll.TestInfo;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.Factory;
@@ -32,6 +33,8 @@ import com.ibm.icu.dev.test.TestFmwk;
 import com.ibm.icu.text.UnicodeSet;
 
 public class TestCheckCLDR extends TestFmwk {
+    static TestInfo testInfo = TestInfo.getInstance();
+
     public static void main(String[] args) {
         new TestCheckCLDR().run(args);
     }
@@ -64,11 +67,10 @@ public class TestCheckCLDR extends TestFmwk {
     }
 
     public static void TestCheckConsistentCasing() {
-        TestInfo info = TestInfo.getInstance();
-        CheckConsistentCasing c = new CheckConsistentCasing(info.getCldrFactory());
-        Map<String, String> options = new LinkedHashMap();
+        CheckConsistentCasing c = new CheckConsistentCasing(testInfo.getCldrFactory());
+        Map<String, String> options = new LinkedHashMap<String, String>();
         List<CheckStatus> possibleErrors = new ArrayList<CheckStatus>();
-        final CLDRFile english = info.getEnglish();
+        final CLDRFile english = testInfo.getEnglish();
         c.setCldrFileToCheck(english, options, possibleErrors);
         for (String path : english) {
             c.check(path, english.getFullXPath(path), english.getStringValue(path), options, possibleErrors);
@@ -80,9 +82,8 @@ public class TestCheckCLDR extends TestFmwk {
      */
 
     public static final String INDIVIDUAL_TESTS = ".*(CheckCasing|CheckCurrencies|CheckDates|CheckExemplars|CheckForCopy|CheckForExemplars|CheckMetazones|CheckNumbers)";
-    static final TestInfo info = TestInfo.getInstance();
-    static final Factory factory = info.getCldrFactory();
-    static final CLDRFile english = info.getEnglish();
+    static final Factory factory = testInfo.getCldrFactory();
+    static final CLDRFile english = testInfo.getEnglish();
 
     private static final boolean DEBUG = true;
 
@@ -104,14 +105,11 @@ public class TestCheckCLDR extends TestFmwk {
         for (String path : english.fullIterable()) {
             sorted.add(pathHeaderFactory.fromPath(path));
         }
-        final String testPath = "//ldml/units/unit[@type=\"day-future\"]/unitPattern[@count=\"0\"]";
+        final String testPath = "//ldml/units/unitLength[@type=\"long\"]/unit[@type=\"duration-day-future\"]/unitPattern[@count=\"0\"]";
         sorted.add(pathHeaderFactory.fromPath(testPath));
 
         for (PathHeader pathHeader : sorted) {
             String path = pathHeader.getOriginalPath();
-            if (path.equals(testPath)) {
-                int x = 0;
-            }
             String value = english.getStringValue(path);
             if (value == null) {
                 value = "?";
@@ -180,7 +178,7 @@ public class TestCheckCLDR extends TestFmwk {
 
         CheckCLDR test = CheckCLDR.getCheckAll(factory, INDIVIDUAL_TESTS);
         CheckCLDR.setDisplayInformation(english);
-        Set<String> unique = new HashSet();
+        Set<String> unique = new HashSet<String>();
 
         LanguageTagParser ltp = new LanguageTagParser();
         int count = 0;
@@ -198,7 +196,7 @@ public class TestCheckCLDR extends TestFmwk {
 
         CheckCLDR test = CheckCLDR.getCheckAll(factory, INDIVIDUAL_TESTS);
         CheckCLDR.setDisplayInformation(english);
-        Set<String> unique = new HashSet();
+        Set<String> unique = new HashSet<String>();
 
         checkLocale(test, "ko", null, unique);
     }
@@ -269,7 +267,7 @@ public class TestCheckCLDR extends TestFmwk {
                     UnicodeSet set = new UnicodeSet(parameters[0].toString());
                     if (status.getMessage().contains("currency")) {
                         missingCurrencyExemplars.addAll(set);
-                    } else if (status.getSubtype() != Subtype.discouragedCharactersInTranslation) {
+                    } else {
                         missingExemplars.addAll(set);
                     }
                 } catch (RuntimeException e) {
@@ -279,11 +277,10 @@ public class TestCheckCLDR extends TestFmwk {
     }
 
     public void TestCheckNames() {
-        TestInfo info = TestInfo.getInstance();
         CheckCLDR c = new CheckNames();
-        Map<String, String> options = new LinkedHashMap();
+        Map<String, String> options = new LinkedHashMap<String, String>();
         List<CheckStatus> possibleErrors = new ArrayList<CheckStatus>();
-        final CLDRFile english = info.getEnglish();
+        final CLDRFile english = testInfo.getEnglish();
         c.setCldrFileToCheck(english, options, possibleErrors);
         String xpath = "//ldml/localeDisplayNames/languages/language[@type=\"mga\"]";
         c.check(xpath, xpath, "Middle Irish (900-1200) ", options, possibleErrors);
@@ -293,5 +290,25 @@ public class TestCheckCLDR extends TestFmwk {
         xpath = "//ldml/localeDisplayNames/currencies/currency[@type=\"afa\"]/name";
         c.check(xpath, xpath, "Afghan Afghani (1927-2002)", options, possibleErrors);
         assertEquals("Currencies are allowed to have dates", 0, possibleErrors.size());
+    }
+
+    public void TestCheckNew() {
+        String path = "//ldml/localeDisplayNames/territories/territory[@type=\"AX\"]";
+        CheckCLDR c = new CheckNew(testInfo.getCldrFactory());
+        List<CheckStatus> result = new ArrayList();
+        Map<String, String> options = new HashMap();
+        c.setCldrFileToCheck(testInfo.getCldrFactory().make("fr", true), options, result);
+        c.check(path, path, "foobar", options, result);
+        boolean ok = false;
+        for (CheckStatus status : result) {
+            if (status.getSubtype() != Subtype.modifiedEnglishValue) {
+                continue;
+            }
+            assertEquals(null,
+                "The English value for this field changed from “Aland Islands” to “Åland Islands’, but the corresponding value for your locale didn't change.",
+                status.getMessage());
+            return;
+        }
+        errln("No failure message.");
     }
 }

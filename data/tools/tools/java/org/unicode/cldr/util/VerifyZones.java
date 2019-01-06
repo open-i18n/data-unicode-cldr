@@ -20,16 +20,11 @@ import java.util.regex.Pattern;
 import org.unicode.cldr.tool.Option;
 import org.unicode.cldr.tool.Option.Options;
 import org.unicode.cldr.tool.TablePrinter;
-import org.unicode.cldr.util.StandardCodes.CodeType;
 import org.unicode.cldr.util.SupplementalDataInfo.DateRange;
 import org.unicode.cldr.util.SupplementalDataInfo.MetaZoneRange;
 import org.unicode.cldr.util.TimezoneFormatter.Format;
-import org.unicode.cldr.util.VerifyZones.ZoneFormats.Length;
-import org.unicode.cldr.util.VerifyZones.ZoneFormats.Type;
 
 import com.ibm.icu.dev.util.BagFormatter;
-import com.ibm.icu.impl.Row;
-import com.ibm.icu.impl.Row.R4;
 import com.ibm.icu.impl.Row.R5;
 import com.ibm.icu.text.MessageFormat;
 import com.ibm.icu.text.SimpleDateFormat;
@@ -37,6 +32,7 @@ import com.ibm.icu.util.TimeZone;
 import com.ibm.icu.util.ULocale;
 
 public class VerifyZones {
+    private static final boolean DEBUG = false;
 
     final static Options myOptions = new Options();
 
@@ -57,14 +53,17 @@ public class VerifyZones {
 
     static class MetazoneRow extends R5<Long, String, String, Integer, String> {
         public MetazoneRow(Integer order, Integer rawOffset, String container, int orderInMetazone, String metazone, String zone) {
-            super(((long)order << 32) + rawOffset, container, metazone, orderInMetazone, zone);
+            super(((long) order << 32) + rawOffset, container, metazone, orderInMetazone, zone);
         }
+
         public String getContainer() {
             return get1();
         }
+
         public String getMetazone() {
             return get2();
         }
+
         public String getZone() {
             return get4();
         }
@@ -133,21 +132,21 @@ public class VerifyZones {
     private final static Map<String, Map<String, String>> metazoneToRegionToZone = sdi.getMetazoneToRegionToZone();
     private final static Set<MetazoneRow> rows = new TreeSet<MetazoneRow>();
     private final static Set<String> goldenZones = new HashSet<String>();
-    private final static Map<String,Integer> countryToOrder = new HashMap();
+    private final static Map<String, Integer> countryToOrder = new HashMap();
 
     private final static List<Format> FORMAT_LIST = Arrays.asList(Format.VVVV, Format.vvvv, Format.v, Format.zzzz,
         Format.z, Format.zzzz, Format.z);
     static {
-        
+
         // find out which canonical zones are not in a metazone
-        Map<String,String> nameToCountry = new TreeMap<String,String>();
+        Map<String, String> nameToCountry = new TreeMap<String, String>();
         String[] zones = TimeZone.getAvailableIDs();
         Set<String> zoneSet = new LinkedHashSet<String>();
         Set<String> noncanonical = new LinkedHashSet<String>();
         for (String zone : zones) {
             String countryCode = TimeZone.getRegion(zone);
             String englishTerritory = ULocale.getDisplayCountry("und-" + countryCode, ULocale.ENGLISH);
-            nameToCountry.put(englishTerritory, countryCode);            
+            nameToCountry.put(englishTerritory, countryCode);
             String canon = TimeZone.getCanonicalID(zone);
             if (canon.equals(zone)) {
                 zoneSet.add(canon);
@@ -155,7 +154,7 @@ public class VerifyZones {
                 noncanonical.add(zone);
             }
         }
-        
+
         // get mapping of country names to ints
         int i = 0;
         for (Entry<String, String> entry : nameToCountry.entrySet()) {
@@ -166,7 +165,7 @@ public class VerifyZones {
         //System.out.println("Non-canonical zones:\t" + noncanonical.size() + "\t" + noncanonical);
 
         Set<String> metazones = sdi.getAllMetazones();
-        if (!metazones.equals(metazoneToRegionToZone.keySet())) {
+        if (DEBUG && !metazones.equals(metazoneToRegionToZone.keySet())) {
             System.out.println("Mismatch between metazones");
             showVennSets(metazones, metazoneToRegionToZone.keySet());
         }
@@ -202,19 +201,19 @@ public class VerifyZones {
                 }
             }
         }
-//        zoneSet.removeAll(found);
-//        for (String zone : zoneSet) {
-//            found.add(zone);
-//            //            TimeZone currentZone = TimeZone.getTimeZone(tz_string);
-//            //            int offsetOrder = currentZone.getRawOffset();
-//            //            MetazoneRow row = new MetazoneRow(Integer.MAX_VALUE, offsetOrder, "001", 1, "None", tz_string);
-//            //            rows.add(row);
-//            addRow("None", zone, 1);
-//        }
-        System.out.println("\nSorted");
+        //        zoneSet.removeAll(found);
+        //        for (String zone : zoneSet) {
+        //            found.add(zone);
+        //            //            TimeZone currentZone = TimeZone.getTimeZone(tz_string);
+        //            //            int offsetOrder = currentZone.getRawOffset();
+        //            //            MetazoneRow row = new MetazoneRow(Integer.MAX_VALUE, offsetOrder, "001", 1, "None", tz_string);
+        //            //            rows.add(row);
+        //            addRow("None", zone, 1);
+        //        }
+        if (DEBUG) System.out.println("\nSorted");
         for (MetazoneRow row : rows) {
             if (row.getMetazone().equals("Europe_Central")) {
-                System.out.println(row);
+                if (DEBUG) System.out.println(row);
             }
         }
     }
@@ -230,13 +229,13 @@ public class VerifyZones {
         }
         int order = Containment.getOrder(container);
         int offsetOrder = currentZone.getRawOffset();
-        orderInMetazone = (orderInMetazone << 16) 
-            | (hasDaylight(currentZone) ? 0 : 1) 
+        orderInMetazone = (orderInMetazone << 16)
+            | (hasDaylight(currentZone) ? 0 : 1)
             | countryToOrder.get(TimeZone.getRegion(tz_string));
-        MetazoneRow row = new MetazoneRow(order, offsetOrder, container, 
+        MetazoneRow row = new MetazoneRow(order, offsetOrder, container,
             orderInMetazone, metaZone, tz_string);
         if (metaZone.equals("Europe_Central")) {
-            System.out.println(row);
+            if (DEBUG) System.out.println(row);
         }
         rows.add(row);
     }
@@ -395,12 +394,12 @@ public class VerifyZones {
         CLDRFile englishCldrFile, CLDRFile nativeCdrFile,
         Appendable out) throws IOException {
         TablePrinter tablePrinter = new TablePrinter() // .setCaption("Timezone Formats")
-        .setTableAttributes("class='dtf-table'")
-        .addColumn("Metazone").setHeaderCell(true).setSpanRows(true)
-        .setHeaderAttributes("class='dtf-th'").setCellAttributes("class='dtf-s'")
-        .addColumn("Region: TZID").setHeaderCell(true).setSpanRows(true)
-        .setHeaderAttributes("class='dtf-th'").setCellAttributes("class='dtf-s'")
-        .setCellPattern(CldrUtility.getDoubleLinkMsg())
+            .setTableAttributes("class='dtf-table'")
+            .addColumn("Metazone").setHeaderCell(true).setSpanRows(true)
+            .setHeaderAttributes("class='dtf-th'").setCellAttributes("class='dtf-s'")
+            .addColumn("Region: TZID").setHeaderCell(true).setSpanRows(true)
+            .setHeaderAttributes("class='dtf-th'").setCellAttributes("class='dtf-s'")
+            .setCellPattern(CldrUtility.getDoubleLinkMsg())
         // .addColumn("Region: City").setHeaderCell(true).setSpanRows(true)
         // .addColumn("Region/City").setSpanRows(true)
         ;
@@ -417,6 +416,7 @@ public class VerifyZones {
                 daylight = true; // reset for final 2 items
             }
         }
+        tablePrinter.addColumn("View").setHeaderCell(true).setHeaderAttributes("class='dtf-th'").setCellAttributes("class='dtf-s'");
         ZoneFormats englishZoneFormats = new ZoneFormats().set(englishCldrFile);
         addZones(englishZoneFormats, nativeCdrFile, timezoneFilter, tablePrinter);
 
@@ -449,9 +449,8 @@ public class VerifyZones {
             }
             String englishTerritory = englishCldrFile.getName(CLDRFile.TERRITORY_NAME, countryCode2);
             output.addRow()
-            .addCell(metazoneInfo)
-            .addCell(englishTerritory + ": " + tzid.replace("/", "/\u200B"))
-            ;
+                .addCell(metazoneInfo)
+                .addCell(englishTerritory + ": " + tzid.replace("/", "/\u200B"));
             long date2 = getStandardDate(tz);
             for (Format pattern : FORMAT_LIST) {
                 String formattedZone = tzformatter.getFormattedZone(tzid, pattern.toString(), date2);
@@ -468,9 +467,24 @@ public class VerifyZones {
                     date2 = date2 == date ? date6 : date; // reverse for final 2 items
                 }
             }
+            String view = PathHeader.getLinkedView(surveyUrl, cldrFile, METAZONE_PREFIX + metazone + METAZONE_SUFFIX);
+            if (view == null) {
+                view = PathHeader.getLinkedView(surveyUrl, cldrFile, METAZONE_PREFIX + metazone + METAZONE_SUFFIX2);
+            }
+
+            output.addCell(view == null
+                ? ""
+                : view);
             output.finishRow();
         }
     }
+
+    private static String surveyUrl = CLDRConfig.getInstance().getProperty("CLDR_SURVEY_URL",
+        "http://st.unicode.org/cldr-apps/survey");
+
+    static private String METAZONE_PREFIX = "//ldml/dates/timeZoneNames/metazone[@type=\"";
+    static private String METAZONE_SUFFIX = "\"]/long/generic";
+    static private String METAZONE_SUFFIX2 = "\"]/long/standard";
 
     private static boolean hasDaylight(TimeZone tz) {
         int dateOffset = tz.getOffset(date);

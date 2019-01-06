@@ -1,5 +1,7 @@
 package org.unicode.cldr.test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -12,6 +14,7 @@ import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.LanguageTagParser;
 import org.unicode.cldr.util.Level;
 import org.unicode.cldr.util.RegexLookup;
+import org.unicode.cldr.util.RegexLookup.Finder;
 import org.unicode.cldr.util.RegexLookup.RegexFinder;
 import org.unicode.cldr.util.StandardCodes;
 import org.unicode.cldr.util.SupplementalDataInfo;
@@ -20,6 +23,7 @@ import org.unicode.cldr.util.SupplementalDataInfo.CoverageVariableInfo;
 import org.unicode.cldr.util.Timer;
 
 import com.ibm.icu.dev.util.CollectionUtilities;
+import com.ibm.icu.util.Output;
 import com.ibm.icu.util.ULocale;
 
 public class CoverageLevel2 {
@@ -63,18 +67,26 @@ public class CoverageLevel2 {
         @Override
         public boolean find(String item, Object context) {
             LocaleSpecificInfo localeSpecificInfo = (LocaleSpecificInfo) context;
-            if (ci.inLanguageSet != null
-                && !ci.inLanguageSet.contains(localeSpecificInfo.targetLanguage)) {
+            // Modified the logic to handle the case where we want specific languages and specific territories.
+            // Any match in language script or territory will succeed when multiple items are present.
+            boolean lstOK = false;
+            if (ci.inLanguageSet == null && ci.inScriptSet == null && ci.inTerritorySet == null) {
+                lstOK = true;
+            } else if (ci.inLanguageSet != null
+                && ci.inLanguageSet.contains(localeSpecificInfo.targetLanguage)) {
+                lstOK = true;
+            } else if (ci.inScriptSet != null
+                && CollectionUtilities.containsSome(ci.inScriptSet, localeSpecificInfo.cvi.targetScripts)) {
+                lstOK = true;
+            } else if (ci.inTerritorySet != null
+                && CollectionUtilities.containsSome(ci.inTerritorySet, localeSpecificInfo.cvi.targetTerritories)) {
+                lstOK = true;
+            }
+
+            if (!lstOK) {
                 return false;
             }
-            if (ci.inScriptSet != null
-                && CollectionUtilities.containsNone(ci.inScriptSet, localeSpecificInfo.cvi.targetScripts)) {
-                return false;
-            }
-            if (ci.inTerritorySet != null
-                && CollectionUtilities.containsNone(ci.inTerritorySet, localeSpecificInfo.cvi.targetTerritories)) {
-                return false;
-            }
+
             boolean result = super.find(item, context); // also sets matcher in RegexFinder
             if (!result) {
                 return false;
@@ -128,7 +140,7 @@ public class CoverageLevel2 {
      * @see CldrUtility#SUPPLEMENTAL_DIRECTORY
      */
     public static CoverageLevel2 getInstance(String locale) {
-        return new CoverageLevel2(SupplementalDataInfo.getInstance(CldrUtility.SUPPLEMENTAL_DIRECTORY), locale);
+        return new CoverageLevel2(SupplementalDataInfo.getInstance(), locale);
     }
 
     public static CoverageLevel2 getInstance(SupplementalDataInfo sdi, String locale) {
@@ -140,7 +152,18 @@ public class CoverageLevel2 {
             return Level.UNDETERMINED;
         }
         synchronized (lookup) { // synchronize on the class, since the Matchers are changed during the matching process
-            Level result = lookup.get(path, myInfo, null);
+            Level result;
+            if (false) { // for testing
+                Output<String[]> checkItems = new Output();
+                Output<Finder> matcherFound = new Output<Finder>();
+                List<String> failures = new ArrayList();
+                result = lookup.get(path, myInfo, checkItems, matcherFound, failures);
+                for (String s : failures) {
+                    System.out.println(s);
+                }
+            } else {
+                result = lookup.get(path, myInfo, null);
+            }
             return result == null ? Level.OPTIONAL : result;
         }
     }

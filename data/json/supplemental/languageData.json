@@ -1,162 +1,162 @@
 {
   "supplemental": {
     "version": {
-      "@cldrVersion": "23.1",
-      "@number": "$Revision: 8721 $"
+      "_cldrVersion": "24",
+      "_number": "$Revision: 9270 $"
     },
     "generation": {
-      "@date": "$Date: 2013-05-15 14:50:20 -0500 (Wed, 15 May 2013) $"
+      "_date": "$Date: 2013-08-25 16:44:03 -0500 (Sun, 25 Aug 2013) $"
     },
     "languageData": {
       "aa": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "aa-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "DJ",
           "ET"
         ]
       },
       "ab": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "ab-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "GE"
         ]
       },
       "abq": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "abr-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "GH"
         ]
       },
       "ace": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ace-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "ID"
         ]
       },
       "ach": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ada": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ady": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "ady-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "RU"
         ]
       },
       "ae-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Avst"
         ]
       },
       "af": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "NA",
           "ZA"
         ]
       },
       "agq": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "aii": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "aii-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Syrc"
         ]
       },
       "ain-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Kana",
           "Latn"
         ]
       },
       "ak": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ak-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "GH"
         ]
       },
       "akk-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Xsux"
         ]
       },
       "ale": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "alt": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "am": {
-        "@scripts": [
+        "_scripts": [
           "Ethi"
         ],
-        "@territories": [
+        "_territories": [
           "ET"
         ]
       },
       "amo": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "an": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "anp": {
-        "@scripts": [
+        "_scripts": [
           "Deva"
         ]
       },
       "ar": {
-        "@scripts": [
+        "_scripts": [
           "Arab"
         ],
-        "@territories": [
+        "_territories": [
           "AE",
           "BH",
           "DJ",
@@ -187,905 +187,916 @@
         ]
       },
       "ar-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Syrc"
         ],
-        "@territories": [
+        "_territories": [
           "IR"
         ]
       },
       "arc-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Armi"
         ]
       },
       "arn": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "arp": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "arw-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "as": {
-        "@scripts": [
+        "_scripts": [
           "Beng"
         ]
       },
       "as-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "asa": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ast": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ast-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "ES"
         ]
       },
       "av": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "av-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "RU"
         ]
       },
       "awa": {
-        "@scripts": [
+        "_scripts": [
           "Deva"
         ]
       },
       "awa-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "ay": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "BO"
         ]
       },
       "az": {
-        "@scripts": [
+        "_scripts": [
           "Arab",
           "Cyrl",
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "AZ"
         ]
       },
       "az-alt-secondary": {
-        "@territories": [
-          "IR"
+        "_territories": [
+          "IR",
+          "RU"
         ]
       },
       "ba": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "ba-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "RU"
         ]
       },
       "bal": {
-        "@scripts": [
+        "_scripts": [
           "Arab"
         ]
       },
       "bal-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
+          "AF",
           "IR",
           "PK"
         ]
       },
       "ban": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ban-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Bali"
         ],
-        "@territories": [
+        "_territories": [
           "ID"
         ]
       },
       "bas": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "bax": {
-        "@scripts": [
+        "_scripts": [
           "Bamu"
         ]
       },
       "bbc": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "bbc-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Batk"
         ],
-        "@territories": [
+        "_territories": [
           "ID"
         ]
       },
       "bci-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "CI"
         ]
       },
       "be": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ],
-        "@territories": [
+        "_territories": [
           "BY"
         ]
       },
       "bej": {
-        "@scripts": [
+        "_scripts": [
           "Arab"
         ]
       },
       "bem": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "bem-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "ZM"
         ]
       },
       "bew-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "ID"
         ]
       },
       "bez": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "bfq": {
-        "@scripts": [
+        "_scripts": [
           "Taml"
         ]
       },
       "bft": {
-        "@scripts": [
+        "_scripts": [
           "Arab"
         ]
       },
       "bft-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Tibt"
         ]
       },
       "bfy": {
-        "@scripts": [
+        "_scripts": [
           "Deva"
         ]
       },
       "bg": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ],
-        "@territories": [
+        "_territories": [
           "BG"
         ]
       },
       "bgc-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "bh-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Deva",
           "Kthi"
         ]
       },
       "bhb": {
-        "@scripts": [
+        "_scripts": [
           "Deva"
         ]
       },
       "bhb-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "bhi-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "bhk-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "PH"
         ]
       },
       "bho": {
-        "@scripts": [
+        "_scripts": [
           "Deva"
         ]
       },
       "bho-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN",
           "MU",
           "NP"
         ]
       },
       "bi": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "VU"
         ]
       },
       "bik": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "bik-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "PH"
         ]
       },
       "bin": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "bin-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "NG"
         ]
       },
       "bjj": {
-        "@scripts": [
+        "_scripts": [
           "Deva"
         ]
       },
       "bjj-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "bjn-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "ID",
           "MY"
         ]
       },
       "bku": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "bku-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Buhd"
         ]
       },
       "bla": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "blt": {
-        "@scripts": [
+        "_scripts": [
           "Tavt"
         ]
       },
       "bm": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "bm-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "ML"
         ]
       },
       "bn": {
-        "@scripts": [
+        "_scripts": [
           "Beng"
         ],
-        "@territories": [
+        "_territories": [
           "BD"
         ]
       },
       "bn-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "bo": {
-        "@scripts": [
+        "_scripts": [
           "Tibt"
         ]
       },
       "bo-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "CN"
         ]
       },
       "bqi-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IR"
         ]
       },
       "bqv": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "br": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "bra": {
-        "@scripts": [
+        "_scripts": [
           "Deva"
         ]
       },
       "brh-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "PK"
         ]
       },
       "brx": {
-        "@scripts": [
+        "_scripts": [
           "Deva"
         ]
       },
       "brx-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "bs": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl",
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "BA"
         ]
       },
+      "bss": {
+        "_scripts": [
+          "Latn"
+        ]
+      },
       "btv": {
-        "@scripts": [
+        "_scripts": [
           "Deva"
         ]
       },
       "bua": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "buc": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "buc-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "YT"
         ]
       },
       "bug": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "bug-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Bugi"
         ],
-        "@territories": [
+        "_territories": [
           "ID"
         ]
       },
       "bya": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "bya-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "ID"
         ]
       },
       "byn": {
-        "@scripts": [
+        "_scripts": [
           "Ethi"
         ]
       },
       "ca": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "AD"
         ]
       },
       "ca-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "ES"
         ]
       },
       "cad": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "car": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "cay": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "cch": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ccp": {
-        "@scripts": [
+        "_scripts": [
           "Beng"
         ]
       },
       "ccp-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Cakm"
         ]
       },
       "ce": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "ce-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "RU"
         ]
       },
       "ceb": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ceb-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "PH"
         ]
       },
       "cgg": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "cgg-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "UG"
         ]
       },
       "ch": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "GU"
         ]
       },
       "chk": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "FM"
         ]
       },
       "chm": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "chn-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "cho": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "chp": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "chp-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Cans"
         ]
       },
       "chr": {
-        "@scripts": [
+        "_scripts": [
           "Cher"
         ]
       },
       "chy": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "cja": {
-        "@scripts": [
+        "_scripts": [
           "Arab"
         ]
       },
       "cja-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Cham"
         ]
       },
       "cjm": {
-        "@scripts": [
+        "_scripts": [
           "Cham"
         ]
       },
       "cjm-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Arab"
         ]
       },
       "cjs": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "ckb": {
-        "@scripts": [
+        "_scripts": [
           "Arab"
         ]
       },
       "ckb-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IQ",
           "IR"
         ]
       },
       "ckt": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "co": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "cop-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Arab",
           "Copt",
           "Grek"
         ]
       },
       "cpe-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "cr": {
-        "@scripts": [
+        "_scripts": [
           "Cans",
           "Latn"
         ]
       },
       "crh": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "crk": {
-        "@scripts": [
+        "_scripts": [
           "Cans"
         ]
       },
       "crs-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "SC"
         ]
       },
       "cs": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "CZ"
         ]
       },
       "csb-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "PL"
         ]
       },
       "cu-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Glag"
         ]
       },
       "cv": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "cv-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "RU"
         ]
       },
       "cy": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "cy-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "GB"
         ]
       },
       "da": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "DK",
           "GL"
         ]
       },
       "dak": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "dar": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "dav": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "dcc-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "de": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "AT",
           "BE",
           "CH",
           "DE",
           "LI",
-          "LU",
-          "NA"
+          "LU"
         ]
       },
       "de-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Runr"
         ],
-        "@territories": [
+        "_territories": [
           "BR",
+          "DK",
           "KZ",
+          "PL",
           "US"
         ]
       },
       "del": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "den": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "den-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Cans"
         ]
       },
       "dgr": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "din": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "dje": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "dje-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "NE"
         ]
       },
       "dng": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "doi": {
-        "@scripts": [
+        "_scripts": [
           "Arab"
         ]
       },
       "doi-alt-secondary": {
-        "@territories": [
+        "_scripts": [
+          "Takr"
+        ],
+        "_territories": [
           "IN"
         ]
       },
       "dsb": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "dua": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "dv": {
-        "@scripts": [
+        "_scripts": [
           "Thaa"
         ],
-        "@territories": [
+        "_territories": [
           "MV"
         ]
       },
       "dyo": {
-        "@scripts": [
-          "Arab"
-        ]
-      },
-      "dyo-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
+      "dyo-alt-secondary": {
+        "_scripts": [
+          "Arab"
+        ]
+      },
       "dyu": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "dyu-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "BF"
         ]
       },
       "dz": {
-        "@scripts": [
+        "_scripts": [
           "Tibt"
         ],
-        "@territories": [
+        "_territories": [
           "BT"
         ]
       },
       "ebu": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ee": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ee-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "GH",
           "TG"
         ]
       },
       "efi": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "NG"
         ]
       },
       "egy-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Egyp"
         ]
       },
       "eka": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "eky": {
-        "@scripts": [
+        "_scripts": [
           "Kali"
         ]
       },
       "el": {
-        "@scripts": [
+        "_scripts": [
           "Grek"
         ],
-        "@territories": [
+        "_territories": [
           "CY",
           "GR"
         ]
       },
       "en": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "AG",
           "AI",
           "AS",
@@ -1102,6 +1113,7 @@
           "CX",
           "DG",
           "DM",
+          "ER",
           "FJ",
           "FK",
           "FM",
@@ -1145,6 +1157,7 @@
           "PK",
           "PN",
           "PR",
+          "PW",
           "RW",
           "SB",
           "SC",
@@ -1175,11 +1188,11 @@
         ]
       },
       "en-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Dsrt",
           "Shaw"
         ],
-        "@territories": [
+        "_territories": [
           "AC",
           "BE",
           "DE",
@@ -1189,20 +1202,19 @@
           "IT",
           "MY",
           "NL",
-          "PW",
           "TA"
         ]
       },
       "eo": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "es": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "AR",
           "BO",
           "CL",
@@ -1221,7 +1233,6 @@
           "NI",
           "PA",
           "PE",
-          "PH",
           "PR",
           "PY",
           "SV",
@@ -1230,151 +1241,152 @@
         ]
       },
       "es-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "AD",
           "BZ",
+          "PH",
           "US"
         ]
       },
       "et": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "EE"
         ]
       },
       "ett-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Ital",
           "Latn"
         ]
       },
       "eu": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "eu-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "ES"
         ]
       },
       "evn": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "ewo": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "fa": {
-        "@scripts": [
+        "_scripts": [
           "Arab"
         ],
-        "@territories": [
+        "_territories": [
           "AF",
           "IR"
         ]
       },
       "fa-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "PK"
         ]
       },
       "fan": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "fan-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "GQ"
         ]
       },
       "ff": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ff-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "GN",
           "SN"
         ]
       },
       "ffm-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "ML"
         ]
       },
       "fi": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "FI"
         ]
       },
       "fi-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "SE"
         ]
       },
       "fil": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "PH"
         ]
       },
       "fil-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Tglg"
         ],
-        "@territories": [
+        "_territories": [
           "US"
         ]
       },
       "fiu-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "fj": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "FJ"
         ]
       },
       "fo": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "FO"
         ]
       },
       "fon": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "fon-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "BJ"
         ]
       },
       "fr": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "BE",
           "BF",
           "BI",
@@ -1387,7 +1399,6 @@
           "CH",
           "CI",
           "CM",
-          "CP",
           "DJ",
           "DZ",
           "FR",
@@ -1424,555 +1435,560 @@
         ]
       },
       "fr-alt-secondary": {
-        "@territories": [
-          "GB",
+        "_territories": [
+          "IT",
           "TF",
           "US"
         ]
       },
       "frr": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "frs": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "fud-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "WF"
         ]
       },
       "fuq-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "NE"
         ]
       },
       "fur": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "fuv-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "NG"
         ]
       },
       "fy": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "fy-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "NL"
         ]
       },
       "ga": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "IE"
         ]
       },
       "ga-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "GB"
         ]
       },
       "gaa": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "gaa-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "GH"
         ]
       },
       "gag": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "gag-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
-        ],
-        "@territories": [
-          "MD"
         ]
       },
       "gay": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "gba": {
-        "@scripts": [
+        "_scripts": [
           "Arab"
         ]
       },
       "gbm": {
-        "@scripts": [
+        "_scripts": [
           "Deva"
         ]
       },
       "gbm-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "gcr": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "gcr-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "GF"
         ]
       },
       "gd": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "gd-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "GB"
         ]
       },
       "gez-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Ethi"
         ]
       },
       "gil": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "KI"
         ]
       },
       "gl": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "gl-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "ES"
         ]
       },
       "gld": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "glk-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IR"
         ]
       },
       "gn": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "PY"
         ]
       },
       "gon": {
-        "@scripts": [
+        "_scripts": [
           "Deva",
           "Telu"
         ]
       },
       "gon-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "gor": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "gor-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "ID"
         ]
       },
       "got-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Goth"
         ]
       },
       "grb": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "grc-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Cprt",
           "Grek",
           "Linb"
         ]
       },
       "grt": {
-        "@scripts": [
+        "_scripts": [
           "Beng"
         ]
       },
       "gsw": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "CH",
           "LI"
         ]
       },
       "gu": {
-        "@scripts": [
+        "_scripts": [
           "Gujr"
         ]
       },
       "gu-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "guz": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "guz-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "KE"
         ]
       },
       "gv": {
-        "@scripts": [
-          "Latn"
-        ],
-        "@territories": [
+        "_territories": [
           "IM"
         ]
       },
+      "gv-alt-secondary": {
+        "_scripts": [
+          "Latn"
+        ]
+      },
       "gwi": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ha": {
-        "@scripts": [
+        "_scripts": [
           "Arab",
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "NG"
         ]
       },
       "ha-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "NE"
         ]
       },
       "hai": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "haw": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "haw-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "US"
         ]
       },
       "haz-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "AF"
         ]
       },
       "he": {
-        "@scripts": [
+        "_scripts": [
           "Hebr"
         ],
-        "@territories": [
+        "_territories": [
           "IL"
         ]
       },
       "hi": {
-        "@scripts": [
+        "_scripts": [
           "Deva"
         ],
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "hi-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "FJ"
         ]
       },
       "hil": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "hil-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "PH"
         ]
       },
       "hit-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Xsux"
         ]
       },
+      "hmd": {
+        "_scripts": [
+          "Plrd"
+        ]
+      },
       "hmn": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "hne": {
-        "@scripts": [
+        "_scripts": [
           "Deva"
         ]
       },
       "hne-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "hnn": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "hnn-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Hano"
         ]
       },
       "hno-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "PK"
         ]
       },
       "ho": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "PG"
         ]
       },
       "hoc": {
-        "@scripts": [
+        "_scripts": [
           "Deva"
         ]
       },
       "hoc-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "hoj": {
-        "@scripts": [
+        "_scripts": [
           "Deva"
         ]
       },
       "hoj-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "hop": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "hr": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "BA",
           "HR"
         ]
       },
       "hr-alt-secondary": {
-        "@territories": [
-          "AT"
+        "_territories": [
+          "AT",
+          "RS"
         ]
       },
       "hsb": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ht": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "HT"
         ]
       },
       "hu": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "HU"
         ]
       },
       "hu-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "AT",
           "RO",
           "RS"
         ]
       },
       "hup": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "hy": {
-        "@scripts": [
+        "_scripts": [
           "Armn"
         ],
-        "@territories": [
+        "_territories": [
           "AM"
         ]
       },
       "hz": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ia-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "iba": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ibb": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ibb-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "NG"
         ]
       },
       "id": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "ID"
         ]
       },
       "id-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Arab"
         ]
       },
       "ig": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "NG"
         ]
       },
       "ii": {
-        "@scripts": [
+        "_scripts": [
           "Yiii"
         ]
       },
       "ii-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "CN"
         ]
       },
       "ik": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ikt-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "CA"
         ]
       },
       "ilo": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ilo-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "PH"
         ]
       },
       "inh": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "inh-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Arab",
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "RU"
         ]
       },
       "is": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "IS"
         ]
       },
       "it": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "CH",
           "IT",
           "SM"
         ]
       },
       "it-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "FR",
           "HR",
           "US",
@@ -1980,1160 +1996,1174 @@
         ]
       },
       "iu": {
-        "@scripts": [
+        "_scripts": [
           "Cans"
         ]
       },
       "iu-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "CA"
         ]
       },
       "ja": {
-        "@scripts": [
+        "_scripts": [
           "Jpan"
         ],
-        "@territories": [
+        "_territories": [
           "JP"
         ]
       },
       "jmc": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "jpr": {
-        "@scripts": [
+        "_scripts": [
           "Hebr"
         ]
       },
       "jrb": {
-        "@scripts": [
+        "_scripts": [
           "Hebr"
         ]
       },
       "jv": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "jv-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Java"
         ],
-        "@territories": [
+        "_territories": [
           "ID"
         ]
       },
       "ka": {
-        "@scripts": [
+        "_scripts": [
           "Geor"
         ],
-        "@territories": [
+        "_territories": [
           "GE"
         ]
       },
       "kaa": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "kab": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "kab-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "DZ"
         ]
       },
       "kac": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "kaj": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "kam": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "kam-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "KE"
         ]
       },
       "kbd": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "kbd-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "RU"
         ]
       },
       "kca": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "kcg": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "kde": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "kde-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "TZ"
         ]
       },
       "kdt": {
-        "@scripts": [
+        "_scripts": [
           "Thai"
         ]
       },
       "kea": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "kea-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "CV"
         ]
       },
       "kfo": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "kfr": {
-        "@scripts": [
+        "_scripts": [
           "Deva"
         ]
       },
       "kfy-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "kg": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "kg-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "CD"
         ]
       },
       "kha": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "kha-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Beng"
         ],
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "khb": {
-        "@scripts": [
+        "_scripts": [
           "Talu"
         ]
       },
       "khn-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "khq": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "kht": {
-        "@scripts": [
+        "_scripts": [
           "Mymr"
         ]
       },
       "ki": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ki-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "KE"
         ]
       },
       "kj": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
-        ],
-        "@territories": [
+        ]
+      },
+      "kj-alt-secondary": {
+        "_territories": [
           "NA"
         ]
       },
       "kjh": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "kk": {
-        "@scripts": [
+        "_scripts": [
           "Arab",
           "Cyrl"
         ],
-        "@territories": [
+        "_territories": [
           "KZ"
         ]
       },
       "kk-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "CN"
         ]
       },
       "kl": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "GL"
         ]
       },
       "kl-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "DK"
         ]
       },
       "kln": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "kln-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "KE"
         ]
       },
       "km": {
-        "@scripts": [
+        "_scripts": [
           "Khmr"
         ],
-        "@territories": [
+        "_territories": [
           "KH"
         ]
       },
       "kmb": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "kmb-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "AO"
         ]
       },
       "kn": {
-        "@scripts": [
+        "_scripts": [
           "Knda"
         ]
       },
       "kn-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "ko": {
-        "@scripts": [
+        "_scripts": [
           "Kore"
         ],
-        "@territories": [
+        "_territories": [
           "KP",
           "KR"
         ]
       },
       "ko-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "CN"
         ]
       },
       "koi": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "koi-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "RU"
         ]
       },
       "kok": {
-        "@scripts": [
+        "_scripts": [
           "Deva"
         ]
       },
       "kok-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "kos": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "FM"
         ]
       },
       "kpe": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "kpy": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "kr": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "krc": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "krc-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "RU"
         ]
       },
       "kri": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "kri-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "SL"
         ]
       },
       "krl": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "kru": {
-        "@scripts": [
+        "_scripts": [
           "Deva"
         ]
       },
       "kru-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "ks": {
-        "@scripts": [
+        "_scripts": [
           "Arab",
           "Deva"
         ]
       },
       "ks-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "ksb": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ksf": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ksh": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ku": {
-        "@scripts": [
+        "_scripts": [
           "Arab",
           "Cyrl",
           "Latn"
         ]
       },
       "ku-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "SY",
           "TR"
         ]
       },
       "kum": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "kum-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "RU"
         ]
       },
       "kut": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "kv": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "kv-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "RU"
         ]
       },
       "kw": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "kxm-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "TH"
         ]
       },
       "ky": {
-        "@scripts": [
+        "_scripts": [
           "Arab",
           "Cyrl",
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "KG"
         ]
       },
       "kyu": {
-        "@scripts": [
+        "_scripts": [
           "Kali"
         ]
       },
       "la": {
-        "@scripts": [
-          "Latn"
-        ],
-        "@territories": [
+        "_territories": [
           "VA"
         ]
       },
+      "la-alt-secondary": {
+        "_scripts": [
+          "Latn"
+        ]
+      },
       "lad": {
-        "@scripts": [
+        "_scripts": [
           "Hebr"
         ]
       },
       "lag": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "lah": {
-        "@scripts": [
+        "_scripts": [
           "Arab"
         ]
       },
       "lah-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "PK"
         ]
       },
       "laj-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "UG"
         ]
       },
       "lam": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "lb": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "LU"
         ]
       },
       "lbe": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "lbe-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "RU"
         ]
       },
       "lcp": {
-        "@scripts": [
+        "_scripts": [
           "Thai"
         ]
       },
       "lep": {
-        "@scripts": [
+        "_scripts": [
           "Lepc"
         ]
       },
       "lez": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "lez-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "RU"
         ]
       },
       "lg": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "lg-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "UG"
         ]
       },
       "li": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "lif": {
-        "@scripts": [
+        "_scripts": [
           "Deva",
           "Limb"
         ]
       },
       "lis": {
-        "@scripts": [
+        "_scripts": [
           "Lisu"
         ]
       },
       "ljp-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "ID"
         ]
       },
       "lki": {
-        "@scripts": [
+        "_scripts": [
           "Arab"
         ]
       },
       "lmn": {
-        "@scripts": [
+        "_scripts": [
           "Telu"
         ]
       },
       "lmn-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "ln": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "CG"
         ]
       },
       "ln-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "CD"
         ]
       },
       "lo": {
-        "@scripts": [
+        "_scripts": [
           "Laoo"
         ],
-        "@territories": [
+        "_territories": [
           "LA"
         ]
       },
       "lol": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "loz": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "lrc-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IR"
         ]
       },
       "lt": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "LT"
         ]
       },
+      "lt-alt-secondary": {
+        "_territories": [
+          "PL"
+        ]
+      },
       "lu": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "lu-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "CD"
         ]
       },
       "lua": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "lua-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "CD"
         ]
       },
       "lui": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "lun": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "luo": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "luo-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "KE"
         ]
       },
       "lus": {
-        "@scripts": [
+        "_scripts": [
           "Beng"
         ]
       },
       "lut-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "luy": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "luy-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "KE"
         ]
       },
       "lv": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "LV"
         ]
       },
       "lwl": {
-        "@scripts": [
+        "_scripts": [
           "Thai"
         ]
       },
+      "lzh-alt-secondary": {
+        "_scripts": [
+          "Phag"
+        ]
+      },
       "mad": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "mad-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "ID"
         ]
       },
       "mag": {
-        "@scripts": [
+        "_scripts": [
           "Deva"
         ]
       },
       "mag-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "mai": {
-        "@scripts": [
+        "_scripts": [
           "Deva"
         ]
       },
       "mai-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN",
           "NP"
         ]
       },
       "mak": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "mak-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Bugi"
         ],
-        "@territories": [
+        "_territories": [
           "ID"
         ]
       },
       "man": {
-        "@scripts": [
+        "_scripts": [
           "Latn",
           "Nkoo"
         ]
       },
       "man-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "GM",
           "GN"
         ]
       },
       "mas": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "mdf": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "mdf-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "RU"
         ]
       },
       "mdh": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "mdh-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "PH"
         ]
       },
       "mdr": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "mdr-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Bugi"
         ]
       },
       "men": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "men-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "SL"
         ]
       },
       "mer": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "mer-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "KE"
         ]
       },
       "mfa-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "TH"
         ]
       },
       "mfe": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "mfe-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "MU"
         ]
       },
       "mg": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "MG"
         ]
       },
       "mgh": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "mh": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "MH"
         ]
       },
       "mi": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "NZ"
         ]
       },
       "mic": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "min": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "min-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "ID"
         ]
       },
       "mk": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ],
-        "@territories": [
+        "_territories": [
           "MK"
         ]
       },
       "ml": {
-        "@scripts": [
+        "_scripts": [
           "Mlym"
         ]
       },
       "ml-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "mn": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl",
           "Mong"
         ],
-        "@territories": [
+        "_territories": [
           "MN"
         ]
       },
       "mn-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Phag"
         ],
-        "@territories": [
+        "_territories": [
           "CN"
         ]
       },
       "mnc-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Mong"
         ]
       },
       "mni": {
-        "@scripts": [
+        "_scripts": [
           "Beng"
         ]
       },
       "mni-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Mtei"
         ],
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "mns": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "mnw": {
-        "@scripts": [
+        "_scripts": [
           "Mymr"
         ]
       },
       "moh": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "mos": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "mos-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "BF"
         ]
       },
       "mr": {
-        "@scripts": [
+        "_scripts": [
           "Deva"
         ]
       },
       "mr-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "ms": {
-        "@scripts": [
+        "_scripts": [
           "Arab",
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "BN",
           "MY",
           "SG"
         ]
       },
       "ms-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "CC",
           "ID"
         ]
       },
       "mt": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "MT"
         ]
       },
       "mtr-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "mua": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "mus": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "mwl": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "mwr": {
-        "@scripts": [
+        "_scripts": [
           "Deva"
         ]
       },
       "mwr-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "my": {
-        "@scripts": [
+        "_scripts": [
           "Mymr"
         ],
-        "@territories": [
+        "_territories": [
           "MM"
         ]
       },
       "myv": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "myv-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "RU"
         ]
       },
       "myx-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "UG"
         ]
       },
       "myz-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Mand"
         ]
       },
       "na": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "NR"
         ]
       },
       "nap": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "nap-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IT"
         ]
       },
       "naq": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "nb": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "NO",
           "SJ"
         ]
       },
       "nd": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "ZW"
         ]
       },
       "ndc-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "MZ"
         ]
       },
       "nds": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "nds-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "DE"
         ]
       },
       "ne": {
-        "@scripts": [
+        "_scripts": [
           "Deva"
         ],
-        "@territories": [
+        "_territories": [
           "NP"
         ]
       },
       "ne-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "new": {
-        "@scripts": [
+        "_scripts": [
           "Deva"
         ]
       },
       "new-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "NP"
         ]
       },
       "ng": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ng-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "NA"
         ]
       },
       "ngl-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "MZ"
         ]
       },
       "nia": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "niu": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "NU"
         ]
       },
       "nl": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "AW",
           "BE",
           "BQ",
@@ -3144,317 +3174,318 @@
         ]
       },
       "nmg": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "nn": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "NO"
         ]
       },
       "nod": {
-        "@scripts": [
+        "_scripts": [
           "Lana"
         ]
       },
       "nod-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "TH"
         ]
       },
       "noe-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "nog": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
+      "non-alt-secondary": {
+        "_scripts": [
+          "Runr"
+        ]
+      },
       "nqo": {
-        "@scripts": [
+        "_scripts": [
           "Nkoo"
         ]
       },
       "nr": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "ZA"
         ]
       },
       "nso": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "ZA"
         ]
       },
       "nus": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "nv": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ny": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "MW"
         ]
       },
       "ny-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "ZM"
         ]
       },
       "nym": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "nym-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "TZ"
         ]
       },
       "nyn": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "nyn-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "UG"
         ]
       },
       "nyo": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "nzi": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "oc": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "oc-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "FR"
         ]
       },
       "oj": {
-        "@scripts": [
+        "_scripts": [
           "Cans"
         ]
       },
       "oj-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "om": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "om-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Ethi"
         ],
-        "@territories": [
+        "_territories": [
           "ET"
         ]
       },
       "or": {
-        "@scripts": [
+        "_scripts": [
           "Orya"
         ]
       },
       "or-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "os": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "os-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "GE"
         ]
       },
       "osa": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "osc-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Ital",
           "Latn"
         ]
       },
       "otk-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Orkh"
         ]
       },
       "pa": {
-        "@scripts": [
+        "_scripts": [
           "Arab",
           "Guru"
         ]
       },
       "pa-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN",
           "PK"
         ]
       },
       "pag": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "pag-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "PH"
         ]
       },
       "pal-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Phli"
         ]
       },
       "pam": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "pam-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "PH"
         ]
       },
       "pap": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
+          "AW",
           "BQ",
           "CW"
         ]
       },
-      "pap-alt-secondary": {
-        "@territories": [
-          "AW"
-        ]
-      },
       "pau": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "PW"
         ]
       },
       "peo-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Xpeo"
         ]
       },
       "phn-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Phnx"
         ]
       },
       "pi-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Deva",
           "Sinh",
           "Thai"
         ]
       },
       "pl": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "PL"
         ]
       },
       "pl-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "UA"
         ]
       },
       "pon": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "FM"
         ]
       },
       "pra-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Brah",
           "Khar"
         ]
       },
       "prd": {
-        "@scripts": [
+        "_scripts": [
           "Arab"
         ]
       },
       "prg-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "prs": {
-        "@scripts": [
+        "_scripts": [
           "Arab"
         ]
       },
       "ps": {
-        "@scripts": [
+        "_scripts": [
           "Arab"
         ],
-        "@territories": [
+        "_territories": [
           "AF"
         ]
       },
       "ps-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "PK"
         ]
       },
       "pt": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "AO",
           "BR",
           "CV",
@@ -3467,133 +3498,134 @@
         ]
       },
       "qu": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "BO",
           "PE"
         ]
       },
       "raj": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "raj-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "rap": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "rar": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "rcf": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "rcf-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "RE"
         ]
       },
       "rej": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "rej-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Rjng"
         ],
-        "@territories": [
+        "_territories": [
           "ID"
         ]
       },
       "rif-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "MA"
         ]
       },
       "rjs": {
-        "@scripts": [
+        "_scripts": [
           "Deva"
         ]
       },
       "rkt": {
-        "@scripts": [
+        "_scripts": [
           "Beng"
         ]
       },
       "rkt-alt-secondary": {
-        "@territories": [
+        "_territories": [
+          "BD",
           "IN"
         ]
       },
       "rm": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "rm-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "CH"
         ]
       },
       "rmt-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IR"
         ]
       },
       "rn": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "BI"
         ]
       },
       "ro": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "MD",
           "RO"
         ]
       },
       "ro-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ],
-        "@territories": [
+        "_territories": [
           "RS"
         ]
       },
       "rof": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "rom": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl",
           "Latn"
         ]
       },
       "ru": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ],
-        "@territories": [
+        "_territories": [
           "BY",
           "KG",
           "KZ",
@@ -3602,7 +3634,7 @@
         ]
       },
       "ru-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "EE",
           "LV",
           "SJ",
@@ -3610,1228 +3642,1279 @@
         ]
       },
       "rup": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "rw": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "RW"
         ]
       },
       "rwk": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "sa-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Deva",
+          "Shrd",
           "Sinh"
         ],
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "sad": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "saf": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "sah": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "sah-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "RU"
         ]
       },
       "sam-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Hebr",
           "Samr"
         ]
       },
       "saq": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "sas": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "sas-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "ID"
         ]
       },
       "sat": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "sat-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Beng",
           "Deva",
           "Olck",
           "Orya"
         ],
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "saz": {
-        "@scripts": [
+        "_scripts": [
           "Saur"
         ]
       },
       "sbp": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "sc": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "sck-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "scn": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "scn-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IT"
         ]
       },
       "sco": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "sco-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "GB"
         ]
       },
       "sd": {
-        "@scripts": [
+        "_scripts": [
           "Arab",
           "Deva"
         ]
       },
       "sd-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN",
           "PK"
         ]
       },
       "sdh": {
-        "@scripts": [
+        "_scripts": [
           "Arab"
         ]
       },
       "sdh-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IR"
         ]
       },
       "se": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "se-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ],
-        "@territories": [
+        "_territories": [
           "NO"
         ]
       },
       "see": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "seh": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "seh-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "MZ"
         ]
       },
       "sel-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "ses": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "sg": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "CF"
         ]
       },
       "sga-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Latn",
           "Ogam"
         ]
       },
       "shi": {
-        "@scripts": [
+        "_scripts": [
           "Arab",
           "Latn",
           "Tfng"
         ]
       },
       "shi-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "MA"
         ]
       },
       "shn": {
-        "@scripts": [
+        "_scripts": [
           "Mymr"
         ]
       },
       "shn-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "MM"
         ]
       },
       "si": {
-        "@scripts": [
+        "_scripts": [
           "Sinh"
         ],
-        "@territories": [
+        "_territories": [
           "LK"
         ]
       },
       "sid": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "sid-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "ET"
         ]
       },
       "sk": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "SK"
         ]
       },
       "sk-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "RS"
         ]
       },
       "skr-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "PK"
         ]
       },
       "sl": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "SI"
         ]
       },
       "sl-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "AT"
         ]
       },
       "sm": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "AS",
           "WS"
         ]
       },
       "sma": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "smi-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "smj": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "smn": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
+      "smp-alt-secondary": {
+        "_scripts": [
+          "Samr"
+        ]
+      },
       "sms": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "sn": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "ZW"
         ]
       },
       "snk": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "so": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "SO"
         ]
       },
       "so-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Arab",
           "Osma"
         ],
-        "@territories": [
+        "_territories": [
           "DJ",
           "ET"
         ]
       },
       "son-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "sou-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "TH"
         ]
       },
       "sq": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "AL",
           "MK",
           "XK"
         ]
       },
       "sq-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "RS"
         ]
       },
       "sr": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl",
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "BA",
           "ME",
           "RS",
           "XK"
         ]
       },
+      "srb": {
+        "_scripts": [
+          "Latn"
+        ]
+      },
+      "srb-alt-secondary": {
+        "_scripts": [
+          "Sora"
+        ]
+      },
       "srn": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "srn-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "SR"
         ]
       },
       "srr": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "srr-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "SN"
         ]
       },
       "ss": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "SZ",
           "ZA"
         ]
       },
       "ssy": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "st": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "LS",
           "ZA"
         ]
       },
       "su": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "ID"
         ]
       },
       "su-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Sund"
         ]
       },
       "suk": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "suk-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "TZ"
         ]
       },
       "sus": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "sus-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Arab"
         ],
-        "@territories": [
+        "_territories": [
           "GN"
         ]
       },
       "sv": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "AX",
           "FI",
           "SE"
         ]
       },
       "sw": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "KE",
           "TZ",
           "UG"
         ]
       },
       "sw-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "CD"
         ]
       },
       "swb": {
-        "@scripts": [
+        "_scripts": [
           "Arab"
         ]
       },
       "swb-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "YT"
         ]
       },
       "swc": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "swv-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "syl": {
-        "@scripts": [
+        "_scripts": [
           "Beng"
         ]
       },
       "syl-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Sylo"
         ],
-        "@territories": [
+        "_territories": [
           "BD"
         ]
       },
       "syr-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Syrc"
         ]
       },
       "ta": {
-        "@scripts": [
+        "_scripts": [
           "Taml"
         ],
-        "@territories": [
+        "_territories": [
           "LK",
           "SG"
         ]
       },
       "ta-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN",
           "MY"
         ]
       },
       "tab": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "tbw": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "tbw-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Tagb"
         ]
       },
       "tcy": {
-        "@scripts": [
+        "_scripts": [
           "Knda"
         ]
       },
       "tcy-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "tdd": {
-        "@scripts": [
+        "_scripts": [
           "Tale"
         ]
       },
       "te": {
-        "@scripts": [
+        "_scripts": [
           "Telu"
         ]
       },
       "te-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "tem": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "tem-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "SL"
         ]
       },
       "teo": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "teo-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "UG"
         ]
       },
       "ter": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "tet": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "TL"
         ]
       },
       "tg": {
-        "@scripts": [
+        "_scripts": [
           "Arab",
           "Cyrl",
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "TJ"
         ]
       },
       "th": {
-        "@scripts": [
+        "_scripts": [
           "Thai"
         ],
-        "@territories": [
+        "_territories": [
           "TH"
         ]
       },
       "ti": {
-        "@scripts": [
+        "_scripts": [
           "Ethi"
         ],
-        "@territories": [
+        "_territories": [
           "ER"
         ]
       },
       "ti-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "ET"
         ]
       },
       "tig": {
-        "@scripts": [
+        "_scripts": [
           "Ethi"
         ]
       },
       "tig-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "ER"
         ]
       },
       "tiv": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "tiv-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "NG"
         ]
       },
       "tk": {
-        "@scripts": [
+        "_scripts": [
           "Arab",
           "Cyrl",
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "TM"
         ]
       },
       "tk-alt-secondary": {
-        "@territories": [
+        "_territories": [
+          "AF",
           "IR"
         ]
       },
       "tkl": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "TK"
         ]
       },
       "tli": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "tmh": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "tmh-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "NE"
         ]
       },
       "tn": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "BW",
           "ZA"
         ]
       },
       "to": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "TO"
         ]
       },
       "tog": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "tpi": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "PG"
         ]
       },
       "tr": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "CY",
           "TR"
         ]
       },
       "tr-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Arab"
         ],
-        "@territories": [
-          "DE",
-          "MK"
+        "_territories": [
+          "DE"
         ]
       },
       "tru": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "tru-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Syrc"
         ]
       },
       "trv": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ts": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "ZA"
         ]
       },
       "ts-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "MZ"
         ]
       },
       "tsg": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "tsg-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "PH"
         ]
       },
       "tsi": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "tt": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "tt-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "RU"
         ]
       },
       "tts": {
-        "@scripts": [
+        "_scripts": [
           "Thai"
         ]
       },
       "tts-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "TH"
         ]
       },
       "tum": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "tum-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "MW"
         ]
       },
       "tut-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "tvl": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "TV"
         ]
       },
       "twq": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "ty": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "PF"
         ]
       },
       "tyv": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "tyv-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "RU"
         ]
       },
       "tzm": {
-        "@scripts": [
+        "_scripts": [
           "Latn",
           "Tfng"
         ],
-        "@territories": [
+        "_territories": [
           "MA"
         ]
       },
       "ude": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "udm": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "udm-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "RU"
         ]
       },
       "ug": {
-        "@scripts": [
+        "_scripts": [
           "Arab",
           "Cyrl"
         ]
       },
       "ug-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "CN"
         ]
       },
       "uga-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Ugar"
         ]
       },
       "uk": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ],
-        "@territories": [
+        "_territories": [
           "UA"
         ]
       },
+      "uk-alt-secondary": {
+        "_territories": [
+          "RS"
+        ]
+      },
       "uli": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "FM"
         ]
       },
       "umb": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "umb-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "AO"
         ]
       },
       "und-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "AQ",
           "BV",
+          "CP",
           "GS",
           "HM"
         ]
       },
       "unr": {
-        "@scripts": [
+        "_scripts": [
           "Beng",
           "Deva"
         ]
       },
       "unr-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "unx": {
-        "@scripts": [
+        "_scripts": [
           "Beng",
           "Deva"
         ]
       },
       "ur": {
-        "@scripts": [
+        "_scripts": [
           "Arab"
         ],
-        "@territories": [
+        "_territories": [
           "PK"
         ]
       },
       "ur-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "uz": {
-        "@scripts": [
+        "_scripts": [
           "Arab",
           "Cyrl",
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "UZ"
         ]
       },
       "uz-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "AF"
         ]
       },
       "vai": {
-        "@scripts": [
+        "_scripts": [
           "Latn",
           "Vaii"
         ]
       },
       "ve": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "ZA"
         ]
       },
       "vi": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "VN"
         ]
       },
       "vi-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Hani"
         ],
-        "@territories": [
+        "_territories": [
           "US"
         ]
       },
       "vmw-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "MZ"
         ]
       },
       "vo-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "vot-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "vun": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "wa": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "wae": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "wak-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "wal": {
-        "@scripts": [
+        "_scripts": [
           "Ethi"
         ]
       },
       "wal-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "ET"
         ]
       },
       "war": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "war-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "PH"
         ]
       },
       "was": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "wbq-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "wbr-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "wls-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "WF"
         ]
       },
       "wo": {
-        "@scripts": [
-          "Arab",
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "SN"
         ]
       },
+      "wo-alt-secondary": {
+        "_scripts": [
+          "Arab"
+        ]
+      },
       "wtm-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "xal": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "xcr-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Cari"
         ]
       },
       "xh": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "ZA"
         ]
       },
+      "xlc-alt-secondary": {
+        "_scripts": [
+          "Lyci"
+        ]
+      },
+      "xld-alt-secondary": {
+        "_scripts": [
+          "Lydi"
+        ]
+      },
+      "xmr-alt-secondary": {
+        "_scripts": [
+          "Merc"
+        ]
+      },
       "xnr-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "IN"
         ]
       },
       "xog": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "xog-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "UG"
         ]
       },
       "xpr-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Prti"
         ]
       },
       "xsa-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Sarb"
         ]
       },
       "xsr": {
-        "@scripts": [
+        "_scripts": [
           "Deva"
         ]
       },
       "xum-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Ital",
           "Latn"
         ]
       },
       "yao": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "yap": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "FM"
         ]
       },
       "yav": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "yi": {
-        "@scripts": [
+        "_scripts": [
           "Hebr"
         ]
       },
       "yo": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "NG"
         ]
       },
       "yrk": {
-        "@scripts": [
+        "_scripts": [
           "Cyrl"
         ]
       },
       "yue": {
-        "@scripts": [
+        "_scripts": [
           "Hans"
         ]
       },
       "za": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "za-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Hans"
         ],
-        "@territories": [
+        "_territories": [
           "CN"
         ]
       },
       "zap": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "zdj": {
-        "@territories": [
+        "_territories": [
           "KM"
         ]
       },
       "zen-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Tfng"
         ]
       },
+      "zgh": {
+        "_scripts": [
+          "Tfng"
+        ]
+      },
+      "zgh-alt-secondary": {
+        "_territories": [
+          "MA"
+        ]
+      },
       "zh": {
-        "@scripts": [
+        "_scripts": [
           "Hans",
           "Hant"
         ],
-        "@territories": [
+        "_territories": [
           "CN",
           "HK",
           "MO",
@@ -4840,11 +4923,11 @@
         ]
       },
       "zh-alt-secondary": {
-        "@scripts": [
+        "_scripts": [
           "Bopo",
           "Phag"
         ],
-        "@territories": [
+        "_territories": [
           "ID",
           "MY",
           "TH",
@@ -4852,25 +4935,25 @@
         ]
       },
       "zu": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ],
-        "@territories": [
+        "_territories": [
           "ZA"
         ]
       },
       "zun": {
-        "@scripts": [
+        "_scripts": [
           "Latn"
         ]
       },
       "zza": {
-        "@scripts": [
+        "_scripts": [
           "Arab"
         ]
       },
       "zza-alt-secondary": {
-        "@territories": [
+        "_territories": [
           "TR"
         ]
       }

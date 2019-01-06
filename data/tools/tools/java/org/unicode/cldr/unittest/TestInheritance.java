@@ -1,6 +1,7 @@
 package org.unicode.cldr.unittest;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,6 +23,8 @@ import org.unicode.cldr.unittest.TestAll.TestInfo;
 import org.unicode.cldr.util.Builder;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRLocale;
+import org.unicode.cldr.util.ChainedMap;
+import org.unicode.cldr.util.ChainedMap.M3;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.LanguageTagCanonicalizer;
@@ -31,6 +34,8 @@ import org.unicode.cldr.util.StandardCodes;
 import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.BasicLanguageData;
 import org.unicode.cldr.util.SupplementalDataInfo.BasicLanguageData.Type;
+import org.unicode.cldr.util.SupplementalDataInfo.OfficialStatus;
+import org.unicode.cldr.util.SupplementalDataInfo.PopulationData;
 import org.unicode.cldr.util.XPathParts;
 
 import com.ibm.icu.dev.test.TestFmwk;
@@ -40,7 +45,9 @@ import com.ibm.icu.impl.Row.R2;
 
 public class TestInheritance extends TestFmwk {
 
-    private static boolean DEBUG = CldrUtility.getProperty("DEBUG", true);
+    static TestInfo testInfo = TestInfo.getInstance();
+
+    private static boolean DEBUG = CldrUtility.getProperty("DEBUG", false);
 
     private static String fileMatcher = CldrUtility.getProperty("FILE", ".*");
 
@@ -51,11 +58,163 @@ public class TestInheritance extends TestFmwk {
     }
 
     private static final SupplementalDataInfo dataInfo = SupplementalDataInfo.getInstance();
+    private static final Set<String> defaultContents = dataInfo.getDefaultContentLocales();
 
     private static final boolean EXPECT_EQUALITY = false;
 
+    public void TestLocalesHaveOfficial() {
+        // If we have a language, we have all the region locales where the language is official
+        Set<String> SKIP_TERRITORIES = new HashSet(Arrays.asList("001", "150"));
+        for (Entry<String, R2<List<String>, String>> s : dataInfo.getLocaleAliasInfo().get("territory").entrySet()) {
+            SKIP_TERRITORIES.add(s.getKey());
+        }
+
+        LanguageTagParser ltp = new LanguageTagParser();
+
+        Relation<String, String> languageLocalesSeen = Relation.of(new TreeMap<String, Set<String>>(), TreeSet.class);
+
+        Set<String> testOrg = testInfo.getStandardCodes().getLocaleCoverageLocales("google");
+        ChainedMap.M4<String, OfficialStatus, String, Boolean> languageToOfficialChildren = ChainedMap.of(new TreeMap<String, Object>(),
+            new TreeMap<OfficialStatus, Object>(),
+            new TreeMap<String, Object>(),
+            Boolean.class);
+
+        // gather the data
+
+        for (String language : dataInfo.getLanguagesForTerritoriesPopulationData()) {
+            for (String territory : dataInfo.getTerritoriesForPopulationData(language)) {
+                if (SKIP_TERRITORIES.contains(territory)) {
+                    continue;
+                }
+                PopulationData data = dataInfo.getLanguageAndTerritoryPopulationData(language, territory);
+                OfficialStatus status = data.getOfficialStatus();
+                if (data.getOfficialStatus() != OfficialStatus.unknown) {
+                    String locale = removeScript(language + "_" + territory);
+                    String lang = removeScript(ltp.set(locale).getLanguage());
+                    languageToOfficialChildren.put(lang, status, locale, Boolean.TRUE);
+                    languageLocalesSeen.put(lang, locale);
+                }
+            }
+        }
+
+        // flesh it out by adding 'clean' codes.
+        // also get the child locales in cldr.
+
+        Relation<String, String> languageToChildren = Relation.of(new TreeMap<String, Set<String>>(), TreeSet.class);
+        for (String locale : testInfo.getCldrFactory().getAvailable()) {
+            String lang = ltp.set(locale).getLanguage();
+            if (SKIP_TERRITORIES.contains(ltp.getRegion())) {
+                continue;
+            }
+            lang = removeScript(lang);
+            locale = removeScript(locale);
+
+            if (!lang.equals(locale)) {
+                languageToChildren.put(lang, locale);
+                Set<String> localesSeen = languageLocalesSeen.get(lang);
+                if (localesSeen == null || !localesSeen.contains(locale)) {
+                    languageToOfficialChildren.put(lang, OfficialStatus.unknown, locale, Boolean.TRUE);
+                }
+            }
+        }
+
+        for (Entry<String, Set<String>> languageAndChildren : languageToChildren.keyValuesSet()) {
+            String language = languageAndChildren.getKey();
+            Set<String> children = languageAndChildren.getValue();
+            M3<OfficialStatus, String, Boolean> officalStatusToChildren = languageToOfficialChildren.get(language);
+            for (Entry<OfficialStatus, Map<String, Boolean>> entry : officalStatusToChildren) {
+                OfficialStatus status = entry.getKey();
+                if (status != OfficialStatus.official && status != OfficialStatus.de_facto_official) {
+                    continue;
+                }
+                Set<String> officalChildren = entry.getValue().keySet();
+                if (!children.containsAll(officalChildren)) {
+                    Set<String> missing = new TreeSet(officalChildren);
+                    missing.removeAll(children);
+                    String message = "Missing CLDR locales for " + status + " languages: " + missing;
+                    errln(message);
+                } else {
+                    logln("CLDR locales " + children + " cover " + status + " locales " + officalChildren);
+                }
+
+            }
+        }
+
+        if (DEBUG) {
+            Set<String> languages = new TreeSet(languageToChildren.keySet());
+            languages.addAll(languageToOfficialChildren.keySet());
+            System.out.print("\ncode\tlanguage");
+            for (OfficialStatus status : OfficialStatus.values()) {
+                System.out.print("\tNo\t" + status);
+            }
+            System.out.println();
+            for (String language : languages) {
+                if (!testOrg.contains(language)) {
+                    continue;
+                }
+                System.out.print(language + "\t" + testInfo.getEnglish().getName(language));
+
+                M3<OfficialStatus, String, Boolean> officialChildren = languageToOfficialChildren.get(language);
+                for (OfficialStatus status : OfficialStatus.values()) {
+                    Map<String, Boolean> children = officialChildren.get(status);
+                    if (children == null) {
+                        System.out.print("\t" + 0 + "\t");
+                    } else {
+                        System.out.print("\t" + children.size() + "\t" + show(children.keySet(), false));
+                    }
+                }
+                System.out.println();
+            }
+        }
+    }
+
+    private String show(Set<String> joint, boolean showStatus) {
+        StringBuffer b = new StringBuffer();
+        for (String s : joint) {
+            if (b.length() != 0) {
+                b.append(", ");
+            }
+            LanguageTagParser ltp = new LanguageTagParser().set(s);
+            String script = ltp.getScript();
+            if (script.length() != 0) {
+                b.append(testInfo.getEnglish().getName(CLDRFile.SCRIPT_NAME, script));
+            }
+            String region = ltp.getRegion();
+            if (region.length() != 0) {
+                if (script.length() != 0) {
+                    b.append("-");
+                }
+                b.append(testInfo.getEnglish().getName(CLDRFile.TERRITORY_NAME, region));
+            }
+            b.append(" [")
+                .append(s);
+            if (showStatus) {
+                PopulationData data = dataInfo.getLanguageAndTerritoryPopulationData(ltp.getLanguage(), region);
+                if (data == null) {
+                    data = dataInfo.getLanguageAndTerritoryPopulationData(ltp.getLanguageScript(), region);
+                }
+                b.append("; ");
+                b.append(data == null ? "?" : data.getOfficialStatus());
+            }
+            b.append("]");
+
+        }
+        return b.toString();
+    }
+
+    private String removeScript(String lang) {
+        if (!lang.contains("_")) {
+            return lang;
+        }
+        LanguageTagParser ltp = new LanguageTagParser().set(lang);
+        String ls = ltp.getLanguageScript();
+        //if (defaultContents.contains(ls)) {
+        ltp.setScript("");
+        //}
+        return ltp.toString();
+    }
+
     public void TestLikelyAndDefaultConsistency() {
-        Set<String> defaultContents = dataInfo.getDefaultContentLocales();
         LikelySubtags likelySubtags = new LikelySubtags();
         Factory factory = Factory.make(CldrUtility.MAIN_DIRECTORY, ".*");
         Factory factory2 = Factory.make(CldrUtility.BASE_DIRECTORY + "seed/", ".*");
@@ -427,10 +586,9 @@ public class TestInheritance extends TestFmwk {
     }
 
     public void TestCldrFileConsistency() {
-        Factory factory = Factory.make(CldrUtility.MAIN_DIRECTORY, fileMatcher);
         boolean haveErrors = false;
-        for (String locale : factory.getAvailable()) {
-            CLDRFile cldrFileToCheck = factory.make(locale, true);
+        for (String locale : testInfo.getCldrFactory().getAvailable()) {
+            CLDRFile cldrFileToCheck = testInfo.getCldrFactory().make(locale, false);
             int errors = 0;
             for (String path : cldrFileToCheck) {
                 if (!pathMatcher.reset(path).find()) {
@@ -815,5 +973,20 @@ public class TestInheritance extends TestFmwk {
             }
         }
         return result.toString();
+    }
+
+    public void TestLanguageTagParser() {
+        LanguageTagParser ltp = new LanguageTagParser();
+        ltp.set("en-Cyrl-US");
+        assertEquals(null, "en", ltp.getLanguage());
+        assertEquals(null, "en_Cyrl", ltp.getLanguageScript());
+        assertEquals(null, "Cyrl", ltp.getScript());
+        assertEquals(null, "US", ltp.getRegion());
+        try {
+            ltp.set("$");
+            assertFalse("expected exception", true);
+        } catch (Exception e) {
+            logln(e.getMessage());
+        }
     }
 }

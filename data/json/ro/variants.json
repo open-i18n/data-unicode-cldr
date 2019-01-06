@@ -1,0 +1,83 @@
+{
+  "main": {
+    "ro": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "24",
+          "_number": "$Revision: 9287 $"
+        },
+        "generation": {
+          "_date": "$Date: 2013-08-28 21:32:04 -0500 (Wed, 28 Aug 2013) $"
+        },
+        "language": "ro"
+      },
+      "localeDisplayNames": {
+        "variants": {
+          "1901": "ortografie germană tradițională",
+          "1994": "ortografie resiană standardizată",
+          "1996": "ortografie germană de la 1996",
+          "1606NICT": "franceză medievală târzie până la 1606",
+          "1694ACAD": "franceză modernă veche",
+          "1959ACAD": "belarusă academică",
+          "ALALC97": "ALALC97",
+          "ALUKU": "ALUKU",
+          "AREVELA": "armeană orientală",
+          "AREVMDA": "armeană occidentală",
+          "BAKU1926": "alfabet latin altaic unificat",
+          "BAUDDHA": "BAUDDHA",
+          "BISCAYAN": "BISCAYAN",
+          "BISKE": "dialect San Giorgio/Bila",
+          "BOHORIC": "BOHORIC",
+          "BOONT": "boontling",
+          "DAJNKO": "DAJNKO",
+          "EMODENG": "EMODENG",
+          "FONIPA": "alfabet fonetic internațional",
+          "FONUPA": "alfabet fonetic uralic",
+          "FONXSAMP": "FONXSAMP",
+          "HEPBURN": "HEPBURN",
+          "HOGNORSK": "HOGNORSK",
+          "ITIHASA": "ITIHASA",
+          "JAUER": "JAUER",
+          "JYUTPING": "JYUTPING",
+          "KKCOR": "ortografie comuna cornish",
+          "KSCOR": "KSCOR",
+          "LAUKIKA": "LAUKIKA",
+          "LIPAW": "dialect lipovaz din resiană",
+          "LUNA1918": "LUNA1918",
+          "METELKO": "METELKO",
+          "MONOTON": "monotonică",
+          "NDYUKA": "NDYUKA",
+          "NEDIS": "dialect Natisone",
+          "NJIVA": "dialect Gniva/Njiva",
+          "NULIK": "NULIK",
+          "OSOJS": "dialect Oseacco/Osojane",
+          "PAMAKA": "PAMAKA",
+          "PETR1708": "PETR1708",
+          "PINYIN": "pinyin",
+          "POLYTON": "politonică",
+          "POSIX": "informantică",
+          "PUTER": "PUTER",
+          "REVISED": "ortografie revizuită",
+          "RIGIK": "RIGIK",
+          "ROZAJ": "dialect resian",
+          "RUMGR": "RUMGR",
+          "SAAHO": "dialect saho",
+          "SCOTLAND": "engleză standard scoțiană",
+          "SCOUSE": "dialect scouse",
+          "SOLBA": "dialet Stolvizza/Solbica",
+          "SURMIRAN": "SURMIRAN",
+          "SURSILV": "SURSILV",
+          "SUTSILV": "SUTSILV",
+          "TARASK": "ortografie taraskievica",
+          "UCCOR": "ortografie unificată cornish",
+          "UCRCOR": "ortografie revizuită unificată cornish",
+          "ULSTER": "ULSTER",
+          "VAIDIKA": "VAIDIKA",
+          "VALENCIA": "valenciană",
+          "VALLADER": "VALLADER",
+          "WADEGILE": "Wade-Giles"
+        }
+      }
+    }
+  }
+}

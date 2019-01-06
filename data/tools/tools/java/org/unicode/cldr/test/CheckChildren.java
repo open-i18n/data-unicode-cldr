@@ -63,7 +63,7 @@ public class CheckChildren extends FactoryCheckCLDR {
         if (cldrFileToCheck.getLocaleID().equals("root")) return this; // Root's children can override.
 
         // Skip if the phase is not final testing
-        if (Phase.FINAL_TESTING == getPhase()) {
+        if (Phase.FINAL_TESTING == getPhase() || Phase.BUILD == getPhase()) {
             setSkipTest(false); // ok
         } else {
             setSkipTest(true);
@@ -73,6 +73,10 @@ public class CheckChildren extends FactoryCheckCLDR {
         List<CLDRFile> iChildren = new ArrayList<CLDRFile>();
         super.setCldrFileToCheck(cldrFileToCheck, options, possibleErrors);
         CLDRLocale myLocale = CLDRLocale.getInstance(cldrFileToCheck.getLocaleID());
+        if (myLocale.getCountry() != null && myLocale.getCountry().length() == 2) {
+            immediateChildren = null;
+            return this; // We don't care if a country locale's children override, since the country locale needs to stand on its own.
+        }
         Set<CLDRLocale> subLocales = getFactory().subLocalesOf(myLocale);
         if (subLocales == null) return this;
         for (CLDRLocale locale : subLocales) {

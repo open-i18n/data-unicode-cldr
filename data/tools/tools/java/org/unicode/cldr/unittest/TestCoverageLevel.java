@@ -2,6 +2,7 @@ package org.unicode.cldr.unittest;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -11,7 +12,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.unicode.cldr.test.CoverageLevel2;
 import org.unicode.cldr.unittest.TestAll.TestInfo;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.Status;
@@ -19,6 +19,10 @@ import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Counter2;
 import org.unicode.cldr.util.LanguageTagParser;
 import org.unicode.cldr.util.Level;
+import org.unicode.cldr.util.PathHeader;
+import org.unicode.cldr.util.PathHeader.Factory;
+import org.unicode.cldr.util.PathHeader.PageId;
+import org.unicode.cldr.util.PathHeader.SectionId;
 import org.unicode.cldr.util.PathStarrer;
 import org.unicode.cldr.util.RegexLookup;
 import org.unicode.cldr.util.RegexLookup.Finder;
@@ -26,10 +30,13 @@ import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.CurrencyDateInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.OfficialStatus;
 import org.unicode.cldr.util.SupplementalDataInfo.PopulationData;
+import org.unicode.cldr.util.XPathParts;
 
 import com.ibm.icu.dev.test.TestFmwk;
 import com.ibm.icu.dev.util.Relation;
+import com.ibm.icu.impl.Row;
 import com.ibm.icu.impl.Row.R2;
+import com.ibm.icu.impl.Row.R3;
 import com.ibm.icu.text.CompactDecimalFormat;
 import com.ibm.icu.text.CompactDecimalFormat.CompactStyle;
 import com.ibm.icu.text.Transform;
@@ -40,50 +47,52 @@ public class TestCoverageLevel extends TestFmwk {
     private static TestInfo testInfo = TestInfo.getInstance();
 
     public static void main(String[] args) throws IOException {
-        TestCoverageLevel.getStarred("en", true);
+        // TestCoverageLevel.getStarred(true, "en", "de");
         // new TestCoverageLevel().getOrgs();
-        // new TestCoverageLevel().run(args);
+        new TestCoverageLevel().run(args);
     }
 
-    private static void getStarred(String locale, boolean longForm) {
-        CoverageLevel2 coverageLevel2 = CoverageLevel2.getInstance(
-            SupplementalDataInfo.getInstance(CldrUtility.DEFAULT_SUPPLEMENTAL_DIRECTORY), locale);
-        CLDRFile cldrFileToCheck = testInfo.getCldrFactory().make(locale, true);
-
+    private static void getStarred(boolean longForm, String... locales) {
         Map<Level, Relation<String, String>> data = new TreeMap<Level, Relation<String, String>>(); // Relation.of(new
-                                                                                                    // HashMap<Row.R2<Level,
-                                                                                                    // Integer>,
-                                                                                                    // Set<Relation<String,String>>>(),
-                                                                                                    // HashSet.class);
+        SupplementalDataInfo sdi = SupplementalDataInfo.getInstance(CldrUtility.DEFAULT_SUPPLEMENTAL_DIRECTORY);
+        for (String locale : locales) {
+            CLDRFile cldrFileToCheck = testInfo.getCldrFactory().make(locale, true);
 
-        PathStarrer pathStarrer = new PathStarrer();
-        Status status = new Status();
+            // HashMap<Row.R2<Level,
+            // Integer>,
+            // Set<Relation<String,String>>>(),
+            // HashSet.class);
 
-        for (String path : cldrFileToCheck) {
-            if (path.contains("/alias")) {
-                continue;
-            }
-            cldrFileToCheck.getSourceLocaleID(path, status);
-            if (status.pathWhereFound != path) {
-                continue;
-            }
+            PathStarrer pathStarrer = new PathStarrer();
+            Status status = new Status();
 
-            String fullPath = cldrFileToCheck.getFullXPath(path);
-            if (fullPath == null) {
-                continue;
-            }
-            // if (path.contains("ethiopic")) {
-            // System.out.println("?");
-            // }
-            Level level = coverageLevel2.getLevel(path);
+            for (String path : cldrFileToCheck) {
+                if (path.contains("/alias")) {
+                    continue;
+                }
+                String value = cldrFileToCheck.getStringValue(path);
+                //            cldrFileToCheck.getSourceLocaleID(path, status);
+                //            if (status.pathWhereFound != path) {
+                //                continue;
+                //            }
 
-            // R2<Level, Level> key = Row.of(level, newLevel);
-            String starredPath = pathStarrer.set(path);
-            Relation<String, String> starredToAttributes = data.get(level);
-            if (starredToAttributes == null) {
-                data.put(level, starredToAttributes = Relation.of(new TreeMap<String, Set<String>>(), TreeSet.class));
+                String fullPath = cldrFileToCheck.getFullXPath(path);
+                if (fullPath == null) {
+                    continue;
+                }
+                // if (path.contains("ethiopic")) {
+                // System.out.println("?");
+                // }
+                Level level = sdi.getCoverageLevel(path, locale);
+
+                // R2<Level, Level> key = Row.of(level, newLevel);
+                String starredPath = pathStarrer.set(path);
+                Relation<String, String> starredToAttributes = data.get(level);
+                if (starredToAttributes == null) {
+                    data.put(level, starredToAttributes = Relation.of(new TreeMap<String, Set<String>>(), TreeSet.class));
+                }
+                starredToAttributes.put(starredPath, pathStarrer.getAttributesString("|") + "=‹" + value + "›");
             }
-            starredToAttributes.put(starredPath, pathStarrer.getAttributesString("|"));
         }
         RegexLookup<Transform<String, String>> longTransLookup = new RegexLookup<Transform<String, String>>()
             .add("^//ldml/localeDisplayNames/languages/language", new TypeName(CLDRFile.LANGUAGE_NAME))
@@ -250,11 +259,119 @@ public class TestCoverageLevel extends TestFmwk {
         public Level transform(String source) {
             return Level.fromLevel(Integer.parseInt(source));
         }
-    }, null)
-        .loadFromFile(TestCoverageLevel.class, "TestCoverageLevel.txt");
-    {
+    }, null).loadFromFile(TestCoverageLevel.class, "TestCoverageLevel.txt");
+
+    public void TestExceptions() {
         for (R2<Finder, Level> x : exceptions) {
-            System.out.println(x.get0().toString() + " => " + x.get1());
+            logln(x.get0().toString() + " => " + x.get1());
+        }
+    }
+
+    public void TestNarrowCurrencies() {
+        String path = "//ldml/numbers/currencies/currency[@type=\"USD\"]/symbol[@alt=\"narrow\"]";
+        String value = testInfo.getEnglish().getStringValue(path);
+        assertEquals("Narrow $", "$", value);
+        SupplementalDataInfo sdi = SupplementalDataInfo.getInstance(CldrUtility.DEFAULT_SUPPLEMENTAL_DIRECTORY);
+        Level level = sdi.getCoverageLevel(path, "en");
+        assertEquals("Narrow $", Level.BASIC, level);
+    }
+
+    static final EnumSet<PageId> SKIP_PAGE_OK = EnumSet.of(
+        PageId.Dangi,
+        PageId.Islamic,
+        PageId.Islamic_Civil,
+        PageId.Islamic_Rgsa,
+        PageId.Islamic_Tbla,
+        PageId.Islamic_Umalqura,
+        PageId.Buddhist,
+        PageId.Chinese,
+        PageId.Coptic,
+        PageId.Ethiopic,
+        PageId.Ethiopic_Amete_Alem,
+        PageId.Hebrew,
+        PageId.Indian,
+        PageId.Japanese,
+        PageId.Persian,
+        PageId.ROC,
+        PageId.Transforms,
+        PageId.Identity,
+        PageId.Version
+        );
+
+    public void TestEnglishModern() {
+        if (logKnownIssue("5712", "Finish enabling more comprehensive tests")) {
+            return;
+        }
+        SupplementalDataInfo sdi = testInfo.getSupplementalDataInfo();
+        Factory phf = PathHeader.getFactory(testInfo.getEnglish());
+        Relation<Row.R3, String> bad = Relation.of(new TreeMap<Row.R3, Set<String>>(), TreeSet.class);
+        Relation<Row.R3, String> all = Relation.of(new TreeMap<Row.R3, Set<String>>(), TreeSet.class);
+        XPathParts parts = new XPathParts();
+
+        main: for (String path : testInfo.getEnglish().fullIterable()) {
+            PathHeader ph = phf.fromPath(path);
+            SectionId section = ph.getSectionId();
+            PageId page = ph.getPageId();
+            String header = ph.getHeader();
+            String code = ph.getCode();
+            R3<SectionId, PageId, String> row = Row.of(section, page, header);
+            all.put(row, code);
+            Level coverageLevel = sdi.getCoverageLevel(path, "en");
+
+            if (coverageLevel.compareTo(Level.MODERN) <= 0) {
+                continue;
+            }
+
+            if (SKIP_PAGE_OK.contains(page)) {
+                continue;
+            }
+            if (header.equals("Alias")) {
+                continue;
+            }
+            switch (page) {
+            case Numbering_Systems:
+                if (header.startsWith("Standard Patterns when")
+                    && !header.contains("Latin")) {
+                    continue main;
+                }
+                break;
+            case Compact_Decimal_Formatting:
+                if ((header.startsWith("Short Formats when") || header.startsWith("Long Formats when"))
+                    && !header.contains("Latin")) {
+                    continue main;
+                }
+                break;
+            case Number_Formatting_Patterns:
+                if ((header.startsWith("Currency Spacing when")
+                    || header.startsWith("Standard Patterns when using")
+                    || header.startsWith("Miscellaneous Patterns when")
+                    || header.startsWith("Currency Unit Patterns when")
+                    )
+                    && !header.contains("Latin")) {
+                    continue main;
+                }
+                break;
+            case Symbols:
+                if ((header.startsWith("Symbols when using")
+                    )
+                    && !header.contains("Latin")) {
+                    continue main;
+                }
+                break;
+            }
+
+            if (testInfo.getSupplementalDataInfo().hasDeprecatedItem("ldml", parts.set(path))) {
+                continue;
+            }
+
+            bad.put(row, code);
+        }
+        all.removeAll(bad);
+        for (Entry<R3, Set<String>> item : bad.keyValuesSet()) {
+            errln(item.getKey() + "\t" + item.getValue());
+        }
+        for (Entry<R3, Set<String>> item : all.keyValuesSet()) {
+            logln(item.getKey() + "\t" + item.getValue());
         }
     }
 }

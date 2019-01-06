@@ -423,7 +423,7 @@ class GeneratePickerData {
     private static void writeMainFile(String directory, String categoryTable) throws IOException, FileNotFoundException {
         PrintWriter out = getFileWriter(directory, "CharData.java");
         out.println("package org.unicode.cldr.draft;");
-        out.println("// $Date: 2012-11-08 11:09:27 -0600 (Thu, 08 Nov 2012) $");
+        out.println("// $Date: 2013-05-28 08:16:59 -0500 (Tue, 28 May 2013) $");
         out.println("public class CharData {");
         out.println("static String[][] CHARACTERS_TO_NAME = {");
         out.println(buildNames());
@@ -1748,6 +1748,7 @@ class GeneratePickerData {
             int codepoint = Integer.valueOf(codepoints[0], 16);
             emojiCharacters.add(codepoint);
         }
+        in.close();
         CATEGORYTABLE.add("Symbol", false, "Emoji", buttonComparator, Separation.ALL_ORDINARY, emojiCharacters);
     }
 

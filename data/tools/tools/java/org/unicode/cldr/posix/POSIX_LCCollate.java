@@ -13,13 +13,10 @@ import java.io.PrintWriter;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.unicode.cldr.util.CLDRFile;
-import org.unicode.cldr.util.XPathParts;
 
 import com.ibm.icu.dev.util.SortedBag;
 import com.ibm.icu.impl.Utility;
@@ -44,7 +41,6 @@ public class POSIX_LCCollate {
         String codeset, POSIXVariant variant) throws Exception
     {
         String rules = "";
-        String settings = "";
         String collationType = "standard";
         boolean UsingDefaultCollateSet = false;
 
@@ -60,31 +56,14 @@ public class POSIX_LCCollate {
         if (collrules != null)
         {
             if (variant.collation_type == "default") {
-                String path = "//ldml/collations/default";
-                String fp = collrules.getFullXPath(path);
-                XPathParts xp = new XPathParts();
-                xp.set(fp);
-                if (xp.containsAttribute("choice")) {
-                    collationType = xp.getAttributeValue(-1, "choice");
-                }
+                String path = "//ldml/collations/defaultCollation";
+                collationType = collrules.getWinningValue(path);
             } else {
                 collationType = variant.collation_type;
             }
 
-            String path = "//ldml/collations/collation[@type=\"" + collationType + "\"]/settings";
-            Set<String> settingsPaths = new TreeSet<String>(CLDRFile.ldmlComparator);
-            settingsPaths = collrules.getPaths(path, null, settingsPaths);
-            for (String settingPath : settingsPaths) {
-                settings += POSIXUtilities.CollationSettingString(collrules, settingPath);
-            }
-
-            path = "//ldml/collations/collation[@type=\"" + collationType + "\"]/rules";
-            Set<String> rulesPaths = new TreeSet<String>(CLDRFile.ldmlComparator);
-            rulesPaths = collrules.getPaths(path, null, rulesPaths);
-            for (Iterator<String> it = rulesPaths.iterator(); it.hasNext();) {
-                String rulePath = it.next();
-                rules += POSIXUtilities.CollationRuleString(collrules, rulePath);
-            }
+            String path = "//ldml/collations/collation[@type=\"" + collationType + "\"]/cr";
+            rules = collrules.getStringValue(path);
 
         }
 
@@ -92,8 +71,8 @@ public class POSIX_LCCollate {
         // System.out.println("Setting string is :"+settings);
         // System.out.println("Rules   string is :"+rules);
 
-        if (settings.length() > 0 || rules.length() > 0)
-            col = new RuleBasedCollator(settings + rules);
+        if (rules != null && rules.length() > 0)
+            col = new RuleBasedCollator(rules);
         else
             col = (RuleBasedCollator) RuleBasedCollator.getInstance();
 

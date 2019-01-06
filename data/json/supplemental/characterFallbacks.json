@@ -1,11 +1,11 @@
 {
   "supplemental": {
     "version": {
-      "@cldrVersion": "23.1",
-      "@number": "$Revision: 8242 $"
+      "_cldrVersion": "24",
+      "_number": "$Revision: 9123 $"
     },
     "generation": {
-      "@date": "$Date: 2013-02-24 21:06:02 -0600 (Sun, 24 Feb 2013) $"
+      "_date": "$Date: 2013-08-05 13:50:51 -0500 (Mon, 05 Aug 2013) $"
     },
     "characters": {
       "character-fallback": {
@@ -219,7 +219,7 @@
           { "substitute": "INR"}
         ],
         "U+20BA": [
-          { "substitute": "TRY"}
+          { "substitute": "TL"}
         ],
         "U+215F": [
           { "substitute": " 1/"}

@@ -7,16 +7,19 @@ import java.util.regex.Pattern;
 
 import org.unicode.cldr.test.CoverageLevel2;
 import org.unicode.cldr.tool.Option.Options;
+import org.unicode.cldr.unittest.TestAll.TestInfo;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.Status;
 import org.unicode.cldr.util.CldrUtility;
-import org.unicode.cldr.util.CldrUtility.Output;
 import org.unicode.cldr.util.Counter;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.Level;
-import org.unicode.cldr.util.LocaleIDParser;
 import org.unicode.cldr.util.PathHeader;
+import org.unicode.cldr.util.PathHeader.BaseUrl;
 import org.unicode.cldr.util.StandardCodes;
+
+import com.ibm.icu.dev.util.CollectionUtilities;
+import com.ibm.icu.util.Output;
 
 public class SearchCLDR {
     // private static final int
@@ -58,8 +61,7 @@ public class SearchCLDR {
     final static Options myOptions = new Options()
         .add("source", ".*", CldrUtility.MAIN_DIRECTORY, "source directory")
         .add("file", ".*", ".*", "regex to filter files/locales.")
-        .add("path", ".*", null,
-            "regex to filter paths. ! in front selects items that don't match. example: -p relative.*@type=\\\"-?3\\\"")
+        .add("path", ".*", null, "regex to filter paths. ! in front selects items that don't match. example: -p relative.*@type=\\\"-?3\\\"")
         .add("value", ".*", null, "regex to filter values. ! in front selects items that don't match")
         .add("level", ".*", null, "regex to filter levels. ! in front selects items that don't match")
         .add("count", null, null, "only count items")
@@ -68,12 +70,14 @@ public class SearchCLDR {
         .add("resolved", null, null, "use resolved locales")
         .add("q-showParent", null, null, "show parent value")
         .add("english", null, null, "show english value")
-        .add("Verbose", null, null, "verbose output");
+        .add("Verbose", null, null, "verbose output")
+        .add("PathHeader", null, null, "show path header and string ID");
 
     private static String fileMatcher;
     private static Matcher pathMatcher;
     private static boolean countOnly;
     private static boolean showPath;
+    private static PathHeader.Factory PATH_HEADER_FACTORY = null;
 
     private static String organization;
 
@@ -102,6 +106,10 @@ public class SearchCLDR {
 
         showPath = myOptions.get("z-showPath").doesOccur();
         organization = myOptions.get("organization").getValue();
+
+        if (myOptions.get("PathHeader").doesOccur()) {
+            PATH_HEADER_FACTORY = PathHeader.getFactory(TestInfo.getInstance().getEnglish());
+        }
 
         boolean showParent = myOptions.get("q-showParent").doesOccur();
 
@@ -144,6 +152,9 @@ public class SearchCLDR {
             Status status = new Status();
             Set<PathHeader> sorted = new TreeSet<PathHeader>();
             for (String path : file.fullIterable()) {
+                if (file.getStringValue(path) == null) {
+                    continue;
+                }
                 sorted.add(pathHeaderFactory.fromPath(path));
             }
             for (PathHeader pathHeader : sorted) {
@@ -151,7 +162,7 @@ public class SearchCLDR {
                 String fullPath = file.getFullXPath(path);
                 String value = file.getStringValue(path);
 
-                if (pathMatcher != null && pathExclude == pathMatcher.reset(path).find()) {
+                if (pathMatcher != null && pathExclude == pathMatcher.reset(fullPath).find()) {
                     continue;
                 }
 
@@ -175,25 +186,26 @@ public class SearchCLDR {
                 }
                 if (!headerShown) {
                     showLine(showPath, showParent, showEnglish, resolved, locale, "Path", "Full-Path", "Value",
-                        "ShortPath", "Parent-Value", "English-Value", "Source Locale\tSource Path", "Org-Level");
+                        "PathHeader", "Parent-Value", "English-Value", "Source-Locale\tSource-Path", "Org-Level");
                     headerShown = true;
                 }
-                if (showParent && parent == null) {
-                    String parentLocale = LocaleIDParser.getParent(locale);
-                    parent = cldrFactory.make(parentLocale, true);
-                }
+                //                if (showParent && parent == null) {
+                //                    String parentLocale = LocaleIDParser.getParent(locale);
+                //                    parent = cldrFactory.make(parentLocale, true);
+                //                }
                 // String shortPath = pretty.getPrettyPath(path);
                 // String cleanShort = pretty.getOutputForm(shortPath);
                 String cleanShort = pathHeader.toString().replace('\t', '|');
                 final String resolvedSource = !resolved ? null
                     : file.getSourceLocaleID(path, status)
-                        + (path.equals(status.pathWhereFound) ? "" : "\t" + status);
+                        + (path.equals(status.pathWhereFound) ? "\t≣" : "\t" + status);
                 showLine(showPath, showParent, showEnglish, resolved, locale,
                     path, fullPath, value,
                     cleanShort,
-                    parent == null ? null : parent.getStringValue(path),
+                    !showParent ? null : english.getBaileyValue(path, null, null),
                     english == null ? null : english.getStringValue(path),
-                    resolvedSource, organizationLevel == null ? null : organizationLevel.toString());
+                    resolvedSource,
+                    organizationLevel == null ? null : organizationLevel.toString());
             }
             if (countOnly) {
                 System.out.print(locale);
@@ -211,13 +223,23 @@ public class SearchCLDR {
     private static void showLine(boolean showPath, boolean showParent, boolean showEnglish,
         boolean resolved, String locale, String path, String fullPath, String value,
         String shortPath, String parentValue, String englishValue, String resolvedSource, String organizationLevel) {
-        System.out.println(locale + "\t⟪" + value + "⟫"
-            + (showParent ? "\t⟪" + parentValue + "⟪" : "")
-            + (showEnglish ? "\t⟪" + englishValue + "⟪" : "")
-            + "\t" + shortPath
-            + (showPath ? "\t" + fullPath : "")
-            + (resolved ? "\t" + resolvedSource : "")
-            + (organizationLevel != null ? "\t" + organizationLevel : "")
+        String pathHeaderInfo = "";
+        if (PATH_HEADER_FACTORY != null) {
+            PathHeader pathHeader = PATH_HEADER_FACTORY.fromPath(path);
+            if (pathHeader != null) {
+                pathHeaderInfo = "\n\t" + pathHeader
+                    + "\n\t" + pathHeader.getUrl(BaseUrl.PRODUCTION, locale);
+            }
+        }
+        System.out.println(
+            locale + "\t⟪" + value + "⟫"
+                + (showEnglish ? "\t⟪" + englishValue + "⟫" : "")
+                + (!showParent ? "" : CollectionUtilities.equals(value, parentValue) ? "\t≣" : "\t⟪" + parentValue + "⟫")
+                + "\t" + shortPath
+                + (showPath ? "\t" + fullPath : "")
+                + (resolved ? "\t" + resolvedSource : "")
+                + (organizationLevel != null ? "\t" + organizationLevel : "")
+                + pathHeaderInfo
             );
     }
 

@@ -108,14 +108,14 @@ class GenerateStatistics {
         logHtml.println("<p><b>Draft countries (" + draftCountries.size()
             + "):</b>");
         logHtml.println(showSet(draftNativeCountries, transliterate, false));
-        logHtml.println(ShowData.ANALYTICS);
+        logHtml.println(CldrUtility.ANALYTICS);
         logHtml.println("</body></html>");
         logHtml.close();
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     private static Set removeSingleLanguagesWhereWeHaveScripts(Set contents) {
         StandardCodes sc = StandardCodes.make();
         contents = new TreeSet(contents); // make writable
@@ -372,8 +372,8 @@ class GenerateStatistics {
      */
 
     /**
-	 * 
-	 */
+     * 
+     */
     private static String getFixedLanguageName(String localeID, String lang) {
         if (HACK) {
             if (localeID.equals("bs") || localeID.startsWith("bs_")) {

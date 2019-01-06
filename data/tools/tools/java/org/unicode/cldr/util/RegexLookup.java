@@ -18,6 +18,7 @@ import org.unicode.cldr.util.RegexLookup.Finder;
 import com.ibm.icu.impl.Row;
 import com.ibm.icu.impl.Row.R2;
 import com.ibm.icu.text.Transform;
+import com.ibm.icu.util.Output;
 
 /**
  * Lookup items according to a set of regex patterns. Returns the value according to the first pattern that matches. Not
@@ -139,7 +140,7 @@ public class RegexLookup<T> implements Iterable<Row.R2<Finder, T>> {
      *            TODO
      * @return
      */
-    public T get(String source, Object context, CldrUtility.Output<String[]> arguments) {
+    public T get(String source, Object context, Output<String[]> arguments) {
         return get(source, context, arguments, null, null);
     }
 
@@ -152,23 +153,25 @@ public class RegexLookup<T> implements Iterable<Row.R2<Finder, T>> {
      *            TODO
      * @return
      */
-    public T get(String source, Object context, CldrUtility.Output<String[]> arguments,
-        CldrUtility.Output<Finder> matcherFound, List<String> failures) {
+    public T get(String source, Object context, Output<String[]> arguments,
+        Output<Finder> matcherFound, List<String> failures) {
         for (R2<Finder, T> entry : entries.values()) {
             Finder matcher = entry.get0();
-            if (matcher.find(source, context)) {
-                if (arguments != null) {
-                    arguments.value = matcher.getInfo();
+            synchronized (matcher) {
+                if (matcher.find(source, context)) {
+                    if (arguments != null) {
+                        arguments.value = matcher.getInfo();
+                    }
+                    if (matcherFound != null) {
+                        matcherFound.value = matcher;
+                    }
+                    return entry.get1();
+                } else if (failures != null) {
+                    int failPoint = matcher.getFailPoint(source);
+                    String show = source.substring(0, failPoint) + "☹" + source.substring(failPoint) + "\t"
+                        + matcher.toString();
+                    failures.add(show);
                 }
-                if (matcherFound != null) {
-                    matcherFound.value = matcher;
-                }
-                return entry.get1();
-            } else if (failures != null) {
-                int failPoint = matcher.getFailPoint(source);
-                String show = source.substring(0, failPoint) + "☹" + source.substring(failPoint) + "\t"
-                    + matcher.toString();
-                failures.add(show);
             }
         }
         // not really necessary, but makes debugging easier.

@@ -15,24 +15,36 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.unicode.cldr.draft.FileUtilities;
+import org.unicode.cldr.test.CoverageLevel2;
+import org.unicode.cldr.unittest.TestAll.TestInfo;
+import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.CldrUtility.VariableReplacer;
 import org.unicode.cldr.util.ExtractCollationRules;
 import org.unicode.cldr.util.Factory;
+import org.unicode.cldr.util.LanguageTagParser;
+import org.unicode.cldr.util.Level;
 import org.unicode.cldr.util.LocaleIDParser;
-import org.unicode.cldr.util.PrettyPath;
+import org.unicode.cldr.util.PathHeader;
+import org.unicode.cldr.util.PathHeader.SectionId;
 import org.unicode.cldr.util.XPathParts;
 
 import com.ibm.icu.dev.tool.UOption;
 import com.ibm.icu.dev.util.BagFormatter;
+import com.ibm.icu.dev.util.CollectionUtilities;
+import com.ibm.icu.dev.util.Relation;
 import com.ibm.icu.dev.util.TransliteratorUtilities;
+import com.ibm.icu.impl.Row;
+import com.ibm.icu.impl.Row.R2;
 import com.ibm.icu.lang.UScript;
 import com.ibm.icu.text.Collator;
 import com.ibm.icu.text.RuleBasedCollator;
@@ -43,14 +55,20 @@ import com.ibm.icu.util.ULocale;
 
 public class ShowData {
     private static final int HELP1 = 0, HELP2 = 1, SOURCEDIR = 2, DESTDIR = 3,
-        MATCH = 4, GET_SCRIPTS = 5;
+        MATCH = 4, GET_SCRIPTS = 5,
+        LAST_DIR = 6,
+        COVERAGE = 7;
 
-    private static final UOption[] options = { UOption.HELP_H(),
+    private static final UOption[] options = {
+        UOption.HELP_H(),
         UOption.HELP_QUESTION_MARK(),
-        UOption.SOURCEDIR().setDefault(CldrUtility.MAIN_DIRECTORY), // C:\cvsdata/unicode\cldr\diff\summary
+        UOption.SOURCEDIR().setDefault(CldrUtility.MAIN_DIRECTORY),
         UOption.DESTDIR().setDefault(CldrUtility.CHART_DIRECTORY + "summary/"),
         UOption.create("match", 'm', UOption.REQUIRES_ARG).setDefault(".*"),
-        UOption.create("getscript", 'g', UOption.NO_ARG), };
+        UOption.create("getscript", 'g', UOption.NO_ARG),
+        UOption.create("last", 'l', UOption.REQUIRES_ARG).setDefault(CldrUtility.LAST_DIRECTORY + "common/main/"),
+        UOption.create("coverage", 'c', UOption.REQUIRES_ARG).setDefault(Level.MODERN.toString()),
+    };
 
     public static String dateFooter() {
         return "<!-- SVN: $" + // break these apart to prevent SVN replacement in code
@@ -59,16 +77,6 @@ public class ShowData {
             "<p>Generation: " + CldrUtility.isoFormat(new java.util.Date()) + "</p>\n";
     }
 
-    public static String ANALYTICS = "<script type=\"text/javascript\">\n"
-        + "var gaJsHost = ((\"https:\" == document.location.protocol) ? \"https://ssl.\" : \"http://www.\");\n"
-        + "document.write(unescape(\"%3Cscript src='\" + gaJsHost + \"google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E\"));\n"
-        + "</script>\n"
-        + "<script type=\"text/javascript\">\n"
-        + "try {\n"
-        + "var pageTracker = _gat._getTracker(\"UA-7672775-1\");\n"
-        + "pageTracker._trackPageview();\n"
-        + "} catch(err) {}</script>";
-
     static RuleBasedCollator uca = (RuleBasedCollator) Collator
         .getInstance(ULocale.ROOT);
 
@@ -76,13 +84,13 @@ public class ShowData {
         uca.setNumericCollation(true);
     }
 
-    static PrettyPath prettyPathMaker = new PrettyPath();
+    static PathHeader.Factory prettyPathMaker = PathHeader.getFactory(CLDRConfig.getInstance().getEnglish());
 
     static CLDRFile english;
 
-    static Set locales;
+    static Set<String> locales;
 
-    static Factory cldrFactory;
+    static Factory cldrFactory, oldCldrFactory;
 
     public static void main(String[] args) throws Exception {
         // String p =
@@ -91,7 +99,7 @@ public class ShowData {
 
         double deltaTime = System.currentTimeMillis();
         try {
-
+            TestInfo testInfo = TestInfo.getInstance();
             UOption.parseArgs(args, options);
             String sourceDir = options[SOURCEDIR].value; // Utility.COMMON_DIRECTORY
             // + "main/";
@@ -99,6 +107,10 @@ public class ShowData {
             // "main/";
             cldrFactory = Factory.make(sourceDir, ".*");
             english = (CLDRFile) cldrFactory.make("en", true);
+            String lastSourceDir = options[LAST_DIR].value; // Utility.COMMON_DIRECTORY
+            oldCldrFactory = Factory.make(lastSourceDir, ".*");
+
+            Level requiredCoverage = Level.valueOf(options[COVERAGE].value.toUpperCase(Locale.ENGLISH)); // Utility.COMMON_DIRECTORY
 
             if (options[GET_SCRIPTS].doesOccur) {
                 getScripts();
@@ -117,7 +129,7 @@ public class ShowData {
             locales = new TreeSet(cldrFactory.getAvailable());
             new CldrUtility.MatcherFilter(options[MATCH].value).retainAll(locales);
             // Set paths = new TreeSet();
-            Set prettySet = new TreeSet(uca);
+            Set<PathHeader> prettySet = new TreeSet<PathHeader>();
             Set skipList = new HashSet(Arrays.asList(new String[] { "id" }));
 
             CLDRFile.Status status = new CLDRFile.Status();
@@ -126,27 +138,54 @@ public class ShowData {
             Map nonDistinguishingAttributes = new LinkedHashMap();
             CLDRFile parent = null;
 
-            for (Iterator it = locales.iterator(); it.hasNext();) {
-                String locale = (String) it.next();
+            Map<PathHeader, Relation<String, String>> pathHeaderToValuesToLocale = new TreeMap();
+
+            Set<String> defaultContents = testInfo.getSupplementalDataInfo().getDefaultContentLocales();
+
+            // get all the locales in a group (with same written language)
+            Relation<String, String> parentToChildren = Relation.of(new TreeMap<String, Set<String>>(), TreeSet.class);
+            LanguageTagParser ltp = new LanguageTagParser();
+            for (String locale : locales) {
+                if (defaultContents.contains(locale)) {
+                    continue;
+                }
                 if (locale.startsWith("supplem") || locale.startsWith("character"))
                     continue;
+                String writtenLanguage = ltp.set(locale).getLanguageScript();
+                parentToChildren.put(writtenLanguage, locale);
+            }
 
-                // showCollation(collationFactory, locale, collationRules);
-                // if (true) continue;
+            for (Entry<String, Set<String>> group : parentToChildren.keyValuesSet()) {
+                String locale = group.getKey();
+                Set<String> children = group.getValue();
+                Map<String, Row.R2<CLDRFile, CLDRFile>> sublocales = new TreeMap();
 
                 boolean doResolved = localeIDParser.set(locale).getRegion().length() == 0;
                 String languageSubtag = localeIDParser.getLanguage();
                 boolean isLanguageLocale = locale.equals(languageSubtag);
 
-                CLDRFile file = (CLDRFile) cldrFactory.make(locale, doResolved);
+                CLDRFile file = cldrFactory.make(locale, true);
+                for (String s : children) {
+                    if (!s.equals(locale)) {
+                        sublocales.put(s,
+                            Row.of(oldCldrFactory.make(locale, false),
+                                cldrFactory.make(locale, false)));
+                    }
+                }
                 if (file.isNonInheriting())
                     continue; // for now, skip supplementals
-                boolean showParent = !isLanguageLocale;
-                if (showParent) {
-                    parent = (CLDRFile) cldrFactory.make(
-                        localeIDParser.getParent(locale), true);
+
+                boolean showLast = true;
+                CLDRFile lastCldrFile = null;
+                if (showLast) {
+                    try {
+                        lastCldrFile = oldCldrFactory.make(locale, true);
+                    } catch (Exception e) {
+                        // leave null
+                    }
                 }
                 boolean showEnglish = !languageSubtag.equals("en");
+                CoverageLevel2 coverageLevel = CoverageLevel2.getInstance(testInfo.getSupplementalDataInfo(), locale);
 
                 // put into set of simpler paths
                 // and filter if necessary
@@ -176,8 +215,10 @@ public class ShowData {
                         skippedCount++;
                         continue; // skip code fllback
                     }
-                    String prettyString = prettyPathMaker.getPrettyPath(path);
-                    prettySet.add(prettyString);
+                    PathHeader prettyString = prettyPathMaker.fromPath(path);
+                    if (prettyString.getSectionId() != SectionId.Special) {
+                        prettySet.add(prettyString);
+                    }
                 }
 
                 PrintWriter pw = BagFormatter.openUTF8Writer(targetDir, locale + ".html");
@@ -187,17 +228,6 @@ public class ShowData {
                 getChartTemplate(
                     "Locale Data Summary for " + getName(locale),
                     CldrUtility.CHART_DISPLAY_VERSION,
-                    // "<style type='text/css'>" + Utility.LINE_SEPARATOR +
-                    // "h1 {margin-bottom:1em}" + Utility.LINE_SEPARATOR +
-                    // ".e {background-color: #EEEEEE}" + Utility.LINE_SEPARATOR +
-                    // ".i {background-color: #FFFFCC}" + Utility.LINE_SEPARATOR +
-                    // ".v {background-color: #FFFF00}" + Utility.LINE_SEPARATOR +
-                    // ".a {background-color: #9999FF}" + Utility.LINE_SEPARATOR +
-                    // ".ah {background-color: #FF99FF}" + Utility.LINE_SEPARATOR +
-                    // ".h {background-color: #FF9999}" + Utility.LINE_SEPARATOR +
-                    // ".n {color: #999999}" + Utility.LINE_SEPARATOR +
-                    // ".g {background-color: #99FF99}" + Utility.LINE_SEPARATOR +
-                    // "</style>" + Utility.LINE_SEPARATOR +
                     "<script>" + CldrUtility.LINE_SEPARATOR
                         + "if (location.href.split('?')[1].split(',')[0]=='hide') {" + CldrUtility.LINE_SEPARATOR
                         + "document.write('<style>');" + CldrUtility.LINE_SEPARATOR
@@ -206,33 +236,6 @@ public class ShowData {
                         + "</script>",
                     headerAndFooter);
                 pw.println(headerAndFooter[0]);
-                // pw.println("<html><head>");
-                // pw.println("<meta http-equiv='Content-Type' content='text/html;
-                // charset=utf-8'>");
-                // pw.println("<style type='text/css'>");
-                // pw.println("<!--");
-                // pw.println(".e {background-color: #EEEEEE}");
-                // pw.println(".i {background-color: #FFFFCC}");
-                // pw.println(".v {background-color: #FFFF00}");
-                // pw.println(".a {background-color: #9999FF}");
-                // pw.println(".ah {background-color: #FF99FF}");
-                // pw.println(".h {background-color: #FF9999}");
-                // pw.println(".n {color: #999999}");
-                // pw.println(".g {background-color: #99FF99}");
-                // pw.println("-->");
-                // pw.println("</style>");
-                // pw.println("<script>");
-                // pw.println("if (location.href.split('?')[1].split(',')[0]=='hide')
-                // {");
-                // pw.println("document.write('<style>');");
-                // pw.println("document.write('.xx {display:none}');");
-                // pw.println("document.write('</style>');");
-                // pw.println("}");
-                // pw.println("</script>");
-                // pw.println("<title>" + getName(locale) + "</title>");
-                // pw.println("</head><body>");
-                // pw.println("<h1>" + getName(locale) + " (" + file.getDtdVersion() +
-                // ")</h1>");
                 showLinks(pw, locale);
                 showChildren(pw, locale);
                 if (doResolved) {
@@ -242,20 +245,23 @@ public class ShowData {
                 }
                 pw.println("<table border=\"1\" cellpadding=\"2\" cellspacing=\"0\">");
 
-                pw.println("<tr><th>No</th><th colSpan=3>Path</th>"
+                pw.println("<tr><th>No</th>"
+                    + "<th>Section</th>"
+                    + "<th>Page</th>"
+                    + "<th>Header</th>"
+                    + "<th>Code</th>"
                     + (showEnglish ? "<th>English</th>" : "")
-                    + (showParent ? "<th>Parent</th>" : "") + "<th>Native</th>"
-                    + "<th>D?</th>" +
-                    // "<th>Nat. Att.</th>" +
-                    // (showEnglish ? "<th>Eng. Att.</th>" : "") +
-                    // (showParent ? "<th>Par. Att.</th>" : "") +
-                    "<tr>");
+                    + "<th>Native</th>"
+                    + (showLast ? "<th>Last Release</th>" : "")
+                    + "<tr>");
 
                 int count = 0;
-                String[] oldParts = new String[4];
-                for (Iterator it2 = prettySet.iterator(); it2.hasNext();) {
-                    String prettyPath = (String) it2.next();
-                    String path = prettyPathMaker.getOriginal(prettyPath);
+                PathHeader oldParts = null;
+
+                Relation<R2<String, String>, String> childValueToLocales = Relation.of(
+                    new TreeMap<R2<String, String>, Set<String>>(), TreeSet.class);
+                for (PathHeader prettyPath : prettySet) {
+                    String path = prettyPath.getOriginalPath();
                     boolean zeroOutEnglish = path.indexOf("/references") < 0;
 
                     String source = file.getSourceLocaleID(path, status);
@@ -271,94 +277,72 @@ public class ShowData {
 
                     StringBuffer tempDraftRef = new StringBuffer();
                     String value = file.getStringValue(path);
-                    String fullPath = file.getFullXPath(path);
-                    String nda = getNda(skipList, nonDistinguishingAttributes, file,
-                        path, fullPath, tempDraftRef);
-                    String draftRef = tempDraftRef.toString();
-                    if (nda.length() != 0) {
-                        if (value.length() != 0)
-                            value += "; ";
-                        value += nda;
+                    String lastValue = null;
+                    boolean lastNonEmpty = false;
+                    boolean lastEquals = false;
+                    if (lastCldrFile != null) {
+                        lastValue = lastCldrFile.getStringValue(path);
+                        lastNonEmpty = lastValue != null;
+                        if (CldrUtility.equals(lastValue, value)) {
+                            lastValue = null;
+                            lastEquals = true;
+                        }
+                    }
+
+                    for (Entry<String, R2<CLDRFile, CLDRFile>> s : sublocales.entrySet()) {
+                        String oldChildValue = s.getValue().get0().getStringValue(path);
+                        String newChildValue = s.getValue().get1().getStringValue(path);
+                        if (CldrUtility.equals(oldChildValue, lastValue) && CldrUtility.equals(newChildValue, value)) {
+                            continue;
+                        }
+                        R2<String, String> row = Row.of(oldChildValue, newChildValue);
+                        childValueToLocales.put(row, s.getKey());
                     }
 
                     String englishValue = null;
                     String englishFullPath = null;
-                    String englishNda = null;
                     if (zeroOutEnglish) {
-                        englishValue = englishFullPath = englishNda = "";
+                        englishValue = englishFullPath = "";
                     }
                     if (showEnglish
                         && null != (englishValue = english.getStringValue(path))) {
                         englishFullPath = english.getFullXPath(path);
-                        englishNda = getNda(skipList, nonDistinguishingAttributes, file,
-                            path, englishFullPath, tempDraftRef);
-                        if (englishNda.length() != 0) {
-                            if (englishValue.length() != 0)
-                                englishValue += "; ";
-                            englishValue += englishNda;
-                        }
                     }
 
-                    String parentFullPath = null;
-                    String parentNda = null;
-                    String parentValue = null;
-                    if (showParent
-                        && (null != (parentValue = parent.getStringValue(path)))) {
-                        parentFullPath = parent.getFullXPath(path);
-                        parentNda = getNda(skipList, nonDistinguishingAttributes, parent,
-                            path, parentFullPath, tempDraftRef);
-                        if (parentNda.length() != 0) {
-                            if (parentValue.length() != 0)
-                                parentValue += "; ";
-                            parentValue += parentNda;
-                        }
-                    }
-                    prettyPath = TransliteratorUtilities.toHTML
-                        .transliterate(prettyPathMaker.getOutputForm(prettyPath));
-                    String[] pathParts = prettyPath.split("[|]");
-                    // count the <td>'s and pad
-                    // int countBreaks = Utility.countInstances(prettyPath, "</td><td>");
-                    // prettyPath += Utility.repeat("</td><td>", 3-countBreaks);
-                    prettyPath = "";
-                    for (int i = 0; i < 3; ++i) {
-                        String newPart = i < pathParts.length ? pathParts[i] : "";
-                        if (newPart.equals(oldParts[i])) {
-                            prettyPath += "</td><td class='n'>";
-                        } else {
-                            if (newPart.length() == 0) {
-                                prettyPath += "</td><td>";
-                            } else {
-                                prettyPath += "</td><td class='g'>";
-                            }
-                            oldParts[i] = newPart;
-                        }
-                        prettyPath += newPart;
-                    }
                     String statusClass = isAliased ? (isInherited ? " class='ah'"
                         : " class='a'") : (isInherited ? " class='h'" : "");
 
-                    pw
-                        .println((isAliased || isInherited ? "<tr class='xx'><td"
-                            : "<tr><td")
+                    Level currentCoverage = coverageLevel.getLevel(path);
+                    boolean hideCoverage = false;
+                    if (requiredCoverage.compareTo(currentCoverage) < 0) {
+                        hideCoverage = true;
+                    }
+
+                    boolean hide = isAliased || isInherited || lastEquals || hideCoverage || !lastNonEmpty;
+                    if (!hide) {
+                        Relation<String, String> valuesToLocales = pathHeaderToValuesToLocale.get(prettyPath);
+                        if (valuesToLocales == null) {
+                            pathHeaderToValuesToLocale.put(prettyPath, valuesToLocales = Relation.of(new TreeMap<String, Set<String>>(), TreeSet.class));
+                        }
+                        valuesToLocales.put(lastValue + "→→" + value, locale);
+                    }
+                    pw.println(
+                        (hide ? "<tr class='xx'><td" : "<tr><td")
                             + statusClass
                             + ">"
                             + (++count)
-                            + prettyPath
+                            + addPart(oldParts == null ? null : oldParts.getSection(), prettyPath.getSection())
+                            + addPart(oldParts == null ? null : oldParts.getPage(), prettyPath.getPage())
+                            + addPart(oldParts == null ? null : oldParts.getHeader(), prettyPath.getHeader())
+                            + addPart(oldParts == null ? null : oldParts.getCode(), prettyPath.getCode())
                             // + "</td><td>" +
                             // TransliteratorUtilities.toHTML.transliterate(lastElement)
                             + showValue(showEnglish, englishValue, value)
-                            + showValue(showParent, parentValue, value)
-                            + (value == null ? "</td><td>n/a" : "</td><td class='v'"
-                                + dataShower.getBidiStyle(value) + ">"
-                                + dataShower.getPrettyValue(value))
-                            + (draftRef.length() == 0 ? "</td><td>&nbsp;"
-                                : "</td><td class='v'>"
-                                    + dataShower.getPrettyValue(draftRef))
-                            // + "</td><td>" + (nda == null ? "&nbsp;" :
-                            // TransliteratorUtilities.toHTML.transliterate(nda))
-                            // + showValue(showEnglish, englishNda, nda)
-                            // + showValue(showParent, parentNda, nda)
+                            + (value == null ? "</td><td></i>n/a</i>"
+                                : "</td><td class='v'" + DataShower.getBidiStyle(value) + ">" + DataShower.getPrettyValue(value))
+                            + showValue(showLast, lastValue, value)
                             + "</td></tr>");
+                    oldParts = prettyPath;
                 }
                 pw.println("</table><br><table>");
                 pw.println("<tr><td class='a'>Aliased items: </td><td>" + aliasedCount
@@ -374,11 +358,75 @@ public class ShowData {
                 pw.println(headerAndFooter[1]);
                 pw.close();
             }
+            PrintWriter pw = BagFormatter.openUTF8Writer(targetDir, "all-changed.html");
+            String[] headerAndFooter = new String[2];
+
+            getChartTemplate(
+                "Locale Data Summary for ALL-CHANGED",
+                CldrUtility.CHART_DISPLAY_VERSION,
+                "",
+                headerAndFooter);
+            pw.println(headerAndFooter[0]);
+            pw.println("<table border=\"1\" cellpadding=\"2\" cellspacing=\"0\">");
+            pw.println("<tr>" +
+                "<th>Section</th>" +
+                "<th>Page</th>" +
+                "<th>Header</th>" +
+                "<th>Code</th>" +
+                "<th>Old</th>" +
+                "<th>Changed</th>" +
+                "<th>Locales</th>" +
+                "</tr>");
+            for (Entry<PathHeader, Relation<String, String>> entry : pathHeaderToValuesToLocale.entrySet()) {
+                PathHeader ph = entry.getKey();
+                Set<Entry<String, Set<String>>> keyValuesSet = entry.getValue().keyValuesSet();
+                String rowspan = keyValuesSet.size() == 1 ? ">" : " rowSpan='" + keyValuesSet.size() + "'>";
+                pw
+                    .append("<tr><td class='g'").append(rowspan)
+                    .append(ph.getSectionId().toString())
+                    .append("</td><td class='g'").append(rowspan)
+                    .append(ph.getPageId().toString())
+                    .append("</td><td class='g'").append(rowspan)
+                    .append(ph.getHeader())
+                    .append("</td><td class='g'").append(rowspan)
+                    .append(ph.getCode())
+                    .append("</td>");
+                boolean addRow = false;
+                for (Entry<String, Set<String>> s : keyValuesSet) {
+                    String value = s.getKey();
+                    int breakPoint = value.indexOf("→→");
+                    if (addRow) {
+                        pw.append("<tr>");
+                    }
+                    pw.append("<td>")
+                        .append(DataShower.getPrettyValue(value.substring(0, breakPoint)))
+                        .append("</td><td class='v'>")
+                        .append(DataShower.getPrettyValue(value.substring(breakPoint + 2)))
+                        .append("</td><td>")
+                        .append(CollectionUtilities.join(s.getValue(), ", "))
+                        .append("</td></tr>\n");
+                    addRow = true;
+                }
+            }
+            pw.println(headerAndFooter[1]);
+            pw.close();
         } finally {
             deltaTime = System.currentTimeMillis() - deltaTime;
             System.out.println("Elapsed: " + deltaTime / 1000.0 + " seconds");
             System.out.println("Done");
         }
+    }
+
+    private static String addPart(String oldPart, String newPart) {
+        String prefix;
+        if (newPart.equals(oldPart)) {
+            prefix = "</td><td class='n'>";
+        } else if (newPart.length() == 0) {
+            prefix = "</td><td>";
+        } else {
+            prefix = "</td><td class='g'>";
+        }
+        return prefix + TransliteratorUtilities.toHTML.transform(newPart);
     }
 
     private static void getScripts() throws IOException {
@@ -469,11 +517,11 @@ public class ShowData {
 
     private static String showValue(boolean showEnglish, String comparisonValue,
         String mainValue) {
-        return !showEnglish ? "" : comparisonValue == null ? "</td><td>n/a"
-            : comparisonValue.length() == 0 ? "</td><td>&nbsp;" : comparisonValue
-                .equals(mainValue) ? "</td><td>=" : "</td><td class='e'"
-                + dataShower.getBidiStyle(comparisonValue) + ">"
-                + dataShower.getPrettyValue(comparisonValue);
+        return !showEnglish ? ""
+            : comparisonValue == null ? "</td><td><i>n/a</i>"
+                : comparisonValue.length() == 0 ? "</td><td>&nbsp;"
+                    : comparisonValue.equals(mainValue) ? "</td><td>="
+                        : "</td><td class='e'" + DataShower.getBidiStyle(comparisonValue) + ">" + DataShower.getPrettyValue(comparisonValue);
     }
 
     static DataShower dataShower = new DataShower();

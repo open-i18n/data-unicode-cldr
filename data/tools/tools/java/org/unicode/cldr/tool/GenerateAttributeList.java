@@ -80,8 +80,8 @@ public class GenerateAttributeList {
     }
 
     /**
-   * 
-   */
+    * 
+    */
     private void addFromStandardCodes() {
         StandardCodes sc = StandardCodes.make();
         String cat = "language";
@@ -94,8 +94,8 @@ public class GenerateAttributeList {
     }
 
     /**
-   * 
-   */
+    * 
+    */
     private void addFromStandardCodes(StandardCodes sc, String cat) {
         Collection c = sc.getGoodAvailableCodes(cat);
         String target = cat.equals("tzid") ? "zone" : cat;
@@ -247,13 +247,13 @@ public class GenerateAttributeList {
             }
         }
         pw.println("</table>");
-        pw.println(ShowData.ANALYTICS);
+        pw.println(CldrUtility.ANALYTICS);
         pw.println("</body></html>");
     }
 
     /**
-   * 
-   */
+    * 
+    */
     private String toString(Collection source, String defaultKey) {
         StringBuffer result = new StringBuffer();
         boolean first = true;

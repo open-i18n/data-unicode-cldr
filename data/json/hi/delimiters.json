@@ -1,0 +1,22 @@
+{
+  "main": {
+    "hi": {
+      "identity": {
+        "version": {
+          "_cldrVersion": "24",
+          "_number": "$Revision: 9296 $"
+        },
+        "generation": {
+          "_date": "$Date: 2013-08-30 22:08:05 -0500 (Fri, 30 Aug 2013) $"
+        },
+        "language": "hi"
+      },
+      "delimiters": {
+        "quotationStart": "“",
+        "quotationEnd": "”",
+        "alternateQuotationStart": "‘",
+        "alternateQuotationEnd": "’"
+      }
+    }
+  }
+}

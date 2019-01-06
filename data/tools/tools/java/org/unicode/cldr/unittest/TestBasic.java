@@ -5,11 +5,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,9 +17,8 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.unicode.cldr.test.CheckCLDR;
-import org.unicode.cldr.test.CheckCLDR.CheckStatus;
-import org.unicode.cldr.test.CoverageLevel2;
 import org.unicode.cldr.test.DisplayAndInputProcessor;
+import org.unicode.cldr.tool.LikelySubtags;
 import org.unicode.cldr.unittest.TestAll.TestInfo;
 import org.unicode.cldr.util.Builder;
 import org.unicode.cldr.util.CLDRFile;
@@ -31,6 +29,7 @@ import org.unicode.cldr.util.CharacterFallbacks;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Counter;
 import org.unicode.cldr.util.Factory;
+import org.unicode.cldr.util.LanguageTagParser;
 import org.unicode.cldr.util.Level;
 import org.unicode.cldr.util.LocaleIDParser;
 import org.unicode.cldr.util.StandardCodes;
@@ -106,7 +105,7 @@ public class TestBasic extends TestFmwk {
         }
         logln("Checking files for DTD errors in: " + canonicalPath);
         for (File fileName : listFiles) {
-            if (!fileName.toString().endsWith(".xml")) {
+            if (!fileName.toString().endsWith(".xml") || fileName.getName().startsWith(".")) {
                 continue;
             }
             check(fileName);
@@ -250,8 +249,6 @@ public class TestBasic extends TestFmwk {
             .add("([^]])\\[", "$1\t[")
             .add("([^]])/", "$1\t/")
             .add("/", "\t");
-        List<CheckStatus> possibleErrors = new ArrayList<CheckStatus>();
-        Map<String, String> options = new HashMap<String, String>();
 
         for (String locale : cldrFactory.getAvailable()) {
             // if (locale.equals("root") && !localeRegex.equals("root"))
@@ -259,7 +256,6 @@ public class TestBasic extends TestFmwk {
             CLDRFile file = cldrFactory.make(locale, resolved);
             if (file.isNonInheriting())
                 continue;
-            CoverageLevel2 coverageLevel = CoverageLevel2.getInstance(testInfo.getSupplementalDataInfo(), locale);
             logln(locale + "\t-\t" + english.getName(locale));
 
             for (Iterator<String> it = file.iterator(); it.hasNext();) {
@@ -269,7 +265,7 @@ public class TestBasic extends TestFmwk {
                 }
                 // collect abstracted paths
                 String abstractPath = abstractPathTransform.transform(path);
-                Level level = coverageLevel.getLevel(path);
+                Level level = testInfo.getSupplementalDataInfo().getCoverageLevel(path, locale);
                 if (level == Level.OPTIONAL) {
                     level = Level.COMPREHENSIVE;
                 }
@@ -303,13 +299,13 @@ public class TestBasic extends TestFmwk {
     }
 
     public void TestPaths() {
-        Relation<String, String> distinguishing = new Relation(new TreeMap<String, String>(), TreeSet.class, null);
-        Relation<String, String> nonDistinguishing = new Relation(new TreeMap<String, String>(), TreeSet.class, null);
+        Relation<String, String> distinguishing = Relation.of(new TreeMap<String, Set<String>>(), TreeSet.class);
+        Relation<String, String> nonDistinguishing = Relation.of(new TreeMap<String, Set<String>>(), TreeSet.class);
         XPathParts parts = new XPathParts();
-        Factory cldrFactory = Factory.make(mainDirectory, localeRegex);
+        Factory cldrFactory = testInfo.getCldrFactory();
         CLDRFile english = cldrFactory.make("en", true);
 
-        Relation<String, String> pathToLocale = new Relation(new TreeMap<String, String>(CLDRFile.ldmlComparator),
+        Relation<String, String> pathToLocale = Relation.of(new TreeMap<String, Set<String>>(CLDRFile.ldmlComparator),
             TreeSet.class, null);
 
         for (String locale : cldrFactory.getAvailable()) {
@@ -318,7 +314,7 @@ public class TestBasic extends TestFmwk {
             CLDRFile file = cldrFactory.make(locale, resolved);
             if (file.isNonInheriting())
                 continue;
-            DisplayAndInputProcessor displayAndInputProcessor = new DisplayAndInputProcessor(file);
+            DisplayAndInputProcessor displayAndInputProcessor = new DisplayAndInputProcessor(file, false);
 
             logln(locale + "\t-\t" + english.getName(locale));
 
@@ -397,63 +393,11 @@ public class TestBasic extends TestFmwk {
         }
     }
 
-    final static boolean DO_JOHNS = false;
-
-    private void fixFormatIfCantDisplay(NumberFormat format, ULocale locale, Currency currency) {
-        // Ugly code, unoptimized; just presented here for illustration
-
-        // John's suggestion; use currency if not for locale
-        if (DO_JOHNS) {
-            String[] codes = Currency.getAvailableCurrencyCodes(locale, new Date());
-
-            // this is only an approximation, since the currency may have been used previously in the locale,
-            // but ICU doesn't make that CLDR information accessible.
-
-            for (String code : codes) {
-                if (code.equals(currency.toString())) {
-                    return; // skip
-                }
-            }
-        } else {
-            // This also means that perfectly reasonable, well-established symbols like "Rp" for "INR"
-            // will be unavailable for all locales but "IN".
-
-            // Alternative, use hack to figure out if the user of the locale is likely to have the fonts
-            // If we are using plural formatting, we have to take a different code path, so this would need enhancement!
-
-            boolean[] isChoiceFormat = new boolean[1];
-            String name = currency.getName(locale, Currency.SYMBOL_NAME, isChoiceFormat);
-
-            // We actually would like to get the currencySymbol Exemplars, but those aren't available in ICU - another
-            // hole!
-            // So we just assume Latin1.
-            // LocaleData.getExemplarSet(locale, 0);
-
-            final UnicodeSet OK_CURRENCY = (UnicodeSet) new UnicodeSet("[\\u0000-\\u00FF]").freeze();
-            if (OK_CURRENCY.containsAll(name)) {
-                return;
-            }
-        }
-
-        // use bad hack to just use Intl Currency symbol. That means instead of getting "Rp", the user gets "INR".
-        // If ICU exposed the characters.xml file, then we could use the fallbacks there instead
-
-        DecimalFormat format2 = (DecimalFormat) format;
-        String pattern = format2.toPattern();
-        pattern = pattern.replace("\u00a4", "\u00a4\u00a4");
-        format2.applyPattern(pattern);
-
-        // Even if we wanted to use the fallbacks, we'd have to define our own CurrencyCode override,
-        // because the ICU API is not rich enough to let us create a Currency instance that changes the right
-        // information.
-        // That is what ICUServiceBuilder in CLDR has to do, which is a royal pain.
-    }
-
     /**
      * The verbose output shows the results of 1..3 \u00a4 signs.
      */
     public void checkCurrency() {
-        Map<String, Set<R2>> results = new TreeMap<String, Set<R2>>(Collator.getInstance(ULocale.ENGLISH));
+        Map<String, Set<R2<String, Integer>>> results = new TreeMap<String, Set<R2<String, Integer>>>(Collator.getInstance(ULocale.ENGLISH));
         for (ULocale locale : ULocale.getAvailableLocales()) {
             if (locale.getCountry().length() != 0) {
                 continue;
@@ -464,11 +408,11 @@ public class TestBasic extends TestFmwk {
                     Currency.getInstance("INR") }) {
                     format.setCurrency(c);
                     final String formatted = format.format(12345.67);
-                    Set<R2> set = results.get(formatted);
+                    Set<R2<String, Integer>> set = results.get(formatted);
                     if (set == null) {
-                        results.put(formatted, set = new TreeSet<R2>());
+                        results.put(formatted, set = new TreeSet<R2<String, Integer>>());
                     }
-                    set.add(Row.of(locale.toString(), i));
+                    set.add(Row.of(locale.toString(), Integer.valueOf(i)));
                 }
             }
         }
@@ -514,6 +458,14 @@ public class TestBasic extends TestFmwk {
 
     public void TestDefaultContents() {
         Set<String> defaultContents = testInfo.getSupplementalDataInfo().getDefaultContentLocales();
+        Relation<String, String> parentToChildren = Relation.of(new TreeMap(), TreeSet.class);
+        for (String child : testInfo.getCldrFactory().getAvailable()) {
+            if (child.equals("root")) {
+                continue;
+            }
+            String localeParent = LocaleIDParser.getParent(child);
+            parentToChildren.put(localeParent, child);
+        }
         for (String locale : defaultContents) {
             CLDRFile cldrFile;
             try {
@@ -522,6 +474,7 @@ public class TestBasic extends TestFmwk {
                 logln("Can't open default content file:\t" + locale);
                 continue;
             }
+            // we check that the default content locale is always empty
             for (Iterator<String> it = cldrFile.iterator(); it.hasNext();) {
                 String path = it.next();
                 if (path.contains("/identity")) {
@@ -530,6 +483,71 @@ public class TestBasic extends TestFmwk {
                 errln("Default content file not empty:\t" + locale);
                 showDifferences(locale);
                 break;
+            }
+        }
+
+        // check that if a locale has any children, that exactly one of them is the default content
+
+        for (String locale : defaultContents) {
+
+            if (locale.equals("en_US")) {
+                continue; // en_US_POSIX
+            }
+            Set<String> children = parentToChildren.get(locale);
+            if (children != null) {
+                Set<String> defaultContentChildren = new LinkedHashSet(children);
+                defaultContentChildren.retainAll(defaultContents);
+                if (defaultContentChildren.size() != 1) {
+                    if (defaultContentChildren.isEmpty()) {
+                        errln("Locale has children but is missing default contents locale: " + locale + ", children: " + children);
+                    } else {
+                        errln("Locale has too many defaultContent locales!!: " + locale
+                            + ", defaultContents: " + defaultContentChildren);
+                    }
+                }
+            }
+        }
+
+        // check that each default content locale is likely-subtag equivalent to its parent.
+
+        for (String locale : defaultContents) {
+            String maxLocale = LikelySubtags.maximize(locale, likelyData);
+            String localeParent = LocaleIDParser.getParent(locale);
+            String maxLocaleParent = LikelySubtags.maximize(localeParent, likelyData);
+            if (locale.equals("ar_001")) {
+                logln("Known exception to likelyMax(locale=" + locale + ")" +
+                    " == " +
+                    "likelyMax(defaultContent=" + localeParent + ")");
+                continue;
+            }
+            assertEquals(
+                "likelyMax(locale=" + locale + ")" +
+                    " == " +
+                    "likelyMax(defaultContent=" + localeParent + ")",
+                maxLocaleParent,
+                maxLocale);
+        }
+
+    }
+
+    static final Map<String, String> likelyData = testInfo.getSupplementalDataInfo().getLikelySubtags();
+
+    public void TestLikelySubtagsComplete() {
+        LanguageTagParser ltp = new LanguageTagParser();
+        for (String locale : testInfo.getCldrFactory().getAvailable()) {
+            if (locale.equals("root")) {
+                continue;
+            }
+            String maxLocale = LikelySubtags.maximize(locale, likelyData);
+            if (maxLocale == null) {
+                errln("Locale missing likely subtag: " + locale);
+                continue;
+            }
+            ltp.set(maxLocale);
+            if (ltp.getLanguage().isEmpty()
+                || ltp.getScript().isEmpty()
+                || ltp.getRegion().isEmpty()) {
+                errln("Locale has defective likely subtag: " + locale + " => " + maxLocale);
             }
         }
     }

@@ -3,6 +3,7 @@ package org.unicode.cldr.icu;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -11,12 +12,12 @@ import java.util.Set;
 /**
  * Wrapper class for converted ICU data which RB paths to values.
  */
-class IcuData {
+public class IcuData implements Iterable<String> {
     private boolean hasFallback;
     private String sourceFile;
     private String name;
     private Map<String, List<String[]>> rbPathToValues;
-    private boolean hasSpecial;
+    private String comment;
     private Map<String, String> enumMap;
 
     /**
@@ -84,15 +85,16 @@ class IcuData {
         return name;
     }
 
-    public void setHasSpecial(boolean hasSpecial) {
-        this.hasSpecial = hasSpecial;
+    /**
+     * Sets a comment to be placed above the data structure.
+     * @param comment
+     */
+    public void setFileComment(String comment) {
+        this.comment = comment;
     }
 
-    /**
-     * @return true if special data is included in this IcuData, false by default
-     */
-    public boolean hasSpecial() {
-        return hasSpecial;
+    public String getFileComment() {
+        return comment;
     }
 
     /**
@@ -129,6 +131,12 @@ class IcuData {
         }
     }
 
+    public void replace(String path, String[] values) {
+        List<String[]> list = new ArrayList<String[]>(1);
+        rbPathToValues.put(path, list);
+        list.add(normalizeValues(path, values));
+    }
+
     private String[] normalizeValues(String rbPath, String[] values) {
         if (isIntRbPath(rbPath)) {
             List<String> normalizedValues = new ArrayList<String>();
@@ -160,6 +168,11 @@ class IcuData {
      */
     public Set<String> keySet() {
         return rbPathToValues.keySet();
+    }
+
+    @Override
+    public Iterator<String> iterator() {
+        return rbPathToValues.keySet().iterator();
     }
 
     public int size() {

@@ -91,8 +91,8 @@ public class RBNFWriter {
         out.println("<!DOCTYPE ldml SYSTEM \"../../common/dtd/ldml.dtd\">");
         out.println("<ldml>");
         out.println("    <identity>");
-        out.println("        <version number=\"$Revision: 7860 $\"/>");
-        out.println("        <generation date=\"$Date: 2012-10-17 17:12:30 -0500 (Wed, 17 Oct 2012) $\"/>");
+        out.println("        <version number=\"$Revision: 8786 $\"/>");
+        out.println("        <generation date=\"$Date: 2013-05-28 08:16:59 -0500 (Tue, 28 May 2013) $\"/>");
         out.println("        <language type=\"" + language + "\"/>");
 
         if (pieces.length > 1)
@@ -105,6 +105,7 @@ public class RBNFWriter {
         if (options[SPEC].value.equals("true")) {
             out.println("</ldml>");
             out.close();
+            in.close();
             return;
         }
 
@@ -193,6 +194,7 @@ public class RBNFWriter {
             }
             line = in.readLine();
         }
+        in.close();
         out.println("            </ruleset>");
         out.println("        </rulesetGrouping>");
         out.println("    </rbnf>");

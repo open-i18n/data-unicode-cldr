@@ -1,5 +1,5 @@
-/* Copyright (C) 2007-2010 Google and others.  All Rights Reserved. */
-/* Copyright (C) 2007-2010 IBM Corp. and others. All Rights Reserved. */
+/* Copyright (C) 2007-2013 Google and others.  All Rights Reserved. */
+/* Copyright (C) 2007-2013 IBM Corp. and others. All Rights Reserved. */
 
 package org.unicode.cldr.test;
 
@@ -15,6 +15,7 @@ import org.unicode.cldr.util.CLDRLocale;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.DateTimeCanonicalizer;
 import org.unicode.cldr.util.DateTimeCanonicalizer.DateTimePatternType;
+import org.unicode.cldr.util.ICUServiceBuilder;
 import org.unicode.cldr.util.With;
 import org.unicode.cldr.util.XPathParts;
 
@@ -23,9 +24,9 @@ import com.ibm.icu.lang.UCharacter;
 import com.ibm.icu.text.Collator;
 import com.ibm.icu.text.DecimalFormat;
 import com.ibm.icu.text.Normalizer;
+import com.ibm.icu.text.RuleBasedCollator;
 import com.ibm.icu.text.Transform;
 import com.ibm.icu.text.Transliterator;
-import com.ibm.icu.text.UCharacterIterator;
 import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.text.UnicodeSetIterator;
 import com.ibm.icu.util.ULocale;
@@ -54,22 +55,43 @@ public class DisplayAndInputProcessor {
         .compile("//ldml/numbers/.*Format\\[@type=\"standard\"]/pattern.*");
     private static final Pattern NON_DECIMAL_PERIOD = Pattern.compile("(?<![0#'])\\.(?![0#'])");
     private static final Pattern WHITESPACE_NO_NBSP_TO_NORMALIZE = Pattern.compile("\\s+"); // string of whitespace not
-                                                                                            // including NBSP, i.e. [
-                                                                                            // \t\n\r]+
+    // including NBSP, i.e. [
+    // \t\n\r]+
     private static final Pattern WHITESPACE_AND_NBSP_TO_NORMALIZE = Pattern.compile("[\\s\\u00A0]+"); // string of
-                                                                                                      // whitespace
-                                                                                                      // including NBSP,
-                                                                                                      // i.e. [
-                                                                                                      // \u00A0\t\n\r]+
+    // whitespace
+    // including NBSP,
+    // i.e. [
+    // \u00A0\t\n\r]+
+    private static final UnicodeSet UNICODE_WHITESPACE = new UnicodeSet("[:whitespace:]").freeze();
+
+    private static final CLDRLocale MALAYALAM = CLDRLocale.getInstance("ml");
+    private static final CLDRLocale ROMANIAN = CLDRLocale.getInstance("ro");
+    private static final CLDRLocale CATALAN = CLDRLocale.getInstance("ca");
+    private static final CLDRLocale NGOMBA = CLDRLocale.getInstance("jgo");
+    private static final CLDRLocale HEBREW = CLDRLocale.getInstance("he");
+
+    // Ş ş Ţ ţ  =>  Ș ș Ț ț
+    private static final char[][] ROMANIAN_CONVERSIONS = {
+        { '\u015E', '\u0218' }, { '\u015F', '\u0219' }, { '\u0162', '\u021A' },
+        { '\u0163', '\u021B' } };
+
+    private static final char[][] CATALAN_CONVERSIONS = {
+        { '\u013F', '\u004C', '\u00B7' }, // Ŀ -> L·
+        { '\u0140', '\u006C', '\u00B7' } }; // ŀ -> l·
+
+    private static final char[][] NGOMBA_CONVERSIONS = {
+        { '\u0251', '\u0061' }, { '\u0261', '\u0067' } }; //  ɑ -> a , ɡ -> g , See ticket #5691
+
+    private static final char[][] HEBREW_CONVERSIONS = {
+        { '\'', '\u05F3' }, { '"', '\u05F4' } }; //  ' -> geresh  " -> gershayim
 
     private Collator col;
 
     private Collator spaceCol;
 
-    private PrettyPrinter pp;
+    private PrettyPrinter pp = null;
 
     final private CLDRLocale locale;
-    private static final CLDRLocale MALAYALAM = CLDRLocale.getInstance("ml");
     private boolean isPosix;
 
     /**
@@ -77,21 +99,54 @@ public class DisplayAndInputProcessor {
      * 
      * @param cldrFileToCheck
      */
-    public DisplayAndInputProcessor(CLDRFile cldrFileToCheck) {
-        init(this.locale = CLDRLocale.getInstance(cldrFileToCheck.getLocaleID()));
+    public DisplayAndInputProcessor(CLDRFile cldrFileToCheck, boolean needsCollator) {
+        init(this.locale = CLDRLocale.getInstance(cldrFileToCheck.getLocaleID()), needsCollator);
     }
 
-    void init(CLDRLocale locale) {
-        isPosix = locale.toString().indexOf("POSIX") >= 0;
-        col = Collator.getInstance(locale.toULocale());
-        spaceCol = Collator.getInstance(locale.toULocale());
+    public DisplayAndInputProcessor(CLDRFile cldrFileToCheck) {
+        init(this.locale = CLDRLocale.getInstance(cldrFileToCheck.getLocaleID()), true);
+    }
 
-        pp = new PrettyPrinter().setOrdering(Collator.getInstance(ULocale.ROOT))
-            .setSpaceComparator(Collator.getInstance(ULocale.ROOT).setStrength2(Collator.PRIMARY))
-            .setCompressRanges(true)
-            .setToQuote(new UnicodeSet(TO_QUOTE))
-            .setOrdering(col)
-            .setSpaceComparator(spaceCol);
+    void init(CLDRLocale locale, boolean needsCollator) {
+        isPosix = locale.toString().indexOf("POSIX") >= 0;
+        if (needsCollator) {
+            ICUServiceBuilder isb = null;
+            try {
+                isb = ICUServiceBuilder.forLocale(locale);
+            } catch (Exception e) {
+            }
+
+            if (isb != null) {
+                try {
+                    col = isb.getRuleBasedCollator();
+                } catch (Exception e) {
+                    col = Collator.getInstance(ULocale.ROOT);
+                }
+            } else {
+                col = Collator.getInstance(ULocale.ROOT);
+            }
+
+            spaceCol = Collator.getInstance(locale.toULocale());
+            if (spaceCol instanceof RuleBasedCollator) {
+                ((RuleBasedCollator) spaceCol).setAlternateHandlingShifted(false);
+            }
+            pp = new PrettyPrinter().setOrdering(Collator.getInstance(ULocale.ROOT))
+                .setSpaceComparator(Collator.getInstance(ULocale.ROOT).setStrength2(Collator.PRIMARY))
+                .setCompressRanges(true)
+                .setToQuote(new UnicodeSet(TO_QUOTE))
+                .setOrdering(col)
+                .setSpaceComparator(spaceCol);
+
+        }
+    }
+
+    /**
+     * Constructor, taking locale.
+     * 
+     * @param locale
+     */
+    public DisplayAndInputProcessor(ULocale locale, boolean needsCollator) {
+        init(this.locale = CLDRLocale.getInstance(locale), needsCollator);
     }
 
     /**
@@ -100,7 +155,16 @@ public class DisplayAndInputProcessor {
      * @param locale
      */
     public DisplayAndInputProcessor(ULocale locale) {
-        init(this.locale = CLDRLocale.getInstance(locale));
+        init(this.locale = CLDRLocale.getInstance(locale), true);
+    }
+
+    /**
+     * Constructor, taking locale.
+     * 
+     * @param locale
+     */
+    public DisplayAndInputProcessor(CLDRLocale locale, boolean needsCollator) {
+        init(this.locale = locale, needsCollator);
     }
 
     /**
@@ -109,7 +173,7 @@ public class DisplayAndInputProcessor {
      * @param locale
      */
     public DisplayAndInputProcessor(CLDRLocale locale) {
-        init(this.locale = locale);
+        init(this.locale = locale, true);
     }
 
     /**
@@ -180,39 +244,22 @@ public class DisplayAndInputProcessor {
                 String newvalue = normalizeMalayalam(value);
                 if (DEBUG_DAIP) System.out.println("DAIP: Normalized Malayalam '" + value + "' to '" + newvalue + "'");
                 value = newvalue;
+            } else if (locale.childOf(ROMANIAN) && !path.startsWith("//ldml/characters/exemplarCharacters")) {
+                value = standardizeRomanian(value);
+            } else if (locale.childOf(CATALAN) && !path.startsWith("//ldml/characters/exemplarCharacters")) {
+                value = standardizeCatalan(value);
+            } else if (locale.childOf(NGOMBA) && !path.startsWith("//ldml/characters/exemplarCharacters")) {
+                value = standardizeNgomba(value);
+            } else if (locale.childOf(HEBREW) && !path.startsWith("//ldml/characters/exemplarCharacters")) {
+                value = standardizeHebrew(value);
             }
 
-            // turn all whitespace sequences (including tab and newline, and NBSP for certain paths)
-            // into a single space or a single NBSP depending on path.
-            if ((path.contains("/dateFormatLength") && path.contains("/pattern")) ||
-                path.contains("/availableFormats/dateFormatItem") ||
-                path.startsWith("//ldml/dates/timeZoneNames/fallbackRegionFormat") ||
-                (path.startsWith("//ldml/dates/timeZoneNames/metazone") && path.contains("/long")) ||
-                path.startsWith("//ldml/dates/timeZoneNames/regionFormat") ||
-                path.startsWith("//ldml/localeDisplayNames/codePatterns/codePattern") ||
-                path.startsWith("//ldml/localeDisplayNames/languages/language") ||
-                path.startsWith("//ldml/localeDisplayNames/territories/territory") ||
-                path.startsWith("//ldml/localeDisplayNames/types/type") ||
-                (path.startsWith("//ldml/numbers/currencies/currency") && path.contains("/displayName")) ||
-                (path.contains("/decimalFormatLength[@type=\"long\"]") && path.contains("/pattern")) ||
-                path.startsWith("//ldml/posix/messages") ||
-                (path.startsWith("//ldml/units/uni") && path.contains("/unitPattern "))) {
-                value = WHITESPACE_AND_NBSP_TO_NORMALIZE.matcher(value).replaceAll(" "); // replace with regular space
-            } else if ((path.contains("/currencies/currency") && (path.contains("/group") || path.contains("/pattern")))
-                ||
-                (path.contains("/currencyFormatLength") && path.contains("/pattern")) ||
-                (path.contains("/currencySpacing") && path.contains("/insertBetween")) ||
-                (path.contains("/decimalFormatLength") && path.contains("/pattern")) || // i.e. the non-long ones
-                (path.contains("/percentFormatLength") && path.contains("/pattern")) ||
-                (path.startsWith("//ldml/numbers/symbols") && (path.contains("/group") || path.contains("/nan")))) {
-                value = WHITESPACE_AND_NBSP_TO_NORMALIZE.matcher(value).replaceAll("\u00A0"); // replace with NBSP
-            } else {
-                // in this case don't normalize away NBSP
-                value = WHITESPACE_NO_NBSP_TO_NORMALIZE.matcher(value).replaceAll(" "); // replace with regular space
+            if (UNICODE_WHITESPACE.containsSome(value)) {
+                value = normalizeWhitespace(path, value);
             }
 
             // all of our values should not have leading or trailing spaces, except insertBetween
-            if (!path.contains("/insertBetween") && !path.contains("/localeSeparator")) {
+            if (!path.contains("/insertBetween")) {
                 value = value.trim();
             }
 
@@ -230,6 +277,9 @@ public class DisplayAndInputProcessor {
                 value = dtc.getCanonicalDatePattern(path, value, datetimePatternType);
             }
 
+            if (path.startsWith("//ldml/numbers/currencies/currency") && path.contains("displayName")) {
+                value = normalizeCurrencyDisplayName(value);
+            }
             NumericType numericType = NumericType.getNumericType(path);
             if (numericType != NumericType.NOT_NUMERIC) {
                 if (numericType == NumericType.CURRENCY) {
@@ -243,6 +293,21 @@ public class DisplayAndInputProcessor {
                     }
                 }
                 value = getCanonicalPattern(value, numericType, isPosix);
+            }
+
+            // fix [,]
+            if (path.startsWith("//ldml/localeDisplayNames/languages/language")
+                || path.startsWith("//ldml/localeDisplayNames/scripts/script")
+                || path.startsWith("//ldml/localeDisplayNames/territories/territory")
+                || path.startsWith("//ldml/localeDisplayNames/variants/variant")
+                || path.startsWith("//ldml/localeDisplayNames/keys/key")
+                || path.startsWith("//ldml/localeDisplayNames/types/type")) {
+                value = value.replace('[', '(').replace(']', ')').replace('［', '（').replace('］', '）');
+            }
+
+            // Normalize two single quotes for the inches symbol.
+            if (path.contains("/units")) {
+                value = value.replace("''", "″");
             }
 
             // check specific cases
@@ -293,6 +358,116 @@ public class DisplayAndInputProcessor {
         }
     }
 
+    private String normalizeWhitespace(String path, String value) {
+        // turn all whitespace sequences (including tab and newline, and NBSP for certain paths)
+        // into a single space or a single NBSP depending on path.
+        if ((path.contains("/dateFormatLength") && path.contains("/pattern")) ||
+            path.contains("/availableFormats/dateFormatItem") ||
+            (path.startsWith("//ldml/dates/timeZoneNames/metazone") && path.contains("/long")) ||
+            path.startsWith("//ldml/dates/timeZoneNames/regionFormat") ||
+            path.startsWith("//ldml/localeDisplayNames/codePatterns/codePattern") ||
+            path.startsWith("//ldml/localeDisplayNames/languages/language") ||
+            path.startsWith("//ldml/localeDisplayNames/territories/territory") ||
+            path.startsWith("//ldml/localeDisplayNames/types/type") ||
+            (path.startsWith("//ldml/numbers/currencies/currency") && path.contains("/displayName")) ||
+            (path.contains("/decimalFormatLength[@type=\"long\"]") && path.contains("/pattern")) ||
+            path.startsWith("//ldml/posix/messages") ||
+            (path.startsWith("//ldml/units/uni") && path.contains("/unitPattern "))) {
+            value = WHITESPACE_AND_NBSP_TO_NORMALIZE.matcher(value).replaceAll(" "); // replace with regular space
+        } else if ((path.contains("/currencies/currency") && (path.contains("/group") || path.contains("/pattern")))
+            ||
+            (path.contains("/currencyFormatLength") && path.contains("/pattern")) ||
+            (path.contains("/currencySpacing") && path.contains("/insertBetween")) ||
+            (path.contains("/decimalFormatLength") && path.contains("/pattern")) || // i.e. the non-long ones
+            (path.contains("/percentFormatLength") && path.contains("/pattern")) ||
+            (path.startsWith("//ldml/numbers/symbols") && (path.contains("/group") || path.contains("/nan")))) {
+            value = WHITESPACE_AND_NBSP_TO_NORMALIZE.matcher(value).replaceAll("\u00A0"); // replace with NBSP
+        } else {
+            // in this case don't normalize away NBSP
+            value = WHITESPACE_NO_NBSP_TO_NORMALIZE.matcher(value).replaceAll(" "); // replace with regular space
+        }
+        return value;
+    }
+
+    private String normalizeCurrencyDisplayName(String value) {
+        StringBuilder result = new StringBuilder();
+        boolean inParentheses = false;
+        for (int i = 0; i < value.length(); i++) {
+            char c = value.charAt(i);
+            if (c == '(') {
+                inParentheses = true;
+            } else if (c == ')') {
+                inParentheses = false;
+            }
+            if (inParentheses && c == '-') {
+                c = 0x2013; /* Replace hyphen-minus with dash for date ranges */
+            }
+            result.append(c);
+        }
+        return result.toString();
+    }
+
+    private String standardizeRomanian(String value) {
+        StringBuilder builder = new StringBuilder();
+        for (char c : value.toCharArray()) {
+            for (char[] pair : ROMANIAN_CONVERSIONS) {
+                if (c == pair[0]) {
+                    c = pair[1];
+                    break;
+                }
+            }
+            builder.append(c);
+        }
+        return builder.toString();
+    }
+
+    private String standardizeNgomba(String value) {
+        StringBuilder builder = new StringBuilder();
+        for (char c : value.toCharArray()) {
+            for (char[] pair : NGOMBA_CONVERSIONS) {
+                if (c == pair[0]) {
+                    c = pair[1];
+                    break;
+                }
+            }
+            builder.append(c);
+        }
+        return builder.toString();
+    }
+
+    private String standardizeHebrew(String value) {
+        StringBuilder builder = new StringBuilder();
+        for (char c : value.toCharArray()) {
+            for (char[] pair : HEBREW_CONVERSIONS) {
+                if (c == pair[0]) {
+                    c = pair[1];
+                    break;
+                }
+            }
+            builder.append(c);
+        }
+        return builder.toString();
+    }
+
+    private String standardizeCatalan(String value) {
+        StringBuilder builder = new StringBuilder();
+        for (char c : value.toCharArray()) {
+            boolean didSubstitute = false;
+            for (char[] triple : CATALAN_CONVERSIONS) {
+                if (c == triple[0]) {
+                    builder.append(triple[1]);
+                    builder.append(triple[2]);
+                    didSubstitute = true;
+                    break;
+                }
+            }
+            if (!didSubstitute) {
+                builder.append(c);
+            }
+        }
+        return builder.toString();
+    }
+
     private String replace(Pattern pattern, String value, String replacement) {
         String value2 = pattern.matcher(value).replaceAll(replacement);
         if (DEBUG_DAIP && !value.equals(value2)) {
@@ -335,7 +510,7 @@ public class DisplayAndInputProcessor {
         return value;
     }
 
-    static final Transform<String,String> fixArabicPresentation = Transliterator.getInstance(
+    static final Transform<String, String> fixArabicPresentation = Transliterator.getInstance(
         "[[:block=Arabic_Presentation_Forms_A:][:block=Arabic_Presentation_Forms_B:]] nfkc");
 
     /**
@@ -358,8 +533,11 @@ public class DisplayAndInputProcessor {
 
     public static String getCleanedUnicodeSet(UnicodeSet exemplar, PrettyPrinter prettyPrinter,
         ExemplarType exemplarType) {
+        if (prettyPrinter == null) {
+            return exemplar.toString();
+        }
         String value;
-        prettyPrinter.setCompressRanges(exemplar.size() > 100);
+        prettyPrinter.setCompressRanges(exemplar.size() > 300);
         value = exemplar.toPattern(false);
         UnicodeSet toAdd = new UnicodeSet();
 
