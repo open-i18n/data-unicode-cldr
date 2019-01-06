@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7474 $"/>
-		<generation date="$Date: 2012-08-03 13:39:09 -0700 (Fri, 03 Aug 2012) $"/>
+		<version number="$Revision: 7838 $"/>
+		<generation date="$Date: 2012-10-11 15:53:21 -0700 (Thu, 11 Oct 2012) $"/>
 		<language type="hy"/>
 	</identity>
 	<localeDisplayNames>
@@ -525,6 +525,9 @@
 				</dateTimeFormats>
 			</calendar>
 		</calendars>
+		<timeZoneNames>
+			<regionFormat>Ժամանակ՝ {0}</regionFormat>
+		</timeZoneNames>
 	</dates>
 	<numbers>
 		<defaultNumberingSystem>latn</defaultNumberingSystem>
@@ -560,7 +563,9 @@
 		<currencies>
 			<currency type="AMD">
 				<symbol>դր.</symbol>
+				<symbol alt="variant">֏</symbol> <!-- New symbol - Unicode 6.1 -->
 			</currency>
 		</currencies>
 	</numbers>
 </ldml>
+

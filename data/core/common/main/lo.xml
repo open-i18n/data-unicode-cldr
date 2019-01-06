@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7638 $"/>
-		<generation date="$Date: 2012-08-24 14:21:03 -0700 (Fri, 24 Aug 2012) $"/>
+		<version number="$Revision: 7839 $"/>
+		<generation date="$Date: 2012-10-11 16:37:12 -0700 (Thu, 11 Oct 2012) $"/>
 		<language type="lo"/>
 	</identity>
 	<localeDisplayNames>
@@ -747,16 +747,16 @@
 			<territory type="002" draft="provisional">ແອບຟຮິກາ</territory>
 			<territory type="003">ອາເມລິກາເໜືອ</territory>
 			<territory type="005">ອາເມລິກາໃຕ້</territory>
-			<territory type="009">009</territory>
+			<territory type="009">ໂອເຊຍເນຍ</territory>
 			<territory type="011">ແອບຟຣິກາຕາເວັນຕົກ</territory>
-			<territory type="013">013</territory>
+			<territory type="013">ອາເມລິກາກາງ</territory>
 			<territory type="014">ແອບຟຣິກາຕາເວັນອອກ</territory>
 			<territory type="015">ແອບຟຣິກາເຫນືອ</territory>
 			<territory type="017">ແອບຟຮິກາກາງ</territory>
 			<territory type="018">ແອບຟຣິກາໃຕ້</territory>
 			<territory type="019">ອາເມຣິກາ</territory>
-			<territory type="021">021</territory>
-			<territory type="029">029</territory>
+			<territory type="021">ອາເມລິກາເໜືອສຸດ</territory>
+			<territory type="029">ຄາຣິບບຽນ</territory>
 			<territory type="030" draft="provisional">ອາຊີຕາເວັນອອກ</territory>
 			<territory type="034">ອາຊີໃຕ້</territory>
 			<territory type="035">ອາຊີຕາເວັນອອກສຽງໃຕ້</territory>
@@ -867,7 +867,7 @@
 			<territory type="GH">ການ່າ</territory>
 			<territory type="GI">ກີບຣາລຕາ</territory>
 			<territory type="GL">ກຣີນແລນ</territory>
-			<territory type="GM">ແກມເບຍ</territory>
+			<territory type="GM">ສາທາລະນະລັດແກມເບຍ</territory>
 			<territory type="GN">ກິວນີ</territory>
 			<territory type="GP">ກວດເດລູບ</territory>
 			<territory type="GQ">ອີຄົວໂທເລຍກີເນຍ</territory>
@@ -1969,8 +1969,8 @@
 						<dateFormatItem id="yMMM">y MMM</dateFormatItem>
 						<dateFormatItem id="yMMMd">y MMM d</dateFormatItem>
 						<dateFormatItem id="yMMMEd">E, y MMM d</dateFormatItem>
-						<dateFormatItem id="yQ">y Q</dateFormatItem>
 						<dateFormatItem id="yQQQ">y QQQ</dateFormatItem>
+						<dateFormatItem id="yQQQQ">y QQQQ</dateFormatItem>
 					</availableFormats>
 					<intervalFormats>
 						<intervalFormatFallback>{0} – {1}</intervalFormatFallback>
@@ -2419,11 +2419,11 @@
 						<dateFormatItem id="ms">mm:ss</dateFormatItem>
 						<dateFormatItem id="y">y</dateFormatItem>
 						<dateFormatItem id="yM">M/yyyy</dateFormatItem>
-						<dateFormatItem id="yMEd">E  M/d/y</dateFormatItem>
+						<dateFormatItem id="yMEd">E M/d/y</dateFormatItem>
 						<dateFormatItem id="yMMM">MMM y</dateFormatItem>
 						<dateFormatItem id="yMMMEd">E,MMM d,y</dateFormatItem>
-						<dateFormatItem id="yQ">Q yyyy</dateFormatItem>
 						<dateFormatItem id="yQQQ">QQQ y</dateFormatItem>
+						<dateFormatItem id="yQQQQ">QQQQ y</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
@@ -2778,7 +2778,7 @@
 			<hourFormat>+HH:mm;-HH:mm</hourFormat>
 			<gmtFormat>GMT{0}</gmtFormat>
 			<gmtZeroFormat>GMT</gmtZeroFormat>
-			<regionFormat>({0})</regionFormat>
+			<regionFormat>ເວລາ {0}</regionFormat>
 			<fallbackFormat>{1} ({0})</fallbackFormat>
 			<fallbackRegionFormat>{1} ({0})</fallbackRegionFormat>
 			<zone type="America/Lower_Princes">
@@ -5072,32 +5072,34 @@
 		<decimalFormats numberSystem="laoo">
 			<decimalFormatLength type="long">
 				<decimalFormat>
-					<pattern type="10000" count="other">00ກີບ</pattern>
-					<pattern type="100000" count="other">000ກີບ</pattern>
+					<pattern type="1000" count="other">0ພັນ</pattern>
+					<pattern type="10000" count="other">00ພັນ</pattern>
+					<pattern type="100000" count="other">000ພັນ</pattern>
 					<pattern type="1000000" count="other">0ລ້ານ</pattern>
 					<pattern type="10000000" count="other">00ລ້ານ</pattern>
 					<pattern type="100000000" count="other">000ລ້ານ</pattern>
 					<pattern type="1000000000" count="other">0ພັນລ້ານ</pattern>
-					<pattern type="10000000000" count="other">00ໝື່ນລ້ານ</pattern>
-					<pattern type="100000000000" count="other">000ແສນລ້ານ</pattern>
-					<pattern type="1000000000000" count="other">0ລ້ານລ້ານ</pattern>
+					<pattern type="10000000000" count="other">00ພັນລ້ານ</pattern>
+					<pattern type="100000000000" count="other">000ພັນລ້ານ</pattern>
+					<pattern type="1000000000000" count="other">0000ພັນລ້ານ</pattern>
 					<pattern type="10000000000000" count="other">00ລ້ານລ້ານ</pattern>
 					<pattern type="100000000000000" count="other">000ລ້ານລ້ານ</pattern>
 				</decimalFormat>
 			</decimalFormatLength>
 			<decimalFormatLength type="short">
 				<decimalFormat>
-					<pattern type="10000" count="other">00ກີບ</pattern>
-					<pattern type="100000" count="other">000ກີບ</pattern>
+					<pattern type="1000" count="other">0ພັນ</pattern>
+					<pattern type="10000" count="other">00ພັນ</pattern>
+					<pattern type="100000" count="other">000ພັນ</pattern>
 					<pattern type="1000000" count="other">0ລ້ານ</pattern>
 					<pattern type="10000000" count="other">00ລ້ານ</pattern>
 					<pattern type="100000000" count="other">000ລ້ານ</pattern>
-					<pattern type="1000000000" count="other">0ພັນລ້ານ</pattern>
-					<pattern type="10000000000" count="other">00ໝື່ນລ້ານ</pattern>
-					<pattern type="100000000000" count="other">000ແສນລ້ານ</pattern>
-					<pattern type="1000000000000" count="other">0ລ້ານລ້ານ</pattern>
-					<pattern type="10000000000000" count="other">00ລ້ານລ້ານ</pattern>
-					<pattern type="100000000000000" count="other">000ລ້ານລ້ານ</pattern>
+					<pattern type="1000000000" count="other">0ຕື້</pattern>
+					<pattern type="10000000000" count="other">00ຕື້</pattern>
+					<pattern type="100000000000" count="other">000ຕື້</pattern>
+					<pattern type="1000000000000" count="other">0000ຕື້</pattern>
+					<pattern type="10000000000000" count="other">00ພັນຕື້</pattern>
+					<pattern type="100000000000000" count="other">000ພັນຕື້</pattern>
 				</decimalFormat>
 			</decimalFormatLength>
 		</decimalFormats>
@@ -5200,13 +5202,13 @@
 				<displayName>ອອສຕຣານ ອາກຊັງຕິນ</displayName>
 			</currency>
 			<currency type="ARL">
-				<displayName>ເປໂຊເລ ອາກຊັງຕິນ  (1970-1983)</displayName>
+				<displayName>ເປໂຊເລ ອາກຊັງຕິນ (1970-1983)</displayName>
 			</currency>
 			<currency type="ARM">
 				<displayName>ເປໂຊ ອາກຊັງຕິນ (1881-1970)</displayName>
 			</currency>
 			<currency type="ARP">
-				<displayName>ເປໂຊ ອາກຊັງຕິນ  (1983-1985)</displayName>
+				<displayName>ເປໂຊ ອາກຊັງຕິນ (1983-1985)</displayName>
 			</currency>
 			<currency type="ARS">
 				<displayName>ເປໂຊ ອາເຈນຕີນາ</displayName>
@@ -5287,10 +5289,10 @@
 				<displayName>ມະດອນ ໂລລິເວຍ</displayName>
 			</currency>
 			<currency type="BRB">
-				<displayName>ກຣູເຊໂດບາຊິ ໃໝ່  (1967-1986)</displayName>
+				<displayName>ກຣູເຊໂດບາຊິ ໃໝ່ (1967-1986)</displayName>
 			</currency>
 			<currency type="BRC">
-				<displayName>ກຣູຊາໂດບາຊິວ  (1986-1989)</displayName>
+				<displayName>ກຣູຊາໂດບາຊິວ (1986-1989)</displayName>
 			</currency>
 			<currency type="BRE">
 				<displayName>ກຣູເຊໂຣ ບາຊິ ກຣູໂຊ ບາຊິວ (1993-1994)</displayName>
@@ -5733,7 +5735,7 @@
 				<displayName>ນູໂວຊໍ ເປຣູ</displayName>
 			</currency>
 			<currency type="PES">
-				<displayName>ໂຊນ ເປຣູ  (1863-1965)</displayName>
+				<displayName>ໂຊນ ເປຣູ (1863-1965)</displayName>
 			</currency>
 			<currency type="PGK">
 				<displayName>ກີນາ ປາປົວນີວກຸນນີນ</displayName>
@@ -5917,7 +5919,7 @@
 				<displayName>ໂຊມ ອຸສເບກິສຖາານ</displayName>
 			</currency>
 			<currency type="VEB">
-				<displayName>ໂບລີວາ ເວເນຊູເອລາ</displayName>
+				<displayName>ໂບລີວາ ເວເນຊູເອລາ (1871-2008)</displayName>
 			</currency>
 			<currency type="VEF">
 				<displayName>ໂບລິວາ ເວເນຊູເອລາ</displayName>

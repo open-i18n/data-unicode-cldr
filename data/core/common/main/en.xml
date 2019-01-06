@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7685 $"/>
-		<generation date="$Date: 2012-09-05 14:15:46 -0700 (Wed, 05 Sep 2012) $"/>
+		<version number="$Revision: 7836 $"/>
+		<generation date="$Date: 2012-10-11 13:11:48 -0700 (Thu, 11 Oct 2012) $"/>
 		<language type="en"/>
 	</identity>
 	<localeDisplayNames>
@@ -319,7 +319,7 @@
 			<language type="lui">Luiseno</language>
 			<language type="lun">Lunda</language>
 			<language type="luo">Luo</language>
-			<language type="lus">Lushai</language>
+			<language type="lus">Mizo</language>
 			<language type="luy">Luyia</language>
 			<language type="lv">Latvian</language>
 			<language type="mad">Madurese</language>
@@ -1068,23 +1068,30 @@
 			<variant type="AREVMDA">Western Armenian</variant>
 			<variant type="BAKU1926">Unified Turkic Latin Alphabet</variant>
 			<variant type="BISKE">San Giorgio/Bila dialect</variant>
+			<variant type="BOHORIC">Bohorič alphabet</variant>
 			<variant type="BOONT">Boontling</variant>
+			<variant type="DAJNKO">Dajnko alphabet</variant>
+			<variant type="EMODENG">Early Modern English</variant>
 			<variant type="FONIPA">IPA Phonetics</variant>
 			<variant type="FONUPA">UPA Phonetics</variant>
 			<variant type="HEPBURN">Hepburn romanization</variant>
 			<variant type="HEPLOC">Hepburn romanization, Library of Congress method</variant>
 			<variant type="KKCOR">Common Orthography</variant>
+			<variant type="KSCOR">Standard Orthography</variant>
 			<variant type="LIPAW">The Lipovaz dialect of Resian</variant>
+			<variant type="METELKO">Metelko alphabet</variant>
 			<variant type="MONOTON">Monotonic</variant>
 			<variant type="NDYUKA">Ndyuka dialect</variant>
 			<variant type="NEDIS">Natisone dialect</variant>
 			<variant type="NJIVA">Gniva/Njiva dialect</variant>
+			<variant type="NULIK">Modern Volapük</variant>
 			<variant type="OSOJS">Oseacco/Osojane dialect</variant>
 			<variant type="PAMAKA">Pamaka dialect</variant>
 			<variant type="PINYIN">Pinyin Romanization</variant>
 			<variant type="POLYTON">Polytonic</variant>
 			<variant type="POSIX">Computer</variant>
 			<variant type="REVISED">Revised Orthography</variant>
+			<variant type="RIGIK">Classic Volapük</variant>
 			<variant type="ROZAJ">Resian</variant>
 			<variant type="SAAHO">Saho</variant>
 			<variant type="SCOTLAND">Scottish Standard English</variant>
@@ -1126,6 +1133,7 @@
 			<type type="cham" key="numbers">Cham Digits</type>
 			<type type="chinese" key="calendar">Chinese Calendar</type>
 			<type type="coptic" key="calendar">Coptic Calendar</type>
+			<type type="dangi" key="calendar">Dangi Calendar</type>
 			<type type="deva" key="numbers">Devanagari Digits</type>
 			<type type="dictionary" key="collation">Dictionary Sort Order</type>
 			<type type="ducet" key="collation">Default Unicode Sort Order</type>
@@ -1246,9 +1254,6 @@
 		<exemplarCharacters type="auxiliary">[á à ă â å ä ã ā æ ç é è ĕ ê ë ē í ì ĭ î ï ī ñ ó ò ŏ ô ö ø ō œ ú ù ŭ û ü ū ÿ]</exemplarCharacters>
 		<exemplarCharacters type="index">[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]</exemplarCharacters>
 		<exemplarCharacters type="punctuation">[\- ‐ – — , ; \: ! ? . … ' ‘ ’ &quot; “ ” ( ) \[ \] § @ * / \&amp; # † ‡ ′ ″]</exemplarCharacters>
-		<stopwords>
-			<stopwordList type="collation">a an the</stopwordList>
-		</stopwords>
 	</characters>
 	<delimiters>
 		<quotationStart>“</quotationStart>
@@ -1306,8 +1311,8 @@
 						<dateFormatItem id="yMMM">MMM y G</dateFormatItem>
 						<dateFormatItem id="yMMMd">MMM d, y G</dateFormatItem>
 						<dateFormatItem id="yMMMEd">E, MMM d, y G</dateFormatItem>
-						<dateFormatItem id="yQ">Q y G</dateFormatItem>
 						<dateFormatItem id="yQQQ">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yQQQQ">QQQQ y G</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
@@ -1376,8 +1381,8 @@
 						<dateFormatItem id="yMMM">MMM U</dateFormatItem>
 						<dateFormatItem id="yMMMd">MMM d, U</dateFormatItem>
 						<dateFormatItem id="yMMMEd">E, MMM d, U</dateFormatItem>
-						<dateFormatItem id="yQ">Q U</dateFormatItem>
 						<dateFormatItem id="yQQQ">QQQ U</dateFormatItem>
+						<dateFormatItem id="yQQQQ">QQQQ U</dateFormatItem>
 					</availableFormats>
 					<intervalFormats>
 						<intervalFormatFallback>{0} – {1}</intervalFormatFallback>
@@ -1679,6 +1684,7 @@
 						<dateFormatItem id="EHm">E HH:mm</dateFormatItem>
 						<dateFormatItem id="Ehms">E h:mm:ss a</dateFormatItem>
 						<dateFormatItem id="EHms">E HH:mm:ss</dateFormatItem>
+						<dateFormatItem id="Gy">y G</dateFormatItem>
 						<dateFormatItem id="hm">h:mm a</dateFormatItem>
 						<dateFormatItem id="Hm">HH:mm</dateFormatItem>
 						<dateFormatItem id="hms">h:mm:ss a</dateFormatItem>
@@ -1697,8 +1703,8 @@
 						<dateFormatItem id="yMMM">MMM y</dateFormatItem>
 						<dateFormatItem id="yMMMd">MMM d, y</dateFormatItem>
 						<dateFormatItem id="yMMMEd">E, MMM d, y</dateFormatItem>
-						<dateFormatItem id="yQ">Q y</dateFormatItem>
 						<dateFormatItem id="yQQQ">QQQ y</dateFormatItem>
+						<dateFormatItem id="yQQQQ">QQQQ y</dateFormatItem>
 					</availableFormats>
 					<intervalFormats>
 						<intervalFormatFallback>{0} – {1}</intervalFormatFallback>
@@ -1859,6 +1865,7 @@
 					<availableFormats>
 						<dateFormatItem id="d">d</dateFormatItem>
 						<dateFormatItem id="Ed">d E</dateFormatItem>
+						<dateFormatItem id="Gy">y G</dateFormatItem>
 						<dateFormatItem id="hm">h:mm a</dateFormatItem>
 						<dateFormatItem id="Hm">HH:mm</dateFormatItem>
 						<dateFormatItem id="hms">h:mm:ss a</dateFormatItem>
@@ -1870,6 +1877,7 @@
 						<dateFormatItem id="MMMd">MMM d</dateFormatItem>
 						<dateFormatItem id="MMMEd">E, MMM d</dateFormatItem>
 						<dateFormatItem id="ms">mm:ss</dateFormatItem>
+						<dateFormatItem id="y">y G</dateFormatItem>
 						<dateFormatItem id="yyyy">y G</dateFormatItem>
 						<dateFormatItem id="yyyyM">M/y G</dateFormatItem>
 						<dateFormatItem id="yyyyMd">M/d/y G</dateFormatItem>
@@ -1877,8 +1885,8 @@
 						<dateFormatItem id="yyyyMMM">MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMd">MMM d, y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMEd">E, MMM d, y G</dateFormatItem>
-						<dateFormatItem id="yyyyQ">Q y G</dateFormatItem>
 						<dateFormatItem id="yyyyQQQ">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yyyyQQQQ">QQQQ y G</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
@@ -1931,8 +1939,8 @@
 						<dateFormatItem id="yyyyMMM">MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMd">MMM d, y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMEd">E, MMM d, y G</dateFormatItem>
-						<dateFormatItem id="yyyyQ">Q y G</dateFormatItem>
 						<dateFormatItem id="yyyyQQQ">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yyyyQQQQ">QQQQ y G</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
@@ -1985,8 +1993,8 @@
 						<dateFormatItem id="yyyyMMM">MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMd">MMM d, y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMEd">E, MMM d, y G</dateFormatItem>
-						<dateFormatItem id="yyyyQ">Q y G</dateFormatItem>
 						<dateFormatItem id="yyyyQQQ">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yyyyQQQQ">QQQQ y G</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>

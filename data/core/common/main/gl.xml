@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7599 $"/>
-		<generation date="$Date: 2012-08-16 17:59:44 -0700 (Thu, 16 Aug 2012) $"/>
+		<version number="$Revision: 7830 $"/>
+		<generation date="$Date: 2012-10-11 02:06:51 -0700 (Thu, 11 Oct 2012) $"/>
 		<language type="gl"/>
 	</identity>
 	<localeDisplayNames>
@@ -708,9 +708,6 @@
 		<ellipsis type="initial">…{0}</ellipsis>
 		<ellipsis type="medial">{0}…{1}</ellipsis>
 		<moreInformation>?</moreInformation>
-		<stopwords>
-			<stopwordList type="collation" draft="provisional">un unha o a</stopwordList>
-		</stopwords>
 	</characters>
 	<delimiters>
 		<quotationStart draft="contributed">“</quotationStart>
@@ -969,10 +966,9 @@
 						<dateFormatItem id="yMMMd">d MMM, y</dateFormatItem>
 						<dateFormatItem id="yMMMEd">E, d MMM, y</dateFormatItem>
 						<dateFormatItem id="yMMMM" draft="contributed">MMMM y</dateFormatItem>
-						<dateFormatItem id="yQ" draft="contributed">Q yyyy</dateFormatItem>
 						<dateFormatItem id="yQQQ" draft="contributed">QQQ y</dateFormatItem>
+						<dateFormatItem id="yQQQQ" draft="contributed">QQQQ y</dateFormatItem>
 						<dateFormatItem id="yyMM" draft="contributed">MM/yy</dateFormatItem>
-						<dateFormatItem id="yyQ" draft="contributed">Q yy</dateFormatItem>
 						<dateFormatItem id="yyyyMMMM" draft="contributed">MMMM y</dateFormatItem>
 					</availableFormats>
 					<intervalFormats>
@@ -2189,8 +2185,8 @@
 	</dates>
 	<numbers>
 		<symbols numberSystem="latn">
-			<decimal>.</decimal>
-			<group>,</group>
+			<decimal>,</decimal>
+			<group>.</group>
 			<list>;</list>
 			<percentSign>%</percentSign>
 			<plusSign>+</plusSign>
@@ -2236,8 +2232,8 @@
 			</decimalFormatLength>
 			<decimalFormatLength type="short">
 				<decimalFormat>
-					<pattern type="1000" count="one" draft="contributed">0000</pattern>
-					<pattern type="1000" count="other" draft="contributed">0000</pattern>
+					<pattern type="1000" count="one" draft="contributed">0</pattern>
+					<pattern type="1000" count="other" draft="contributed">0</pattern>
 					<pattern type="10000" count="one" draft="contributed">00k</pattern>
 					<pattern type="10000" count="other" draft="contributed">00k</pattern>
 					<pattern type="100000" count="one" draft="contributed">000k</pattern>
@@ -2933,14 +2929,14 @@
 				<displayName>Som usbeco</displayName>
 			</currency>
 			<currency type="VEB">
+				<displayName draft="contributed">Bolívar venezolano (1871-2008)</displayName>
+				<displayName count="one" draft="contributed">bolívar venezolano (1871-2008)</displayName>
+				<displayName count="other" draft="contributed">bolívares venezolanos (1871-2008)</displayName>
+			</currency>
+			<currency type="VEF">
 				<displayName draft="contributed">Bolívar venezolano</displayName>
 				<displayName count="one" draft="contributed">bolívar venezolano</displayName>
 				<displayName count="other" draft="contributed">bolívares venezolanos</displayName>
-			</currency>
-			<currency type="VEF">
-				<displayName draft="contributed">Bolívar forte venezolano</displayName>
-				<displayName count="one" draft="contributed">bolívar forte venezolano</displayName>
-				<displayName count="other" draft="contributed">bolívares fortes venezolanos</displayName>
 			</currency>
 			<currency type="VND">
 				<displayName>Dong vietnamita</displayName>

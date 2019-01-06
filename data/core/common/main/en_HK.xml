@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
-	<!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7599 $"/>
-		<generation date="$Date: 2012-08-16 17:59:44 -0700 (Thu, 16 Aug 2012) $"/>
+		<version number="$Revision: 7847 $"/>
+		<generation date="$Date: 2012-10-15 11:02:42 -0700 (Mon, 15 Oct 2012) $"/>
 		<language type="en"/>
 		<territory type="HK"/>
 	</identity>
@@ -35,7 +35,6 @@
 				<dateTimeFormats>
 					<availableFormats>
 						<dateFormatItem id="MMMMEd">E d MMMM</dateFormatItem>
-						<dateFormatItem id="yM">M/y GGGGG</dateFormatItem>
 						<dateFormatItem id="yMd">d/M/y GGGGG</dateFormatItem>
 						<dateFormatItem id="yMEd">E, d/M/y GGGGG</dateFormatItem>
 						<dateFormatItem id="yMMMd">d MMM, y G</dateFormatItem>
@@ -104,10 +103,6 @@
 						<intervalFormatItem id="MEd">
 							<greatestDifference id="d">E, d/M – E, d/M</greatestDifference>
 							<greatestDifference id="M">E, d/M – E, d/M</greatestDifference>
-						</intervalFormatItem>
-						<intervalFormatItem id="MMMd">
-							<greatestDifference id="d">d–d MMM</greatestDifference>
-							<greatestDifference id="M">d MMM – d MMM</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="MMMEd">
 							<greatestDifference id="d">E, d MMM – E, d MMM</greatestDifference>
@@ -269,3 +264,4 @@
 		</currencies>
 	</numbers>
 </ldml>
+

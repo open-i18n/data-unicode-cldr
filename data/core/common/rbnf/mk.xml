@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
     <identity>
-        <version number="$Revision: 7363 $"/>
-        <generation date="$Date: 2012-07-02 22:20:50 -0700 (Mon, 02 Jul 2012) $"/>
+        <version number="$Revision: 7734 $"/>
+        <generation date="$Date: 2012-09-17 11:52:13 -0700 (Mon, 17 Sep 2012) $"/>
         <language type="mk"/>
     </identity>
     <rbnf>
@@ -54,7 +54,7 @@
                 <rbnfrule value="1000000000000000">←%spellout-cardinal-masculine← билијарда[ →→];</rbnfrule>
                 <rbnfrule value="1000000000000000000">=#,##0=;</rbnfrule>
             </ruleset>
-            <ruleset type="spellout-cardinal-neutre">
+            <ruleset type="spellout-cardinal-neuter">
                 <rbnfrule value="-x">минус →→;</rbnfrule>
                 <rbnfrule value="x.x">←← кома →→;</rbnfrule>
                 <rbnfrule value="0">нула;</rbnfrule>

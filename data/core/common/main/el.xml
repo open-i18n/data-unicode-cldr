@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7599 $"/>
-		<generation date="$Date: 2012-08-16 17:59:44 -0700 (Thu, 16 Aug 2012) $"/>
+		<version number="$Revision: 7832 $"/>
+		<generation date="$Date: 2012-10-11 11:59:15 -0700 (Thu, 11 Oct 2012) $"/>
 		<language type="el"/>
 	</identity>
 	<localeDisplayNames>
@@ -1190,16 +1190,13 @@
 	</localeDisplayNames>
 	<characters>
 		<exemplarCharacters>[α ά β γ δ ε έ ζ η ή θ ι ί ϊ ΐ κ λ μ ν ξ ο ό π ρ σ ς τ υ ύ ϋ ΰ φ χ ψ ω ώ]</exemplarCharacters>
-		<exemplarCharacters type="auxiliary">[]</exemplarCharacters>
+		<exemplarCharacters type="auxiliary">[ἀ ἄ ἂ ἆ ἁ ἅ ἃ ἇ ὰ ᾶ ἐ ἔ ἒ ἑ ἕ ἓ ὲ ἠ ἤ ἢ ἦ ἡ ἥ ἣ ἧ ὴ ῆ ἰ ἴ ἲ ἶ ἱ ἵ ἳ ἷ ὶ ῖ ῒ ῗ ὄ ὂ ὃ ὸ ὐ ὔ ὒ ὖ ὑ ὕ ὓ ὗ ὺ ῦ ῢ ῧ ὤ ὢ ὦ ὥ ὣ ὧ ὼ ῶ]</exemplarCharacters>
 		<exemplarCharacters type="index">[Α Β Γ Δ Ε Ζ Η Θ Ι Κ Λ Μ Ν Ξ Ο Π Ρ Σ Τ Υ Φ Χ Ψ Ω]</exemplarCharacters>
 		<exemplarCharacters type="punctuation">[\- ‐ – — , ; \: ! . … &quot; ( ) \[ \] § @ * / \\ \&amp;]</exemplarCharacters>
 		<ellipsis type="final">{0}…</ellipsis>
 		<ellipsis type="initial">…{0}</ellipsis>
 		<ellipsis type="medial">{0}…{1}</ellipsis>
 		<moreInformation>;</moreInformation>
-		<stopwords>
-			<stopwordList type="collation" draft="provisional">οι το και η ο</stopwordList>
-		</stopwords>
 	</characters>
 	<delimiters>
 		<quotationStart>«</quotationStart>
@@ -1571,12 +1568,10 @@
 						<dateFormatItem id="yMMM">LLL y</dateFormatItem>
 						<dateFormatItem id="yMMMd">d MMM y</dateFormatItem>
 						<dateFormatItem id="yMMMEd">E, d MMM y</dateFormatItem>
-						<dateFormatItem id="yQ">y Q</dateFormatItem>
 						<dateFormatItem id="yQQQ">y QQQ</dateFormatItem>
+						<dateFormatItem id="yQQQQ">y QQQQ</dateFormatItem>
 						<dateFormatItem id="yyMM">MM/yy</dateFormatItem>
 						<dateFormatItem id="yyMMM">LLL yy</dateFormatItem>
-						<dateFormatItem id="yyQ">Q yy</dateFormatItem>
-						<dateFormatItem id="yyQQQQ">QQQQ yy</dateFormatItem>
 						<dateFormatItem id="yyyy">y</dateFormatItem>
 						<dateFormatItem id="yyyyMM">MM/yyyy</dateFormatItem>
 						<dateFormatItem id="yyyyMMMM">LLLL y</dateFormatItem>
@@ -1774,7 +1769,7 @@
 						<dateFormatItem id="yyyyMMM">LLL yy GGGGG</dateFormatItem>
 						<dateFormatItem id="yyyyMMMd">d MMM, y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMEd">E, d MMM, y G</dateFormatItem>
-						<dateFormatItem id="yyyyQ">yy GGGGG Q</dateFormatItem>
+						<dateFormatItem id="yyyyQQQ">yy GGGGG QQQ</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
@@ -1824,8 +1819,8 @@
 						<dateFormatItem id="yyyyMMM">LLL, y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMd">d MMM, y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMEd">E, d MMM, y G</dateFormatItem>
-						<dateFormatItem id="yyyyQ">y G Q</dateFormatItem>
-						<dateFormatItem id="yyyyQQQ">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yyyyQQQ">y G QQQ</dateFormatItem>
+						<dateFormatItem id="yyyyQQQQ">QQQQ y G</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
@@ -2273,7 +2268,7 @@
 				<exemplarCity>Ζυρίχη</exemplarCity>
 			</zone>
 			<zone type="Africa/Abidjan">
-				<exemplarCity>Ακτή Ελεφαντοστού</exemplarCity>
+				<exemplarCity>Αμπιτζάν</exemplarCity>
 			</zone>
 			<zone type="Pacific/Rarotonga">
 				<exemplarCity>Ραροτόνγκα</exemplarCity>
@@ -2768,7 +2763,7 @@
 				<exemplarCity draft="contributed">Λίμα</exemplarCity>
 			</zone>
 			<zone type="Pacific/Tahiti">
-				<exemplarCity>Αϊτή</exemplarCity>
+				<exemplarCity>Ταϊτή</exemplarCity>
 			</zone>
 			<zone type="Pacific/Marquesas">
 				<exemplarCity>Μαρκέσας</exemplarCity>
@@ -4103,25 +4098,25 @@
 			</decimalFormatLength>
 			<decimalFormatLength type="long">
 				<decimalFormat>
-					<pattern type="1000" count="one">0 χιλιάδες</pattern>
+					<pattern type="1000" count="one">0 χιλιάδα</pattern>
 					<pattern type="1000" count="other">0 χιλιάδες</pattern>
 					<pattern type="10000" count="one">00 χιλιάδες</pattern>
 					<pattern type="10000" count="other">00 χιλιάδες</pattern>
 					<pattern type="100000" count="one">000 χιλιάδες</pattern>
 					<pattern type="100000" count="other">000 χιλιάδες</pattern>
-					<pattern type="1000000" count="one">0 εκατομμύρια</pattern>
+					<pattern type="1000000" count="one">0 εκατομμύριο</pattern>
 					<pattern type="1000000" count="other">0 εκατομμύρια</pattern>
 					<pattern type="10000000" count="one">00 εκατομμύρια</pattern>
 					<pattern type="10000000" count="other">00 εκατομμύρια</pattern>
 					<pattern type="100000000" count="one">000 εκατομμύρια</pattern>
 					<pattern type="100000000" count="other">000 εκατομμύρια</pattern>
-					<pattern type="1000000000" count="one">0 δισεκατομμύρια</pattern>
+					<pattern type="1000000000" count="one">0 δισεκατομμύριο</pattern>
 					<pattern type="1000000000" count="other">0 δισεκατομμύρια</pattern>
 					<pattern type="10000000000" count="one">00 δισεκατομμύρια</pattern>
 					<pattern type="10000000000" count="other">00 δισεκατομμύρια</pattern>
 					<pattern type="100000000000" count="one">000 δισεκατομμύρια</pattern>
 					<pattern type="100000000000" count="other">000 δισεκατομμύρια</pattern>
-					<pattern type="1000000000000" count="one">0 τρισεκατομμύρια</pattern>
+					<pattern type="1000000000000" count="one">0 τρισεκατομμύριο</pattern>
 					<pattern type="1000000000000" count="other">0 τρισεκατομμύρια</pattern>
 					<pattern type="10000000000000" count="one">00 τρισεκατομμύρια</pattern>
 					<pattern type="10000000000000" count="other">00 τρισεκατομμύρια</pattern>
@@ -4132,7 +4127,7 @@
 			<decimalFormatLength type="short">
 				<decimalFormat>
 					<pattern type="1000" count="one" draft="contributed">0 χιλ'.'</pattern>
-					<pattern type="1000" count="other" draft="contributed">0 χιλ'.'</pattern>
+					<pattern type="1000" count="other" draft="contributed">0 χιλ'.'</pattern>
 					<pattern type="10000" count="one" draft="contributed">00 χιλ'.'</pattern>
 					<pattern type="10000" count="other" draft="contributed">00 χιλ'.'</pattern>
 					<pattern type="100000" count="one" draft="contributed">000 χιλ'.'</pattern>
@@ -5406,14 +5401,14 @@
 				<displayName count="other">σομ Ουζμπεκιστάν</displayName>
 			</currency>
 			<currency type="VEB">
+				<displayName>Μπολιβάρ Βενεζουέλας (1871-2008)</displayName>
+				<displayName count="one">μπολιβάρ Βενεζουέλας (1871-2008)</displayName>
+				<displayName count="other">μπολιβάρ Βενεζουέλας (1871-2008)</displayName>
+			</currency>
+			<currency type="VEF">
 				<displayName>Μπολιβάρ Βενεζουέλας</displayName>
 				<displayName count="one">μπολιβάρ Βενεζουέλας</displayName>
 				<displayName count="other">μπολιβάρ Βενεζουέλας</displayName>
-			</currency>
-			<currency type="VEF">
-				<displayName>Βολιβάρ Φουέρτε Βενεζουέλας</displayName>
-				<displayName count="one">βολιβάρ φουέρτε Βενεζουέλας</displayName>
-				<displayName count="other">βολιβάρ φουέρτε Βενεζουέλας</displayName>
 			</currency>
 			<currency type="VND">
 				<displayName>Ντονγκ Βιετνάμ</displayName>

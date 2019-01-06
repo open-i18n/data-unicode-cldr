@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7599 $"/>
-		<generation date="$Date: 2012-08-16 17:59:44 -0700 (Thu, 16 Aug 2012) $"/>
+		<version number="$Revision: 7847 $"/>
+		<generation date="$Date: 2012-10-15 11:02:42 -0700 (Mon, 15 Oct 2012) $"/>
 		<language type="de"/>
 	</identity>
 	<localeDisplayNames>
@@ -1127,16 +1127,13 @@
 	</localeDisplayNames>
 	<characters>
 		<exemplarCharacters>[a ä b c d e f g h i j k l m n o ö p q r s ß t u ü v w x y z]</exemplarCharacters>
-		<exemplarCharacters type="auxiliary">[á à ă â å ã ā æ ç é è ĕ ê ë ē í ì ĭ î ï ī ñ ó ò ŏ ô ø ō œ ú ù ŭ û ū ÿ]</exemplarCharacters>
+		<exemplarCharacters type="auxiliary">[á à ă â å ã ā æ ç é è ĕ ê ë ē ğ í ì ĭ î ï {i\u0307} ī ı ñ ó ò ŏ ô ø ō œ ş ú ù ŭ û ū ÿ]</exemplarCharacters>
 		<exemplarCharacters type="index">[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]</exemplarCharacters>
 		<exemplarCharacters type="punctuation">[\- ‐ – — , ; \: ! ? . … ' ‘ ‚ &quot; “ „ « » ( ) \[ \] \{ \} § @ * / \&amp; #]</exemplarCharacters>
 		<ellipsis type="final">{0} …</ellipsis>
 		<ellipsis type="initial">… {0}</ellipsis>
 		<ellipsis type="medial">{0} … {1}</ellipsis>
 		<moreInformation>?</moreInformation>
-		<stopwords>
-			<stopwordList type="collation" draft="provisional">der die das</stopwordList>
-		</stopwords>
 	</characters>
 	<delimiters>
 		<quotationStart>„</quotationStart>
@@ -1195,12 +1192,12 @@
 						<dateFormatItem id="yMMM">MMM y G</dateFormatItem>
 						<dateFormatItem id="yMMMd">d. MMM y G</dateFormatItem>
 						<dateFormatItem id="yMMMEd">E, d. MMM y G</dateFormatItem>
-						<dateFormatItem id="yQ">Q y G</dateFormatItem>
 						<dateFormatItem id="yQQQ">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yQQQQ">QQQQ y G</dateFormatItem>
 						<dateFormatItem id="yyMM">MM.y G</dateFormatItem>
 						<dateFormatItem id="yyMMdd">dd.MM.y G</dateFormatItem>
 						<dateFormatItem id="yyMMM">MMM y G</dateFormatItem>
-						<dateFormatItem id="yyQ">Q y G</dateFormatItem>
+						<dateFormatItem id="yyQQQ">QQQ y G</dateFormatItem>
 						<dateFormatItem id="yyQQQQ">QQQQ y G</dateFormatItem>
 						<dateFormatItem id="yyyy">y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMM">MMMM y G</dateFormatItem>
@@ -1544,12 +1541,12 @@
 						<dateFormatItem id="yMMM">MMM y</dateFormatItem>
 						<dateFormatItem id="yMMMd">d. MMM y</dateFormatItem>
 						<dateFormatItem id="yMMMEd">E, d. MMM y</dateFormatItem>
-						<dateFormatItem id="yQ">Q y</dateFormatItem>
 						<dateFormatItem id="yQQQ">QQQ y</dateFormatItem>
+						<dateFormatItem id="yQQQQ">QQQQ y</dateFormatItem>
 						<dateFormatItem id="yyMM">MM.yy</dateFormatItem>
 						<dateFormatItem id="yyMMdd">dd.MM.yy</dateFormatItem>
 						<dateFormatItem id="yyMMM">MMM yy</dateFormatItem>
-						<dateFormatItem id="yyQ">Q yy</dateFormatItem>
+						<dateFormatItem id="yyQQQ">QQQ yy</dateFormatItem>
 						<dateFormatItem id="yyQQQQ">QQQQ yy</dateFormatItem>
 						<dateFormatItem id="yyyy">y</dateFormatItem>
 						<dateFormatItem id="yyyyMMMM">MMMM y</dateFormatItem>
@@ -1732,6 +1729,7 @@
 						<!-- per cldrbug 2835, added from gregorian and adjusted for G -->
 						<dateFormatItem id="d">d</dateFormatItem>
 						<dateFormatItem id="Ed">E d.</dateFormatItem>
+						<dateFormatItem id="Gy">y G</dateFormatItem>
 						<dateFormatItem id="H">HH 'Uhr'</dateFormatItem>
 						<dateFormatItem id="Hm">HH:mm</dateFormatItem>
 						<dateFormatItem id="Hms">HH:mm:ss</dateFormatItem>
@@ -1745,10 +1743,11 @@
 						<dateFormatItem id="MMMEd">E, d. MMM</dateFormatItem>
 						<dateFormatItem id="MMMMdd">dd. MMMM</dateFormatItem>
 						<dateFormatItem id="ms">mm:ss</dateFormatItem>
+						<dateFormatItem id="y">y G</dateFormatItem>
 						<dateFormatItem id="yyMM">MM.y G</dateFormatItem>
 						<dateFormatItem id="yyMMdd">dd.MM.y G</dateFormatItem>
 						<dateFormatItem id="yyMMM">MMM y G</dateFormatItem>
-						<dateFormatItem id="yyQ">Q y G</dateFormatItem>
+						<dateFormatItem id="yyQQQ">QQQ y G</dateFormatItem>
 						<dateFormatItem id="yyQQQQ">QQQQ y G</dateFormatItem>
 						<dateFormatItem id="yyyy">y G</dateFormatItem>
 						<dateFormatItem id="yyyyM">M.y G</dateFormatItem>
@@ -1758,8 +1757,8 @@
 						<dateFormatItem id="yyyyMMMd">d. MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMEd">E, d. MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMM">MMMM y G</dateFormatItem>
-						<dateFormatItem id="yyyyQ">Q y G</dateFormatItem>
 						<dateFormatItem id="yyyyQQQ">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yyyyQQQQ">QQQQ y G</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
@@ -1810,7 +1809,7 @@
 						<dateFormatItem id="yyMM">MM.y GGGGG</dateFormatItem>
 						<dateFormatItem id="yyMMdd">dd.MM.y GGGGG</dateFormatItem>
 						<dateFormatItem id="yyMMM">MMM y G</dateFormatItem>
-						<dateFormatItem id="yyQ">Q y G</dateFormatItem>
+						<dateFormatItem id="yyQQQ">QQQ y G</dateFormatItem>
 						<dateFormatItem id="yyQQQQ">QQQQ y G</dateFormatItem>
 						<dateFormatItem id="yyyy">y G</dateFormatItem>
 						<dateFormatItem id="yyyyM">M.y GGGGG</dateFormatItem>
@@ -1819,8 +1818,8 @@
 						<dateFormatItem id="yyyyMMMd">d. MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMEd">E, d. MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMM">MMMM y G</dateFormatItem>
-						<dateFormatItem id="yyyyQ">Q y G</dateFormatItem>
 						<dateFormatItem id="yyyyQQQ">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yyyyQQQQ">QQQQ y G</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
@@ -1871,7 +1870,7 @@
 						<dateFormatItem id="yyMM">MM.y GGGGG</dateFormatItem>
 						<dateFormatItem id="yyMMdd">dd.MM.y GGGGG</dateFormatItem>
 						<dateFormatItem id="yyMMM">MMM y G</dateFormatItem>
-						<dateFormatItem id="yyQ">Q y G</dateFormatItem>
+						<dateFormatItem id="yyQQQ">QQQ y G</dateFormatItem>
 						<dateFormatItem id="yyQQQQ">QQQQ y G</dateFormatItem>
 						<dateFormatItem id="yyyy">y G</dateFormatItem>
 						<dateFormatItem id="yyyyM">M.y GGGGG</dateFormatItem>
@@ -1880,8 +1879,8 @@
 						<dateFormatItem id="yyyyMMMd">d. MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMEd">E, d. MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMM">MMMM y G</dateFormatItem>
-						<dateFormatItem id="yyyyQ">Q y G</dateFormatItem>
 						<dateFormatItem id="yyyyQQQ">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yyyyQQQQ">QQQQ y G</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
@@ -2088,9 +2087,6 @@
 			</zone>
 			<zone type="America/Mexico_City">
 				<exemplarCity>Mexiko-Stadt</exemplarCity>
-			</zone>
-			<zone type="Africa/Niamey">
-				<exemplarCity>Niger</exemplarCity>
 			</zone>
 			<zone type="Asia/Katmandu">
 				<exemplarCity draft="contributed">Kathmandu</exemplarCity>
@@ -3224,12 +3220,12 @@
 			</decimalFormatLength>
 			<decimalFormatLength type="short">
 				<decimalFormat>
-					<pattern type="1000" count="one" draft="provisional">0k</pattern>
-					<pattern type="1000" count="other" draft="provisional">0k</pattern>
-					<pattern type="10000" count="one" draft="contributed">00000</pattern>
-					<pattern type="10000" count="other" draft="contributed">00000</pattern>
-					<pattern type="100000" count="one" draft="contributed">000000</pattern>
-					<pattern type="100000" count="other" draft="contributed">000000</pattern>
+					<pattern type="1000" count="one" draft="contributed">0</pattern>
+					<pattern type="1000" count="other" draft="contributed">0</pattern>
+					<pattern type="10000" count="one" draft="contributed">0</pattern>
+					<pattern type="10000" count="other" draft="contributed">0</pattern>
+					<pattern type="100000" count="one" draft="contributed">0</pattern>
+					<pattern type="100000" count="other" draft="contributed">0</pattern>
 					<pattern type="1000000" count="one">0 Mio</pattern>
 					<pattern type="1000000" count="other">0 Mio</pattern>
 					<pattern type="10000000" count="one">00 Mio</pattern>
@@ -3242,12 +3238,12 @@
 					<pattern type="10000000000" count="other">00 Mrd</pattern>
 					<pattern type="100000000000" count="one">000 Mrd</pattern>
 					<pattern type="100000000000" count="other">000 Mrd</pattern>
-					<pattern type="1000000000000" count="one" draft="contributed">0 Bio</pattern>
-					<pattern type="1000000000000" count="other" draft="contributed">0 Bio</pattern>
-					<pattern type="10000000000000" count="one" draft="contributed">00 Bio</pattern>
-					<pattern type="10000000000000" count="other" draft="contributed">00 Bio</pattern>
-					<pattern type="100000000000000" count="one" draft="contributed">000 Bio</pattern>
-					<pattern type="100000000000000" count="other" draft="contributed">000 Bio</pattern>
+					<pattern type="1000000000000" count="one" draft="contributed">0 Bio</pattern>
+					<pattern type="1000000000000" count="other" draft="contributed">0 Bio</pattern>
+					<pattern type="10000000000000" count="one" draft="contributed">00 Bio</pattern>
+					<pattern type="10000000000000" count="other" draft="contributed">00 Bio</pattern>
+					<pattern type="100000000000000" count="one" draft="contributed">000 Bio</pattern>
+					<pattern type="100000000000000" count="other" draft="contributed">000 Bio</pattern>
 				</decimalFormat>
 			</decimalFormatLength>
 		</decimalFormats>
@@ -4473,7 +4469,7 @@
 			<currency type="VEB">
 				<displayName>Venezolanischer Bolívar (1871-2008)</displayName>
 				<displayName count="one">Venezolanischer Bolívar (1871-2008)</displayName>
-				<displayName count="other">Venezolanische Bolívar (1871-2008)</displayName>
+				<displayName count="other">Venezolanische Bolívares (1871-2008)</displayName>
 			</currency>
 			<currency type="VEF">
 				<displayName>Venezolanischer Bolívar</displayName>

@@ -6,8 +6,8 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 THE DATA FILES AND SOFTWARE ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF THIRD PARTY RIGHTS. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR HOLDERS INCLUDED IN THIS NOTICE BE LIABLE FOR ANY CLAIM, OR ANY SPECIAL INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THE DATA FILES OR SOFTWARE.
 
 Except as contained in this notice, the name of a copyright holder shall not be used in advertising or otherwise to promote the sale, use or other dealings in these Data Files or Software without prior written authorization of the copyright holder.
-$Revision: 7621 $
-$Date: 2012-08-22 14:30:59 -0700 (Wed, 22 Aug 2012) $
+$Revision: 7869 $
+$Date: 2012-10-22 09:35:18 -0700 (Mon, 22 Oct 2012) $
 -->
 
 <!ELEMENT ldml (identity, (alias | (fallback*, localeDisplayNames?, layout?, contextTransforms?, characters?, delimiters?, measurement?, dates?, numbers?, units?, listPatterns?, collations?, posix?, segmentations?, rbnf?, metadata?, references?, special*))) >
@@ -19,7 +19,7 @@ $Date: 2012-08-22 14:30:59 -0700 (Wed, 22 Aug 2012) $
 
 <!ELEMENT version EMPTY >
 <!ATTLIST version number CDATA #REQUIRED >
-<!ATTLIST version cldrVersion CDATA #FIXED "22.0" >
+<!ATTLIST version cldrVersion CDATA #FIXED "22.1" >
 
 <!ELEMENT generation EMPTY >
 <!ATTLIST generation date CDATA #REQUIRED >
@@ -266,12 +266,12 @@ $Date: 2012-08-22 14:30:59 -0700 (Wed, 22 Aug 2012) $
 <!ATTLIST moreInformation references CDATA #IMPLIED >
 <!ATTLIST moreInformation alt NMTOKENS #IMPLIED >
 
-<!ELEMENT stopwords ( stopwordList* ) >
-<!ELEMENT stopwordList ( #PCDATA ) >
-<!ATTLIST stopwordList type NMTOKEN #REQUIRED >
-<!ATTLIST stopwordList draft ( approved | contributed | provisional | unconfirmed ) #IMPLIED >
-<!ATTLIST stopwordList references CDATA #IMPLIED >
-<!ATTLIST stopwordList alt NMTOKENS #IMPLIED >
+<!ELEMENT stopwords ( stopwordList* ) > <!-- stopwords are deprecated. -->
+<!ELEMENT stopwordList ( #PCDATA ) > <!-- stopwords are deprecated. -->
+<!ATTLIST stopwordList type NMTOKEN #REQUIRED > <!-- stopwords are deprecated. -->
+<!ATTLIST stopwordList draft ( approved | contributed | provisional | unconfirmed ) #IMPLIED > <!-- stopwords are deprecated. -->
+<!ATTLIST stopwordList references CDATA #IMPLIED > <!-- stopwords are deprecated. -->
+<!ATTLIST stopwordList alt NMTOKENS #IMPLIED > <!-- stopwords are deprecated. -->
 
 
 <!ELEMENT indexLabels (indexSeparator*, compressedIndexSeparator*, indexRangePattern*, indexLabelBefore*, indexLabelAfter*, indexLabel*) >
@@ -1265,6 +1265,7 @@ $Date: 2012-08-22 14:30:59 -0700 (Wed, 22 Aug 2012) $
 <!ATTLIST collation references CDATA #IMPLIED >
 <!ATTLIST collation alt NMTOKENS #IMPLIED >
 <!ATTLIST collation validSubLocales CDATA #IMPLIED >
+<!ATTLIST collation visibility ( internal | external ) "external" > 
 
 <!ELEMENT base (alias|special) >
 
@@ -1278,7 +1279,7 @@ $Date: 2012-08-22 14:30:59 -0700 (Wed, 22 Aug 2012) $
 <!ATTLIST settings hiraganaQuarternary  ( on | off ) #IMPLIED >
 <!ATTLIST settings hiraganaQuaternary   ( on | off ) #IMPLIED >
 <!ATTLIST settings numeric              ( on | off ) #IMPLIED >
-<!ATTLIST settings private              ( true | false ) #IMPLIED >
+<!ATTLIST settings private              ( true | false ) #IMPLIED > <!-- deprecated -->
 <!ATTLIST settings variableTop          CDATA #IMPLIED >
 <!ATTLIST settings reorder              NMTOKENS #IMPLIED >
 

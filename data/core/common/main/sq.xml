@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7485 $"/>
-		<generation date="$Date: 2012-08-05 19:01:41 -0700 (Sun, 05 Aug 2012) $"/>
+		<version number="$Revision: 7738 $"/>
+		<generation date="$Date: 2012-09-19 15:39:00 -0700 (Wed, 19 Sep 2012) $"/>
 		<language type="sq"/>
 	</identity>
 	<localeDisplayNames>
@@ -570,7 +570,7 @@
 	<numbers>
 		<symbols numberSystem="latn">
 			<decimal>,</decimal>
-			<group>.</group>
+			<group> </group>
 		</symbols>
 		<currencyFormats numberSystem="latn">
 			<currencyFormatLength>

@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7594 $"/>
-		<generation date="$Date: 2012-08-16 13:13:57 -0700 (Thu, 16 Aug 2012) $"/>
+		<version number="$Revision: 7838 $"/>
+		<generation date="$Date: 2012-10-11 15:53:21 -0700 (Thu, 11 Oct 2012) $"/>
 		<language type="be"/>
 	</identity>
 	<localeDisplayNames>
@@ -785,8 +785,8 @@
 						<dateFormatItem id="yMMMd">d MMM y</dateFormatItem>
 						<dateFormatItem id="yMMMEd" draft="contributed">E, d MMM y</dateFormatItem>
 						<dateFormatItem id="yMMMM" draft="contributed">MMMM y</dateFormatItem>
-						<dateFormatItem id="yQ" draft="contributed">Q 'кв'. y</dateFormatItem>
 						<dateFormatItem id="yQQQ" draft="contributed">QQQ y</dateFormatItem>
+						<dateFormatItem id="yQQQQ" draft="contributed">QQQQ y</dateFormatItem>
 						<dateFormatItem id="yyyyM" draft="contributed">MM/yyyy</dateFormatItem>
 					</availableFormats>
 					<intervalFormats>
@@ -1107,45 +1107,45 @@
 	</numbers>
 	<units>
 		<unit type="day">
+			<unitPattern count="one" draft="contributed">{0} дзень</unitPattern>
 			<unitPattern count="few" draft="contributed">{0} дні</unitPattern>
 			<unitPattern count="many" draft="contributed">{0} дзён</unitPattern>
-			<unitPattern count="one" draft="contributed">{0} дзень</unitPattern>
 			<unitPattern count="other" draft="contributed">{0} дня</unitPattern>
 		</unit>
 		<unit type="hour">
+			<unitPattern count="one" draft="contributed">{0} гадзіна</unitPattern>
 			<unitPattern count="few" draft="contributed">{0} гадзіны</unitPattern>
 			<unitPattern count="many" draft="contributed">{0} гадзін</unitPattern>
-			<unitPattern count="one" draft="contributed">{0} гадзіна</unitPattern>
 			<unitPattern count="other" draft="contributed">{0} гадзіны</unitPattern>
 		</unit>
 		<unit type="minute">
+			<unitPattern count="one" draft="contributed">{0} хвіліна</unitPattern>
 			<unitPattern count="few" draft="contributed">{0} хвіліны</unitPattern>
 			<unitPattern count="many" draft="contributed">{0} хвілін</unitPattern>
-			<unitPattern count="one" draft="contributed">{0} хвіліна</unitPattern>
 			<unitPattern count="other" draft="contributed">{0} хвіліны</unitPattern>
 		</unit>
 		<unit type="month">
+			<unitPattern count="one" draft="contributed">{0} месяц</unitPattern>
 			<unitPattern count="few" draft="contributed">{0} месяца</unitPattern>
 			<unitPattern count="many" draft="contributed">{0} месяцаў</unitPattern>
-			<unitPattern count="one" draft="contributed">{0} месяц</unitPattern>
 			<unitPattern count="other" draft="contributed">{0} месяца</unitPattern>
 		</unit>
 		<unit type="second">
+			<unitPattern count="one" draft="contributed">{0} сэкунда</unitPattern>
 			<unitPattern count="few" draft="contributed">{0} сэкунды</unitPattern>
 			<unitPattern count="many" draft="contributed">{0} сэкунд</unitPattern>
-			<unitPattern count="one" draft="contributed">{0} сэкунда</unitPattern>
 			<unitPattern count="other" draft="contributed">{0} сэкунды</unitPattern>
 		</unit>
 		<unit type="week">
+			<unitPattern count="one" draft="contributed">{0} тыдзень</unitPattern>
 			<unitPattern count="few" draft="contributed">{0} тыдні</unitPattern>
 			<unitPattern count="many" draft="contributed">{0} тыдняў</unitPattern>
-			<unitPattern count="one" draft="contributed">{0} тыдзень</unitPattern>
 			<unitPattern count="other" draft="contributed">{0} тыдня</unitPattern>
 		</unit>
 		<unit type="year">
+			<unitPattern count="one" draft="contributed">{0} год</unitPattern>
 			<unitPattern count="few" draft="contributed">{0} гады</unitPattern>
 			<unitPattern count="many" draft="contributed">{0} гадоў</unitPattern>
-			<unitPattern count="one" draft="contributed">{0} год</unitPattern>
 			<unitPattern count="other" draft="contributed">{0} году</unitPattern>
 		</unit>
 	</units>

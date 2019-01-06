@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7599 $"/>
-		<generation date="$Date: 2012-08-16 17:59:44 -0700 (Thu, 16 Aug 2012) $"/>
+		<version number="$Revision: 7832 $"/>
+		<generation date="$Date: 2012-10-11 11:59:15 -0700 (Thu, 11 Oct 2012) $"/>
 		<language type="ca"/>
 	</identity>
 	<localeDisplayNames>
@@ -1263,9 +1263,6 @@
 		<ellipsis type="initial">…{0}</ellipsis>
 		<ellipsis type="medial">{0}…{1}</ellipsis>
 		<moreInformation>?</moreInformation>
-		<stopwords>
-			<stopwordList type="collation" draft="provisional">un una uns unes el la l'</stopwordList>
-		</stopwords>
 	</characters>
 	<delimiters>
 		<quotationStart>“</quotationStart>
@@ -1324,8 +1321,8 @@
 						<dateFormatItem id="yMEd" draft="contributed">E, dd/MM/yyyy GGGGG</dateFormatItem>
 						<dateFormatItem id="yMMM" draft="contributed">MMM y G</dateFormatItem>
 						<dateFormatItem id="yMMMEd" draft="contributed">E, d MMM y G</dateFormatItem>
-						<dateFormatItem id="yQ" draft="contributed">Q yyyy GGGGG</dateFormatItem>
-						<dateFormatItem id="yQQQ" draft="contributed">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yQQQ" draft="contributed">QQQ y GGGGG</dateFormatItem>
+						<dateFormatItem id="yQQQQ" draft="contributed">QQQQ y G</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
@@ -1876,9 +1873,8 @@
 						<dateFormatItem id="yMMMd">d MMM y</dateFormatItem>
 						<dateFormatItem id="yMMMEd">E, d MMM, y</dateFormatItem>
 						<dateFormatItem id="yMMMM">LLLL 'de' y</dateFormatItem>
-						<dateFormatItem id="yQ">Q yyyy</dateFormatItem>
 						<dateFormatItem id="yQQQ">QQQ y</dateFormatItem>
-						<dateFormatItem id="yyQ" draft="contributed">Q yy</dateFormatItem>
+						<dateFormatItem id="yQQQQ">QQQQ y</dateFormatItem>
 						<dateFormatItem id="yyyyMM" draft="contributed">MM/yyyy</dateFormatItem>
 					</availableFormats>
 					<intervalFormats>
@@ -2307,7 +2303,7 @@
 				<exemplarCity>Mazatlán</exemplarCity>
 			</zone>
 			<zone type="America/Mexico_City">
-				<exemplarCity>Mèxic</exemplarCity>
+				<exemplarCity>Ciutat de Mèxic</exemplarCity>
 			</zone>
 			<zone type="America/Merida">
 				<exemplarCity>Mérida</exemplarCity>
@@ -3410,12 +3406,12 @@
 			</decimalFormatLength>
 			<decimalFormatLength type="short">
 				<decimalFormat>
-					<pattern type="1000" count="one">0 K</pattern>
-					<pattern type="1000" count="other">0 K</pattern>
-					<pattern type="10000" count="one">00 K</pattern>
-					<pattern type="10000" count="other">00 K</pattern>
-					<pattern type="100000" count="one">000 K</pattern>
-					<pattern type="100000" count="other">000 K</pattern>
+					<pattern type="1000" count="one">0 K</pattern>
+					<pattern type="1000" count="other">0 K</pattern>
+					<pattern type="10000" count="one">00 K</pattern>
+					<pattern type="10000" count="other">00 K</pattern>
+					<pattern type="100000" count="one">000 K</pattern>
+					<pattern type="100000" count="other">000 K</pattern>
 					<pattern type="1000000" count="one">0 M</pattern>
 					<pattern type="1000000" count="other">0 M</pattern>
 					<pattern type="10000000" count="one">00 M</pattern>
@@ -4751,14 +4747,14 @@
 				<displayName count="other">soms uzbeks</displayName>
 			</currency>
 			<currency type="VEB">
+				<displayName>bolívar veneçolà (1871-2008)</displayName>
+				<displayName count="one">bolívar veneçolà (1871-2008)</displayName>
+				<displayName count="other">bolívars veneçolans (1871-2008)</displayName>
+			</currency>
+			<currency type="VEF">
 				<displayName>bolívar veneçolà</displayName>
 				<displayName count="one">bolívar veneçolà</displayName>
 				<displayName count="other">bolívars veneçolans</displayName>
-			</currency>
-			<currency type="VEF">
-				<displayName>bolívar fort veneçolà</displayName>
-				<displayName count="one">bolívar fort veneçolà</displayName>
-				<displayName count="other">bolívars forts veneçolans</displayName>
 			</currency>
 			<currency type="VND">
 				<displayName>dong vietnamita</displayName>

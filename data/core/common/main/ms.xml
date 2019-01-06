@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7599 $"/>
-		<generation date="$Date: 2012-08-16 17:59:44 -0700 (Thu, 16 Aug 2012) $"/>
+		<version number="$Revision: 7820 $"/>
+		<generation date="$Date: 2012-10-10 11:32:02 -0700 (Wed, 10 Oct 2012) $"/>
 		<language type="ms"/>
 	</identity>
 	<localeDisplayNames>
@@ -671,7 +671,7 @@
 	</localeDisplayNames>
 	<characters>
 		<exemplarCharacters>[a {ai} {au} b c d {dz} e f g h i j k {kh} l m n {ng} {ngg} {ny} o p q r s {sy} t {ts} u {ua} v w x y z]</exemplarCharacters>
-		<exemplarCharacters type="auxiliary">[á à ă â å ä ã ā æ ç é è ĕ ê ë ē í ì ĭ î ï ī ñ ó ò ŏ ô ö ø ō œ ú ù ŭ û ü ū ÿ]</exemplarCharacters>
+		<exemplarCharacters type="auxiliary">[]</exemplarCharacters>
 		<exemplarCharacters type="index">[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]</exemplarCharacters>
 		<ellipsis type="final">{0}…</ellipsis>
 		<ellipsis type="initial">…{0}</ellipsis>
@@ -1159,8 +1159,8 @@
 						<dateFormatItem id="yMMM">MMM y</dateFormatItem>
 						<dateFormatItem id="yMMMd">d MMM y</dateFormatItem>
 						<dateFormatItem id="yMMMEd">E, d MMM y</dateFormatItem>
-						<dateFormatItem id="yQ">Q y</dateFormatItem>
 						<dateFormatItem id="yQQQ">QQQ y</dateFormatItem>
+						<dateFormatItem id="yQQQQ">QQQQ y</dateFormatItem>
 					</availableFormats>
 					<intervalFormats>
 						<intervalFormatFallback>{0} – {1}</intervalFormatFallback>
@@ -2367,9 +2367,9 @@
 					<pattern type="1000" count="other" draft="contributed">0K</pattern>
 					<pattern type="10000" count="other" draft="contributed">00K</pattern>
 					<pattern type="100000" count="other" draft="contributed">000K</pattern>
-					<pattern type="1000000" count="other" draft="contributed">0M</pattern>
-					<pattern type="10000000" count="other" draft="contributed">00M</pattern>
-					<pattern type="100000000" count="other" draft="contributed">000M</pattern>
+					<pattern type="1000000" count="other" draft="contributed">0J</pattern>
+					<pattern type="10000000" count="other" draft="contributed">00J</pattern>
+					<pattern type="100000000" count="other" draft="contributed">000J</pattern>
 					<pattern type="1000000000" count="other">0B</pattern>
 					<pattern type="10000000000" count="other">00B</pattern>
 					<pattern type="100000000000" count="other">000B</pattern>

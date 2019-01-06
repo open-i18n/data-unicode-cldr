@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7653 $"/>
-		<generation date="$Date: 2012-08-27 22:16:46 -0700 (Mon, 27 Aug 2012) $"/>
+		<version number="$Revision: 7830 $"/>
+		<generation date="$Date: 2012-10-11 02:06:51 -0700 (Thu, 11 Oct 2012) $"/>
 		<language type="fr"/>
 	</identity>
 	<localeDisplayNames>
@@ -1278,9 +1278,6 @@
 		<ellipsis type="initial">... {0}</ellipsis>
 		<ellipsis type="medial">{0}... {1}</ellipsis>
 		<moreInformation>?</moreInformation>
-		<stopwords>
-			<stopwordList type="collation" draft="provisional">le la les l’</stopwordList>
-		</stopwords>
 	</characters>
 	<delimiters>
 		<quotationStart>«</quotationStart>
@@ -1352,13 +1349,13 @@
 						<dateFormatItem id="yMEd">E d/M/y G</dateFormatItem>
 						<dateFormatItem id="yMMM">MMM y G</dateFormatItem>
 						<dateFormatItem id="yMMMEd">E d MMM y G</dateFormatItem>
-						<dateFormatItem id="yQ">'T'Q y G</dateFormatItem>
 						<dateFormatItem id="yQQQ">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yQQQQ">QQQQ y G</dateFormatItem>
 						<dateFormatItem id="yyMM">MM/y G</dateFormatItem>
 						<dateFormatItem id="yyMMM">MMM y G</dateFormatItem>
 						<dateFormatItem id="yyMMMd">d MMM y G</dateFormatItem>
 						<dateFormatItem id="yyMMMEd">E d MMM y G</dateFormatItem>
-						<dateFormatItem id="yyQ">'T'Q y G</dateFormatItem>
+						<dateFormatItem id="yyQQQ">QQQ y G</dateFormatItem>
 						<dateFormatItem id="yyQQQQ">QQQQ y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMM">MMMM y G</dateFormatItem>
 					</availableFormats>
@@ -1435,8 +1432,8 @@
 						<dateFormatItem id="yMMM">MMM U</dateFormatItem>
 						<dateFormatItem id="yMMMd">d MMM U</dateFormatItem>
 						<dateFormatItem id="yMMMEd">E d MMM U</dateFormatItem>
-						<dateFormatItem id="yQ">'T'Q U</dateFormatItem>
 						<dateFormatItem id="yQQQ">QQQ U</dateFormatItem>
+						<dateFormatItem id="yQQQQ">QQQQ U</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
@@ -1919,14 +1916,12 @@
 						<dateFormatItem id="yMMM">MMM y</dateFormatItem>
 						<dateFormatItem id="yMMMd">d MMM y</dateFormatItem>
 						<dateFormatItem id="yMMMEd">E d MMM y</dateFormatItem>
-						<dateFormatItem id="yQ">'T'Q y</dateFormatItem>
 						<dateFormatItem id="yQQQ">QQQ y</dateFormatItem>
+						<dateFormatItem id="yQQQQ">QQQQ y</dateFormatItem>
 						<dateFormatItem id="yyMM">MM/yy</dateFormatItem>
 						<dateFormatItem id="yyMMM">MMM yy</dateFormatItem>
 						<dateFormatItem id="yyMMMd">d MMM yy</dateFormatItem>
 						<dateFormatItem id="yyMMMEd">E d MMM yy</dateFormatItem>
-						<dateFormatItem id="yyQ">'T'Q yy</dateFormatItem>
-						<dateFormatItem id="yyQQQQ">QQQQ yy</dateFormatItem>
 						<dateFormatItem id="yyyyMMMM">MMMM y</dateFormatItem>
 					</availableFormats>
 					<intervalFormats>
@@ -2086,7 +2081,7 @@
 							<month type="5" draft="unconfirmed">sché.</month>
 							<month type="6" draft="unconfirmed">ad.I</month>
 							<month type="7" draft="unconfirmed">adar</month>
-							<month type="7" draft="unconfirmed" yeartype="leap">ad.II</month>
+							<month type="7" yeartype="leap" draft="unconfirmed">ad.II</month>
 							<month type="8" draft="unconfirmed">nis.</month>
 							<month type="9" draft="unconfirmed">iyar</month>
 							<month type="10" draft="unconfirmed">siv.</month>
@@ -2120,7 +2115,7 @@
 							<month type="5" draft="unconfirmed">S</month>
 							<month type="6" draft="unconfirmed">A</month>
 							<month type="7" draft="unconfirmed">A</month>
-							<month type="7" draft="unconfirmed" yeartype="leap">A</month>
+							<month type="7" yeartype="leap" draft="unconfirmed">A</month>
 							<month type="8" draft="unconfirmed">N</month>
 							<month type="9" draft="unconfirmed">I</month>
 							<month type="10" draft="unconfirmed">S</month>
@@ -2314,6 +2309,7 @@
 					<availableFormats>
 						<dateFormatItem id="d">d</dateFormatItem>
 						<dateFormatItem id="Ed">E d</dateFormatItem>
+						<dateFormatItem id="Gy">y G</dateFormatItem>
 						<dateFormatItem id="h">h a</dateFormatItem>
 						<dateFormatItem id="H">HH</dateFormatItem>
 						<dateFormatItem id="hm">h:mm a</dateFormatItem>
@@ -2331,18 +2327,18 @@
 						<dateFormatItem id="MMMEd">E d MMM</dateFormatItem>
 						<dateFormatItem id="MMMMEd">E d MMMM</dateFormatItem>
 						<dateFormatItem id="ms">mm:ss</dateFormatItem>
-						<dateFormatItem id="y">y</dateFormatItem>
+						<dateFormatItem id="y">y G</dateFormatItem>
 						<dateFormatItem id="yM">M/yyyy</dateFormatItem>
 						<dateFormatItem id="yMEd">E d/M/yyyy</dateFormatItem>
 						<dateFormatItem id="yMMM">MMM y</dateFormatItem>
 						<dateFormatItem id="yMMMEd">E d MMM y</dateFormatItem>
-						<dateFormatItem id="yQ">'T'Q y</dateFormatItem>
 						<dateFormatItem id="yQQQ">QQQ y</dateFormatItem>
+						<dateFormatItem id="yQQQQ">QQQQ y</dateFormatItem>
 						<dateFormatItem id="yyMM">MM/y G</dateFormatItem>
 						<dateFormatItem id="yyMMM">MMM y G</dateFormatItem>
 						<dateFormatItem id="yyMMMd">d MMM y G</dateFormatItem>
 						<dateFormatItem id="yyMMMEd">E d MMM y G</dateFormatItem>
-						<dateFormatItem id="yyQ">'T'Q y G</dateFormatItem>
+						<dateFormatItem id="yyQQQ">QQQ y G</dateFormatItem>
 						<dateFormatItem id="yyQQQQ">QQQQ y G</dateFormatItem>
 						<dateFormatItem id="yyyy">y G</dateFormatItem>
 						<dateFormatItem id="yyyyM">M/y G</dateFormatItem>
@@ -2352,8 +2348,8 @@
 						<dateFormatItem id="yyyyMMMd">d MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMEd">E d MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMM">MMMM y G</dateFormatItem>
-						<dateFormatItem id="yyyyQ">'T'Q y G</dateFormatItem>
-						<dateFormatItem id="yyyyQQQ">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yyyyQQQ">'T'QQQ y G</dateFormatItem>
+						<dateFormatItem id="yyyyQQQQ">QQQQ y G</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
@@ -2405,7 +2401,7 @@
 						<dateFormatItem id="yyMMM">MMM y G</dateFormatItem>
 						<dateFormatItem id="yyMMMd">d MMM y G</dateFormatItem>
 						<dateFormatItem id="yyMMMEd">E d MMM y G</dateFormatItem>
-						<dateFormatItem id="yyQ">'T'Q y G</dateFormatItem>
+						<dateFormatItem id="yyQQQ">QQQ y G</dateFormatItem>
 						<dateFormatItem id="yyQQQQ">QQQQ y G</dateFormatItem>
 						<dateFormatItem id="yyyy">y G</dateFormatItem>
 						<dateFormatItem id="yyyyM">M/y GGGGG</dateFormatItem>
@@ -2415,8 +2411,8 @@
 						<dateFormatItem id="yyyyMMMd">d MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMEd">E d MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMM">MMMM y G</dateFormatItem>
-						<dateFormatItem id="yyyyQ">'T'Q y G</dateFormatItem>
 						<dateFormatItem id="yyyyQQQ">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yyyyQQQQ">QQQQ y G</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
@@ -2474,7 +2470,7 @@
 						<dateFormatItem id="yyMMM">MMM y G</dateFormatItem>
 						<dateFormatItem id="yyMMMd">d MMM y G</dateFormatItem>
 						<dateFormatItem id="yyMMMEd">E d MMM y G</dateFormatItem>
-						<dateFormatItem id="yyQ">'T'Q y G</dateFormatItem>
+						<dateFormatItem id="yyQQQ">QQQ y G</dateFormatItem>
 						<dateFormatItem id="yyQQQQ">QQQQ y G</dateFormatItem>
 						<dateFormatItem id="yyyy">y G</dateFormatItem>
 						<dateFormatItem id="yyyyM">M/y GGGGG</dateFormatItem>
@@ -2484,8 +2480,8 @@
 						<dateFormatItem id="yyyyMMMd">d MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMEd">E d MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMM">MMMM y G</dateFormatItem>
-						<dateFormatItem id="yyyyQ">'T'Q y G</dateFormatItem>
 						<dateFormatItem id="yyyyQQQ">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yyyyQQQQ">QQQQ y G</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
@@ -2494,9 +2490,9 @@
 			<hourFormat>+HH:mm;−HH:mm</hourFormat>
 			<gmtFormat>UTC{0}</gmtFormat>
 			<gmtZeroFormat>UTC</gmtZeroFormat>
-			<regionFormat>Heure : {0}</regionFormat>
+			<regionFormat>Heure : {0}</regionFormat>
 			<fallbackFormat>{1} ({0})</fallbackFormat>
-			<fallbackRegionFormat>Heure : {1} ({0})</fallbackRegionFormat>
+			<fallbackRegionFormat>Heure : {1} ({0})</fallbackRegionFormat>
 			<zone type="America/Lower_Princes">
 				<exemplarCity>Lower Prince's Quarter</exemplarCity>
 			</zone>
@@ -3997,7 +3993,7 @@
 			<decimalFormatLength type="long">
 				<decimalFormat>
 					<pattern type="1000" count="one">0 millier</pattern>
-					<pattern type="1000" count="other">0 milliers</pattern>
+					<pattern type="1000" count="other">0 mille</pattern>
 					<pattern type="10000" count="one">00 mille</pattern>
 					<pattern type="10000" count="other">00 mille</pattern>
 					<pattern type="100000" count="one">000 mille</pattern>
@@ -4024,24 +4020,24 @@
 			</decimalFormatLength>
 			<decimalFormatLength type="short">
 				<decimalFormat>
-					<pattern type="1000" count="one">0 K</pattern>
-					<pattern type="1000" count="other">0 K</pattern>
-					<pattern type="10000" count="one">00 K</pattern>
-					<pattern type="10000" count="other">00 K</pattern>
-					<pattern type="100000" count="one">000 K</pattern>
-					<pattern type="100000" count="other">000 K</pattern>
-					<pattern type="1000000" count="one">0 M</pattern>
-					<pattern type="1000000" count="other">0 M</pattern>
-					<pattern type="10000000" count="one">00 M</pattern>
+					<pattern type="1000" count="one">0 K</pattern>
+					<pattern type="1000" count="other">0 K</pattern>
+					<pattern type="10000" count="one">00 K</pattern>
+					<pattern type="10000" count="other">00 K</pattern>
+					<pattern type="100000" count="one">000 K</pattern>
+					<pattern type="100000" count="other">000 K</pattern>
+					<pattern type="1000000" count="one">0 M</pattern>
+					<pattern type="1000000" count="other">0 M</pattern>
+					<pattern type="10000000" count="one">00 M</pattern>
 					<pattern type="10000000" count="other">00 M</pattern>
 					<pattern type="100000000" count="one">000 M</pattern>
 					<pattern type="100000000" count="other">000 M</pattern>
 					<pattern type="1000000000" count="one">0 Md</pattern>
 					<pattern type="1000000000" count="other">0 Md</pattern>
-					<pattern type="10000000000" count="one">00 Md</pattern>
-					<pattern type="10000000000" count="other">00 Md</pattern>
-					<pattern type="100000000000" count="one">000 Md</pattern>
-					<pattern type="100000000000" count="other">000 Md</pattern>
+					<pattern type="10000000000" count="one">00 Md</pattern>
+					<pattern type="10000000000" count="other">00 Md</pattern>
+					<pattern type="100000000000" count="one">000 Md</pattern>
+					<pattern type="100000000000" count="other">000 Md</pattern>
 					<pattern type="1000000000000" count="one">0 Bn</pattern>
 					<pattern type="1000000000000" count="other">0 Bn</pattern>
 					<pattern type="10000000000000" count="one">00 Bn</pattern>
@@ -5314,14 +5310,14 @@
 				<displayName count="other">sums ouzbeks</displayName>
 			</currency>
 			<currency type="VEB">
-				<displayName>bolivar</displayName>
-				<displayName count="one">bolívar vénézuélien (1879–2008)</displayName>
-				<displayName count="other">bolívars vénézuéliens (1879–2008)</displayName>
+				<displayName>bolivar vénézuélien (1871-2008)</displayName>
+				<displayName count="one">bolivar vénézuélien (1871-2008)</displayName>
+				<displayName count="other">bolivar vénézuélien (1871-2008)</displayName>
 			</currency>
 			<currency type="VEF">
-				<displayName>bolivar fuerte vénézuélien</displayName>
-				<displayName count="one">bolivar fuerte vénézuélien</displayName>
-				<displayName count="other">bolivar fuertes vénézuélien</displayName>
+				<displayName>bolivar vénézuélien</displayName>
+				<displayName count="one">bolivar vénézuélien</displayName>
+				<displayName count="other">bolivar vénézuélien</displayName>
 			</currency>
 			<currency type="VND">
 				<displayName>dông vietnamien</displayName>

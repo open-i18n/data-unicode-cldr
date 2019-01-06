@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE supplementalData SYSTEM "../../common/dtd/ldmlSupplemental.dtd">
 <supplementalData>
-  <version number="$Revision: 4747 $"/>
-	<generation date="$Date: 2010-02-25 13:22:30 -0800 (Thu, 25 Feb 2010) $"/>
+  <version number="$Revision: 7744 $"/>
+	<generation date="$Date: 2012-09-21 14:25:20 -0700 (Fri, 21 Sep 2012) $"/>
 	<transforms>
 		<transform source="Serbian" target="Latin" direction="forward" variant="BGN" draft="provisional">
 			<comment>
@@ -87,7 +87,7 @@
 			<tRule>И → I ; # CYRILLIC CAPITAL LETTER I</tRule>
 			<tRule>и → i ; # CYRILLIC SMALL LETTER I</tRule>
 			<tRule>Ј → J ; # CYRILLIC CAPITAL LETTER JE</tRule>
-			<tRule>ј → J ; # CYRILLIC SMALL LETTER JE</tRule>
+			<tRule>ј → j ; # CYRILLIC SMALL LETTER JE</tRule>
 			<tRule>К → K ; # CYRILLIC CAPITAL LETTER KA</tRule>
 			<tRule>к → k ; # CYRILLIC SMALL LETTER KA</tRule>
 			<tRule>Л → L ; # CYRILLIC CAPITAL LETTER EL</tRule>

@@ -2,8 +2,8 @@
 	<!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7599 $"/>
-		<generation date="$Date: 2012-08-16 17:59:44 -0700 (Thu, 16 Aug 2012) $"/>
+		<version number="$Revision: 7847 $"/>
+		<generation date="$Date: 2012-10-15 11:02:42 -0700 (Mon, 15 Oct 2012) $"/>
 		<language type="es"/>
 		<territory type="419"/>
 	</identity>
@@ -69,16 +69,9 @@
 			<transformName type="Numeric" draft="contributed">Numéricas</transformName>
 		</transformNames>
 		<measurementSystemNames>
-			<measurementSystemName type="metric" draft="contributed">métrico</measurementSystemName>
 			<measurementSystemName type="UK" draft="contributed">Reino Unido</measurementSystemName>
-			<measurementSystemName type="US" draft="contributed">estadounidense</measurementSystemName>
 		</measurementSystemNames>
 	</localeDisplayNames>
-	<characters>
-		<stopwords>
-			<stopwordList type="collation" draft="provisional">artículos</stopwordList>
-		</stopwords>
-	</characters>
 	<dates>
 		<calendars>
 			<calendar type="gregorian">
@@ -107,27 +100,7 @@
 				</quarters>
 				<dateTimeFormats>
 					<availableFormats>
-						<dateFormatItem id="d" draft="contributed">d</dateFormatItem>
-						<dateFormatItem id="Ed" draft="contributed">E d</dateFormatItem>
-						<dateFormatItem id="H" draft="contributed">HH</dateFormatItem>
-						<dateFormatItem id="Hm" draft="contributed">HH:mm</dateFormatItem>
-						<dateFormatItem id="Hms" draft="contributed">HH:mm:ss</dateFormatItem>
-						<dateFormatItem id="Md" draft="contributed">d/M</dateFormatItem>
-						<dateFormatItem id="MMd" draft="contributed">d/MM</dateFormatItem>
-						<dateFormatItem id="MMdd" draft="contributed">dd/MM</dateFormatItem>
-						<dateFormatItem id="MMMd" draft="contributed">d MMM</dateFormatItem>
-						<dateFormatItem id="MMMdd" draft="contributed">dd-MMM</dateFormatItem>
-						<dateFormatItem id="MMMEd" draft="contributed">E d MMM</dateFormatItem>
-						<dateFormatItem id="MMMMd" draft="contributed">d 'de' MMMM</dateFormatItem>
-						<dateFormatItem id="ms" draft="contributed">mm:ss</dateFormatItem>
-						<dateFormatItem id="y" draft="contributed">y</dateFormatItem>
-						<dateFormatItem id="yM" draft="contributed">M/y</dateFormatItem>
-						<dateFormatItem id="yMd" draft="contributed">d/M/y</dateFormatItem>
 						<dateFormatItem id="yMEd" draft="contributed">E d/M/y</dateFormatItem>
-						<dateFormatItem id="yMMM" draft="contributed">MMM y</dateFormatItem>
-						<dateFormatItem id="yMMMd" draft="contributed">d MMM y</dateFormatItem>
-						<dateFormatItem id="yMMMM" draft="contributed">MMMM 'de' y</dateFormatItem>
-						<dateFormatItem id="yyMMM" draft="contributed">MMM-yy</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 				<fields>
@@ -137,7 +110,6 @@
 						<relative type="1" draft="contributed">Año próximo</relative>
 					</field>
 					<field type="month">
-						<displayName draft="contributed">mes</displayName>
 						<relative type="-1" draft="contributed">El mes pasado</relative>
 						<relative type="0" draft="contributed">Este mes</relative>
 						<relative type="1" draft="contributed">Mes próximo</relative>
@@ -198,8 +170,8 @@
 		<decimalFormats numberSystem="latn">
 			<decimalFormatLength type="short">
 				<decimalFormat>
-					<pattern type="1000" count="one" draft="contributed">0000</pattern>
-					<pattern type="1000" count="other" draft="contributed">0000</pattern>
+					<pattern type="1000" count="one" draft="contributed">0</pattern>
+					<pattern type="1000" count="other" draft="contributed">0</pattern>
 					<pattern type="10000" count="one" draft="contributed">00k</pattern>
 					<pattern type="10000" count="other" draft="contributed">00k</pattern>
 					<pattern type="100000" count="one" draft="contributed">000k</pattern>
@@ -232,20 +204,6 @@
 				</currencyFormat>
 			</currencyFormatLength>
 		</currencyFormats>
-		<currencies>
-			<currency type="EUR">
-				<displayName draft="contributed">euro</displayName>
-				<displayName count="one" draft="contributed">euro</displayName>
-				<displayName count="other" draft="contributed">euros</displayName>
-				<symbol draft="contributed">€</symbol>
-			</currency>
-			<currency type="GBP">
-				<displayName draft="contributed">libra esterlina británica</displayName>
-				<displayName count="one" draft="contributed">libra esterlina británica</displayName>
-				<displayName count="other" draft="contributed">libras esterlinas británicas</displayName>
-				<symbol draft="contributed">£</symbol>
-			</currency>
-		</currencies>
 	</numbers>
 	<units>
 		<unit type="day-future">

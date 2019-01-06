@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7646 $"/>
-		<generation date="$Date: 2012-08-26 13:52:13 -0700 (Sun, 26 Aug 2012) $"/>
+		<version number="$Revision: 7840 $"/>
+		<generation date="$Date: 2012-10-11 16:59:25 -0700 (Thu, 11 Oct 2012) $"/>
 		<language type="kn"/>
 	</identity>
 	<localeDisplayNames>
@@ -722,7 +722,7 @@
 			<territory type="BL">ಸೇಂಟ್ ಬಾರ್ಥೆಲೆಮಿ</territory>
 			<territory type="BM">ಬರ್ಮುಡಾ</territory>
 			<territory type="BN">ಬ್ರೂನಿ</territory>
-			<territory type="BO">ಬೊಲಿವಿಯಾ</territory>
+			<territory type="BO">ಬೊಲಿವಿಯಾ</territory>
 			<territory type="BQ">ಕೆರಾಬಿಯನ್ ನೆದರ್‌ಲ್ಯಾಂಡ್ಸ್</territory>
 			<territory type="BR">ಬ್ರೆಜಿಲ್</territory>
 			<territory type="BS">ಬಹಾಮಾಸ್</territory>
@@ -1095,9 +1095,6 @@
 		<ellipsis type="initial">…{0}</ellipsis>
 		<ellipsis type="medial">{0}…{1}</ellipsis>
 		<moreInformation>?</moreInformation>
-		<stopwords>
-			<stopwordList type="collation" draft="provisional">ಒಂದು,</stopwordList>
-		</stopwords>
 	</characters>
 	<delimiters>
 		<quotationStart>“</quotationStart>
@@ -1379,9 +1376,8 @@
 						<dateFormatItem id="yMMM">MMM y</dateFormatItem>
 						<dateFormatItem id="yMMMd">d, MMM, y</dateFormatItem>
 						<dateFormatItem id="yMMMEd">E, MMM d, y</dateFormatItem>
-						<dateFormatItem id="yQ">Q y</dateFormatItem>
 						<dateFormatItem id="yQQQ">QQQ y</dateFormatItem>
-						<dateFormatItem id="yyQ">Q yy</dateFormatItem>
+						<dateFormatItem id="yQQQQ">QQQQ y</dateFormatItem>
 						<dateFormatItem id="yyyyMM">MM-yyyy</dateFormatItem>
 						<dateFormatItem id="yyyyMMMM">MMMM y</dateFormatItem>
 					</availableFormats>
@@ -2988,7 +2984,7 @@
 				<long>
 					<generic draft="unconfirmed">ಬೋರ್ನಿಯೋ ಸಮಯ</generic>
 					<standard draft="unconfirmed">ಬೋರ್ನಿಯೋ ಪ್ರಮಾಣಿತ ಸಮಯ</standard>
-					<daylight draft="unconfirmed">ಬೋರ್ನಿಯೋ ಬೇಸಿಗೆ  ಸಮಯ</daylight>
+					<daylight draft="unconfirmed">ಬೋರ್ನಿಯೋ ಬೇಸಿಗೆ ಸಮಯ</daylight>
 				</long>
 			</metazone>
 			<metazone type="Brasilia">
@@ -3542,7 +3538,7 @@
 			</metazone>
 			<metazone type="Novosibirsk">
 				<long>
-					<generic>ನೊವೊಸಿಬಿರ್‌ಸ್ಕ್  ಸಮಯ</generic>
+					<generic>ನೊವೊಸಿಬಿರ್‌ಸ್ಕ್ ಸಮಯ</generic>
 					<standard>ನೊವೊಸಿಬಿಸ್ಕ್ ಸ್ಟ್ಯಾಂಡರ್ಡ್ ಸಮಯ</standard>
 					<daylight>ನೊವೊಸಿಬಿರ್‌ಸ್ಕ್ ಬೇಸಿಗೆ ಸಮಯ</daylight>
 				</long>
@@ -3948,7 +3944,7 @@
 				<displayName>ಸಂಯುಕ್ತ ಅರಬ್‌ ಎಮಿರೇಟ್‌‌ಗಳ ದಿರಾಮ್‌‌</displayName>
 			</currency>
 			<currency type="AFN">
-				<displayName>ಅಫ್‌ಘನ್  ಅಫಗಾನಿ</displayName>
+				<displayName>ಅಫ್‌ಘನ್ ಅಫಗಾನಿ</displayName>
 			</currency>
 			<currency type="ALL">
 				<displayName>ಅಲ್‌ಬೇನಿಯನ್ ಲೆಕ್</displayName>

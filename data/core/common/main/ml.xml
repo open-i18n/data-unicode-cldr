@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7599 $"/>
-		<generation date="$Date: 2012-08-16 17:59:44 -0700 (Thu, 16 Aug 2012) $"/>
+		<version number="$Revision: 7830 $"/>
+		<generation date="$Date: 2012-10-11 02:06:51 -0700 (Thu, 11 Oct 2012) $"/>
 		<language type="ml"/>
 	</identity>
 	<localeDisplayNames>
@@ -1111,9 +1111,6 @@
 		<ellipsis type="initial" draft="contributed">…{0}</ellipsis>
 		<ellipsis type="medial" draft="contributed">{0}…{1}</ellipsis>
 		<moreInformation draft="contributed">?</moreInformation>
-		<stopwords>
-			<stopwordList type="collation" draft="provisional">ഒരു ഈ</stopwordList>
-		</stopwords>
 	</characters>
 	<delimiters>
 		<quotationStart>“</quotationStart>
@@ -1401,9 +1398,9 @@
 						<dateFormatItem id="yMMMd" draft="contributed">y MMM d</dateFormatItem>
 						<dateFormatItem id="yMMMEd">y MMM d, E</dateFormatItem>
 						<dateFormatItem id="yMMMM">y MMMM</dateFormatItem>
-						<dateFormatItem id="yQ">yyyy Q</dateFormatItem>
 						<dateFormatItem id="yQQQ">y QQQ</dateFormatItem>
-						<dateFormatItem id="yyQ">Q yy</dateFormatItem>
+						<dateFormatItem id="yQQQQ">y QQQQ</dateFormatItem>
+						<dateFormatItem id="yyQQQ">QQQ yy</dateFormatItem>
 						<dateFormatItem id="yyyyMM">MM-yyyy</dateFormatItem>
 						<dateFormatItem id="yyyyMMMM">MMMM y</dateFormatItem>
 					</availableFormats>
@@ -5141,14 +5138,14 @@
 				<displayName count="other">ഉസ്ബക്കിസ്ഥാൻ സംസ്</displayName>
 			</currency>
 			<currency type="VEB">
-				<displayName>വെനസ്വേലൻ ബോലിവർ</displayName>
-				<displayName count="one">വെനസ്വേലൻ ബോലിവർ</displayName>
-				<displayName count="other">വെനസ്വേലൻ ബോലിവർസ്</displayName>
+				<displayName>വെനസ്വേലൻ ബോലിവർ (1871-2008)</displayName>
+				<displayName count="one">വെനസ്വേലൻ ബോലിവർ (1871-2008)</displayName>
+				<displayName count="other">വെനസ്വേലൻ ബോലിവർസ് (1871-2008)</displayName>
 			</currency>
 			<currency type="VEF">
-				<displayName>വെനസ്വേലൻ ബോലിവർ ഫുവെർറ്റെ</displayName>
-				<displayName count="one">വെനസ്വേലൻ ബോലിവർ ഫുവെർറ്റെ</displayName>
-				<displayName count="other">വെനസ്വേലൻ ബോലിവർ ഫുവെർറ്റെസ്</displayName>
+				<displayName>വെനസ്വേലൻ ബോലിവർ</displayName>
+				<displayName count="one">വെനസ്വേലൻ ബോലിവർ</displayName>
+				<displayName count="other">വെനസ്വേലൻ ബോലിവർ</displayName>
 			</currency>
 			<currency type="VND">
 				<displayName>വിയറ്റ്നാമീസ് ഡോങ്</displayName>

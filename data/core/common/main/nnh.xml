@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7589 $"/>
-		<generation date="$Date: 2012-08-16 12:04:15 -0700 (Thu, 16 Aug 2012) $"/>
+		<version number="$Revision: 7839 $"/>
+		<generation date="$Date: 2012-10-11 16:37:12 -0700 (Thu, 11 Oct 2012) $"/>
 		<language type="nnh"/>
 	</identity>
 	<localeDisplayNames>
@@ -245,7 +245,7 @@
 				</dateTimeFormats>
 				<fields>
 					<field type="era">
-						<displayName>tsɔ́  fʉ̀ʼ</displayName>
+						<displayName>tsɔ́ fʉ̀ʼ</displayName>
 					</field>
 					<field type="year">
 						<displayName>ngùʼ</displayName>

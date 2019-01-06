@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7604 $"/>
-		<generation date="$Date: 2012-08-17 15:53:16 -0700 (Fri, 17 Aug 2012) $"/>
+		<version number="$Revision: 7839 $"/>
+		<generation date="$Date: 2012-10-11 16:37:12 -0700 (Thu, 11 Oct 2012) $"/>
 		<language type="da"/>
 	</identity>
 	<localeDisplayNames>
@@ -1073,9 +1073,9 @@
 			<type type="big5han" key="collation">sorteringsrækkefølge uforkortet kinesisk - Big5</type>
 			<type type="buddhist" key="calendar">buddhistisk kalender</type>
 			<type type="chinese" key="calendar">kinesisk kalender</type>
-			<type type="coptic" key="calendar">Koptisk kalender</type>
+			<type type="coptic" key="calendar">koptisk kalender</type>
 			<type type="deva" key="numbers">Devanagariske tal</type>
-			<type type="dictionary" key="collation">Sorteringsrækkefølge for ordbog</type>
+			<type type="dictionary" key="collation">sorteringsrækkefølge for ordbog</type>
 			<type type="ducet" key="collation">Unicode-standardsortering</type>
 			<type type="ethi" key="numbers">Etiopiske tal</type>
 			<type type="ethiopic" key="calendar">etiopisk kalender</type>
@@ -1084,7 +1084,7 @@
 			<type type="fullwide" key="numbers">Tal i fuld bredde</type>
 			<type type="gb2312han" key="collation">sorteringsrækkefølge forkortet kinesisk - GB2312</type>
 			<type type="geor" key="numbers">Georgiske tal</type>
-			<type type="gregorian" key="calendar">Gregoriansk kalender</type>
+			<type type="gregorian" key="calendar">gregoriansk kalender</type>
 			<type type="grek" key="numbers">Græske tal</type>
 			<type type="greklow" key="numbers">Græske tal i små bogstaver</type>
 			<type type="gujr" key="numbers">Gujarati tal</type>
@@ -1122,16 +1122,16 @@
 			<type type="orya" key="numbers" draft="contributed">Oriya tal</type>
 			<type type="persian" key="calendar">persisk kalender</type>
 			<type type="phonebook" key="collation">sorteringsrækkefølge i telefonbøger</type>
-			<type type="phonetic" key="collation" draft="contributed">Fonetisk sorteringsrækkefølge</type>
+			<type type="phonetic" key="collation" draft="contributed">fonetisk sorteringsrækkefølge</type>
 			<type type="pinyin" key="collation">pinyin-baseret sorteringsrækkefølge</type>
 			<type type="primary" key="colStrength" draft="contributed">Sortér kun efter basisbogstaver</type>
 			<type type="quaternary" key="colStrength" draft="contributed">Sortér efter accenter/små og store bogstaver/bredde/kana</type>
-			<type type="reformed" key="collation">Ny sorteringsrækkefølge</type>
+			<type type="reformed" key="collation">ny sorteringsrækkefølge</type>
 			<type type="roc" key="calendar">kalender for Republikken Kina</type>
 			<type type="roman" key="numbers">Romertal</type>
 			<type type="romanlow" key="numbers">Romertal i små bogstaver</type>
-			<type type="search" key="collation">Generel søgning</type>
-			<type type="searchjl" key="collation" draft="contributed">Sortér efter den første konsonant i hangul</type>
+			<type type="search" key="collation">generel søgning</type>
+			<type type="searchjl" key="collation" draft="contributed">sortér efter den første konsonant i hangul</type>
 			<type type="secondary" key="colStrength" draft="contributed">Sortér efter accenter</type>
 			<type type="shifted" key="colAlternate" draft="contributed">Sortér, og ignorer symboler</type>
 			<type type="stroke" key="collation">stregbaseret sorteringsrækkefølge</type>
@@ -1177,16 +1177,13 @@
 	</localeDisplayNames>
 	<characters>
 		<exemplarCharacters>[a b c d e f g h i j k l m n o p q r s t u v w x y z æ ø å]</exemplarCharacters>
-		<exemplarCharacters type="auxiliary">[á é è ê ë ü ä ö]</exemplarCharacters>
+		<exemplarCharacters type="auxiliary">[á à â ç é è ê ë í î ï ñ ó ô ú ù û ÿ ü æ ä ø ö œ å]</exemplarCharacters>
 		<exemplarCharacters type="index">[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z Æ Ø Å]</exemplarCharacters>
 		<exemplarCharacters type="punctuation">[\- ‐ – , ; \: ! ? . … ' ‘ ’ &quot; “ ” ( ) \[ \] § @ * / \&amp; # † ′ ″]</exemplarCharacters>
 		<ellipsis type="final" draft="contributed">{0}…</ellipsis>
 		<ellipsis type="initial" draft="contributed">…{0}</ellipsis>
 		<ellipsis type="medial" draft="contributed">{0}…{1}</ellipsis>
 		<moreInformation>?</moreInformation>
-		<stopwords>
-			<stopwordList type="collation" draft="provisional">en et den det</stopwordList>
-		</stopwords>
 	</characters>
 	<delimiters>
 		<quotationStart>“</quotationStart>
@@ -1246,11 +1243,10 @@
 						<dateFormatItem id="yMMM">MMM y G</dateFormatItem>
 						<dateFormatItem id="yMMMd">d. MMM y G</dateFormatItem>
 						<dateFormatItem id="yMMMEd">E d. MMM y G</dateFormatItem>
-						<dateFormatItem id="yQ">Q y G</dateFormatItem>
 						<dateFormatItem id="yQQQ">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yQQQQ">QQQQ y G</dateFormatItem>
 						<dateFormatItem id="yyMM">MM/y G</dateFormatItem>
 						<dateFormatItem id="yyMMM">MMM y G</dateFormatItem>
-						<dateFormatItem id="yyQ">Q. 'kvartal' y G</dateFormatItem>
 						<dateFormatItem id="yyyy">y G</dateFormatItem>
 						<dateFormatItem id="yyyyMM">MM/y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMM">MMM y G</dateFormatItem>
@@ -1593,11 +1589,10 @@
 						<dateFormatItem id="yMMM">MMM y</dateFormatItem>
 						<dateFormatItem id="yMMMd">d. MMM y</dateFormatItem>
 						<dateFormatItem id="yMMMEd">E d. MMM y</dateFormatItem>
-						<dateFormatItem id="yQ">Q yyyy</dateFormatItem>
 						<dateFormatItem id="yQQQ">QQQ y</dateFormatItem>
+						<dateFormatItem id="yQQQQ">QQQQ y</dateFormatItem>
 						<dateFormatItem id="yyMM">MM/yy</dateFormatItem>
 						<dateFormatItem id="yyMMM">MMM yy</dateFormatItem>
-						<dateFormatItem id="yyQ">Q. 'kvartal' yy</dateFormatItem>
 						<dateFormatItem id="yyyy">y</dateFormatItem>
 						<dateFormatItem id="yyyyMM">MM/yyyy</dateFormatItem>
 						<dateFormatItem id="yyyyMMM">MMM y</dateFormatItem>
@@ -1777,6 +1772,7 @@
 						<!-- per cldrbug 2835, added from gregorian and adjusted for G -->
 						<dateFormatItem id="d">d.</dateFormatItem>
 						<dateFormatItem id="Ed">E d.</dateFormatItem>
+						<dateFormatItem id="Gy">y G</dateFormatItem>
 						<dateFormatItem id="H">HH</dateFormatItem>
 						<dateFormatItem id="hm">h.mm a</dateFormatItem>
 						<dateFormatItem id="Hm">HH.mm</dateFormatItem>
@@ -1791,9 +1787,9 @@
 						<dateFormatItem id="MMMEd">E d. MMM</dateFormatItem>
 						<dateFormatItem id="MMMMEd">E d. MMMM</dateFormatItem>
 						<dateFormatItem id="ms">mm.ss</dateFormatItem>
+						<dateFormatItem id="y">y G</dateFormatItem>
 						<dateFormatItem id="yyMM">MM/y G</dateFormatItem>
 						<dateFormatItem id="yyMMM">MMM y G</dateFormatItem>
-						<dateFormatItem id="yyQ">Q. 'kvartal' y G</dateFormatItem>
 						<dateFormatItem id="yyyy">y G</dateFormatItem>
 						<dateFormatItem id="yyyyM">M/y G</dateFormatItem>
 						<dateFormatItem id="yyyyMd">d/M/y G</dateFormatItem>
@@ -1801,8 +1797,8 @@
 						<dateFormatItem id="yyyyMMM">MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMd">d. MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMEd">E d. MMM y G</dateFormatItem>
-						<dateFormatItem id="yyyyQ">Q y G</dateFormatItem>
 						<dateFormatItem id="yyyyQQQ">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yyyyQQQQ">QQQQ y G</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
@@ -1853,7 +1849,6 @@
 						<dateFormatItem id="y">y G</dateFormatItem>
 						<dateFormatItem id="yyMM">MM/y GGGGG</dateFormatItem>
 						<dateFormatItem id="yyMMM">MMM y G</dateFormatItem>
-						<dateFormatItem id="yyQ">Q. 'kvartal' y G</dateFormatItem>
 						<dateFormatItem id="yyyy">y G</dateFormatItem>
 						<dateFormatItem id="yyyyM">M/y GGGGG</dateFormatItem>
 						<dateFormatItem id="yyyyMd">d/M/y GGGGG</dateFormatItem>
@@ -1862,8 +1857,8 @@
 						<dateFormatItem id="yyyyMMM">MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMd">d. MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMEd">E d. MMM y G</dateFormatItem>
-						<dateFormatItem id="yyyyQ">Q y G</dateFormatItem>
 						<dateFormatItem id="yyyyQQQ">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yyyyQQQQ">QQQQ y G</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
@@ -1914,7 +1909,6 @@
 						<dateFormatItem id="y">y G</dateFormatItem>
 						<dateFormatItem id="yyMM">MM/y GGGGG</dateFormatItem>
 						<dateFormatItem id="yyMMM">MMM y G</dateFormatItem>
-						<dateFormatItem id="yyQ">Q. 'kvartal' y G</dateFormatItem>
 						<dateFormatItem id="yyyy">y G</dateFormatItem>
 						<dateFormatItem id="yyyyM">M/y GGGGG</dateFormatItem>
 						<dateFormatItem id="yyyyMd">d/M/y GGGGG</dateFormatItem>
@@ -1923,8 +1917,8 @@
 						<dateFormatItem id="yyyyMMM">MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMd">d. MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMEd">E d. MMM y G</dateFormatItem>
-						<dateFormatItem id="yyyyQ">Q y G</dateFormatItem>
 						<dateFormatItem id="yyyyQQQ">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yyyyQQQQ">QQQQ y G</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
@@ -3292,12 +3286,12 @@
 			</decimalFormatLength>
 			<decimalFormatLength type="short">
 				<decimalFormat>
-					<pattern type="1000" count="one" draft="contributed">0000</pattern>
-					<pattern type="1000" count="other" draft="contributed">0000</pattern>
-					<pattern type="10000" count="one" draft="contributed">00000</pattern>
-					<pattern type="10000" count="other" draft="contributed">00000</pattern>
-					<pattern type="100000" count="one" draft="contributed">000000</pattern>
-					<pattern type="100000" count="other" draft="contributed">000000</pattern>
+					<pattern type="1000" count="one" draft="contributed">0</pattern>
+					<pattern type="1000" count="other" draft="contributed">0</pattern>
+					<pattern type="10000" count="one" draft="contributed">0</pattern>
+					<pattern type="10000" count="other" draft="contributed">0</pattern>
+					<pattern type="100000" count="one" draft="contributed">0</pattern>
+					<pattern type="100000" count="other" draft="contributed">0</pattern>
 					<pattern type="1000000" count="one">0 mio</pattern>
 					<pattern type="1000000" count="other">0 mio</pattern>
 					<pattern type="10000000" count="one">00 mio</pattern>

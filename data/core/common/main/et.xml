@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7599 $"/>
-		<generation date="$Date: 2012-08-16 17:59:44 -0700 (Thu, 16 Aug 2012) $"/>
+		<version number="$Revision: 7832 $"/>
+		<generation date="$Date: 2012-10-11 11:59:15 -0700 (Thu, 11 Oct 2012) $"/>
 		<language type="et"/>
 	</identity>
 	<localeDisplayNames>
@@ -993,7 +993,6 @@
 			<territory type="ZA">Lõuna-Aafrika Vabariik</territory>
 			<territory type="ZM">Sambia</territory>
 			<territory type="ZW">Zimbabwe</territory>
-			<territory type="ZZ">määramata</territory>
 		</territories>
 		<variants>
 			<variant type="1901">saksa traditsiooniline kirjaviis</variant>
@@ -1501,9 +1500,8 @@
 						<dateFormatItem id="yMMM">MMM y</dateFormatItem>
 						<dateFormatItem id="yMMMd">d. MMM y</dateFormatItem>
 						<dateFormatItem id="yMMMEd">E, d. MMMM y</dateFormatItem>
-						<dateFormatItem id="yQ">Q y</dateFormatItem>
 						<dateFormatItem id="yQQQ">QQQ y</dateFormatItem>
-						<dateFormatItem id="yyQ">Q. yy</dateFormatItem>
+						<dateFormatItem id="yQQQQ">QQQQ y</dateFormatItem>
 						<dateFormatItem id="yyyyMM">MM.yyyy</dateFormatItem>
 						<dateFormatItem id="yyyyMMMM">MMMM y</dateFormatItem>
 					</availableFormats>
@@ -1658,7 +1656,7 @@
 			<hourFormat>+HH:mm;-HH:mm</hourFormat>
 			<gmtFormat>GMT{0}</gmtFormat>
 			<gmtZeroFormat>GMT</gmtZeroFormat>
-			<regionFormat>({0})</regionFormat>
+			<regionFormat>{0} aeg</regionFormat>
 			<fallbackFormat>{1} ({0})</fallbackFormat>
 			<fallbackRegionFormat>{1} ({0})</fallbackRegionFormat>
 			<zone type="America/Lower_Princes">
@@ -3842,7 +3840,9 @@
 				<displayName count="other">Usbekistani sommi</displayName>
 			</currency>
 			<currency type="VEB">
-				<displayName>Venezuela boliivar</displayName>
+				<displayName>Venezuela bolívar (1871-2008)</displayName>
+				<displayName count="one">Venezuela bolívar (1871-2008)</displayName>
+				<displayName count="other">Venezuela boliivarit (1871-2008)</displayName>
 			</currency>
 			<currency type="VEF">
 				<displayName>Venezuela bolívar</displayName>

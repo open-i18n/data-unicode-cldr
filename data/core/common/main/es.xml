@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7599 $"/>
-		<generation date="$Date: 2012-08-16 17:59:44 -0700 (Thu, 16 Aug 2012) $"/>
+		<version number="$Revision: 7832 $"/>
+		<generation date="$Date: 2012-10-11 11:59:15 -0700 (Thu, 11 Oct 2012) $"/>
 		<language type="es"/>
 	</identity>
 	<localeDisplayNames>
@@ -1039,7 +1039,7 @@
 			<variant type="REVISED">Ortografía revisada</variant>
 			<variant type="ROZAJ" draft="provisional">Resiano</variant>
 			<variant type="SAAHO" draft="provisional">Saho</variant>
-			<variant type="SCOTLAND" draft="provisional">Inglés escocés estándar</variant>
+			<variant type="SCOTLAND" draft="contributed">Inglés escocés estándar</variant>
 			<variant type="SCOUSE" draft="provisional">Scouse</variant>
 			<variant type="SOLBA" draft="provisional">Dialecto de Stolvizza/Solbica</variant>
 			<variant type="TARASK" draft="provisional">Ortografía taraskievica</variant>
@@ -1201,16 +1201,13 @@
 	</contextTransforms>
 	<characters>
 		<exemplarCharacters>[a á b c d e é f g h i í j k l m n ñ o ó p q r s t u ú ü v w x y z]</exemplarCharacters>
-		<exemplarCharacters type="auxiliary">[à ă â å ä ã ā æ ç è ĕ ê ë ē ì ĭ î ï ī º ò ŏ ô ö ø ō œ ù ŭ û ū ÿ]</exemplarCharacters>
+		<exemplarCharacters type="auxiliary">[ª à ă â å ä ã ā æ ç è ĕ ê ë ē ì ĭ î ï ī º ò ŏ ô ö ø ō œ ù ŭ û ū ÿ]</exemplarCharacters>
 		<exemplarCharacters type="index">[A B C D E F G H I J K L M N Ñ O P Q R S T U V W X Y Z]</exemplarCharacters>
 		<exemplarCharacters type="punctuation">[\- ‐ – — , ; \: ! ¡ ? ¿ . … ' ‘ ’ &quot; “ ” « » ( ) \[ \] § @ * / \\ \&amp; # † ‡ ′ ″]</exemplarCharacters>
 		<ellipsis type="final">{0}...</ellipsis>
 		<ellipsis type="initial">… {0}</ellipsis>
 		<ellipsis type="medial">{0}… {1}</ellipsis>
 		<moreInformation draft="contributed">[...]</moreInformation>
-		<stopwords>
-			<stopwordList type="collation" draft="provisional">un una unos unas el la los las</stopwordList>
-		</stopwords>
 	</characters>
 	<delimiters>
 		<quotationStart>“</quotationStart>
@@ -1273,11 +1270,11 @@
 						<dateFormatItem id="yMMMd">d MMM y G</dateFormatItem>
 						<dateFormatItem id="yMMMEd">E, d MMM y G</dateFormatItem>
 						<dateFormatItem id="yMMMM">MMMM 'de' y G</dateFormatItem>
-						<dateFormatItem id="yQ">Q y G</dateFormatItem>
 						<dateFormatItem id="yQQQ">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yQQQQ">QQQQ 'de' y G</dateFormatItem>
 						<dateFormatItem id="yyMM">MM/y G</dateFormatItem>
 						<dateFormatItem id="yyMMM">MMM-y G</dateFormatItem>
-						<dateFormatItem id="yyQ">Q y G</dateFormatItem>
+						<dateFormatItem id="yyQQQ">QQQ y G</dateFormatItem>
 						<dateFormatItem id="yyQQQQ">QQQQ 'de' y G</dateFormatItem>
 						<dateFormatItem id="yyyyMM">MM/y G</dateFormatItem>
 					</availableFormats>
@@ -1568,12 +1565,10 @@
 						<dateFormatItem id="yMMMd">d MMM y</dateFormatItem>
 						<dateFormatItem id="yMMMEd">EEE, d 'de' MMMM 'de' y</dateFormatItem>
 						<dateFormatItem id="yMMMM">MMMM 'de' y</dateFormatItem>
-						<dateFormatItem id="yQ">Q y</dateFormatItem>
 						<dateFormatItem id="yQQQ">QQQ y</dateFormatItem>
+						<dateFormatItem id="yQQQQ">QQQQ 'de' y</dateFormatItem>
 						<dateFormatItem id="yyMM">MM/yy</dateFormatItem>
 						<dateFormatItem id="yyMMM">MMM-yy</dateFormatItem>
-						<dateFormatItem id="yyQ">Q yy</dateFormatItem>
-						<dateFormatItem id="yyQQQQ">QQQQ 'de' yy</dateFormatItem>
 						<dateFormatItem id="yyyyMM">MM/yyyy</dateFormatItem>
 					</availableFormats>
 					<intervalFormats>
@@ -1769,7 +1764,7 @@
 						<dateFormatItem id="yMMMEd" draft="contributed">E d MMM y</dateFormatItem>
 						<dateFormatItem id="yyMM">MM/y G</dateFormatItem>
 						<dateFormatItem id="yyMMM">MMM-y G</dateFormatItem>
-						<dateFormatItem id="yyQ">Q y G</dateFormatItem>
+						<dateFormatItem id="yyQQQ">QQQ y G</dateFormatItem>
 						<dateFormatItem id="yyQQQQ">QQQQ 'de' y G</dateFormatItem>
 						<dateFormatItem id="yyyy">y G</dateFormatItem>
 						<dateFormatItem id="yyyyM">M/y G</dateFormatItem>
@@ -1779,8 +1774,8 @@
 						<dateFormatItem id="yyyyMMMd">d MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMEd">E, d MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMM">MMMM 'de' y G</dateFormatItem>
-						<dateFormatItem id="yyyyQ">Q y G</dateFormatItem>
 						<dateFormatItem id="yyyyQQQ">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yyyyQQQQ">QQQQ 'de' y G</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
@@ -1832,7 +1827,7 @@
 						<dateFormatItem id="y">y G</dateFormatItem>
 						<dateFormatItem id="yyMM">MM/y GGGGG</dateFormatItem>
 						<dateFormatItem id="yyMMM">MMM-y G</dateFormatItem>
-						<dateFormatItem id="yyQ">Q y G</dateFormatItem>
+						<dateFormatItem id="yyQQQ">QQQ y G</dateFormatItem>
 						<dateFormatItem id="yyQQQQ">QQQQ 'de' y G</dateFormatItem>
 						<dateFormatItem id="yyyy">y G</dateFormatItem>
 						<dateFormatItem id="yyyyM">M/y GGGGG</dateFormatItem>
@@ -1842,8 +1837,8 @@
 						<dateFormatItem id="yyyyMMMd">d MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMEd">E, d MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMM">MMMM 'de' y G</dateFormatItem>
-						<dateFormatItem id="yyyyQ">Q y G</dateFormatItem>
 						<dateFormatItem id="yyyyQQQ">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yyyyQQQQ">QQQQ 'de' y G</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
@@ -1900,7 +1895,7 @@
 						<dateFormatItem id="y">y G</dateFormatItem>
 						<dateFormatItem id="yyMM">MM/y GGGGG</dateFormatItem>
 						<dateFormatItem id="yyMMM">MMM-y G</dateFormatItem>
-						<dateFormatItem id="yyQ">Q y G</dateFormatItem>
+						<dateFormatItem id="yyQQQ">QQQ y G</dateFormatItem>
 						<dateFormatItem id="yyQQQQ">QQQQ 'de' y G</dateFormatItem>
 						<dateFormatItem id="yyyy">y G</dateFormatItem>
 						<dateFormatItem id="yyyyM">M/y GGGGG</dateFormatItem>
@@ -1911,8 +1906,8 @@
 						<dateFormatItem id="yyyyMMMd">d MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMEd">E, d MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMM">MMMM 'de' y G</dateFormatItem>
-						<dateFormatItem id="yyyyQ">Q y G</dateFormatItem>
 						<dateFormatItem id="yyyyQQQ">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yyyyQQQQ">QQQQ 'de' y G</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
@@ -2090,7 +2085,7 @@
 				<exemplarCity>Copenhague</exemplarCity>
 			</zone>
 			<zone type="Africa/Algiers">
-				<exemplarCity>Argelia</exemplarCity>
+				<exemplarCity>Argel</exemplarCity>
 			</zone>
 			<zone type="Pacific/Galapagos">
 				<exemplarCity>Galápagos</exemplarCity>
@@ -2372,7 +2367,7 @@
 				<exemplarCity>Asjabad</exemplarCity>
 			</zone>
 			<zone type="Africa/Tunis">
-				<exemplarCity>Túnez</exemplarCity>
+				<exemplarCity>Túnez capital</exemplarCity>
 			</zone>
 			<zone type="Europe/Istanbul">
 				<exemplarCity>Estambul</exemplarCity>
@@ -3556,19 +3551,19 @@
 					<pattern type="10000" count="other">00 mil</pattern>
 					<pattern type="100000" count="one">000 mil</pattern>
 					<pattern type="100000" count="other">000 mil</pattern>
-					<pattern type="1000000" count="one">0 millones</pattern>
+					<pattern type="1000000" count="one">0 millón</pattern>
 					<pattern type="1000000" count="other">0 millones</pattern>
 					<pattern type="10000000" count="one">00 millones</pattern>
 					<pattern type="10000000" count="other">00 millones</pattern>
 					<pattern type="100000000" count="one">000 millones</pattern>
 					<pattern type="100000000" count="other">000 millones</pattern>
-					<pattern type="1000000000" count="one">0 millardos</pattern>
+					<pattern type="1000000000" count="one">0 millardo</pattern>
 					<pattern type="1000000000" count="other">0 millardos</pattern>
 					<pattern type="10000000000" count="one">00 millardos</pattern>
 					<pattern type="10000000000" count="other">00 millardos</pattern>
 					<pattern type="100000000000" count="one">000 millardos</pattern>
 					<pattern type="100000000000" count="other">000 millardos</pattern>
-					<pattern type="1000000000000" count="one">0 billones</pattern>
+					<pattern type="1000000000000" count="one">0 billón</pattern>
 					<pattern type="1000000000000" count="other">0 billones</pattern>
 					<pattern type="10000000000000" count="one">00 billones</pattern>
 					<pattern type="10000000000000" count="other">00 billones</pattern>
@@ -3578,12 +3573,12 @@
 			</decimalFormatLength>
 			<decimalFormatLength type="short">
 				<decimalFormat>
-					<pattern type="1000" count="one">0000</pattern>
-					<pattern type="1000" count="other">0000</pattern>
-					<pattern type="10000" count="one">00k</pattern>
-					<pattern type="10000" count="other">00k</pattern>
-					<pattern type="100000" count="one">000k</pattern>
-					<pattern type="100000" count="other">000k</pattern>
+					<pattern type="1000" count="one">0 K</pattern>
+					<pattern type="1000" count="other">0 K</pattern>
+					<pattern type="10000" count="one">00 K</pattern>
+					<pattern type="10000" count="other">00 K</pattern>
+					<pattern type="100000" count="one">000 K</pattern>
+					<pattern type="100000" count="other">000 K</pattern>
 					<pattern type="1000000" count="one">0 M</pattern>
 					<pattern type="1000000" count="other">0 M</pattern>
 					<pattern type="10000000" count="one">00 M</pattern>
@@ -3592,10 +3587,10 @@
 					<pattern type="100000000" count="other">000 M</pattern>
 					<pattern type="1000000000" count="one">0000 M</pattern>
 					<pattern type="1000000000" count="other">0000 M</pattern>
-					<pattern type="10000000000" count="one">00k M</pattern>
-					<pattern type="10000000000" count="other">00k M</pattern>
-					<pattern type="100000000000" count="one">000k M</pattern>
-					<pattern type="100000000000" count="other">000k M</pattern>
+					<pattern type="10000000000" count="one">00 K M</pattern>
+					<pattern type="10000000000" count="other">00 K M</pattern>
+					<pattern type="100000000000" count="one">000 K M</pattern>
+					<pattern type="100000000000" count="other">000 K M</pattern>
 					<pattern type="1000000000000" count="one">0 B</pattern>
 					<pattern type="1000000000000" count="other">0 B</pattern>
 					<pattern type="10000000000000" count="one">00 B</pattern>

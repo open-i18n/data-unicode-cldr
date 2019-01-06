@@ -4,24 +4,29 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-import com.ibm.icu.dev.test.util.UnicodeMap;
+import com.ibm.icu.dev.util.UnicodeMap;
 import com.ibm.icu.text.UnicodeSet;
 
 public class UnicodeMapBuilder<T> {
-    public enum Leniency {allowChars, allowUnicodeSet}
+    public enum Leniency {
+        allowChars, allowUnicodeSet
+    }
+
     UnicodeMap<T> result;
     Parser<T, String> parser;
     Leniency leniency;
     Pattern semi = Pattern.compile("\\s+;\\s+");
-    //Matcher semi = Pattern.compile("\\s+;\\s+").matcher("");
-    
-    public UnicodeMapBuilder() {}
-    
+
+    // Matcher semi = Pattern.compile("\\s+;\\s+").matcher("");
+
+    public UnicodeMapBuilder() {
+    }
+
     public UnicodeMapBuilder<T> setParser(Parser<T, String> parser) {
         this.parser = parser;
         return this;
     }
-    
+
     public Parser<T, String> getParser() {
         return parser;
     }
@@ -38,18 +43,18 @@ public class UnicodeMapBuilder<T> {
     public UnicodeMap<T> get() {
         return result;
     }
-    
+
     public UnicodeMap<T> getFrozen() {
         UnicodeMap<T> myResult = result.freeze();
         result = null;
         return myResult;
     }
-    
+
     public UnicodeMapBuilder<T> putFromLines(BufferedReader br) {
         if (result == null) {
             result = new UnicodeMap<T>();
         }
-        //final BufferedReader br = BagFormatter.openUTF8Reader(null, file);
+        // final BufferedReader br = BagFormatter.openUTF8Reader(null, file);
         UnicodeSet sources = new UnicodeSet();
         String line = null;
         try {
@@ -128,7 +133,7 @@ public class UnicodeMapBuilder<T> {
             }
             line = line.trim();
         } catch (final Exception e) {
-            throw new IllegalArgumentException("Line \"{" + originalLine + "}\",  \"{"+ line +"}\"", e);
+            throw new IllegalArgumentException("Line \"{" + originalLine + "}\",  \"{" + line + "}\"", e);
         }
         return line;
     }

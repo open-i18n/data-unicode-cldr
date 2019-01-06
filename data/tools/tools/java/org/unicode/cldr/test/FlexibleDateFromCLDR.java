@@ -4,8 +4,8 @@
  * and others. All Rights Reserved.                                           *
  ******************************************************************************
  * $Source$
- * $Date: 2012-08-29 16:09:25 -0700 (Wed, 29 Aug 2012) $
- * $Revision: 7659 $
+ * $Date: 2012-10-17 14:49:46 -0700 (Wed, 17 Oct 2012) $
+ * $Revision: 7859 $
  ******************************************************************************
  */
 package org.unicode.cldr.test;
@@ -30,65 +30,67 @@ import com.ibm.icu.text.DateTimePatternGenerator.PatternInfo;
 
 /**
  * Temporary class while refactoring.
+ * 
  * @author markdavis
- *
+ * 
  */
 class FlexibleDateFromCLDR {
     DateTimePatternGenerator gen = DateTimePatternGenerator.getEmptyInstance();
     transient XPathParts parts = new XPathParts(null, null);
     private transient ICUServiceBuilder icuServiceBuilder = new ICUServiceBuilder();
-            
-    static List tests = Arrays.asList(new String[]{
-            
-            "HHmmssSSSvvvv", // 'complete' time
-            "HHmm",
-            "HHmmvvvv",
-            "HHmmss",
-            "HHmmssSSSSS",
-            "HHmmssvvvv",
 
-            "MMMd",
-            "Md",
+    static List<String> tests = Arrays.asList(new String[] {
 
-            "YYYYD", // (maybe?)
+        "HHmmssSSSvvvv", // 'complete' time
+        "HHmm",
+        "HHmmvvvv",
+        "HHmmss",
+        "HHmmssSSSSS",
+        "HHmmssvvvv",
 
-            "yyyyww",
-            "yyyywwEEE",
+        "MMMd",
+        "Md",
 
-            "yyyyQQQQ",
-            "yyyyMM",
+        "YYYYD", // (maybe?)
 
-            "yyyyMd",
-            "yyyyMMMd",
-            "yyyyMMMEEEd",
+        "yyyyww",
+        "yyyywwEEE",
 
-            "GyyyyMMMd",
-            "GyyyyMMMEEEd", // 'complete' date 
-            
-            "YYYYwEEE", // year, week of year, weekday
-            "yyyyDD", // year, day of year
-            "yyyyMMFE", // year, month, nth day of week in month
-            // misc
-            "eG", "dMMy", "GHHmm", "yyyyHHmm", "Kmm", "kmm",
-            "MMdd", "ddHH", "yyyyMMMd", "yyyyMMddHHmmss",
-            "GEEEEyyyyMMddHHmmss",
-            "GuuuuQMMMMwwWddDDDFEEEEaHHmmssSSSvvvv", // bizarre case just for testing
-            });
+        "yyyyQQQQ",
+        "yyyyMM",
+
+        "yyyyMd",
+        "yyyyMMMd",
+        "yyyyMMMEEEd",
+
+        "GyyyyMMMd",
+        "GyyyyMMMEEEd", // 'complete' date
+
+        "YYYYwEEE", // year, week of year, weekday
+        "yyyyDD", // year, day of year
+        "yyyyMMFE", // year, month, nth day of week in month
+        // misc
+        "eG", "dMMy", "GHHmm", "yyyyHHmm", "Kmm", "kmm",
+        "MMdd", "ddHH", "yyyyMMMd", "yyyyMMddHHmmss",
+        "GEEEEyyyyMMddHHmmss",
+        "GuuuuQMMMMwwWddDDDFEEEEaHHmmssSSSvvvv", // bizarre case just for testing
+    });
 
     public void set(CLDRFile cldrFile) {
         icuServiceBuilder.setCldrFile(cldrFile);
         gen = DateTimePatternGenerator.getEmptyInstance(); // for now
         failureMap.clear();
     }
+
     /**
      * 
      */
     public void showFlexibles() {
-        Map items = (Map)gen.getSkeletons(new LinkedHashMap());
+        Map<String, String> items = gen.getSkeletons(new LinkedHashMap<String, String>());
         System.out.println("ERRORS");
-        for (Iterator it = failureMap.keySet().iterator(); it.hasNext();) {
-            Object item = it.next();
-            Object value = failureMap.get(item);
+        for (Iterator<String> it = failureMap.keySet().iterator(); it.hasNext();) {
+            String item = it.next();
+            String value = failureMap.get(item);
             System.out.println("\t" + value);
         }
         for (int i = 0; i < DateTimePatternGenerator.TYPE_LIMIT; ++i) {
@@ -103,27 +105,26 @@ class FlexibleDateFromCLDR {
             }
         }
         System.out.println("SKELETON\t=> PATTERN LIST");
-        for (Iterator it = items.keySet().iterator(); it.hasNext();) {
-            Object skeleton = it.next();
+        for (Iterator<String> it = items.keySet().iterator(); it.hasNext();) {
+            String skeleton = it.next();
             System.out.println("\t\"" + skeleton + "\"\t=>\t\"" + items.get(skeleton) + "\"");
         }
         System.out.println("REDUNDANTS");
-        Collection redundants = gen.getRedundants(new ArrayList());
-        for (Iterator it = redundants.iterator(); it.hasNext();) {
-            Object item = it.next();
+        Collection<String> redundants = gen.getRedundants(new ArrayList<String>());
+        for (String item : redundants) {
             System.out.println("\t" + item);
         }
         System.out.println("TESTS");
-        for (Iterator it = tests.iterator(); it.hasNext();) {
-            String item = (String) it.next();
+        for (String item : tests) {
             try {
                 String pat = gen.getBestPattern(item);
                 String sample = "<can't format>";
                 try {
                     DateFormat df = icuServiceBuilder.getDateFormat("gregorian", pat);
                     sample = df.format(new Date());
-                } catch (RuntimeException e) {}
-                System.out.println("\t\"" + item + "\"\t=>\t\"" + pat +  "\"\t=>\t\"" + sample + "\"");
+                } catch (RuntimeException e) {
+                }
+                System.out.println("\t\"" + item + "\"\t=>\t\"" + pat + "\"\t=>\t\"" + sample + "\"");
             } catch (RuntimeException e) {
                 System.out.println(e.getMessage()); // e.printStackTrace();
             }
@@ -131,8 +132,8 @@ class FlexibleDateFromCLDR {
         System.out.println("END");
     }
 
-    Map failureMap = new TreeMap();
-    
+    Map<String, String> failureMap = new TreeMap<String, String>();
+
     /**
      * @param path
      * @param value
@@ -166,15 +167,14 @@ class FlexibleDateFromCLDR {
         if (path.indexOf("pattern") < 0 && path.indexOf("dateFormatItem") < 0) return;
         // set the am/pm preference
         if (path.indexOf("timeFormatLength[@type=\"short\"]") >= 0) {
-        	fp.set(value);
-        	for (Iterator it = fp.getItems().iterator(); it.hasNext();) {
-        		Object item = it.next();
-        		if (item instanceof DateTimePatternGenerator.VariableField) {
-        			if (item.toString().charAt(0) == 'h') {
-        				isPreferred12Hour = true;
-        			}
-        		}
-        	}
+            fp.set(value);
+            for (Object item : fp.getItems()) {
+                if (item instanceof DateTimePatternGenerator.VariableField) {
+                    if (item.toString().charAt(0) == 'h') {
+                        isPreferred12Hour = true;
+                    }
+                }
+            }
         }
         if (path.indexOf("dateTimeFormatLength") > 0) return; // exclude {1} {0}
         // add to generator
@@ -182,8 +182,9 @@ class FlexibleDateFromCLDR {
             gen.addPattern(value, false, patternInfo);
             switch (patternInfo.status) {
             case PatternInfo.CONFLICT:
-                    failureMap.put(path, "Conflicting Patterns: \"" + value + "\"\t&\t\"" + patternInfo.conflictingPattern + "\"");
-                    break;
+                failureMap.put(path, "Conflicting Patterns: \"" + value + "\"\t&\t\"" + patternInfo.conflictingPattern
+                    + "\"");
+                break;
             }
         } catch (RuntimeException e) {
             failureMap.put(path, e.getMessage());
@@ -202,45 +203,41 @@ class FlexibleDateFromCLDR {
             }
         }
     }
-	DateTimePatternGenerator.FormatParser fp = new DateTimePatternGenerator.FormatParser();
+
+    DateTimePatternGenerator.FormatParser fp = new DateTimePatternGenerator.FormatParser();
 
     boolean isPreferred12Hour = false;
 
     static private String[] DISPLAY_NAME_MAP = {
-      "era", "year", "quarter", "month", "week", "week_in_month", "weekday", 
-      "day", "day_of_year", "day_of_week_in_month", "dayperiod", 
-      "hour", "minute", "second", "fractional_second", "zone", "-"
+        "era", "year", "quarter", "month", "week", "week_in_month", "weekday",
+        "day", "day_of_year", "day_of_week_in_month", "dayperiod",
+        "hour", "minute", "second", "fractional_second", "zone", "-"
     };
 
-    static private String[] APPEND_ITEM_NAME_MAP_OLD = {
-      "G", "y", "Q", "M", "w", "W", "e", 
-      "d", "D", "F", "a", 
-      "h", "m", "s", "S", "v", "-"
-    };
-    
     static private String[] APPEND_ITEM_NAME_MAP = {
-      "Era", "Year", "Quarter", "Month", "Week", "Week", "Day-Of-Week", 
-      "Day", "Day", "Day-Of-Week", "-", 
-      "Hour", "Minute", "Second", "-", "Timezone", "-"
+        "Era", "Year", "Quarter", "Month", "Week", "Week", "Day-Of-Week",
+        "Day", "Day", "Day-Of-Week", "-",
+        "Hour", "Minute", "Second", "-", "Timezone", "-"
     };
 
     int getIndex(String s, String[] strings) {
-      for (int i = 0; i < strings.length; ++i) {
-        if (s.equals(strings[i])) return i;
-      }
-      return -1;
+        for (int i = 0; i < strings.length; ++i) {
+            if (s.equals(strings[i])) return i;
+        }
+        return -1;
     }
-    
+
     PatternInfo patternInfo = new PatternInfo();
 
-    public Collection getRedundants(Collection output) {
+    public Collection<String> getRedundants(Collection<String> output) {
         return gen.getRedundants(output);
     }
+
     public Object getFailurePath(Object path) {
         return failureMap.get(path);
     }
-	public boolean preferred12Hour() {
-		// TODO Auto-generated method stub
-		return isPreferred12Hour;
-	}
+
+    public boolean preferred12Hour() {
+        return isPreferred12Hour;
+    }
 }

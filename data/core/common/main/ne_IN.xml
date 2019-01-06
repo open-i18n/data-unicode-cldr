@@ -2,14 +2,13 @@
 	<!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7599 $"/>
-		<generation date="$Date: 2012-08-16 17:59:44 -0700 (Thu, 16 Aug 2012) $"/>
+		<version number="$Revision: 7847 $"/>
+		<generation date="$Date: 2012-10-15 11:02:42 -0700 (Mon, 15 Oct 2012) $"/>
 		<language type="ne"/>
 		<territory type="IN"/>
 	</identity>
 	<localeDisplayNames>
 		<measurementSystemNames>
-			<measurementSystemName type="metric">मेट्रिक</measurementSystemName>
 			<measurementSystemName type="US">अमेरिकेली</measurementSystemName>
 		</measurementSystemNames>
 	</localeDisplayNames>

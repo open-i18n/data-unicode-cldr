@@ -13,11 +13,10 @@ import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Factory;
 import org.unicode.cldr.util.SimpleFactory;
 
-import com.ibm.icu.dev.test.util.BagFormatter;
-import com.ibm.icu.dev.test.util.PrettyPrinter;
+import com.ibm.icu.dev.util.BagFormatter;
+import com.ibm.icu.dev.util.PrettyPrinter;
 import com.ibm.icu.text.AlphabeticIndex;
 import com.ibm.icu.text.Collator;
-import com.ibm.icu.text.RuleBasedCollator;
 import com.ibm.icu.text.UnicodeSet;
 import com.ibm.icu.util.ULocale;
 
@@ -38,18 +37,24 @@ public class GenerateIndexCharacters {
 
     public static String getConstructedIndexSet(String locale, CLDRFile cFile) {
         ULocale uLocale = new ULocale(locale);
-        Collator collator = Collator.getInstance(uLocale).setStrength2(Collator.PRIMARY);// ought to build from CLDR, but...
-        AlphabeticIndex index = new AlphabeticIndex(uLocale, (RuleBasedCollator)collator, cFile.getExemplarSet("", WinningChoice.WINNING));
+        Collator collator = Collator.getInstance(uLocale);
+        collator.setStrength(Collator.PRIMARY); // TODO: ought to build the collator from CLDR instead of from ICU.
+        AlphabeticIndex<String> index = new AlphabeticIndex<String>(uLocale);
+        index.clearRecords();
+        UnicodeSet indexLabels = cFile.getExemplarSet("index", WinningChoice.WINNING);
+        if (indexLabels != null && indexLabels.size() > 0) {
+            index.addLabels(indexLabels);
+        }
         UnicodeSet uset = new UnicodeSet();
         List<String> items = index.getBucketLabels();
         for (String item : items) {
             uset.add(item);
         }
         PrettyPrinter pp = new PrettyPrinter()
-        .setCompressRanges(true)
-        .setToQuote(DisplayAndInputProcessor.TO_QUOTE)
-        .setOrdering(collator)
-        .setSpaceComparator(collator);
+            .setCompressRanges(true)
+            .setToQuote(DisplayAndInputProcessor.TO_QUOTE)
+            .setOrdering(collator)
+            .setSpaceComparator(collator);
 
         String cleanedSet = DisplayAndInputProcessor.getCleanedUnicodeSet(uset, pp, ExemplarType.index);
         return cleanedSet;

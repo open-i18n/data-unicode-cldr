@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7594 $"/>
-		<generation date="$Date: 2012-08-16 13:13:57 -0700 (Thu, 16 Aug 2012) $"/>
+		<version number="$Revision: 7830 $"/>
+		<generation date="$Date: 2012-10-11 02:06:51 -0700 (Thu, 11 Oct 2012) $"/>
 		<language type="root"/>
 	</identity>
 	<localeDisplayNames>
@@ -124,8 +124,8 @@
 						<dateFormatItem id="yMMM">G y MMM</dateFormatItem>
 						<dateFormatItem id="yMMMd">G y MMM d</dateFormatItem>
 						<dateFormatItem id="yMMMEd">E, G y MMM d</dateFormatItem>
-						<dateFormatItem id="yQ">GGGGG yyyy Q</dateFormatItem>
-						<dateFormatItem id="yQQQ">G y QQQ</dateFormatItem>
+						<dateFormatItem id="yQQQ">GGGGG y QQQ</dateFormatItem>
+						<dateFormatItem id="yQQQQ">G y QQQQ</dateFormatItem>
 					</availableFormats>
 					<appendItems>
 						<appendItem request="Day">{0} ({2}: {1})</appendItem>
@@ -405,8 +405,8 @@
 						<dateFormatItem id="yMMM">U MMM</dateFormatItem>
 						<dateFormatItem id="yMMMd">U MMM d</dateFormatItem>
 						<dateFormatItem id="yMMMEd">E, U MMM d</dateFormatItem>
-						<dateFormatItem id="yQ">U Q</dateFormatItem>
 						<dateFormatItem id="yQQQ">U QQQ</dateFormatItem>
+						<dateFormatItem id="yQQQQ">U QQQQ</dateFormatItem>
 					</availableFormats>
 					<appendItems>
 						<appendItem request="Day">{0} ({2}: {1})</appendItem>
@@ -431,7 +431,6 @@
 							<greatestDifference id="h">h–h a</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="H">
-							<greatestDifference id="a">HH–HH</greatestDifference>
 							<greatestDifference id="H">HH–HH</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="hm">
@@ -440,7 +439,6 @@
 							<greatestDifference id="m">h:mm–h:mm a</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="Hm">
-							<greatestDifference id="a">HH:mm–HH:mm</greatestDifference>
 							<greatestDifference id="H">HH:mm–HH:mm</greatestDifference>
 							<greatestDifference id="m">HH:mm–HH:mm</greatestDifference>
 						</intervalFormatItem>
@@ -450,7 +448,6 @@
 							<greatestDifference id="m">h:mm–h:mm a v</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="Hmv">
-							<greatestDifference id="a">HH:mm–HH:mm v</greatestDifference>
 							<greatestDifference id="H">HH:mm–HH:mm v</greatestDifference>
 							<greatestDifference id="m">HH:mm–HH:mm v</greatestDifference>
 						</intervalFormatItem>
@@ -459,7 +456,6 @@
 							<greatestDifference id="h">h–h a v</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="Hv">
-							<greatestDifference id="a">HH–HH v</greatestDifference>
 							<greatestDifference id="H">HH–HH v</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="M">
@@ -602,6 +598,35 @@
 				</timeFormats>
 				<dateTimeFormats>
 					<alias source="locale" path="../../calendar[@type='gregorian']/dateTimeFormats"/>
+				</dateTimeFormats>
+			</calendar>
+			<calendar type="dangi">
+				<months>
+					<alias source="locale" path="../../calendar[@type='chinese']/months"/>
+				</months>
+				<monthPatterns>
+					<alias source="locale" path="../../calendar[@type='chinese']/monthPatterns"/>
+				</monthPatterns>
+				<days>
+					<alias source="locale" path="../../calendar[@type='chinese']/days"/>
+				</days>
+				<quarters>
+					<alias source="locale" path="../../calendar[@type='chinese']/quarters"/>
+				</quarters>
+				<dayPeriods>
+					<alias source="locale" path="../../calendar[@type='chinese']/dayPeriods"/>
+				</dayPeriods>
+				<cyclicNameSets>
+					<alias source="locale" path="../../calendar[@type='chinese']/cyclicNameSets"/>
+				</cyclicNameSets>
+				<dateFormats>
+					<alias source="locale" path="../../calendar[@type='chinese']/dateFormats"/>
+				</dateFormats>
+				<timeFormats>
+					<alias source="locale" path="../../calendar[@type='chinese']/timeFormats"/>
+				</timeFormats>
+				<dateTimeFormats>
+					<alias source="locale" path="../../calendar[@type='chinese']/dateTimeFormats"/>
 				</dateTimeFormats>
 			</calendar>
 			<calendar type="ethiopic">
@@ -963,8 +988,8 @@
 						<dateFormatItem id="yMMM">y MMM</dateFormatItem>
 						<dateFormatItem id="yMMMd">y MMM d</dateFormatItem>
 						<dateFormatItem id="yMMMEd">E, y MMM d</dateFormatItem>
-						<dateFormatItem id="yQ">y Q</dateFormatItem>
 						<dateFormatItem id="yQQQ">y QQQ</dateFormatItem>
+						<dateFormatItem id="yQQQQ">y QQQQ</dateFormatItem>
 					</availableFormats>
 					<appendItems>
 						<appendItem request="Day">{0} ({2}: {1})</appendItem>
@@ -1968,8 +1993,8 @@
 						<dateFormatItem id="yyyyMMM">G y MMM</dateFormatItem>
 						<dateFormatItem id="yyyyMMMd">G y MMM d</dateFormatItem>
 						<dateFormatItem id="yyyyMMMEd">E, G y MMM d</dateFormatItem>
-						<dateFormatItem id="yyyyQ">GGGGG yy Q</dateFormatItem>
-						<dateFormatItem id="yyyyQQQ">G y QQQ</dateFormatItem>
+						<dateFormatItem id="yyyyQQQ">GGGGG y QQQ</dateFormatItem>
+						<dateFormatItem id="yyyyQQQQ">G y QQQQ</dateFormatItem>
 					</availableFormats>
 					<appendItems>
 						<appendItem request="Day">{0} ({2}: {1})</appendItem>
@@ -2147,8 +2172,8 @@
 						<dateFormatItem id="yyyyMMM">G y MMM</dateFormatItem>
 						<dateFormatItem id="yyyyMMMd">G y MMM d</dateFormatItem>
 						<dateFormatItem id="yyyyMMMEd">E, G y MMM d</dateFormatItem>
-						<dateFormatItem id="yyyyQ">GGGGG yyy Q</dateFormatItem>
-						<dateFormatItem id="yyyyQQQ">G y QQQ</dateFormatItem>
+						<dateFormatItem id="yyyyQQQ">GGGGG y QQQ</dateFormatItem>
+						<dateFormatItem id="yyyyQQQQ">G y QQQQ</dateFormatItem>
 					</availableFormats>
 					<appendItems>
 						<appendItem request="Day">{0} ({2}: {1})</appendItem>
@@ -2173,7 +2198,7 @@
 			<hourFormat>+HH:mm;-HH:mm</hourFormat>
 			<gmtFormat>GMT{0}</gmtFormat>
 			<gmtZeroFormat>GMT</gmtZeroFormat>
-			<regionFormat>({0})</regionFormat>
+			<regionFormat>{0}</regionFormat>
 			<fallbackFormat>{1} ({0})</fallbackFormat>
 			<fallbackRegionFormat>{1} ({0})</fallbackRegionFormat>
 			<singleCountries list="Europe/Kiev Pacific/Majuro Africa/Bamako America/Godthab America/Santiago America/Guayaquil Asia/Shanghai Asia/Tashkent Asia/Kuala_Lumpur Europe/Madrid Europe/Lisbon Europe/London Pacific/Auckland Pacific/Tahiti"/>

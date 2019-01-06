@@ -2,15 +2,15 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 6546 $"/>
-		<generation date="$Date: 2012-02-07 10:32:35 -0800 (Tue, 07 Feb 2012) $"/>
+		<version number="$Revision: 7728 $"/>
+		<generation date="$Date: 2012-09-13 17:25:05 -0700 (Thu, 13 Sep 2012) $"/>
 		<language type="nl"/>
 		<territory type="BE"/>
 	</identity>
 	<localeDisplayNames>
 		<languages>
 			<language type="lv">Lets</language>
-			<language type="oc">Occitaans (na 1500); Provençaals</language>
+			<language type="oc">Occitaans; Provençaals</language>
 			<language type="sh">Servo-Kroatisch</language>
 			<language type="ssa" draft="provisional">Nilo-Saharaans</language>
 		</languages>

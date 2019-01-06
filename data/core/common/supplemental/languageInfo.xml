@@ -2,8 +2,8 @@
 <!DOCTYPE supplementalData SYSTEM "../../common/dtd/ldmlSupplemental.dtd">
 
 <supplementalData>
-	<version number="$Revision: 5851 $"/>
-	<generation date="$Date: 2011-05-05 23:09:30 -0700 (Thu, 05 May 2011) $"/>
+	<version number="$Revision: 7724 $"/>
+	<generation date="$Date: 2012-09-12 12:08:15 -0700 (Wed, 12 Sep 2012) $"/>
 	<languageMatching>
 		<languageMatches type="written">
 			<languageMatch desired="no" supported="nb" percent="100"/>  <!-- The language no is normally taken as nb in content; we might alias this for lookup.-->
@@ -22,7 +22,9 @@
 			    <languageMatch desired="sr-Latn" supported="sr-Cyrl" percent="90"/> <!-- Most serbs can read either script. -->
 			    <languageMatch desired="*-Hans" supported="*-Hant" percent="85" oneway="true"/> <!-- Readers of simplified can read traditional much better than reverse. -->
 			    <languageMatch desired="*-Hant" supported="*-Hans" percent="75" oneway="true"/>
-			    <languageMatch desired="en-*-US" supported="en-*-CA" percent="98"/> <!-- US is different than others, and Canadian is inbetween. -->
+				<languageMatch desired="gsw" supported="de-CH" percent="85" oneway="true"/> <!-- Most Swiss Germans can speak Swiss Standard German. -->
+				<languageMatch desired="gsw" supported="de" percent="80" oneway="true"/>
+			    <languageMatch desired="en-*-US" supported="en-*-CA" percent="98"/> <!-- US is different than others, and Canadian is in between. -->
 			    <languageMatch desired="en-*-US" supported="en-*-*" percent="97"/>
 			    <languageMatch desired="en-*-CA" supported="en-*-*" percent="98"/>
 			    <languageMatch desired="en-*-*" supported="en-*-*" percent="99"/>

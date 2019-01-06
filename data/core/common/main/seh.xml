@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7479 $"/>
-		<generation date="$Date: 2012-08-03 14:23:14 -0700 (Fri, 03 Aug 2012) $"/>
+		<version number="$Revision: 7746 $"/>
+		<generation date="$Date: 2012-09-23 14:02:23 -0700 (Sun, 23 Sep 2012) $"/>
 		<language type="seh"/>
 	</identity>
 	<localeDisplayNames>
@@ -452,13 +452,13 @@
 						<dateFormatItem id="yMMM">MMM 'de' y</dateFormatItem>
 						<dateFormatItem id="yMMMEd">E, d 'de' MMM 'de' y</dateFormatItem>
 						<dateFormatItem id="yMMMM">MMMM 'de' y</dateFormatItem>
-						<dateFormatItem id="yQ">y Q</dateFormatItem>
 						<dateFormatItem id="yQQQ">y QQQ</dateFormatItem>
+						<dateFormatItem id="yQQQQ">y QQQQ</dateFormatItem>
 						<dateFormatItem id="yyMM">MM/yy</dateFormatItem>
 						<dateFormatItem id="yyMMM">MMM yy</dateFormatItem>
 						<dateFormatItem id="yyMMMd">d 'de' MMM 'de' yy</dateFormatItem>
 						<dateFormatItem id="yyMMMEd">E, d 'de' MMM 'de' yy</dateFormatItem>
-						<dateFormatItem id="yyQ">Q yy</dateFormatItem>
+						<dateFormatItem id="yyQQQ">QQQ yy</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 				<fields>
@@ -678,3 +678,4 @@
 		</messages>
 	</posix>
 </ldml>
+

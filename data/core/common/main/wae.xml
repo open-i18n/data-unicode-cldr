@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7599 $"/>
-		<generation date="$Date: 2012-08-16 17:59:44 -0700 (Thu, 16 Aug 2012) $"/>
+		<version number="$Revision: 7847 $"/>
+		<generation date="$Date: 2012-10-15 11:02:42 -0700 (Mon, 15 Oct 2012) $"/>
 		<language type="wae"/>
 	</identity>
 	<localeDisplayNames>
@@ -958,9 +958,6 @@
 			</zone>
 			<zone type="America/Montserrat">
 				<exemplarCity draft="unconfirmed">Monserat</exemplarCity>
-			</zone>
-			<zone type="Africa/Niamey">
-				<exemplarCity draft="unconfirmed">Niger</exemplarCity>
 			</zone>
 			<zone type="Europe/Amsterdam">
 				<exemplarCity draft="unconfirmed">Amšterdam</exemplarCity>

@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7594 $"/>
-		<generation date="$Date: 2012-08-16 13:13:57 -0700 (Thu, 16 Aug 2012) $"/>
+		<version number="$Revision: 7839 $"/>
+		<generation date="$Date: 2012-10-11 16:37:12 -0700 (Thu, 11 Oct 2012) $"/>
 		<language type="si"/>
 	</identity>
 	<localeDisplayNames>
@@ -492,7 +492,7 @@
 		</keys>
 		<types>
 			<type type="arab" key="numbers">ඉන්දු අරාබි ඉලක්කම්</type>
-			<type type="arabext" key="numbers">වැඩි කළ ඉන්දු අරාබි ඉලක්කම්</type>
+			<type type="arabext" key="numbers">වැඩි කළ ඉන්දු අරාබි ඉලක්කම්</type>
 			<type type="armn" key="numbers">ඇමරිකානු සංඛ්‍යාංකන</type>
 			<type type="armnlow" key="numbers">ඇමරිකානු කුඩා සංඛ්‍යාංකන</type>
 			<type type="beng" key="numbers">බෙංගාලි ඉලක්කම්</type>
@@ -510,8 +510,8 @@
 			<type type="gujr" key="numbers">ගුජරාටි ඉලක්කම්</type>
 			<type type="guru" key="numbers">ගුර්මුකී ඉලක්කම්</type>
 			<type type="hanidec" key="numbers">චීන දශම සංඛ්‍යාංකන</type>
-			<type type="hans" key="numbers">සරල කළ චීන සංඛ්‍යාංකන</type>
-			<type type="hansfin" key="numbers">සරල කළ චීන ව්‍යාපාරික සංඛ්‍යාංකන</type>
+			<type type="hans" key="numbers">සරල කළ චීන සංඛ්‍යාංකන</type>
+			<type type="hansfin" key="numbers">සරල කළ චීන ව්‍යාපාරික සංඛ්‍යාංකන</type>
 			<type type="hant" key="numbers">සාම්ප්‍රදායික චීන සංඛ්‍යාංකන</type>
 			<type type="hantfin" key="numbers">සාම්ප්‍රදායික චීන ව්‍යාපාරික සංඛ්‍යාංකන</type>
 			<type type="hebr" key="numbers">හීබ්‍රෑ සංඛ්‍යාංකන</type>
@@ -875,8 +875,8 @@
 						<dateFormatItem id="yMMM">y MMM</dateFormatItem>
 						<dateFormatItem id="yMMMd">y MMM d</dateFormatItem>
 						<dateFormatItem id="yMMMEd">y MMM d, E</dateFormatItem>
-						<dateFormatItem id="yQ">y Q</dateFormatItem>
 						<dateFormatItem id="yQQQ">y QQQ</dateFormatItem>
+						<dateFormatItem id="yQQQQ">y QQQQ</dateFormatItem>
 					</availableFormats>
 					<intervalFormats>
 						<intervalFormatFallback>{0} – {1}</intervalFormatFallback>
@@ -1020,7 +1020,7 @@
 			<hourFormat>+HH:mm;-HH:mm</hourFormat>
 			<gmtFormat>GMT{0}</gmtFormat>
 			<gmtZeroFormat>ග්‍රිමවේ</gmtZeroFormat>
-			<regionFormat>({0}) ජපාන වේලාව</regionFormat>
+			<regionFormat>{0} ජපාන වේලාව</regionFormat>
 			<fallbackFormat>{1} ({0})</fallbackFormat>
 			<fallbackRegionFormat>{1} ({0})</fallbackRegionFormat>
 			<zone type="Etc/GMT+12">
@@ -1656,7 +1656,7 @@
 			<metazone type="America_Pacific">
 				<long>
 					<generic>උතුරු ඇමරිකානු පැසිෆික් වේලාව</generic>
-					<standard>උතුරු ඇමරිකානු පැසිෆික්  සම්මත වේලාව</standard>
+					<standard>උතුරු ඇමරිකානු පැසිෆික් සම්මත වේලාව</standard>
 					<daylight>උතුරු ඇමරිකානු පැසිෆික් දිවා කාලය</daylight>
 				</long>
 			</metazone>
@@ -1720,7 +1720,7 @@
 				<long>
 					<generic>බංගලාදේශ වේලාව</generic>
 					<standard>බංගලාදේශ සම්මත වේලාව</standard>
-					<daylight>බංගලාදේශ ග්‍රීෂ්ම කාලය</daylight>
+					<daylight>බංගලාදේශ ග්‍රීෂ්ම කාලය</daylight>
 				</long>
 			</metazone>
 			<metazone type="Bhutan">
@@ -2098,7 +2098,7 @@
 				<displayName>කොලොම්බියානු පැසෝ</displayName>
 			</currency>
 			<currency type="CUC">
-				<displayName>මාරුකළ හැකි කූබානු පැසෝ</displayName>
+				<displayName>මාරුකළ හැකි කූබානු පැසෝ</displayName>
 			</currency>
 			<currency type="CUP">
 				<displayName>කූබානු පැසෝ</displayName>

@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7599 $"/>
-		<generation date="$Date: 2012-08-16 17:59:44 -0700 (Thu, 16 Aug 2012) $"/>
+		<version number="$Revision: 7847 $"/>
+		<generation date="$Date: 2012-10-15 11:02:42 -0700 (Mon, 15 Oct 2012) $"/>
 		<language type="hu"/>
 	</identity>
 	<localeDisplayNames>
@@ -1106,8 +1106,8 @@
 			<type type="armnlow" key="numbers">Örmény kisbetűs számok</type>
 			<type type="beng" key="numbers">Bengáli számjegyek</type>
 			<type type="big5han" key="collation">Hagyományos kínai sorrend - Big5</type>
-			<type type="buddhist" key="calendar">buddhista naptár</type>
-			<type type="chinese" key="calendar">kínai naptár</type>
+			<type type="buddhist" key="calendar">Buddhista naptár</type>
+			<type type="chinese" key="calendar">Kínai naptár</type>
 			<type type="coptic" key="calendar">Kopt naptár</type>
 			<type type="deva" key="numbers">Dévanágari számjegyek</type>
 			<type type="dictionary" key="collation">Szótári rendezési sorrend</type>
@@ -1130,12 +1130,12 @@
 			<type type="hant" key="numbers">Hagyományos kínai számok</type>
 			<type type="hantfin" key="numbers">Hagyományos kínai pénzügyi számok</type>
 			<type type="hebr" key="numbers">Héber számok</type>
-			<type type="hebrew" key="calendar">héber naptár</type>
+			<type type="hebrew" key="calendar">Héber naptár</type>
 			<type type="identical" key="colStrength" draft="contributed">Összes rendezése</type>
 			<type type="indian" key="calendar">Indiai nemzeti naptár</type>
-			<type type="islamic" key="calendar">iszlám naptár</type>
-			<type type="islamic-civil" key="calendar">iszlám civil naptár</type>
-			<type type="japanese" key="calendar">japán naptár</type>
+			<type type="islamic" key="calendar">Iszlám naptár</type>
+			<type type="islamic-civil" key="calendar">Iszlám civil naptár</type>
+			<type type="japanese" key="calendar">Japán naptár</type>
 			<type type="jpan" key="numbers">Japán számok</type>
 			<type type="jpanfin" key="numbers">Japán pénzügyi számok</type>
 			<type type="khmr" key="numbers">Khmer számjegyek</type>
@@ -1178,7 +1178,7 @@
 			<type type="tibt" key="numbers">Tibeti számjegyek</type>
 			<type type="traditional" key="collation">Hagyományos</type>
 			<type type="traditional" key="numbers" draft="contributed">Hagyományos számok</type>
-			<type type="unihan" key="collation">szótővonás rendezési sorrend</type>
+			<type type="unihan" key="collation">Szótővonás rendezési sorrend</type>
 			<type type="upper" key="colCaseFirst" draft="contributed">Nagybetűs szavak rendezése előre</type>
 			<type type="vaii" key="numbers" draft="contributed">Vai számjegyek</type>
 			<type type="yes" key="colBackwards" draft="contributed">Ékezetek szerinti fordított rendezés</type>
@@ -1219,9 +1219,6 @@
 		<ellipsis type="initial">...{0}</ellipsis>
 		<ellipsis type="medial">{0}...{1}</ellipsis>
 		<moreInformation>?</moreInformation>
-		<stopwords>
-			<stopwordList type="collation" draft="provisional">a az egy</stopwordList>
-		</stopwords>
 	</characters>
 	<delimiters>
 		<quotationStart>„</quotationStart>
@@ -1774,9 +1771,9 @@
 						<dateFormatItem id="yMMM">y. MMM</dateFormatItem>
 						<dateFormatItem id="yMMMd">y. MMM d.</dateFormatItem>
 						<dateFormatItem id="yMMMEd">y. MMM d., E</dateFormatItem>
-						<dateFormatItem id="yQ">y. Q</dateFormatItem>
 						<dateFormatItem id="yQQQ">y. QQQ</dateFormatItem>
-						<dateFormatItem id="yyQ">yy/Q</dateFormatItem>
+						<dateFormatItem id="yQQQQ">y. QQQQ</dateFormatItem>
+						<dateFormatItem id="yyQQQ">yy/QQQ</dateFormatItem>
 						<dateFormatItem id="yyyyMM">yyyy.MM</dateFormatItem>
 						<dateFormatItem id="yyyyMMMM">y. MMMM</dateFormatItem>
 					</availableFormats>
@@ -1871,8 +1868,8 @@
 							<greatestDifference id="y">y. MMM d., E - y. MMM d., E</greatestDifference>
 						</intervalFormatItem>
 						<intervalFormatItem id="yMMMM">
-							<greatestDifference id="M">y MMMM-MMMM</greatestDifference>
-							<greatestDifference id="y">y MMMM - y MMMM</greatestDifference>
+							<greatestDifference id="M">y. MMMM-MMMM</greatestDifference>
+							<greatestDifference id="y">y. MMMM - y. MMMM</greatestDifference>
 						</intervalFormatItem>
 					</intervalFormats>
 				</dateTimeFormats>
@@ -1937,7 +1934,7 @@
 							<month type="5" draft="contributed">Svát</month>
 							<month type="6" draft="contributed">Ádár I</month>
 							<month type="7" draft="contributed">Ádár</month>
-							<month type="7" draft="contributed" yeartype="leap">Ádár II</month>
+							<month type="7" yeartype="leap" draft="contributed">Ádár II</month>
 							<month type="8" draft="contributed">Niszán</month>
 							<month type="9" draft="contributed">Ijár</month>
 							<month type="10" draft="contributed">Sziván</month>
@@ -1971,7 +1968,7 @@
 							<month type="5" draft="contributed">Svát</month>
 							<month type="6" draft="contributed">Ádár risón</month>
 							<month type="7" draft="contributed">Ádár</month>
-							<month type="7" draft="contributed" yeartype="leap">Ádár II</month>
+							<month type="7" yeartype="leap" draft="contributed">Ádár II</month>
 							<month type="8" draft="contributed">Niszán</month>
 							<month type="9" draft="contributed">Ijár</month>
 							<month type="10" draft="contributed">Sziván</month>
@@ -1987,7 +1984,7 @@
 							<month type="5" draft="contributed">Svát</month>
 							<month type="6" draft="contributed">Ádár risón</month>
 							<month type="7" draft="contributed">Ádár</month>
-							<month type="7" draft="contributed" yeartype="leap">Ádár II</month>
+							<month type="7" yeartype="leap" draft="contributed">Ádár II</month>
 							<month type="8" draft="contributed">Niszán</month>
 							<month type="9" draft="contributed">Ijár</month>
 							<month type="10" draft="contributed">Sziván</month>
@@ -2179,8 +2176,8 @@
 						<dateFormatItem id="yMEd" draft="contributed">yyyy.MM.dd., E</dateFormatItem>
 						<dateFormatItem id="yMMM" draft="contributed">y MMM</dateFormatItem>
 						<dateFormatItem id="yMMMEd" draft="contributed">y. MMM d., E</dateFormatItem>
-						<dateFormatItem id="yQ" draft="contributed">y Q</dateFormatItem>
 						<dateFormatItem id="yQQQ" draft="contributed">y QQQ</dateFormatItem>
+						<dateFormatItem id="yQQQQ" draft="contributed">y QQQQ</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
@@ -2584,9 +2581,6 @@
 			</zone>
 			<zone type="Europe/Luxembourg">
 				<exemplarCity>Luxemburg</exemplarCity>
-			</zone>
-			<zone type="Europe/Podgorica">
-				<exemplarCity>Montenegró</exemplarCity>
 			</zone>
 			<zone type="Pacific/Kwajalein">
 				<exemplarCity>Kwajalein-zátony</exemplarCity>
@@ -3988,18 +3982,18 @@
 			</decimalFormatLength>
 			<decimalFormatLength type="short">
 				<decimalFormat>
-					<pattern type="1000" count="other" draft="contributed">0 E</pattern>
-					<pattern type="10000" count="other" draft="contributed">00 E</pattern>
-					<pattern type="100000" count="other" draft="contributed">000 E</pattern>
-					<pattern type="1000000" count="other" draft="contributed">0 M</pattern>
-					<pattern type="10000000" count="other" draft="contributed">00 M</pattern>
-					<pattern type="100000000" count="other" draft="contributed">000 M</pattern>
-					<pattern type="1000000000" count="other" draft="contributed">0 Mrd</pattern>
-					<pattern type="10000000000" count="other" draft="contributed">00 Mrd</pattern>
-					<pattern type="100000000000" count="other" draft="contributed">000 Mrd</pattern>
-					<pattern type="1000000000000" count="other" draft="contributed">0 B</pattern>
-					<pattern type="10000000000000" count="other" draft="contributed">00 B</pattern>
-					<pattern type="100000000000000" count="other" draft="contributed">000 B</pattern>
+					<pattern type="1000" count="other" draft="contributed">0 E</pattern>
+					<pattern type="10000" count="other" draft="contributed">00 E</pattern>
+					<pattern type="100000" count="other" draft="contributed">000 E</pattern>
+					<pattern type="1000000" count="other" draft="contributed">0 M</pattern>
+					<pattern type="10000000" count="other" draft="contributed">00 M</pattern>
+					<pattern type="100000000" count="other" draft="contributed">000 M</pattern>
+					<pattern type="1000000000" count="other" draft="contributed">0 Mrd</pattern>
+					<pattern type="10000000000" count="other" draft="contributed">00 Mrd</pattern>
+					<pattern type="100000000000" count="other" draft="contributed">000 Mrd</pattern>
+					<pattern type="1000000000000" count="other" draft="contributed">0 B</pattern>
+					<pattern type="10000000000000" count="other" draft="contributed">00 B</pattern>
+					<pattern type="100000000000000" count="other" draft="contributed">000 B</pattern>
 				</decimalFormat>
 			</decimalFormatLength>
 		</decimalFormats>
@@ -4814,11 +4808,12 @@
 				<displayName>Üzbegisztáni szum</displayName>
 			</currency>
 			<currency type="VEB">
-				<displayName>Venezuelai bolívar</displayName>
+				<displayName>Venezuelai bolivar (1871-2008)</displayName>
+				<displayName count="other">Venezuelai bolivar (1871-2008)</displayName>
 			</currency>
 			<currency type="VEF">
-				<displayName>Venezuelai bolivar fuerte</displayName>
-				<displayName count="other">Venezuelai bolivar fuerte</displayName>
+				<displayName>Venezuelai bolivar</displayName>
+				<displayName count="other">Venezuelai bolivar</displayName>
 			</currency>
 			<currency type="VND">
 				<displayName>Vietnami dong</displayName>

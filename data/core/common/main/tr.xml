@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7599 $"/>
-		<generation date="$Date: 2012-08-16 17:59:44 -0700 (Thu, 16 Aug 2012) $"/>
+		<version number="$Revision: 7839 $"/>
+		<generation date="$Date: 2012-10-11 16:37:12 -0700 (Thu, 11 Oct 2012) $"/>
 		<language type="tr"/>
 	</identity>
 	<localeDisplayNames>
@@ -487,7 +487,7 @@
 			<language type="sn">Shona</language>
 			<language type="snk">Soninke</language>
 			<language type="so">Somalice</language>
-			<language type="sog">Sogdiana Dili</language>
+			<language type="sog">Sogdiana Dili</language>
 			<language type="son">Songhai</language>
 			<language type="sq">Arnavutça</language>
 			<language type="sr">Sırpça</language>
@@ -1190,7 +1190,7 @@
 	</localeDisplayNames>
 	<characters>
 		<exemplarCharacters>[a b c ç d e f g ğ h ı i {i\u0307} j k l m n o ö p r s ş t u ü v y z]</exemplarCharacters>
-		<exemplarCharacters type="auxiliary">[á à ă â å ä ã ā æ é è ĕ ê ë ē í ì ĭ î ï ī ñ ó ò ŏ ô ø ō œ q ú ù ŭ û ū w x ÿ]</exemplarCharacters>
+		<exemplarCharacters type="auxiliary">[á à ă â å ä ã ā æ ç é è ĕ ê ë ē í ì ĭ î ï ī ñ ó ò ŏ ô ø ō œ ö q ß ú ù ŭ û ū ü w x ÿ]</exemplarCharacters>
 		<exemplarCharacters type="index">[A B C Ç D E F G H I İ J K L M N O Ö P Q R S Ş T U Ü V W X Y Z]</exemplarCharacters>
 		<exemplarCharacters type="punctuation">[\- ‐ – — , ; \: ! ? . … ' ‘ ’ &quot; “ ” ( ) \[ \] § @ * / \&amp; # † ‡ ′ ″]</exemplarCharacters>
 		<ellipsis type="final">{0}…</ellipsis>
@@ -1225,7 +1225,7 @@
 					</dateFormatLength>
 					<dateFormatLength type="short">
 						<dateFormat>
-							<pattern>dd.MM.yyyy G</pattern>
+							<pattern>d.MM.yyyy G</pattern>
 						</dateFormat>
 					</dateFormatLength>
 				</dateFormats>
@@ -1255,12 +1255,10 @@
 						<dateFormatItem id="yMMMd">dd MMM y G</dateFormatItem>
 						<dateFormatItem id="yMMMEd">dd MMM y G E</dateFormatItem>
 						<dateFormatItem id="yMMMM">MMMM y G</dateFormatItem>
-						<dateFormatItem id="yQ">Q y G</dateFormatItem>
 						<dateFormatItem id="yQQQ">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yQQQQ">QQQQ y G</dateFormatItem>
 						<dateFormatItem id="yyMM">MM.yy G</dateFormatItem>
 						<dateFormatItem id="yyMMM">MMM yy G</dateFormatItem>
-						<dateFormatItem id="yyQ">Q yy G</dateFormatItem>
-						<dateFormatItem id="yyQQQQ">QQQQ yy G</dateFormatItem>
 						<dateFormatItem id="yyyy">y G</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
@@ -1554,7 +1552,7 @@
 					</dateFormatLength>
 					<dateFormatLength type="short">
 						<dateFormat>
-							<pattern>dd.MM.yyyy</pattern>
+							<pattern>d.MM.yyyy</pattern>
 						</dateFormat>
 					</dateFormatLength>
 				</dateFormats>
@@ -1628,11 +1626,11 @@
 						<dateFormatItem id="yMMMd">dd MMM y</dateFormatItem>
 						<dateFormatItem id="yMMMEd">d MMM y E</dateFormatItem>
 						<dateFormatItem id="yMMMM">MMMM y</dateFormatItem>
-						<dateFormatItem id="yQ">y/Q</dateFormatItem>
 						<dateFormatItem id="yQQQ">y/QQQ</dateFormatItem>
+						<dateFormatItem id="yQQQQ">y/QQQQ</dateFormatItem>
 						<dateFormatItem id="yyMM">MM.yy</dateFormatItem>
 						<dateFormatItem id="yyMMM">MMM yy</dateFormatItem>
-						<dateFormatItem id="yyQ">Q yy</dateFormatItem>
+						<dateFormatItem id="yyQQQ">QQQ yy</dateFormatItem>
 						<dateFormatItem id="yyQQQQ">QQQQ yy</dateFormatItem>
 						<dateFormatItem id="yyyy">y</dateFormatItem>
 					</availableFormats>
@@ -1871,64 +1869,7 @@
 					</dateFormatLength>
 					<dateFormatLength type="short">
 						<dateFormat>
-							<pattern>dd.MM.yyyy G</pattern>
-						</dateFormat>
-					</dateFormatLength>
-				</dateFormats>
-				<dateTimeFormats>
-					<availableFormats>
-						<dateFormatItem id="d">d</dateFormatItem>
-						<dateFormatItem id="Ed">d E</dateFormatItem>
-						<dateFormatItem id="H">HH</dateFormatItem>
-						<dateFormatItem id="hm">h:mm a</dateFormatItem>
-						<dateFormatItem id="Hm">HH:mm</dateFormatItem>
-						<dateFormatItem id="hms">h:mm:ss a</dateFormatItem>
-						<dateFormatItem id="Hms">HH:mm:ss</dateFormatItem>
-						<dateFormatItem id="M">L</dateFormatItem>
-						<dateFormatItem id="Md">dd.MM</dateFormatItem>
-						<dateFormatItem id="MEd">dd.MM E</dateFormatItem>
-						<dateFormatItem id="MMM">LLL</dateFormatItem>
-						<dateFormatItem id="MMMd">dd MMM</dateFormatItem>
-						<dateFormatItem id="MMMEd">dd MMM E</dateFormatItem>
-						<dateFormatItem id="mmss">mm:ss</dateFormatItem>
-						<dateFormatItem id="ms">mm:ss</dateFormatItem>
-						<dateFormatItem id="yyMM">MM.yy G</dateFormatItem>
-						<dateFormatItem id="yyMMM">MMM yy G</dateFormatItem>
-						<dateFormatItem id="yyQ">Q yy G</dateFormatItem>
-						<dateFormatItem id="yyQQQQ">QQQQ yy G</dateFormatItem>
-						<dateFormatItem id="yyyy">y G</dateFormatItem>
-						<dateFormatItem id="yyyyM">MM.y G</dateFormatItem>
-						<dateFormatItem id="yyyyMd">dd.MM.y G</dateFormatItem>
-						<dateFormatItem id="yyyyMEd">dd.MM.y G E</dateFormatItem>
-						<dateFormatItem id="yyyyMMM">MMM y G</dateFormatItem>
-						<dateFormatItem id="yyyyMMMd">dd MMM y G</dateFormatItem>
-						<dateFormatItem id="yyyyMMMEd">dd MMM y G E</dateFormatItem>
-						<dateFormatItem id="yyyyMMMM">MMMM y G</dateFormatItem>
-						<dateFormatItem id="yyyyQ">Q y G</dateFormatItem>
-						<dateFormatItem id="yyyyQQQ">QQQ y G</dateFormatItem>
-					</availableFormats>
-				</dateTimeFormats>
-			</calendar>
-			<calendar type="japanese">
-				<dateFormats>
-					<dateFormatLength type="full">
-						<dateFormat>
-							<pattern>dd MMMM y G EEEE</pattern>
-						</dateFormat>
-					</dateFormatLength>
-					<dateFormatLength type="long">
-						<dateFormat>
-							<pattern>dd MMMM y G</pattern>
-						</dateFormat>
-					</dateFormatLength>
-					<dateFormatLength type="medium">
-						<dateFormat>
-							<pattern>dd MMM y G</pattern>
-						</dateFormat>
-					</dateFormatLength>
-					<dateFormatLength type="short">
-						<dateFormat>
-							<pattern>dd.MM.yyyy G</pattern>
+							<pattern>d.MM.yyyy G</pattern>
 						</dateFormat>
 					</dateFormatLength>
 				</dateFormats>
@@ -1953,7 +1894,7 @@
 						<dateFormatItem id="y">y G</dateFormatItem>
 						<dateFormatItem id="yyMM">MM.yy G</dateFormatItem>
 						<dateFormatItem id="yyMMM">MMM yy G</dateFormatItem>
-						<dateFormatItem id="yyQ">Q yy G</dateFormatItem>
+						<dateFormatItem id="yyQQQ">QQQ yy G</dateFormatItem>
 						<dateFormatItem id="yyQQQQ">QQQQ yy G</dateFormatItem>
 						<dateFormatItem id="yyyy">y G</dateFormatItem>
 						<dateFormatItem id="yyyyM">MM.y G</dateFormatItem>
@@ -1963,8 +1904,67 @@
 						<dateFormatItem id="yyyyMMMd">dd MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMEd">dd MMM y G E</dateFormatItem>
 						<dateFormatItem id="yyyyMMMM">MMMM y G</dateFormatItem>
-						<dateFormatItem id="yyyyQ">Q y G</dateFormatItem>
 						<dateFormatItem id="yyyyQQQ">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yyyyQQQQ">QQQQ y G</dateFormatItem>
+					</availableFormats>
+				</dateTimeFormats>
+			</calendar>
+			<calendar type="japanese">
+				<dateFormats>
+					<dateFormatLength type="full">
+						<dateFormat>
+							<pattern>dd MMMM y G EEEE</pattern>
+						</dateFormat>
+					</dateFormatLength>
+					<dateFormatLength type="long">
+						<dateFormat>
+							<pattern>dd MMMM y G</pattern>
+						</dateFormat>
+					</dateFormatLength>
+					<dateFormatLength type="medium">
+						<dateFormat>
+							<pattern>dd MMM y G</pattern>
+						</dateFormat>
+					</dateFormatLength>
+					<dateFormatLength type="short">
+						<dateFormat>
+							<pattern>d.MM.yyyy G</pattern>
+						</dateFormat>
+					</dateFormatLength>
+				</dateFormats>
+				<dateTimeFormats>
+					<availableFormats>
+						<dateFormatItem id="d">d</dateFormatItem>
+						<dateFormatItem id="Ed">d E</dateFormatItem>
+						<dateFormatItem id="Gy">y G</dateFormatItem>
+						<dateFormatItem id="H">HH</dateFormatItem>
+						<dateFormatItem id="hm">h:mm a</dateFormatItem>
+						<dateFormatItem id="Hm">HH:mm</dateFormatItem>
+						<dateFormatItem id="hms">h:mm:ss a</dateFormatItem>
+						<dateFormatItem id="Hms">HH:mm:ss</dateFormatItem>
+						<dateFormatItem id="M">L</dateFormatItem>
+						<dateFormatItem id="Md">dd.MM</dateFormatItem>
+						<dateFormatItem id="MEd">dd.MM E</dateFormatItem>
+						<dateFormatItem id="MMM">LLL</dateFormatItem>
+						<dateFormatItem id="MMMd">dd MMM</dateFormatItem>
+						<dateFormatItem id="MMMEd">dd MMM E</dateFormatItem>
+						<dateFormatItem id="mmss">mm:ss</dateFormatItem>
+						<dateFormatItem id="ms">mm:ss</dateFormatItem>
+						<dateFormatItem id="y">y G</dateFormatItem>
+						<dateFormatItem id="yyMM">MM.yy G</dateFormatItem>
+						<dateFormatItem id="yyMMM">MMM yy G</dateFormatItem>
+						<dateFormatItem id="yyQQQ">QQQ yy G</dateFormatItem>
+						<dateFormatItem id="yyQQQQ">QQQQ yy G</dateFormatItem>
+						<dateFormatItem id="yyyy">y G</dateFormatItem>
+						<dateFormatItem id="yyyyM">MM.y G</dateFormatItem>
+						<dateFormatItem id="yyyyMd">dd.MM.y G</dateFormatItem>
+						<dateFormatItem id="yyyyMEd">dd.MM.y G E</dateFormatItem>
+						<dateFormatItem id="yyyyMMM">MMM y G</dateFormatItem>
+						<dateFormatItem id="yyyyMMMd">dd MMM y G</dateFormatItem>
+						<dateFormatItem id="yyyyMMMEd">dd MMM y G E</dateFormatItem>
+						<dateFormatItem id="yyyyMMMM">MMMM y G</dateFormatItem>
+						<dateFormatItem id="yyyyQQQ">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yyyyQQQQ">QQQQ y G</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
@@ -2007,7 +2007,7 @@
 					</dateFormatLength>
 					<dateFormatLength type="short">
 						<dateFormat>
-							<pattern>dd.MM.yyyy G</pattern>
+							<pattern>d.MM.yyyy G</pattern>
 						</dateFormat>
 					</dateFormatLength>
 				</dateFormats>
@@ -2032,7 +2032,7 @@
 						<dateFormatItem id="y">y G</dateFormatItem>
 						<dateFormatItem id="yyMM">MM.yy G</dateFormatItem>
 						<dateFormatItem id="yyMMM">MMM yy G</dateFormatItem>
-						<dateFormatItem id="yyQ">Q yy G</dateFormatItem>
+						<dateFormatItem id="yyQQQ">QQQ yy G</dateFormatItem>
 						<dateFormatItem id="yyQQQQ">QQQQ yy G</dateFormatItem>
 						<dateFormatItem id="yyyy">y G</dateFormatItem>
 						<dateFormatItem id="yyyyM">MM.y G</dateFormatItem>
@@ -2042,8 +2042,8 @@
 						<dateFormatItem id="yyyyMMMd">dd MMM y G</dateFormatItem>
 						<dateFormatItem id="yyyyMMMEd">dd MMM y G E</dateFormatItem>
 						<dateFormatItem id="yyyyMMMM">MMMM y G</dateFormatItem>
-						<dateFormatItem id="yyyyQ">Q y G</dateFormatItem>
 						<dateFormatItem id="yyyyQQQ">QQQ y G</dateFormatItem>
+						<dateFormatItem id="yyyyQQQQ">QQQQ y G</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
@@ -2158,7 +2158,7 @@
 				<exemplarCity>Dominika</exemplarCity>
 			</zone>
 			<zone type="Africa/Algiers">
-				<exemplarCity>Cezayir</exemplarCity>
+				<exemplarCity>Cezayir şehri</exemplarCity>
 			</zone>
 			<zone type="Africa/Cairo">
 				<exemplarCity>Kahire</exemplarCity>
@@ -2406,7 +2406,7 @@
 				<exemplarCity>Aşkabat</exemplarCity>
 			</zone>
 			<zone type="Africa/Tunis">
-				<exemplarCity>Tunus</exemplarCity>
+				<exemplarCity>Tınıs şehri</exemplarCity>
 			</zone>
 			<zone type="Europe/Istanbul">
 				<exemplarCity>İstanbul</exemplarCity>
@@ -3620,7 +3620,7 @@
 			</decimalFormatLength>
 			<decimalFormatLength type="short">
 				<decimalFormat>
-					<pattern type="1000" count="other">0000</pattern>
+					<pattern type="1000" count="other">0</pattern>
 					<pattern type="10000" count="other">00 B</pattern>
 					<pattern type="100000" count="other">000 B</pattern>
 					<pattern type="1000000" count="other">0 Mn</pattern>
@@ -3629,9 +3629,9 @@
 					<pattern type="1000000000" count="other">0 Mr</pattern>
 					<pattern type="10000000000" count="other">00 Mr</pattern>
 					<pattern type="100000000000" count="other">000 Mr</pattern>
-					<pattern type="1000000000000" count="other">0 T</pattern>
-					<pattern type="10000000000000" count="other">00 T</pattern>
-					<pattern type="100000000000000" count="other">000 T</pattern>
+					<pattern type="1000000000000" count="other">0 Tn</pattern>
+					<pattern type="10000000000000" count="other">00 Tn</pattern>
+					<pattern type="100000000000000" count="other">000 Tn</pattern>
 				</decimalFormat>
 			</decimalFormatLength>
 		</decimalFormats>
@@ -3652,7 +3652,7 @@
 		<currencyFormats numberSystem="latn">
 			<currencyFormatLength>
 				<currencyFormat>
-					<pattern>#,##0.00 ¤</pattern>
+					<pattern>#,##0.00 ¤;(#,##0.00 ¤)</pattern>
 				</currencyFormat>
 			</currencyFormatLength>
 			<unitPattern count="other">{0} {1}</unitPattern>
@@ -4341,6 +4341,7 @@
 			<currency type="TRY">
 				<displayName>Türk Lirası</displayName>
 				<symbol>TL</symbol>
+				<symbol alt="variant">₺</symbol> <!-- New symbol - Unicode 6.2 -->
 			</currency>
 			<currency type="TTD">
 				<displayName>Trinidad ve Tobago Doları</displayName>

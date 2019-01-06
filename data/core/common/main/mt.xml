@@ -2,8 +2,8 @@
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7599 $"/>
-		<generation date="$Date: 2012-08-16 17:59:44 -0700 (Thu, 16 Aug 2012) $"/>
+		<version number="$Revision: 7838 $"/>
+		<generation date="$Date: 2012-10-11 15:53:21 -0700 (Thu, 11 Oct 2012) $"/>
 		<language type="mt"/>
 	</identity>
 	<localeDisplayNames>
@@ -129,7 +129,7 @@
 			<language type="el">Grieg</language>
 			<language type="elx">Elamit</language>
 			<language type="en">Ingliż</language>
-			<language type="enm">Ingliż, Medjevali (1100-1500)</language>
+			<language type="enm">Ingliż, Medjevali</language>
 			<language type="eo">Esperanto</language>
 			<language type="es">Spanjol</language>
 			<language type="et">Estonjan</language>
@@ -166,7 +166,7 @@
 			<language type="gor">Gorontalo</language>
 			<language type="got">Gotiku</language>
 			<language type="grb">Ġerbo</language>
-			<language type="grc">Grieg, Antik (to 1453)</language>
+			<language type="grc">Grieg, Antik</language>
 			<language type="gu">Guġarati</language>
 			<language type="gv">Manks</language>
 			<language type="gwi">Gwiċin</language>
@@ -275,7 +275,7 @@
 			<language type="mdr">Mandar</language>
 			<language type="men">Mende</language>
 			<language type="mg">Malagażi</language>
-			<language type="mga">Irlandiż, Medjevali (900-1200)</language>
+			<language type="mga">Irlandiż, Medjevali</language>
 			<language type="mh">Marxall</language>
 			<language type="mi">Maori</language>
 			<language type="mic">Mikmek</language>
@@ -352,7 +352,7 @@
 			<language type="pl">Pollakk</language>
 			<language type="pon">Ponpejan</language>
 			<language type="pra">Lingwi Prakriti</language>
-			<language type="pro">Provenzal, Antik (sa l-1500)</language>
+			<language type="pro">Provenzal, Antik</language>
 			<language type="ps">Paxtun</language>
 			<language type="pt">Portugiż</language>
 			<language type="qu">Keċwa</language>
@@ -383,7 +383,7 @@
 			<language type="sel">Selkup</language>
 			<language type="sem">Semitiku</language>
 			<language type="sg">Sango</language>
-			<language type="sga">Irlandiż, Antik (sa l-900)</language>
+			<language type="sga">Irlandiż, Antik</language>
 			<language type="sgn">Lingwa tas-Sinjali</language>
 			<language type="sh">Serbo-Kroat</language>
 			<language type="shn">Xan</language>
@@ -1175,18 +1175,18 @@
 			</currency>
 			<currency type="XXX">
 				<displayName>Munita Mhux Magħruf jew Mhux Validu</displayName>
+				<displayName count="one">Munita Mhux Magħruf jew Mhux Validu</displayName>
 				<displayName count="few">Munita Mhux Magħruf jew Mhux Validu</displayName>
 				<displayName count="many">Munita Mhux Magħruf jew Mhux Validu</displayName>
-				<displayName count="one">Munita Mhux Magħruf jew Mhux Validu</displayName>
 				<displayName count="other">Munita Mhux Magħruf jew Mhux Validu</displayName>
 			</currency>
 		</currencies>
 	</numbers>
 	<units>
 		<unit type="year-past">
+			<unitPattern count="one" draft="unconfirmed">{0} sena ilu</unitPattern>
 			<unitPattern count="few" draft="unconfirmed">{0} snin ilu</unitPattern>
 			<unitPattern count="many" draft="unconfirmed">{0} snin ilu</unitPattern>
-			<unitPattern count="one" draft="unconfirmed">{0} sena ilu</unitPattern>
 			<unitPattern count="other" draft="unconfirmed">{0} snin ilu</unitPattern>
 		</unit>
 	</units>

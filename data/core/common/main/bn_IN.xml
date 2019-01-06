@@ -2,8 +2,8 @@
 	<!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="$Revision: 7599 $"/>
-		<generation date="$Date: 2012-08-16 17:59:44 -0700 (Thu, 16 Aug 2012) $"/>
+		<version number="$Revision: 7847 $"/>
+		<generation date="$Date: 2012-10-15 11:02:42 -0700 (Mon, 15 Oct 2012) $"/>
 		<language type="bn"/>
 		<territory type="IN"/>
 	</identity>
@@ -31,7 +31,6 @@
 			<language type="en_GB" draft="contributed">ব্রিটিশ ইংরেজী</language>
 			<language type="fr_CA" draft="contributed">ক্যানাডিয়ান ফরাসী</language>
 			<language type="map" draft="contributed">অস্ট্রোনেসিয়ান</language>
-			<language type="qu" draft="contributed">কেচুয়া</language>
 			<language type="rm" draft="contributed">রেটো-রোমানীয়</language>
 			<language type="rup" draft="contributed">আরমেনিয়ান</language>
 			<language type="tut" draft="contributed">আলটাইক</language>
@@ -247,10 +246,4 @@
 			</currency>
 		</currencies>
 	</numbers>
-	<units>
-		<unit type="second-past">
-			<unitPattern count="one" draft="contributed">{0} সেকেন্ড পূর্বে</unitPattern>
-			<unitPattern count="other" draft="contributed">{0} সেকেন্ড পূর্বে</unitPattern>
-		</unit>
-	</units>
 </ldml>
