@@ -70,6 +70,22 @@ public class VoteResolver<T> {
 
     /**
      * The status levels according to the committee, in ascending order
+     *
+     * Status corresponds to icons as follows:
+     * A checkmark means it’s approved and is slated to be used. A cross means it’s a missing value.
+     * Green/orange check: The item has enough votes to be used in CLDR.
+     * Red/orange/black X: The item does not have enough votes to be used in CLDR, by most implementations (or is completely missing).
+     * Reference: http://cldr.unicode.org/index/survey-tool/guide
+     * 
+     * New January, 2019: When the item is inherited, i.e., winningValue is INHERITANCE_MARKER (↑↑↑),
+     * then orange/red X are replaced by orange/red up-arrow. That change is made only on the client.
+     * Reference: https://unicode.org/cldr/trac/ticket/11103
+     * 
+     * Status.approved:    approved.png    = green check
+     * Status.contributed: contributed.png = orange check
+     * Status.provisional: provisional.png = orange X (or inherited_provisional.png orange up-arrow if inherited)
+     * Status.unconfirmed: unconfirmed.png = red X (or inherited_unconfirmed.png red up-arrow if inherited
+     * Status.missing:     missing.png     = black X
      */
     public enum Status {
         missing, unconfirmed, provisional, contributed, approved;
@@ -89,7 +105,7 @@ public class VoteResolver<T> {
      * weight.
      */
     public enum Level {
-        locked(0, 999), street(1, 10), vetter(4, 5), expert(8, 3), manager(4, 2), tc(20, 1), admin(100, 0);
+        locked(0, 999), street(1, 10), anonymous(0, 8), vetter(4, 5), expert(8, 3), manager(4, 2), tc(20, 1), admin(100, 0);
         private int votes;
         private int stlevel;
 
@@ -425,6 +441,9 @@ public class VoteResolver<T> {
                 Iterator<T> iterator = items.getKeysetSortedByCount(false).iterator();
                 T value = iterator.next();
                 long weight = items.getCount(value);
+                if (weight == 0) {
+                    continue;
+                }
                 Organization org = entry.getKey();
                 if (DEBUG) {
                     System.out.println("sortedKeys?? " + value + " " + org.displayName);
@@ -595,13 +614,13 @@ public class VoteResolver<T> {
     private SupplementalDataInfo supplementalDataInfo = SupplementalDataInfo.getInstance();
 
     /**
-     * useKeywordAnnotationVoting: when true, use a special voting method for keyword
+     * usingKeywordAnnotationVoting: when true, use a special voting method for keyword
      * annotations that have multiple values separated by bar, like "happy | joyful".
      * See http://unicode.org/cldr/trac/ticket/10973 .
      * public, set in STFactory.java; could make it private and add param to
      * the VoteResolver constructor.
      */
-    public boolean useKeywordAnnotationVoting = false;
+    private boolean usingKeywordAnnotationVoting = false;
 
     private final Comparator<T> ucaCollator = new Comparator<T>() {
         Collator col = Collator.getInstance(ULocale.ENGLISH);
@@ -610,7 +629,6 @@ public class VoteResolver<T> {
             return col.compare(String.valueOf(o1), String.valueOf(o2));
         }
     };
-
 
     /**
      * Set the last-release value and status for this VoteResolver.
@@ -621,8 +639,17 @@ public class VoteResolver<T> {
      * TODO: possibly that change should be done in the caller instead; also there may be room
      * for improvement in determining whether the last release value, when it matches the
      * inherited value, should be associated with a "hard" or "soft" candidate item.
+     * Possibly the more accurate lastRelease value would be:
+     *    if the lastRelease's baileyValue(path) == lastReleaseValue(path)
+     *    then use INHERITANCE_MARKER
+     * or maybe add an extra clause:
+     *    if the lastRelease's baileyValue(path) == lastReleaseValue(path)
+     *    && votes(lastReleaseValue) < votes(INHERITANCE_MARKER)
+     *    then use INHERITANCE_MARKER
      *
      * Reference: https://unicode.org/cldr/trac/ticket/11299
+     *            https://unicode.org/cldr/trac/ticket/11611
+     *            https://unicode.org/cldr/trac/ticket/11420
      *
      * @param lastReleaseValue the last-release value
      * @param lastReleaseStatus the last-release status
@@ -634,7 +661,9 @@ public class VoteResolver<T> {
         /*
          * Depending on the order in which setLastRelease and setBaileyValue are called,
          * bailey might not be set yet; often baileySet is false here. Keep the implementation
-         * robust regardless of the order in which the two functions are called.
+         * robust regardless of the order in which the two functions are called. Alternatively,
+         * we might enforce a particular order. Currently (2018-12-1) getResolverInternal calls
+         * setLastRelease and setTrunk before it calls setBaileyValue.
          */
         if (organizationToValueAndVote != null
                 && organizationToValueAndVote.baileySet
@@ -644,9 +673,33 @@ public class VoteResolver<T> {
         }
     }
 
+    /**
+     * Set the trunk value and status for this VoteResolver.
+     *
+     * If the value matches the bailey value, change it to CldrUtility.INHERITANCE_MARKER,
+     * in order to distinguish "soft" votes for inheritance from "hard" votes for the specific
+     * value that currently matches the inherited value. Compare similar code in setLastRelease.
+     *
+     * Reference: https://unicode.org/cldr/trac/ticket/11611
+     *
+     * @param trunkValue the trunk value
+     * @param trunkStatus the trunk status
+     */
     public void setTrunk(T trunkValue, Status trunkStatus) {
         this.trunkValue = trunkValue;
         this.trunkStatus = trunkValue == null ? Status.missing : trunkStatus;
+
+        /*
+         * Depending on the order in which setTrunk and setBaileyValue are called,
+         * bailey might not be set yet. Keep the implementation robust regardless
+         * of the order in which the two functions are called.
+         */
+        if (organizationToValueAndVote != null
+                && organizationToValueAndVote.baileySet
+                && organizationToValueAndVote.baileyValue != null
+                && organizationToValueAndVote.baileyValue.equals(trunkValue)) {
+            this.trunkValue = (T) CldrUtility.INHERITANCE_MARKER;
+        }
     }
 
     public T getLastReleaseValue() {
@@ -717,10 +770,29 @@ public class VoteResolver<T> {
         this.lastReleaseStatus = Status.missing;
         this.trunkValue = null;
         this.trunkStatus = Status.missing;
-        this.useKeywordAnnotationVoting = false;
+        this.setUsingKeywordAnnotationVoting(false);
         organizationToValueAndVote.clear();
         resolved = false;
         values.clear();
+    }
+
+    /**
+     * Get the bailey value (what the inherited value would be if there were no
+     * explicit value) for this VoteResolver.
+     *
+     * Throw an exception if !baileySet.
+     *
+     * @return the bailey value.
+     *
+     * Called by STFactory.PerLocaleData.getResolverInternal in the special
+     * circumstance where getWinningValue has returned INHERITANCE_MARKER.
+     */
+    public T getBaileyValue() {
+        if (organizationToValueAndVote == null
+                || organizationToValueAndVote.baileySet == false) {
+            throw new IllegalArgumentException("setBaileyValue must be called before getBaileyValue");
+        }
+        return organizationToValueAndVote.baileyValue;
     }
 
     /**
@@ -728,19 +800,24 @@ public class VoteResolver<T> {
      * This value is used in handling any {@link CldrUtility.INHERITANCE_MARKER}.
      * This value must be set <i>before</i> adding values. Usually by calling CLDRFile.getBaileyValue().
      *
-     * Also, revise lastReleaseValue to INHERITANCE_MARKER if appropriate.
+     * Also, revise lastReleaseValue and/or trunkValue to INHERITANCE_MARKER if appropriate.
      */
     public void setBaileyValue(T baileyValue) {
         organizationToValueAndVote.baileySet = true;
         organizationToValueAndVote.baileyValue = baileyValue;
 
         /*
-         * If setLastRelease was called before setBaileyValue (as appears often to be the case),
-         * then lastRelease may need fixing here. Similar code in setLastRelease makes the implementation
-         * robust regardless of the order in which the two functions are called.
+         * If setLastRelease (or setTrunk) was called before setBaileyValue (as appears often to be the case),
+         * then lastRelease (or trunkValue) may need fixing here. Similar code in setLastRelease (and setTrunk)
+         * makes the implementation robust regardless of the order in which the functions are called.
          */
-        if (baileyValue != null && baileyValue.equals(lastReleaseValue)) {
-            lastReleaseValue = (T) CldrUtility.INHERITANCE_MARKER;
+        if (baileyValue != null) {
+            if (baileyValue.equals(lastReleaseValue)) {
+                lastReleaseValue = (T) CldrUtility.INHERITANCE_MARKER;
+            }
+            if (baileyValue.equals(trunkValue)) {
+                trunkValue = (T) CldrUtility.INHERITANCE_MARKER;
+            }
         }
     }
 
@@ -873,7 +950,7 @@ public class VoteResolver<T> {
         /*
          * Adjust sortedValues and voteCount as needed for annotation keywords.
          */
-        if (useKeywordAnnotationVoting) {
+        if (isUsingKeywordAnnotationVoting()) {
             adjustAnnotationVoteCounts(sortedValues, voteCount);
         }
 
@@ -1238,15 +1315,27 @@ public class VoteResolver<T> {
         return weightArray;
     }
 
+    /**
+     * Compute the status for the winning value.
+     * 
+     * @param weight1 the weight (vote count) for the best value
+     * @param weight2 the weight (vote count) for the next-best value
+     * @param oldStatus the old status (trunkStatus)
+     * @return the Status
+     */
     private Status computeStatus(long weight1, long weight2, Status oldStatus) {
-        int orgCount = organizationToValueAndVote.getOrgCount(winningValue);
-        return weight1 > weight2 &&
-            (weight1 >= requiredVotes) ? Status.approved
-                : weight1 > weight2 &&
-                    (weight1 >= 4 && Status.contributed.compareTo(oldStatus) > 0
-                        || weight1 >= 2 && orgCount >= 2) ? Status.contributed
-                            : weight1 >= weight2 && weight1 >= 2 ? Status.provisional
-                                : Status.unconfirmed;
+        if (weight1 > weight2 && weight1 >= requiredVotes) {
+            return Status.approved;
+        }
+        if (weight1 > weight2 &&
+            (weight1 >= 4 && Status.contributed.compareTo(oldStatus) > 0
+                || weight1 >= 2 && organizationToValueAndVote.getOrgCount(winningValue) >= 2) ) {
+            return Status.contributed;
+        }
+        if (weight1 >= weight2 && weight1 >= 2) {
+            return Status.provisional;
+        }
+        return Status.unconfirmed;
     }
 
     public Status getPossibleWinningStatus() {
@@ -1803,5 +1892,23 @@ public class VoteResolver<T> {
             || orgVote.equals(value)
             || CldrUtility.INHERITANCE_MARKER.equals(value)
                 && orgVote.equals(organizationToValueAndVote.baileyValue);
+    }
+
+    /**
+     * Is this VoteResolver using keyword annotation voting?
+     *
+     * @return true or false
+     */
+    public boolean isUsingKeywordAnnotationVoting() {
+        return usingKeywordAnnotationVoting;
+    }
+
+    /**
+     * Set whether this VoteResolver should use keyword annotation voting.
+     *
+     * @param usingKeywordAnnotationVoting true or false
+     */
+    public void setUsingKeywordAnnotationVoting(boolean usingKeywordAnnotationVoting) {
+        this.usingKeywordAnnotationVoting = usingKeywordAnnotationVoting;
     }
 }

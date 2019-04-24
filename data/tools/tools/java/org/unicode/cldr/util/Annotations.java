@@ -41,6 +41,7 @@ public class Annotations {
     public static final String MISSING_MARKER = "⊖";
     public static final String ENGLISH_MARKER = "⊕";
     public static final String EQUIVALENT = "≣";
+    public static final String NEUTRAL_HOLDING = "🧑‍🤝‍🧑";
 
     public static final Splitter splitter = Splitter.on(Pattern.compile("[|;]")).trimResults().omitEmptyStrings();
     static final Splitter dotSplitter = Splitter.on(".").trimResults();
@@ -124,6 +125,8 @@ public class Annotations {
             return result;
         }
 
+        static final Pattern SPACES = Pattern.compile("\\s+");
+        
         @Override
         public void handlePathValue(String path, String value) {
             XPathParts parts = XPathParts.getFrozenInstance(path);
@@ -144,6 +147,11 @@ public class Annotations {
             String type = parts.getAttributeValue(-1, "type");
             String alt = parts.getAttributeValue(-1, "alt");
 
+            // clean up value
+            String value2 = SPACES.matcher(value).replaceAll(" ").trim();
+            if (!value2.equals(value)) {
+                value = value2;
+            }
             if (alt != null) {
                 // do nothing for now
             } else if ("tts".equals(type)) {
@@ -408,7 +416,8 @@ public class Annotations {
                 } else if (code.contains(EmojiConstants.HANDSHAKE)) {
                     code = code.startsWith(EmojiConstants.MAN) ? "👬"
                         : code.endsWith(EmojiConstants.MAN) ? "👫" 
-                            : "👭";
+                            : code.startsWith(EmojiConstants.WOMAN) ? "👭"
+                            : NEUTRAL_HOLDING;
                     skipSet = EmojiConstants.REM_GROUP_SKIP_SET;
                 } else if (EmojiConstants.FAMILY_MARKERS.containsAll(code)) {
                     rem = code + rem;

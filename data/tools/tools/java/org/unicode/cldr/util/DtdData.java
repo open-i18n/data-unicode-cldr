@@ -25,7 +25,9 @@ import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
+import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
 import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.impl.Relation;
 import com.ibm.icu.text.Transform;
@@ -58,7 +60,16 @@ public class DtdData extends XMLFileReader.SimpleHandler {
     private DtdComparator dtdComparator;
 
     public enum AttributeStatus {
-        distinguished, value, metadata
+        distinguished ("§d"), 
+        value ("§v"), 
+        metadata ("§m︎");
+        public final String shortName;
+        AttributeStatus(String shortName) {
+            this.shortName = shortName;
+        }
+        public static String getShortName(AttributeStatus status) {
+            return status == null ? "" : status.shortName;
+        }
     }
 
     public enum Mode {
@@ -97,8 +108,9 @@ public class DtdData extends XMLFileReader.SimpleHandler {
         private final Set<String> commentsPre;
         private Set<String> commentsPost;
         private boolean isDeprecatedAttribute;
-        private AttributeStatus attributeStatus = AttributeStatus.distinguished; // default unless reset by annotations
+        public AttributeStatus attributeStatus = AttributeStatus.distinguished; // default unless reset by annotations
         private Set<String> deprecatedValues = Collections.emptySet();
+        public MatchValue matchValue;
         private final Comparator<String> attributeValueComparator;
 
         private Attribute(DtdType dtdType, Element element2, String aName, Mode mode2, String[] split, String value2, Set<String> firstComment) {
@@ -207,11 +219,25 @@ public class DtdData extends XMLFileReader.SimpleHandler {
                     isDeprecatedAttribute = true;
                     break;
                 default:
-                    if (commentIn.startsWith("@DEPRECATED:")) {
-                        deprecatedValues = Collections.unmodifiableSet(new HashSet<>(COMMA.splitToList(commentIn.substring("@DEPRECATED:".length()))));
-                        break;
+                    int colonPos = commentIn.indexOf(':');
+                    if (colonPos < 0) {
+                        throw new IllegalArgumentException("Unrecognized annotation: " + commentIn);
                     }
-                    throw new IllegalArgumentException("Unrecognized annotation: " + commentIn);
+                    String command = commentIn.substring(0, colonPos);
+                    String argument = commentIn.substring(colonPos + 1);
+                    switch(command) {
+                    case "@DEPRECATED":
+                        deprecatedValues = Collections.unmodifiableSet(new HashSet<>(COMMA.splitToList(argument)));
+                        break;
+                    case "@MATCH":
+                        if (matchValue != null) {
+                            throw new IllegalArgumentException("Conflicting @MATCH: " + matchValue.getName() + " & " + argument);
+                        }
+                        matchValue = MatchValue.of(argument);
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Unrecognized annotation: " + commentIn);
+                    }
                 }
                 return;
             }
@@ -229,13 +255,13 @@ public class DtdData extends XMLFileReader.SimpleHandler {
             Attribute that = (Attribute) obj;
             return name.equals(that.name)
                 && element.name.equals(that.element.name) // don't use plain element: circularity
-            // not relevant to identity
-            //                && Objects.equals(comment, that.comment)
-            //                && mode.equals(that.mode)
-            //                && Objects.equals(defaultValue, that.defaultValue)
-            //                && type.equals(that.type)
-            //                && values.equals(that.values)
-            ;
+                // not relevant to identity
+                //                && Objects.equals(comment, that.comment)
+                //                && mode.equals(that.mode)
+                //                && Objects.equals(defaultValue, that.defaultValue)
+                //                && type.equals(that.type)
+                //                && values.equals(that.values)
+                ;
         }
 
         /**
@@ -245,13 +271,13 @@ public class DtdData extends XMLFileReader.SimpleHandler {
         public int hashCode() {
             return name.hashCode() * 37
                 + element.name.hashCode() // don't use plain element: circularity
-            // not relevant to identity
-            //                ) * 37 + Objects.hashCode(comment)) * 37
-            //                + mode.hashCode()) * 37
-            //                + Objects.hashCode(defaultValue)) * 37
-            //                + type.hashCode()) * 37
-            //                + values.hashCode()
-            ;
+                // not relevant to identity
+                //                ) * 37 + Objects.hashCode(comment)) * 37
+                //                + mode.hashCode()) * 37
+                //                + Objects.hashCode(defaultValue)) * 37
+                //                + type.hashCode()) * 37
+                //                + values.hashCode()
+                ;
         }
 
         public boolean isDeprecated() {
@@ -266,7 +292,40 @@ public class DtdData extends XMLFileReader.SimpleHandler {
             return attributeStatus;
         }
 
+        public ValueStatus getValueStatus(String value) {
+            return deprecatedValues.contains(value) 
+                ? ValueStatus.invalid
+                    : type == AttributeType.ENUMERATED_TYPE 
+                    ? (values.containsKey(value) 
+                        ? ValueStatus.valid 
+                            : ValueStatus.invalid)
+                        : matchValue == null 
+                        ? ValueStatus.unknown :
+                            matchValue.is(value) 
+                            ? ValueStatus.valid 
+                                : ValueStatus.invalid;
+        }
+
+        public String getMatchString() {
+            return type == AttributeType.ENUMERATED_TYPE 
+                ? "⟨" + CollectionUtilities.join(values.keySet(), ", ") + "⟩" 
+                    : matchValue != null 
+                    ? "⟪" + matchValue.toString() + "⟫"
+                        : "";
+        }
+
+        public Attribute getMatchingName(Map<Attribute, Integer> attributes) {
+            for (Attribute attribute : attributes.keySet()) {
+                if (name.equals(attribute.getName())) {
+                    return attribute;
+                }
+            }
+            return null;
+        }
+
     }
+
+    public enum ValueStatus {invalid, unknown, valid}
 
     private DtdData(DtdType type, String version) {
         this.dtdType = type;
@@ -358,7 +417,7 @@ public class DtdData extends XMLFileReader.SimpleHandler {
             result = CLEANER2.matcher(result).replaceAll(" $1");
             return result.equals(model2)
                 ? model2
-                : result; // for debugging
+                    : result; // for debugging
         }
 
         public boolean containsAttribute(String string) {
@@ -445,12 +504,12 @@ public class DtdData extends XMLFileReader.SimpleHandler {
             }
             Element that = (Element) obj;
             return name.equals(that.name)
-            // not relevant to the identity of the object
-            //                && Objects.equals(comment, that.comment)
-            //                && type == that.type
-            //                && attributes.equals(that.attributes)
-            //                && children.equals(that.children)
-            ;
+                // not relevant to the identity of the object
+                //                && Objects.equals(comment, that.comment)
+                //                && type == that.type
+                //                && attributes.equals(that.attributes)
+                //                && children.equals(that.children)
+                ;
         }
 
         /**
@@ -459,12 +518,12 @@ public class DtdData extends XMLFileReader.SimpleHandler {
         @Override
         public int hashCode() {
             return name.hashCode()
-            // not relevant to the identity of the object
-            // * 37 + Objects.hashCode(comment)
-            //) * 37 + Objects.hashCode(type)
-            //                ) * 37 + attributes.hashCode()
-            //                ) * 37 + children.hashCode()
-            ;
+                // not relevant to the identity of the object
+                // * 37 + Objects.hashCode(comment)
+                //) * 37 + Objects.hashCode(type)
+                //                ) * 37 + attributes.hashCode()
+                //                ) * 37 + children.hashCode()
+                ;
         }
 
         public boolean isDeprecated() {
@@ -906,8 +965,8 @@ public class DtdData extends XMLFileReader.SimpleHandler {
         if (currentEnd != b.length()) {
             b.insert(currentEnd,
                 System.lineSeparator() + System.lineSeparator()
-                    + "<!-- Elements not reachable from root! -->"
-                    + System.lineSeparator());
+                + "<!-- Elements not reachable from root! -->"
+                + System.lineSeparator());
         }
         return b.toString();
     }
@@ -1048,6 +1107,9 @@ public class DtdData extends XMLFileReader.SimpleHandler {
 //            if (attributeDeprecated != deprecatedComment) {
 //                System.out.println("*** BAD DEPRECATION ***" + a);
 //            }
+            if (a.matchValue != null) {
+                b.append(COMMENT_PREFIX + "<!--@MATCH:" + a.matchValue.getName() + "-->");
+            }
             if (METADATA.contains(a.name) || a.attributeStatus == AttributeStatus.metadata) {
                 b.append(COMMENT_PREFIX + "<!--@METADATA-->");
             } else if (!isDistinguishing(current.name, a.name)) {
@@ -1080,10 +1142,10 @@ public class DtdData extends XMLFileReader.SimpleHandler {
                     // special handling for very first comment
                     if (b.length() == 0) {
                         b.append("<!--")
-                            .append(System.lineSeparator())
-                            .append(c)
-                            .append(System.lineSeparator())
-                            .append("-->");
+                        .append(System.lineSeparator())
+                        .append(c)
+                        .append(System.lineSeparator())
+                        .append("-->");
                         continue;
                     }
                     b.append(System.lineSeparator());
@@ -1251,9 +1313,11 @@ public class DtdData extends XMLFileReader.SimpleHandler {
         "angle-revolution", "angle-radian", "angle-degree", "angle-arc-minute", "angle-arc-second",
         "area-square-kilometer", "area-hectare", "area-square-meter", "area-square-centimeter",
         "area-square-mile", "area-acre", "area-square-yard", "area-square-foot", "area-square-inch",
+        "area-dunam",
         "concentr-karat",
         "concentr-milligram-per-deciliter", "concentr-millimole-per-liter",
-        "concentr-part-per-million", "concentr-percent", "concentr-permille",
+        "concentr-part-per-million", "concentr-percent", "concentr-permille", "concentr-permyriad",
+        "concentr-mole",
         "consumption-liter-per-kilometer", "consumption-liter-per-100kilometers",
         "consumption-mile-per-gallon", "consumption-mile-per-gallon-imperial",
         "digital-petabyte", "digital-terabyte", "digital-terabit", "digital-gigabyte", "digital-gigabit",
@@ -1268,6 +1332,10 @@ public class DtdData extends XMLFileReader.SimpleHandler {
         "duration-millisecond", "duration-microsecond", "duration-nanosecond",
         "electric-ampere", "electric-milliampere", "electric-ohm", "electric-volt",
         "energy-kilocalorie", "energy-calorie", "energy-foodcalorie", "energy-kilojoule", "energy-joule", "energy-kilowatt-hour",
+        "energy-electronvolt",
+        "energy-british-thermal-unit",
+        "force-pound-force",
+        "force-newton",
         "frequency-gigahertz", "frequency-megahertz", "frequency-kilohertz", "frequency-hertz",
         "length-kilometer", "length-meter", "length-decimeter", "length-centimeter",
         "length-millimeter", "length-micrometer", "length-nanometer", "length-picometer",
@@ -1276,23 +1344,33 @@ public class DtdData extends XMLFileReader.SimpleHandler {
         "length-furlong", "length-fathom",
         "length-nautical-mile", "length-mile-scandinavian",
         "length-point",
+        "length-solar-radius",
         "light-lux",
+        "light-solar-luminosity",
         "mass-metric-ton", "mass-kilogram", "mass-gram", "mass-milligram", "mass-microgram",
         "mass-ton", "mass-stone", "mass-pound", "mass-ounce",
         "mass-ounce-troy", "mass-carat",
+        "mass-dalton",
+        "mass-earth-mass",
+        "mass-solar-mass",
         "power-gigawatt", "power-megawatt", "power-kilowatt", "power-watt", "power-milliwatt",
         "power-horsepower",
         "pressure-hectopascal", "pressure-millimeter-of-mercury",
         "pressure-pound-per-square-inch", "pressure-inch-hg", "pressure-millibar", "pressure-atmosphere",
+        "pressure-kilopascal",
+        "pressure-megapascal",
         "speed-kilometer-per-hour", "speed-meter-per-second", "speed-mile-per-hour", "speed-knot",
         "temperature-generic", "temperature-celsius", "temperature-fahrenheit", "temperature-kelvin",
+        "torque-pound-foot",
+        "torque-newton-meter",
         "volume-cubic-kilometer", "volume-cubic-meter", "volume-cubic-centimeter",
         "volume-cubic-mile", "volume-cubic-yard", "volume-cubic-foot", "volume-cubic-inch",
         "volume-megaliter", "volume-hectoliter", "volume-liter", "volume-deciliter", "volume-centiliter", "volume-milliliter",
         "volume-pint-metric", "volume-cup-metric",
         "volume-acre-foot",
         "volume-bushel", "volume-gallon", "volume-gallon-imperial", "volume-quart", "volume-pint", "volume-cup",
-        "volume-fluid-ounce", "volume-tablespoon", "volume-teaspoon").freeze();
+        "volume-fluid-ounce", "volume-fluid-ounce-imperial", "volume-tablespoon", "volume-teaspoon",
+        "volume-barrel").freeze();
 
     static MapComparator<String> countValueOrder = new MapComparator<String>().add(
         "0", "1", "zero", "one", "two", "few", "many", "other").freeze();
@@ -1406,7 +1484,7 @@ public class DtdData extends XMLFileReader.SimpleHandler {
                 return true;
             }
             break;
-        ////supplementalData/transforms/transform[@source="am"][@target="am_FONIPA"][@direction="forward"]/comment
+            ////supplementalData/transforms/transform[@source="am"][@target="am_FONIPA"][@direction="forward"]/comment
         case supplementalData:
             // these are NOT under /metadata/ but are actually metadata
             switch (element1) {
@@ -1635,6 +1713,42 @@ public class DtdData extends XMLFileReader.SimpleHandler {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Return the value status for an EAV
+     */
+    public ValueStatus getValueStatus(String elementName, String attributeName, String value) {
+        Element element = nameToElement.get(elementName);
+        if (element == null) {
+            return ValueStatus.invalid;
+        }
+        Attribute attr = element.getAttributeNamed(attributeName);
+        if (attr == null) {
+            return ValueStatus.invalid;
+        }
+        return attr.getValueStatus(value);
+    }
+
+    /**
+     * Return element-attribute pairs with non-enumerated values, for quick checks.
+     */
+    public Multimap<String, String> getNonEnumerated(Map<String,String> matchValues) {
+        Multimap<String,String> nonEnumeratedElementToAttribute = TreeMultimap.create(); // make tree for ease of debugging
+        for (Entry<String, Element> entry : nameToElement.entrySet()) {
+            Element element = entry.getValue();
+            for (Attribute attribute : element.attributes.keySet()) {
+                if (attribute.type != AttributeType.ENUMERATED_TYPE) {
+                    String elementName = element.getName();
+                    String attrName = attribute.getName();
+                    nonEnumeratedElementToAttribute.put(elementName, attrName);
+                    if (attribute.matchValue != null) {
+                        matchValues.put(elementName + "\t" + attrName, attribute.matchValue.getName());
+                    }
+                }
+            }
+        }
+        return ImmutableSetMultimap.copyOf(nonEnumeratedElementToAttribute);
     }
 
     // ALWAYS KEEP AT END, FOR STATIC INIT ORDER

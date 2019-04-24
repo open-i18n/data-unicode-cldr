@@ -984,7 +984,6 @@ public class CldrUtility {
                 "Path must be relative to org/unicode/cldr/util/data  such as 'file.txt' or 'casing/file.txt', but got '"
                     + name + "'.");
         }
-
         return FileReaders.openFile(CldrUtility.class, "data/" + name);
     }
 
@@ -1003,7 +1002,6 @@ public class CldrUtility {
         return getInputStream(CldrUtility.class, "data/" + name);
     }
 
-    @SuppressWarnings("resource")
     public static InputStream getInputStream(Class<?> callingClass, String relativePath) {
         InputStream is = callingClass.getResourceAsStream(relativePath);
         // add buffering

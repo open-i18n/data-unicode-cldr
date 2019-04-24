@@ -60,6 +60,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.impl.Relation;
+import com.ibm.icu.impl.Row;
+import com.ibm.icu.impl.Row.R2;
 import com.ibm.icu.impl.Utility;
 import com.ibm.icu.text.MessageFormat;
 import com.ibm.icu.text.PluralRules;
@@ -116,7 +118,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
     public static final String SUPPLEMENTAL_NAME = "supplementalData";
     public static final String SUPPLEMENTAL_METADATA = "supplementalMetadata";
     public static final String SUPPLEMENTAL_PREFIX = "supplemental";
-    public static final String GEN_VERSION = "34";
+    public static final String GEN_VERSION = "35";
     public static final List<String> SUPPLEMENTAL_NAMES = Arrays.asList("characters", "coverageLevels", "dayPeriods", "genderList", "languageInfo",
         "languageGroup", "likelySubtags", "metaZones", "numberingSystems", "ordinals", "plurals", "postalCodeData", "rgScope", "supplementalData",
         "supplementalMetadata",
@@ -696,14 +698,26 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
      *            the distinguished path where the item was found. Pass in null if you don't care.
      */
     public String getSourceLocaleID(String distinguishedXPath, CLDRFile.Status status) {
-        String result = dataSource.getSourceLocaleID(distinguishedXPath, status);
+        return getSourceLocaleIdExtended(distinguishedXPath, status, true /* skipInheritanceMarker */);
+    }
+
+    /**
+     * Find out where the value was found (for resolving locales). Returns code-fallback as the location if nothing is
+     * found
+     *
+     * @param distinguishedXPath
+     *            path (must be distinguished!)
+     * @param status
+     *            the distinguished path where the item was found. Pass in null if you don't care.
+     * @param skipInheritanceMarker if true, skip sources in which value is INHERITANCE_MARKER
+     * @return the locale id as a string
+     */
+    public String getSourceLocaleIdExtended(String distinguishedXPath, CLDRFile.Status status, boolean skipInheritanceMarker) {
+        String result = dataSource.getSourceLocaleIdExtended(distinguishedXPath, status, skipInheritanceMarker);
         if (result == XMLSource.CODE_FALLBACK_ID && dataSource.isResolving()) {
             final String fallbackPath = getFallbackPath(distinguishedXPath, false);
             if (fallbackPath != null && !fallbackPath.equals(distinguishedXPath)) {
-                result = dataSource.getSourceLocaleID(fallbackPath, status);
-                // if (status != null && status.pathWhereFound.equals(distinguishedXPath)) {
-                // status.pathWhereFound = fallbackPath;
-                // }
+                result = dataSource.getSourceLocaleIdExtended(fallbackPath, status, skipInheritanceMarker);
             }
         }
         return result;
@@ -1758,6 +1772,7 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
 
         static Pattern WHITESPACE_WITH_LF = PatternCache.get("\\s*\\u000a\\s*");
         Matcher whitespaceWithLf = WHITESPACE_WITH_LF.matcher("");
+        static final UnicodeSet CONTROLS = new UnicodeSet("[:cc:]");
 
         /**
          * Trim leading whitespace if there is a linefeed among them, then the same with trailing.
@@ -1766,6 +1781,9 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
          * @return
          */
         private String trimWhitespaceSpecial(String source) {
+            if (DEBUG && CONTROLS.containsSome(source)) {
+                System.out.println("*** " + source);
+            }
             if (!source.contains("\n")) {
                 return source;
             }
@@ -2348,10 +2366,10 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
             localePattern = "{0} ({1})";
         }
 
-        // Hack - support BCP47 ids
-        if (localeOrTZID.contains("-") && !localeOrTZID.contains("@") && !localeOrTZID.contains("_")) {
-            localeOrTZID = ULocale.forLanguageTag(localeOrTZID).toString().replace("__", "_");
-        }
+//        // Hack - support BCP47 ids
+//        if (localeOrTZID.contains("-") && !localeOrTZID.contains("@") && !localeOrTZID.contains("_")) {
+//            localeOrTZID = ULocale.forLanguageTag(localeOrTZID).toString().replace("__", "_");
+//        }
 
         boolean isCompound = localeOrTZID.contains("_");
         String name = isCompound && onlyConstructCompound ? null : getName(LANGUAGE_NAME, localeOrTZID, altPicker);
@@ -2408,22 +2426,31 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
             String key = extension.getKey();
             String type = extension.getValue();
             // Check if key/type pairs exist in the CLDRFile first.
-            String valuePath = "//ldml/localeDisplayNames/types/type[@key=\"" + key + "\"][@type=\"" + type + "\"]";
-            String value = null;
-            // Ignore any values from code-fallback.
-            if (!getSourceLocaleID(valuePath, null).equals(XMLSource.CODE_FALLBACK_ID)) {
-                value = getStringValueWithBailey(valuePath);
-            }
-            if (value == null) {
-                // Get name of key instead and pair it with the type as-is.
-                String sname = getStringValue("//ldml/localeDisplayNames/keys/key[@type=\"" + key + "\"]");
-                if (sname == null) sname = key;
-                sname = sname.replace('(', '[').replace(')', ']').replace('（', '［').replace('）', '］');
-                value = MessageFormat.format(localeKeyTypePattern, new Object[] { sname, type });
+            String value = getKeyValueName(key, type);
+            if (value != null) {
+                value = value.replace('(', '[').replace(')', ']').replace('（', '［').replace('）', '］');
             } else {
+                // if we fail, then we construct from the key name and the value
+                String kname = getKeyName(key);
+                if (kname == null) {
+                    kname = key; // should not happen, but just in case
+                }
+                switch(key) {
+                case "t":
+                    type = getName(type);
+                    break;
+                case "cu":
+                    type = getName(CURRENCY_SYMBOL, type);
+                    break;
+                    // TODO tz, but have to look up aliases
+                    // TODO [u, kr, REORDER_CODE] 
+                    // TODO [u, rg, RG_KEY_VALUE]
+                    // TODO [u, sd, SUBDIVISION_CODE]
+                }
+                value = MessageFormat.format(localeKeyTypePattern, new Object[] { kname, type });
                 value = value.replace('(', '[').replace(')', ']').replace('（', '［').replace('）', '］');
             }
-            extras = MessageFormat.format(localeSeparator, new Object[] { extras, value });
+            extras = extras.isEmpty() ? value : MessageFormat.format(localeSeparator, new Object[] { extras, value });
         }
         // fix this -- shouldn't be hardcoded!
         if (extras.length() == 0) {
@@ -2431,6 +2458,55 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
         }
         return MessageFormat.format(localePattern, new Object[] { name, extras });
     }
+    
+    public String getKeyName(String key) {
+        // old code
+        // if (XMLSource.CODE_FALLBACK_ID.equals(getSourceLocaleID(valuePath, null)) {
+        // value = getStringValueWithBailey(valuePath);
+
+        String result = getStringValue("//ldml/localeDisplayNames/keys/key[@type=\"" + key + "\"]");
+        if (result == null) {
+            Relation<R2<String, String>, String> toAliases = SupplementalDataInfo.getInstance().getBcp47Aliases();
+            Set<String> aliases = toAliases.get(Row.of(key, ""));
+            if (aliases != null) {
+                for (String alias : aliases) {
+                    result = getStringValue("//ldml/localeDisplayNames/keys/key[@type=\"" + alias + "\"]");
+                    if (result != null) {
+                        break;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public String getKeyValueName(String key, String value) {
+        String result = getStringValue("//ldml/localeDisplayNames/types/type[@key=\"" + key + "\"][@type=\"" + value + "\"]");
+        if (result == null) {
+            Relation<R2<String, String>, String> toAliases = SupplementalDataInfo.getInstance().getBcp47Aliases();
+            Set<String> keyAliases = toAliases.get(Row.of(key, ""));
+            Set<String> valueAliases = toAliases.get(Row.of(key, value));
+            if (keyAliases != null || valueAliases != null) {
+                if (keyAliases == null) {
+                    keyAliases = Collections.singleton(key);
+                }
+                if (valueAliases == null) {
+                    valueAliases = Collections.singleton(value);
+                }
+                for (String keyAlias : keyAliases) {
+                    for (String valueAlias : valueAliases) {
+                        result = getStringValue("//ldml/localeDisplayNames/types/type[@key=\"" + keyAlias + "\"][@type=\"" + valueAlias + "\"]");
+                        if (result != null) {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+
 
     /**
      * Returns the name of the given bcp47 identifier. Note that extensions must
@@ -3006,7 +3082,18 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
     }
 
     public VersionInfo getDtdVersionInfo() {
-        return dataSource.getDtdVersionInfo();
+        VersionInfo result = dataSource.getDtdVersionInfo();
+        if (result != null || isEmpty()) {
+            return result;
+        }
+        // for old files, pick the version from the @version attribute
+        String path = dataSource.iterator().next();
+        String full = getFullXPath(path);
+        XPathParts parts = XPathParts.getFrozenInstance(full);
+        String versionString = parts.findFirstAttributeValue("version");
+        return versionString == null 
+            ? null 
+                : VersionInfo.getInstance(versionString);
     }
 
     public String getStringValue(String path, boolean ignoreOtherLeafAttributes) {

@@ -362,30 +362,38 @@ public class TestCoverageLevel extends TestFmwkPlus {
             + "was|wbp|wuu|"
             + "xmf|"
             + "ya[op]|yrl|"
-            + "zap?|zbl|ze[an])");
+            + "zap?|zbl|ze[an]|"
+            + "gil|tlh|gil|tlh|tet|ro_MD|ss|new|ba|iu|suk|kmb|rup|sms|udm|lus|gn|ada|kbd|kcg|eka|"
+            + "dak|nap|bin|arn|kfo|ch|ab|fa_AF|kac|ty|tvl|arp|aa|ng|hup|wa|min|ilo|kru|hil|sat|bho|"
+            + "jbo|pag|tig|bi|mus|tyv|pcm|ace|tum|mh|fon|chk|awa|root|hz|chm|mdf|kaj|nr|dar|shn|zun|"
+            + "cho|li|moh|nso|sw_CD|srn|lad|ve|gaa|pam|ale|sma|sba|lua|kha|sc|nv|men|cv|quc|pap|bla|"
+            + "kj|anp|an|niu|mni|dv|swb|pau|gor|nqo|krc|crs|gwi|zza|mad|nog|lez|byn|sad|ssy|mag|iba|"
+            + "tpi|kum|wal|mos|dzg|gez|io|tn|snk|mai|ady|chy|mwl|sco|av|efi|war|mic|loz|scn|smj|tem|"
+            + "dgr|mak|inh|lun|ts|fj|na|kpe|sr_ME|trv|rap|bug|ban|xal|oc|alt|nia|myv|ain|rar|krl|ay|"
+            + "syr|kv|umb|)");
 
         final Pattern script100 = PatternCache.get("("
             + "Adlm|Afak|Aghb|Ahom|Armi|Avst|Bali|Bamu|Bass|Batk|Bhks|Blis|Brah|Bugi|Buhd|"
             + "Cakm|Cans|Cari|Cham|Cher|Cirt|Copt|Cprt|Cyrs|"
-            + "Dogr|Dsrt|Dupl|Egy[dhp]|Elba|Geok|Glag|Gong|Gonm|Goth|Gran|"
-            + "Hatr|Hanb|Hano|Hluw|Hmng|Hrkt|Hung|Inds|Ital|Jamo|Java|Jurc|"
+            + "Dogr|Dsrt|Dupl|Egy[dhp]|Elba|Elym|Geok|Glag|Gong|Gonm|Goth|Gran|"
+            + "Hatr|Hanb|Hano|Hluw|Hmng|Hmnp|Hrkt|Hung|Inds|Ital|Jamo|Java|Jurc|"
             + "Kali|Khar|Khoj|Kpel|Kthi|Kits|Lana|Lat[fg]|Lepc|Limb|Lin[ab]|Lisu|Loma|Ly[cd]i|"
             + "Mahj|Maka|Man[di]|Marc|Maya|Medf|Mend|Mer[co]|Modi|Moon|Mroo|Mtei|Mult|"
-            + "Narb|Nbat|Newa|Nkgb|Nkoo|Nshu|Ogam|Olck|Orkh|Osge|Osma|"
+            + "Nand|Narb|Nbat|Newa|Nkgb|Nkoo|Nshu|Ogam|Olck|Orkh|Osge|Osma|"
             + "Palm|Pauc|Perm|Phag|Phl[ipv]|Phnx|Plrd|Prti|"
             + "Rjng|Rohg|Roro|Runr|"
             + "Samr|Sar[ab]|Saur|Sgnw|Shaw|Shrd|Sidd|Sind|Sogd|Sogo|Sora|Soyo|Sund|Sylo|Syr[cejn]|"
             + "Tagb|Takr|Tal[eu]|Tang|Tavt|Teng|Tfng|Tglg|Tirh|"
-            + "Ugar|Vaii|Visp|Wara|Wole|Xpeo|Xsux|Yiii|Zanb|Zinh|Zmth)");
+            + "Ugar|Vaii|Visp|Wara|Wcho|Wole|Xpeo|Xsux|Yiii|Zanb|Zinh|Zmth)");
 
         final Pattern keys100 = PatternCache.get("(col(Alternate|Backwards|CaseFirst|CaseLevel|HiraganaQuaternary|"
             + "Normalization|Numeric|Reorder|Strength)|kv|sd|timezone|va|variableTop|x|d0|h0|i0|k0|m0|s0)");
 
         final Pattern numberingSystem100 = PatternCache.get("("
             + "finance|native|traditional|adlm|ahom|bali|bhks|brah|cakm|cham|cyrl|"
-            + "gong|gonm|hanidays|hmng|java|kali|lana(tham)?|lepc|limb|"
+            + "gong|gonm|hanidays|hmng|hmnp|java|jpanyear|kali|lana(tham)?|lepc|limb|"
             + "math(bold|dbl|mono|san[bs])|modi|mong|mroo|mtei|mymr(shan|tlng)|"
-            + "newa|nkoo|olck|osma|rohg|saur|shrd|sin[dh]|sora|sund|takr|talu|tirh|vaii|wara)");
+            + "newa|nkoo|olck|osma|rohg|saur|shrd|sin[dh]|sora|sund|takr|talu|tirh|vaii|wara|wcho)");
 
         final Pattern collation100 = PatternCache.get("("
             + "big5han|compat|dictionary|emoji|eor|gb2312han|phonebook|phonetic|pinyin|reformed|searchjl|stroke|traditional|unihan|zhuyin)");
@@ -462,8 +470,8 @@ public class TestCoverageLevel extends TestFmwkPlus {
                     && path.endsWith("exemplarCity")) {
                     continue;
                 }
-                // We don't survey for short timezone names
-                if (path.contains("/short/")) {
+                // We don't survey for short timezone names or at least some alts
+                if (path.contains("/short/") || path.contains("[@alt=\"formal\"]")) {
                     continue;
                 }
             } else if (xpp.containsElement("metazone")) {
@@ -594,11 +602,14 @@ public class TestCoverageLevel extends TestFmwkPlus {
                         if (!request.equals("Timezone")) {
                             continue;
                         }
-                    }
-                    if (element.equals("dayPeriod")) {
+                    } else if (element.equals("dayPeriod")) {
                         if ("variant".equals(xpp.findAttributeValue("dayPeriod", "alt"))) {
                             continue;
                         }
+                    } else if (element.equals("dateFormatItem")) {
+                        //ldml/dates/calendars/calendar[@type='gregorian']/dateTimeFormats/availableFormats/dateFormatItem[@id='%dateFormatItems']
+                        assertEquals(path, Level.BASIC, lvl);
+                        continue;
                     }
                 }
             } else if (path.startsWith("//ldml/units")) {

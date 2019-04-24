@@ -1,1 +1,1 @@
-icu4j release-63-rc 2018-10-03
+icu4j 67d218f2476ac543de2ed843fa080892972c604a(release-64-rc2) 2019-03-12

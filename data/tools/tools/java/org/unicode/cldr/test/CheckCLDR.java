@@ -41,6 +41,7 @@ import org.unicode.cldr.util.RegexFileParser.RegexLineParser;
 import org.unicode.cldr.util.StandardCodes;
 import org.unicode.cldr.util.TransliteratorUtilities;
 import org.unicode.cldr.util.VoteResolver;
+import org.unicode.cldr.util.VoteResolver.Status;
 
 import com.ibm.icu.dev.util.ElapsedTimer;
 import com.ibm.icu.impl.Row.R3;
@@ -67,6 +68,9 @@ import com.ibm.icu.util.ICUUncheckedIOException;
  * @author davis
  */
 abstract public class CheckCLDR {
+
+    public static final boolean LIMITED_SUBMISSION = true; // TODO represent differently
+
     private static CLDRFile displayInformation;
 
     private CLDRFile cldrFileToCheck;
@@ -100,7 +104,11 @@ abstract public class CheckCLDR {
         /**
          * Disallow (for various reasons)
          */
-        FORBID_ERRORS(true), FORBID_READONLY(true), FORBID_UNLESS_DATA_SUBMISSION(true), FORBID_COVERAGE(true), FORBID_NEEDS_TICKET(true);
+        FORBID_ERRORS(true), 
+        FORBID_READONLY(true), 
+        FORBID_UNLESS_DATA_SUBMISSION(true), 
+        FORBID_COVERAGE(true), 
+        FORBID_NEEDS_TICKET(true);
 
         private final boolean isForbidden;
 
@@ -177,7 +185,7 @@ abstract public class CheckCLDR {
             InputMethod inputMethod,
             PathHeader.SurveyToolStatus status,
             UserInfo userInfo // can get voterInfo from this.
-        ) {
+            ) {
 
             // always forbid deprecated items - don't show.
             if (status == SurveyToolStatus.DEPRECATED) {
@@ -198,33 +206,42 @@ abstract public class CheckCLDR {
                 return StatusAction.ALLOW;
             }
 
-            // if the coverage level is optional, disallow everything
-            if (pathValueInfo.getCoverageLevel().compareTo(Level.COMPREHENSIVE) > 0) {
-                return StatusAction.FORBID_COVERAGE;
-            }
+            // remove this since we no longer have an 'optional' level
+//            // if the coverage level is optional, disallow everything
+//            if (pathValueInfo.getCoverageLevel().compareTo(Level.COMPREHENSIVE) > 0) {
+//                return StatusAction.FORBID_COVERAGE;
+//            }
 
             if (status == SurveyToolStatus.HIDE) {
+                return StatusAction.FORBID_READONLY;
+            }
+
+            CandidateInfo winner = pathValueInfo.getCurrentItem();
+//            if (winner != null && "тлусты".equals(winner.getValue())) {
+//                int debug = 0;
+//            }
+            ValueStatus valueStatus = getValueStatus(winner, ValueStatus.NONE, null);
+
+            // if limited submission, and winner doesn't have an error, limit the values
+
+            if (LIMITED_SUBMISSION && !SubmissionLocales.allowEvenIfLimited(pathValueInfo.getLocale().toString(), pathValueInfo.getXpath(), valueStatus == ValueStatus.ERROR, pathValueInfo.getLastReleaseStatus() == Status.missing)) {
                 return StatusAction.FORBID_READONLY;
             }
 
             if (this == Phase.SUBMISSION) {
                 return (status == SurveyToolStatus.READ_WRITE || status == SurveyToolStatus.LTR_ALWAYS)
                     ? StatusAction.ALLOW
-                    : StatusAction.ALLOW_VOTING_AND_TICKET;
+                        : StatusAction.ALLOW_VOTING_AND_TICKET;
             }
 
-            // We are not in submission.
+            // We are in vetting, not in submission
+
             // Only allow ADD if we have an error or warning
-            ValueStatus valueStatus = ValueStatus.NONE;
-            CandidateInfo winner = pathValueInfo.getCurrentItem();
             // Only check winning value for errors/warnings per ticket #8677
-            // We used to check all candidates.
-//            for (CandidateInfo value : pathValueInfo.getValues()) {
-            valueStatus = getValueStatus(winner, valueStatus);
             if (valueStatus != ValueStatus.NONE) {
                 return (status == SurveyToolStatus.READ_WRITE || status == SurveyToolStatus.LTR_ALWAYS)
                     ? StatusAction.ALLOW
-                    : StatusAction.ALLOW_VOTING_AND_TICKET;
+                        : StatusAction.ALLOW_VOTING_AND_TICKET;
             }
 //            }
 
@@ -251,7 +268,7 @@ abstract public class CheckCLDR {
             InputMethod inputMethod,
             PathHeader.SurveyToolStatus status,
             UserInfo userInfo // can get voterInfo from this.
-        ) {
+            ) {
             if (status != SurveyToolStatus.READ_WRITE && status != SurveyToolStatus.LTR_ALWAYS) {
                 return StatusAction.FORBID_READONLY; // not writable.
             }
@@ -272,7 +289,7 @@ abstract public class CheckCLDR {
             }
 
             // Disallow errors.
-            ValueStatus valueStatus = getValueStatus(enteredValue, ValueStatus.NONE);
+            ValueStatus valueStatus = getValueStatus(enteredValue, ValueStatus.NONE, CheckStatus.crossCheckSubtypes);
             if (valueStatus == ValueStatus.ERROR) {
                 return StatusAction.FORBID_ERRORS;
             }
@@ -288,7 +305,7 @@ abstract public class CheckCLDR {
                 if (value == enteredValue) {
                     return StatusAction.ALLOW;
                 }
-                valueStatus = getValueStatus(value, valueStatus);
+                valueStatus = getValueStatus(value, valueStatus, CheckStatus.crossCheckSubtypes);
             }
 
             // If there were any errors/warnings on other values, allow
@@ -302,11 +319,11 @@ abstract public class CheckCLDR {
             return StatusAction.FORBID_UNLESS_DATA_SUBMISSION;
         }
 
-        enum ValueStatus {
+        public enum ValueStatus {
             ERROR, WARNING, NONE
         }
 
-        private ValueStatus getValueStatus(CandidateInfo value, ValueStatus previous) {
+        public ValueStatus getValueStatus(CandidateInfo value, ValueStatus previous, Set<Subtype> changeErrorToWarning) {
             if (previous == ValueStatus.ERROR || value == null) {
                 return previous;
             }
@@ -314,7 +331,7 @@ abstract public class CheckCLDR {
             for (CheckStatus item : value.getCheckStatusList()) {
                 CheckStatus.Type type = item.getType();
                 if (type.equals(CheckStatus.Type.Error)) {
-                    if (CheckStatus.crossCheckSubtypes.contains(item.getSubtype())) {
+                    if (changeErrorToWarning != null && changeErrorToWarning.contains(item.getSubtype())) {
                         return ValueStatus.WARNING;
                     } else {
                         return ValueStatus.ERROR;
@@ -537,9 +554,9 @@ abstract public class CheckCLDR {
             for (Option o : Option.values()) {
                 if (options[o.ordinal()] != null) {
                     sb.append(o)
-                        .append('=')
-                        .append(options[o.ordinal()])
-                        .append(' ');
+                    .append('=')
+                    .append(options[o.ordinal()])
+                    .append(' ');
                 }
             }
             return sb.toString();
@@ -589,8 +606,8 @@ abstract public class CheckCLDR {
             .add(new CheckWidths())
             .add(new CheckPlaceHolders())
             .add(new CheckNew(factory)) // this is at the end; it will check for other certain other errors and warnings and
-        // not add a message if there are any.
-        ;
+            // not add a message if there are any.
+            ;
     }
 
     /**
@@ -717,7 +734,7 @@ abstract public class CheckCLDR {
             patternContainsInvalidCharacters, parenthesesNotAllowed, illegalNumberingSystem, unexpectedOrderOfEraYear, 
             invalidPlaceHolder, asciiQuotesNotAllowed, badMinimumGroupingDigits, inconsistentPeriods, 
             inheritanceMarkerNotAllowed, invalidDurationUnitPattern, invalidDelimiter, illegalCharactersInPattern,
-            badParseLenient, tooManyValues;
+            badParseLenient, tooManyValues, invalidSymbol;
 
             public String toString() {
                 return TO_STRING.matcher(name()).replaceAll(" $1").toLowerCase();
@@ -726,6 +743,9 @@ abstract public class CheckCLDR {
             static Pattern TO_STRING = PatternCache.get("([A-Z])");
         };
 
+        /** 
+         * These error don't prevent entry during submission, since they become valid if a different row is changed.
+         */
         public static EnumSet<Subtype> crossCheckSubtypes = EnumSet.of(
             Subtype.dateSymbolCollision,
             Subtype.displayCollision,
@@ -997,16 +1017,16 @@ abstract public class CheckCLDR {
         public static void appendLine(StringBuffer htmlMessage, String pattern, String input, String formatted,
             String reparsed) {
             htmlMessage.append("<tr><td><input type='text' name='pattern' value='")
-                .append(TransliteratorUtilities.toXML.transliterate(pattern))
-                .append("'></td><td><input type='text' name='input' value='")
-                .append(TransliteratorUtilities.toXML.transliterate(input))
-                .append("'></td><td>")
-                .append("<input type='submit' value='Test' name='Test'>")
-                .append("</td><td>" + "<input type='text' name='formatted' value='")
-                .append(TransliteratorUtilities.toXML.transliterate(formatted))
-                .append("'></td><td>" + "<input type='text' name='reparsed' value='")
-                .append(TransliteratorUtilities.toXML.transliterate(reparsed))
-                .append("'></td></tr>");
+            .append(TransliteratorUtilities.toXML.transliterate(pattern))
+            .append("'></td><td><input type='text' name='input' value='")
+            .append(TransliteratorUtilities.toXML.transliterate(input))
+            .append("'></td><td>")
+            .append("<input type='submit' value='Test' name='Test'>")
+            .append("</td><td>" + "<input type='text' name='formatted' value='")
+            .append(TransliteratorUtilities.toXML.transliterate(formatted))
+            .append("'></td><td>" + "<input type='text' name='reparsed' value='")
+            .append(TransliteratorUtilities.toXML.transliterate(reparsed))
+            .append("'></td></tr>");
         }
 
         /**
@@ -1014,7 +1034,7 @@ abstract public class CheckCLDR {
          */
         public static void appendTitle(StringBuffer htmlMessage) {
             htmlMessage.append("<table border='1' cellspacing='0' cellpadding='2'" +
-            // " style='border-collapse: collapse' style='width: 100%'" +
+                // " style='border-collapse: collapse' style='width: 100%'" +
                 "><tr>" +
                 "<th>Pattern</th>" +
                 "<th>Unlocalized Input</th>" +
@@ -1089,8 +1109,8 @@ abstract public class CheckCLDR {
          */
         // if (value == cldrFileToCheck.getBaileyValue(path, null, null) && value != cldrFileToCheck.getWinningValue(path)) {
         if (value != null
-                && value.equals(cldrFileToCheck.getBaileyValue(path, null, null))
-                && !value.equals(cldrFileToCheck.getWinningValue(path))) {
+            && value.equals(cldrFileToCheck.getBaileyValue(path, null, null))
+            && !value.equals(cldrFileToCheck.getWinningValue(path))) {
             return this;
         }
         // If we're being asked to run tests for an inheritance marker, then we need to change it
@@ -1259,7 +1279,7 @@ abstract public class CheckCLDR {
                 .setMessage("Internal error in {0}. Exception: {1}, Message: {2}, Trace: {3}",
                     new Object[] { item.getClass().getName(), e.getClass().getName(), e,
                         Arrays.asList(e.getStackTrace())
-                    }));
+                }));
         }
 
         public CheckCLDR setCldrFileToCheck(CLDRFile cldrFileToCheck, Options options,

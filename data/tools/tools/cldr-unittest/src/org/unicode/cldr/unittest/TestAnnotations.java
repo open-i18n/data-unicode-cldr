@@ -105,8 +105,8 @@ public class TestAnnotations extends TestFmwkPlus {
         AnnotationSet eng = Annotations.getDataSet("en");
         String[][] tests = { // the expected value for keywords can use , as well as |.
             {"👨🏻", "man: light skin tone", "adult | man | light skin tone"},
-            {"👱‍♂️", "man: blond hair", "blond | blond-haired man | man | man: blond hair"},
-            {"👱🏻‍♂️", "man: light skin tone, blond hair", "blond, blond-haired man, man, man: blond hair, light skin tone, blond hair"},
+            {"👱‍♂️", "man: blond hair", "blond, blond-haired man, hair, man, man: blond hair"},
+            {"👱🏻‍♂️", "man: light skin tone, blond hair", "blond, blond-haired man, hair, man, man: blond hair, light skin tone, blond hair"},
             {"👨‍🦰", "man: red hair", "adult | man | red hair"},
             { "👨🏻‍🦰", "man: light skin tone, red hair", "adult | man | light skin tone| red hair"},
             { "🇪🇺", "flag: European Union", "flag" },
@@ -256,8 +256,8 @@ public class TestAnnotations extends TestFmwkPlus {
             Set<String> annotationPaths = enAnnotations.getPaths("//ldml/anno",
                 Pattern.compile("//ldml/annotations/annotation.*tts.*").matcher(""), new TreeSet<>());
             Set<String> annotationPathsExpected = Emoji.getNamePaths();
-            checkAMinusBIsC(locale + ".xml - Emoji.getNamePaths", annotationPaths, annotationPathsExpected, Collections.<String> emptySet());
-            checkAMinusBIsC("Emoji.getNamePaths - " + locale + ".xml", annotationPathsExpected, annotationPaths, Collections.<String> emptySet());
+            checkAMinusBIsC("(" + locale + ".xml - Emoji.getNamePaths)", annotationPaths, annotationPathsExpected, Collections.<String> emptySet());
+            checkAMinusBIsC("(Emoji.getNamePaths - " + locale + ".xml)", annotationPathsExpected, annotationPaths, Collections.<String> emptySet());
         }
     }
 
@@ -316,7 +316,8 @@ public class TestAnnotations extends TestFmwkPlus {
     public void testListFormatter() {
         Object[][] tests = {
             {"en", ListTypeLength.NORMAL, "ABC", "A, B, and C"},
-            {"en", ListTypeLength.AND_SHORT, "ABC", "A, B, and C"},
+            {"en", ListTypeLength.AND_SHORT, "ABC", "A, B, & C"},
+            {"en", ListTypeLength.AND_NARROW, "ABC", "A, B, C"},
             {"en", ListTypeLength.OR_WIDE, "ABC", "A, B, or C"}
         };
         Factory factory = CLDRConfig.getInstance().getCldrFactory();
