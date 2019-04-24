@@ -9,7 +9,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 14842 $"/>
+		<version number="$Revision: 14982 $"/>
 		<language type="sr"/>
 	</identity>
 	<localeDisplayNames>
@@ -2338,6 +2338,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 						<era type="233">Таишо</era>
 						<era type="234">Шова</era>
 						<era type="235">Хаисеи</era>
+						<era type="236" draft="contributed">Реива</era>
 					</eraAbbr>
 				</eras>
 				<dateFormats>

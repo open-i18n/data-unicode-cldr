@@ -9,7 +9,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 14926 $"/>
+		<version number="$Revision: 14982 $"/>
 		<language type="el"/>
 	</identity>
 	<localeDisplayNames>
@@ -2298,6 +2298,12 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				</eras>
 			</calendar>
 			<calendar type="japanese">
+				<eras>
+					<eraAbbr>
+						<era type="235" draft="contributed">Χεϊσέι</era>
+						<era type="236" draft="contributed">Ρέιβα</era>
+					</eraAbbr>
+				</eras>
 				<dateFormats>
 					<dateFormatLength type="full">
 						<dateFormat>

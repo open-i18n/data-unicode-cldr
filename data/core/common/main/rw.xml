@@ -7,7 +7,7 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 14782 $"/>
+		<version number="$Revision: 14982 $"/>
 		<language type="rw"/>
 	</identity>
 	<localeDisplayNames>
@@ -119,6 +119,7 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 			<language type="zu">Inyezulu</language>
 		</languages>
 		<territories>
+			<territory type="MK">Masedoniya y'Amajyaruguru</territory>
 			<territory type="RW">U Rwanda</territory>
 			<territory type="TO">Tonga</territory>
 		</territories>

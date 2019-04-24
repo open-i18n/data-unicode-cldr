@@ -9,7 +9,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 14842 $"/>
+		<version number="$Revision: 14982 $"/>
 		<language type="fa"/>
 	</identity>
 	<localeDisplayNames>
@@ -2544,6 +2544,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 						<dateFormatItem id="yyyyQQQQ">QQQQ y G</dateFormatItem>
 					</availableFormats>
 				</dateTimeFormats>
+			</calendar>
+			<calendar type="japanese">
+				<eras>
+					<eraAbbr>
+						<era type="235" draft="contributed">هیسه‌ای</era>
+						<era type="236" draft="contributed">ریوا</era>
+					</eraAbbr>
+				</eras>
 			</calendar>
 			<calendar type="persian">
 				<months>
