@@ -6,14 +6,14 @@ This is a CLDR release. For more information on CLDR, see <a href="http://cldr.u
 <ul>
   <li><b>cldr-common-*.zip</b> contains the common production data (from cldr/common).</li>
   <li><b>cldr-keyboards-*.zip</b> contains the keyboard data.</li>
-  <li><b>cldr-tools-*.zip</b> contains the Java source to the CLDR tools.</li>
+<!--   <li><b>cldr-tools-*.zip</b> contains the Java source to the CLDR tools.</li> -->
   <li><b>cldr-tools-*.jar</b> is a standalone .jar file containing the CLDR tools and all
     needed dependencies. <!-- For example,
     <pre>
       java -DCLDR_DIR=/path/to/cldr -jar cldr-tools-*.jar check -m de
     </pre> -->
   </li>
-  <li><b>core.zip, keyboards.zip,</b> and <b>tools.zip</b> are symbolic links to the other
+  <li><b>core.zip</b> is a symbolic link to the other
     files, for URL compatibility.</li>
   <li><b>cldr-json*</b> - JSON version data, see <a href='https://github.com/unicode-org/cldr-json.git'>unicode-org/cldr-json</a>
 </ul>
@@ -25,6 +25,12 @@ This is a CLDR release. For more information on CLDR, see <a href="http://cldr.u
   <li><b>.asc</b> files contain GPG signatures.</li>
 </ul>
 
+<h2>Changes from v38</h2>
+See <a href='http://cldr.unicode.org/index/downloads/cldr-38#TOC-CLDR-38.1'>CLDR 38.1 release notes</a>
+<ul>
+  <li>cldr-tools.zip is no longer included. You can download or checkout the source tree
+    <a href="https://github.com/unicode-org/cldr/releases">directly from GitHub</a>.</li>
+</ul>
 <h2>Changes from v37</h2>
 <ul>
   <li>The /hashes subdirectory was added.</li>
