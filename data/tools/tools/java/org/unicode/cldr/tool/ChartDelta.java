@@ -64,13 +64,13 @@ public class ChartDelta extends Chart {
 
     private static final String DIR_NAME = "delta";
 
-    private static final boolean SKIP_REFORMAT_ANNOTATIONS = ToolConstants.PREVIOUS_CHART_VERSION.compareTo("30") >= 0;
+    private static final boolean SKIP_REFORMAT_ANNOTATIONS = ToolConstants.PREV_CHART_VERSION.compareTo("30") >= 0;
 
     private static final PageId DEBUG_PAGE_ID = PageId.DayPeriod;
 
     private static final SupplementalDataInfo SUPPLEMENTAL_DATA_INFO = CLDRConfig.getInstance().getSupplementalDataInfo();
-    private static final String LAST_ARCHIVE_DIRECTORY = CLDRPaths.LAST_DIRECTORY;
-    private static final String CURRENT_DIRECTORY = CLDRPaths.ARCHIVE_DIRECTORY + "cldr-" + ToolConstants.LAST_CHART_VERSION + "/";
+    private static final String LAST_ARCHIVE_DIRECTORY = CLDRPaths.LAST_RELEASE_DIRECTORY;
+    private static final String CURRENT_DIRECTORY = CLDRPaths.ARCHIVE_DIRECTORY + "cldr-" + ToolConstants.PREV_CHART_VERSION_WITH0 + "/";
     private static final String LOG_DIR = CLDRPaths.GEN_DIRECTORY + "charts/";
 
     enum MyOptions {
@@ -108,7 +108,7 @@ public class ChartDelta extends Chart {
     private final boolean verbose;
 
     public static void main(String[] args) {
-        System.out.println("use -DCHART_VERSION=28 to generate version 28.");
+        System.out.println("use -DCHART_VERSION=36.0 -DPREV_CHART_VERSION=34.0 to generate the differences between v36 and v34.");
         MyOptions.parse(args, true);
         Matcher fileFilter = !MyOptions.fileFilter.option.doesOccur() ? null : PatternCache.get(MyOptions.fileFilter.option.getValue()).matcher("");
         if (MyOptions.orgFilter.option.doesOccur()) {
@@ -171,7 +171,7 @@ public class ChartDelta extends Chart {
     public void writeContents(FormattedFileWriter pw) throws IOException {
         FormattedFileWriter.Anchors anchors = new FormattedFileWriter.Anchors();
         FileUtilities.copyFile(ChartDelta.class, "index.css", getDirectory());
-        FormattedFileWriter.copyIncludeHtmls(getDirectory());
+        FormattedFileWriter.copyIncludeHtmls(getDirectory(), true);
         counter.clear();
         fileCounters.clear();
         writeNonLdmlPlain(anchors);
@@ -284,17 +284,18 @@ public class ChartDelta extends Chart {
 
             Counter<PathHeader> counts = new Counter<>();
 
-            String dirBase = 
-                ToolConstants.CLDR_VERSIONS.contains(ToolConstants.LAST_CHART_VERSION) ? CURRENT_DIRECTORY 
-                    : vxml ? CLDRPaths.SVN_DIRECTORY + "cldr-aux/" + "voting/36/vxml/" // TODO fix version to be variable
-                        : CLDRPaths.BASE_DIRECTORY;
+            String dirBase = ToolConstants.getBaseDirectory(ToolConstants.CHART_VERSION);
+            String prevDirBase = ToolConstants.getBaseDirectory(ToolConstants.PREV_CHART_VERSION);
+//                ToolConstants.CLDR_RELEASE_VERSION_SET.contains(ToolConstants.PREV_CHART_VERSION) ? CURRENT_DIRECTORY 
+//                    : vxml ? CLDRPaths.SVN_DIRECTORY + "cldr-aux/" + "voting/36/vxml/" // TODO fix version to be variable
+//                        : CLDRPaths.BASE_DIRECTORY;
 
             for (String dir : DtdType.ldml.directories) {
                 if (dir.equals("annotationsDerived") || dir.equals("casing")) {
                     continue;
                 }
                 String current = dirBase + "common/" + dir;
-                String past = LAST_ARCHIVE_DIRECTORY + "common/" + dir;
+                String past = prevDirBase + "common/" + dir;
                 try {
                     factories.add(Factory.make(current, ".*"));
                 } catch (Exception e1) {
@@ -311,7 +312,8 @@ public class ChartDelta extends Chart {
                 System.out.println("Will compare: " + dir + "\t\t" + current + "\t\t" + past);
             }
             if (factories.isEmpty()) {
-                throw new IllegalArgumentException("No factories found");
+                throw new IllegalArgumentException("No factories found for " 
+                    + dirBase + ": " + DtdType.ldml.directories);
             }
             // get a list of all the locales to cycle over
 
@@ -339,7 +341,6 @@ public class ChartDelta extends Chart {
             Set<String> paths = new HashSet<>();
 
             Relation<PathHeader, String> diffAll = Relation.of(new TreeMap<PathHeader, Set<String>>(), TreeSet.class);
-//        XPathParts pathPlain = new XPathParts();
             for (Entry<String, Set<String>> baseNLocale : baseToLocales.keyValuesSet()) {
                 String base = baseNLocale.getKey();
 //            int qCount = 0;
@@ -675,6 +676,8 @@ public class ChartDelta extends Chart {
 
     private void writeDiffs(Anchors anchors, String file, String title, Multimap<PathHeader, String> bcp, PrintWriter tsvFile) {
         if (bcp.isEmpty()) {
+            System.out.println("\tDeleting: " + DIR + "/" + file);
+            new File(DIR + file).delete();
             return;
         }
         TablePrinter tablePrinter = new TablePrinter()
@@ -819,10 +822,11 @@ public class ChartDelta extends Chart {
 
         @Override
         public String getExplanation() {
-            return "<p>Lists data fields that differ from the last version."
+            return "<p>Lists data fields that differ from the last major version (see versions above)."
                 + " Inherited differences in locales are suppressed, except where the source locales are different. "
-                + " The collations and metadata still have a raw format."
-                + " The rbnf, segmentations, and annotations are not yet included.<p>";
+//                + " The collations and metadata still have a raw format."
+//                + " The rbnf, segmentations, and annotations are not yet included."
+                + "<p>";
         }
 
         @Override
@@ -850,6 +854,8 @@ public class ChartDelta extends Chart {
             Counter<PathHeader> countSame = new Counter<>();
             Counter<PathHeader> countAdded = new Counter<>();
             Counter<PathHeader> countDeleted = new Counter<>();
+            
+            
 
             for (String dir : new File(CLDRPaths.BASE_DIRECTORY + "common/").list()) {
                 if (DtdType.ldml.directories.contains(dir)
@@ -860,8 +866,10 @@ public class ChartDelta extends Chart {
                     ) {
                     continue;
                 }
-                File dir1 = new File(LAST_ARCHIVE_DIRECTORY + "common/" + dir);
-                File dir2 = new File(CLDRPaths.BASE_DIRECTORY + "common/" + dir);
+                File dirOld = new File(PREV_CHART_VERSION_DIRECTORY + "common/" + dir);
+                System.out.println("\tLast dir: " + dirOld);
+                File dir2 = new File(CHART_VERSION_DIRECTORY + "common/" + dir);
+                System.out.println("\tCurr dir: " + dir2);
 
                 for (String file : dir2.list()) {
                     if (!file.endsWith(".xml")) {
@@ -879,10 +887,10 @@ public class ChartDelta extends Chart {
                     if (verbose) {
                         System.out.println(file);
                     }
-                    Relation<PathHeader, String> contents1 = fillData(dir1.toString() + "/", file);
+                    Relation<PathHeader, String> contentsOld = fillData(dirOld.toString() + "/", file);
                     Relation<PathHeader, String> contents2 = fillData(dir2.toString() + "/", file);
 
-                    Set<PathHeader> keys = new TreeSet<PathHeader>(CldrUtility.ifNull(contents1.keySet(), Collections.<PathHeader> emptySet()));
+                    Set<PathHeader> keys = new TreeSet<PathHeader>(CldrUtility.ifNull(contentsOld.keySet(), Collections.<PathHeader> emptySet()));
                     keys.addAll(CldrUtility.ifNull(contents2.keySet(), Collections.<PathHeader> emptySet()));
                     DtdType dtdType = null;
                     for (PathHeader key : keys) {
@@ -897,56 +905,56 @@ public class ChartDelta extends Chart {
                         Multimap<PathHeader, String> target = dtdType == DtdType.ldmlBCP47 ? bcp
                             : isTransform ? transforms
                                 : supplemental;
-                        Set<String> set1 = contents1.get(key);
+                        Set<String> setOld = contentsOld.get(key);
                         Set<String> set2 = contents2.get(key);
 
-                        if (Objects.equals(set1, set2)) {
+                        if (Objects.equals(setOld, set2)) {
                             if (file.equals(DEBUG_FILE)) { // for debugging
-                                System.out.println("**Same: " + key + "\t" + set1);
+                                System.out.println("**Same: " + key + "\t" + setOld);
                             }
-                            addChange(parentAndFile, ChangeType.same, set1.size());
+                            addChange(parentAndFile, ChangeType.same, setOld.size());
                             countSame.add(key, 1);
                             continue;
                         }
-                        if (set1 == null) {
+                        if (setOld == null) {
                             addChange(parentAndFile, ChangeType.added, set2.size());
                             for (String s : set2) {
                                 addRow(target, key, "▷missing◁", s);
                                 countAdded.add(key, 1);
                             }
                         } else if (set2 == null) {
-                            addChange(parentAndFile, ChangeType.deleted, set1.size());
-                            for (String s : set1) {
+                            addChange(parentAndFile, ChangeType.deleted, setOld.size());
+                            for (String s : setOld) {
                                 addRow(target, key, s, "▷removed◁");
                                 countDeleted.add(key, 1);
                             }
                         } else {
-                            Set<String> s1M2 = set1;
+                            Set<String> s1MOld = setOld;
                             Set<String> s2M1 = set2;
 //                        Set<String> s1M2 = new LinkedHashSet<>(set1);
 //                        s1M2.removeAll(set2);
 //                        Set<String> s2M1 = new LinkedHashSet<>(set2);
 //                        s2M1.removeAll(set1);
-                            if (s1M2.isEmpty()) {
+                            if (s1MOld.isEmpty()) {
                                 addRow(target, key, "▷missing◁", CollectionUtilities.join(s2M1, ", "));
                                 addChange(parentAndFile, ChangeType.added, s2M1.size());
                                 countAdded.add(key, 1);
                             } else if (s2M1.isEmpty()) {
-                                addRow(target, key, CollectionUtilities.join(s1M2, ", "), "▷removed◁");
-                                addChange(parentAndFile, ChangeType.deleted, s1M2.size());
+                                addRow(target, key, CollectionUtilities.join(s1MOld, ", "), "▷removed◁");
+                                addChange(parentAndFile, ChangeType.deleted, s1MOld.size());
                                 countDeleted.add(key, 1);
                             } else {
                                 String valueOld;
                                 String valueCurrent;
 
                                 int[] sameAndNotInSecond = new int[2];
-                                valueOld = getFilteredValue(s1M2, s1M2, sameAndNotInSecond);
+                                valueOld = getFilteredValue(s1MOld, s1MOld, sameAndNotInSecond);
                                 addChange(parentAndFile, ChangeType.same, sameAndNotInSecond[0]);
                                 countSame.add(key, 1);
                                 addChange(parentAndFile, ChangeType.deleted, sameAndNotInSecond[1]);
                                 sameAndNotInSecond[1] = 0;
                                 countDeleted.add(key, 1);
-                                valueCurrent = getFilteredValue(s2M1, s1M2, sameAndNotInSecond);
+                                valueCurrent = getFilteredValue(s2M1, s1MOld, sameAndNotInSecond);
                                 addChange(parentAndFile, ChangeType.added, sameAndNotInSecond[1]);
                                 addRow(target, key, valueOld, valueCurrent);
                                 countAdded.add(key, 1);

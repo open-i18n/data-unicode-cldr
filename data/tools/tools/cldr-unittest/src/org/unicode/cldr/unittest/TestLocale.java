@@ -17,7 +17,6 @@ import java.util.Set;
 import javax.xml.xpath.XPathException;
 
 import org.unicode.cldr.test.ExampleGenerator;
-import org.unicode.cldr.test.ExampleGenerator.ExampleType;
 import org.unicode.cldr.util.AttributeValueValidity;
 import org.unicode.cldr.util.AttributeValueValidity.MatcherPattern;
 import org.unicode.cldr.util.CLDRConfig;
@@ -78,7 +77,7 @@ public class TestLocale extends TestFmwkPlus {
     public void TestLanguageRegions() {
         Set<String> missingLanguageRegion = new LinkedHashSet<String>();
         // TODO This should be derived from metadata: https://unicode.org/cldr/trac/ticket/11224
-        Set<String> knownMultiScriptLanguages = new HashSet<String>(Arrays.asList("az", "ff", "bs", "pa", "shi", "sr", "vai", "uz", "yue", "zh"));
+        Set<String> knownMultiScriptLanguages = new HashSet<String>(Arrays.asList("az", "ff", "bs", "hi", "ks", "mni", "ms", "pa", "sat", "sd", "shi", "sr", "su", "vai", "uz", "yue", "zh"));
         Set<String> available = testInfo.getCldrFactory().getAvailable();
         LanguageTagParser ltp = new LanguageTagParser();
         Set<String> defaultContents = SUPPLEMENTAL_DATA_INFO
@@ -411,14 +410,15 @@ public class TestLocale extends TestFmwkPlus {
             if (row[0] != null) {
                 int typeCode = CLDRFile.typeNameToCode(row[0]);
                 String standAlone = f.getName(typeCode, row[1]);
+                logln(typeCode + ": " + standAlone);
                 if (!assertEquals("stand-alone " + row[3], row[2], standAlone)) {
                     typeCode = CLDRFile.typeNameToCode(row[0]);
                     standAlone = f.getName(typeCode, row[1]);
                 }
-                ;
+
                 if (row[5] != null) {
                     String path = CLDRFile.getKey(typeCode, row[1]);
-                    String example = eg.getExampleHtml(path, "?" + row[2] + "?", ExampleType.NATIVE);
+                    String example = eg.getExampleHtml(path, "?" + row[2] + "?");
                     assertEquals("example " + row[3], row[5], ExampleGenerator.simplify(example));
                 }
             }

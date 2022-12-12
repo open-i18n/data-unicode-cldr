@@ -42,15 +42,24 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
     public static final String ROOT_ID = "root";
     public static final boolean USE_PARTS_IN_ALIAS = false;
     private static final String TRACE_INDENT = " "; // "\t"
-    private transient XPathParts parts = new XPathParts();
     private static Map<String, String> allowDuplicates = new HashMap<String, String>();
 
     private String localeID;
     private boolean nonInheriting;
-    private TreeMap<String, String> aliases;
-    private LinkedHashMap<String, List<String>> reverseAliases;
+    private TreeMap<String, String> aliasCache;
+    private LinkedHashMap<String, List<String>> reverseAliasCache;
     protected boolean locked;
     transient String[] fixedPath = new String[1];
+
+    /*
+     * For testing, make it possible to disable multiple caches:
+     * getFullPathAtDPathCache, getSourceLocaleIDCache, aliasCache, reverseAliasCache
+     */
+    protected boolean cachingIsEnabled = true;
+
+    public void disableCaching() {
+        cachingIsEnabled = false;
+    }
 
     public static class AliasLocation {
         public final String pathWhereFound;
@@ -388,28 +397,52 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
      *         only locale to have aliases, all other locales will have no mappings.
      */
     protected synchronized TreeMap<String, String> getAliases() {
-        // The cache assumes that aliases will never change over the lifetime of
-        // an XMLSource.
-        if (aliases == null) {
-            aliases = new TreeMap<String, String>();
-            // Look for aliases and create mappings for them.
-            // Aliases are only ever found in root.
-            for (String path : this) {
-                if (!Alias.isAliasPath(path)) continue;
-                String fullPath = getFullPathAtDPath(path);
-                Alias temp = Alias.make(fullPath);
-                if (temp == null) continue;
-                aliases.put(temp.getOldPath(), temp.getNewPath());
-            }
+        if (!cachingIsEnabled) {
+            /*
+             * Always create and return a new "aliasMap" instead of this.aliasCache
+             * Probably expensive!
+             */
+            return loadAliases();
         }
-        return aliases;
+
+        /*
+         * The cache assumes that aliases will never change over the lifetime of an XMLSource.
+         */
+        if (aliasCache == null) {
+            aliasCache = loadAliases();
+        }
+        return aliasCache;
+    }
+
+    /**
+     * Look for aliases and create mappings for them.
+     * Aliases are only ever found in root.
+     *
+     * return aliasMap the new map
+     */
+    private TreeMap<String, String> loadAliases() {
+        TreeMap<String, String> aliasMap = new TreeMap<String, String>();
+        for (String path : this) {
+            if (!Alias.isAliasPath(path)) {
+                continue;
+            }
+            String fullPath = getFullPathAtDPath(path);
+            Alias temp = Alias.make(fullPath);
+            if (temp == null) {
+                continue;
+            }
+            aliasMap.put(temp.getOldPath(), temp.getNewPath());
+        }
+        return aliasMap;
     }
 
     /**
      * @return a reverse mapping of aliases
      */
     private LinkedHashMap<String, List<String>> getReverseAliases() {
-        if (reverseAliases != null) return reverseAliases;
+        if (cachingIsEnabled && reverseAliasCache != null) {
+            return reverseAliasCache;
+        }
         // Aliases are only ever found in root.
         Map<String, String> aliases = getAliases();
         Map<String, List<String>> reverse = new HashMap<String, List<String>>();
@@ -421,17 +454,33 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
             }
             list.add(entry.getKey());
         }
-
         // Sort map.
-        reverseAliases = new LinkedHashMap<String, List<String>>(new TreeMap<String, List<String>>(reverse));
-        return reverseAliases;
+        LinkedHashMap<String, List<String>> reverseAliasMap = new LinkedHashMap<String, List<String>>(new TreeMap<String, List<String>>(reverse));
+        if (cachingIsEnabled) {
+            reverseAliasCache = reverseAliasMap;
+        }
+        return reverseAliasMap;
     }
 
     /**
-     * Clear any internal caches.
+     * Clear "any internal caches" (or only aliasCache?) for this XMLSource.
+     *
+     * Called only by XMLSource.putValueAtPath and XMLSource.removeValueAtPath
      */
     private void clearCache() {
-        aliases = null;
+        aliasCache = null;
+
+        /*
+         * TODO: what about the other caches: reverseAliasCache, getFullPathAtDPathCache, getSourceLocaleIDCache?
+         * Reference: https://unicode-org.atlassian.net/browse/CLDR-12020
+         */
+        if (false) {
+            reverseAliasCache = null;
+            if (false && isResolving()) {
+                ((XMLSource.ResolvingSource) this).getFullPathAtDPathCache = null;
+                ((XMLSource.ResolvingSource) this).getSourceLocaleIDCache = null;
+            }
+        }
     }
 
     /**
@@ -697,6 +746,10 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
                 }
                 result = getSource(fullStatus).getValueAtDPath(fullStatus.pathWhereFound);
             }
+//            if (result == null && xpath.contains("[@alt=")) {
+//                String path2 = XPathParts.getPathWithoutAlt(xpath);
+//                return getValueAtDPath(path2); // recurse
+//            }
             if (TRACE_VALUE) System.out.println("\t*value: " + result);
             return result;
         }
@@ -776,7 +829,10 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
         }
 
         private String getFullPath(String xpath, AliasLocation fullStatus, String fullPathWhereFound) {
-            String result = getFullPathAtDPathCache.get(xpath);
+            String result = null;
+            if (this.cachingIsEnabled) {
+                result = getFullPathAtDPathCache.get(xpath);
+            }
             if (result == null) {
                 // find the differences, and add them into xpath
                 // we do this by walking through each element, adding the corresponding attribute values.
@@ -800,7 +856,9 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
                     }
                 }
                 result = xpathParts.toString();
-                getFullPathAtDPathCache.put(xpath, result);
+                if (cachingIsEnabled) {
+                    getFullPathAtDPathCache.put(xpath, result);
+                }
             }
             return result;
         }
@@ -849,7 +907,7 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
              *
              * Reference: https://unicode.org/cldr/trac/ticket/11765
              */
-            if (!skipInheritanceMarker) {
+            if (!skipInheritanceMarker || !cachingIsEnabled ) {
                 return getPathLocation(xpath, false /* skipFirst */, skipInheritanceMarker);
             }
             synchronized (getSourceLocaleIDCache) {
@@ -965,6 +1023,11 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
                         xpath.substring(possibleSubpath.length());
                 }
             }
+            
+            // alts are special; they act like there is a root alias to the path without the alt.
+            if (aliasedPath == null && xpath.contains("[@alt=")) {
+                aliasedPath = XPathParts.getPathWithoutAlt(xpath);
+            }
 
             // counts are special; they act like there is a root alias to 'other'
             // and in the special case of currencies, other => null
@@ -1064,11 +1127,8 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
          * Takes in a list of xpaths and returns a new set of paths that alias
          * directly to those existing xpaths.
          *
-         * @param paths
-         *            a sorted list of xpaths
-         * @param reverseAliases
-         *            a map of reverse aliases sorted by key.
-         * @return
+         * @param paths a sorted list of xpaths
+         * @return the new set of paths
          */
         private Set<String> getDirectAliases(String[] paths) {
             HashSet<String> newPaths = new HashSet<String>();
@@ -1154,6 +1214,9 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
 
         @Override
         public void valueChanged(String xpath, XMLSource nonResolvingSource) {
+            if (!cachingIsEnabled) {
+                return;
+            }
             synchronized (getSourceLocaleIDCache) {
                 AliasLocation location = getSourceLocaleIDCache.remove(xpath);
                 if (location == null) {
@@ -1387,8 +1450,18 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
             // "false");
             // }
 
-            String[] extraCodes = { "ar_001", "de_AT", "de_CH", "en_AU", "en_CA", "en_GB", "en_US", "es_419", "es_ES", "es_MX",
-                "fr_CA", "fr_CH", "frc", "lou", "nds_NL", "nl_BE", "pt_BR", "pt_PT", "ro_MD", "sw_CD", "zh_Hans", "zh_Hant" };
+            String[] extraCodes = { 
+                "ar_001", 
+                "de_AT", "de_CH", 
+                "en_AU", "en_CA", "en_GB", "en_US", "es_419", "es_ES", "es_MX",
+                "fa_AF", "fr_CA", "fr_CH", "frc", 
+                "lou", 
+                "nds_NL", "nl_BE", 
+                "pt_BR", "pt_PT", 
+                "ro_MD", 
+                "sw_CD", 
+                "zh_Hans", "zh_Hant"
+                };
             for (String extraCode : extraCodes) {
                 addFallbackCode(CLDRFile.LANGUAGE_NAME, extraCode, extraCode);
             }
@@ -1416,7 +1489,6 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
             addFallbackCode(CLDRFile.TERRITORY_NAME, "CI", "CI", "variant");
             addFallbackCode(CLDRFile.TERRITORY_NAME, "CZ", "CZ", "variant");
             addFallbackCode(CLDRFile.TERRITORY_NAME, "FK", "FK", "variant");
-            addFallbackCode(CLDRFile.TERRITORY_NAME, "MK", "MK", "variant");
             addFallbackCode(CLDRFile.TERRITORY_NAME, "TL", "TL", "variant");
             addFallbackCode(CLDRFile.TERRITORY_NAME, "SZ", "SZ", "variant");
 

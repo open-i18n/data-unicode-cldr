@@ -20,7 +20,6 @@ import java.util.regex.Matcher;
 
 import org.unicode.cldr.test.CoverageLevel2;
 import org.unicode.cldr.test.ExampleGenerator;
-import org.unicode.cldr.test.ExampleGenerator.ExampleType;
 import org.unicode.cldr.util.CLDRConfig;
 import org.unicode.cldr.util.CLDRFile;
 import org.unicode.cldr.util.CLDRFile.Status;
@@ -46,7 +45,6 @@ import org.unicode.cldr.util.PatternCache;
 import org.unicode.cldr.util.PatternPlaceholders;
 import org.unicode.cldr.util.PatternPlaceholders.PlaceholderInfo;
 import org.unicode.cldr.util.PatternPlaceholders.PlaceholderStatus;
-import org.unicode.cldr.util.PrettyPath;
 import org.unicode.cldr.util.StandardCodes;
 import org.unicode.cldr.util.SupplementalDataInfo;
 import org.unicode.cldr.util.SupplementalDataInfo.PluralInfo;
@@ -184,7 +182,11 @@ public class TestPathHeader extends TestFmwkPlus {
                 try {
                     ph = pathHeaderFactory2.fromPath(p);
                 } catch (Exception e1) {
-                    throw new IllegalArgumentException(locale + ":\t" + p);
+                    try {
+                        ph = pathHeaderFactory2.fromPath(p);
+                    } catch (Exception e2) {
+                        throw new IllegalArgumentException(locale + ":\t" + p, e2);
+                    }
                 }
                 if (ph == null) {
                     errln("Failed to create path from: " + p);
@@ -331,7 +333,7 @@ public class TestPathHeader extends TestFmwkPlus {
                 placeholderInfo2.example);
         }
         ExampleGenerator eg = new ExampleGenerator(cldrFile, cldrFile, CLDRPaths.SUPPLEMENTAL_DIRECTORY);
-        String example = eg.getExampleHtml(APPEND_TIMEZONE, cldrFile.getStringValue(APPEND_TIMEZONE), ExampleType.NATIVE);
+        String example = eg.getExampleHtml(APPEND_TIMEZONE, cldrFile.getStringValue(APPEND_TIMEZONE));
         String result = ExampleGenerator.simplify(example, false);
         assertEquals("", "〖❬6:25:59 PM❭ ❬GMT❭〗", result);
     }
@@ -339,7 +341,6 @@ public class TestPathHeader extends TestFmwkPlus {
     public void TestOptional() {
         if (true) return;
         Map<PathHeader, String> sorted = new TreeMap<PathHeader, String>();
-        XPathParts parts = new XPathParts();
         for (String locale : new String[] { "af" }) {
             sorted.clear();
             CLDRFile cldrFile = info.getCLDRFile(locale, true);
@@ -664,8 +665,6 @@ public class TestPathHeader extends TestFmwkPlus {
         EnumMap<SurveyToolStatus, Relation<String, String>> info2 = new EnumMap<SurveyToolStatus, Relation<String, String>>(
             SurveyToolStatus.class);
         Set<String> nuked = new HashSet<String>();
-        PrettyPath pp = new PrettyPath();
-        XPathParts parts = new XPathParts();
         Set<String> deprecatedStar = new HashSet<String>();
         Set<String> differentStar = new HashSet<String>();
 
@@ -767,7 +766,7 @@ public class TestPathHeader extends TestFmwkPlus {
         PathDescription pathDescription = new PathDescription(supplemental,
             english, null, null, PathDescription.ErrorHandling.CONTINUE);
         Matcher normal = PatternCache.get(
-            "http://cldr.org/translation/[a-zA-Z0-9_]").matcher("");
+            "http://cldr.org/translation/[-a-zA-Z0-9_]").matcher("");
         // http://cldr.unicode.org/translation/plurals#TOC-Minimal-Pairs
         Set<String> alreadySeen = new HashSet<String>();
         PathStarrer starrer = new PathStarrer();
@@ -1114,7 +1113,6 @@ public class TestPathHeader extends TestFmwkPlus {
     public void TestCompletenessNonLdmlDtd() {
         PathChecker pathChecker = new PathChecker();
         Set<String> directories = new LinkedHashSet<>();
-        XPathParts parts = new XPathParts();
         Multimap<String, String> pathValuePairs = LinkedListMultimap.create();
         // get all the directories containing non-Ldml dtd files
         for (DtdType dtdType : DtdType.values()) {
@@ -1140,7 +1138,8 @@ public class TestPathHeader extends TestFmwkPlus {
                         final String path = pathValue.getFirst();
                         final String value = pathValue.getSecond();
 //                        logln("\t\t" + path);
-                        if (path.startsWith("//supplementalData/weekData/weekOf")) {
+                        if (path.startsWith("//supplementalData/unitPreferenceData/unitPreferences")
+                            && path.contains("skeleton")) {
                             int debug = 0;
                         }
                         pathChecker.checkPathHeader(dtdData, path);
@@ -1184,6 +1183,9 @@ public class TestPathHeader extends TestFmwkPlus {
 
         public void checkSubpath(String path) {
             String message = ": Can't compute path header";
+            if (path.contentEquals("//supplementalData/grammaticalData/grammaticalFeatures[@targets=\"nominal\"][@locales=\"it\"]/grammaticalGender/_values") ) {
+                int debug = 0;
+            }
             PathHeader ph = null;
             try {
                 ph = phf.fromPath(path);
@@ -1214,6 +1216,13 @@ public class TestPathHeader extends TestFmwkPlus {
             String star = starrer.set(path);
             if (badHeaders.add(star)) {
                 errln(star + message + ", " + ph);
+                System.out.println("\tNo match in PathHeader.txt for " + path 
+                    + "\n\tYou get only one message for all paths matching " + star
+                    + "\n\tFor example, check to see if the field in PathHeader.txt is in PathHeader.PageId."
+                    + "\n\tIf not, either correct PathHeader.txt or add it to PageId"
+                    + "\n\tIf you have a value attribute, you will need extra _ characters. The value attribute will show at the end with prefixed _, eg [...]/_skeleton."
+                    + "If there can be a value for the path then that element will add _. "
+                    );
             }
         }
     }
@@ -1326,7 +1335,9 @@ public class TestPathHeader extends TestFmwkPlus {
                 assertEquals("Section", lastItem.getSectionId(), item.getSectionId());
                 assertEquals("Page", lastItem.getPageId(), item.getPageId());
                 assertEquals("Header", lastItem.getHeader(), item.getHeader());
-                assertTrue(lastItem + " < " + item, lastItem.compareTo(item) < 0);
+                if (!assertTrue(lastItem + " < " + item, lastItem.compareTo(item) < 0)) {
+                    lastItem.compareTo(item); // for debugging
+                }
             }
             lastItem = item;
         }

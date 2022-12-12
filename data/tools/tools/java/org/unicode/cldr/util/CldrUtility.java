@@ -155,11 +155,11 @@ public class CldrUtility {
         return getPath(path, null);
     }
 
-    public static final String ANALYTICS = "<script type=\"text/javascript\">\n"
+    public static final String ANALYTICS = "<script>\n"
         + "var gaJsHost = ((\"https:\" == document.location.protocol) ? \"https://ssl.\" : \"http://www.\");\n"
         + "document.write(unescape(\"%3Cscript src='\" + gaJsHost + \"google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E\"));\n"
         + "</script>\n"
-        + "<script type=\"text/javascript\">\n"
+        + "<script>\n"
         + "try {\n"
         + "var pageTracker = _gat._getTracker(\"UA-7672775-1\");\n"
         + "pageTracker._trackPageview();\n"
@@ -1364,11 +1364,15 @@ public class CldrUtility {
     }
 
     public static String getCopyrightString() {
+        return getCopyrightString("");
+    }
+    
+    public static String getCopyrightString(String linePrefix) {
         // now do the rest
-        return "Copyright \u00A9 1991-" + Calendar.getInstance().get(Calendar.YEAR) + " Unicode, Inc." + CldrUtility.LINE_SEPARATOR
-            + "For terms of use, see http://www.unicode.org/copyright.html" + CldrUtility.LINE_SEPARATOR
-            + "Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries." + CldrUtility.LINE_SEPARATOR
-            + "CLDR data files are interpreted according to the LDML specification " + "(http://unicode.org/reports/tr35/)";
+        return linePrefix + "Copyright \u00A9 1991-" + Calendar.getInstance().get(Calendar.YEAR) + " Unicode, Inc." + CldrUtility.LINE_SEPARATOR
+            + linePrefix + "For terms of use, see http://www.unicode.org/copyright.html" + CldrUtility.LINE_SEPARATOR
+            + linePrefix + "Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries." + CldrUtility.LINE_SEPARATOR
+            + linePrefix + "CLDR data files are interpreted according to the LDML specification " + "(http://unicode.org/reports/tr35/)";
     }
 
     // TODO Move to collection utilities

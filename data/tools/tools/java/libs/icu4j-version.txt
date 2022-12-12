@@ -1,1 +1,1 @@
-icu4j ffbc8cf85f1379a1461b6928d40cfd6ae2464694 2019-12-04 (branch maint/maint-66 release-66-preview)
+icu4j b9d1ba87f545744f2b81f1f413484f55a0da3d2f 2020-04-14 (from maint/maint-67, ICU 67 post rc)

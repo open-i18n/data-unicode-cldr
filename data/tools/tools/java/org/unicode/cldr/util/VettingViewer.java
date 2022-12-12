@@ -33,7 +33,6 @@ import org.unicode.cldr.test.OutdatedPaths;
 import org.unicode.cldr.test.SubmissionLocales;
 import org.unicode.cldr.tool.Option;
 import org.unicode.cldr.tool.Option.Options;
-import org.unicode.cldr.tool.ToolConstants;
 import org.unicode.cldr.util.CLDRFile.Status;
 import org.unicode.cldr.util.PathHeader.PageId;
 import org.unicode.cldr.util.PathHeader.SectionId;
@@ -111,9 +110,9 @@ public class VettingViewer<T> {
             "The English value has changed in CLDR, but the corresponding value for your language has not. Check if any changes are needed in your language.",
             6),
         /**
-         * The value changed from the last version of CLDR
+         * The value changed from the baseline
          */
-        changedOldValue('N', "New", "The winning value was altered from the last-released CLDR value. (Informational)", 7),
+        changedOldValue('C', "Changed", "The winning value was altered from the baseline value. (Informational)", 7),
         /**
          * Given the users' coverage, some items are missing.
          */
@@ -374,6 +373,10 @@ public class VettingViewer<T> {
             checkCldr.check(path, fullPath, value, options, result);
             for (CheckStatus checkStatus : result) {
                 final CheckCLDR cause = checkStatus.getCause();
+                /*
+                 * CheckCoverage will be shown under Missing, not under Warnings; and
+                 * CheckNew will be shown under New, not under Warnings; so skip them here.
+                 */
                 if (cause instanceof CheckCoverage || cause instanceof CheckNew) {
                     continue;
                 }
@@ -475,10 +478,9 @@ public class VettingViewer<T> {
      * @param localeId
      * @param user
      * @param usersLevel
-     * @param nonVettingPhase
      */
     public void generateHtmlErrorTables(Appendable output, EnumSet<Choice> choices, String localeID, T user,
-        Level usersLevel, boolean nonVettingPhase, boolean quick) {
+        Level usersLevel, boolean quick) {
 
         // Gather the relevant paths
         // each one will be marked with the choice that it triggered.
@@ -497,7 +499,7 @@ public class VettingViewer<T> {
             }
         }
 
-        FileInfo fileInfo = new FileInfo().getFileInfo(sourceFile, baselineFile, sorted, choices, localeID, nonVettingPhase, user,
+        FileInfo fileInfo = new FileInfo().getFileInfo(sourceFile, baselineFile, sorted, choices, localeID, user,
             usersLevel, quick);
 
         // now write the results out
@@ -518,14 +520,14 @@ public class VettingViewer<T> {
      * Called only by writeVettingViewerOutput
      */
     public Relation<R2<SectionId, PageId>, WritingInfo> generateFileInfoReview(Appendable output, EnumSet<Choice> choices, String localeID, T user,
-        Level usersLevel, boolean nonVettingPhase, boolean quick, CLDRFile sourceFile, CLDRFile baselineFile) {
+        Level usersLevel, boolean quick, CLDRFile sourceFile, CLDRFile baselineFile) {
 
         // Gather the relevant paths
         // each one will be marked with the choice that it triggered.
         Relation<R2<SectionId, PageId>, WritingInfo> sorted = Relation.of(
             new TreeMap<R2<SectionId, PageId>, Set<WritingInfo>>(), TreeSet.class);
 
-        new FileInfo().getFileInfo(sourceFile, baselineFile, sorted, choices, localeID, nonVettingPhase, user,
+        new FileInfo().getFileInfo(sourceFile, baselineFile, sorted, choices, localeID, user,
             usersLevel, quick);
 
         // now write the results out
@@ -547,19 +549,32 @@ public class VettingViewer<T> {
 
         private FileInfo getFileInfo(CLDRFile sourceFile, CLDRFile baselineFile,
             Relation<R2<SectionId, PageId>, WritingInfo> sorted,
-            EnumSet<Choice> choices, String localeID, boolean nonVettingPhase,
+            EnumSet<Choice> choices, String localeID,
             T user, Level usersLevel, boolean quick) {
             return this.getFileInfo(sourceFile, baselineFile, sorted,
-                choices, localeID, nonVettingPhase,
+                choices, localeID,
                 user, usersLevel, quick, null);
         }
 
+        /**
+         * Loop through paths for the Dashboard
+         *
+         * @param sourceFile
+         * @param baselineFile
+         * @param sorted
+         * @param choices
+         * @param localeID
+         * @param user
+         * @param usersLevel
+         * @param quick
+         * @param xpath
+         * @return
+         */
         private FileInfo getFileInfo(CLDRFile sourceFile, CLDRFile baselineFile,
             Relation<R2<SectionId, PageId>, WritingInfo> sorted,
-            EnumSet<Choice> choices, String localeID, boolean nonVettingPhase,
+            EnumSet<Choice> choices, String localeID,
             T user, Level usersLevel, boolean quick, String xpath) {
 
-            Status status = new Status();
             errorChecker.initErrorStatus(sourceFile);
             Matcher altProposed = ALT_PROPOSED.matcher("");
             problems = EnumSet.noneOf(Choice.class);
@@ -571,10 +586,11 @@ public class VettingViewer<T> {
             EnumSet<Subtype> subtypes = EnumSet.noneOf(Subtype.class);
             Set<String> seenSoFar = new HashSet<String>();
             boolean latin = VettingViewer.isLatinScriptLocale(sourceFile);
+            CLDRFile baselineFileUnresolved = (baselineFile == null) ? null : baselineFile.getUnresolved();
             for (String path : sourceFile.fullIterable()) {
                 if (xpath != null && !xpath.equals(path))
                     continue;
-                String value = sourceFile.getWinningValue(path);
+                String value = sourceFile.getWinningValueForVettingViewer(path);
                 statusMessage.setLength(0);
                 subtypes.clear();
                 ErrorChecker.Status errorStatus = errorChecker.getErrorStatus(path, value, statusMessage, subtypes);
@@ -615,10 +631,13 @@ public class VettingViewer<T> {
 
                 problems.clear();
                 htmlMessage.setLength(0);
-                final String oldValue = baselineFile == null ? null : baselineFile.getWinningValue(path);
+
+                final String oldValue = (baselineFileUnresolved == null) ? null : baselineFileUnresolved.getWinningValue(path);
 
                 if (CheckCLDR.LIMITED_SUBMISSION) {
-                    if (!SubmissionLocales.allowEvenIfLimited(localeID, path, errorStatus == ErrorChecker.Status.error, oldValue == null)) {
+                    boolean isError = (errorStatus == ErrorChecker.Status.error);
+                    boolean isMissing = (oldValue == null);
+                    if (!SubmissionLocales.allowEvenIfLimited(localeID, path, isError, isMissing)) {
                         continue;
                     };
                 }
@@ -634,7 +653,7 @@ public class VettingViewer<T> {
                 MissingStatus missingStatus = null;
 
                 if (!onlyRecordErrors) {
-                    missingStatus = getMissingStatus(sourceFile, path, status, latin);
+                    missingStatus = getMissingStatus(sourceFile, path, latin);
                     if (choices.contains(Choice.missingCoverage) && missingStatus == MissingStatus.ABSENT) {
                         problems.add(Choice.missingCoverage);
                         problemCounter.increment(Choice.missingCoverage);
@@ -644,9 +663,6 @@ public class VettingViewer<T> {
                         problemCounter.increment(Choice.englishChanged);
                     }
                     if (!CheckCLDR.LIMITED_SUBMISSION && !itemsOkIfVoted && outdatedPaths.isOutdated(localeID, path)) {
-                        // the outdated paths compares the base value, before
-                        // data submission,
-                        // so see if the value changed.
                         if (Objects.equals(value, oldValue) && choices.contains(Choice.englishChanged)) {
                             // check to see if we voted
                             problems.add(Choice.englishChanged);
@@ -856,7 +872,7 @@ public class VettingViewer<T> {
             if (organization != null) {
                 level = StandardCodes.make().getLocaleCoverageLevel(organization.toString(), localeID);
             }
-            FileInfo fileInfo = new FileInfo().getFileInfo(sourceFile, baselineFile, null, choices, localeID, true, organization, level, false);
+            FileInfo fileInfo = new FileInfo().getFileInfo(sourceFile, baselineFile, null, choices, localeID, organization, level, false);
             localeNameToFileInfo.put(name, fileInfo);
             totals.addAll(fileInfo);
 
@@ -1065,11 +1081,10 @@ public class VettingViewer<T> {
      *
      * @param sourceFile the CLDRFile
      * @param path the path
-     * @param status used for status.pathWhereFound, also passed to getSourceLocaleIdExtended
      * @param latin boolean from isLatinScriptLocale, passed to isMissingOk
      * @return the MissingStatus
      */
-    public static MissingStatus getMissingStatus(CLDRFile sourceFile, String path, Status status, boolean latin) {
+    public static MissingStatus getMissingStatus(CLDRFile sourceFile, String path, boolean latin) {
         if (sourceFile == null) {
             return MissingStatus.ABSENT;
         }
@@ -1082,6 +1097,8 @@ public class VettingViewer<T> {
         MissingStatus result;
 
         String value = sourceFile.getStringValue(path);
+        Status status = new Status();
+        sourceFile.getSourceLocaleID(path, status);
         boolean isAliased = path.equals(status.pathWhereFound);
 
         if (value == null) {
@@ -1200,7 +1217,7 @@ public class VettingViewer<T> {
      * @return
      */
     public static String getHeaderStyles() {
-        return "<style type='text/css'>\n"
+        return "<style>\n"
             + ".hide {display:none}\n"
             + ".vve {}\n"
             + ".vvn {}\n"
@@ -1222,8 +1239,6 @@ public class VettingViewer<T> {
         try {
 
             boolean latin = VettingViewer.isLatinScriptLocale(sourceFile);
-
-            Status status = new Status();
 
             output.append("<h2>Summary</h2>\n")
             .append("<p><i>It is important that you read " +
@@ -1266,7 +1281,7 @@ public class VettingViewer<T> {
                 .append("</td></tr>\n");
             }
             output.append("</table>\n</form>\n"
-                + "<script type='text/javascript'>\n" +
+                + "<script>\n" +
                 "<!-- \n" +
                 "setStyles()\n" +
                 "-->\n"
@@ -1354,8 +1369,9 @@ public class VettingViewer<T> {
                         addCell(output, englishFile.getWinningValue(path), null, "tv-eng", HTMLType.plain);
                     }
                     // baseline value
+                    // TODO: should this be baselineFile.getUnresolved()? Compare how getFileInfo calls getMissingStatus
                     final String oldStringValue = baselineFile == null ? null : baselineFile.getWinningValue(path);
-                    MissingStatus oldValueMissing = getMissingStatus(baselineFile, path, status, latin);
+                    MissingStatus oldValueMissing = getMissingStatus(baselineFile, path, latin);
 
                     addCell(output, oldStringValue, null, oldValueMissing != MissingStatus.PRESENT ? "tv-miss"
                         : "tv-last", HTMLType.plain);
@@ -1422,7 +1438,7 @@ public class VettingViewer<T> {
         } catch (Exception e) {
         }
 
-        EnumSet<Choice> errors = new FileInfo().getFileInfo(sourceFile, baselineFile, sorted, choices, localeID, nonVettingPhase, user, usersLevel,
+        EnumSet<Choice> errors = new FileInfo().getFileInfo(sourceFile, baselineFile, sorted, choices, localeID, user, usersLevel,
             false, path).problems;
 
         ArrayList<String> out = new ArrayList<String>();
@@ -1511,7 +1527,6 @@ public class VettingViewer<T> {
         unconfirmedCounter.clear();
         missingCounter.clear();
 
-        Status status = new Status();
         boolean latin = VettingViewer.isLatinScriptLocale(file);
         CoverageLevel2 coverageLevel2 = CoverageLevel2.getInstance(file.getLocaleID());
 
@@ -1525,7 +1540,7 @@ public class VettingViewer<T> {
             Level level = coverageLevel2.getLevel(path);
             // String localeFound = file.getSourceLocaleID(path, status);
             // String value = file.getSourceLocaleID(path, status);
-            MissingStatus missingStatus = VettingViewer.getMissingStatus(file, path, status, latin);
+            MissingStatus missingStatus = VettingViewer.getMissingStatus(file, path, latin);
 
             switch (missingStatus) {
             case ABSENT:
@@ -1594,8 +1609,7 @@ public class VettingViewer<T> {
         for (String s : DIRECTORIES) {
             fileDirectories[i++] = new File(s);
         }
-        final String version = ToolConstants.PREVIOUS_CHART_VERSION;
-        final String lastMain = CLDRPaths.ARCHIVE_DIRECTORY + "/cldr-" + version + "/common/main";
+        final String lastMain = CLDRPaths.LAST_RELEASE_DIRECTORY;
         //final String lastMain = CLDRPaths.ARCHIVE_DIRECTORY + "/common/main";
 
         do {
@@ -1736,7 +1750,7 @@ public class VettingViewer<T> {
 
         switch (newCode) {
         case newCode:
-            tableView.generateHtmlErrorTables(out, choiceSet, localeStringID, organization, usersLevel, SHOW_ALL, false);
+            tableView.generateHtmlErrorTables(out, choiceSet, localeStringID, organization, usersLevel, false);
             break;
             // case oldCode:
             // tableView.generateHtmlErrorTablesOld(out, choiceSet, localeStringID, userNumericID, usersLevel, SHOW_ALL);

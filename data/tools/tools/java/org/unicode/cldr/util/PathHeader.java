@@ -255,7 +255,7 @@ public class PathHeader implements Comparable<PathHeader> {
         RegionMapping(SectionId.Supplemental),
         WZoneMapping( SectionId.Supplemental),
         Transform(SectionId.Supplemental),
-        UnitPreferences(SectionId.Supplemental),
+        Units(SectionId.Supplemental),
         Likely(SectionId.Supplemental),
         LanguageMatch( SectionId.Supplemental),
         TerritoryInfo(SectionId.Supplemental),
@@ -263,6 +263,7 @@ public class PathHeader implements Comparable<PathHeader> {
         LanguageGroup( SectionId.Supplemental),
         Fallback(SectionId.Supplemental),
         Gender(SectionId.Supplemental),
+        Grammar(SectionId.Supplemental),
         Metazone(SectionId.Supplemental),
         NumberSystem( SectionId.Supplemental),
         Plural(SectionId.Supplemental),
@@ -276,6 +277,7 @@ public class PathHeader implements Comparable<PathHeader> {
         RBNF( SectionId.Supplemental),
         Segmentation(SectionId.Supplemental),
         DayPeriod(SectionId.Supplemental),
+        
         Category(SectionId.Characters),
 
         // [Smileys, People, Animals & Nature, Food & Drink, Travel & Places, Activities, Objects, Symbols, Flags] 
@@ -342,7 +344,7 @@ public class PathHeader implements Comparable<PathHeader> {
 
     // Used for ordering
     private final int headerOrder;
-    private final int codeOrder;
+    private final long codeOrder;
     private final SubstringOrder codeSuborder;
 
     static final Pattern SEMI = PatternCache.get("\\s*;\\s*");
@@ -408,7 +410,7 @@ public class PathHeader implements Comparable<PathHeader> {
      * @param status
      */
     private PathHeader(SectionId sectionId, PageId pageId, String header,
-        int headerOrder, String code, int codeOrder, SubstringOrder suborder, SurveyToolStatus status,
+        int headerOrder, String code, long codeOrder, SubstringOrder suborder, SurveyToolStatus status,
         String originalPath) {
         this.sectionId = sectionId;
         this.pageId = pageId;
@@ -518,8 +520,9 @@ public class PathHeader implements Comparable<PathHeader> {
             if (0 != (result = alphabeticCompare(header, other.header))) {
                 return result;
             }
-            if (0 != (result = codeOrder - other.codeOrder)) {
-                return result;
+            long longResult;
+            if (0 != (longResult = codeOrder - other.codeOrder)) {
+                return longResult < 0 ? -1 : longResult > 0 ? 1 : 0;
             }
             if (codeSuborder != null) { // do all three cases, for transitivity
                 if (other.codeSuborder != null) {
@@ -559,8 +562,9 @@ public class PathHeader implements Comparable<PathHeader> {
 
     public int compareCode(PathHeader other) {
         int result;
-        if (0 != (result = codeOrder - other.codeOrder)) {
-            return result;
+        long longResult;
+        if (0 != (longResult = codeOrder - other.codeOrder)) {
+            return longResult < 0 ? -1 : longResult > 0 ? 1 : 0;
         }
         if (codeSuborder != null) { // do all three cases, for transitivity
             if (other.codeSuborder != null) {
@@ -613,7 +617,7 @@ public class PathHeader implements Comparable<PathHeader> {
         // synchronized with lookup
         static final Map<RawData, String> samples = new HashMap<RawData, String>();
         // synchronized with lookup
-        static int order;
+        static long order;
         static SubstringOrder suborder;
 
         static final Map<String, PathHeader> cache = new HashMap<String, PathHeader>();
@@ -724,7 +728,7 @@ public class PathHeader implements Comparable<PathHeader> {
                         SectionId.forString(fix(data.section, 0)),
                         PageId.forString(fix(data.page, 0)),
                         fix(data.header, data.headerOrder),
-                        order, // only valid after call to fix. TODO, make
+                        (int)order, // only valid after call to fix. TODO, make
                         // this cleaner
                         fix(data.code + (alt == null ? "" : ("-" + alt)), data.codeOrder),
                         order, // only valid after call to fix
@@ -1765,7 +1769,7 @@ public class PathHeader implements Comparable<PathHeader> {
                 @Override
                 public String transform(String source) {
                     String minorCat = Emoji.getMinorCategory(source);
-                    order = Emoji.getEmojiMinorOrder(source);
+                    order = Emoji.getEmojiMinorOrder(minorCat);
                     return minorCat;
                 }
             });

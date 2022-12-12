@@ -222,7 +222,11 @@
 //ldml/units/unitLength[@type="%L"]/unit[@type="%A"]/unitPattern[@count="%A"]                           ; Units ; Other Units ; &unit($2) ; &unitCount($1-$3)
 //ldml/units/unitLength[@type="%L"]/unit[@type="%A"]/perUnitPattern                                     ; Units ; Other Units ; &unit($2) ; &unitCount($1-per)
 
+# Warning: the longer match must come first
+//ldml/units/unitLength[@type="%L"]/compoundUnit[@type="%A"]/compoundUnitPattern1[@count="%A"]          ; Units ; Compound Units ; $2 ; &unitCount($1-$3)
+//ldml/units/unitLength[@type="%L"]/compoundUnit[@type="%A"]/compoundUnitPattern1                        ; Units ; Compound Units ; $2 ; $1
 //ldml/units/unitLength[@type="%L"]/compoundUnit[@type="%A"]/compoundUnitPattern                        ; Units ; Compound Units ; $2 ; $1
+//ldml/units/unitLength[@type="%L"]/compoundUnit[@type="%A"]/unitPrefixPattern							; Units ; Compound Units ; $2 ; $1
 //ldml/units/durationUnit[@type="(hms|hm|ms)"]                                                        	; Units ; Duration ; Duration Patterns ; $1
 
 //ldml/units/unitLength[@type="%L"]/coordinateUnit/displayName                                          ; Units ; Coordinates ; all ; &unitCount($1-displayName)
@@ -358,11 +362,6 @@
 //supplementalData/transforms/transform[@source="%A"][@target="%A"][@direction="%A"]/%E			; Supplemental ; Transform ; &transform($3,$1,$2) ; $4 ; HIDE
 //supplementalData/transforms/transform[@source="%A"][@target="%A"][@variant="%A"][@direction="%A"]/%E			; Supplemental ; Transform ;  &transform($4,$1,$2,$3) ; $5 ; HIDE
 
-//supplementalData/unitPreferenceData/unitPreferences[@category="%A"][@usage="%A"]/unitPreference[@regions="%A"]			; Supplemental ; UnitPreferences ; $1/$2 ; $3 ; HIDE
-//supplementalData/unitPreferenceData/unitPreferences[@category="%A"][@usage="%A"]/unitPreference[@regions="%A"][@alt="%A"]			; Supplemental ; UnitPreferences ; $1/$2 ; $3-$4 ; HIDE
-//supplementalData/unitPreferenceData/unitPreferences[@category="%A"][@usage="%A"][@scope="%A"]/unitPreference[@regions="%A"]			; Supplemental ; UnitPreferences ; $1/$2/$3 ; $4 ; HIDE
-//supplementalData/unitPreferenceData/unitPreferences[@category="%A"][@usage="%A"][@scope="%A"]/unitPreference[@regions="%A"][@alt="%A"]			; Supplemental ; UnitPreferences ; $1/$2/$3 ; $4-$5 ; HIDE
-
 //supplementalData/territoryInfo/territory[@type="%A"]/languagePopulation[@type="%A"]/_%E			; Supplemental ; LanguageInfo ; $1/$2 ; $3 ; HIDE
 //supplementalData/territoryInfo/territory[@type="%A"]/_%E			; Supplemental ; TerritoryInfo ; $1 ; $2 ; HIDE
 
@@ -421,6 +420,32 @@
 
 //supplementalData/dayPeriodRuleSet[@type="%A"]/dayPeriodRules[@locales="%A"]/dayPeriodRule[@type="%A"]/_%E			; Supplemental ; DayPeriod ; $1-$2 ; $3-$4 ; HIDE
 //supplementalData/dayPeriodRuleSet/dayPeriodRules[@locales="%A"]/dayPeriodRule[@type="%A"]/_%E			; Supplemental ; DayPeriod ; $1 ; $2-$3 ; HIDE
+
+//supplementalData/grammaticalData/grammaticalFeatures[@targets="%A"][@locales="%A"]/grammaticalCase/_values ; Supplemental ; Grammar ; Case ; $1-$2 ; HIDE
+//supplementalData/grammaticalData/grammaticalFeatures[@targets="%A"][@locales="%A"]/grammaticalDefiniteness/_values ; Supplemental ; Grammar ; Definiteness ; $1-$2 ; HIDE
+//supplementalData/grammaticalData/grammaticalFeatures[@targets="%A"][@locales="%A"]/grammaticalGender/_values ; Supplemental ; Grammar ; Gender ; $1-$2 ; HIDE
+//supplementalData/grammaticalData/grammaticalFeatures[@targets="%A"][@locales="%A"]/grammaticalState/_values ; Supplemental ; Grammar ; State ; $1-$2 ; HIDE
+
+//supplementalData/unitPreferenceData/unitPreferences[@category="%A"][@usage="%A"]/unitPreference_[@regions="%A"][@geq="%A"]/_skeleton            ; Supplemental ; Units ; $1/$2 ; $3:$4-skeleton ; HIDE
+//supplementalData/unitPreferenceData/unitPreferences[@category="%A"][@usage="%A"]/unitPreference_[@regions="%A"]/_skeleton            ; Supplemental ; Units ; $1/$2 ; $3-skeleton ; HIDE
+//supplementalData/unitPreferenceData/unitPreferences[@category="%A"][@usage="%A"]/unitPreference[@regions="%A"][@geq="%A"]            ; Supplemental ; Units ; $1/$2 ; $3:$4 ; HIDE
+//supplementalData/unitPreferenceData/unitPreferences[@category="%A"][@usage="%A"]/unitPreference[@regions="%A"]            ; Supplemental ; Units ; $1/$2 ; $3 ; HIDE
+
+#OLD
+#//supplementalData/unitPreferenceData/unitPreferences[@category="%A"][@usage="%A"]/unitPreference[@regions="%A"][@alt="%A"]			; Supplemental ; Units ; $1/$2 ; $3-alt-$4 ; HIDE
+//supplementalData/unitPreferenceData/unitPreferences[@category="%A"][@usage="%A"][@scope="%A"]/unitPreference[@regions="%A"]			; Supplemental ; Units ; $1/$2/$3 ; $4 ; HIDE
+//supplementalData/unitPreferenceData/unitPreferences[@category="%A"][@usage="%A"][@scope="%A"]/unitPreference[@regions="%A"][@alt="%A"]			; Supplemental ; Units ; $1/$2/$3 ; $4-$5 ; HIDE
+
+
+//supplementalData/unitConstants/unitConstant[@constant="%A"]/_value	; Supplemental ; Units ; Constant ; $1-value ; HIDE
+//supplementalData/unitConstants/unitConstant[@constant="%A"]/_status	; Supplemental ; Units ; Constant ; $1-status ; HIDE
+//supplementalData/unitQuantities/unitQuantity[@baseUnit="%A"]/_quantity	; Supplemental ; Units ; Quantity ; $1-value ; HIDE
+//supplementalData/unitQuantities/unitQuantity[@baseUnit="%A"]/_status	; Supplemental ; Units ; Quantity ; $1-status ; HIDE
+//supplementalData/convertUnits/convertUnit[@source="%A"]/_baseUnit	; Supplemental ; Units ; Convert ; $1-baseUnit ; HIDE
+//supplementalData/convertUnits/convertUnit[@source="%A"]/_factor	; Supplemental ; Units ; Convert ; $1-factor ; HIDE
+//supplementalData/convertUnits/convertUnit[@source="%A"]/_offset	; Supplemental ; Units ; Convert ; $1-offset ; HIDE
+//supplementalData/convertUnits/convertUnit[@source="%A"]/_reciprocal	; Supplemental ; Units ; Convert ; $1-reciprocal ; HIDE
+//supplementalData/convertUnits/convertUnit[@source="%A"]/_systems	; Supplemental ; Units ; Convert ; $1-systems ; HIDE
 
 # Ultimate fallback (Error)
 //supplementalData/%S/(.*)                                                                              ; Supplemental ; Unknown ; $1 ; $2 ; DEPRECATED

@@ -35,6 +35,7 @@ import org.unicode.cldr.util.Level;
 import org.unicode.cldr.util.LocaleIDParser;
 import org.unicode.cldr.util.PathHeader;
 import org.unicode.cldr.util.PathHeader.SectionId;
+import org.unicode.cldr.util.StringId;
 import org.unicode.cldr.util.TransliteratorUtilities;
 
 import com.ibm.icu.dev.tool.UOption;
@@ -61,7 +62,7 @@ public class ShowData {
         UOption.DESTDIR().setDefault(CLDRPaths.CHART_DIRECTORY + "summary/"),
         UOption.create("match", 'm', UOption.REQUIRES_ARG).setDefault(".*"),
         UOption.create("getscript", 'g', UOption.NO_ARG),
-        UOption.create("last", 'l', UOption.REQUIRES_ARG).setDefault(CLDRPaths.LAST_DIRECTORY + "common/main/"),
+        UOption.create("last", 'l', UOption.REQUIRES_ARG).setDefault(CLDRPaths.LAST_RELEASE_DIRECTORY + "common/main/"),
         UOption.create("coverage", 'c', UOption.REQUIRES_ARG).setDefault(Level.MODERN.toString()),
     };
 
@@ -100,7 +101,7 @@ public class ShowData {
             // + "main/";
             String targetDir = options[DESTDIR].value; // Utility.GEN_DIRECTORY +
             // "main/";
-            cldrFactory = Factory.make(sourceDir, ".*");
+            cldrFactory = CLDRConfig.getInstance().getMainAndAnnotationsFactory(); // ignore source directory for now
             english = cldrFactory.make("en", true);
             String lastSourceDir = options[LAST_DIR].value; // Utility.COMMON_DIRECTORY
 
@@ -233,7 +234,7 @@ public class ShowData {
                 getChartTemplate(
                     "Locale Data Summary for " + getLocaleNameAndCode(locale),
                     ToolConstants.CHART_DISPLAY_VERSION,
-                    "<script type='text/javascript'>" + System.lineSeparator()
+                    "<script>" + System.lineSeparator()
                         + "if (location.href.split('?')[1].split(',')[0]=='hide') {" + System.lineSeparator()
                         + "document.write('<style>');" + System.lineSeparator()
                         + "document.write('.xx {display:none}');" + System.lineSeparator()
@@ -330,7 +331,7 @@ public class ShowData {
                         (hide ? "<tr class='xx'><td" : "<tr><td")
                             + statusClass
                             + ">"
-                            + CldrUtility.getDoubleLinkedText(String.valueOf(++count))
+                            + CldrUtility.getDoubleLinkedText(Long.toHexString(StringId.getId(path)), String.valueOf(++count))
                             + addPart(oldParts == null ? null : oldParts.getSection(), prettyPath.getSection())
                             + addPart(oldParts == null ? null : oldParts.getPage(), prettyPath.getPage())
                             + addPart(oldParts == null ? null : oldParts.getHeader(), prettyPath.getHeader())
@@ -448,7 +449,6 @@ public class ShowData {
     private static void getScripts() throws IOException {
         Set<String> locales = cldrFactory.getAvailableLanguages();
         Set<String> scripts = new TreeSet<String>();
-        //XPathParts parts = new XPathParts();
         Map<String, Map<String, Set<String>>> script_name_locales = new TreeMap<String, Map<String, Set<String>>>();
         PrintWriter out = FileUtilities.openUTF8Writer(CLDRPaths.GEN_DIRECTORY, "scriptNames.txt");
         for (Iterator<String> it = locales.iterator(); it.hasNext();) {

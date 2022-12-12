@@ -373,7 +373,7 @@ public class TestCoverageLevel extends TestFmwkPlus {
             + "syr|kv|umb|)");
 
         final Pattern script100 = PatternCache.get("("
-            + "Adlm|Afak|Aghb|Ahom|Armi|Avst|Bali|Bamu|Bass|Batk|Bhks|Blis|Brah|Bugi|Buhd|"
+            + "Adlm|Afak|Aghb|Ahom|Aran|Armi|Avst|Bali|Bamu|Bass|Batk|Bhks|Blis|Brah|Bugi|Buhd|"
             + "Cakm|Cans|Cari|Cham|Chrs|Cher|Cirt|Copt|Cprt|Cyrs|"
             + "Diak|Dogr|Dsrt|Dupl|Egy[dhp]|Elba|Elym|Geok|Glag|Gong|Gonm|Goth|Gran|"
             + "Hatr|Hanb|Hano|Hluw|Hmng|Hmnp|Hrkt|Hung|Inds|Ital|Jamo|Java|Jurc|"
@@ -393,7 +393,7 @@ public class TestCoverageLevel extends TestFmwkPlus {
             + "finance|native|traditional|adlm|ahom|bali|bhks|brah|cakm|cham|cyrl|diak|"
             + "gong|gonm|hanidays|hmng|hmnp|java|jpanyear|kali|lana(tham)?|lepc|limb|"
             + "math(bold|dbl|mono|san[bs])|modi|mong|mroo|mtei|mymr(shan|tlng)|"
-            + "newa|nkoo|olck|osma|rohg|saur|shrd|sin[dh]|sora|sund|takr|talu|tirh|vaii|wara|wcho)");
+            + "newa|nkoo|olck|osma|rohg|saur|segment|shrd|sin[dh]|sora|sund|takr|talu|tirh|vaii|wara|wcho)");
 
         final Pattern collation100 = PatternCache.get("("
             + "big5han|compat|dictionary|emoji|eor|gb2312han|phonebook|phonetic|pinyin|reformed|searchjl|stroke|traditional|unihan|zhuyin)");
@@ -638,8 +638,11 @@ public class TestCoverageLevel extends TestFmwkPlus {
                 continue;
             }
             Set<String> grouping = LogicalGrouping.getPaths(cldrFile, path);
+            seen.add(path);
+            if (grouping == null) {
+                continue;
+            }
             seen.addAll(grouping);
-            seen.add(path); // needed too?
             levelToPaths.clear();
             for (String groupingPath : grouping) {
                 if (LogicalGrouping.isOptional(cldrFile, groupingPath)) {

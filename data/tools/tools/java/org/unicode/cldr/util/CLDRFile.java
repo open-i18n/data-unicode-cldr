@@ -123,11 +123,10 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
     public static final String SUPPLEMENTAL_NAME = "supplementalData";
     public static final String SUPPLEMENTAL_METADATA = "supplementalMetadata";
     public static final String SUPPLEMENTAL_PREFIX = "supplemental";
-    public static final String GEN_VERSION = "36.1";
-    public static final List<String> SUPPLEMENTAL_NAMES = Arrays.asList("characters", "coverageLevels", "dayPeriods", "genderList", "languageInfo",
+    public static final String GEN_VERSION = "37";
+    public static final List<String> SUPPLEMENTAL_NAMES = Arrays.asList("characters", "coverageLevels", "dayPeriods", "genderList", "grammaticalFeatures", "languageInfo",
         "languageGroup", "likelySubtags", "metaZones", "numberingSystems", "ordinals", "plurals", "postalCodeData", "rgScope", "supplementalData",
-        "supplementalMetadata",
-        "telephoneCodeData", "windowsZones");
+        "supplementalMetadata", "telephoneCodeData", "units", "windowsZones");
 
     private Collection<String> extraPaths = null;
 
@@ -403,6 +402,8 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
      * @param options
      *            map of options for writing
      * @return true if we write the file, false if we cancel due to skipping all paths
+     *
+     * TODO: shorten this method (over 170 lines) using subroutines.
      */
     public boolean write(PrintWriter pw, Map<String, ?> options) {
         Set<String> orderedSet = new TreeSet<String>(getComparator());
@@ -479,42 +480,29 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
 
         XPathParts.Comments tempComments = (XPathParts.Comments) dataSource.getXpathComments().clone();
 
-        XPathParts last = new XPathParts(defaultSuppressionMap);
-        XPathParts current = new XPathParts(defaultSuppressionMap);
-        XPathParts lastFiltered = new XPathParts(defaultSuppressionMap);
-        XPathParts currentFiltered = new XPathParts(defaultSuppressionMap);
+        XPathParts last = null;
 
         boolean isResolved = dataSource.isResolving();
 
         java.util.function.Predicate<String> skipTest = (java.util.function.Predicate<String>) options.get("SKIP_PATH");
 
+        /*
+         * First loop: call writeDifference for each xpath in identitySet, with empty string "" for value.
+         * There is no difference between "filtered" and "not filtered" in this loop.
+         */
         for (Iterator<String> it2 = identitySet.iterator(); it2.hasNext();) {
             String xpath = (String) it2.next();
             if (isResolved && xpath.contains("/alias")) {
                 continue;
             }
-            currentFiltered.setForWritingWithSuppressionMap(xpath);
-            current.setForWritingWithSuppressionMap(xpath);
-            current.writeDifference(pw, currentFiltered, last, "", tempComments);
-            /*
-             * Exchange pairs of parts:
-             *     swap current with last
-             *     swap currentFiltered with lastFiltered
-             * However, current and currentFiltered both get "set" next, so the effect should be the same as
-             *     last = current
-             *     lastFiltered = currentFiltered
-             *     current = getInstance
-             *     currentFiltered = getInstance
-             *     ??
-             */
-            XPathParts temp = current;
-            current = last;
-            last = temp;
-            temp = currentFiltered;
-            currentFiltered = lastFiltered;
-            lastFiltered = temp;
+            XPathParts current = XPathParts.getInstance(xpath);
+            current.writeDifference(pw, current, last, "", tempComments);
+            last = current;
         }
 
+        /*
+         * Second loop: call writeDifference for each xpath in orderedSet, with v = getStringValue(xpath).
+         */
         boolean wroteAtLeastOnePath = false;
         for (String xpath : orderedSet) {
             if (skipTest != null
@@ -528,20 +516,18 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
             if (suppressInheritanceMarkers && CldrUtility.INHERITANCE_MARKER.equals(v)) {
                 continue;
             }
-            currentFiltered.setForWritingWithSuppressionMap(xpath);
+            /*
+             * The difference between "filtered" (currentFiltered) and "not filtered" (current) is that
+             * current uses getFullXPath(xpath), while currentFiltered uses xpath.
+             */
+            XPathParts currentFiltered = XPathParts.getInstance(xpath);
             if (currentFiltered.size() >= 2
                 && currentFiltered.getElement(1).equals("identity")) {
                 continue;
             }
-            current.setForWritingWithSuppressionMap(getFullXPath(xpath));
+            XPathParts current = XPathParts.getInstance(getFullXPath(xpath));
             current.writeDifference(pw, currentFiltered, last, v, tempComments);
-            // exchange pairs of parts
-            XPathParts temp = current;
-            current = last;
-            last = temp;
-            temp = currentFiltered;
-            currentFiltered = lastFiltered;
-            lastFiltered = temp;
+            last = current;
             wroteAtLeastOnePath = true;
         }
         /*
@@ -557,7 +543,9 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
         if (!wroteAtLeastOnePath && options.containsKey("SKIP_FILE_IF_SKIP_ALL_PATHS")) {
             return false;
         }
-        current.clear().writeDifference(pw, null, last, null, tempComments);
+
+        last.writeLast(pw);
+
         String finalComment = dataSource.getXpathComments().getFinalComment();
 
         if (WRITE_COMMENTS_THAT_NO_LONGER_HAVE_BASE) {
@@ -649,24 +637,15 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
      * @parameter pathWhereFound null if constructed.
      */
     public String getConstructedBaileyValue(String xpath, Output<String> pathWhereFound, Output<String> localeWhereFound) {
-        //ldml/localeDisplayNames/languages/language[@type="zh_Hans"]
-        if (xpath.startsWith("//ldml/localeDisplayNames/languages/language[@type=\"") && xpath.contains("_")) {
-            XPathParts parts = XPathParts.getFrozenInstance(xpath);
-            String type = parts.getAttributeValue(-1, "type");
-            if (type.contains("_")) {
-                String alt = parts.getAttributeValue(-1, "alt");
-                if (localeWhereFound != null) {
-                    localeWhereFound.value = getLocaleID();
-                }
-                if (pathWhereFound != null) {
-                    pathWhereFound.value = null; // TODO make more useful
-                }
-                if (alt == null) {
-                    return getName(type, true);
-                } else {
-                    return getName(type, true, new SimpleAltPicker(alt));
-                }
+        String constructedValue = getConstructedValue(xpath);
+        if (constructedValue != null) {
+            if (localeWhereFound != null) {
+                localeWhereFound.value = getLocaleID();
             }
+            if (pathWhereFound != null) {
+                pathWhereFound.value = null; // TODO make more useful
+            }
+            return constructedValue;
         }
         return getBaileyValue(xpath, pathWhereFound, localeWhereFound);
     }
@@ -692,7 +671,18 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
     }
 
     /**
-     * Get the full path from a distinguished path
+     * Get the full path from a distinguished path.
+     *
+     * @param xpath the distinguished path
+     * @return the full path
+     *
+     * Examples:
+     *
+     * xpath  = //ldml/localeDisplayNames/scripts/script[@type="Adlm"]
+     * result = //ldml/localeDisplayNames/scripts/script[@type="Adlm"][@draft="unconfirmed"]
+     *
+     * xpath  = //ldml/dates/calendars/calendar[@type="hebrew"]/dateFormats/dateFormatLength[@type="full"]/dateFormat[@type="standard"]/pattern[@type="standard"]
+     * result = //ldml/dates/calendars/calendar[@type="hebrew"]/dateFormats/dateFormatLength[@type="full"]/dateFormat[@type="standard"]/pattern[@type="standard"][@numbers="hebr"]
      */
     public String getFullXPath(String xpath) {
         if (xpath == null) {
@@ -1021,69 +1011,71 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
             boolean logicDuplicate = true;
 
             if (!checked.contains(curXpath)) {
-                // we compare logic Group and only removen when all are duplicate
+                // we compare logic Group and only remove when all are duplicate
                 Set<String> logicGroups = LogicalGrouping.getPaths(this, curXpath);
-                Iterator<String> iter = logicGroups.iterator();
-                while (iter.hasNext() && logicDuplicate) {
-                    String xpath = iter.next();
-                    switch (keepIfMatches.getRetention(xpath)) {
-                    case RETAIN:
-                        logicDuplicate = false;
-                        continue;
-                    case RETAIN_IF_DIFFERENT:
-                        String currentValue = dataSource.getValueAtPath(xpath);
-                        if (currentValue == null) {
+                if (logicGroups != null) {
+                    Iterator<String> iter = logicGroups.iterator();
+                    while (iter.hasNext() && logicDuplicate) {
+                        String xpath = iter.next();
+                        switch (keepIfMatches.getRetention(xpath)) {
+                        case RETAIN:
                             logicDuplicate = false;
                             continue;
-                        }
-                        String otherXpath = xpath;
-                        String otherValue = other.dataSource.getValueAtPath(otherXpath);
-                        if (!currentValue.equals(otherValue)) {
-                            if (MINIMIZE_ALT_PROPOSED) {
-                                otherXpath = CLDRFile.getNondraftNonaltXPath(xpath);
-                                if (otherXpath.equals(xpath)) {
-                                    logicDuplicate = false;
-                                    continue;
-                                }
-                                otherValue = other.dataSource.getValueAtPath(otherXpath);
-                                if (!currentValue.equals(otherValue)) {
-                                    logicDuplicate = false;
-                                    continue;
-                                }
-                            } else {
+                        case RETAIN_IF_DIFFERENT:
+                            String currentValue = dataSource.getValueAtPath(xpath);
+                            if (currentValue == null) {
                                 logicDuplicate = false;
                                 continue;
                             }
+                            String otherXpath = xpath;
+                            String otherValue = other.dataSource.getValueAtPath(otherXpath);
+                            if (!currentValue.equals(otherValue)) {
+                                if (MINIMIZE_ALT_PROPOSED) {
+                                    otherXpath = CLDRFile.getNondraftNonaltXPath(xpath);
+                                    if (otherXpath.equals(xpath)) {
+                                        logicDuplicate = false;
+                                        continue;
+                                    }
+                                    otherValue = other.dataSource.getValueAtPath(otherXpath);
+                                    if (!currentValue.equals(otherValue)) {
+                                        logicDuplicate = false;
+                                        continue;
+                                    }
+                                } else {
+                                    logicDuplicate = false;
+                                    continue;
+                                }
+                            }
+                            String keepValue = (String) XMLSource.getPathsAllowingDuplicates().get(xpath);
+                            if (keepValue != null && keepValue.equals(currentValue)) {
+                                logicDuplicate = false;
+                                continue;
+                            }
+                            // we've now established that the values are the same
+                            String currentFullXPath = dataSource.getFullPath(xpath);
+                            String otherFullXPath = other.dataSource.getFullPath(otherXpath);
+                            if (!equalsIgnoringDraft(currentFullXPath, otherFullXPath)) {
+                                logicDuplicate = false;
+                                continue;
+                            }
+                            if (DEBUG) {
+                                keepIfMatches.getRetention(xpath);
+                            }
+                            break;
+                        case REMOVE:
+                            if (DEBUG) {
+                                keepIfMatches.getRetention(xpath);
+                            }
+                            break;
                         }
-                        String keepValue = (String) XMLSource.getPathsAllowingDuplicates().get(xpath);
-                        if (keepValue != null && keepValue.equals(currentValue)) {
-                            logicDuplicate = false;
-                            continue;
-                        }
-                        // we've now established that the values are the same
-                        String currentFullXPath = dataSource.getFullPath(xpath);
-                        String otherFullXPath = other.dataSource.getFullPath(otherXpath);
-                        if (!equalsIgnoringDraft(currentFullXPath, otherFullXPath)) {
-                            logicDuplicate = false;
-                            continue;
-                        }
-                        if (DEBUG) {
-                            keepIfMatches.getRetention(xpath);
-                        }
-                        break;
-                    case REMOVE:
-                        if (DEBUG) {
-                            keepIfMatches.getRetention(xpath);
-                        }
-                        break;
+
                     }
 
+                    if (first) {
+                        first = false;
+                        if (butComment) appendFinalComment("Duplicates removed:");
+                    }
                 }
-                if (first) {
-                    first = false;
-                    if (butComment) appendFinalComment("Duplicates removed:");
-                }
-
                 // we can't remove right away, since that disturbs the iterator.
                 checked.addAll(logicGroups);
                 if (logicDuplicate) {
@@ -1303,13 +1295,19 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
         return getNondraftNonaltXPath(path1).equals(getNondraftNonaltXPath(path2));
     }
 
-    static XPathParts nondraftParts = new XPathParts();
+    /*
+     * TODO: clarify the need for syncObject.
+     * Formerly, an XPathParts object named "nondraftParts" was used for this purpose, but
+     * there was no evident reason for it to be an XPathParts object rather than any other
+     * kind of object.
+     */
+    private static Object syncObject = new Object();
 
     public static String getNondraftNonaltXPath(String xpath) {
         if (xpath.indexOf("draft=\"") < 0 && xpath.indexOf("alt=\"") < 0) {
             return xpath;
         }
-        synchronized (nondraftParts) {
+        synchronized (syncObject) {
             XPathParts parts = XPathParts.getInstance(xpath); // can't be frozen since we call removeAttributes
             String restore;
             HashSet<String> toRemove = new HashSet<String>();
@@ -3110,6 +3108,30 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
     }
 
     /**
+     * Shortcut for getting the string value for a path.
+     * If the string value is an INHERITANCE_MARKER (used in survey
+     * tool), then the Bailey value is returned.
+     *
+     * @param path
+     * @return the string value
+     *
+     * TODO: check whether this is called only when appropriate, see https://unicode.org/cldr/trac/ticket/11299
+     * Compare getWinningValueWithBailey wich is identical except getWinningValue versus getStringValue.
+     */
+    public String getStringValueWithBailey(String path, Output<String> pathWhereFound, Output<String> localeWhereFound) {
+        String value = getStringValue(path);
+        if (CldrUtility.INHERITANCE_MARKER.equals(value)) {
+            value = getBaileyValue(path, pathWhereFound, localeWhereFound);
+        } else {
+            Status status = new Status();
+            String localeWhereFound2 = getSourceLocaleID(path, status);
+            if (localeWhereFound != null) localeWhereFound.value = localeWhereFound2;
+            if (pathWhereFound != null) pathWhereFound.value = status.pathWhereFound;
+        }
+        return value;
+    }
+
+    /**
      * Return the distinguished paths that have the specified value. The pathPrefix and pathMatcher
      * can be used to restrict the returned paths to those matching.
      * The pathMatcher can be null (equals .*).
@@ -3600,4 +3622,109 @@ public class CLDRFile implements Freezable<CLDRFile>, Iterable<String> {
         if (locked) throw new UnsupportedOperationException("Attempt to modify locked object");
         this.dtdType = dtdType;
     }
+
+    /**
+     * Used only for TestExampleGenerator.
+     */
+    public void valueChanged(String xpath) {
+        if (isResolved()) {
+            ResolvingSource resSource = (ResolvingSource) dataSource;
+            resSource.valueChanged(xpath, resSource);
+        }
+    }
+
+    /**
+     * Used only for TestExampleGenerator.
+     */
+    public void disableCaching() {
+        dataSource.disableCaching();
+    }
+
+    /**
+     * Get a constructed value for the given path, if it is a path for which values can be constructed
+     *
+     * @param xpath the given path, such as //ldml/localeDisplayNames/languages/language[@type="zh_Hans"]
+     * @return the constructed value, or null if this path doesn't have constructed values
+     */
+    public String getConstructedValue(String xpath) {
+        if (xpath.startsWith("//ldml/localeDisplayNames/languages/language[@type=\"") && xpath.contains("_")) {
+            XPathParts parts = XPathParts.getFrozenInstance(xpath);
+            String type = parts.getAttributeValue(-1, "type");
+            if (type.contains("_")) {
+                String alt = parts.getAttributeValue(-1, "alt");
+                if (alt == null) {
+                    return getName(type, true);
+                } else {
+                    return getName(type, true, new SimpleAltPicker(alt));
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get the string value for the winning path
+     *
+     * Do so taking constructed values into account.
+     *
+     * Currently this is only intended for use by VettingViewer.FileInfo.getFileInfo,
+     * to fix an urgent Dashboard bug. In the long run maybe it should replace
+     * getWinningValue, or the two methods should be merged somehow.
+     *
+     * Reference:
+     *  CLDR-13457 Dashboard does not show all Error/Missing/New… values
+     *
+     * @param path
+     * @return the winning value
+     */
+    public String getWinningValueForVettingViewer(String path) {
+        final String winningPath = getWinningPath(path);
+        return winningPath == null ? null : getStringValueForVettingViewer(winningPath);
+    }
+
+    /**
+     * Get a string value from an xpath.
+     *
+     * Do so taking constructed values into account.
+     *
+     * Currently called only by getWinningValueForVettingViewer
+     *
+     * References:
+     *  CLDR-13263 Merge getConstructedBaileyValue and getBaileyValue
+     *  CLDR-13457 Dashboard does not show all Error/Missing/New… values
+     */
+    private String getStringValueForVettingViewer(String xpath) {
+        try {
+            String constructedValue = getConstructedValue(xpath);
+            if (constructedValue != null) {
+                String value = getStringValueUnresolved(xpath);
+                if (value == null || CldrUtility.INHERITANCE_MARKER.equals(value)) {
+                    return constructedValue;
+                }
+            }
+            String result = dataSource.getValueAtPath(xpath);
+            if (result == null && dataSource.isResolving()) {
+                final String fallbackPath = getFallbackPath(xpath, false);
+                if (fallbackPath != null) {
+                    result = dataSource.getValueAtPath(fallbackPath);
+                }
+            }
+            return result;
+        } catch (Exception e) {
+            throw new UncheckedExecutionException("Bad path: " + xpath, e);
+        }
+    }
+
+    /**
+     * Get the string value for the given path in this locale,
+     * without resolving to any other path or locale.
+     *
+     * @param xpath the given path
+     * @return the string value, unresolved
+     */
+    private String getStringValueUnresolved(String xpath) {
+        CLDRFile sourceFileUnresolved = this.getUnresolved();
+        return sourceFileUnresolved.getStringValue(xpath);
+    }
+
 }

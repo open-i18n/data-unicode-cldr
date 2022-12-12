@@ -107,17 +107,19 @@ abstract public class CheckCLDR {
         FORBID_ERRORS(true), 
         FORBID_READONLY(true), 
         FORBID_UNLESS_DATA_SUBMISSION(true), 
-        FORBID_NULL(true);
+        FORBID_NULL(true),
+        FORBID_ROOT(true),
+        FORBID_PERMANENT_WITHOUT_FORUM(true);
 
         private final boolean isForbidden;
 
         private StatusAction() {
             isForbidden = false;
-        };
+        }
 
         private StatusAction(boolean isForbidden) {
             this.isForbidden = isForbidden;
-        };
+        }
 
         public boolean isForbidden() {
             return isForbidden;

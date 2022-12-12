@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map;
@@ -23,6 +24,7 @@ import org.unicode.cldr.util.CLDRPaths;
 import org.unicode.cldr.util.CldrUtility;
 import org.unicode.cldr.util.Emoji;
 import org.unicode.cldr.util.Factory;
+import org.unicode.cldr.util.PathHeader.PageId;
 import org.unicode.cldr.util.SimpleFactory;
 import org.unicode.cldr.util.XListFormatter;
 import org.unicode.cldr.util.XListFormatter.ListTypeLength;
@@ -36,10 +38,16 @@ import com.google.common.collect.TreeMultimap;
 import com.ibm.icu.dev.util.CollectionUtilities;
 import com.ibm.icu.dev.util.UnicodeMap;
 import com.ibm.icu.dev.util.UnicodeMap.EntryRange;
+import com.ibm.icu.impl.Row;
+import com.ibm.icu.impl.Row.R3;
+import com.ibm.icu.impl.Row.R4;
 import com.ibm.icu.impl.Utility;
+import com.ibm.icu.text.Collator;
 import com.ibm.icu.text.UnicodeSet;
 
 public class TestAnnotations extends TestFmwkPlus {
+    private static final boolean DEBUG = false;
+
     private static final boolean SHOW_LIST = false;
     private static final boolean SHOW_ENGLISH = false;
 
@@ -106,8 +114,9 @@ public class TestAnnotations extends TestFmwkPlus {
         }
     }
 
+    final AnnotationSet eng = Annotations.getDataSet("en");
+
     public void TestNames() {
-        AnnotationSet eng = Annotations.getDataSet("en");
         String[][] tests = { // the expected value for keywords can use , as well as |.
             {"👨🏻", "man: light skin tone", "adult | man | light skin tone"},
             {"👱‍♂️", "man: blond hair", "blond, blond-haired man, hair, man, man: blond hair"},
@@ -168,28 +177,63 @@ public class TestAnnotations extends TestFmwkPlus {
         }
 
     }
-    
+    static final UnicodeSet symbols = new UnicodeSet(Emoji.EXTRA_SYMBOL_MINOR_CATEGORIES.keySet())
+        .freeze();
     /** The English name should line up with the emoji-test.txt file */
     public void TestNamesVsEmojiData() {
-        AnnotationSet eng = Annotations.getDataSet("en");
         for (Entry<String, Annotations> s : eng.getExplicitValues().entrySet()) {
             String emoji = s.getKey();
             Annotations annotations = s.getValue();
             String name = Emoji.getName(emoji);
             String annotationName = annotations.getShortName();
-            if (!emoji.contains("👲")) {
+            if (!symbols.contains(emoji) && !emoji.contains("👲")) {
                 assertEquals(emoji, name, annotationName);
             }
         }
     }
+    
+    public void TestCategories() {
+        if (DEBUG) System.out.println();
 
-    // comment this out, since we now have console check for this.
+        TreeSet<R4<PageId, Long, String, R3<String, String, String>>> sorted = new TreeSet<>();
+        for (Entry<String, Annotations> s : eng.getExplicitValues().entrySet()) {
+            String emoji = s.getKey();
+            Annotations annotations = s.getValue();
+            final String rawCategory = Emoji.getMajorCategory(emoji);
+            PageId majorCategory = PageId.forString(rawCategory);
+            if (majorCategory == PageId.Symbols) {
+                majorCategory = PageId.Symbols2;
+            }
+            String minorCategory = Emoji.getMinorCategory(emoji);
+            long emojiOrder = Emoji.getEmojiToOrder(emoji);
+            R3<String, String, String> row2 = Row.of(emoji, annotations.getShortName(), CollectionUtilities.join(annotations.getKeywords(), " | "));
+            R4<PageId, Long, String, R3<String, String, String>> row = Row.of(majorCategory, emojiOrder, minorCategory, row2);
+            sorted.add(row);
+        }
+        for (R4<PageId, Long, String, R3<String, String, String>> row : sorted) {
+            PageId majorCategory = row.get0();
+            Long emojiOrder = row.get1();
+            String minorCategory = row.get2();
+            R3<String, String, String> row2 = row.get3();
+            String emoji = row2.get0();
+            String shortName = row2.get1();
+            String keywords = row2.get2();
+            if (DEBUG) System.out.println(majorCategory 
+                + "\t" + emojiOrder
+                + "\t" + minorCategory
+                + "\t" + emoji
+                + "\t" + shortName
+                + "\t" + keywords
+                );
+        }
+    }
+
     public void TestUniqueness() {
 //        if (logKnownIssue("cldrbug:10104", "Disable until the uniqueness problems are fixed")) {
 //            return;
 //        }
         Set<String> locales = new TreeSet<>();
-        
+
         locales.add("en");
         locales.addAll(Annotations.getAvailable());
         locales.remove("root");
@@ -200,7 +244,6 @@ public class TestAnnotations extends TestFmwkPlus {
         Multimap<String, String> localeToNameToEmoji = TreeMultimap.create();
         Multimap<String, String> nameToEmoji = TreeMultimap.create();
         UnicodeMap<Annotations> english = Annotations.getData("en");
-        AnnotationSet englishSet = Annotations.getDataSet("en");
         UnicodeSet englishKeys = getCurrent(english.keySet());
         Map<String, UnicodeSet> localeToMissing = new TreeMap<>();
 
@@ -235,7 +278,7 @@ public class TestAnnotations extends TestFmwkPlus {
                 String locale = entry.getKey();
                 String emoji = entry.getValue();
                 System.out.println(locale
-                    + "\t" + englishSet.getShortName(emoji)
+                    + "\t" + eng.getShortName(emoji)
                     + "\t" + emoji);
             }
         }
@@ -247,10 +290,10 @@ public class TestAnnotations extends TestFmwkPlus {
                 for (String emoji : entry.getValue()) {
                     System.out.println(locale
                         + "\t" + emoji
-                        + "\t" + englishSet.getShortName(emoji)
+                        + "\t" + eng.getShortName(emoji)
                         + "\t" + "=GOOGLETRANSLATE(C" + count + ",\"en\",A" + count + ")"
-                    // =GOOGLETRANSLATE(C2,"en",A2)
-                    );
+                        // =GOOGLETRANSLATE(C2,"en",A2)
+                        );
                     ++count;
                 }
             }
@@ -276,7 +319,8 @@ public class TestAnnotations extends TestFmwkPlus {
             CLDRFile enAnnotations = factoryAnnotations.make(locale, false);
             //               //ldml/annotations/annotation[@cp="🧜"][@type="tts"]
             Set<String> annotationPaths = enAnnotations.getPaths("//ldml/anno",
-                Pattern.compile("//ldml/annotations/annotation.*tts.*").matcher(""), new TreeSet<>());
+                Pattern.compile("//ldml/annotations/annotation.*tts.*").matcher(""),
+                new TreeSet<>());
             Set<String> annotationPathsExpected = Emoji.getNamePaths();
             checkAMinusBIsC("(" + locale + ".xml - Emoji.getNamePaths)", annotationPaths, annotationPathsExpected, Collections.<String> emptySet());
             checkAMinusBIsC("(Emoji.getNamePaths - " + locale + ".xml)", annotationPathsExpected, annotationPaths, Collections.<String> emptySet());
@@ -289,28 +333,34 @@ public class TestAnnotations extends TestFmwkPlus {
         String emojiImageDir = CLDRPaths.BASE_DIRECTORY + "/tools/cldr-apps/WebContent/images/emoji";
         for (String emoji : Emoji.getNonConstructed()) { 
             String noVs = emoji.replace(Emoji.EMOJI_VARIANT, "");
-            
+
             // example: emoji_1f1e7_1f1ec.png
             String fileName = "emoji_" + Utility.hex(noVs, 4, "_").toLowerCase(Locale.ENGLISH) + ".png";
             File file = new File(emojiImageDir, fileName);
-            
+
             if (!file.exists()) {
                 String name = enAnnotations.getStringValue("//ldml/annotations/annotation[@cp=\"" + noVs + "\"][@type=\"tts\"]");
                 errln(fileName + " missing; " + name);
             }
         }
     }
-    
+
     /**
-     * check that the order info and categories are consistent.
+     * Check that the order info, categories, and collation are consistent.
      */
     public void testEmojiOrdering() {
         // load an array for sorting
         // and test that every order value maps to exactly one emoji
         Map<String,String> minorToMajor = new HashMap<>();
-        Map<Integer, String> orderToEmoji = new TreeMap<>();
+        Map<Long, String> orderToEmoji = new TreeMap<>();
+        Collator col = CLDRConfig.getInstance().getCollatorRoot();
+
         for (String emoji : Emoji.getNonConstructed()) {
-            Integer emojiOrder = Emoji.getEmojiToOrder(emoji);
+            Long emojiOrder = Emoji.getEmojiToOrder(emoji);
+            if (DEBUG) {
+                String minor = Emoji.getMinorCategory(emoji);
+                System.out.println(emojiOrder + "\t" + emoji + "\t" + minor);
+            }
             String oldEmoji = orderToEmoji.get(emojiOrder);
             if (oldEmoji == null) {
                 orderToEmoji.put(emojiOrder, emoji);
@@ -322,8 +372,27 @@ public class TestAnnotations extends TestFmwkPlus {
         String lastMajor = "";
         Set<String> minorsSoFar = new TreeSet<>();
         String lastMinor = "";
-        for (Entry<Integer, String> entry : orderToEmoji.entrySet()) {
+        Set<String> lastMajorGroup = new LinkedHashSet<>();
+        Set<String> lastMinorGroup = new LinkedHashSet<>();
+        String lastEmoji = "";
+        long lastEmojiOrdering = -1L;
+        for (Entry<Long, String> entry : orderToEmoji.entrySet()) {
             String emoji = entry.getValue();
+            Long emojiOrdering = entry.getKey();
+            // check against collation
+            if (col.compare(emoji, lastEmoji) <= 0) {
+                String name = eng.getShortName(emoji);
+                String lastName = eng.getShortName(lastEmoji);
+                int errorType = ERR;
+                if (logKnownIssue("cldr13660", "slightly out of order")) {
+                    errorType = WARN;
+                };
+                msg("Out of order: " 
+                + lastEmoji + " (" + lastEmojiOrdering + ") " + lastName
+                + " > " 
+                + emoji + " (" + emojiOrdering + ") " + name, errorType, true, true);
+            }
+
             String major = Emoji.getMajorCategory(emoji);
             String minor = Emoji.getMinorCategory(emoji);
             if (isVerbose()) {
@@ -338,21 +407,35 @@ public class TestAnnotations extends TestFmwkPlus {
             }
             // never get major1 < major2 < major1
             if (!major.equals(lastMajor)) {
-                if (majorsSoFar.contains(major)) {
-                    errln("Non-contiguous majors: " + major + " <… " + lastMajor + " < " + major);
-                }
+                //System.out.println(lastMajor + "\t" + lastMajorGroup);
+
+//                if (majorsSoFar.contains(major)) {
+//                    errln("Non-contiguous majors: " + major + " <… " + lastMajor + " < " + major);
+//                }
                 majorsSoFar.add(major);
                 lastMajor = major;
+                lastMajorGroup.clear();
+                lastMajorGroup.add(emoji); // add emoji with different cat
+            } else {
+                lastMajorGroup.add(emoji);
             }
             // never get minor1 < minor2 < minor1
             if (!minor.equals(lastMinor)) {
+                if (DEBUG) System.out.println(lastMinor + "\t" + lastMinorGroup);
                 if (minorsSoFar.contains(minor)) {
                     errln("Non-contiguous minors: " + minor + " <… " + lastMinor + " < " + minor);
                 }
                 minorsSoFar.add(minor);
                 lastMinor = minor;
+                lastMinorGroup.clear();
+                lastMinorGroup.add(emoji); // add emoji with different cat
+            } else {
+                lastMinorGroup.add(emoji);
             }
+            lastEmoji = emoji;
+            lastEmojiOrdering = emojiOrdering;
         }
+        if (DEBUG) System.out.println(lastMinor + "\t" + lastMinorGroup);
     }
 
 
@@ -405,9 +488,15 @@ public class TestAnnotations extends TestFmwkPlus {
     private void checkAMinusBIsC(String title, Set<String> a, Set<String> b, Set<String> c) {
         Set<String> aMb = new TreeSet<>(a);
         aMb.removeAll(b);
+        for (Iterator<String> it = aMb.iterator(); it.hasNext();) {
+            String item = it.next();
+            if (symbols.containsSome(item)) {
+                it.remove();
+            }
+        }
         assertEquals(title + " (" + aMb.size() + ")", c, aMb);
     }
-    
+
     public void testListFormatter() {
         Object[][] tests = {
             {"en", ListTypeLength.NORMAL, "ABC", "A, B, and C"},
