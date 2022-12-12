@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2019 Unicode, Inc.
+<!-- Copyright © 1991-2020 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
@@ -12,6 +12,10 @@ CLDR data files are interpreted according to the LDML specification (http://unic
 		<territory type="IN"/>
 	</identity>
 	<annotations>
-		<annotation cp="👫" draft="contributed">couple | hand | hold | man | man and woman holding hands | woman</annotation>
+		<annotation cp="🩴">beach sandals | flip-flop | sandals | thong sandal | thong sandals | thongs | zōri</annotation>
+		<annotation cp="🪴">boring | grow | house | nurturing | plant | potted plant | useless</annotation>
+		<annotation cp="🫑">bell pepper | capsicum | pepper | vegetable</annotation>
+		<annotation cp="🫑" type="tts">bell pepper</annotation>
+		<annotation cp="👫">couple | hand | hold | man | man and woman holding hands | woman | woman and man holding hands</annotation>
 	</annotations>
 </ldml>
