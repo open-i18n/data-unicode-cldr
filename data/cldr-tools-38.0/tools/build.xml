@@ -1,0 +1,87 @@
+<project name="CLDR Distribution" default="all" basedir=".">
+  <target name="init">
+    <tstamp/>
+    <property name="version" value="38.0"/>
+    <property name="dist.dir" value="dist"/>
+    <property name="dist.conf.dir" value="dist.conf"/>
+    <property name="excludes.file" value="${dist.conf.dir}/distExcludes.txt"/>
+    <property name="includes.common.file" value="${dist.conf.dir}/includes-common.txt"/>
+    <property name="includes.readme.file" value="${dist.conf.dir}/includes-readme.txt"/>
+    <property name="includes.tools.file" value="${dist.conf.dir}/includes-tools.txt"/>
+    <property name="includes.keyboards.file" value="${dist.conf.dir}/includes-keyboards.txt"/>
+  </target>
+
+  <target name="all" depends="dist-common,dist-tools,dist-keyboards">
+    <exec dir="scripts" executable="bash">
+      <arg line="updateHash.sh"/>
+    </exec>
+  </target>
+
+  <target name="clean" depends="init" description="Clean out the distribution directory">
+    <delete dir="${dist.dir}"/>
+  </target>
+
+  <target name="dist-excludes" depends="init">
+    <exec dir="scripts" executable="bash">
+      <arg line="distUpdateExcludes.sh"/>
+    </exec>
+  </target>
+
+  <target name="dist-dir">
+    <mkdir dir="${dist.dir}"/>
+  </target>
+
+  <target name="dist-common" depends="init,dist-dir,dist-excludes">
+    <zip destfile="${dist.dir}/cldr-common-${version}.zip"
+         compress="yes">
+         <fileset
+             excludesfile="${excludes.file}"
+             dir=".."
+             includesfile="${includes.readme.file}"
+         />
+         <fileset
+             excludesfile="${excludes.file}"
+             dir="../../cldr-staging/production/"
+             includesfile="${includes.common.file}"
+         />
+    </zip>
+    <symlink resource="cldr-common-${version}.zip" link="${dist.dir}/core.zip"/>
+  </target>
+
+  <target name="dist-tools" depends="init,dist-dir,dist-excludes">
+    <zip destfile="${dist.dir}/cldr-tools-${version}.zip"
+         compress="yes">
+         <fileset
+             excludesfile="${excludes.file}"
+             dir=".."
+             includesfile="${includes.readme.file}"
+         />
+         <fileset
+             excludesfile="${excludes.file}"
+             dir=".."
+             includesfile="${includes.tools.file}"
+         />
+    </zip>
+    <symlink resource="cldr-tools-${version}.zip" link="${dist.dir}/tools.zip"/>
+    <exec dir="scripts" executable="bash">
+      <arg line="build-single-jar.sh"/>
+    </exec>
+    <copy file="java/cldr.jar" tofile="${dist.dir}/cldr-tools-${version}.jar"/>
+  </target>
+  <target name="dist-keyboards" depends="init,dist-dir,dist-excludes">
+    <zip destfile="${dist.dir}/cldr-keyboards-${version}.zip"
+         compress="yes">
+         <fileset
+             excludesfile="${excludes.file}"
+             dir=".."
+             includesfile="${includes.readme.file}"
+         />
+         <fileset
+             excludesfile="${excludes.file}"
+             dir=".."
+             includesfile="${includes.keyboards.file}"
+         />
+    </zip>
+    <symlink resource="cldr-keyboards-${version}.zip" link="${dist.dir}/keyboards.zip"/>
+  </target>
+</project>
