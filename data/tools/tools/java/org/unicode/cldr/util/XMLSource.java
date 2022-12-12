@@ -42,7 +42,7 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
     public static final String ROOT_ID = "root";
     public static final boolean USE_PARTS_IN_ALIAS = false;
     private static final String TRACE_INDENT = " "; // "\t"
-    private transient XPathParts parts = new XPathParts(null, null);
+    private transient XPathParts parts = new XPathParts();
     private static Map<String, String> allowDuplicates = new HashMap<String, String>();
 
     private String localeID;
@@ -130,9 +130,14 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
      */
     public boolean isDraft(String path) {
         String fullpath = getFullPath(path);
-        if (path == null) return false;
-        if (fullpath.indexOf("[@draft=") < 0) return false;
-        return parts.set(fullpath).containsAttribute("draft");
+        if (path == null) {
+            return false;
+        }
+        if (fullpath.indexOf("[@draft=") < 0) {
+            return false;
+        }
+        XPathParts parts = XPathParts.getFrozenInstance(fullpath);
+        return parts.containsAttribute("draft");
     }
 
     public boolean isFrozen() {
@@ -149,7 +154,7 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
         if (locked) {
             throw new UnsupportedOperationException("Attempt to modify locked object");
         }
-        String distinguishingXPath = CLDRFile.getDistinguishingXPath(xpath, fixedPath, nonInheriting);
+        String distinguishingXPath = CLDRFile.getDistinguishingXPath(xpath, fixedPath);
         putValueAtDPath(distinguishingXPath, value);
         if (!fixedPath[0].equals(distinguishingXPath)) {
             clearCache();
@@ -316,12 +321,9 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
 
             // fullPath will be the same as newPath, except for some attributes at the end.
             // add those attributes to oldPath, starting from the end.
-            XPathParts partsOld = new XPathParts();
-            XPathParts partsNew = new XPathParts();
-            XPathParts partsFull = new XPathParts();
-            partsOld.set(oldPath);
-            partsNew.set(newPath);
-            partsFull.set(fullPath);
+            XPathParts partsOld = XPathParts.getFrozenInstance(oldPath);
+            XPathParts partsNew = XPathParts.getFrozenInstance(newPath);
+            XPathParts partsFull = XPathParts.getFrozenInstance(fullPath);
             Map<String, String> attributesFull = partsFull.getAttributes(-1);
             Map<String, String> attributesNew = partsNew.getAttributes(-1);
             Map<String, String> attributesOld = partsOld.getAttributes(-1);
@@ -442,7 +444,7 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
      */
     public String getSourceLocaleID(String path, CLDRFile.Status status) {
         if (status != null) {
-            status.pathWhereFound = CLDRFile.getDistinguishingXPath(path, null, false);
+            status.pathWhereFound = CLDRFile.getDistinguishingXPath(path, null);
         }
         return getLocaleID();
     }
@@ -471,7 +473,7 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
     public void removeValueAtPath(String xpath) {
         if (locked) throw new UnsupportedOperationException("Attempt to modify locked object");
         clearCache();
-        removeValueAtDPath(CLDRFile.getDistinguishingXPath(xpath, null, nonInheriting));
+        removeValueAtDPath(CLDRFile.getDistinguishingXPath(xpath, null));
     }
 
     /**
@@ -482,7 +484,7 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
      * @return
      */
     public String getValueAtPath(String xpath) {
-        return getValueAtDPath(CLDRFile.getDistinguishingXPath(xpath, null, nonInheriting));
+        return getValueAtDPath(CLDRFile.getDistinguishingXPath(xpath, null));
     }
 
     /**
@@ -493,7 +495,7 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
      * @return
      */
     public String getFullPath(String xpath) {
-        return getFullPathAtDPath(CLDRFile.getDistinguishingXPath(xpath, null, nonInheriting));
+        return getFullPathAtDPath(CLDRFile.getDistinguishingXPath(xpath, null));
     }
 
     /**
@@ -779,9 +781,9 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
                 // find the differences, and add them into xpath
                 // we do this by walking through each element, adding the corresponding attribute values.
                 // we add attributes FROM THE END, in case the lengths are different!
-                XPathParts xpathParts = new XPathParts().set(xpath);
-                XPathParts fullPathWhereFoundParts = new XPathParts().set(fullPathWhereFound);
-                XPathParts pathWhereFoundParts = new XPathParts().set(fullStatus.pathWhereFound);
+                XPathParts xpathParts = XPathParts.getInstance(xpath); // not frozen, for putAttributeValue
+                XPathParts fullPathWhereFoundParts = XPathParts.getFrozenInstance(fullPathWhereFound);
+                XPathParts pathWhereFoundParts = XPathParts.getFrozenInstance(fullStatus.pathWhereFound);
                 int offset = xpathParts.size() - pathWhereFoundParts.size();
 
                 for (int i = 0; i < pathWhereFoundParts.size(); ++i) {
@@ -1154,7 +1156,9 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
         public void valueChanged(String xpath, XMLSource nonResolvingSource) {
             synchronized (getSourceLocaleIDCache) {
                 AliasLocation location = getSourceLocaleIDCache.remove(xpath);
-                if (location == null) return;
+                if (location == null) {
+                    return;
+                }
                 // Paths aliasing to this path (directly or indirectly) may be affected,
                 // so clear them as well.
                 // There's probably a more elegant way to fix the paths than simply
@@ -1388,10 +1392,14 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
                 addFallbackCode(CLDRFile.LANGUAGE_NAME, extraCode, extraCode);
             }
 
-
             addFallbackCode(CLDRFile.LANGUAGE_NAME, "en_GB", "en_GB", "short");
             addFallbackCode(CLDRFile.LANGUAGE_NAME, "en_US", "en_US", "short");
             addFallbackCode(CLDRFile.LANGUAGE_NAME, "az", "az", "short");
+            
+            addFallbackCode(CLDRFile.LANGUAGE_NAME, "yue", "yue", "menu");
+            addFallbackCode(CLDRFile.LANGUAGE_NAME, "zh", "zh", "menu");
+            addFallbackCode(CLDRFile.LANGUAGE_NAME, "zh_Hans", "zh", "long");
+            addFallbackCode(CLDRFile.LANGUAGE_NAME, "zh_Hant", "zh", "long");
 
             addFallbackCode(CLDRFile.SCRIPT_NAME, "Hans", "Hans", "stand-alone");
             addFallbackCode(CLDRFile.SCRIPT_NAME, "Hant", "Hant", "stand-alone");
@@ -1635,6 +1643,7 @@ public abstract class XMLSource implements Freezable<XMLSource>, Iterable<String
         return null;
     }
 
+    @SuppressWarnings("unused")
     public String getBaileyValue(String xpath, Output<String> pathWhereFound, Output<String> localeWhereFound) {
         return null; // only a resolving xmlsource will return a value
     }

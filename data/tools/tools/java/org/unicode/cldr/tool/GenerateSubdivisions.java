@@ -25,7 +25,7 @@ import com.ibm.icu.impl.Relation;
 import com.ibm.icu.impl.Row.R2;
 
 public class GenerateSubdivisions {
-    private static final String ISO_COUNTRY_CODES = CLDRPaths.CLDR_PRIVATE_DIRECTORY + "iso_country_codes/";
+    private static final String ISO_COUNTRY_CODES = CLDRPaths.CLDR_PRIVATE_DIRECTORY + "iso/";
     static final String ISO_SUBDIVISION_CODES = ISO_COUNTRY_CODES + "iso_country_codes.xml";
 
 
@@ -40,7 +40,7 @@ public class GenerateSubdivisions {
 
         static final Map<String, R2<List<String>, String>> SUBDIVISION_ALIASES_FORMER = SDI.getLocaleAliasInfo().get("subdivision");
 
-        static final SubdivisionNames SUBDIVISION_NAMES_ENGLISH_FORMER = new SubdivisionNames("en");
+        static final SubdivisionNames SUBDIVISION_NAMES_ENGLISH_FORMER = new SubdivisionNames("en", "main", "subdivisions");
 
         static final Validity VALIDITY_FORMER = Validity.getInstance(CLDRPaths.LAST_RELEASE_DIRECTORY + "common/validity/");
 

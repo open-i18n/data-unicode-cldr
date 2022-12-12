@@ -14,8 +14,8 @@ import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
-import org.unicode.cldr.test.EmojiSubdivisionNames;
 import org.unicode.cldr.tool.ChartAnnotations;
+import org.unicode.cldr.tool.SubdivisionNames;
 import org.unicode.cldr.util.XMLFileReader.SimpleHandler;
 
 import com.google.common.base.Objects;
@@ -129,6 +129,9 @@ public class Annotations {
         
         @Override
         public void handlePathValue(String path, String value) {
+            if (value.contains(CldrUtility.INHERITANCE_MARKER)) {
+                return; // skip all ^^^
+            }
             XPathParts parts = XPathParts.getFrozenInstance(path);
             String lastElement = parts.getElement(-1);
             if (!lastElement.equals("annotation")) {
@@ -180,7 +183,16 @@ public class Annotations {
 
     public Annotations(Set<String> attributes, String tts2) {
         annotations = attributes == null ? Collections.<String> emptySet() : ImmutableSet.copyOf(attributes);
+        for (String attr : annotations) {
+            if (attr.contains(CldrUtility.INHERITANCE_MARKER)) {
+                throw new IllegalArgumentException(CldrUtility.INHERITANCE_MARKER);
+            }
+
+        }
         tts = tts2;
+        if (tts != null && tts.contains(CldrUtility.INHERITANCE_MARKER)) {
+            throw new IllegalArgumentException(CldrUtility.INHERITANCE_MARKER);
+        }
     }
 
     public Annotations add(Set<String> attributes, String tts2) {
@@ -213,14 +225,14 @@ public class Annotations {
         static final Factory factory = CONFIG.getCldrFactory();
         static final CLDRFile ENGLISH = CONFIG.getEnglish();
         static final CLDRFile ENGLISH_ANNOTATIONS = null;
-        static final Map<String,String> englishSubdivisionIdToName = EmojiSubdivisionNames.getSubdivisionIdToName("en");
+        static final SubdivisionNames englishSubdivisionIdToName = new SubdivisionNames("en", "main");
         //CLDRConfig.getInstance().getAnnotationsFactory().make("en", false);
 
         private final String locale;
         private final UnicodeMap<Annotations> baseData;
         private final UnicodeMap<Annotations> unresolvedData;
         private final CLDRFile cldrFile;
-        private final Map<String, String> subdivisionIdToName;
+        private final SubdivisionNames subdivisionIdToName;
         private final SimpleFormatter initialPattern;
         private final Pattern initialRegexPattern;
         private final XListFormatter listPattern;
@@ -239,7 +251,8 @@ public class Annotations {
             unresolvedData = source.freeze();
             this.baseData = resolvedSource == null ? unresolvedData : resolvedSource.freeze();
             cldrFile = factory.make(locale, true);
-            subdivisionIdToName = EmojiSubdivisionNames.getSubdivisionIdToName(locale);
+            subdivisionIdToName = new SubdivisionNames(locale, "main", "subdivisions");
+// EmojiSubdivisionNames.getSubdivisionIdToName(locale);
             listPattern = new XListFormatter(cldrFile, EmojiConstants.COMPOSED_NAME_LIST);
             final String initialPatternString = getStringValue("//ldml/characterLabels/characterLabelPattern[@type=\"category-list\"]");
             initialPattern = SimpleFormatter.compile(initialPatternString);
@@ -271,9 +284,9 @@ public class Annotations {
         }
 
         private String getStringValue(String xpath, CLDRFile cldrFile2, CLDRFile english) {
-            String result = cldrFile2.getStringValue(xpath);
+            String result = cldrFile2.getStringValueWithBailey(xpath);
             if (result == null) {
-                return ENGLISH_MARKER + english.getStringValue(xpath);
+                return ENGLISH_MARKER + english.getStringValueWithBailey(xpath);
             }
             String sourceLocale = cldrFile2.getSourceLocaleID(xpath, null);
             if (sourceLocale.equals(XMLSource.CODE_FALLBACK_ID) || sourceLocale.equals(XMLSource.ROOT_ID)) {
@@ -361,7 +374,7 @@ public class Annotations {
                 String path = CLDRFile.getKey(CLDRFile.TERRITORY_NAME, countryCode);
                 String regionName = getStringValue(path);
                 if (regionName == null) {
-                    regionName = ENGLISH_MARKER + ENGLISH.getStringValue(path);
+                    regionName = ENGLISH_MARKER + ENGLISH.getStringValueWithBailey(path);
                 }
                 String flagName = flagLabel == null ? regionName : initialPattern.format(flagLabel, regionName);
                 return new Annotations(flagLabelSet, flagName);
@@ -370,12 +383,12 @@ public class Annotations {
                 String subdivisionCode = EmojiConstants.getTagSpec(code);
                 String subdivisionName = subdivisionIdToName.get(subdivisionCode);
                 if (subdivisionName == null) {
-                    subdivisionName = englishSubdivisionIdToName.get(subdivisionCode);
-                    if (subdivisionName != null) {
-                        subdivisionName = ENGLISH_MARKER + subdivisionCode;
-                    } else {
+//                    subdivisionName = englishSubdivisionIdToName.get(subdivisionCode);
+//                    if (subdivisionName != null) {
+//                        subdivisionName = ENGLISH_MARKER + subdivisionCode;
+//                    } else {
                         subdivisionName = MISSING_MARKER + subdivisionCode;
-                    }
+//                    }
                 }
                 String flagName = flagLabel == null ? subdivisionName : initialPattern.format(flagLabel, subdivisionName);
                 return new Annotations(flagLabelSet, flagName);
@@ -598,7 +611,7 @@ public class Annotations {
         if (!LOCALES.contains(locale)) {
             return null;
         }
-        String parentString = LocaleIDParser.getSimpleParent(locale);
+        String parentString = LocaleIDParser.getParent(locale);
         AnnotationSet parentData = null;
         if (parentString != null && !parentString.equals("root")) {
             parentData = getDataSet(dir, parentString);

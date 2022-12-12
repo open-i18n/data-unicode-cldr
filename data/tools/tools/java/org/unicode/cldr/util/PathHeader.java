@@ -203,6 +203,7 @@ public class PathHeader implements Comparable<PathHeader> {
         
         Measurement_Systems( SectionId.Units, "Measurement Systems"),
         Duration( SectionId.Units),
+        Graphics( SectionId.Units),
         Length( SectionId.Units),
         Area( SectionId.Units),
         Volume( SectionId.Units),
@@ -440,6 +441,13 @@ public class PathHeader implements Comparable<PathHeader> {
         }
         return factorySingleton;
     }
+    
+    /**
+     * Convenience method for common case. See {{@link #getFactory(CLDRFile)}}
+     */
+    public static Factory getFactory() {
+        return getFactory(CLDRConfig.getInstance().getEnglish());
+    }
 
     /**
      * @deprecated
@@ -671,7 +679,7 @@ public class PathHeader implements Comparable<PathHeader> {
          * Return the PathHeader for a given path. Thread-safe.
          * @param failures a list of failures to add to.
          */
-        public PathHeader fromPath(String path, List<String> failures) {
+        public PathHeader fromPath(final String path, List<String> failures) {
             if (path == null) {
                 throw new NullPointerException("Path cannot be null");
             }
@@ -745,7 +753,7 @@ public class PathHeader implements Comparable<PathHeader> {
                     return result;
                 } catch (Exception e) {
                     throw new IllegalArgumentException(
-                        "Probably mismatch in Page/Section enum, or too few capturing groups in regex for " + cleanPath,
+                        "Probably mismatch in Page/Section enum, or too few capturing groups in regex for " + path,
                         e);
                 }
             }
@@ -1757,8 +1765,21 @@ public class PathHeader implements Comparable<PathHeader> {
                 @Override
                 public String transform(String source) {
                     String minorCat = Emoji.getMinorCategory(source);
-                    order = Emoji.getEmojiToOrder(source);
+                    order = Emoji.getEmojiMinorOrder(source);
                     return minorCat;
+                }
+            });
+            /**
+             * Use the ordering of the emoji in getEmojiToOrder rather than alphabetic,
+             * since the collator data won't be ready until the candidates are final. 
+             */
+            functionMap.put("emoji", new Transform<String, String>() {
+                @Override
+                public String transform(String source) {
+                    int dashPos = source.indexOf(' ');
+                    String emoji = source.substring(0, dashPos);
+                    order = (Emoji.getEmojiToOrder(emoji) << 1) + (source.endsWith("name") ? 0 : 1);
+                    return source;
                 }
             });
 

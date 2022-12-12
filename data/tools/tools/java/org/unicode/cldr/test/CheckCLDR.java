@@ -69,7 +69,7 @@ import com.ibm.icu.util.ICUUncheckedIOException;
  */
 abstract public class CheckCLDR {
 
-    public static final boolean LIMITED_SUBMISSION = true; // TODO represent differently
+    public static final boolean LIMITED_SUBMISSION = false; // TODO represent differently
 
     private static CLDRFile displayInformation;
 
@@ -107,8 +107,7 @@ abstract public class CheckCLDR {
         FORBID_ERRORS(true), 
         FORBID_READONLY(true), 
         FORBID_UNLESS_DATA_SUBMISSION(true), 
-        FORBID_COVERAGE(true), 
-        FORBID_NEEDS_TICKET(true);
+        FORBID_NULL(true);
 
         private final boolean isForbidden;
 
@@ -127,27 +126,6 @@ abstract public class CheckCLDR {
         public boolean canShow() {
             return !isForbidden;
         }
-
-        /**
-         * @deprecated
-         */
-        public static final StatusAction FORBID = FORBID_READONLY;
-        /**
-         * @deprecated
-         */
-        public static final StatusAction SHOW_VOTING_AND_ADD = ALLOW;
-        /**
-         * @deprecated
-         */
-        public static final StatusAction SHOW_VOTING_AND_TICKET = ALLOW_VOTING_AND_TICKET;
-        /**
-         * @deprecated
-         */
-        public static final StatusAction SHOW_VOTING_BUT_NO_ADD = ALLOW_VOTING_BUT_NO_ADD;
-        /**
-         * @deprecated
-         */
-        public static final StatusAction FORBID_HAS_ERROR = FORBID_ERRORS;
     }
 
     private static final HashMap<String, Phase> PHASE_NAMES = new HashMap<String, Phase>();
@@ -206,25 +184,16 @@ abstract public class CheckCLDR {
                 return StatusAction.ALLOW;
             }
 
-            // remove this since we no longer have an 'optional' level
-//            // if the coverage level is optional, disallow everything
-//            if (pathValueInfo.getCoverageLevel().compareTo(Level.COMPREHENSIVE) > 0) {
-//                return StatusAction.FORBID_COVERAGE;
-//            }
-
             if (status == SurveyToolStatus.HIDE) {
                 return StatusAction.FORBID_READONLY;
             }
 
             CandidateInfo winner = pathValueInfo.getCurrentItem();
-//            if (winner != null && "тлусты".equals(winner.getValue())) {
-//                int debug = 0;
-//            }
             ValueStatus valueStatus = getValueStatus(winner, ValueStatus.NONE, null);
 
             // if limited submission, and winner doesn't have an error, limit the values
 
-            if (LIMITED_SUBMISSION && !SubmissionLocales.allowEvenIfLimited(pathValueInfo.getLocale().toString(), pathValueInfo.getXpath(), valueStatus == ValueStatus.ERROR, pathValueInfo.getLastReleaseStatus() == Status.missing)) {
+            if (LIMITED_SUBMISSION && !SubmissionLocales.allowEvenIfLimited(pathValueInfo.getLocale().toString(), pathValueInfo.getXpath(), valueStatus == ValueStatus.ERROR, pathValueInfo.getBaselineStatus() == Status.missing)) {
                 return StatusAction.FORBID_READONLY;
             }
 
@@ -347,8 +316,14 @@ abstract public class CheckCLDR {
     public static final class Options implements Comparable<Options> {
 
         public enum Option {
-            locale, CoverageLevel_requiredLevel("CoverageLevel.requiredLevel"), CoverageLevel_localeType(
-                "CoverageLevel.localeType"), SHOW_TIMES, phase, lgWarningCheck, CheckCoverage_skip("CheckCoverage.skip"), exemplarErrors;
+            locale,
+            CoverageLevel_requiredLevel("CoverageLevel.requiredLevel"),
+            CoverageLevel_localeType("CoverageLevel.localeType"),
+            SHOW_TIMES,
+            phase,
+            lgWarningCheck,
+            CheckCoverage_skip("CheckCoverage.skip"),
+            exemplarErrors;
 
             private String key;
 
@@ -458,11 +433,6 @@ abstract public class CheckCLDR {
             }
         }
 
-        private Options clear(Option o) {
-            set(o, null);
-            return this;
-        }
-
         private Options clear() {
             for (int i = 0; i < options.length; i++) {
                 options[i] = null;
@@ -487,6 +457,14 @@ abstract public class CheckCLDR {
             return CLDRLocale.getInstance(get(Option.locale));
         }
 
+        /**
+         * Get the required coverage level for the specified locale, for this CheckCLDR object.
+         *
+         * @param localeID
+         * @return the Level
+         *
+         * Called by CheckCoverage.setCldrFileToCheck and CheckDates.setCldrFileToCheck
+         */
         public Level getRequiredLevel(String localeID) {
             Level result;
             // see if there is an explicit level
@@ -497,7 +475,8 @@ abstract public class CheckCLDR {
                     return result;
                 }
             }
-            // otherwise, see if there is an organization level
+            // otherwise, see if there is an organization level for the "Cldr" organization.
+            // This is not user-specific.
             return sc.getLocaleCoverageLevel("Cldr", localeID);
         }
 
@@ -728,7 +707,7 @@ abstract public class CheckCLDR {
             missingMainExemplars, mustNotStartOrEndWithSpace, illegalCharactersInNumberPattern, 
             numberPatternNotCanonical, currencyPatternMissingCurrencySymbol, missingMinusSign, 
             badNumericType, percentPatternMissingPercentSymbol, illegalNumberFormat, unexpectedAttributeValue, 
-            metazoneContainsDigit, tooManyGroupingSeparators, inconsistentPluralFormat, sameAsEnglishOrCode, 
+            metazoneContainsDigit, tooManyGroupingSeparators, inconsistentPluralFormat, sameAsEnglish, sameAsCode, 
             dateSymbolCollision, incompleteLogicalGroup, extraMetazoneString, inconsistentDraftStatus, 
             errorOrWarningInLogicalGroup, valueTooWide, valueTooNarrow, nameContainsYear, patternCannotContainDigits, 
             patternContainsInvalidCharacters, parenthesesNotAllowed, illegalNumberingSystem, unexpectedOrderOfEraYear, 
@@ -831,6 +810,9 @@ abstract public class CheckCLDR {
         public CheckStatus setMessage(String message) {
             if (cause == null) {
                 throw new IllegalArgumentException("Must have cause set.");
+            }
+            if (message == null) {
+                throw new IllegalArgumentException("Message cannot be null.");
             }
             this.messageFormat = message;
             this.parameters = null;
@@ -953,7 +935,7 @@ abstract public class CheckCLDR {
         public abstract String getHTML(Map<String, String> postArguments) throws Exception;
 
         /**
-         * Only here for compatibiltiy. Use the other getHTML instead
+         * Only here for compatibility. Use the other getHTML instead
          */
         public final String getHTML(String path, String fullPath, String value) throws Exception {
             return getHTML(internalPostArguments);
@@ -973,13 +955,6 @@ abstract public class CheckCLDR {
             internalPostArguments.putAll(postArguments);
             return true;
         }
-        // /**
-        // * Utility for setting map. Use the paradigm in CheckNumbers.
-        // */
-        // public boolean putIfDifferent(Map inout, String key, String value) {
-        // Object oldValue = inout.put(key, value);
-        // return !value.equals(oldValue);
-        // }
     }
 
     public static abstract class FormatDemo extends SimpleDemo {
@@ -1135,21 +1110,6 @@ abstract public class CheckCLDR {
     }
 
     /**
-     * @deprecated use {@link #getExamples(String, String, String, Options, List)}
-     * @param path
-     * @param fullPath
-     * @param value
-     * @param options
-     * @param result
-     * @return
-     */
-    @Deprecated
-    public final CheckCLDR getExamples(String path, String fullPath, String value, Map<String, String> options,
-        List<CheckStatus> result) {
-        return getExamples(path, fullPath, value, new Options(options), result);
-    }
-
-    /**
      * Returns any examples in the result parameter. Both examples and demos can
      * be returned. A demo will have getType() == CheckStatus.demoType. In that
      * case, there will be no getMessage or getHTMLMessage available; instead,
@@ -1162,6 +1122,7 @@ abstract public class CheckCLDR {
         return handleGetExamples(path, fullPath, value, options, result);
     }
 
+    @SuppressWarnings("unused")
     protected CheckCLDR handleGetExamples(String path, String fullPath, String value, Options options2,
         List<CheckStatus> result) {
         return this; // NOOP unless overridden
@@ -1341,8 +1302,6 @@ abstract public class CheckCLDR {
         }
     }
 
-    // static Transliterator prettyPath = getTransliteratorFromFile("ID", "prettyPath.txt");
-
     public static Transliterator getTransliteratorFromFile(String ID, String file) {
         try {
             BufferedReader br = CldrUtility.getUTF8Data(file);
@@ -1402,7 +1361,9 @@ abstract public class CheckCLDR {
      */
     private boolean shouldExcludeStatus(String xpath, CheckStatus status) {
         List<Pattern> xpathPatterns = filtersForLocale.get(status.getSubtype());
-        if (xpathPatterns == null) return false;
+        if (xpathPatterns == null) {
+            return false;
+        }
         for (Pattern xpathPattern : xpathPatterns) {
             if (xpathPattern.matcher(xpath).matches()) {
                 return true;

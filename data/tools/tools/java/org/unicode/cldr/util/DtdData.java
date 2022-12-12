@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -19,6 +18,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Pattern;
 
 import com.google.common.base.CharMatcher;
@@ -530,6 +531,10 @@ public class DtdData extends XMLFileReader.SimpleHandler {
             return isDeprecatedElement;
         }
 
+        public boolean isOrdered() {
+            return isOrderedElement;
+        }
+
         public ElementStatus getElementStatus() {
             return elementStatus;
         }
@@ -647,34 +652,42 @@ public class DtdData extends XMLFileReader.SimpleHandler {
         throw new XMLFileReader.AbortException();
     }
 
-    //    static final Map<CLDRFile.DtdType, String> DTD_TYPE_TO_FILE;
-    //    static {
-    //        EnumMap<CLDRFile.DtdType, String> temp = new EnumMap<CLDRFile.DtdType, String>(CLDRFile.DtdType.class);
-    //        temp.put(CLDRFile.DtdType.ldml, CldrUtility.BASE_DIRECTORY + "common/dtd/ldml.dtd");
-    //        temp.put(CLDRFile.DtdType.supplementalData, CldrUtility.BASE_DIRECTORY + "common/dtd/ldmlSupplemental.dtd");
-    //        temp.put(CLDRFile.DtdType.ldmlBCP47, CldrUtility.BASE_DIRECTORY + "common/dtd/ldmlBCP47.dtd");
-    //        temp.put(CLDRFile.DtdType.keyboard, CldrUtility.BASE_DIRECTORY + "keyboards/dtd/ldmlKeyboard.dtd");
-    //        temp.put(CLDRFile.DtdType.platform, CldrUtility.BASE_DIRECTORY + "keyboards/dtd/ldmlPlatform.dtd");
-    //        DTD_TYPE_TO_FILE = Collections.unmodifiableMap(temp);
-    //    }
-
     /**
-     * Normal version of DtdData
      * Note that it always gets the trunk version
+     * @deprecated depends on static config, use {@link DtdData#getInstance(DtdType, File)} instead
      */
     public static DtdData getInstance(DtdType type) {
-        return CACHE.get(type);
+        return getInstance(type, CLDRConfig.getInstance().getCldrBaseDirectory());
     }
-
+    
     /**
      * Special form using version, used only by tests, etc.
      */
     public static DtdData getInstance(DtdType type, String version) {
-        DtdData simpleHandler = new DtdData(type, version);
-        XMLFileReader xfr = new XMLFileReader().setHandler(simpleHandler);
         File directory = version == null ? CLDRConfig.getInstance().getCldrBaseDirectory()
             : new File(CLDRPaths.ARCHIVE_DIRECTORY + "/cldr-" + version);
 
+        return getInstance(type, version, directory);
+    }
+
+    private static final ConcurrentMap<Pair<DtdType, File>, DtdData> CACHE = new ConcurrentHashMap<>();
+
+    /**
+     * Normal version of DtdData
+     * Get a DtdData, given the CLDR root directory.
+     * @param type which DtdType to return
+     * @param directory the CLDR Root directory, which contains the "common" directory.
+     * @return
+     */
+    public static DtdData getInstance(DtdType type, File directory) {
+        Pair<DtdType, File> key = new Pair<>(type, directory);
+        DtdData data = CACHE.computeIfAbsent(key, k -> getInstance(type, null, directory));
+        return data;
+    }
+ 
+    private static DtdData getInstance(DtdType type, String version, File directory) {
+        DtdData simpleHandler = new DtdData(type, version);
+        XMLFileReader xfr = new XMLFileReader().setHandler(simpleHandler);
         if (type != type.rootType) {
             // read the real first, then add onto it.
             readFile(type.rootType, xfr, directory);
@@ -746,15 +759,6 @@ public class DtdData extends XMLFileReader.SimpleHandler {
                 System.out.println("Element Ordering:\t" + elementList);
                 System.out.println("Attribute Ordering:\t" + attributeList);
             }
-            // double-check
-            //        for (Element element : elements) {
-            //            if (!MergeLists.hasConsistentOrder(elementList, element.children.keySet())) {
-            //                throw new IllegalArgumentException("Failed to find good element order: " + element.children.keySet());
-            //            }
-            //            if (!MergeLists.hasConsistentOrder(attributeList, element.attributes.keySet())) {
-            //                throw new IllegalArgumentException("Failed to find good attribute order: " + element.attributes.keySet());
-            //            }
-            //        }
             elementComparator = new MapComparator<String>(elementList).setErrorOnMissing(true).freeze();
             attributeComparator = new MapComparator<String>(attributeList).setErrorOnMissing(true).freeze();
         }
@@ -888,70 +892,10 @@ public class DtdData extends XMLFileReader.SimpleHandler {
         return nameToElement;
     }
 
-    //    private static class XPathIterator implements SimpleIterator<Node> {
-    //        private String path;
-    //        private int position; // at the start of the next element, or at the end of the string
-    //        private Node node = new Node();
-    //
-    //        public void set(String path) {
-    //            if (!path.startsWith("//")) {
-    //                throw new IllegalArgumentException();
-    //            }
-    //            this.path = path;
-    //            this.position = 2;
-    //        }
-    //
-    //        @Override
-    //        public Node next() {
-    //            // starts with /...[@...="...."]...
-    //            if (position >= path.length()) {
-    //                return null;
-    //            }
-    //            node.elementName = "";
-    //            node.attributes.clear();
-    //            int start = position;
-    //            // collect the element
-    //            while (true) {
-    //                if (position >= path.length()) {
-    //                    return node;
-    //                }
-    //                char ch = path.charAt(position++);
-    //                switch (ch) {
-    //                case '/':
-    //                    return node;
-    //                case '[':
-    //                    node.elementName = path.substring(start, position);
-    //                    break;
-    //                }
-    //            }
-    //            // done with element, we hit a [, collect the attributes
-    //
-    //            if (path.charAt(position++) != '@') {
-    //                throw new IllegalArgumentException();
-    //            }
-    //            while (true) {
-    //                if (position >= path.length()) {
-    //                    return node;
-    //                }
-    //                char ch = path.charAt(position++);
-    //                switch (ch) {
-    //                case '/':
-    //                    return node;
-    //                case '[':
-    //                    node.elementName = path.substring(start, position);
-    //                    break;
-    //                }
-    //            }
-    //        }
-    //    }
-
     public String toString() {
         StringBuilder b = new StringBuilder();
         // <!ELEMENT ldml (identity, (alias | (fallback*, localeDisplayNames?, layout?, contextTransforms?, characters?, delimiters?, measurement?, dates?, numbers?, units?, listPatterns?, collations?, posix?, segmentations?, rbnf?, metadata?, references?, special*))) >
         // <!ATTLIST ldml draft ( approved | contributed | provisional | unconfirmed | true | false ) #IMPLIED > <!-- true and false are deprecated. -->
-//        if (firstComment != null) {
-//            b.append("\n<!--").append(firstComment).append("-->");
-//        }
         Seen seen = new Seen(dtdType);
         seen.seenElements.add(ANY);
         seen.seenElements.add(PCDATA);
@@ -1003,12 +947,7 @@ public class DtdData extends XMLFileReader.SimpleHandler {
         return toAddTo;
     }
 
-    //static final SupplementalDataInfo supplementalDataInfo = CLDRConfig.getInstance().getSupplementalDataInfo();
-
     private void toString(Element current, StringBuilder b, Seen seen) {
-//        if ("calendar".equals(current.name) || current.commentsPost != null && current.commentsPost.contains("use of fields")) {
-//            int debug = 0;
-//        }
         boolean first = true;
         if (seen.seenElements.contains(current)) {
             return;
@@ -1249,9 +1188,6 @@ public class DtdData extends XMLFileReader.SimpleHandler {
         if ("_q".equals(attributeName)) {
             return AttributeStatus.distinguished; // special case
         }
-        if ("#PCDATA".equals(elementName)) {
-            int debug = 1;
-        }
         Element element = nameToElement.get(elementName);
         if (element == null) {
             if (elementName.startsWith("icu:")) {
@@ -1323,7 +1259,7 @@ public class DtdData extends XMLFileReader.SimpleHandler {
         "digital-petabyte", "digital-terabyte", "digital-terabit", "digital-gigabyte", "digital-gigabit",
         "digital-megabyte", "digital-megabit", "digital-kilobyte", "digital-kilobit",
         "digital-byte", "digital-bit",
-        "duration-century",
+        "duration-century", "duration-decade",
         "duration-year", "duration-year-person",
         "duration-month", "duration-month-person",
         "duration-week", "duration-week-person",
@@ -1334,9 +1270,13 @@ public class DtdData extends XMLFileReader.SimpleHandler {
         "energy-kilocalorie", "energy-calorie", "energy-foodcalorie", "energy-kilojoule", "energy-joule", "energy-kilowatt-hour",
         "energy-electronvolt",
         "energy-british-thermal-unit",
+        "energy-therm-us",
         "force-pound-force",
         "force-newton",
         "frequency-gigahertz", "frequency-megahertz", "frequency-kilohertz", "frequency-hertz",
+        "graphics-em", "graphics-pixel", "graphics-megapixel",
+        "graphics-pixel-per-centimeter", "graphics-pixel-per-inch",
+        "graphics-dot-per-centimeter", "graphics-dot-per-inch", 
         "length-kilometer", "length-meter", "length-decimeter", "length-centimeter",
         "length-millimeter", "length-micrometer", "length-nanometer", "length-picometer",
         "length-mile", "length-yard", "length-foot", "length-inch",
@@ -1355,8 +1295,10 @@ public class DtdData extends XMLFileReader.SimpleHandler {
         "mass-solar-mass",
         "power-gigawatt", "power-megawatt", "power-kilowatt", "power-watt", "power-milliwatt",
         "power-horsepower",
-        "pressure-hectopascal", "pressure-millimeter-of-mercury",
-        "pressure-pound-per-square-inch", "pressure-inch-hg", "pressure-millibar", "pressure-atmosphere",
+        "pressure-millimeter-of-mercury",
+        "pressure-pound-per-square-inch", "pressure-inch-hg", "pressure-bar", "pressure-millibar", "pressure-atmosphere",
+        "pressure-pascal",
+        "pressure-hectopascal", 
         "pressure-kilopascal",
         "pressure-megapascal",
         "speed-kilometer-per-hour", "speed-meter-per-second", "speed-mile-per-hour", "speed-knot",
@@ -1560,16 +1502,6 @@ public class DtdData extends XMLFileReader.SimpleHandler {
             }
         }
 
-//        private int size() {
-//            return list.iterator().next().size();
-//        }
-//
-//        private void removeElement(int i) {
-//            for (XPathParts item : list) {
-//                item.removeElement(i);
-//            }
-//        }
-
         private void addAttributes(String attribute, List<String> attributeValues) {
             if (attributeValues.size() == 1) {
                 addAttribute(attribute, attributeValues.iterator().next());
@@ -1672,15 +1604,13 @@ public class DtdData extends XMLFileReader.SimpleHandler {
     }
 
     public AttributeType getAttributeType(String elementName, String attributeName) {
+        Attribute attr = getAttribute(elementName, attributeName);
+        return (attr != null) ? attr.type : null;
+    }
+
+    public Attribute getAttribute(String elementName, String attributeName) {
         Element element = nameToElement.get(elementName);
-        if (element == null) {
-            return null;
-        }
-        Attribute attr = element.getAttributeNamed(attributeName);
-        if (attr == null) {
-            return null;
-        }
-        return attr.type;
+        return (element != null) ? element.getAttributeNamed(attributeName) : null;
     }
 
     // TODO: add support for following to DTD annotations, and rework API
@@ -1750,15 +1680,4 @@ public class DtdData extends XMLFileReader.SimpleHandler {
         }
         return ImmutableSetMultimap.copyOf(nonEnumeratedElementToAttribute);
     }
-
-    // ALWAYS KEEP AT END, FOR STATIC INIT ORDER
-    private static final Map<DtdType, DtdData> CACHE;
-    static {
-        EnumMap<DtdType, DtdData> temp = new EnumMap<DtdType, DtdData>(DtdType.class);
-        for (DtdType type : DtdType.values()) {
-            temp.put(type, getInstance(type, null));
-        }
-        CACHE = Collections.unmodifiableMap(temp);
-    }
-    // ALWAYS KEEP AT END, FOR STATIC INIT ORDER
 }
